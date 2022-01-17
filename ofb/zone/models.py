@@ -4,6 +4,7 @@ class Author(models.Model):
     name = models.CharField(max_length=100)
     id = models.IntegerField(primary_key=True)
 
+
 class Story(models.Model):
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
@@ -12,3 +13,7 @@ class Story(models.Model):
     downloads = models.IntegerField()
     words = models.IntegerField()
     id = models.IntegerField(primary_key=True)
+    tags = models.CharField(max_length=100)
+
+    class Meta:
+        verbose_name_plural = "stories"
