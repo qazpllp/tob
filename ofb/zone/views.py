@@ -2,8 +2,11 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views import generic
+from django.core.paginator import Paginator
 
 from .models import Story, Author, Tag
+
+paginate_stories = 10
 
 class IndexView(generic.ListView):
     template_name = 'zone/index.html'
@@ -17,12 +20,13 @@ class IndexView(generic.ListView):
 
 class StoriesView(generic.ListView):
     context_object_name = 'latest_story_list'
+    paginate_by = paginate_stories
 
     def get_queryset(self):
         """
         Returns the last 5 piblished stories
         """
-        return Story.objects.order_by('-pub_date')[:5]
+        return Story.objects.order_by('-pub_date')
 
 class DetailView(generic.DetailView):
     model = Story
@@ -41,16 +45,16 @@ class DetailAuthorView(generic.DetailView):
 class TagListView(generic.ListView):
     model = Tag
 
-class TagDetailView(generic.DetailView):
-    model = Tag
+class TagDetailView(generic.ListView):
+    model = Story
+    paginate_by = paginate_stories
+    template_name = 'zone/tag_detail.html'
 
-    def get_context_data(self, *args, **kwargs):
+    def get_queryset(self):
         """
-        Get the stories which have this tag
+        Returns the last 5 piblished stories
         """
-        context = super(TagDetailView, self).get_context_data(*args, **kwargs)
-        context["story_list"] = Story.objects.filter(tags__id = self.kwargs['pk'])
-        return context
+        return Story.objects.filter(tags__id = self.kwargs['pk'])
    
 class AboutView(generic.ListView):
     template_name = 'zone/about.html'
