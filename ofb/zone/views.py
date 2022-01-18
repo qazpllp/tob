@@ -41,3 +41,7 @@ class DetailAuthorView(generic.DetailView):
 class TagListView(generic.ListView):
     template_name = 'zone/tags.html'
     model = Story
+
+class AboutView(generic.ListView):
+    template_name = 'zone/about.html'
+    model = Story
