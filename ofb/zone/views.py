@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views import generic
 
-from .models import Story, Author
+from .models import Story, Author, Tag
 
 class IndexView(generic.ListView):
     template_name = 'zone/index.html'
@@ -39,9 +39,19 @@ class DetailAuthorView(generic.DetailView):
         return context
 
 class TagListView(generic.ListView):
-    template_name = 'zone/tags.html'
-    model = Story
+    model = Tag
 
+class TagDetailView(generic.DetailView):
+    model = Tag
+
+    def get_context_data(self, *args, **kwargs):
+        """
+        Get the stories which have this tag
+        """
+        context = super(TagDetailView, self).get_context_data(*args, **kwargs)
+        context["story_list"] = Story.objects.filter(tags__id = self.kwargs['pk'])
+        return context
+   
 class AboutView(generic.ListView):
     template_name = 'zone/about.html'
     model = Story

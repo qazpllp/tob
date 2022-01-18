@@ -1,7 +1,8 @@
 import csv
+import ast
 from turtle import title
 from django.core.management import BaseCommand
-from zone.models import Author, Story
+from zone.models import Author, Story, Tag
 
 class Command(BaseCommand):
     help = 'import a csv of the generated site data'
@@ -19,13 +20,23 @@ class Command(BaseCommand):
                         name = row[1],
                     )
 
-                    _, created_s = Story.objects.get_or_create(
+                    tag_array = ast.literal_eval(row[6])
+                    tags = []
+                    for t in tag_array:
+                        tag, created_t = Tag.objects.get_or_create(
+                            slug = t
+                        )
+                        tags.append(tag)
+
+                    story, created_s = Story.objects.get_or_create(
                         id = row[0],
                         title = row[3],
                         pub_date = row[4],
                         summary = row[5],
-                        tags = row[6],
                         downloads= row[7],
                         words = row[8],
                         author = author,
                     )
+                    # story must be saved before assigning many-to-many tags field
+                    for t in tags:
+                        story.tags.add(t)
