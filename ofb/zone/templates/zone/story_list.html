@@ -1,13 +1,28 @@
-{% load static %}
+{% extends "zone/base.html" %}
 
-<link rel="stylesheet" type="text/css" href="{% static 'zone/style.css' %}">
-
+{% block content %}
+<h2>Recent Stories</h2>
+<p>The most recently submitted works</p>
 {% if latest_story_list %}
     <ul>
     {% for story in latest_story_list %}
-        <li><a href="/zone/{{ story.id }}/">{{ story.title }}</a></li>
+        <li><div>
+            <h4><a href="/zone/stories/{{ story.id }}/">{{ story.title }}</a> by <a href="{% url 'author' story.author.id %}">{{ story.author.name }}</a></h4>
+            <p>{{ story.pub_date }}</p>
+            <ul class="tags">
+                <!-- for tags.... -->
+            </ul>
+            <h6>{{ story.summary }}</h6>
+            <dl>
+                <dt>Words:</dt>
+                <dd>{{ story.words }}</dd>
+                <dt>Downloads:</dt>
+                <dd>{{ story.downloads }}</dd>
+            </dl>
+        </div></li>
     {% endfor %}
     </ul>
 {% else %}
     <p>No stories are available.</p>
 {% endif %}
+{% endblock %}
