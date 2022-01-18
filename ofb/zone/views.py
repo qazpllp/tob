@@ -19,3 +19,11 @@ class DetailView(generic.DetailView):
 
 class DetailAuthorView(generic.DetailView):
     model = Author
+
+    def get_context_data(self, *args, **kwargs):
+        """
+        Get the stories by the author
+        """
+        context = super(DetailAuthorView, self).get_context_data(*args, **kwargs)
+        context["story_list"] = Story.objects.filter(author__id = self.kwargs['pk'])
+        return context
