@@ -1,17 +1,21 @@
-{% extends "zone/base.html" %}
+{% extends "zone/base_text.html" %}
+
+{% block title %}
+{{ story.title}}
+{% endblock %}
+
+{% block subtitle %}
+by <a href="/zone/author/{{ story.author.id }}/">{{ story.author.name }}</a>
+{% endblock %}
 
 {% block content %}
 {% load static %}
-
-<h1>{{ story.title }}</h1>
-<h3>by <a href="/zone/author/{{ story.author.id }}/">{{ story.author.name }}</a></h3>
-
 <p>{{ story.summary }}</p>
 
-<p> Published: {{ story.pub_date }}</p>
+<p> Published: {{ story.pub_date|date:"Y M d" }}</p>
 
-<p>Contains {{ story.words }} words</p>
-<p>Had {{ story.downloads }} downloads as of last trawling the original site</p>
+<p>Contains {{ story.words|floatformat:"g" }} words</p>
+<p>Had {{ story.downloads|floatformat:"g" }} downloads as of last trawling the original site</p>
 <p>Contains the tags:{% for tag in story.tags.all %} <a href="{% url 'tag' tag.id %}">{{ tag }}</a>,{% endfor %}</p>
 
 <h3><a href="{% static 'zone/stories/' %}{{ story.id }}.pdf">Read Now</a></h3>
