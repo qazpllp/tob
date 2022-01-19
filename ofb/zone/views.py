@@ -24,7 +24,7 @@ class StoriesView(generic.ListView):
 
     def get_queryset(self):
         """
-        Returns the last 5 piblished stories
+        Returns the last 5 published stories
         """
         return Story.objects.order_by('-pub_date')
 
@@ -52,10 +52,18 @@ class TagDetailView(generic.ListView):
 
     def get_queryset(self):
         """
-        Returns the last 5 piblished stories
+        Returns the published stories with the relevant tag
         """
         return Story.objects.filter(tags__id = self.kwargs['pk'])
-   
+
+    def get_context_data(self, *args, **kwargs):
+        """
+        Get the tag detail info
+        """
+        context = super(TagDetailView, self).get_context_data(*args, **kwargs)
+        context["tag"] = Tag.objects.get(pk = self.kwargs['pk'])
+        return context
+
 class AboutView(generic.ListView):
     template_name = 'zone/about.html'
     model = Story
