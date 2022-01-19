@@ -2,7 +2,6 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views import generic
-from django.core.paginator import Paginator
 
 from .models import Story, Author, Tag
 
@@ -27,9 +26,17 @@ class StoriesView(generic.ListView):
 
     def get_queryset(self):
         """
-        Returns the last 5 published stories
+        Sort stories by get parameters (of form ?{var}={val}&{var}={val} e.t.c)
         """
-        return Story.objects.order_by('-pub_date')
+        ascending = self.request.GET['ascending']
+        sort_column = self.request.GET['sort_column']
+
+        ordering_string = ""
+        if not ascending:
+            ordering_string = "-"
+        s = Story.objects.order_by(ordering_string+sort_column)
+
+        return s
 
     def get_context_data(self, *args, **kwargs):
         """
