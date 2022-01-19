@@ -32,7 +32,7 @@ class StoriesView(generic.ListView):
         sort_column = self.request.GET['sort_column']
 
         ordering_string = ""
-        if not ascending:
+        if ascending == 'False':
             ordering_string = "-"
         s = Story.objects.order_by(ordering_string+sort_column)
 
