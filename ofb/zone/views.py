@@ -6,7 +6,7 @@ from django.core.paginator import Paginator
 
 from .models import Story, Author, Tag
 
-paginate_stories = 10
+paginate_stories = 20
 
 class IndexView(generic.ListView):
     template_name = 'zone/index.html'
@@ -14,7 +14,7 @@ class IndexView(generic.ListView):
 
     def get_queryset(self):
         """
-        Returns the last 5 piblished stories
+        Returns the last 5 published stories
         """
         return Story.objects.order_by('-pub_date')[:5]
 
@@ -27,6 +27,15 @@ class StoriesView(generic.ListView):
         Returns the last 5 published stories
         """
         return Story.objects.order_by('-pub_date')
+
+    def get_context_data(self, *args, **kwargs):
+        """
+        Limit pagination pages when appropriate
+        """
+        # pagination
+        context = super(StoriesView, self).get_context_data(*args, **kwargs)
+        context = pagination(context)
+        return context
 
 class DetailView(generic.DetailView):
     model = Story
@@ -58,12 +67,40 @@ class TagDetailView(generic.ListView):
 
     def get_context_data(self, *args, **kwargs):
         """
-        Get the tag detail info
+        Get the tag detail info, and limit pagination pages when appropriate
         """
+        # Tag
         context = super(TagDetailView, self).get_context_data(*args, **kwargs)
         context["tag"] = Tag.objects.get(pk = self.kwargs['pk'])
+
+        # pagination
+        context = pagination(context)
         return context
 
 class AboutView(generic.ListView):
     template_name = 'zone/about.html'
     model = Story
+
+def pagination(context, pages_either_side=5):
+    """
+    Limit the number of pages shown.
+    Show this page, and +-pages_either_side total, at most
+    https://stackoverflow.com/a/39090909
+    """
+    if not context.get('is_paginated', False):
+        return context
+
+    paginator = context.get('paginator')
+    num_pages = paginator.num_pages
+    current_page = context.get('page_obj')
+    page_no = current_page.number
+
+    if num_pages <= (pages_either_side*2+1) or page_no <= pages_either_side+1:  # case 1 and 2
+        pages = [x for x in range(1, min(num_pages + 1, (pages_either_side*2+2)))]
+    elif page_no > num_pages - (pages_either_side+1):  # case 4
+        pages = [x for x in range(num_pages - (pages_either_side*2), num_pages + 1)]
+    else:  # case 3
+        pages = [x for x in range(page_no - pages_either_side, page_no + pages_either_side+1)]
+
+    context.update({'pages': pages})
+    return context
