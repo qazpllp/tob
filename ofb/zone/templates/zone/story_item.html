@@ -1,20 +1,23 @@
 <div class="card">
     <div class="card-body">
-        <h4 class="card-title"><a href="/zone/stories/{{ story.id }}/">{{ story.title }}</a> by <a href="{% url 'author' story.author.id %}">{{ story.author.name }}</a></h4>
+        <div class="d-flex justify-content-between">
+            <h4 class="card-title"><a href="/zone/stories/{{ story.id }}/">{{ story.title }}</a> by <a href="{% url 'author' story.author.id %}">{{ story.author.name }}</a></h4>
+            <p>{{ story.pub_date|date:"Y M d" }}</p>
+        </div>
         <h6 class="card-subtitle mb-2 text-muted">{{ story.summary }}</h6>
-        <p>{{ story.pub_date|date:"Y M d" }}</p>
-        <ul class="list-group list-group-horizontal list-group-flush">
-        {% for tag in story.tags.all %}
-            <li class="list-group-item"><a href="{% url 'tag' tag.id %}">{{ tag.slug }}</a></li>
+        <div class="d-flex flex-wrap flex-row bd-highlight mb-2">
+            <div class="pr-1 py-1 bd-highlight float-start">Tags:</div>
+            {% for tag in story.tags.all %}
+            <div class="p-1 bd-highlight"><a href="{% url 'tag' tag.id %}">{{ tag.slug }}</a></div>
         {% endfor %}
-        </ul>
-    </div>
-    <div class="card-footer">
-        <dl>
-            <dt>Words:</dt>
-            <dd>{{ story.words }}</dd>
-            <dt>Downloads:</dt>
-            <dd>{{ story.downloads }}</dd>
-        </dl>
+        </div>
+        <div class="d-flex justify-content-between">
+            <div>
+                Words: {{ story.words|floatformat:"g" }}
+            </div>
+            <div>
+                Downloads: {{ story.downloads|floatformat:"g" }}
+            </div>
+        </div>
     </div>
 </div>

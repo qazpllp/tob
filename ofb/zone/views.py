@@ -8,15 +8,18 @@ from .models import Story, Author, Tag
 
 paginate_stories = 20
 
-class IndexView(generic.ListView):
+class IndexView(generic.TemplateView):
     template_name = 'zone/index.html'
-    context_object_name = 'latest_story_list'
 
-    def get_queryset(self):
+    def get_context_data(self, *args, **kwargs):
         """
-        Returns the last 5 published stories
+        Returns the approxiate number of works and authors
         """
-        return Story.objects.order_by('-pub_date')[:5]
+        # pagination
+        context = super(IndexView, self).get_context_data(*args, **kwargs)
+        context.update({'works': round(len(Story.objects.all()),-1)})
+        context.update({'authors': round(len(Author.objects.all()),-1)})
+        return context
 
 class StoriesView(generic.ListView):
     context_object_name = 'latest_story_list'
@@ -48,7 +51,7 @@ class DetailAuthorView(generic.DetailView):
         Get the stories by the author
         """
         context = super(DetailAuthorView, self).get_context_data(*args, **kwargs)
-        context["story_list"] = Story.objects.filter(author__id = self.kwargs['pk'])
+        context["story_list"] = Story.objects.filter(author__id = self.kwargs['pk']).order_by('-pub_date')
         return context
 
 class TagListView(generic.ListView):
@@ -63,7 +66,7 @@ class TagDetailView(generic.ListView):
         """
         Returns the published stories with the relevant tag
         """
-        return Story.objects.filter(tags__id = self.kwargs['pk'])
+        return Story.objects.filter(tags__id = self.kwargs['pk']).order_by('-pub_date')
 
     def get_context_data(self, *args, **kwargs):
         """
