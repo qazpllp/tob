@@ -1,39 +1,42 @@
 {% extends "zone/base_text.html" %}
 
-
 {% block content %}
+{% load widget_tweaks %}
 
-{% load crispy_forms_tags %}
-{% crispy filter.form %}
+
 
     <form method="get">
-        <div class="form-row">
+            <div class="form-row">
             <div class="col">
                 {{ filter.form.title__icontains.errors }}
                 <label for="{{ filter.form.title__icontains.id_for_label }}">Title:</label>
-                <input type="text" class="form-control">
-                 {{ filter.form.title__icontains }}
+                {{ filter.form.title__icontains|attr:"class=form-control" }}
             </div>
             <div class="col">
-                Author: {{ filter.form.author__icontains }}
+                {{ filter.form.author__name__icontains.errors }}
+                <label for="{{ filter.form.author__name__icontains.id_for_label }}">Author:</label>
+                {{ filter.form.author__name__icontains|attr:"class=form-control" }}
             </div>
         </div>
         <div class="form-group">
             {{ filter.form.story__tags.errors }}
             <label for="{{ filter.form.story__tags.id_for_label }}">Tags:</label>
 
-            
-            <select class="custom-select" multiple>
-            {% for tag in filter.filters.story__tags.queryset %}
-                <option value="{{ tag }}">{{ tag }}</option>
-            {% endfor %}
-            </select>
+            {{ filter.form.story__tags|attr:"class=custom-select" }}
+
             <small id="tagHelpBlock" class="form-text text-muted">'Ctrl' click to select multiple</small>
         </div>
-
-
+        <div class="form-group">
+            <label for="{{ filter.form.pub_date__year.id_for_label }}">Year of release:</label>
+            {{ filter.form.pub_date__year|attr:"class=custom-select" }}
+        </div>
         <hr>
-        {{ filter.form.as_p }}
+        <div class="form-group">
+            <label for="{{ filter.form.o.id_for_label }}">Order By:</label>
+            {{ filter.form.o|attr:"class=custom-select" }}
+        </div>
+
+         <!-- {{ filter.form.as_p }} -->
         <input type="submit" />
     </form>
     

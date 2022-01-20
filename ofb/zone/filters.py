@@ -4,9 +4,13 @@ from django.db import models
 from django import forms
 
 import django_filters
-from crispy_forms.helper import FormHelper
 
 from .models import Story, Tag
+
+# Unique years
+year_choices = ()
+for c in Story.objects.dates('pub_date', 'year').reverse():
+    year_choices = year_choices + ((c.year, str(c.year)),)
 
 class StoryFilter(FilterSet):
     # Tags multiple choice selection filter
@@ -15,6 +19,11 @@ class StoryFilter(FilterSet):
         to_field_name='slug',
         queryset=Tag.objects.all(),
         conjoined=True,
+    )
+
+    # Have only the years within the database selectable
+    pub_date__year = django_filters.ChoiceFilter(
+        choices = year_choices
     )
 
     # Possibilities to order the results
@@ -35,21 +44,5 @@ class StoryFilter(FilterSet):
             'title': ['icontains'],
             'downloads': ['lte','gte','exact'],
             'author__name': ['icontains'],
-            'pub_date': ['year'],
+            # 'pub_date': ['year'],
         }
-        filter_overrides = {
-            models.ManyToManyField: {
-                'filter_class':  django_filters.ModelMultipleChoiceFilter,
-                'extra': lambda f: {
-                    'widget': forms.CheckboxSelectMultiple
-                }
-            }
-        }
-
-    @property                                                                                        
-    def form(self):                                                                                  
-       self._form = super(StoryFilter, self).form                                                     
-       self._form.helper = FormHelper()                                                              
-       self._form.helper.form_tag = False                                                            
-       self._form.helper.form_style = 'inline'                                                       
-       return self._form 
