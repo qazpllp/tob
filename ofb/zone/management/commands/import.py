@@ -28,15 +28,24 @@ class Command(BaseCommand):
                         )
                         tags.append(tag)
 
-                    story, created_s = Story.objects.get_or_create(
+
+                        tag, created_t = Tag.objects.update_or_create(
+                            slug = row[0],
+                            defaults = {'description': row[1]}
+                        )
+
+                    story, created_s = Story.objects.update_or_create(
                         id = row[0],
                         title = row[3],
                         pub_date = row[4],
                         summary = row[5],
-                        downloads= row[7],
-                        words = row[8],
                         author = author,
+                        defaults = {
+                            'words': row[8],
+                            'downloads': row[7],
+                        }
                     )
+
                     # story must be saved before assigning many-to-many tags field
                     for t in tags:
                         story.tags.add(t)
