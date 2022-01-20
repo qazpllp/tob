@@ -2,8 +2,9 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views import generic
+from django_filters.views import FilterView
 
-from .models import Story, Author, Tag
+from .models import Story, Author, Tag, StoryFilter
 
 paginate_stories = 20
 
@@ -28,8 +29,14 @@ class StoriesView(generic.ListView):
         """
         Sort stories by get parameters (of form ?{var}={val}&{var}={val} e.t.c)
         """
-        ascending = self.request.GET['ascending']
-        sort_column = self.request.GET['sort_column']
+        try:
+            ascending = self.request.GET['ascending']
+        except:
+            ascending = 'False'
+        try:
+            sort_column = self.request.GET['sort_column']
+        except:
+            sort_column = 'pub_date'
 
         ordering_string = ""
         if ascending == 'False':
@@ -114,3 +121,6 @@ def pagination(context, pages_either_side=5):
 
     context.update({'pages': pages})
     return context
+
+class StoryFilterView(FilterView):
+    filterset_class = StoryFilter
