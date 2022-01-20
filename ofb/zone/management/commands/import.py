@@ -1,6 +1,5 @@
 import csv
 import ast
-from turtle import title
 from django.core.management import BaseCommand
 from zone.models import Author, Story, Tag
 
@@ -27,12 +26,6 @@ class Command(BaseCommand):
                             slug = t
                         )
                         tags.append(tag)
-
-
-                        tag, created_t = Tag.objects.update_or_create(
-                            slug = row[0],
-                            defaults = {'description': row[1]}
-                        )
 
                     story, created_s = Story.objects.update_or_create(
                         id = row[0],
