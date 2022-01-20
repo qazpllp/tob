@@ -1,5 +1,4 @@
 from django.db import models
-from django_filters import FilterSet, OrderingFilter
 
 class Tag(models.Model):
     slug = models.CharField(max_length=10, unique=True)
@@ -31,23 +30,3 @@ class Story(models.Model):
     def __str__(self):
         return self.title
 
-class StoryFilter(FilterSet):
-    o = OrderingFilter(
-        fields = (
-            ('title', 'title'),
-            ('downloads', 'downloads'),
-            ('words', 'words'),
-            ('pub_date', 'date'),
-            ('author__name', 'author')
-        )
-    )
-
-    class Meta:
-        model = Story
-        # fields = ['title', 'downloads']
-        fields = {
-            'title': ['icontains'],
-            'downloads': ['exact'],
-            # 'tags': ['in'],
-            'pub_date': ['range'],
-        }

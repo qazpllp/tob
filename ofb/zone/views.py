@@ -4,7 +4,8 @@ from django.urls import reverse
 from django.views import generic
 from django_filters.views import FilterView
 
-from .models import Story, Author, Tag, StoryFilter
+from .models import Story, Author, Tag
+from .filters import StoryFilter
 
 paginate_stories = 20
 
