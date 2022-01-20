@@ -1,13 +1,11 @@
-from django.forms import CheckboxSelectMultiple
 from django_filters import FilterSet, OrderingFilter
-from django.db import models
 from django import forms
 
 import django_filters
 
 from .models import Story, Tag
 
-# Unique years
+# Unique years of published stories
 year_choices = ()
 for c in Story.objects.dates('pub_date', 'year').reverse():
     year_choices = year_choices + ((c.year, str(c.year)),)
@@ -19,6 +17,7 @@ class StoryFilter(FilterSet):
         to_field_name='slug',
         queryset=Tag.objects.all(),
         conjoined=True,
+        widget=forms.CheckboxSelectMultiple,
     )
 
     # Have only the years within the database selectable
@@ -39,10 +38,9 @@ class StoryFilter(FilterSet):
 
     class Meta:
         model = Story
-        # Fields to filter on
+        # Additional fields to filter on
         fields = {
             'title': ['icontains'],
             'downloads': ['lte','gte','exact'],
             'author__name': ['icontains'],
-            # 'pub_date': ['year'],
         }
