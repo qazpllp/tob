@@ -125,3 +125,11 @@ def pagination(context, pages_either_side=5):
 
 class StoryFilterView(FilterView):
     filterset_class = StoryFilter
+
+    def get_context_data(self, *args, **kwargs):
+        """
+        Get the tag detail info, and limit pagination pages when appropriate
+        """
+        # Tag
+        context = super(StoryFilterView, self).get_context_data(*args, **kwargs)
+        return context
