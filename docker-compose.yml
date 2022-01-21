@@ -1,24 +1,27 @@
-version: "3.6"
+version: "3.9"
+   
 services:
-  django:
-    build: tob
-    volumes:
-      - ./tob/source:/usr/src/app
-      # - staticfiles:/usr/src/app/zone/static
-    ports:
-      - 8000:80
-    restart: unless-stopped
-  tob-db:
-    image: postgres:9.6
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_DB=tob
-      - POSTGRES_PASSWORD=postgres
+  db:
+    image: postgres
     volumes:
       - db_persistent:/var/lib/postgresql/data
-    restart:
-      - unless-stopped
+    environment:
+      - POSTGRES_NAME=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./tob:/code
+    ports:
+      - "8000:8000"
+    environment:
+      - POSTGRES_NAME=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    depends_on:
+      - db
 
 volumes:
-  staticfiles:
   db_persistent:

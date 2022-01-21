@@ -17,7 +17,7 @@ class Author(models.Model):
 class Story(models.Model):
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
-    pub_date = models.DateTimeField('date published')
+    pub_date = models.DateField('date published', max_length=100)
     summary = models.CharField(max_length=500)
     downloads = models.IntegerField()
     words = models.IntegerField()
