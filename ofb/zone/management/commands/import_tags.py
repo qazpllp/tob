@@ -18,3 +18,9 @@ class Command(BaseCommand):
                             slug = row[0],
                             defaults = {'description': row[1]}
                         )
+                    else:
+                        tag, created_t = Tag.objects.update_or_create(
+                            slug = row[0],
+                            defaults = {'description': row[0]}
+                        )
+
