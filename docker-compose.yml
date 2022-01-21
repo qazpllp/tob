@@ -1,13 +1,24 @@
 version: "3.6"
 services:
   django:
-    build: ofb
+    build: tob
     volumes:
-      - ./ofb/source:/usr/src/app
-      - staticfiles:/assts/static
+      - ./tob/source:/usr/src/app
+      # - staticfiles:/usr/src/app/zone/static
     ports:
       - 8000:80
     restart: unless-stopped
+  tob-db:
+    image: postgres:9.6
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=tob
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - db_persistent:/var/lib/postgresql/data
+    restart:
+      - unless-stopped
 
 volumes:
   staticfiles:
+  db_persistent:
