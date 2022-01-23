@@ -44,7 +44,13 @@ class Command(BaseCommand):
                 
                 try:
                     date = story.find("div", class_="submitdate").contents[0]
-                    date = datetime.datetime.strptime(date, '%dth, %b %y')
+                    
+                    # remove text on the day (e.g. 3rd)
+                    day = date.split(',')
+                    day[0] = ''.join([i for i in day[0] if i.isdigit()])
+                    date = ''.join(day)
+
+                    date = datetime.datetime.strptime(date, '%d %b %y')
                 except:
                     date = datetime.datetime(1970, 1, 1)
                 
@@ -92,8 +98,8 @@ class Command(BaseCommand):
                 else:
                     story, created_s = Story.objects.update_or_create(
                         id = storyId,
-                        title = title,
                         pub_date = date,
+                        title = title,
                         summary = summary,
                         author = author,
                         # The following values may change when accessing the same story at different times

@@ -137,6 +137,13 @@ def striprtf(text):
 				out.append(tchar)
 	return ''.join(out)
 
+# Various strings (key) to replace with (value)
+replace_dict = {
+	'\00': ' ', # Null Character
+	'\xa0': ' ', # remove nbsp character
+
+}
+
 class Command(BaseCommand):
 	help = 'Download stories from TOB and extract the text, and word count'
 
@@ -148,12 +155,13 @@ class Command(BaseCommand):
 	
 	def handle(self, *args, **options):
 		baseUrl = "https://overflowingbra.com/download.php?StoryID="
-		folderName='zone/static/zone/stories_raw/'
 
 		if options['forced']:
 			options['forced_download'] = options['forced_textify'] = options['forced_wordcount'] = True
 
 		for s in Story.objects.all():
+			folderName='zone/static/zone/stories_raw/' + str(s.id)
+			
 			url = baseUrl + str(s.id)
 
 			if not os.path.exists(folderName) or (os.path.exists(folderName) and options['forced_download']):
@@ -161,8 +169,9 @@ class Command(BaseCommand):
 				try:
 					tempname,_ = request.urlretrieve(url, "temp.zip")
 				except:
-					return (False, False)
-				shutil.unpack_archive(tempname, folderName + str(s.id))
+					print(f"Failed to download {s}")
+					continue
+				shutil.unpack_archive(tempname, folderName)
 
 				# clear up tempfile after use
 				os.remove(tempname)
@@ -189,27 +198,21 @@ class Command(BaseCommand):
 				# htm
 				for filename in glob.iglob(folderName + '/**/*.htm', recursive=True):
 					with codecs.open(filename, 'r', encoding='utf-8', errors='replace') as file: 
-						soup = BeautifulSoup(file, 'html.parser')
-						# remove nbsp character
-						text = soup.get_text().replace('\xa0', ' ')
+						soup = BeautifulSoup(file, 'html5lib')
+						text = soup.get_text()
 						handled = True
 
 				# html
 				for filename in glob.iglob(folderName + '/**/*.html', recursive=True):
 					with codecs.open(filename, 'r', encoding='utf-8', errors='replace') as file: 
-						soup = BeautifulSoup(file, 'html.parser')
-						# remove nbsp character
-						try:
-							soup.prettify(formatter=lambda s: s.replace(u'\xa0', ' '))
-							# remove nbsp character
-							text = soup.get_text().replace('\xa0', ' ')
-							handled = True
-						except:
-							handled = False
+						soup = BeautifulSoup(file, 'html5lib')
+						text = soup.get_text()
+						handled = True
 				if handled:
+					for key, val in replace_dict.items():
+						text = text.replace(key, val)
+
 					s.text = text
-					# Get word count 
-					s.words = len(text.split())
 					s.save()
 				else:
 					print(f"Not handled text of {s.id}")
