@@ -5,11 +5,8 @@ from zone.models import Tag
 class Command(BaseCommand):
     help = 'import a csv of the generated site tag information'
 
-    def add_arguments(self, parser):
-        parser.add_argument('csv_file_path')
-    
     def handle(self, *args, **options):
-        with open(options['csv_file_path']) as f:
+        with open('zone/static/zone/tags_mapping.txt') as f:
                 reader = csv.reader(f)
                 next(reader, None) # skip header
                 for row in reader:
