@@ -11,7 +11,11 @@ class Command(BaseCommand):
     help = 'Find stories/authors/tags on TOB. Imports info to database'
 
     def add_arguments(self, parser):
-        parser.add_argument('--create-only', help='Does not update if already exists')
+        parser.add_argument(
+            '--create-only', 
+            action="store_true",
+            help='Does not update if already exists',
+        )
         # parser.add_argument('limit_number', help='Limit the number of searched files')
     
     def handle(self, *args, **options):
@@ -70,7 +74,7 @@ class Command(BaseCommand):
                     )
                     tags_found.append(tag)
 
-                if options['create-only']:
+                if options['create_only']:
                     story = Story.objects.create(
                         id = storyId,
                         title = title,

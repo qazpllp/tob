@@ -22,7 +22,7 @@ class Story(models.Model):
     downloads = models.IntegerField()
     words = models.IntegerField()
     id = models.IntegerField(primary_key=True)
-    # text = models.TextField()
+    text = models.TextField()
     tags = models.ManyToManyField(Tag)
 
     class Meta:
@@ -30,4 +30,3 @@ class Story(models.Model):
 
     def __str__(self):
         return self.title
-

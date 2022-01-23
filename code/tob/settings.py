@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 import os
 from pathlib import Path
+import sqlite3
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-7xvn+8#16h8uc9#y3!3ryqqgi)$)eksl8)!hr!p8#(p7t+fok2'
+SECRET_KEY = 'django-insecure-4k@_&u$x(%pddx(_v@iqik2^@9o%u$8mjg#bk87iy)xrci37h9'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
