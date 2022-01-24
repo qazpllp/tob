@@ -6,6 +6,7 @@ from django.views import generic
 from django_filters.views import FilterView
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render
+from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
 
 from .models import Story, Author, Tag
 from .filters import StoryFilter
@@ -142,9 +143,31 @@ class StoryFilterView(FilterView):
 class UploadView(generic.TemplateView):
     template_name = 'zone/upload.html'
 
+class SearchForm(generic.ListView):
+    template_name = "zone/story_search.html"
+    model = Story
+    paginate_by = paginate_stories
 
-class SearchForm(generic.TemplateView):
-    template_name = "zone/search.html"
+    def get_queryset(self):
+        """
+        Perform a full-text search (postgres) on the text and return rank-ordered
+        """
+        try:
+            searching = self.request.GET['search']
+        except:
+            searching = ''
 
-    def get(self, request, *args, **kwargs):
-        return HttpResponse('Hello')
+        vector = SearchVector('text', 'title', 'author__name', 'summary')
+        query = SearchQuery(searching)
+        s = Story.objects.annotate(rank=SearchRank(vector,query)).order_by('-rank')
+
+        return s
+    
+    def get_context_data(self, *args, **kwargs):
+        """
+        Limit pagination pages when appropriate
+        """
+        # pagination
+        context = super(SearchForm, self).get_context_data(*args, **kwargs)
+        context = pagination(context)
+        return context
