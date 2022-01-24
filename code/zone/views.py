@@ -1,8 +1,11 @@
+from urllib import request
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views import generic
 from django_filters.views import FilterView
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.shortcuts import render
 
 from .models import Story, Author, Tag
 from .filters import StoryFilter
@@ -125,11 +128,21 @@ def pagination(context, pages_either_side=5):
 
 class StoryFilterView(FilterView):
     filterset_class = StoryFilter
+    paginate_by = paginate_stories
 
     def get_context_data(self, *args, **kwargs):
         """
-        Get the tag detail info, and limit pagination pages when appropriate
+        Limit pagination pages when appropriate
         """
-        # Tag
+        # pagination
         context = super(StoryFilterView, self).get_context_data(*args, **kwargs)
+        context = pagination(context)
         return context
+
+
+
+class SearchForm(generic.TemplateView):
+    template_name = "zone/search.html"
+
+    def get(self, request, *args, **kwargs):
+        return HttpResponse('Hello')

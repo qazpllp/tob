@@ -7,10 +7,8 @@ from .models import Story, Tag
 
 # Unique years of published stories
 year_choices = ()
-# for c in Story.objects.dates('pub_date', 'year').reverse():
-for c in Story.objects.all().reverse():
-    year_choices = year_choices + ((c, str(c)),)
-    # year_choices = year_choices + ((c.year, str(c.year)),)
+for c in Story.objects.dates('pub_date', 'year').reverse():
+    year_choices = year_choices + ((c.year, str(c.year)),)
 
 class StoryFilter(FilterSet):
     # Tags multiple choice selection filter
@@ -46,3 +44,6 @@ class StoryFilter(FilterSet):
             'downloads': ['lte','gte','exact'],
             'author__name': ['icontains'],
         }
+
+class FullSearch(forms.Form):
+    search_text = forms.CharField(label='Text search', max_length=100)
