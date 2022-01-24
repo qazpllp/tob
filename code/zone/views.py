@@ -139,6 +139,8 @@ class StoryFilterView(FilterView):
         context = pagination(context)
         return context
 
+class UploadView(generic.TemplateView):
+    template_name = 'zone/upload.html'
 
 
 class SearchForm(generic.TemplateView):
