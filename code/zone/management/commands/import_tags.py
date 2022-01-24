@@ -8,7 +8,6 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         with open('zone/static/zone/tags_mapping.txt') as f:
                 reader = csv.reader(f)
-                next(reader, None) # skip header
                 for row in reader:
                     if row[1]:
                         tag, created_t = Tag.objects.update_or_create(
