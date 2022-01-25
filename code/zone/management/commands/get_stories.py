@@ -7,6 +7,8 @@ import glob
 import codecs
 
 from django.core.management import BaseCommand
+from django.templatetags.static import static
+
 from bs4 import BeautifulSoup
 
 from zone.models import Story
@@ -160,7 +162,7 @@ class Command(BaseCommand):
 			options['forced_download'] = options['forced_textify'] = options['forced_wordcount'] = True
 
 		for s in Story.objects.all():
-			folderName='zone/static/zone/stories_raw/' + str(s.id)
+			folderName=os.path.join('zone/static/zone/stories_raw/', str(s.id))
 			
 			url = baseUrl + str(s.id)
 
@@ -189,26 +191,31 @@ class Command(BaseCommand):
 						handled = True
 
 				# rtf
-				for filename in glob.iglob(folderName + '/**/*.rtf', recursive=True):
-					with open(filename, 'r') as file:
-						text = file.read()
-						text= striprtf(text)
-						handled = True
+				if not handled:
+					for filename in glob.iglob(folderName + '/**/*.rtf', recursive=True):
+						with open(filename, 'r') as file:
+							text = file.read()
+							text= striprtf(text)
+							handled = True
 
 				# htm
-				for filename in glob.iglob(folderName + '/**/*.htm', recursive=True):
-					with codecs.open(filename, 'r', encoding='utf-8', errors='replace') as file: 
-						soup = BeautifulSoup(file, 'html5lib')
-						text = soup.get_text()
-						handled = True
+				if not handled:
+					for filename in glob.iglob(folderName + '/**/*.htm', recursive=True):
+						with codecs.open(filename, 'r', encoding='utf-8', errors='replace') as file: 
+							soup = BeautifulSoup(file, 'html5lib')
+							text = soup.get_text()
+							handled = True
 
 				# html
-				for filename in glob.iglob(folderName + '/**/*.html', recursive=True):
-					with codecs.open(filename, 'r', encoding='utf-8', errors='replace') as file: 
-						soup = BeautifulSoup(file, 'html5lib')
-						text = soup.get_text()
-						handled = True
+				if not handled:
+					for filename in glob.iglob(folderName + '/**/*.html', recursive=True):
+						with codecs.open(filename, 'r', encoding='utf-8', errors='replace') as file: 
+							soup = BeautifulSoup(file, 'html5lib')
+							text = soup.get_text()
+							handled = True
+				
 				if handled:
+					# clean text
 					for key, val in replace_dict.items():
 						text = text.replace(key, val)
 
