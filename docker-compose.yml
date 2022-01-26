@@ -11,17 +11,21 @@ services:
       - POSTGRES_PASSWORD=postgres
   web:
     build: .
-    command: python manage.py runserver 0.0.0.0:8000
+    command: gunicorn tob.wsgi:application --bind 0.0.0.0:8008
     volumes:
       - ./code:/code
+      - static:/static # static files
     ports:
-      - "8000:8000"
+      - "8000:8008"
     environment:
       - POSTGRES_NAME=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
+      - PORT=8008
+      - DEBUG=1
     depends_on:
       - db
 
 volumes:
   db_persistent:
+  static:
