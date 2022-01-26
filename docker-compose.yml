@@ -11,18 +11,19 @@ services:
       - POSTGRES_PASSWORD=postgres
   web:
     build: .
-    command: gunicorn tob.wsgi:application --bind 0.0.0.0:8008
+    command: gunicorn tob.wsgi:application --bind 0.0.0.0:8000
     volumes:
       - ./code:/code
       - static:/static # static files
     ports:
-      - "8000:8008"
+      - "8000:8000"
     environment:
       - POSTGRES_NAME=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - PORT=8008
       - DEBUG=1
+      - URL=127.0.0.1 # change to site, if hosting on site that is not localhost
+      - DATABASE_URL=postgres://postgres:postgres@db:5432/postgres # of form: postgres://user:password@host:port/database
     depends_on:
       - db
 
