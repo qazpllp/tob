@@ -30,7 +30,9 @@ class Command(BaseCommand):
 			if options['story_id'] and s.id != int(options['story_id']):
 				continue
 
-			# story_dir = os.path.join(static('zone/stories/'), str(s.id))
+			if s.text == '':
+				# no text to convert
+				continue
 			story_dir = os.path.join('zone/static/zone/stories/', str(s.id))
 			Path(story_dir).mkdir(parents=True, exist_ok=True)
 
@@ -50,7 +52,7 @@ class Command(BaseCommand):
 				}
 
 				# format newlines for html
-				pdfkit.from_string(s.text.replace("\n", "<br>"), pdf_name, options=opts)
+				pdfkit.from_string(s.text.replace("\n", "<br><br>"), pdf_name, options=opts)
 			
 			# html
 			html_name = os.path.join(story_dir,str(s.id)+".html")

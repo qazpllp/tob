@@ -186,7 +186,7 @@ class Command(BaseCommand):
 				handled = False
 				# text
 				for filename in glob.iglob(folderName + '/**/*.txt', recursive=True):
-					with open(filename, 'r') as file:
+					with open(filename, 'r', errors='replace') as file:
 						text = file.read()
 						handled = True
 
