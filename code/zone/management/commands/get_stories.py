@@ -203,10 +203,13 @@ class Command(BaseCommand):
 				# rtf
 				if not handled:
 					for filename in glob.iglob(folderName + '/**/*.rtf', recursive=True):
-						with open(filename, 'r') as file:
+						with open(filename, 'r', errors='replace') as file:
 							text = file.read()
-							text= striprtf(text)
-							handled = True
+							try:
+								text= striprtf(text)
+								handled = True
+							except:
+								hadled = False
 
 				# htm
 				if not handled:
