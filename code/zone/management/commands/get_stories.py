@@ -154,6 +154,7 @@ class Command(BaseCommand):
 		parser.add_argument('--forced_download', action="store_true", help="Re-download stories")
 		parser.add_argument('--forced_textify', action="store_true", help="Overwrite text data")
 		parser.add_argument('--forced_wordcount', action="store_true", help="Overwrite word count")
+		parser.add_argument('--story_id', help="Download a particular story (if already known about in database)")
 	
 	def handle(self, *args, **options):
 		baseUrl = "https://overflowingbra.com/download.php?StoryID="
@@ -161,7 +162,12 @@ class Command(BaseCommand):
 		if options['forced']:
 			options['forced_download'] = options['forced_textify'] = options['forced_wordcount'] = True
 
-		for s in Story.objects.all():
+		if options['story_id']:
+			stories = [Story.objects.get(id=options['story_id'])]
+		else:
+			stories = Story.objects.all()
+
+		for s in stories:
 			folderName=os.path.join('zone/cache/zone/stories_raw/', str(s.id))
 			
 			url = baseUrl + str(s.id)
@@ -173,7 +179,11 @@ class Command(BaseCommand):
 				except:
 					print(f"Failed to download {s}")
 					continue
-				shutil.unpack_archive(tempname, folderName)
+				try:
+					shutil.unpack_archive(tempname, folderName)
+				except:
+					print(f"Failed to extract {s}")
+					continue
 
 				# clear up tempfile after use
 				os.remove(tempname)
