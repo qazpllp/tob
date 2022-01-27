@@ -162,7 +162,7 @@ class Command(BaseCommand):
 			options['forced_download'] = options['forced_textify'] = options['forced_wordcount'] = True
 
 		for s in Story.objects.all():
-			folderName=os.path.join('zone/static/zone/stories_raw/', str(s.id))
+			folderName=os.path.join('zone/cache/zone/stories_raw/', str(s.id))
 			
 			url = baseUrl + str(s.id)
 
