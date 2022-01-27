@@ -170,4 +170,5 @@ class SearchForm(generic.ListView):
         # pagination
         context = super(SearchForm, self).get_context_data(*args, **kwargs)
         context = pagination(context)
+        context.update({'searchterm': self.request.GET['search']})
         return context
