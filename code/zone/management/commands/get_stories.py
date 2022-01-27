@@ -175,7 +175,7 @@ class Command(BaseCommand):
 			if not os.path.exists(folderName) or (os.path.exists(folderName) and options['forced_download']):
 				print(f"Downloading {s}")
 				try:
-					tempname,_ = request.urlretrieve(url, "temp.zip")
+					tempname,_ = request.urlretrieve(url, "zone/cache/zone/temp.zip")
 				except:
 					print(f"Failed to download {s}")
 					continue
