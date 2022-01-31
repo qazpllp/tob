@@ -160,13 +160,15 @@ class Command(BaseCommand):
 	def handle(self, *args, **options):
 		baseUrl = "https://overflowingbra.com/download.php?StoryID="
 
+		if options['story_id']:
+			stories = [Story.objects.get(id=options['story_id'])]
+			options['forced'] = True
+		else:
+			stories = Story.objects.all()
+
 		if options['forced']:
 			options['forced_download'] = options['forced_textify'] = options['forced_wordcount'] = True
 
-		if options['story_id']:
-			stories = [Story.objects.get(id=options['story_id'])]
-		else:
-			stories = Story.objects.all()
 
 		for s in stories:
 			folderName=os.path.join('zone/cache/zone/stories_raw/', str(s.id))
