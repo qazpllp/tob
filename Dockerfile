@@ -3,7 +3,7 @@ FROM python:3.10
 
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
-ENV DEBUG=0
+# ENV DEBUG=0
 
 # Install dependencies
 RUN apt-get update \

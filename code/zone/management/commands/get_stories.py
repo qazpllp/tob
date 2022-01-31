@@ -5,6 +5,7 @@ import datetime
 import shutil
 import glob
 import codecs
+from pathlib import Path
 
 from django.core.management import BaseCommand
 from django.templatetags.static import static
@@ -169,7 +170,8 @@ class Command(BaseCommand):
 
 		for s in stories:
 			folderName=os.path.join('zone/cache/zone/stories_raw/', str(s.id))
-			
+			Path(folderName).mkdir(parents=True, exist_ok=True)
+
 			url = baseUrl + str(s.id)
 
 			if not os.path.exists(folderName) or (os.path.exists(folderName) and options['forced_download']):
