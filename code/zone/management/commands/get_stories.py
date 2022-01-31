@@ -169,10 +169,10 @@ class Command(BaseCommand):
 		if options['forced']:
 			options['forced_download'] = options['forced_textify'] = options['forced_wordcount'] = True
 
-
+		raw_loc = 'zone/cache/zone/stories_raw/'
+		Path(raw_loc).mkdir(parents=True, exist_ok=True)
 		for s in stories:
-			folderName=os.path.join('zone/cache/zone/stories_raw/', str(s.id))
-			Path(folderName).mkdir(parents=True, exist_ok=True)
+			folderName=os.path.join(raw_loc, str(s.id))
 
 			url = baseUrl + str(s.id)
 
