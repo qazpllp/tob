@@ -52,7 +52,9 @@ Populate database with `python manage.py migrate`
 
 ### Local/Docker
 
-``` bas
+Copy/rename `docker-compose-example.yml` to `docker-compose.yml`. Edit the variabled accordingly (e.g. `URL`, `CSRF_URL` to LAN IP if accessible over LAN)
+
+``` bash
 docker-compose up
 ```
 
