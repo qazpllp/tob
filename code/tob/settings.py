@@ -125,7 +125,6 @@ logging.config.dictConfig({
     'disable_existing_loggers': False,
     'formatters': {
         'console': {
-            # 'format': '%(levelname)s [%(name)s:%(lineno)s] %(module)s %(process)d %(thread)d %(message)s',
             'format': '%(message)s',
         },
     },
@@ -136,10 +135,6 @@ logging.config.dictConfig({
         },
     },
     'loggers': {
-        # '': {
-        #     'level': LOGLEVEL,
-        #     'handlers': ['console',],
-        # },
         'gunicorn': {
             'level': LOGLEVEL,
             'handlers': ['console'],
