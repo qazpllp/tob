@@ -11,6 +11,7 @@ from django.core.management import BaseCommand
 from django.templatetags.static import static
 
 from bs4 import BeautifulSoup
+from markdownify import markdownify
 
 from zone.models import Story
 
@@ -215,20 +216,24 @@ class Command(BaseCommand):
 							except:
 								hadled = False
 
-				# htm
+				# htm(l)
 				if not handled:
+					files = []
 					for filename in glob.iglob(folderName + '/**/*.htm', recursive=True):
-						with codecs.open(filename, 'r', encoding='utf-8', errors='replace') as file: 
-							soup = BeautifulSoup(file, 'html5lib')
-							text = soup.get_text()
-							handled = True
-
-				# html
-				if not handled:
+						files.append(filename)
 					for filename in glob.iglob(folderName + '/**/*.html', recursive=True):
+						files.append(filename)
+					for filename in files:
 						with codecs.open(filename, 'r', encoding='utf-8', errors='replace') as file: 
-							soup = BeautifulSoup(file, 'html5lib')
-							text = soup.get_text()
+							try:
+								# markdown approach
+								text = markdownify(file, heading_style="ATX")
+							except:
+								# beautiful soup approach
+								soup = BeautifulSoup(file, 'html5lib')
+
+								# Grab the story text
+								text = soup.get_text()
 							handled = True
 				
 				if handled:

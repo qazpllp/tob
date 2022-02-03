@@ -25,16 +25,41 @@ class Command(BaseCommand):
 			help="Overwrite already stored data")
 
 	def handle(self, *args, **options):
+		if options['story_id']:
+			stories = [Story.objects.get(id=options['story_id'])]
+			options['forced'] = True
+		else:
+			stories = Story.objects.all()
 
-		for s in Story.objects.all():
-			if options['story_id'] and s.id != int(options['story_id']):
-				continue
-
+		for s in stories:
 			if s.text == '':
-				# no text to convert
+				print('no text to convert')
 				continue
+
 			story_dir = os.path.join('zone/static/zone/stories/', str(s.id))
 			Path(story_dir).mkdir(parents=True, exist_ok=True)
+
+			# markdown
+			md_name = os.path.join(story_dir,str(s.id)+".md")
+			if not os.path.exists(md_name) or (os.path.exists(md_name) and options['forced']):
+				print(f"Converting {s} to markdown")
+
+				with open(md_name, 'w') as f:
+					f.write(s.text)
+			
+			# html
+			html_name = os.path.join(story_dir,str(s.id)+".html")
+			if not os.path.exists(html_name) or (os.path.exists(html_name) and options['forced']):
+				print(f"Converting {s} to html")
+
+				html = markdown.markdown(s.text)
+				with open(html_name, 'w') as f:
+					# Write some styling in the head
+					with open('zone/static/zone/head.html', 'r') as head:
+						f.write(head.read())
+					f.write('<body>')
+					f.write(html)
+					f.write('</body>')
 
 			# pdf 
 			pdf_name = os.path.join(story_dir,str(s.id)+".pdf")
@@ -52,13 +77,6 @@ class Command(BaseCommand):
 				}
 
 				# format newlines for html
-				pdfkit.from_string(s.text.replace("\n", "<br><br>"), pdf_name, options=opts)
-			
-			# html
-			html_name = os.path.join(story_dir,str(s.id)+".html")
-			if not os.path.exists(html_name) or (os.path.exists(html_name) and options['forced']):
-				print(f"Converting {s} to html")
-
-				html = markdown.markdown(s.text)
-				with open(html_name, 'w') as f:
-					f.write(html)
+				with open(html_name, 'r') as f:
+					pdfkit.from_file(f, pdf_name, options=opts)
+				# pdfkit.from_string(s.text, pdf_name, options=opts)
