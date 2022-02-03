@@ -33,7 +33,7 @@ class Command(BaseCommand):
 
 		for s in stories:
 			if s.text == '':
-				print('no text to convert')
+				print(f'{s} has no text to convert')
 				continue
 
 			story_dir = os.path.join('zone/static/zone/stories/', str(s.id))
