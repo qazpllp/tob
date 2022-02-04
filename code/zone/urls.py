@@ -13,5 +13,5 @@ urlpatterns = [
     path('stories/', views.StoryFilterView.as_view(), name='stories'),
     path('upload/', views.UploadView.as_view(), name='upload'),
     path('search/', views.SearchForm.as_view(), name='search'),
-    path('latest/stories', feed.LatestStoriesFeed()),
+    path('stories/feed', feed.LatestStoriesFeed(), name='story-feed'),
 ]
