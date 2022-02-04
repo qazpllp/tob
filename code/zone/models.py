@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 class Tag(models.Model):
     slug = models.CharField(max_length=10, unique=True)
@@ -31,3 +32,6 @@ class Story(models.Model):
 
     def __str__(self):
         return self.title
+    
+    def get_absolute_url(self):
+        return reverse('story-detail', kwargs={'pk': self.pk})

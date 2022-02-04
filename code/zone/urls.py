@@ -1,11 +1,11 @@
 from django.urls import path
 
-from . import views
+from . import views, feed
 
 urlpatterns = [
     path('', views.IndexView.as_view(), name='index'),
     # path('stories/', views.StoriesView.as_view(), name='stories'),
-    path('stories/<int:pk>/', views.DetailView.as_view(), name='detail'),
+    path('stories/<int:pk>/', views.DetailView.as_view(), name='story-detail'),
     path('author/<int:pk>/', views.DetailAuthorView.as_view(), name='author'),
     path('tags/', views.TagListView.as_view(), name='tags'),
     path('tags/<int:pk>/', views.TagDetailView.as_view(), name='tag'),
@@ -13,4 +13,5 @@ urlpatterns = [
     path('stories/', views.StoryFilterView.as_view(), name='stories'),
     path('upload/', views.UploadView.as_view(), name='upload'),
     path('search/', views.SearchForm.as_view(), name='search'),
+    path('latest/stories', feed.LatestStoriesFeed()),
 ]
