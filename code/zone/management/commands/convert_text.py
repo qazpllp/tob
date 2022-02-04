@@ -55,11 +55,16 @@ class Command(BaseCommand):
 				html = markdown.markdown(s.text)
 				with open(html_name, 'w') as f:
 					# Write some styling in the head
-					with open('zone/static/zone/head.html', 'r') as head:
-						f.write(head.read())
-					f.write('<body>')
+					f.write('<!DOCTYPE html>\n<html lang="en">\n')
+					f.write('<head>\n')
+					f.write('\t<meta charset="utf-8">\n')
+					f.write(f'\t<title>{s.title}</title>\n')
+					with open('zone/static/zone/headstyle.html', 'r') as headstyle:
+						f.write(headstyle.read())
+					f.write('\n</head>\n')
+					f.write('<body>\n')
 					f.write(html)
-					f.write('</body>')
+					f.write('\n</body>\n</html>')
 
 			# pdf 
 			pdf_name = os.path.join(story_dir,str(s.id)+".pdf")
@@ -73,7 +78,7 @@ class Command(BaseCommand):
 					'margin-bottom': '0.75in',
 					'margin-left': '0.75in',
 					'encoding': "UTF-8",
-					'no-outline': None
+					'enable-local-file-access': None,
 				}
 
 				# format newlines for html
