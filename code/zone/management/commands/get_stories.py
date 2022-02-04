@@ -123,9 +123,9 @@ class Command(BaseCommand):
 		with codecs.open(filename, 'r', encoding='utf-8', errors='replace') as file: 
 			soup = BeautifulSoup(file, 'html5lib')
 		try:
-			contents = '\n'.join([str(e) for e in soup.body.contents[:5]])
+			contents = '\n'.join([str(e) for e in soup.body.contents])
 		except:
-			contents = str(soup.contents)
+			contents = '\n'.join([str(e) for e in soup.contents])
 		text = markdownify(contents, heading_style="ATX")
 		handled = True
 		return (text, handled)

@@ -25,14 +25,15 @@ class Command(BaseCommand):
         # stories = []
 
         # Find available stories by searching by year
-        for year in range(1998, datetime.datetime.now().year):
+        for year in range(1998, datetime.datetime.now().year + 1):
             
             # store pages for later use
             html_path = 'zone/cache/zone/original/'
             Path(html_path).mkdir(parents=True, exist_ok=True)
             filename = os.path.join(html_path, str(year) + ".html")
 
-            if not os.path.exists(filename):
+            # Try to use cache if html file found in cache, and not current year
+            if not os.path.exists(filename) or year == datetime.datetime.now().year:
                 url = urlYearBase + str(year)
                 try:
                     obj = request.urlopen(url)

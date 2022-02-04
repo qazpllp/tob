@@ -83,5 +83,8 @@ class Command(BaseCommand):
 
 				# format newlines for html
 				with open(html_name, 'r') as f:
-					pdfkit.from_file(f, pdf_name, options=opts)
+					try:
+						pdfkit.from_file(f, pdf_name, options=opts)
+					except:
+						pass
 				# pdfkit.from_string(s.text, pdf_name, options=opts)
