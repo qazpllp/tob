@@ -13,7 +13,7 @@ class Author(models.Model):
     id = models.IntegerField(primary_key=True)
 
     def __str__(self):
-        return self.name
+        return f'{self.id}: {self.name}'
 
 class Story(models.Model):
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
