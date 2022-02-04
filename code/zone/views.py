@@ -157,7 +157,7 @@ class SearchForm(generic.ListView):
         except:
             searching = ''
 
-        vector = SearchVector('text', 'title', 'author__name', 'summary')
+        vector = SearchVector('text', weight='C') + SearchVector('title', weight='A') + SearchVector('author__name', weight='A') + SearchVector('summary', weight='B')
         query = SearchQuery(searching)
         s = Story.objects.annotate(rank=SearchRank(vector,query)).order_by('-rank')
 
