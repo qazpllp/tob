@@ -13,7 +13,7 @@ run migrate again
 Todo:
 - weigh search vector?
 - Serve static files for deployment (https://docs.djangoproject.com/en/3.2/howto/static-files/#serving-files-uploaded-by-a-user-during-development)
-- Rss feed?
+- ratings
 
 Set SECRET_KEY to strong code, URL to url of site if being hosted for external use. An example is https://*.myapp.com where * is a literal asteriks, and adjust http(s) accordingly
 
@@ -31,24 +31,15 @@ In addition, under normal operations dynos will restart every day in a process k
 These two facts mean that the filesystem on Heroku is not suitable for persistent storage of data. In cases where you need to store data we recommend using a database addon such as Postgres (for data) or a dedicated file storage service such as AWS S3 (for static files). If you don't want to set up an account with AWS to create an S3 bucket we also have addons here that handle storage and processing of static assets https://elements.heroku.com/addons
 
 
-# Docker buildkit
-Uses buildkit to have branching builds depending on the target storage rules. If it has ephemiral storage (e.g. Heroku), then it fetches a pre-configured set of stories.
-If storage is more permanent then can use the manage.py commands to download and tranform the stories
-Set environment variable DOCKER_BUILDKIT=1 
-
-e.g.
-```
-$ DOCKER_BUILDKIT=1 docker build .
-```
-
-Needs docker >= 18.09
-
 ## Deployment
 
 Two options are configured within this repo. They are by using docker, or Heroku.
 They build the docker image, use a PostgreSQL database.
 
 Populate database with `python manage.py migrate`
+
+Visit admin.sites `/admin/sites/site` and change the domain name to the hosted version. This is for sitemap functionality.  
+
 
 ### Local/Docker
 
@@ -65,3 +56,18 @@ git push heroku stories:master
 This pushes the stories branch to heroku for building, which must take a master/main branch name. The use of the stories branch is that it contains all the stories in pdf,html form already. This prevents the requirement of using an extra paid extention for storing static files (e.g. AWS S3). It is useful so the deployment is entirely free, but prevents the future possibility of dynamic file uploads and user-specified file changes.
 
 Add environment variables `URL` and `CSRF_URL`
+
+## About
+
+Uses postgresql in particular due to its "Full text search" capabilities. This provides a powerful search feature built right into the database without using external services.
+
+## To populate the database
+
+Run the following commands in order
+
+ - `python manage.py find_stories` to search TOB for stories. Populates titles, authors, e.t.c.
+ - `python manage.py get_stories` to download stories from TOB. Populates word count, text, and a cache file of the story
+ - `python manage.py import_tags` to map tag slugs to a human-understandable phrase
+ - `python manage.py convert_text` to convert stored story text into a more consistent format outputted as pdf, html.
+
+
