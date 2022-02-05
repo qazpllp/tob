@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'django.contrib.sitemaps',
     'bootstrap4',
     'django_filters',
     'widget_tweaks',
@@ -81,6 +83,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'tob.wsgi.application' 
 
+SITE_ID = 1
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
