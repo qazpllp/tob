@@ -142,33 +142,3 @@ class StoryFilterView(FilterView):
 
 class UploadView(generic.TemplateView):
     template_name = 'zone/upload.html'
-
-class SearchForm(generic.ListView):
-    template_name = "zone/story_search.html"
-    model = Story
-    paginate_by = paginate_stories
-
-    def get_queryset(self):
-        """
-        Perform a full-text search (postgres) on the text and return rank-ordered
-        """
-        try:
-            searching = self.request.GET['search']
-        except:
-            searching = ''
-
-        vector = SearchVector('text', weight='C') + SearchVector('title', weight='A') + SearchVector('author__name', weight='A') + SearchVector('summary', weight='B')
-        query = SearchQuery(searching)
-        s = Story.objects.annotate(rank=SearchRank(vector,query)).order_by('-rank')
-
-        return s
-    
-    def get_context_data(self, *args, **kwargs):
-        """
-        Limit pagination pages when appropriate
-        """
-        # pagination
-        context = super(SearchForm, self).get_context_data(*args, **kwargs)
-        context = pagination(context)
-        context.update({'searchterm': self.request.GET['search']})
-        return context

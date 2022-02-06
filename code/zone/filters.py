@@ -44,6 +44,3 @@ class StoryFilter(FilterSet):
             'downloads': ['lte','gte','exact'],
             'author__name': ['icontains'],
         }
-
-class FullSearch(forms.Form):
-    search_text = forms.CharField(label='Text search', max_length=100)
