@@ -103,7 +103,7 @@ class AboutView(generic.ListView):
     template_name = 'zone/about.html'
     model = Story
 
-def pagination(context, pages_either_side=5):
+def pagination(context, pages_either_side=3):
     """
     Limit the number of pages shown.
     Show this page, and +-pages_either_side total, at most
