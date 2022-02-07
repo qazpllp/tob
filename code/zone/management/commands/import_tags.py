@@ -1,4 +1,5 @@
 import csv
+from unicodedata import category
 from django.core.management import BaseCommand
 from zone.models import Tag
 
@@ -9,14 +10,9 @@ class Command(BaseCommand):
         with open('zone/static/zone/tags_mapping.txt') as f:
                 reader = csv.reader(f)
                 for row in reader:
-                    if row[1]:
-                        tag, created_t = Tag.objects.update_or_create(
-                            slug = row[0],
-                            defaults = {'description': row[1]}
-                        )
-                    else:
-                        tag, created_t = Tag.objects.update_or_create(
-                            slug = row[0],
-                            defaults = {'description': row[0]}
-                        )
-
+                    tag, created_t = Tag.objects.update_or_create(
+                        slug = row[0],
+                        description = row[1],
+                        # category = row[2]
+                        defaults = {'category': row[2]}
+                    )

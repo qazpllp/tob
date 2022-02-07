@@ -4,6 +4,7 @@ from django.urls import reverse
 class Tag(models.Model):
     slug = models.CharField(max_length=10, unique=True)
     description = models.CharField(max_length=100)
+    category = models.CharField(max_length=30)
 
     def __str__(self):
         return self.description
