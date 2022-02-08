@@ -9,6 +9,8 @@ ENV PYTHONUNBUFFERED=1
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         wkhtmltopdf \
+        pandoc \
+        texlive \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /code

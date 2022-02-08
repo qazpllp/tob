@@ -6,13 +6,22 @@ import shutil
 import glob
 import codecs
 from pathlib import Path
+from io import StringIO
 
 from django.core.management import BaseCommand
 from django.templatetags.static import static
 
 from bs4 import BeautifulSoup
 from markdownify import markdownify
-
+from docx import Document
+import pypandoc
+from pdfminer.converter import TextConverter
+from pdfminer.layout import LAParams
+from pdfminer.pdfdocument import PDFDocument
+from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
+from pdfminer.pdfpage import PDFPage
+from pdfminer.pdfparser import PDFParser
+import pdfminer
 from zone.models import Story
 
 
@@ -68,47 +77,124 @@ class Command(BaseCommand):
 				# clear up tempfile after use
 				os.remove(tempname)
 			else:
-				print(f"Story {s.id} already exists on disk")
+				print(f"Story {s} already exists on disk")
 
 
 			if s.text == "" or (not s.text == "" and options['forced_textify']):
-				print(f"Textifying {s.id}")
+				print(f"Textifying {s}")
 				handled = False
-				# text
-				for filename in glob.iglob(folderName + '/**/*.txt', recursive=True):
-					with open(filename, 'r', errors='replace') as file:
-						text = file.read()
-						handled = True
 
-				# rtf
-				if not handled:
-					for filename in glob.iglob(folderName + '/**/*.rtf', recursive=True):
-						with open(filename, 'r', errors='replace') as file:
-							text = file.read()
+				exts = ['html', 'htm', 'doc', 'docx', 'odt', 'pdf', 'rtf', 'txt']
+
+				# loop through file extentions in decreasing priority of conversion
+				for ext in exts:
+					filenames = []
+					for filename in glob.iglob(folderName + '/**/*.' + ext, recursive=True):
+						filenames.append(filename)
+					
+					if not filenames or handled:
+						continue
+
+					# text could come from multiple files, if multiple files have the same extention
+					text = []
+
+					# filenames = next(os.walk(folderName), (None, None, []))[2]
+					# filenames = []
+					# for ext in exts:
+					# 	for filename in glob.iglob(folderName + '/**/*.' + ext, recursive=True):
+					# 		filenames.append(filename)
+
+						# for f in filenames:
+					
+					for filename in filenames:
+
+						# htm, rename to html
+						ext_htm = ['htm']
+						if ext in ext_htm:
+							htmlified = filename + 'l'
+							shutil.copyfile(filename, htmlified)
+							filename = htmlified
+
+						# pandoc
+						exts_pandoc = ['htm', 'html', 'doc', 'docx', 'odt']
+						if ext in exts_pandoc:
+							extra_args=['--atx-headers']
 							try:
-								text= self.striprtf(text)
+								t = pypandoc.convert_file(filename, 'md', 
+									extra_args=extra_args)
+								text.append(t)
 								handled = True
+								break
 							except:
-								hadled = False
+								pass
 
-				# htm(l)
-				if not handled:
-					# gather potential files for the same processing
-					files = []
-					for filename in glob.iglob(folderName + '/**/*.htm', recursive=True):
-						files.append(filename)
-					for filename in glob.iglob(folderName + '/**/*.html', recursive=True):
-						files.append(filename)
-					for filename in files:
-						text, handled = self.html2md(filename)
-						break
+						# pdf
+						# if not handled:
+							# for filename in glob.iglob(folderName + '/**/*.pdf', recursive=True):
+						ext_pdf = ['pdf']
+						if ext in ext_pdf:
+							output_string = StringIO()
+							with open(filename, 'rb') as in_file:
+								parser = pdfminer.pdfparser.PDFParser(in_file)
+								doc = pdfminer.pdfdocument.PDFDocument(parser)
+								rsrcmgr = pdfminer.pdfinterp.PDFResourceManager()
+								device = pdfminer.converter.TextConverter(rsrcmgr, output_string, laparams=pdfminer.layout.LAParams())
+								interpreter = pdfminer.pdfinterp.PDFPageInterpreter(rsrcmgr, device)
+								for page in PDFPage.create_pages(doc):
+									interpreter.process_page(page)
+							t = output_string.getvalue()
+							text.append(t)
+							handled = True
+						
+						# rtf
+						ext_rtf = ['rtf']
+						if ext in ext_rtf:
+						# if not handled:
+							# for filename in glob.iglob(folderName + '/**/*.rtf', recursive=True):
+							with open(filename, 'r', errors='replace') as file:
+								t = file.read()
+								try:
+									t = self.striprtf(t)
+									text.append(t)
+									handled = True
+								except:
+									hadled = False
+
+						# text
+						ext_txt = ['txt']
+						if ext in ext_txt:
+						# for filename in glob.iglob(folderName + '/**/*.txt', recursive=True):
+							with open(filename, 'r', errors='replace') as file:
+								t = file.read()
+								text.append(t)
+								handled = True
+				# # htm(l)
+				# if not handled:
+				# 	# gather potential files for the same processing
+				# 	files = []
+				# 	exts = ['htm', 'html']
+				# 	for ext in exts:
+				# 		for filename in glob.iglob(folderName + '/**/*.' + ext, recursive=True):
+				# 			files.append(filename)
+				# 	for filename in files:
+				# 		text, handled = self.html2md(filename)
+				# 		break
+				
+				# # doc(x)
+				# 	files = []
+				# 	exts = ['doc', 'docx']
+				# 	for ext in exts:
+				# 		for filename in glob.iglob(folderName + '/**/*.' + ext, recursive=True):
+				# 			files.append(filename)
+				# 	for filename in files:
+				# 		file = Document(filename)
 				
 				if handled:
-					# clean text
-					for key, val in replace_dict.items():
-						text = text.replace(key, val)
+					# # clean text
+					# for key, val in replace_dict.items():
+					# 	text = text.replace(key, val)
 
-					s.text = text
+					s.text = '\n'.join(text)
 					s.save()
 				else:
 					print(f"Not handled text of {s.id}")
