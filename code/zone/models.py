@@ -32,7 +32,7 @@ class Story(models.Model):
         ordering = ['-pub_date']
 
     def __str__(self):
-        return self.title
+        return f"{self.id}: {self.title}"
     
     def get_absolute_url(self):
         return reverse('story-detail', kwargs={'pk': self.pk})
