@@ -96,27 +96,18 @@ class Command(BaseCommand):
 						continue
 
 					# text could come from multiple files, if multiple files have the same extention
-					text = []
-
-					# filenames = next(os.walk(folderName), (None, None, []))[2]
-					# filenames = []
-					# for ext in exts:
-					# 	for filename in glob.iglob(folderName + '/**/*.' + ext, recursive=True):
-					# 		filenames.append(filename)
-
-						# for f in filenames:
-					
+					text = []					
 					for filename in filenames:
 
-						# htm, rename to html
-						ext_htm = ['htm']
-						if ext in ext_htm:
-							htmlified = filename + 'l'
-							shutil.copyfile(filename, htmlified)
-							filename = htmlified
+						# html
+						ext_html = ['html', 'htm']
+						if ext in ext_html:
+							t, handled = self.html2md(filename)
+							text.append(t)
+
 
 						# pandoc
-						exts_pandoc = ['htm', 'html', 'doc', 'docx', 'odt']
+						exts_pandoc = ['doc', 'docx', 'odt']
 						if ext in exts_pandoc:
 							extra_args=['--atx-headers']
 							try:
@@ -129,8 +120,6 @@ class Command(BaseCommand):
 								pass
 
 						# pdf
-						# if not handled:
-							# for filename in glob.iglob(folderName + '/**/*.pdf', recursive=True):
 						ext_pdf = ['pdf']
 						if ext in ext_pdf:
 							output_string = StringIO()
@@ -149,8 +138,6 @@ class Command(BaseCommand):
 						# rtf
 						ext_rtf = ['rtf']
 						if ext in ext_rtf:
-						# if not handled:
-							# for filename in glob.iglob(folderName + '/**/*.rtf', recursive=True):
 							with open(filename, 'r', errors='replace') as file:
 								t = file.read()
 								try:
@@ -163,38 +150,20 @@ class Command(BaseCommand):
 						# text
 						ext_txt = ['txt']
 						if ext in ext_txt:
-						# for filename in glob.iglob(folderName + '/**/*.txt', recursive=True):
 							with open(filename, 'r', errors='replace') as file:
 								t = file.read()
 								text.append(t)
 								handled = True
-				# # htm(l)
-				# if not handled:
-				# 	# gather potential files for the same processing
-				# 	files = []
-				# 	exts = ['htm', 'html']
-				# 	for ext in exts:
-				# 		for filename in glob.iglob(folderName + '/**/*.' + ext, recursive=True):
-				# 			files.append(filename)
-				# 	for filename in files:
-				# 		text, handled = self.html2md(filename)
-				# 		break
-				
-				# # doc(x)
-				# 	files = []
-				# 	exts = ['doc', 'docx']
-				# 	for ext in exts:
-				# 		for filename in glob.iglob(folderName + '/**/*.' + ext, recursive=True):
-				# 			files.append(filename)
-				# 	for filename in files:
-				# 		file = Document(filename)
 				
 				if handled:
-					# # clean text
-					# for key, val in replace_dict.items():
-					# 	text = text.replace(key, val)
+					# combine the potential multiple documents
+					text = '\n'.join(text)
 
-					s.text = '\n'.join(text)
+					# # clean text
+					for key, val in replace_dict.items():
+						text = text.replace(key, val)
+
+					s.text = text
 					s.save()
 				else:
 					print(f"Not handled text of {s.id}")
