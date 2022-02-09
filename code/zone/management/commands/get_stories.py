@@ -45,22 +45,24 @@ class Command(BaseCommand):
 	def handle(self, *args, **options):
 		baseUrl = "https://overflowingbra.com/download.php?StoryID="
 
+		# handle arguments
 		if options['story_id']:
 			stories = [Story.objects.get(id=options['story_id'])]
 			options['forced'] = True
 		else:
 			stories = Story.objects.all()
-
 		if options['forced']:
 			options['forced_download'] = options['forced_textify'] = options['forced_wordcount'] = True
 
+		# iterate over stories
 		raw_loc = 'zone/cache/zone/stories_raw/'
 		Path(raw_loc).mkdir(parents=True, exist_ok=True)
 		for s in stories:
+			# file of interest
 			folderName=os.path.join(raw_loc, str(s.id))
-
 			url = baseUrl + str(s.id)
 
+			# Download story as necessary
 			if not os.path.exists(folderName) or (os.path.exists(folderName) and options['forced_download']):
 				print(f"Downloading {s}")
 				try:
@@ -79,19 +81,20 @@ class Command(BaseCommand):
 			else:
 				print(f"Story {s} already exists on disk")
 
-
+			# Textify story as necessary (convert into markdown)
 			if s.text == "" or (not s.text == "" and options['forced_textify']):
 				print(f"Textifying {s}")
 				handled = False
 
+				# extentions that can and will be converted. Order first as highest priority. Try to order in ease of conversion to markdown, and that has relevant styling (headings, e.t.c.)
 				exts = ['html', 'htm', 'doc', 'docx', 'odt', 'pdf', 'rtf', 'txt']
 
 				# loop through file extentions in decreasing priority of conversion
 				for ext in exts:
+					# Find all files of this extention for this story
 					filenames = []
 					for filename in glob.iglob(folderName + '/**/*.' + ext, recursive=True):
 						filenames.append(filename)
-					
 					if not filenames or handled:
 						continue
 
@@ -115,7 +118,6 @@ class Command(BaseCommand):
 									extra_args=extra_args)
 								text.append(t)
 								handled = True
-								break
 							except:
 								pass
 
@@ -159,10 +161,12 @@ class Command(BaseCommand):
 					# combine the potential multiple documents
 					text = '\n'.join(text)
 
-					# # clean text
+					# clean text
 					for key, val in replace_dict.items():
 						text = text.replace(key, val)
 
+
+					# Save to model
 					s.text = text
 					s.save()
 				else:
@@ -170,11 +174,15 @@ class Command(BaseCommand):
 			else:
 				print(f"Story {s.id} has text already available")
 
+			# Calculate word count
 			if s.words == 0 or (not s.words == 0 and options['forced_wordcount']):
 				s.words = len(s.text.split())
 				s.save()
 
 	def html2md(self, filename):
+		"""
+		Take a htm(l) filename and convert it to markdown text
+		"""
 		with codecs.open(filename, 'r', encoding='utf-8', errors='replace') as file: 
 			soup = BeautifulSoup(file, 'html5lib')
 		try:
