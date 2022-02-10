@@ -165,19 +165,28 @@ class Command(BaseCommand):
 					for key, val in replace_dict.items():
 						text = text.replace(key, val)
 
+					# Save to file
+					to_markdown(s, text)
 
-					# Save to model
-					s.text = text
-					s.save()
+					# Calculate word count
+					if s.words == 0 or (not s.words == 0 and options['forced_wordcount']):	
+						s.words = len(text.split())
+						s.save()
+
 				else:
 					print(f"Not handled text of {s.id}")
 			else:
 				print(f"Story {s.id} has text already available")
 
-			# Calculate word count
-			if s.words == 0 or (not s.words == 0 and options['forced_wordcount']):
-				s.words = len(s.text.split())
-				s.save()
+	def to_markdown(self, story, text):
+		story_dir = os.path.join('zone/static/zone/stories/', str(s.id))
+		Path(story_dir).mkdir(parents=True, exist_ok=True)
+		md_name = os.path.join(story_dir,str(story.id)+".md")
+		if not os.path.exists(md_name) or (os.path.exists(md_name) and options['forced']):
+			print(f"Converting {s} to markdown")
+
+			with open(md_name, 'w') as f:
+				f.write(text)
 
 	def html2md(self, filename):
 		"""
