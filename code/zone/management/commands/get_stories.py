@@ -184,7 +184,7 @@ class Command(BaseCommand):
 		Path(story_dir).mkdir(parents=True, exist_ok=True)
 		md_name = os.path.join(story_dir,str(story.id)+".md")
 		if not os.path.exists(md_name) or (os.path.exists(md_name) and options['forced']):
-			print(f"Converting {s} to markdown")
+			print(f"Converting {story} to markdown")
 
 			with open(md_name, 'w') as f:
 				f.write(text)
