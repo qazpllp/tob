@@ -166,7 +166,7 @@ class Command(BaseCommand):
 						text = text.replace(key, val)
 
 					# Save to file
-					to_markdown(s, text)
+					self.to_markdown(s, text)
 
 					# Calculate word count
 					if s.words == 0 or (not s.words == 0 and options['forced_wordcount']):	
