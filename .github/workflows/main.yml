@@ -1,0 +1,74 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push events but only for the master branch
+  push:
+    branches: [ master ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "add_stories"
+  add_stories:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      # Download stories that have been zipped and saved in a publically accesible gdrive location
+      - name: Download stories zip
+        run: |
+          fileid="1mOU-1a17DvORtdL2bOFXtxdmPbeJ8oU2"
+          filename="stories.zip"
+          curl -c ./cookie -s -L "https://drive.google.com/uc?export=download&id=${fileid}"
+          curl -Lb ./cookie "https://drive.google.com/uc?export=download&confirm=`awk '/download/ {print $NF}' ./cookie`&id=${fileid}" -o ${filename}
+        
+      # unzip and move the stories to the expected location
+      - name: Unzip stories
+        uses: TonyBogdanov/zip@1.0
+        with:
+            args: unzip -qq ./stories.zip -d ./code/zone/static/zone
+                    
+      - name: remove zip archive
+        run: rm ./stories.zip
+        
+      - name: allow stories through gitignore
+        run: sed -i '/stories/d' .gitignore
+            
+      - name: Commit to stories branch
+        uses: EndBug/add-and-commit@v8 # You can change this to use a specific version.
+        with:
+          # The name of the user that will be displayed as the author of the commit.
+          # Default: depends on the default_author input
+          author_name: qazpllp
+
+          # The email of the user that will be displayed as the author of the commit.
+          # Default: depends on the default_author input
+          author_email: qazpllp4665@hotmail.com
+
+          # The message for the commit.
+          # Default: 'Commit from GitHub Actions (name of the workflow)'
+          message: 'Add stories'
+
+          # If this input is set, the action will push the commit to a new branch with this name.
+          # Default: ''
+          new_branch: stories
+
+          # The way the action should handle pathspec errors from the add and remove commands. Three options are available:
+          # - ignore -> errors will be logged but the step won't fail
+          # - exitImmediately -> the action will stop right away, and the step will fail
+          # - exitAtEnd -> the action will go on, every pathspec error will be logged at the end, the step will fail.
+          # Default: ignore
+          pathspec_error_handling: exitAtEnd
+
+          # Whether to push the commit and, if any, its tags to the repo. It can also be used to set the git push arguments (see the paragraph below for more info)
+          # Default: true
+          push: origin stories --set-upstream --force
