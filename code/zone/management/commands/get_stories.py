@@ -82,7 +82,8 @@ class Command(BaseCommand):
 				print(f"Story {s} already exists on disk")
 
 			# Textify story as necessary (convert into markdown)
-			if s.text == "" or (not s.text == "" and options['forced_textify']):
+			# if s.text == "" or (not s.text == "" and options['forced_textify']):
+			if True:
 				print(f"Textifying {s}")
 				handled = False
 
@@ -166,7 +167,7 @@ class Command(BaseCommand):
 						text = text.replace(key, val)
 
 					# Save to file
-					self.to_markdown(s, text)
+					self.to_markdown(s, text, options)
 
 					# Calculate word count
 					if s.words == 0 or (not s.words == 0 and options['forced_wordcount']):	
@@ -178,8 +179,8 @@ class Command(BaseCommand):
 			else:
 				print(f"Story {s.id} has text already available")
 
-	def to_markdown(self, story, text):
-		story_dir = os.path.join('zone/static/zone/stories/', str(s.id))
+	def to_markdown(self, story, text, options):
+		story_dir = os.path.join('zone/static/zone/stories/', str(story.id))
 		Path(story_dir).mkdir(parents=True, exist_ok=True)
 		md_name = os.path.join(story_dir,str(story.id)+".md")
 		if not os.path.exists(md_name) or (os.path.exists(md_name) and options['forced']):
