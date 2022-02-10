@@ -19,11 +19,11 @@ class StoryFilter(FilterSet):
     # Have only the years within the database selectable
     # Unique years of published stories
     year_choices = ()
-    for c in Story.objects.dates('pub_date', 'year').reverse():
-        year_choices = year_choices + ((c.year, str(c.year)),)
-    pub_date__year = django_filters.ChoiceFilter(
-        choices = year_choices
-    )
+    # for c in Story.objects.dates('pub_date', 'year').reverse():
+    #     year_choices = year_choices + ((c.year, str(c.year)),)
+    # pub_date__year = django_filters.ChoiceFilter(
+    #     choices = year_choices
+    # )
 
     # Possibilities to order the results
     o = OrderingFilter(
