@@ -1,10 +1,9 @@
 import csv
-from unicodedata import category
 from django.core.management import BaseCommand
 from zone.models import Tag
 
 class Command(BaseCommand):
-    help = 'import a csv of the generated site tag information'
+    help = 'import a csv of the generated site tag information, and saves tags to model'
 
     def handle(self, *args, **options):
         with open('zone/static/zone/tags_mapping.txt') as f:
