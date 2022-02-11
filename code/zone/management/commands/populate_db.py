@@ -38,8 +38,8 @@ class Command(BaseCommand):
 
 
 	def handle(self, *args, **options):
-		# self.find_stories(*args, **options)
-		# self.import_tags(*args, **options)
+		self.find_stories(*args, **options)
+		self.import_tags(*args, **options)
 
 		# handle arguments
 		if options['story_id']:
