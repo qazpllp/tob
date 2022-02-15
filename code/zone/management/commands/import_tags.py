@@ -12,6 +12,5 @@ class Command(BaseCommand):
                     tag, created_t = Tag.objects.update_or_create(
                         slug = row[0],
                         description = row[1],
-                        # category = row[2]
-                        defaults = {'category': row[2]}
+                        # defaults = {'category': row[2]}
                     )
