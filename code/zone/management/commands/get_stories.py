@@ -145,6 +145,7 @@ class Command(BaseCommand):
 								t = file.read()
 								try:
 									t = self.striprtf(t)
+									t = self.txt2markdown(t)
 									text.append(t)
 									handled = True
 								except:
@@ -155,6 +156,7 @@ class Command(BaseCommand):
 						if ext in ext_txt:
 							with open(filename, 'r', errors='replace') as file:
 								t = file.read()
+								t = self.txt2markdown(t)
 								text.append(t)
 								handled = True
 				
@@ -209,6 +211,9 @@ class Command(BaseCommand):
 		Source:
 			http://stackoverflow.com/a/188877
 		Code created by Markus Jarderot: http://mizardx.blogspot.com
+		"""
+		"""
+		Current issues: missing text alignment location (i.e. center text)
 		"""
 		pattern = re.compile(r"\\([a-z]{1,32})(-?\d{1,10})?[ ]?|\\'([0-9a-f]{2})|\\([^a-z])|([{}])|[\r\n]+|(.)", re.I)
 		# control words which specify a "destionation".
@@ -328,3 +333,19 @@ class Command(BaseCommand):
 					out.append(tchar)
 		return ''.join(out)
 
+	def txt2markdown(self, text):
+		"""
+		Converts (plain) text to markdown.
+		"""
+		# Convert single newlines to double - so they are visible in MD
+		text = "\n\n".join(text.split("\n"))
+
+		# Escape MD characters
+		replace = {
+			"<": "&lt;",
+			">": "&gt;",
+		}
+		for r,replacement in replace.items():
+			text = text.replace(r, replacement)
+
+		return text

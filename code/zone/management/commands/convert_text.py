@@ -32,7 +32,15 @@ class Command(BaseCommand):
 			stories = Story.objects.all()
 
 		for s in stories:
-			if s.text == '':
+			story_dir = os.path.join('zone/static/zone/stories/', str(s.id))
+			md_name = os.path.join(story_dir,str(s.id)+".md")
+			try:
+				with open(md_name, 'r') as f:
+					text = f.read()
+			except:
+				text = ''
+
+			if text == '':
 				print(f'{s} has no text to convert')
 				continue
 
@@ -40,19 +48,19 @@ class Command(BaseCommand):
 			Path(story_dir).mkdir(parents=True, exist_ok=True)
 
 			# markdown
-			md_name = os.path.join(story_dir,str(s.id)+".md")
-			if not os.path.exists(md_name) or (os.path.exists(md_name) and options['forced']):
-				print(f"Converting {s} to markdown")
+			# md_name = os.path.join(story_dir,str(s.id)+".md")
+			# if not os.path.exists(md_name) or (os.path.exists(md_name) and options['forced']):
+			# 	print(f"Converting {s} to markdown")
 
-				with open(md_name, 'w') as f:
-					f.write(s.text)
+			# 	with open(md_name, 'w') as f:
+			# 		f.write(s.text)
 			
 			# html
 			html_name = os.path.join(story_dir,str(s.id)+".html")
 			if not os.path.exists(html_name) or (os.path.exists(html_name) and options['forced']):
 				print(f"Converting {s} to html")
 
-				html = markdown.markdown(s.text)
+				html = markdown.markdown(text)
 				with open(html_name, 'w') as f:
 					# Write some styling in the head
 					f.write('<!DOCTYPE html>\n<html lang="en">\n')
@@ -79,6 +87,7 @@ class Command(BaseCommand):
 					'margin-left': '0.75in',
 					'encoding': "UTF-8",
 					'enable-local-file-access': None,
+					'title': f"{s.title}.pdf",
 				}
 
 				# format newlines for html

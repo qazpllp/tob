@@ -105,7 +105,7 @@ class Command(BaseCommand):
                     author = author,
                     # The following values may change when accessing the same story at different times
                     defaults = {
-                        'words': 0,
+                        # 'words': 0,
                         'downloads': downloads,
                     }
                 )
