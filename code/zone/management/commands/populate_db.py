@@ -29,6 +29,7 @@ class Command(BaseCommand):
 	help = 'import a csv of the generated site tag information'
 
 	def add_arguments(self, parser):
+		parser.add_argument('--skip_find', action="store_true", help="Don't query the original site for new stories and story information.")
 		parser.add_argument('--forced', action="store_true", help="Overwrite already stored data. Equivalent to all the other optional arguments together")
 		parser.add_argument('--forced_download', action="store_true", help="Re-download stories")
 		parser.add_argument('--forced_textify', action="store_true", help="Overwrite text data")
@@ -38,13 +39,14 @@ class Command(BaseCommand):
 
 
 	def handle(self, *args, **options):
-		self.find_stories(*args, **options)
+		if not options['skip_find']:
+			self.find_stories(*args, **options)
 		self.import_tags(*args, **options)
 
 		# handle arguments
 		if options['story_id']:
 			stories = [Story.objects.get(id=options['story_id'])]
-			options['forced'] = True
+			options['forced_textify'] = options['forced_wordcount'] = True
 		else:
 			stories = Story.objects.all()
 		if options['forced']:
@@ -166,6 +168,7 @@ class Command(BaseCommand):
 		"""
 		import a csv of the generated site tag information, and saves tags to model
 		"""
+		print("Importing tags")
 		with open('zone/static/zone/tags_mapping.txt') as f:
 			reader = csv.reader(f)
 			for row in reader:
