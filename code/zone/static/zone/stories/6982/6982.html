@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Huperion 2</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>Huperion 2</p>
+<p>Huperions, Volume 2</p>
+<p>BrandedToe</p>
+<p>Published by BrandedToe, 2020.</p>
+<p>This is a work of fiction. Similarities to real people, places, or events are
+entirely coincidental.</p>
+<p>HUPERION 2</p>
+<p>First edition. June 19, 2020.</p>
+<p>Copyright © 2020 BrandedToe.</p>
+<p>Written by BrandedToe.</p>
+<p>Check out my new transformation cat-girl romance short story!</p>
+<p>https://books2read.com/b/bWdBlY</p>
+<p>Follow me on twitter https://twitter.com/brandedtoe
+I have a Patreon! https://www.patreon.com/Brandedtoe Part 3 of</p>
+<p>Huperion Will be available on my Patreon by Sunday 6-21!</p>
+<p>I woke up when the Ship's Ai got my attention.
+"There is an emergency in the lavatory. There is an emergency in the</p>
+<p>lavatory."</p>
+<p>"What do you want?" Some bounty hunter had picked me up Eu-
+ropa. The effects of her stun weapon were giving me a splitting headache.
+The loud snap of a magseal unlocking echoed in my cell.</p>
+<p>"I want to speak to the captain. I have an issue with the way they</p>
+<p>"The captain is in the lavatory. There is an emergency in the lavatory."</p>
+<p>brought me in. "</p>
+<p>The AI said.</p>
+<p>"I heard you. Orphelia, Silence alarm." I tried the default AI name</p>
+<p>command, and there was no response.</p>
+<p>"Orthello, Silence Alarm." still nothing. The captain must have given
+his ship a custom name. I couldn't silence the alarms, and that meant my
+headache was sticking around.</p>
+<p>"Fine, I am going to the lavatory. Which way is it?"
+The floor lit up with running lights, highlighting the path I was to</p>
+<p>take.</p>
+<p>Other bounty hunters messed with me before, so I wasn't sure the
+door would be open. One guy had sat with his had on the button, relock-
+ing my cell each time I tried the door. I guess there isn't much to do in
+space, and assholes have to amuse themselves in any way they can.</p>
+<p>The ship was dark and only lit from below. I tried to grab an emer-
+gency weapon from a storage rack, but the cheap ass didn't have any. Not
+that it would have done me any good anyway, I never used a gun. Pulling
+out a weapon always pushed things over the edge of polite chats, and in-
+to, well, gunfights.</p>
+<p>1</p>
+<p>2</p>
+<p>BRANDEDTOE</p>
+<p>I preferred talking to fighting. I was going to blast past these bogus
+charges of fraud, forgery, and fornication. I mean, that last one wasn't a
+crime, but it was the reason I was being brought back. Don't steal some-
+one's money and sleep with their wife. The offended party wants to catch
+you then.</p>
+<p>I walked into the lavatory.
+I couldn't see anything correctly in the room, but there was one
+bright, focused light in the room. A woman was standing in the shower,
+being pushed out into the lavatory by something I couldn't see. She was
+completely naked and very bottom-heavy. Her ass was too big to fit in
+the captain's chair, so this must have been the assistant. I would have no-
+ticed if the bounty hunter that brought me in had bounties like that in
+her pants.</p>
+<p>"Thank god you are here. Jack Undersafe, I need you to fuck me."
+I turned around and walked out of the room.
+"He left, ma'am." the AI said.
+"HE WHAT? Get back here, Jack."
+Bounty hunters wouldn't fool me a fifth time. 'I need you to fuck me.'
+is a hell of a setup, but not the most subtle. I expected something better.</p>
+<p>"We require you to return to the lavatory, Mr. Undersafe."
+"It's pretty convincing when you get the AI to try and trick me as
+well. They usually have to be forward and honest; most of them annoy-
+ingly so."</p>
+<p>"This is an emergency, Mr. Undersafe. The ship's integrity is at risk.
+With the ship in hyperspace travel at the moment, the best action cur-
+rently is to fornicate with the captain of this vessel."</p>
+<p>What the actual fuck was going on here? Ship AI was never sup-
+posed to lie about emergency purposes, and I had never heard one used
+crude, while polite language. I was out; this situation was too weird for
+my taste.</p>
+<p>HUPERION 2</p>
+<p>3</p>
+<p>"I am going back to my cell. You have good luck with that trap. I don't
+want to go in there and have the captain jump out from behind the toilet
+and shout 'Gotcha! Now you have nanites in your system.'"</p>
+<p>The snap of the maglock echoed down the hallway. Clicks through-
+out the ship sounded, signaling the lockdown of the rest of the craft. I
+guess I was going back to the bathroom instead.</p>
+<p>The ass was still in the room, but now the rest of the lights were on.
+They must have tried to focus my vision before, but there was no need.
+Even with the lights, I only saw the bulbous figure before me.</p>
+<p>"Get over here and fuck me already!"
+"Why?"
+"Why? Because if you don't, the ship is going to be in trouble. When</p>
+<p>the ship is in hyperspace and trouble, everyone dies."</p>
+<p>"Yeah, but why is the ship in trouble?" The shower must have still
+been running because I heard water splashing down the drain. She must
+have been transporting orb containers and tried to wash them off. "Turn
+that shower off, and let's talk."</p>
+<p>"I never turned on the shower, asshat."
+I looked closer at the orbs, matching the skin tone of the naked
+woman before me. What I had thought were oddly colored orb contain-
+ers, were six massive breasts. The prisoners of the breasts slipped, and be-
+fore she recovered, I saw a white liquid shoot to the top of the shower.</p>
+<p>"What happened?"
+"Transmat accident." The woman looked back at me, pleadingly. "I
+tried to transmat with some cargo, and something went wrong. I am go-
+ing to keep growing and leaking until you fuck me, so let's do this al-
+ready!"</p>
+<p>"I've heard of this happening." Memories raced through my brain. I
+negotiated an agreement between drug dealers and some scientists for a
+new thing they thought would be all the rage but never made any mon-
+ey. Every single planetary government came down hard on the enterprise.</p>
+<p>4</p>
+<p>BRANDEDTOE</p>
+<p>No one wanted genetically modified food on their planet; being geneti-
+cally modified people was a huge no.
+"You did this on purpose," I said.
+"No, I just..."
+"What, did you want a bigger ass or chest? Did you start this trip a</p>
+<p>male?"</p>
+<p>"It's not like that! I just wanted to be able to give myself a boost."
+"What did you try and mix?"
+"Huperion DNA." She said, giving up the pretense. "I figured we</p>
+<p>were close enough, genetically, it was going to work."</p>
+<p>She was panting now.
+"I think you got more than that. You got a lot more." I didn't know
+much about gene splicing, but I figured you would need a species with
+six breasts to get that mutation.</p>
+<p>"Yeah, I did. What are you going to do about it," The women said de-</p>
+<p>fensively.</p>
+<p>?" She said.</p>
+<p>"Well, you know I don't have to fuck you. Getting you off works pret-
+ty well too. I don't even know your name. Do you ever have experience
+with Huperions?"</p>
+<p>"My name is Marie, and I don't have any experience with Huperions.</p>
+<p>"Well, their special reaction isn't a mating ritual; it is more of a cry for
+attention." I walked over to her and grabber her ass. She moaned. "They
+subconsciously want something, their body tweaks in little ways to mo-
+tivate the individual. If they get what they want, the changes go away."</p>
+<p>"How do you know this?"
+"I had a couple of encounters on my travels."
+"So we can solve this without intercourse?" she sounded disappoint-</p>
+<p>ed.</p>
+<p>"Yeah, I think so, but I think there is a bigger problem as well."
+"What is that?"</p>
+<p>HUPERION 2</p>
+<p>5</p>
+<p>"I will stay on this ship until you send me away. I think I need to stick</p>
+<p>around for a while to help you out, at least."</p>
+<p>She sighed and relaxed.
+"Yeah, you feel better now?"
+"I do feel better. What did you do?"
+"I agreed to stay, and you got what you wanted. That calmed you</p>
+<p>down enough to think clearly, at least."</p>
+<p>"I didn't want you to stay here! I need to turn in your bounty for the</p>
+<p>reward."</p>
+<p>"You were crying out to be sexed. I think that might be a sign of</p>
+<p>something." She blushed when I said that.</p>
+<p>"You just hearing what you want to hear."
+"Probably, but do you feel better now?"
+"No! I still have these milkers on my chest."
+"Going to take a while for those to go away, but I think you have it
+under control." I knew what I was doing, but I had my reasons. I didn't
+mess around with people that couldn't reason correctly. She might have
+been calling out for it, but I always like to leave a good impression. I let
+go of her ass and left a firm impression.
+"I'm going back to my cell," I said.
+"You can't think of anything that will help me out?"
+"I can think of several things to help, but I don't want to be a place-</p>
+<p>holder. Fooling around is no fun when it is mindless."</p>
+<p>She thought for a minute.
+"So, can we still do it? As long as I want it to be you?"
+"Yeah, I don't like being a piece of meat. I will be your partner for</p>
+<p>tonight, though."</p>
+<p>"I think it is a little late for a nice night out, however." She said.
+"Yeah, we can just skip to the good stuff." I walked over to her and
+pressed my crotch into her asscrack. She was short enough to place my
+bulge in the small of her back. I leaned over her and whispered, "What
+do you want me to do to you?"</p>
+<p>6</p>
+<p>BRANDEDTOE</p>
+<p>She shivered at my words.
+"I, I, I don't know."
+"Okay, blushing flower. It looks like you want the busty surprise."
+"What is that?" She asked.
+"It starts like this," I kneeled and ran my hand along her inner thigh.
+Wetness ran down her legs, and I assumed that she made the mess earlier.
+Now I checked to see if she was ready. I ran my fingers around her lower
+lips, feeling the lubrication there. I turned her on with the delay to sex,
+teasing her to arousal.</p>
+<p>"Are you ready to continue?" She tried to see what I was up to behind
+her, but I had kneeled for better access. I licked her with flirting glances
+and light circles that never pierced the depths. I liked to delay and tease
+as long as possible, and I couldn't help it.</p>
+<p>Her hands found my head and pressed my face into her crotch. She
+wanted me more, and she wanted me to become one with her. I dove my
+tongue into her folds deeply. She screamed as I penetrated her with my
+tongue and sucked her with my lips. I could tell she wasn't going to last
+long like this, and the whole event must have aroused her. The growth
+was fueling the desire for me, and the desire fueling the growth. Each is
+causing her to be more excited and turned to go. Sex was so much fun
+with willing and enthusiastic partners.</p>
+<p>She came when I dipped my finger into her folds. I gave a small wig-
+gle, and she claimed the first orgasm of the night. But I didn't stop. My
+finger could feel a nerve bundle point, and I massaged her g-spot, not let-
+ting her stop coming on my hand.</p>
+<p>There was a flomp as she yelped and slipped out of the shower. She
+had passed enough milk with her orgasmic letdown, and she unstuck
+herself from the shower. We both lost our balance, and I ended up be-
+neath her, tucked in between cleavage.</p>
+<p>"Are you still alive down there?" She asked. I felt her weight pressing
+me into the floor, but there was significantly less than there ought to be.
+She must be shrinking just like I planned.</p>
+<p>HUPERION 2</p>
+<p>7</p>
+<p>"Yeah, there is plenty of air down here, so I think you aren't going to
+suffocate me." I wiggled my shoulders to pop my head out from under
+her cleavage. "Are you ready for the surprise?"
+"I thought we just did the surprise?"
+"We just did the prep for the surprise. You were already pretty wet
+and ready to go, but I have my pre-sex rituals as well." I crawled out from
+her still massive chest. Resting on her tits, she was still a few feet off the
+ground.</p>
+<p>I walked around behind her and tried to palm her ass.
+"Why am I still so sensitive back there?"
+"It is probably something that got mixed into your samples. Do you
+want to find out later what is all going on inside you? I know some peo-
+ple."</p>
+<p>"Will it help?" I massaged her ass cheek in a circle and raised my
+hand. The waves echoed across her body, sending jiggles through her tits.
+Marie gasped.</p>
+<p>"Of course, it will help!" I leaned back down and whispered. "Was</p>
+<p>that Okay, If you don't want me to spank you again, just say."
+She was pressing her face into her chest and nodding.
+"Is that a 'yes, I want to be spanked again,' or is it 'yes, I don't want to</p>
+<p>be spanked again."</p>
+<p>"I want to be spanked again." She mumbled into her chest.
+"I am sorry, what was that?" I asked.
+"Spank me." She said hesitantly.
+"Still couldn't hear you." Raising my hand.
+"Oh, just fucking spank me," Marie shouted.
+I dropped my hand down and slapped her ass from below. She shook
+forward and back, her body coming to rest on her tits. While she was re-
+covering, I dropped my pants to the ground. I grabbed what I could of
+her hips and lifted. She pressed into her tits like there was a bed beneath
+her. I had to use both hands to hold her hips, but I was hard enough to
+enter her slowly.</p>
+<p>8</p>
+<p>BRANDEDTOE</p>
+<p>I thrust in time to her moans, slow and heavy. Marie reached back to
+grab my hand, and I sped up slightly. She stuck her head into her cleavage
+and screamed. But I wasn't done yet.</p>
+<p>She was more sensitive than other women, and I was going to turn
+things up again. I wrapped my arm around her hips, and most of her
+weight was on her tits, so I didn't have to carry much. I was able to find
+her clit quickly.</p>
+<p>The rhythm went two swirls and then thrust. I couldn't do more
+without causing an accident. It took a lot of concentration to maintain,
+but I had done it before. I felt her pussy tense down on my dick, with a
+small orgasm. I knew that it would escalate to more if I didn't stop.</p>
+<p>I didn't stop.
+She gushed all over my crotch, and her juices ran down my legs. Her
+arms lay at her sides, surrounded by shrinking breasts. She was shrinking
+all over, the size of the person that had brought me in.
+"I have never cum like that before," she said.
+"Well, you haven't had excellent lovers before then. I think I could</p>
+<p>probably give you a few more."</p>
+<p>"I didn't feel you finish," she said nervously.
+I was quiet for a bit.
+"I assume you have had bad experiences with sex before this?"
+"I wouldn't call my experience bad, just rare."
+"I want to be clear with you. I have had bad experiences with sex be-</p>
+<p>fore. Everyone has their issues, but I have more than most."</p>
+<p>"Issues? I didn't see any issues."
+I tapped the side of my head.
+"All of my issues are up here. I get so focused on my partner, and I</p>
+<p>give up my rhythm for them."</p>
+<p>"Your rhythm?"
+"Have you had solo experiences."
+"I haven't had an encounter for a few years now batteries didn't ac-</p>
+<p>company." She said despondently.</p>
+<p>HUPERION 2</p>
+<p>9</p>
+<p>She had shrunk back down to a manageable size. Marie still had six
+large breasts, but I bet she could walk with them now. I laid down next
+to her, and we both looked up at the ceiling.</p>
+<p>"My first relationship messed me up pretty good. I never felt appreci-
+ated or wanted, and I just wanted to please her. I was never good enough,
+so I had to put her ahead of my own needs each time we had sex. We were
+kids, but we both had no idea what we were doing."</p>
+<p>"That sounds awful," Marie had rolled over to look at my face. It was
+a good view, each set of tits pressed into form cleavage. "Abusive almost."
+"It was. We never had a real relationship, just an involuntary bondage
+kink." I said. "It has turned me into an excellent lover by way of stamina,
+at least—no premature ejaculation for me. Hell, it's incredible if I finish
+when someone goes down on me."</p>
+<p>Marie pushed herself up on her chest.
+"I am going to take a shower. You get to come with." She said matter</p>
+<p>of factly.</p>
+<p>I shrugged, tight showers were nothing new to me.
+What was new to me was a boob job with three sets of tits. Maria's
+boobs were quite big still, about the size of small melons, and her bottom
+pair was pressing into my erection. When the water turned on, she
+grabbed some soap from her dispenser. She rubbed my back and lathered
+my body. Her hands forgotten; She scrubbed the sweat from my body
+with hers.</p>
+<p>She turned me around.
+"I've always wanted to try this but never had the chance. Or equip-
+ment." She grasped my dick and started to jerk me off inside her top
+cleavage. But when she let go of my dick to press her high set together
+and massage with her tits, I lost my mind, and my knees buckled.</p>
+<p>She was going a little slow and not pressing hard enough for me. I
+pulled Marie closer and tried to suggest to speed up with my hands, un-
+able to speak. There is a difference between feeling outstanding and mak-
+ing someone come. She listened and put me into the second category. I</p>
+<p>10</p>
+<p>BRANDEDTOE</p>
+<p>stood straight and shot in-between her second and first pair of tits. Marie
+could not look away as she kept rubbing my dick into her chest, fascinat-
+ed with her body and my cum. I lost my balance and fell back onto the
+plasteel of the shower.</p>
+<p>She wiped a little of my cum from her chest and looked at it, amazed.</p>
+<p>She washed it off her hands.</p>
+<p>"I thought you said it would be incredible if you came."
+"I did." She was surprised by my kiss and returned it with force.
+"Okay, we legitimately need to clean up, and then talk about what we</p>
+<p>do next."</p>
+<p>"Yeah, I am sorry about the mess."
+"Don't apologize. I won't have you feel sorry for me making you feel
+good. It was good for us both, don't belittle a beautiful moment by apol-
+ogizing." Marie said.</p>
+<p>"Well, I am sorry about that then. I told you I have issues."
+"As long as you admit it."
+"I am working on it." I walked over to my pants and pulled them on.</p>
+<p>I WATCHED AS JACK UNDERSAFE pulled his pants up. I had no-
+ticed his ass before when I had detained him.</p>
+<p>I didn't know what to do. Jack was wanted on several systems, and
+bounty hunters were out to get him. But I had never had an experience
+like that. The sex was good, but he dropped hard personal truths to her.
+That could not have been easy.</p>
+<p>He waggled his pants over his hips, and he had to bounce a little to
+get that juicy ass into hiding again. I only noticed because I was staring
+at his butt instead of cleaning up, but I watched as he swelled in front of
+me. His pants were pretty reinforced, but when he bent down to show
+off to me, picking up his shirt, the back split open. His ass had grown a
+few inches. Jack was transforming.</p>
+<p>Shit.</p>
+</body>
+</html>

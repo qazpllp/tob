@@ -1,0 +1,2212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>A Christmas Story</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>Questions, comments, or commissions? Send me an email at </p>
+<p>the.be.engineer@gmail.com</p>
+<p>or message me on Discord at BE Engineer#2306 </p>
+<p>1 </p>
+<p>A Christmas Story </p>
+<p>​
+​
+ </p>
+<p>2 </p>
+<p>“Hoooooly craaaaap! 
+It was finally here. After several weeks of the tease that is Thanksgiving, I was </p>
+<p>” 
+What a DAAAAAY!!
+​</p>
+<p>finally </p>
+<p>heading into my Christmas break. Mind you, I wasn’t just sauntering into these glorious days off; 
+I was jumping headfirst with each and every day’s pajama plans already solidified in my mind. 
+There were an entire two weeks of no work to look forward to. No paperwork, no 
+unnecessary meetings, no Dan from accounting. Damn you, Dan From Accounting… This truly 
+was the most wonderful time of the year and I intended to make every second of my vacation 
+count, starting now and running through New Year’s Day. If only there was snow on the ground 
+instead of these puddles. </p>
+<p>I didn’t even bother cleaning out my work bag. It would still be there when January came </p>
+<p>around, right? Why worry about it now. The only things I needed to concern myself with were 
+the couch, my butt, and a cheesy holiday romance. All in good time, but first I needed to get out 
+of these work clothes. </p>
+<p>Stripping naked and tossing every garment into a pile, I dug into my dresser drawer and </p>
+<p>pulled out the outfit I would be living in for the majority of the next two weeks. A soft, cotton 
+pajama set warmed my hands. The front of the button-up shirt displayed my name in dancing 
+embroidery. </p>
+<p>Dawn </p>
+<p>It was a Christmas tradition. Every Thanksgiving after our family meal, my mother, bless </p>
+<p>her heart, would give each of her kids a new set of pajamas embroidered with our names. Then 
+we would have to suffer through the excitement until we were 
+once school paused for break. </p>
+<p>allowed to wear them 
+actually
+​</p>
+<p>A new pair of pajamas was a lot more useful back then when we were outgrowing last 
+year’s. I’m twenty-seven now, though. I’m not outgrowing my pajamas any time soon but they 
+keep coming like clockwork every year. I think Mom is just trying to keep some of that old 
+Christmas spirit alive. It’s such an easy thing to lose as you get older. Needless to say, I pretty 
+much have an entire bin dedicated to my treasured pajamas. </p>
+<p>This year’s were a dark, royal red with gold lines along the seams. Compared to my </p>
+<p>apartment, they felt far too extravagant for my blood. But they were made with a mother’s love 
+and that warmth never failed to hit me as soon as I ceremoniously pulled the pants over my legs 
+and clasped the shirt’s buttons. That’s right; no bra 
+relaxation thing. </p>
+<p>underwear. I’m serious about this 
+or
+​</p>
+<p>The reflection in the mirror was satisfying. I looked ready for eggnog and a nap. </p>
+<p>Somehow Mom always knew my size. The pajamas belonged on my slender frame and for a 
+second I felt like a magazine model. Like a dark-haired Rachel McAdams getting ready for bed. 
+Had my boyfriend been there, I don’t think I would be staying in these for very long. Pulling at </p>
+<p>​
+​
+​
+​
+ </p>
+<p>3 </p>
+<p>the fabric going across my bust, I found a fair amount of excess space. Far more than my A-cups 
+required. </p>
+<p>I couldn’t help but giggle. “You know me too well, Mom…” She </p>
+<p>forgot to account 
+never
+​</p>
+<p>for an extra-loose fit in the bust of my shirt. </p>
+<p>The couch caught me like a long-lost lover and a sigh akin to a mountain settling deflated </p>
+<p>my chest. I had the perfect Christmas movie in mind to start off my break. All I had to do was 
+turn on the TV and-- </p>
+<p>There was something next to the TV remote. Something </p>
+<p>more stress-relieving than 
+far
+​</p>
+<p>. The butterflies in my belly made me bite my lip with temptation. 
+The Santa Clause
+​</p>
+<p>It was my trusty Boosti-Breast, a well-used temporary growth device. Sorry, a </p>
+<p>very </p>
+<p>well-used temporary growth device. </p>
+<p>Don’t give me that look! It’s more uncommon for a girl </p>
+<p>to have one these days! 
+not 
+​
+When these magical pieces of invention came out years ago, the implant industry collapsed 
+overnight. To a young Dawn going through puberty, getting my hands on one was all I wanted. 
+Along with every other girl in my class. By law you couldn’t have one before you were eighteen, 
+though. Something about adverse effects on growth hormones. </p>
+<p>I got Ol’ Faithful the day I crossed that age limit. Took a year of financial planning in </p>
+<p>order for me to afford it. By that time they were fairly commonplace but still somewhat of a 
+luxury item. She got me through some of my best years in college… Some of my best dates, too. 
+Almost ten years later, she was still holding strong. As strong as the duct tape wrapped around 
+her, at least. </p>
+<p>I should explain. My Boosti-Breast isn’t the most powerful female enhancement device </p>
+<p>on the market. It wasn’t when I bought it, and it certainly wasn’t now. Hell, it wouldn’t have 
+even broken the top five in the industry ten years ago! But it was what I could afford and it got 
+the job done. I was hooked on it from the first use. </p>
+<p>It was about a foot long with big rounded bulges and a dial or two. Similar to what you </p>
+<p>would see in an old sci-fi film or something Marvin the Martian might point at Bugs Bunny. 
+Mine was dull blue with green accents, but a lot of the paint was worn off through the years. The 
+trigger had been hot glued more times than I could count and more often than not it had a faint 
+burning smell after I used it. That scent had actually come to be a bit of a turn on for me... A strip 
+of duct tape wrapped around its oval muzzle to prevent the spreading of a devious crack from an 
+especially drunken night during senior year of college. Don’t ask. </p>
+<p>Ol’ Faithful didn’t have much power behind her. The dial labeled ‘Size’ near the handle 
+was turned to the highest setting as always. I put it there the minute I unwrapped it. The rest of 
+the labels were long gone from wear and tear. Honestly I’m not even sure I 
+I wanted to. It was probably stuck. </p>
+<p>turn the dial if 
+could
+​</p>
+<p>Don’t go getting too excited now. Maximum power is a relative term. Even at full blast I </p>
+<p>couldn’t increase my cup size to anything substantial. If it was a good day and the electronic 
+gods were willing, I could manage to get myself into the realm of say...volleyballs? </p>
+<p>Maybe </p>
+<p>​
+​
+​
+​
+​
+​
+ </p>
+<p>4 </p>
+<p>watermelon halves? The old models didn’t go very large, especially the cheap ones. Nothing like 
+what the newer models can do. Those things can make finding your belly button a treasure hunt. 
+It depends a lot on your natural size. Going from A-cups, I don’t have much for my antique to 
+work with. Not to mention my duration dial only goes up to a few hours. </p>
+<p>But Dawn? Why don’t you just buy a newer, better one? The guys would love that, right? </p>
+<p>And you sound like you would have fun too! </p>
+<p>Yea yea, I hear you. Trust me. These things cost money though. They replaced implants, </p>
+<p>but they didn’t replace the price. It might sound ridiculous to some of you, but unfortunately a 
+girl has to pay her rent before she can go out buying a flashy new booby-gun. I can hear you 
+moaning. I hate it too. </p>
+<p>What about everyday life? Wouldn’t these devices change everything?? Can they be </p>
+<p>hacked? Can men use them on unsuspecting women?? How can I invest in these companies? Are 
+they allowed in the workplace? What if they malfunction and end up making you grow and grow 
+and grow and your boobs never stop and-- </p>
+<p>You ask a </p>
+<p>of questions. Listen, for the most part life is a lot more fun than it was 
+lot
+​</p>
+<p>before boosters were invented. There’s an entire porn industry built around girls blowing their 
+bras and shirt open. You’ll see all sizes walking down the streets. The wealthier the areas you go, 
+the bigger you’ll see. Big-production music video on a yacht? Yea, there are going to be a couple 
+of girls filling out a bikini 
+expect some dressed filled to the max. </p>
+<p>their laps. Fancy restaurant or bar on a Friday night? You can 
+and
+​</p>
+<p>Some girls carry mini versions in their purses like an overnight toothbrush so they can </p>
+<p>maintain a good size throughout the day. Some even do it at work. 
+for a raise...yet. Some can afford the higher-up models that will keep them at a nice size for a 
+few days. Small-breasted women aren’t much of a stereotype for Japan anymore, either. The 
+cosplay industry is literally bigger than ever. </p>
+<p>don’t; I’m not that desperate 
+I
+​</p>
+<p>All in all, society adjusted fairly quickly. Better than you would expect. There are still 
+plenty of women who are small chested and prefer not to mess with it. The majority of women 
+I 
+don’t boost themselves for their own enjoyment, actually. It’s more become an aspect of dating. 
+don’t mind boosting the girls every now and then for a bit of personal fun or a date night. I’m not 
+ashamed to admit having a big pair of knockers makes my engine purr! Would I like to get a 
+; I routinely get off on my growth. Do you have a few thousand to 
+stronger gun? 
+Absolutely
+​
+donate to my cause? Crap… Didn’t think so…  </p>
+<p>It’s fine, though. Ol’ Faithful has served me well. Even after all these years, my pulse still </p>
+<p>races whenever I reach for my booster. Right now is no exception. It took very little 
+decision-making skills on whether to start my vacation off with a movie or some relaxing 
+personal time. Just to be safe I turned on the TV to help drown the noises I was about to make.  </p>
+<p>The handle was cold in my hands. “Make it a good one,” I whispered to the booster, </p>
+<p>looking over its dilapidated exterior before kissing it hopefully. </p>
+<p>Placing the nozzle against my right breast, I pulled the trigger. </p>
+<p>​
+​
+​
+​
+​
+ </p>
+<p>5 </p>
+<p>Click! 
+A familiar shiver ran down my spine when it sent a pulse of energy into my skin.<br />
+” I bit my lip and squirmed deep into the couch cushions. Ol’ Faithful had come 
+Ahm!!
+“
+​</p>
+<p>through yet again. If there was a right way to start two weeks off from work, this had to be it. </p>
+<p>The booster clattered back to its position on the coffee table. My hands were free for only </p>
+<p>a second before I placed them against my chest and massaged the tingling skin below. The 
+process never took long but I always made sure to make the most of it. </p>
+<p>The closest thing I can compare the growth to is inflating balloons. Seriously. I know that </p>
+<p>might be a little cliche, but it’s true. They’re not airy or anything like that; their whole weight 
+and mass are present and accounted for. Feeling those two little mounds rise off my chest and 
+push into my hands though...
+...God, it’s like just trying to contain a couple of sexy latex 
+mmmmm
+​
+puppies. The rush of my skin stretching and pulling is such a magical sensation; like whole-body 
+chills concentrated on my breasts before pouring into my nipples. </p>
+<p>All too soon I was cupping a pair of Cs. I wasn’t done growing yet, but I’ve always </p>
+<p>thought C-cups were a fair size for my frame. Sometimes I think puberty skipped a step or two 
+when it was my turn. </p>
+<p>“</p>
+<p>” I loosed a moan and sank my fingers deeper. It was like greeting two friends I 
+Mmmm!
+​
+hadn’t seen in forever. </p>
+<p>There wasn’t very much extra fabric across my chest anymore. Not with these assets </p>
+<p>filling it out. My breasts were swelling big enough to be worthy of the title of ‘tits’. I knew the 
+cup sizes by sight alone. Years of experience and measuring for fun will do that to you. </p>
+<p>“</p>
+<p>” My nipples were on fire. Seeing my 
+D… E-E… Mmmmnghh… F-ffff...uuuuuck…
+​</p>
+<p>buttons spread open never failed to make my blood rush. Little tents stood out over my pajama 
+top where my nipples puffed up nice and firm. Unfortunately, the effects were slowing. “Don’t 
+stop… J-Just a little...</p>
+<p>bigger…” 
+nnngh...
+​</p>
+<p>Rising hills blocked my view of my own toes on the other end of the couch. The hem of 
+my shirt flipped over my stomach and the fabric pulled around my back. Looks like Mom didn’t 
+go </p>
+<p>big enough! 
+quite
+​
+” My shirt was constricting around my tits. Heaps of jiggling flesh the 
+A-Ahh! Oooh!!
+“
+​</p>
+<p>size of my head were forced to deform as they ran out of room to grow. I really didn’t mind; 
+ few things that turned me on more than feeling my body outgrow my clothes. 
+very
+there were 
+​
+You might say I have a thing for this… Not many girls do. Most wouldn’t use a booster if they 
+weren’t chasing a man or didn’t have a boyfriend asking for it. I’m one of the rare ones, though. I 
+ this growth. The thought of my boobs outweighing the rest of me? 
+craved
+​
+A seam stretched against my side. This shirt wasn’t going to last much longer if I didn’t </p>
+<p>. 
+Yes please
+​</p>
+<p>do something. As fun as it is to send buttons across the room, I didn’t want to ruin Mom’s 
+present. With a shaking hand, I reached up and flicked the center button. A portion of my shirt 
+blew open from its pressurized contents and bulging cleavage shoved itself into the air. Breath 
+heavy and short, I flipped the remaining buttons in a flurry. </p>
+<p>​
+​
+​
+​
+​
+​
+​
+​
+​
+ </p>
+<p>6 </p>
+<p>My pajama top popped open like a party favor. No longer constrained, I watched my </p>
+<p>temporarily-engorged breasts rise into the air as full, supple mounds the size of decent 
+cantaloupes. A slight breeze across my thimble nipples was enough to make me pant. </p>
+<p>Technology is amazing, isn’t it? I was considered flat-chested no more than a minute ago. </p>
+<p>Now I’m staring at a literal pair of fleshy melons filling the space between my biceps. </p>
+<p>I was right to turn the TV on. I couldn’t wait any longer and attacked myself. A generous </p>
+<p>amount of time was spent massaging my new assets. I’ve never gotten over feeling my fingers 
+sink into my own skin like a pillow. I honestly don’t know how busty girls don’t play with 
+themselves all day.  </p>
+<p>After a point, I couldn’t handle the massage any longer. I needed more. The heat between </p>
+<p>my thighs was far too intense to ignore. Keeping one hand working overtime on my chest to 
+knead and occasionally bring a needy nipple to my lips, my other hand slipped under my bottoms 
+into what felt like a sauna. 
+“
+” Yea, definitely a good idea to have the TV on.<br />
+Mmnngh!!! OH!!
+​
+I started masturbating furiously. Not that I necessarily needed the help downstairs; nipple </p>
+<p>orgasms were easy to come by when I was boosted. But the faster I enjoyed myself and my 
+bloated knockers, the faster I could enjoy them in other ways, right? Hugging them while 
+watching TV, walking around the apartment and feeling their weighty bounces, maybe pinching 
+a nipple here and there to test the waters for another round on the couch…  </p>
+<p>I’ll be the first to admit it; I get off on my tits. More than any other girl I knew. It’s not a </p>
+<p>secret. They’re just enjoyable, all right?? Everything about them is sheer goodness! They’re so 
+simple yet I’m never tired of them! The bigger they are, the more I, or a date, have to play with. </p>
+<p>“
+” 
+Hah… Mmmmm!! H-Haaah…
+​
+It was coming. The big reveal. The climax. The edge of the cliff. Just feeling how soft </p>
+<p>they were...and full...and my skin squeezing between my fingers...these massive mounds jiggling 
+and...wobbling in every direction on top of me...pressing into my arms and chin...blown up like 
+balloons from such small beginnings...it just makes me want to...to… </p>
+<p>“</p>
+<p>” Muscles squeezed my working fingers to a trembling standstill 
+NNGHHHH!!!!
+​</p>
+<p>between my thighs and I could feel my pulse beating inside my chest from orgasmic release. </p>
+<p>God I needed that. 
+I fell limp on the couch under heavy breath and an arm wrapped across my chest. I didn’t 
+dare remove the fingers from my crotch; I needed a moment before I could deal with any kind of 
+friction down there. </p>
+<p>“</p>
+<p>…” I shifted on the couch, going onto my side and clamping my thighs on my 
+Mmmm
+​</p>
+<p>hand. A kiss planted itself in my cleavage. “Good to have you girls back.” I could enjoy them for 
+a couple hours before the booster’s effects wore off and I had to watch them return to their 
+natural state. Of course I could just give them another shot afterward, but part of enjoying 
+yourself is also limiting yourself, right? Self-control is what gives special treats their sweetness. </p>
+<p>​
+​
+​
+​
+ </p>
+<p>7 </p>
+<p>I sighed, enjoying feeling my breasts’ soft warmth enveloping my arm and torso while I 
+sleepily watched whatever had been happening on TV. Some girls hug a pillow when they relax; 
+I do too, it’s just self-heating and all-natural. </p>
+<p>A high-end commercial faded onto the screen. Two women were putting their bikini tops </p>
+<p>through stress tests with a set of jugs I could only dream of owning. I 
+breasts that big, actually. No doubt it was an ad for a new booster model. It was the season, after 
+all. It must be pretty pricey too if it managed to get those girls to dwarf beach balls. Honestly I 
+didn’t think such powerful boosters were available to the general public without connections. I 
+watched as they both giggled at the gawking men passing by before an announcer introduced the 
+product.  </p>
+<p>dreamed of having 
+have
+​</p>
+<p>He informed, “Releasing just in time for the holidays for yourself or that special lady in </p>
+<p>your life! Attain the size, and attention, of your dreams with the Limited Edition 
+Maximum-Strength Cup-Enhancement Booster from IncrediBust!” </p>
+<p>My jaw dropped into my cleavage. This was actually real. This was huge. </p>
+<p>things 
+Those
+​</p>
+<p>were huge! I didn’t understand how those women could stand, let alone walk! And they were just 
+going to </p>
+<p>a booster capable of such feats?! To irresponsible girls like me?? 
+sell
+​</p>
+<p>Then they showed it. This booster was sleek, trim, and modern. Chrome and red flashed 
+across its surface. This was the Porsche of the booster world. Based on the booster’s specs, these 
+models weren’t even using it to its full potential. They could have gone </p>
+<p>. The fools. 
+bigger
+​</p>
+<p>“Comes equipped with a full range of sizes, as well as customization for firmness and </p>
+<p>sensitivity! In addition, available only on this special edition, you’ll find a maximum size 
+duration of three days!” </p>
+<p>Three days?!
+ Are they 
+​
+“On sale now for the affordable price of $12,000! Or twenty-four easy payments of $500! </p>
+<p>I would die from forgetting to eat or drink! 
+MAD?!
+​</p>
+<p>Now available for pre-order at any IncrediBust-certified dealerships.” </p>
+<p>There it is. There is that pesky dollar amount. Of </p>
+<p>it’s twelve grand. Why wouldn’t 
+course
+​</p>
+<p>it be? </p>
+<p>I watched the commercial end, leaving me feeling more inadequate than ever before. I </p>
+<p>love the booster I have, I really do. But you can’t blame a girl for just wanting to be 
+Good job, marketing people, you succeeded at your job. Boosters like that were meant for the 
+kind of people who didn’t consider money to be an issue, not girls living in an apartment who 
+enjoy popping their buttons after a long day. </p>
+<p>. 
+bigger
+​</p>
+<p>The night drew on. By the time I was heating up a bowl of mac and cheese for dinner, I </p>
+<p>was also watching my chest shrink by the cup size as my booster’s effects wore off. The 
+IncrediBust commercial hadn’t left my mind. I could never afford something so extravagant. I 
+was not the target audience; rich men with hot wives were. </p>
+<p>I watched my dinner spin and sighed, feeling the last of my boost shrink away. The image </p>
+<p>of that sleek, powerful booster hadn’t left my mind for a second. If it wasn’t meant for me, why 
+couldn’t I stop thinking about it? </p>
+<p>​
+​
+​
+​
+​
+​
+​
+ </p>
+<p>8 </p>
+<hr />
+<p>” 
+Dawwwwn!!
+“
+​
+My girlfriends cheered my name when I walked into the bar. It wasn’t very hard to pick </p>
+<p>them out over the festive crowd, but their boisterous greeting led me straight to their table. It was 
+obvious they were a few drinks ahead of me. </p>
+<p>“Here! We already ordered a drink for you!” one of them, Jasmine, offered. She was </p>
+<p>extra energetic tonight. “Mojito, just how you like it!” </p>
+<p>Kally chuckled and glanced at the cleavage I had pouring out of my little black dress. </p>
+<p>“Might be a little watered down by now. Running a little late? Looks like you’re all done up for 
+our girls’ night out; that dusty old booster of yours acting up again?” </p>
+<p>I sighed and sat in the booth, taking a healthy drink of my mojito. “Like you wouldn’t </p>
+<p>believe. I had to go one cup at a time or it would overheat! Poor thing is on its last legs…” </p>
+<p>“You know you don’t </p>
+<p>to boost yourself, right?” Jasmine asked. “You already have a 
+have
+​</p>
+<p>boyfriend! Who are you trying to impress?? Kally and I aren’t all that interested!” </p>
+<p>“Well hey now! Let’s not jump to any conclusions…” Kally leaned close to me and bat </p>
+<p>her eyes at my chest. “Dawn knows how to make those things look 
+. I’ve been caught 
+good
+​
+staring one or two times. When she’s nice and full, you could get lost in that cleavage.” A 
+.” 
+meeee
+teasing hand walked across my thigh with two fingers. “You can try and impress 
+​</p>
+<p>“Oh shut up!” I slapped my drunk friend away and she laughed. How obvious was it that </p>
+<p>I was blushing? After all these years I still got flak for my booster-based fetish. </p>
+<p>Jasmine pat Kally on the shoulder to help calm her down. “Stop teasing her! Some girls 
+just like pumping themselves up! I’ve heard the noises Dawn makes when that booster hits her. 
+ Dawn were having a blast with 
+and
+That summer at the beach house? Sounded like both Mason 
+​
+that thing!” </p>
+<p>She and Kally burst out laughing at my expense. I couldn’t very well deny any of it; it </p>
+<p>was fairly common knowledge in my close circle of family and friends that I enjoyed my booster 
+for my own personal reasons. </p>
+<p>“I don’t think I’ve touched mine in months…!” Kally said after catching her breath. </p>
+<p>“Might be about time to start bringing the girls out again, though.” </p>
+<p>I was happy to turn the attention elsewhere. “Oooh, ready to start dating again, are we? 
+Maybe I should have brought my booster with me! A full shirt might snag you a guy tonight.” </p>
+<p>Kally stuck her tongue out in response. “I’m not </p>
+<p>desperate yet, but there might come 
+that 
+​</p>
+<p>a time soon enough. Seems like most guys only see you when you’re carting around a giant set 
+of jugs these days. Especially when they just keep making boosters more powerful. They won’t 
+even notice you if you’re not blown up like a sex balloon.” </p>
+<p>​
+​
+​
+​
+​
+​
+ </p>
+<p>9 </p>
+<p>Jasmine agreed. She wasn’t much larger than my normal A-cups, but she was far more </p>
+<p>confident with them than I. “It’s not easy finding someone actually into small breasts anymore.” 
+She sighed and looked at me. “You’re lucky you actually enjoy the whole booster thing.” </p>
+<p>“You don’t?” I asked. 
+“Well...I mean sure it </p>
+<p>great when they’re actually growing, but that only lasts for a 
+feels
+​
+minute! After that you’re stuck with a sore back and tight shoulders for the rest of the night! Not 
+to mention just a giant pair of fleshy things getting in the way!” </p>
+<p>Kally nodded, quickly swallowing her drink to add, “Yea! Sure, I might make myself big 
+enough to get a guy’s number, but then I’m spending fifty bucks at the chiropractor the next day 
+after they’ve gone down. I don’t know how you do it, Dawn. I’m a D-cup and I would trade for 
+your size in a heartbeat if it didn’t mean I would be invisible.” She caught herself a moment later 
+and added, “No offense…” </p>
+<p>“None taken,” I waved. “Don’t really have any evidence otherwise. I can’t tell you the 
+wasn’t
+last time a guy showed interest when I 
+ boosted.” 
+​
+“That’s because you’re 
+ boosted when you go out!” Jasmine prodded. 
+always
+​
+Kally was staring again. “She likes being top-heavy, can’t blame her for that.” 
+“Has Mason even seen you at your regular size? Like, he knows you’re not </p>
+<p>actually </p>
+<p>stacked, right?” </p>
+<p>A-cup!” </p>
+<p>Somehow the conversation was focused on me again. “Yes, Kally, he knows I’m an </p>
+<p>“Just checking! I can’t remember the last time I’ve seen you small…” She thought for a </p>
+<p>moment before her eyes lit up. “There was that time at the pool when it wore off and your top 
+didn’t fit anymore! </p>
+<p>saw them then!” 
+Everyone
+​</p>
+<p>“Thank you for reminding me about that incredibly embarrassing moment in my life,” I </p>
+<p>growled. It wasn’t my fault the duration hadn’t lasted as long as I set. I bet the IncrediBust 
+wouldn’t have had that problem. </p>
+<p>Jasmine tried to console me. “Don’t listen to her. No one remembers, Dawn.” 
+I didn’t know if people not remembering my natural chest was a good thing or not. More 
+than anything I just wanted to turn the conversation away from my sexual urges. “Any plans for 
+Christmas?” </p>
+<p>Both shook their heads. 
+“I’ll be here! My parents thought a cruise would make a good couple’s gift, so unless I </p>
+<p>want to spend Christmas with my aunt and her four cats, I’m staying here.” </p>
+<p>“Just sticking around, I think. Money is tight so I can’t exactly fly across the country for </p>
+<p>family,” Kally shrugged and finished her drink. “But if we’re all here… You know what that 
+means?? </p>
+<p>“Christmas at Dawn’s?” Jasmine gasped. 
+“Christmas at Dawn’s!” 
+This was news to me! “W-Wait, don’t I--” </p>
+<p>​
+​
+​
+​
+​
+ </p>
+<p>10 </p>
+<p>“Nope!” Kally drunkenly leaned on me. I wasn’t much support, feeling the effects of my </p>
+<p>own booze. One of her fingers sank into my bust as she poked me and said, “Too late! It’s 
+planned now! We’ll be over first thing in the morning on Christmas!” </p>
+<p>Jasmine was giddy. “If we didn’t already spend the night!” 
+“Actually I think Mason and I were gonna--” 
+“Oooohhh she wants to spend Christmas Eve with her special friend,” Kally teased. 
+“Don’t worry, we’ll wear earplugs. I’m sure you’ve got a sexy little Santa costume all picked out 
+and ready to be filled up for him!” </p>
+<p>“K-Kally!” I blushed and felt my chest heat up. How did she know?! 
+“I’m sure he has 
+Jasmine was beaming, no doubt coming up with ideas for their Christmas ambush. </p>
+<p>issues with you always maxing out your booster, huh?” 
+nooo
+​</p>
+<p>“Maybe we can do this every year! We can make a tradition out of it! The three of us can buy 
+pajamas for each other and we </p>
+<p>to wear them for the day!” 
+have
+​</p>
+<p>hic!
+“What...
+ What do you want for Christmas, Dawn?” Kally slurred. “What do you want 
+​
+slip down your chimney? And 
+hic!...
+​</p>
+<p>say a white Christmas! You 
+don’t 
+​</p>
+<p>want 
+always
+​</p>
+<p>Mason to...
+snow.”  </p>
+<p>I knew my answer. I suspect you even know my answer. It popped into my head the </p>
+<p>second Kally asked and ordered another drink. Blurting it out was obviously the worst thing I 
+could have done after finally getting the focus away from my booster obsession, but a drunk 
+mind doesn’t work so well. </p>
+<p>“I...I want the Limited Edition Maximum-Strength Cup-Enhancement Booster from </p>
+<p>IncrediBust!” </p>
+<p>The table was surprisingly silent for the amount my friends had drunk. Even some of the </p>
+<p>people around us paused their conversation to look in my direction. </p>
+<p>” Kally exploded with laughter, releasing a spray of her drink across the table. 
+HAA!!
+“
+​
+Jasmine held her stomach and was trying desperately to catch her breath between gasps. </p>
+<p>“D-Dawn...you can’t...</p>
+<p>be serious!!” 
+Haha!!...
+​</p>
+<p>“Guys… Come on…” I shrank into the booth seat. 
+” Kally howled. “The minute you get something like that, 
+You’ll blow your bra open!!
+“
+​
+blow your bra clean off!! You’re too dangerous with something </p>
+<p>you’ll turn it to max strength and 
+” 
+like that!!
+​</p>
+<p>“You...You could shoot someone’s eye out!!” 
+Neither of them could contain their amusement. I blushed like a tomato as their laughter </p>
+<p>spread to a few others in close proximity. You want to know the worst part? They weren’t 
+wrong
+. Kally was one hundred percent correct. The second I got a booster like the IncrediBust, I 
+​
+would
+ put it to its highest setting and I 
+​
+times to get those damn 
+so many 
+when I did it. I’ve tried to blow my bra open for 
+​
+clasps to break. But even as small as my bras are, they’re able to hold on even when Ol’ Faithful 
+gives it her all. There’s a lot of bulging, sure, but I’ve never blown any lingerie off my body. To </p>
+<p>would be wearing one of my A-cup bras 
+most certainly
+​
+. Tried 
+YEARS
+​</p>
+<p>​
+​
+​
+​
+​
+​
+​
+​
+​
+​
+​
+​
+​
+ </p>
+<p>11 </p>
+<p>tell you the truth, the thought alone of my tits blowing my bra open was enough to make me 
+sweat. </p>
+<p>“Don’t those cost a fortune?!” Jasmine gasped. 
+“I’m pretty sure they’re more expensive than my car!” 
+“Ok, guys,” I motioned, trying to calm their laughter. “I was just telling you what I--” 
+A set of colored lights strobed at the bar. “
+” People at the bar were overcome with excitement when a bartender 
+WOOOO!!!
+“
+​</p>
+<p>” 
+DAIRY RUUUUUSH!!!!
+​</p>
+<p>shouted over a PA system and music blared. </p>
+<p>I could feel my face drain of color when my friends cracked devilish smiles. It was a </p>
+<p>dairy rush, one of the hot new trends sweeping the bar scene alongside other gimmicks to draw a 
+crowd. Some willing girl would take a lactation booster at full force until she was engorged and 
+leaking out of her clothes, then either she or one of her friends could drink a shot glass of her 
+milk to earn a free round. Outside of any situation where everyone is drunk and horny, it would 
+have sounded ridiculous. 
+” a tall blonde moaned, already jumping on the milk train. A man, who I 
+Mmm!!!
+​</p>
+<p>assumed she had met within the hour, stood ready with a shot glass in hand. It was amazing how 
+boosters had changed the dating scene. </p>
+<p>“</p>
+<p>“Who’s next??” one of the bartenders called out, holding a booster into the air. It was </p>
+<p>small and silver, no doubt obtained through a promotion with the manufacturer. Several women 
+put their hands up with cheers from their friends. 
+“Over here!! Over here!!” Kally shouted. 
+I laughed. “Kally I thought you weren’t going to--” She wasn’t refering to herself. And 
+Guys!! </p>
+<p>there was a finger pointing at me. Jasmine was too, drawing the bartender’s attention. “
+” 
+What are you doing??
+​</p>
+<p>“She’ll do it!” Jasmine screamed. 
+“N-No! I can’t!!” The bartender was getting closer. The lactation hadn’t even been </p>
+<p>induced yet, but I could already feel the milk swelling inside of me. </p>
+<p>“Please, you 
+“You in?” he asked, holding the booster ready. Spectators were staring all around at the </p>
+<p>you’re going to like it,” Kally teased. “Get her good, Carlos!” 
+know
+​</p>
+<p>girl already big enough to risk falling out of her dress. </p>
+<p>“I-I…” My heart was racing. I had only used a lactation booster once before at a 
+bachelorette party. My hesitation wasn’t from lack of want. On the contrary; it was because I 
+didn’t think I could hide my orgasm from a bar full of people. </p>
+<p>“Do it! I 
+“Hell, I double-dog dare you! Come on, girl!! I’m </p>
+<p>you,” Jasmine challenged. 
+dare
+​</p>
+<p>” Kally was more excited than 
+thirsty!!
+​</p>
+<p>anyone, licking her lips and receiving a few male cheers in response. I really had to start 
+monitoring her alcohol intake better. </p>
+<p>” 
+triple-dog dare you!
+​</p>
+<p>“I 
+“You get a free roooouuuund!” the bartender sang, reminding me. </p>
+<p>​
+​
+​
+​
+​
+​
+​
+​
+ </p>
+<p>12 </p>
+<p>Carlos!” </p>
+<p>my chest. </p>
+<p>“
+thing??” </p>
+<p>the max setting.” </p>
+<p>to my cheeks. </p>
+<p>The peer pressure was crushing. The thought of bloating out of my dress wasn’t so bad </p>
+<p>either if I’m being honest. Plus, how in the world could I ignore a triple-dog dare? There was no 
+higher power. With the aid of my mojito, I took a deep breath a nodded. “A-Alright! Bring it 
+on!” </p>
+<p>“
+” Jasmine clapped. 
+Woo! Attagirl!
+​
+Kally drained a shot glass and slammed it on the table in front of my chest. “Hit her, </p>
+<p>Carlos stepped forward and pressed the booster into the side of my left breast. It sank </p>
+<p>several inches, my skin soft and springy from my own enhancement. </p>
+<p>Click! 
+I jumped when he pulled the trigger and sent a bolt of gland-stimulating energy through </p>
+<p>” I cried out. It was far more intense than I remembered. “How...How strong is that 
+Ahh!
+​</p>
+<p>“It’s the new DairyGold Silver Edition!” he said with pride. “We keep the dial taped to </p>
+<p>My eyes bulged wide and I felt an intense tingle spreading over my already-swollen tits. </p>
+<p>Maybe I should have worn a bra under my dress; something tells me this might have been a good 
+opportunity to finally blow it open. The next minute or so was about to get very intense.  </p>
+<p>“Here we go!” Kally rubbed her hands together, enjoying the flushing pink color rushing </p>
+<p>“Ohh… </p>
+<p>” It was impossible for me not to moan. I wasn’t in control any 
+Oooohhhh…
+​</p>
+<p>more, like a girl sitting across from a guy with the remote to her vibrator. How could 
+keep her calm through something like this?! How do most girls 
+time?! It’s...
+anything to hold on to, anything but my tits; the slightest touch would be enough to send me over 
+the edge. I wasn’t sure I could prevent it as it was! </p>
+<p>...magical! My hands grasped the side of the table for support. I needed 
+nnngh
+​</p>
+<p>girl 
+any
+​
+ use their boosters all the 
+not
+​</p>
+<p>“You might wanna step back,” Jasmine warned the bartender, “She was already boosted.” 
+“We’ve got a full one over here!” he announced, garnering more observers to our booth. 
+” I was starting to pant. The milk was here, and it was coming in full 
+Augh! M-MMM!
+“
+​</p>
+<p>force. My chest wasted no time in jumping forward two cup sizes from the initial flow. I reveled 
+in the tightness spreading over my skin. I hadn’t been this large in 
+, and here I was about to 
+years
+​
+continue swelling! </p>
+<p>Kally’s eyes were wide. “Look at you go! You look like you’re having the time of your </p>
+<p>life!” </p>
+<p>“Bigger! Bigger! Bigger!” The bar crowd was cheering me on now, watching this petite </p>
+<p>girl’s bust bloat impossibly large with milk. </p>
+<p>​
+​
+​
+​
+​
+​
+​
+​
+ </p>
+<p>13 </p>
+<p>“</p>
+<p>” Didn’t they know what saying things like that would do to me?? I 
+Mmm… M-Mmmm!
+​</p>
+<p>got off on getting bigger!! Hearing them chant about my boob blowing up wasn’t helping the 
+mounting arousal in my nipples, core, and crotch! </p>
+<p>I had to push back into the booth’s cushion. Skin was bulging out of the front of my dress </p>
+<p>as if I were trying to hide a pair of basketballs. The cleavage extending from my own body in 
+such a perfect, soft line made me wet. Fabric pulled at my back as the dress started to complain. 
+It couldn’t stretch anymore. The idea of milk swirling under my skin like a couple of balloons 
+made me wet. </p>
+<p>“Lookin’ a little full there, Dawn!” Jasmine teased. “Kally! Better get some glasses </p>
+<p>ready! I want som!” </p>
+<p>“Waaaay ahead of you!” 
+” I groaned. Below the table, my thighs were rubbing 
+A-Ahhh!!! Mmmmm guys!!
+“
+​
+together in mad gyrations. With the lactation booster’s stimulation, my milk glands were 
+working overtime to produce such an exorbitant amount of dairy. Deep within the depths of my 
+udders, I could feel each of them swelling and filling like tiny balloons, engorging me from the 
+inside out. “</p>
+<p>” 
+Hah… G-God…!!! It’s not...stopping!!!
+​</p>
+<p>A creak came from a seam somewhere on my dress. I couldn’t tell you where; it was </p>
+<p>hidden below the mammoth udders heaving off my torso.  </p>
+<p>“</p>
+<p>” I screamed before biting my lip when my strawberry nipples 
+A-AAHHHMMMM!!!!
+​</p>
+<p>pressed into the edge of the table. Warmth was spreading across my fronts and I knew my 
+capacity was nearing its limit. The warmth and leaking was a sure sign. I started leaning forward 
+with the weight, hoping the milk falling in my lap would disguise other fluids. </p>
+<p>“Uh uh! Keep ‘em above the table!” Kally demanded. A quick arm shot under my chest </p>
+<p>and lifted them onto the table, letting them fall with a bloated sloshing. </p>
+<p>“</p>
+<p>” I cried, using every ounce of my mental energy to keep 
+NNNGH!!! K-K-KALLYYYY!!
+​</p>
+<p>my approaching orgasm in check. Her touch brought me dangerously close to losing it in front of 
+everyone. It was bad enough they were about to see my-- </p>
+<p>POP POP!! 
+MMMMM!!!
+“
+” 
+​
+“
+” 
+There they are!!
+​
+My nipples sprang free of my dress like party favors. I swear Kally was drooling over the </p>
+<p>thin threads of milk leaking free. I was utterly exposed to anyone willing to look, and still I 
+continued to fill. The chill of an ice water pressed into my milky skin and sent a bolting shiver 
+through my body. Goosebumps speckled my chest and my nipples shot out at the chilly sensation 
+like nozzles. The glass would have tipped over had Carlos’s reaction not been so quick. </p>
+<p>“
+” I told myself. “Almost...
+A-Almost there…
+​
+My lactation was peaking. Filled to the brim, a final bit of production started its way </p>
+<p>...there!! I can’t hold it!” 
+nnnngh!!
+​</p>
+<p>through my glands. Beginning at the base of my chest, I felt a wave of intense pleasure and heat </p>
+<p>​
+​
+​
+​
+​
+​
+​
+​
+​
+ </p>
+<p>14 </p>
+<p>surge from my torso to the tips of my nipples where they puffed and hardened, making me gasp 
+aloud. </p>
+<p>“
+” 
+MMMM OOOHHH FUCK!!!
+​
+SSPPPPPSSHHHHH 
+Streams of milk arched over our table. I was filled like a couple of stretched beach balls. 
+” I couldn’t resist anymore. I had just outgrown my 
+Ahhh!! Ahhhhhh!! Mmmmm GOD!!
+“
+​</p>
+<p>dress, dammit! How could I not orgasm after feeling myself get so big, milky, and-- </p>
+<p>“Looks like I’m up!!” Kally’s hand shot out and grabbed a plump nipple. She twisted and </p>
+<p>pulled, shooting a hot stream of milk into her shot glass like I was some kind of cow. </p>
+<p>“</p>
+<p>” It only intensified the rolling orgasm. My overly sensitive nipples flared 
+W-W-WAIT!!!
+​</p>
+<p>and rocked my body to its core. I couldn’t help but throw my head back as Kally milked me in 
+front of the entire bar. I would have been humiliated if my mind was on anything other than the 
+pulsing in my panties. </p>
+<p>Gasping for breath, I watched as Kally lifted an overflowing shot glass to her lips and </p>
+<p>guzzled down my fluid. A white mustache lingered before she wiped it away with her tongue and 
+a coy smile. </p>
+<p>Licking a finger clean, she said, “Mmmmm, your milk is </p>
+<p>, Dawn… We could 
+delicious
+​</p>
+<p>sell this stuff!” 
+” Carlos announced. 
+Free round over here!!
+“
+​
+“Yay!! Good job, Dawn!!” Jasmine screamed. 
+I received a standing ovation before everyone started going back to their own business. </p>
+<p>Several other women endured the same torture, but none were quite the show I put on. </p>
+<p>“Way to go, Bessie,” Kally joked. “Doing all right?? You look like we just took you off a </p>
+<p>sex machine!” </p>
+<p>“I…” Swallowing, I realized my mouth was bone dry. Producing so much milk took a lot </p>
+<p>out of a girl. Boosters had come further than I thought. “Water?” </p>
+<p>“Here--” 
+” 
+Augh!!
+“
+​
+Kally poured me a glass of my own milk, driving me up the wall once more. “This will </p>
+<p>help!” </p>
+<p>taste delightful. </p>
+<p>returned. “And the show.” </p>
+<p>I didn’t care. I chugged my own milk without a second thought and I had to admit, it did </p>
+<p>“Thanks for the free drinks,” Jasmine sighed, accepting her prize from Carlos when he </p>
+<p>Kally nudged my shoulder. “Do we need a mop for your seat? I think that scream of </p>
+<p>yours might have cracked a few windows!” 
+“I can’t...help it…” It’s not like it’s </p>
+<p>biggest turn on. I’m just a girl living her best life. “You guys...better have a plan for getting me 
+home. I won’t be able to stand with these!” </p>
+<p>fault the idea of my boobs getting bigger is my 
+my
+​</p>
+<p>​
+​
+​
+​
+​
+​
+​
+ </p>
+<p>15 </p>
+<p>“Oh we do!” Kally grinned and took an empty glass. “We’re going to drain the tanks!” </p>
+<hr />
+<p>Christmas was right around the corner. Tonight was Christmas Eve Eve, as I liked to call </p>
+<p>it. Short of winning the lottery, I was certain I had no chances of getting my hands on that 
+Limited Edition Maximum-Strength Cup-Enhancement Booster from IncrediBust. Not unless 
+Mason had foregone proposing for </p>
+<p>year in order to save up for such a luxury. 
+another 
+​</p>
+<p>The thought alone humored me. Mason was a good guy. A </p>
+<p>guy, really. And boy did 
+great 
+​
+he love tits. But spending over ten grand on something as frivolous as a booster? That was so far 
+beyond the realm of reality it was laughable. Still...a girl could dream, right? </p>
+<p>I stood in my closet meticulously choosing a dress for our traditional Christmas date. It 
+didn’t have to be fancy, but skimpy enough to show off my body once Ol’ Faithful worked her 
+magic. </p>
+<p>A black dress hung in front of me. Usually it would have been an easy pick, but the front </p>
+<p>was warped and blown out from the lactation ordeal several nights earlier.  </p>
+<p>“God, I can’t believe I did that… What was wrong with me??” I groaned, finding the </p>
+<p>dress still devoid of shape. “I ruined one of my favorite outfits!” </p>
+<p>Did you think I regretted the lactation booster? HA! Not in the slightest. So I flashed a 
+few people and sprayed milk like a sprinkler; drunk me didn’t care and current sober me was 
+able to push it out of my mind. The point was I got 
+before and I can assure you, they all measure up to the experience. Kally and Jasmine might have 
+had a bit too much fun milking me like a farm animal, but that’s beside the point. </p>
+<p>. I’ve had dreams like that 
+maaaaassive
+​</p>
+<p>Mason was going to pick me up in less than half an hour and I wasn’t even dressed yet. </p>
+<p>There wasn’t time to reminisce about orgasmic letdowns! Deciding on a seductive appearance, I 
+snatched a festive red dress and slipped it over my body. It fit like a glove, save for the drooping 
+fabric over my breasts. I wasn’t even large enough to support a sufficient amount of fabric to 
+cover my nipples. 
+Not 
+Ol’ Faithful was waiting on the bed right where I left her. It was time for her to earn her </p>
+<p>, at least. 
+yet
+​</p>
+<p>keep once again. The dial remained on the highest setting because you know, I’m always willing 
+to branch out! </p>
+<p>“Let’s see what you’ve got me tonig--
+An end of the duct tape was losing its stick and a broken piece of my booster’s outer shell 
+was hanging by one end. I held it back in place and pretended to have seen nothing. It was better 
+for my sanity that way. </p>
+<p>” 
+oh!
+​</p>
+<p>Fully charged, I held its end into my chest and pulled the trigger. 
+WRRRR </p>
+<p>​
+​
+​
+​
+​
+ </p>
+<p>16 </p>
+<p>It whirred with strange effect, like a weak grinder working in the distance. The noise </p>
+<p>wasn’t new, but it had never been so pronounced. Sometimes it could take a second or two for it 
+to get its bearings and hit me. </p>
+<p>“You can do it,” I encouraged, still holding the trigger and waiting for that pronounced </p>
+<p>clicking sound. </p>
+<p>WRRRRRRRR 
+“Aaaany second now!” 
+WRR-RRR-RRR--POP!! 
+” A small jolt made its way through my chest after a loud pop echoed through my 
+Ahh!
+“
+​</p>
+<p>apartment. It was weak; nowhere near what I was hoping for. </p>
+<p>“No no no! Come on!” I groaned, pulling the trigger again. 
+Nothing happened. Ol’ Faithful whirred like a car with a dying battery and only grew </p>
+<p>weaker. I didn’t notice the increasing heat until it was too late. </p>
+<p>KSHHZAP!! 
+“
+” 
+Crap!!
+​
+Ol’ Faithful jumped in my hands before a piece of her outer shell exploded and sailed to a </p>
+<p>corner of my room. Smoke and the smell of burning electronics reached my nose and I knew it 
+was over. This was it, my booster was done for. They hadn’t made this model in years; repair 
+was a pipedream. 
+“
+” I yelled, throwing it onto the bed. “It didn’t even--
+DAMMIT!!
+​
+At least she didn’t leave me high and dry. I glanced down at my chest with pure hope but 
+I knew I couldn’t expect much. The influx of energy had been so small I would be lucky to even 
+have cleavage. </p>
+<p>” 
+mmm…
+​</p>
+<p>My breasts swelled as if they were tired. Perky roundness filled them out at a snail’s </p>
+<p>pace. I was overjoyed just to see them gain enough weight for my skin to fold over and pass the 
+pencil test. </p>
+<p>“Come on! C-Come...on!” I begged, still enjoying the little bit of pleasure accompanying </p>
+<p>my enhancement. </p>
+<p>just before the growth peetered off. </p>
+<p>The dress lifted across them and I started to fill into the cups. Padding tickled my nipples </p>
+<p>“No! Please no!!” I was at a loss. I couldn’t have been bigger than a C-cup. Can you </p>
+<p>believe it?! A 
+ I couldn’t even hope to form cleavage without the help of a bra! There was 
+C-cup!
+​
+no justice. The world was going to be a dark, hard place from now on without my soft pillows. I 
+had only a handful of hours until they shrank away and left me with nothing. In a kinder world, 
+Ol’ Faithful’s malfunction would have sent some kind of rogue zap into my body to make my 
+boobs blow up to some gorgeous, permanent size. But not here. This was the real world and 
+boosters don’t work that way. Ever wonder if you might have an addiction? </p>
+<p>Mason was going to be so disappointed. No doubt he was expecting to find a girl 
+overflowing her dress with a pair of wobbling, head-sized Christmas ornaments he could bury </p>
+<p>​
+​
+​
+​
+​
+ </p>
+<p>17 </p>
+<p>his face in later tonight. I was barely big enough to make the dress modest. The shoulder straps 
+would have to be tightened if I wanted any kind of support. </p>
+<p>DING DONG! 
+The doorbell rang several minutes later. Still moping, I grabbed my purse and dragged </p>
+<p>myself to open it. My boyfriend stood there with a holiday-themed bouquet of flowers smelling 
+of scented pinecones.  </p>
+<p>“Hey, babe!” he greeted. I followed his eyes to my lack-luster bust and saw his smile turn </p>
+<p>into a perplexed slant. “Going a little more conservative, huh? That’s new!” </p>
+<p>“My booster broke…” I mumbled, crossing my arms over my chest. Normally, that </p>
+<p>wasn’t supposed to be possible. </p>
+<p>Mason must have sensed my despair. If he was torn up about it, he was doing a great job </p>
+<p>of hiding it. The flowers pressed into my back when he hugged me. “Well that’s ok! I’m still 
+taking the most beautiful girl out to a Christmas dinner! You don’t 
+night.” </p>
+<p>to torture a dress every 
+have
+​</p>
+<p>Looking at the floor, I grumbled like a child, “I like torturing my dresses…” 
+“We can see what we can do about fixing it!” 
+I frowned. “I was going to let you dress me up however you wanted and then make me </p>
+<p>grow into it tonight…” </p>
+<p>Mason looked like he had just missed a prime investment opportunity. Bless his 
+titty-loving heart though, he turned it around. “I just would have torn the clothes off you 
+anyway!” </p>
+<p>My stomach growled, betraying my sour mood. 
+“You hungry?” he asked. 
+“Yea…” 
+“You’ll feel better after you eat something. I promise!” 
+He was right. Within an hour, the smell of the restaurant alone helped ease my loss. As 
+heavenly as the food was, it just wasn’t the same without feeling my boobs fighting against the 
+table’s edge. Oddly enough, I still caught Mason staring down my dress. </p>
+<p>trying to sneak a peek??” 
+still
+​</p>
+<p>“I couldn’t fill your hands right now and tou’re 
+“Always!” he grinned, enjoying his steak. 
+“There’s nothing to look at!” 
+“I 
+“You’re sweet…”<br />
+“We can find you a new booster, you know. It’s not a big deal!” 
+Compared to some of the women seated around us, I felt like one of the cutting boards in </p>
+<p>disagree!” 
+very much 
+​</p>
+<p>the kitchen. “It’s a big deal </p>
+<p>.” 
+to me
+​</p>
+<p>Mason winked. “Well, there are a lot of sales going on right now! Maybe we can go </p>
+<p>shopping tomorrow before the department stores close. Is there a model you’ve had your eye 
+on?” </p>
+<p>​
+​
+​
+​
+ </p>
+<p>18 </p>
+<p>You’re damn-well right there was a model I’ve had my eye on. My eye and most of my </p>
+<p>conscious mind. It probably wasn’t healthy how much it’s been in my thoughts and dreams. 
+Regardless, I wasted no time in blurting out, “I want the Limited Edition Maximum-Strength 
+Cup-Enhancement Booster from IncrediBust!” </p>
+<p>Mason coughed on his food and had to use his napkin to prevent spraying me in chunks 
+from his laughter. Finding his composure after a check-in from our worried waiter, he looked at 
+me with watery eyes. “I-Isn’t that the one that costs around a down payment on a small house??” </p>
+<p>“Y-Yes…” I shrunk into my chair, much like my chest soon would. 
+“Dawn, trust me, I would 
+“Yea??” I perked up. I don’t know what I expected. 
+“--but you would absolutely blow your bra open!!” 
+No… No, not Mason too! Why was everyone so concerned about my bra’s wellbeing?! It </p>
+<p>to get you that--” 
+love
+​</p>
+<p>was strong! It’s a fighter! It would </p>
+<p>to go out in such a blaze of glory! 
+want
+​
+I blushed, feeling ridiculed for my sexual urges. “I would not…” 
+“You wouldn’t waste a second setting that thing to max!” Mason leaned forward and I </p>
+<p>felt his foot rub my calf. “And I wouldn’t mind seeing it, either.” </p>
+<p>You and me both. It was lightyears out of both of our budgets, though. Mason was </p>
+<p>well-off, but not </p>
+<p>well-off. 
+that
+​</p>
+<p>“How about we go look at some of last year’s models?” he suggested before teasing, </p>
+<p>“Those might be more affordable and more suited to your tendencies.” </p>
+<p>“
+ is suited towards my tendencies.” 
+Big
+​
+“We’ll see what we can find, ok?” 
+“Ok…” Whatever we might find even remotely in my budget, it wouldn’t be the Limited </p>
+<p>Edition Maximum-Strength Cup-Enhancement Booster from IncrediBust. More than likely it 
+would be less powerful than Ol’ Faithful and designed to break in a year. </p>
+<p>Mason’s foot traveled higher and tickled the insides of my lower thighs. “Does it help </p>
+<p>that I still can’t wait to rip that dress off you?” </p>
+<p>I couldn’t help but blush. Other diners could definitely hear us, but I found it a little </p>
+<p>exciting after my dairy rush at the bar. “A-A little,” I admitted. </p>
+<p>“Good, because I’ve been itching to get my lips on those perky little tits all through </p>
+<p>dinner. I can’t remember the last time I saw you with those cute nipples!” </p>
+<p>Needless to say, the check was paid within the next ten minutes and Mason was racing to 
+my apartment before the clock struck twelve on the last of Ol’ Faithful’s boosts. We managed to 
+enjoy a good amount of fun with my C-cups before I felt them wearing away. Mason’s hands 
+were on them with his lips latched around a nipple when they shrunk. I was strangely 
+embarrassed, similar to what I imagine a man feels like when he loses his hard-on during sex. 
+Mason didn’t miss a beat, though. He sucked as if I were as big as ever, not to mention I was 
+more agile in bed than I had been in a long time. I guess the night didn’t turn out so bad, </p>
+<p>​
+​
+​
+​
+ </p>
+<p>19 </p>
+<p>considering Ol’ Faithful’s corpse was on the floor by my nightstand. That man was as sweet as 
+they came and I felt as precious to him as ever. </p>
+<p>Still, as I lie naked in his arms in the dark trying to find sleep, I wondered how long it </p>
+<p>would be until I could overflow my bra again. Chances were slim we would find anything 
+affordable. Maybe a lost IncrediBust would find its way to me. Surely there was a 
+. 
+chance
+​
+Christmas miracles happen, right? Maybe Santa is a boob-man. A girl can dream. </p>
+<hr />
+<p>” 
+Merry Christmas!!!
+“
+​
+A knock on my door tore me from my sleep far sooner than was fair. My joyous pair of </p>
+<p>friends lunging at me with open arms and well wishes nearly took me off my feet.  </p>
+<p>“Heeeeey, guys!” I couldn’t believe they were actually here at eight in the morning. A </p>
+<p>morning I was supposed to be sleeping in with Mason in my cozy bed away from this cold, 
+snowless Christmas devoid of breasts. “Were we...actually serious about doing this?” </p>
+<p>“Duh!” Jasmine pulled away from her hug and entered my apartment after wiping the </p>
+<p>water from her boots. </p>
+<p>“Am I right in assuming you didn’t get us anything, then?” Kally feigned a pout. 
+“W-Well, I wasn’t planning on 
+“I’m just messing with you! The show you put on at the bar and the free round was </p>
+<p>getting together at eight a.m. and--” 
+actually
+​</p>
+<p>present enough as far as I’m concerned!” </p>
+<p>“</p>
+<p>” Jasmine was beaming with Christmas cheer. 
+Oh my God! I LOVE your tree, Dawn!
+​</p>
+<p>“And don’t worry! We got the pajamas!” </p>
+<p>“We were serious on that too, huh…” I moaned. Christmas Eve had been a little rough on </p>
+<p>me, all right? I’m allowed to be a bit slow. Sex can be rough and drawn out when your two 
+favorite toys are missing. </p>
+<p>“I didn’t know we were having a party…!” 
+We turned to see Mason shuffling from my room. Sleep was heavy in his eyes but I could </p>
+<p>still make out a child-like twinkle present only for Christmas morning. Poor guy was dragged 
+around town all day yesterday looking for a new booster. Most department stores were closed 
+and even those who were open had boosters with prices it hurt to look at. I think he enjoyed the 
+few demos they had available to try, though. Even if they did only last five minutes. </p>
+<p>“Morning, Mason! You look tired. Up all night playing with Dawn’s big--” Kally 
+stopped, noticing my mom’s pajamas weren’t filled out. “Tell me my eyes deceive me! Where 
+are your boobs, Dawn?? Are you feeling all right??” She gasped, putting a hand over her mouth. 
+“We didn’t interrupt you two at the start of some sexy booster role-play did we??” </p>
+<p>“We </p>
+<p>be early if she hasn’t had a chance to have her morning swell yet!” Jasmine 
+must
+​</p>
+<p>joined in on the teasing. </p>
+<p>​
+​
+​
+​
+​
+ </p>
+<p>20 </p>
+<p>It hurt me to say it. I was even wearing a bra to help give myself </p>
+<p>kind of size 
+some
+​</p>
+<p>increase. “Nothing like that… My booster actually broke the other night, so this is what I get for 
+now.” </p>
+<p>“Oh no,” Kally gasped as if there had been a death in the family. “You were our main </p>
+<p>Jasmine at least tried to console me. “Stop it, can’t you see she’s sad? Dawn loved that </p>
+<p>source of free drinks!” </p>
+<p>thing. I’m sorry...” </p>
+<p>Kally turned to my boyfriend. “How are you holding up, Mason? Did you need to use a </p>
+<p>real pillow for the first time last night since dating her?” </p>
+<p>I could tell Mason was shocked by her accuracy. “He’s taken it much better than I have!” </p>
+<p>It was time to change the subject. I tried to mentally slap myself awake and into the spirit. The 
+gentle drizzle outside wasn’t helping. What’s Christmas without snow? “Who wants coffee?? I 
+have eggnog!” </p>
+<p>“Eggnog, yes please,” Mason swooned with sleep deprivation. 
+“We already had one or two energy drinks!” Jasmine confessed. That explained a lot. 
+Kally set a stack of gifts in my living room. “I love your tree, Dawn!” 
+“Thanks! I got it at the last minute!” It was full and heavily flocked with fake snow. 
+Coffee was the savior I needed. I wasn’t going to let my lack of breasts spoil a perfectly </p>
+<p>good Christmas morning with my lover and friends. There was mountains of merriment to be 
+had! I could worry about filling out my clothes later. </p>
+<p>“Let’s do presents!” 
+Mason and I hadn’t even had a chance to catch our breath. Handling my friends made us </p>
+<p>feel like an old married couple surrounded my children and their new toys hidden under shiny 
+paper. I was starting to understand why Jasmine’s parents needed a cruise; somehow my friends 
+regressed to children on Christmas morning. </p>
+<p>No sooner had I sat down than a long, flat box was shoved in my lap. Jasmine looked </p>
+<p>ready to burst. “Here, Dawn! Open your pajamas first!” </p>
+<p>“Are you sure we don’t want to relax and wake up a little bit before we--” 
+“
+” 
+Open it!
+​
+She was going to wake the entire apartment building if I didn’t do what she asked. </p>
+<p>Setting my coffee on the table, I tore open the wrapping paper and lifted the lid. </p>
+<p>A pair of long, pink bunny ears sprang into the air. “Oh...my God…” I stared in horror. 
+“Do you </p>
+<p>?? Kally and I spent all weekend looking for the perfect pair of pajamas to 
+love it
+​</p>
+<p>give you.” </p>
+<p>It was a pink monstrosity. A full-body, fleece bunny suit complete with bunny-head </p>
+<p>slippers. A zipper ran up the front designed to encase some poor sap like me. </p>
+<p>Mason snorted back a chuckle beside me. “Sorry,” he laughed, “But you’re going to look </p>
+<p>in that.” 
+adorable 
+​</p>
+<p>“I-I’m not actually going to--” </p>
+<p>​
+​
+​
+ </p>
+<p>21 </p>
+<p>“Put it on! Put it on!” Jasmine clapped. 
+“My mom already made pajamas for me! It would be rude to--” 
+Kally smirked. “It’s the </p>
+<p>you could do after you forgot we were coming. Jasmine was 
+least
+​</p>
+<p>excited about our new tradition… Look at that face…” 
+so
+​</p>
+<p>I had to admit, Jasmine was a certifiable expert with the puppy-dog eyes. 
+“You gotta put that on,” Mason agreed. “I promise it 
+Groaning, I pulled the costume from the box and dragged it towards my room. “Fine. </p>
+<p>not go on YouTube.” 
+might
+​</p>
+<p>Fine!! I’ll be the Easter Bunny for Christmas!” </p>
+<p>Jasmine was ecstatic. “I knew she would love it!” 
+“Merry Christmas!” Kally called out. I held up a loving finger in return before I closed </p>
+<p>my bedroom door. These were going to be the best pictures I could hope to find all over my 
+social media. </p>
+<p>I undressed down to my bra and underwear before standing in front of my fate. “I really 
+need to stop letting them drink so much,” I sighed. The sooner I put it on the sooner I could take 
+it off. </p>
+<p>I emerged as a giant pink rabbit to a room full of grins. My ears slapped the top of the </p>
+<p>door frame when I stepped out. Kally was enjoying my torture while Jasmine was actually 
+overjoyed. Mason was more than amused. If he was actually imagining me stripping for him 
+while wearing this, I might have to reevaluate my taste in men. 
+“
+” Jasmine squealed. 
+Oh my God! You’re so precious!!
+​
+Kally twirled a finger, holding her phone into the air. “Turn around! Show us the whole </p>
+<p>package!”  </p>
+<p>cottontail on my ass. </p>
+<p>new tradition.” </p>
+<p>I could almost hear the internet giggle when I spun and showed off the giant white </p>
+<p>“Mason, how does this make you feel? Awaken anything inside of you?” Kally asked. 
+“Dawn,” he said, trying to hold back his smile on my account, “I think we might have a </p>
+<p>“Yea? Just wait until you see what I find for you next year then!” 
+“My turn!” Jasmine grabbed a present from the pile. Of course her own pajamas were </p>
+<p>normal for an adult her age. “Thanks, Kally! I love them!” </p>
+<p>“Go put ‘em on!” 
+Jasmine ran past me while I slumped into the couch next to Mason. A hand flipped an ear </p>
+<p>on my head like a cat. “Should I get you a carrot?” he asked. </p>
+<p>“Mmmm, sorry, this bunny only eats sausage,” I breathed hotly, brushing a finger against </p>
+<p>his crotch. I knew he wasn’t wearing boxers and I delighted in seeing his face go red and the 
+front of his sweat pants tent up. Kally seemed to as well. If I had to suffer so much 
+embarrassment, Mason was getting a healthy dose as well. </p>
+<p>Kally purred. “Get a room, you two! Mason, I could help you tie a bow around that for </p>
+<p>her if you want…” </p>
+<p>​
+​
+​
+ </p>
+<p>22 </p>
+<p>“How do I look??” Jasmine interrupted, clad in bright blue pajamas. She didn’t wait long </p>
+<p>before sitting on the floor ready to continue. “Your turn, Kally!” </p>
+<p>Kally’s face lit up when she pulled silk and lace from a bag. It was a spaghetti-strap teddy </p>
+<p>with only enough length to cover the top half of her hips. Somehow it looked 
+than just being naked. </p>
+<p>revealing 
+more
+​</p>
+<p>“Do I know you or what??” Jasmine giggled. 
+“I think you might get a thank you card from the next guy I bring home!” Kally gaped. A </p>
+<p>devilish smile flashed. “Guess I should put it on huh?” </p>
+<p>I tore it from her hands before anyone could answer and stuffed it between a couch </p>
+<p>cushion. “Nope!! We’re one skimpy outfit and a group picture away from having the strangest 
+Christmas card on record.” </p>
+<p>“Aww…” Jasmine was disappointed, sad Kally couldn’t take part. 
+“Don’t worry, I’ll put it on when she’s not looking,” Kally whispered. 
+After the pajama fiasco, Christmas morning continued as expected. Gifts were passed </p>
+<p>around and we all fawned over everyone’s thoughtfulness. Mason bought me a beautiful sweater 
+I would have loved to fill out for him. He could see the longing in my sad bunny eyes and 
+hugged me all the same. Despite the constant teasing and humiliation, I was really surrounded by 
+some great friends. Luckily I had presents under the tree for Kally and Jasmine, they were just 
+meant to be given at a later time. Before long, the flurry of torn paper died down. </p>
+<p>“Looks like you have the last gift, Dawn!” Kally announced, grabbing a smaller box from </p>
+<p>her feet. </p>
+<p>“Hang on!” Mason jumped up and ran into our bedroom. My comically-large bunny ears </p>
+<p>could hear him rifling through some of my things on the higher shelves. He returned soon 
+enough with a box wrapped in sparkling silver paper. “I’ve got one more for her!” </p>
+<p>“Where the hell was that??” I gaped. I knew my closet like the top of my cleavage. 
+It was placed in my lap like a child. “I hid it while you were sleeping. Open it!” 
+The box was a little larger than a toaster. I could tell from the paper and folds that it was 
+not Mason who wrapped it. There was a satisfying weight to it, too. My desperate, titty-starved 
+mind likened it to Ol’ Faithful. 
+“What is it??” I stared. 
+Kally was impatient, bouncing her remaining gift on her knee. “I bet I know how you </p>
+<p>could find out!” </p>
+<p>I tore into the paper like an animal. I knew there was little chance of it containing </p>
+<p>anything remotely close to what I hoped. The first glimpse of the box’s design made my heart 
+palpitate. </p>
+<p>“Mason, no…” I gasped, seeing the letters ‘crediBu’ showing through a tear in the paper. 
+“Open it!” he encouraged. </p>
+<p>​
+ </p>
+<p>23 </p>
+<p>I don’t remember tearing the rest of it off. Suddenly there was just a pristine box 
+illustrating the booster of my dreams sitting in my pink bunny lap. Across the top read ‘Limited 
+Edition Maximum-Strength Cup-Enhancement Booster’, by who other than IncrediBust. </p>
+<p>“Mason… M-Mason…” I couldn’t breathe. Kally and Jasmine’s eyes were just as wide. </p>
+<p>“
+” I think I was 
+Mason if this is some kind of a joke!! This better not be some kind of joke!!
+​
+screeching. “I swear to God, if there is a rock inside this box!” </p>
+<p>There wasn’t time to wait for any kind of assurance. The box didn’t stand a chance 
+against my strength. It flipped open and there sat the IncrediBust I had dreamed about, nestled so 
+precisely in a bed of black foam. It was even shinier in person. Crisp red stripes reflected a dark 
+crimson. </p>
+<p>“Wow…” Jasmine gaped. She was speechless for once. Kally looked like she forgot how </p>
+<p>to blink. 
+“</p>
+<p>” I screamed, diving into a hug. My bunny ears slapped his face. I felt like a 
+MASON!!
+​</p>
+<p>child on Christmas morning opening their dream gift. That kid screeching about a shiny new N64 
+and Mario Kart? That was me right now. “How?! HOW?! I-It’s so much!!” Honestly the TV 
+commercial undersold this thing; it was a gorgeous piece of titty-based technology. I felt like I 
+was about to explode from excitement. “</p>
+<p>” 
+How...?? WHEN?!
+​</p>
+<p>Mason must have noticed my getting overwhelmed and gave me a hug to calm me down </p>
+<p>before I passed out. “Easy, easy! I’ve had it for a few weeks now.” </p>
+<p>” 
+WHAT?!?!
+​</p>
+<p>“...
+ Are you actually some kind of secret millionaire??” Kally wondered, eying my 
+Mason!
+“
+​
+new toy. </p>
+<p>He was getting far too much pleasure out of my ordeal. “I swear I’m not! It’s a funny </p>
+<p>story, really. You should really be thanking Kyle.” </p>
+<p>“Kyle from college??” I asked, heart racing. I hadn’t even touched it yet; it was too </p>
+<p>exciting and precious to mess it up with fingerprints. </p>
+<p>“That’s him. He works at IncrediBust! We had drinks a few weeks ago and it turns out 
+they were raffling off a few of these babies at their company Christmas party and he was lucky 
+enough to win one! But you know, Kyle is--” </p>
+<p>“Gay,” I finished for him. 
+“Yea, so he’s didn’t have much use for it. So he offered it to me!” 
+“Holy crap! </p>
+<p>” What were the chances? I didn’t know what to think or how to 
+Holy crap!
+​</p>
+<p>act. “Thank you, Mason! Thank you!” </p>
+<p>He chuckled and sipped from a spiked coffee. “We’ll see if you’re still thanking me when </p>
+<p>I’m booked helping Kyle put in his paver patio for a month come Summer.” </p>
+<p>“I think you might have earned yourself a good time tonight, Mason,” Kally giggled. </p>
+<p>“Look at her! Dawn is like a toddler with a new puppy!” </p>
+<p>Jasmine was loving the energy. “I’m starving! We should all go get some breakfast </p>
+<p>and--” </p>
+<p>​
+​
+​
+​
+​
+​
+ </p>
+<p>24 </p>
+<p>A high-pitch whirring filled the room before she could finish her thought. All three pairs </p>
+<p>of eyes turned to me in horror. What? Did you think I was going to 
+Have you been </p>
+<p>at all?! 
+listening 
+​</p>
+<p>to try this thing out?? 
+wait
+​</p>
+<p>Mason’s eyes bulged when I turned the dial to max strength. The booster’s whine </p>
+<p>heightened, the mechanics priming a charge for my waiting bunny body. “U-Uhhhh, Dawn 
+maybe we should hold off. Or at least make start a little slower?” </p>
+<p>Hell no. His warning went in one ear and out the other as the booster pressed against my </p>
+<p>chest through the bunny suit. </p>
+<p>“Oh this should be fun,” Kally grinned, watching me finger the trigger. 
+Click! 
+A pleasure bomb erupted in my chest. This was nowhere close to what Ol’ Faithful felt </p>
+<p>like. This was pure power, refined and reworked over many years for the sole purpose of 
+enlarging breasts. From the surge of energy alone I was actually worried about my rash decision. 
+Only for a moment. After that, I stopped caring. </p>
+<p>“
+” 
+Oh…. OOH!! Holy shit!!
+​
+“Dawn? Are you all right?” Jasmine asked, seeing me double over on the couch. I wasn’t 
+expecting such a rush, nor were my little A-cups. Maybe the instructions would have told me not 
+to hit such small boobs with the highest setting. </p>
+<p>Kally snorted. “Oh I think she’s more than all right. I have a feeling you might want to </p>
+<p>move, Jasmine.” </p>
+<p>“Hey,” Mason said, putting a hand on my trembling back. “Do they feel--” 
+I panted with my head between my knees and my hands clenched to my boobs. I could </p>
+<p>feel them heating up in my grasp like a couple of tiny engines. “M-Mason...
+going to have...s-so much...fun with...</p>
+<p>...this...thing.” 
+nnngh
+​
+I shot back into the couch. It was starting. There was no stopping the process now, nor 
+would I ever want to. Arching my back, I lifted a pair of grapefruits already blooming off my 
+chest into the air, tenting out my bunny suit with erotic hills. </p>
+<p>We are 
+oh God...
+​</p>
+<p>“</p>
+<p>” I was ecstatic. My growth was so intense I hardly had time to guess my 
+Ahh!! Ah ahh!!
+​
+size before the cup was irrelevant. </p>
+<p>“Oh damn!” Kally awed, eyes widening as I swelled like a couple of ripening melons.<br />
+I was filling out my bra faster than a college test in the last thirty seconds of class. Within </p>
+<p>a few short gasps, I could see the outline of its padding pressing against my pink PJs. Around it 
+was an onslaught of heaving flesh threatening to engulf the tiny cups into their mass. The bra 
+wasn’t budging, and it sure as hell wasn’t loosening. The excitement of feeling it cut into my 
+torso was almost frightening. </p>
+<p>“T-They’re not...stopping! </p>
+<p>” I cheered. 
+Look at my tits!!
+​
+I could no longer see my legs over the pink mountains rising before me. Under my suit, skin was 
+seeking out any available room for its weighty girth. My bloating knockers stretched and shifted, </p>
+<p>MMMMM they’re not stopping!!
+​</p>
+<p>​
+​
+​
+​
+​
+​
+​
+​
+ </p>
+<p>25 </p>
+<p>rubbing over the top of my stomach and pushing into my collarbones. I was starting to look like 
+an awkwardly pregnant Easter Bunny. </p>
+<p>“Heeeey! Don’t break your pajamas!” Jasmine complained, “We just got you those!” 
+She was right. As much as I wanted to, tearing them to shreds would be rude when I </p>
+<p>hadn’t worn them for more than an hour. Besides, I wanted to stand up. Feeling two 
+watermelon’s worth of weight wobbling on top of my arching chest was bliss, but I wanted to 
+feel gravity </p>
+<p>give me a run for my money. 
+really
+​</p>
+<p>“Careful, careful!” Mason worried when I let my chest carry me forward. 
+I ignored him, using the momentum to stand to swaying feet. 
+CREEAAAAAK 
+My bra complained when It actually had to support me. I felt like a whale suspended in a 
+hammock from the way I was overflowing my little A-cups. A pink slope extended from my chin 
+and inflated the bunny suit like a fat man. Had it not been for my bra slung under my tits, I think 
+they would have reached my hips with ease. </p>
+<p>“W-Whoa…” I swooned, wrapping an arm around my chest and flailing another for </p>
+<p>balance. Now I knew what an upside-down bowling pin felt like. “These 
+are...</p>
+<p>...heavy!” 
+m-mmm!!
+​
+CREEAAAAKK 
+POP!!! 
+Strange noises were coming from my clothes. I didn’t know if stitches were blowing on </p>
+<p>my bra or the suit, but something was going to give soon. In fairness, I did try to unzip and 
+release my expanding assets. Lucky for me, the zipper was cheap and jammed under my chin. </p>
+<p>“I-It’s stuck!” I gasped, feeling the cacoon of fabric deforming my chest. “</p>
+<p>Mmmmm </p>
+<p>” 
+ooohhhh it’s stuck!! It’s getting...tighter!!
+​
+It’s possible I was enjoying myself </p>
+<p>too much. No one seemed to mind, 
+way, waaaay
+​</p>
+<p>though. Mason was rock hard and made no effort to hide it. Kally was simply entertained and 
+smirking with a strange smile. Jasmine… Well, I never really know what Jasmine is thinking, but 
+she had a goofy smile on her face. </p>
+<p>My bra cups were overflowing with my nipples. A gentle touch of my hand was all it </p>
+<p>took to feel my areolas bulging around it in swollen domes and send a violent shiver down my 
+spine. Still my tits burned with growth, the IncrediBust’s work not done. </p>
+<p>CREEAAAKK!!! 
+“M-My...BRA!! It’s so...damn tight!!! It’s 
+Skin was pushing into the sleeves and out of the collar. I could only imagine the true </p>
+<p>” 
+overflowing!
+​</p>
+<p>shape and size of my udders; deformed by the straps of my resilient bra, I looked closer to a pink 
+raspberry. </p>
+<p>“Grow...</p>
+<p>” I started gasping, 
+G-Grow!! I want to be big… Oooohhhh I wanna be big!
+​
+taking as deep of breaths as I could muster. This was bra coming off, one way or another. </p>
+<p>CREEEAAAK!!!! </p>
+<p>​
+​
+​
+​
+​
+​
+ </p>
+<p>26 </p>
+<p>“Jesus, Dawn! How big are you going to get?!” Kally laughed while watching me totter </p>
+<p>like a human balloon. </p>
+<p>Sweat was pouring down my body. I could feel my cleavage sliding against itself and I </p>
+<p>grew afraid I might tumble out of my bra before it met its maker. Wrapping my arms around the 
+bottom of my chest like a pregnant belly, I sentenced my bra to death. </p>
+<p>...on!! 
+nnngh
+​</p>
+<p>“C-Come…
+BANG!!! 
+A shockwave rocketed around my chest at supersonic speed. I couldn’t tell you where, </p>
+<p>” 
+God I’m so big…!! How the fuck is it still--
+​</p>
+<p>but my bra snapped at several places simultaneously as I engorged well beyond the size of beach 
+balls.  </p>
+<p>“
+” 
+MMM!!! MMMMNNNGHHH!!! GOD!!
+​
+It was everything I hoped it would be and more. My nipples sang with the sting of </p>
+<p>snapped spandex, their sensitivity through the roof and their puffed cylinders sticking into the 
+thinning bunny suit like small jars. Without its support, my chest rushed to as natural shape as 
+much as the suit allowed. Hot skin rubbed across my hips before stopping at the legs. At this 
+point I looked like a bunny bloating from the bottom up. </p>
+<p>“She’s actually going to fill that thing!” Kally predicted. 
+Mason was speechless. His hand was twitching from the mental effort of not touching </p>
+<p>himself, or me. 
+“</p>
+<p>” I breathed, my tits relentless. 
+Mmmm that booster is...more powerful than...I thought!
+​</p>
+<p>Skin rubbed and squeaked against my body, the tightness rising higher and higher up my torso as 
+the suit ran out of room by my hips. It looked as though I had a massive belly extending a foot on 
+either side of me and two fists sticking angrily outward where my nipples should be. </p>
+<p>Running my hands over my growing form, I cupped my nipples and felt an orgasm shoot </p>
+<p>through me. I used to not even be able to fill my hands with my breasts. Now my nipples were 
+big enough to overflow my palms and massaging fingers. My knees knocked together from the 
+pleasure. I would never be able to stand fully upright again; it was all I could handle just to stay 
+still with so much weight. </p>
+<p>POP! 
+POP POP!! 
+Stitches were sounding the retreat on the bunny suit. Seams deformed and warped in </p>
+<p>every direction as I rounded out near my shoulders. A pair of tits like exercise balls were stuffed 
+inside the poor pajamas and they were dying to get out. </p>
+<p>“It’s...it’s too much…” I moaned, the tight fabric massaging my nipples for me. I felt like 
+a blimp stuffed inside a sock. Could they see the wet spot soaking the crotch? My legs trembled 
+from pleasure and orgasms, their muscles weakening from the strain. “
+Ooohhhh MMMM GOD 
+” 
+IT’S...SO GOOD!!!
+​</p>
+<p>WHAM!! </p>
+<p>​
+​
+​
+​
+​
+ </p>
+<p>27 </p>
+<p>I fell backward and landed in a mighty heap on my butt, knocking into the coffee table 
+and spilling someone’s coffee. I didn’t care, I was too busy feeling like a water balloon as the 
+force made my chest flatten and spread in all directions around my body. The suit was almost 
+able to handle the pressure until-- </p>
+<p>POW!!! 
+The zipper burst open. An avalanche of freed tit-flesh rushed from my front before I </p>
+<p>could react. Leaning back on my arms for support, I stared at the jiggling piles dominating my 
+torso and flowing around my thighs. Had my knees not been bent up, I would have been buried 
+to my ankles. Sitting atop my cleavage was the remains of my bra, tattered and torn. With a 
+moan I felt my growth come to an end. Putting a hand on top of my right breast with 
+overwhelming fulfillment, I looked up at my observers with a sheepish grin and proud nipples. </p>
+<p>“Heh… S-Sorry about...</p>
+<p>...that…” I panted, my ears drooping from exhaustion. It 
+mmm
+​</p>
+<p>was unbelievable how much my hand sank into my chest. I was massive yet more luxurious than 
+memory foam. Based on the pillow covering Mason’s lap, I think he enjoyed the show as much 
+as I did. </p>
+<p>“What did I tell you?? You blew your bra open!!” Kally laughed. “It didn’t take you </p>
+<p>more than thirty seconds before that thing was turned on high! Are you nuts?!” </p>
+<p>“Wow…” Jasmine’s eyes were like full moons. She crept closer on the floor before </p>
+<p>poking a finger into my depths. </p>
+<p>​
+ </p>
+<p>28 </p>
+<p>“</p>
+<p>” I cried out, crotch throbbing. Every inch of my jugs was alive and 
+M-MMM! Careful…!
+​
+packed with engorged nerves.  </p>
+<p>“Hehe, they’re so soft!” she giggled, pressing hard and sending a wave across my body. 
+I didn’t even know how long the growth was set to last. The intensity was the only dial I </p>
+<p>had been concerned with. I might be stuck with these giant knockers for the next three days! 
+What could be better? </p>
+<p>“How was that for you?” Kally asked Mason. He stammered to answer but she </p>
+<p>interrupted. “Hope you’re not wiped out! We still have one present to go!” </p>
+<p>That’s right, Kally was about to give me something before Mason dropped a massive titty </p>
+<p>bomb. I was grateful, but whatever it was, it wasn’t going to be as magnificent as the 
+IncrediBust. Mason had won Christmas for the next decade or more. </p>
+<p>“I’ll open it for you,” Kally winked as I sat trapped on the floor, “You look a little </p>
+<p>.” 
+indisposed
+​</p>
+<p>The paper tore away and Kally donned a devilish smile. When she held up a box </p>
+<p>depicting a small silver booster I knew why. </p>
+<p>“Hmmm, I wonder what this is!” she hummed. 
+Was I dreaming? I didn’t deserve any of this! “Kally, oh my God! Did you--” 
+A small booster was pulled from the box, resembling the one from the bar. I gulped. 
+“After seeing how much you enjoyed that lactation booster the other night, I couldn’t </p>
+<p>pass this up when I saw it on sale! It’s not as new of a model, but it packs a hell of a punch. And 
+your old booster was on its last legs… But I had 
+that! Way to take my thunder,” she growled. </p>
+<p>idea Mason was going to show me up like 
+no
+​</p>
+<p>“What can I say?” he shrugged, more than happy with his deed. 
+“Kally, I don’t know what to say!” I said in total shock. “T-Thank you! I can’t wait to try </p>
+<p>it! I-If I wasn’t...</p>
+<p>...stuck right now, I would hug you!” 
+mmm
+​</p>
+<p>“Don’t mention it,” she waved before standing up and approaching me. She stood over 
+my stranded form. I was expecting a warm hug until I heard her flip a switch. The booster was 
+still in her hands. “Why wait??” </p>
+<p>I struggled, trying to stand. “W-Wait, Kally! Maybe we shouldn’t--” 
+The tip of the lactation booster sank into my chest a split second before she pulled the </p>
+<p>trigger and delivered her gift. 
+GRRRMMMBLLEEE 
+“Merry Christmas!” Kally wished over the sound of a deep, rumbling slosh emanating </p>
+<p>from my mammoth tits.  </p>
+<p>“</p>
+<p>” I moaned, 
+W-W-Wait! Ohhhh… My...M-My tits!! Kally! What did...MMMM...you do?!
+​</p>
+<p>watching my cleavage start to shift and rise. </p>
+<p>The gurgles were getting louder as each and every one of my stimulated milk glands 
+sprang to life. There wasn’t room for something like this! I was bigger than our coffee table and I 
+was about to fill to the brim with milk! My legs were already being forced to the floor by my </p>
+<p>​
+​
+​
+​
+ </p>
+<p>29 </p>
+<p>soon-to-be-titanic udders’ engorging weight. If my previous growth was a garden hose, I was 
+about to feel the wrath of a milky fire hydrant. A small leak was already running down my front 
+from my swollen nipples as they flared and quivered. </p>
+<p>“And a happy New Year!” Jasmine cheered, leaping towards my chest with a growling </p>
+<p>stomach. My eyes bulged realizing my nipples were unprotected from her hunger. 
+“Jasmine! 
+” 
+J-Jasmine!! AUGH!! Wait! Mason do something!! I’m about to--
+​
+He had his phone out. He was fucking recording this like some kind of home movie we </p>
+<p>would watch years from now and laugh at! </p>
+<p>“S-Seriously?! Guys my milk is going to come in and--</p>
+<p>AHH! Jasmine! Be gentle!! </p>
+<p>”<br />
+A-Ahh!! MMM!! GOD!! I’M GOING TO BE SO FUCKING FUUUULL!!
+​</p>
+<p>I was forced onto my back when my chest engorged in all directions, bloating larger by </p>
+<p>the milk surging against my skin. Feeling my tits pulse and stretch across my body was 
+pleasurable beyond imagination. My lactation was nowhere near completion; I could feel my 
+body just getting started. This was a dream come true. I bit my lip and let the ecstasy take me 
+away as my production gurgled and increased, spraying milk from my nipples like dairy 
+fountains coating everything and everyone in sight. </p>
+<p>As it turns out, I was going to get my white Christmas after all.  </p>
+<p>​
+​
+</p>
+</body>
+</html>

@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Suction Cups</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>D</p>
+<p>Ashly came to in an unfamiliar bed. The first thing she noticed was the pleasure coming from her right nipple. She tried to open her eyes, but she couldn’t focus on anything but the pleasure.</p>
+<p>A voice Ashly had never heard before spoke. "Ah. You’re awake. Don’t move too much, you’ll only cause yourself more pain."</p>
+<p>"Who are you?" Asked Ashly. "Where am I? What happened to me?"</p>
+<p>"I am known as The Doctor around here. You are at my research lab. I’m afraid that one of my experiments went ary and changed the biological construction of your breasts. We can talk more later.</p>
+<p>Eventually the pleasure ebbed and Ashley was able to focus on her vision. She was frightened by what she saw so much she almost forgot about the pleasure entirely. Her tits had grown to be at least double their old size, now being what had to be at least DDs. More pressingly though, a plastic curtain rod about 3 inches in diameter stuck a foot out of her right nipple. Her nipple had been expanded to fit the pole.</p>
+<p>As she watched, she noticed that the rod was slowly being pulled inside her right tit. Suddenly, something slipped, and the rest of the pole disappeared inside her with her nipple closing behind it. Riley was, for a moment, in pure ecstasy. She couldn’t help fondling her breasts as they expanded another four inches in diameter.</p>
+<p>"Ms?" asked The Doctor, "Are you okay?"</p>
+<p>Riley had forgotten that she wasn’t alone in the room. "I am now. When can I leave?"</p>
+<p>"Well, I’m afraid you can’t leave here anytime soon. If you got out in your current state, it could mean untold destruction." The Doctor paused for a moment before continuing. "It seems that your breasts... digest things in a way. Once that pole made contact with your nipple, we were unable to separate it. Then your nipple expanded to fit it and... it became food for your boobs."</p>
+<p>Riley knew all those words separately, and she didn’t understand what he was saying. The Doctor left the room then, and Riley was left alone to think about what he meant. Eventually she drifted off to sleep.</p>
+<p>When she awoke, Riley saw a new figure enter her room.</p>
+<p>"I believe it’s time for your testing. Follow me to the cafeteria and then we will make our way to room 205."</p>
+<p>"Who are you?" Riley assumed this was an assistant of some sort.</p>
+<p>"Ms. Stokes."</p>
+<p>Riley got out of the bed and walked, naked, to the door. She followed Ms. Stokes through a maze of hallways before she ended up in a decently sized room with a serving table. On the table was some kind of soup. Riley got a bowl of it and sat down at a table.</p>
+<p>When she was done eating, Ms. Stokes brought her to another room. This one was  entirely empty except for a few small objects on a table. There was a mirror on one of the walls. When she stepped in, the door shut behind her.</p>
+<p>"Hello." The Doctor’s voice came through some hidden speakers in the room. "Welcome to your first day of testing. I’m front of you are a few objects. I want you to place them on one of you nipples one at a time. Let’s start with the pencil."</p>
+<p>Riley still didn’t know what’s as happening, but she complied. She picked up the pencil from the table and placed it on her left nipple, eraser first. Instantly, Riley had one of the biggest orgasms of her life. She couldn’t stop herself from playing with tits. She was so lost in her orgasm that she didn’t notice that the pencil was gone. A few minutes later, her high wore off, and she finally noticed that her breasts felt decently heavier. Her tits seemed to have grown at least an inch in diameter, maybe more.</p>
+<p>"Great. Let’s move on to the plate."</p>
+<p>Riley picked up a ceramic plate and put it onto her nipple. This time the orgasm wasn’t as strong. She was able to watch as her nipple opened and spread across the plate, about an inch every ten seconds. Once her nipple was wider than the ceramic, the plate disappeared into her so fast she could only feel it. Her tits began to expand once again, and she gained another two cup sizes. The difference in weight momentarily made her lose her balance, and she watched in horror as her nipples hit it. She tried to stand up but she couldn’t take it off. She could hear her milk bubbling within her, almost in anticipation, as her nipples spread across the table, inch by inch. The table began to fold until it became two cylinders, one on each nipple. Each was a foot in diameter and three feet long. Moments later, her nipple reached the edge. The cylinders were pulled inside of her as though there was infinite space within her. As the end of them entered her nipples, they began to shrink back to their normal size. Riley waited anxiously as her milk’s bubbling became audible once more. After what felt to Riley like an eternity, her breasts started to expand. At first, it was slow. Only an inch every few seconds. As time went on, it accelerated. After just a minute, she was doubling her size every thirty seconds. After two and a half minutes, her breasts suddenly stopped. Her tits were enormous. She couldn’t see over them, and they were resting on the ground in front of her. She estimated them to be at least 8 feet in diameter.</p>
+<p>"Well that was... unplanned. We’ll need some time to figure out what to do with you." The Doctor's voice came over the speakers.</p>
+<p>Riley's tits were so massive that she couldn’t move them. She could press her fist into them and it felt like a fly. With nothing to do but wait, Riley began to worry about her future. She wouldn’t be able to do anything if her breasts became larger every time something touched her nipples. She was already pinned to the floor after just a day, how long would it take for her to outgrow the building?</p>
+<p>Riley soon became aware of a dull ache emanating from her nipples. As time passed, it slowly became more painful.</p>
+<p>After a couple hours, a small bug flew in front of her left nipple. As it passed, her nipple opened, and large amounts of air was sucked in with the fly. Afterwards, she could feel her tits get firmer, but they didn’t grow. Riley also noticed that the pain from her nipples was gone.</p>
+<p>A while later, Ms. Stokes entered holding a tray of food. She handed it to Riley and left without a word. Her tits had started aching for food again, but there was no way for her to reach her nipples.</p>
+<p>An hour after being fed, Riley felt something change in herself. Then she felt air rushing into her tits from her nipples. The pain stopped suddenly, and Riley noticed that her breasts were slowly growing again. Not fast, but growing. After a few minutes, the growth had accelerated because her nipples had expanded to be three feet wide. Her breasts were growing an inch every minute, and within an hour they would be against the opposite wall.</p>
+<p>When her nipples hit the wall, her breasts were already twelve feet across. Her nipples spread across the wall. When they were fifteen feet across each, the wall gave in to her body’s demands. The drywall was ripped off, and her breasts graciously consumed it. Her breasts had begun growing by the time the first of the insulation was sucked in. Within just moments, her tits had grown three feet in diameter. As the support beams were torn out, her tits were exposed to a large amount of dirt, which started flying into her in large amounts. Her froth had accelerated, doubling every few seconds, and the sides of her breasts hit the walls of the room. The wall tried to hold, but it was unable to stop the flood of boob. The wall gave within seconds, allowing her breasts to continue their expansion. Riley felt a pain in her thigh, and she passed out.</p>
+<p>When she awoke, she noticed that the wall that was her tits extended beyond her vision, but she could feel them growing. Cities crumbled under the weight of her multi mile wide breasts, but she could barely feel them. They felt like pebbles. Her growth seemed to have accelerated once more as well, as she could feel herself doubling in size every second. Her nipples were now three miles wide, and sucked in dirt and rocks and air and whatever else was unfortunate enough to be in the way. Slowly, Riley became aware that her breasts were becoming much lighter. In fact, she was beginning to lose contact with them ground. Her tits were so massive that most of her was outside the atmosphere, and she was being pulled to the sun because of the mass of her.</p>
+</body>
+</html>

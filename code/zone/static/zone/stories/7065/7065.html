@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Pencil Dick Geek</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>Like most men, Frank had always been cautious about the size of his penis. Unlike many, his 
+actuality was very much undersized. Usually when he was erect it was 2 and a half inches, 
+barely large enough to stroke with a couple fingers. Going through high school with the 
+unfortunate nickname “Pencil Dick Geek”, which was embarrassing despite proving that 
+apparently young kids still listen to Dr. Demento, was far from fun, he was always a scrawny 
+little nerd, so the bullying was constant, even not related to his dick. </p>
+<p>After yet another instance at the gym (even though he was well past going to high school), 
+Frank finally gets fed up and spends many hours searching for ways to actually grow his small 
+penis. After many fruitless hours where his internal BS detector and computer’s virus detectors 
+went off constantly, he found a site that looked pretty legit. It promised to grow you to at least 8 
+inches no matter what size you started out at. He figured it probably wouldn’t work, but figured 
+that it was worth the bit of cash to gamble for finally getting the growth fantasy he’s always 
+dreamed of (and jerked his microdick off to) for years. </p>
+<p>The package came in a relatively unassuming box, and he took it to his room in the apartment 
+to examine it. It was in a small vial, and the instructions (which according to him were the only 
+really relevant part) said to take what looked like 1 tablespoon. It was a bit smudged. And that 
+growth should start in the hour. Excellent. He had the day off work, and figured that now was as 
+good a time as any to try it out. </p>
+<p>He managed to gulp it down (it tasted like unflavored cough syrup, with the consistency of 
+molasses). As soon as he swallowed, of course, he started staring at his penis. For the first 5-10 
+minutes, nothing happened, since the drug was still making its way through his system. He 
+decided to throw on some clothes and watch some TV in the living room. Despite the initial 
+attention he paid his junk, once he’s watching TV he doesn’t notice that it’s definitely started 
+growing. About 30 minutes after he took the dose, he passed 4 inches soft and round enough to 
+grab hold of. After an hour his member is 8 inches and starting to snake down his boxer leg. He 
+was even less likely to notice that he’s become much more muscular, and even grown a few 
+inches in height. </p>
+<p>An hour and a half after taking his dose, his phone buzzes with a notification that one of the 
+models he subscribes to on Onlyfans posted a new video, the thumbnail is enough to hit his 
+hair-trigger libido and give him a hard on. Except now, instead of a sub-three inch nub that’s 
+hard, his dick is over a foot long and immediately springs to life, so hard that it rips itself out of 
+his sweatpants and boxers. His sweats themselves barely went past his powerful calves, as he 
+was now over 6’4” easily. The boring t-shirt he was wearing now looked painted on across his 
+broad, muscular chest. </p>
+<p>“HOLY SHIT, IT WORKED!” </p>
+<p>As he shot up to examine his new member, is precisely when his roommate Amanda unlocks 
+the door and comes home. Amanda and Frank were roommates, nothing more. They’d been 
+friends since college, but neither had ever had any attraction towards the other. Amanda was </p>
+<p>cute, but, like her roommate had been, effectively had had puberty pass her by. Small, skinny, 
+and curveless, she hadn’t had a serious relationship since high school, and wasn’t getting 
+suitors banging down the door. </p>
+<p>Frank, quickly realizing he’s effectively naked in front of his roommate, instinctively reaches 
+down to cover his crotch. Though, since it was effectively a reflex, he only bothered to cover the 
+first couple inches, leaving 7 inches of cock (including a pulsing head) well and truly exposed. 
+Though even his fingers couldn’t stop his dick from immediately getting hard again realizing a 
+woman is staring at it. Amanda was in fact staring, literally slack jawed, at the tremendously well 
+endowed Adonis who looks kind of like her friend/roommate standing, basically nude, in front of 
+her. </p>
+<p>All she could manage to squeak out was “What happened?” </p>
+<p>“There was this thing I bought online, because I wanted a big dick, I didn’t think it would really 
+work…” He managed to reply while she, never taking her eyes off his cock, slid off her shoes 
+and stepped towards him.  </p>
+<p>When she gets close, she finally looks him in the eyes, “I need to suck your dick, please, can I 
+suck it?” Well, Frank had definitely never had a woman literally beg him to suck him off, so he 
+could do nothing but oblige. </p>
+<p>For a woman who hadn’t (to his knowledge) been intimate with a guy in years, Amanda sucks 
+dick like a champ. He leaned back on the couch, in complete ecstasy, feeling pleasure he 
+literally had never known before. He was surprised it took him longer than mere seconds to start 
+ejaculating in her mouth. His moaning and her slurping were so loud neither of them heard a 
+fairly substantial <em>SNAP</em>. Even with him continuously cumming, she managed to keep 
+swallowing it all.  </p>
+<p>After sucking him off for ten or so minutes, she finally has to come up for air “Wow that’s 
+amazing, OOH!” <em>POP</em> As she leans back one of the buttons on her shirt pops off, which, along 
+with her pulling her shoulders back, causes the rest to all pop off in rapid succession. One 
+button whizzes by Frank’s head, while two more bounce off his huge, still hard, and somehow 
+still cumming, cock. She stands up to reveal that she grew substantially as well, not only had 
+she grown a few inches taller, but her breasts, previously basically nonexistent, now were 
+massive, heavy, soft orbs that hung down almost to her belly button. Her pants were barely 
+holding on, with rips in the seams due to her now wider hips and plush ass. She looks down and 
+sees her new curvaceous figure, wipes the cum off her face and asks “What the hell? How the 
+fuck did this happen?” Frank had no idea, and also could barely string any words together, 
+staring at the sex goddess in front of him as his cock was 
+much nonstop for almost half an hour. </p>
+<p>The two of them go back to Frank’s room, where Amanda reads the packaging far more 
+thoroughly than he had. The “Side Effects” section included some very relevant information, like </p>
+<p>cumming, having done so pretty 
+still
+​</p>
+<p>​
+“increased secondary sex charactistics, muscle growth, height, increased sex drive, and larger 
+ejaculations”. None of those should have surprised him, but then again they realized that he had 
+taken a triple dose, since the actual dosage was one teaspoon, not a tablespoon. However, 
+most concerning for Amanda was the large, bold font reading WARNING, DO NOT HAVE 
+INTERPERSONAL SEXUAL ACTIVITIES FOR 12 HOURS AFTER DOSAGE, EFFECTS CAN 
+BE TRANSMITTED THROUGH BODILY FLUID TO OTHER PARTIES!!!! </p>
+<p>“You ass, why didn’t you tell me your cum could make me a crazily proportioned freak?!?” 
+Frank, for his part, had followed her in the room and barely heard her, staring as her ass as she 
+bent over (and ripped a few more stitches in her pants doing so) while he took up stroking 
+himself off. His dick seemed to have finally stopped growing, finally topping out at 14 inches 
+long and as big around as a literal fire hose, his larger hands can’t get all the way around the 
+monster in front of him. He had also taken the time to rip off his torn clothes, so he was standing 
+in front of her, naked and sweating, while jerking himself off, muscles bulging. “Oh fuck but 
+you’re so goddamn sexy. Ugh, fine, when did you take the stuff?” </p>
+<p>“Uh, around 1:30” Frank managed to get out a whole sentence. </p>
+<p>“Fine, then we’ll have to wait until 2 in the morning. Until then…” Amanda, with a fair bit of 
+difficulty, manages to get the tattered remnants of her pants off, and strides to the living room 
+and sits down on a chair, then starts going to town on herself. Having been alone for years, she 
+was admittedly an expert on self pleasuring. The two of them spent an hour masturbating, 
+staring at each other’s mesmerizing bodies, him staring at her enormous, melon sized tits 
+creating a line of cleavage perfect for him to blow a load into as she reached down, while she 
+was gawking at the perfectly developed 12 pack in his abs, glistening with sweat as he jerks off 
+his over a foot long dick. </p>
+<p>Soon, Frank, slowly coming out of the brain fog he was in, and almost starting to lose his 
+erection, after 6 hours, realizes that the two of them definitely need new clothes. He volunteers 
+to go to the store and get a few, since, unlike Amanda, he could almost be decent in some of his 
+looser clothes. After his dick finally went flaccid enough to fit in his largest sweatpants, which 
+were clinging to his muscular legs without the massive filler, he threw on them and a shirt he’d 
+got as a door prize, a size large which was also tight on his more powerful frame. Looking 
+covered enough to be legal, he went to the big box store to get the supplies they would need for 
+the night. His first stop was the mens section, where he bought himself some larger sweats, 
+pants, and a few XL shirts, hopefully large enough he doesn’t burst out of them if he tries 
+flexing. He tries to figure out which kind of underwear would be best for a man with a cock that 
+makes “third leg” seem small, and eventually gets boxers, thinking that it would just go out the 
+bottom of the leg. </p>
+<p>He quickly goes to the womens department next, getting Amanda just enough so she’s decent 
+enough to pick out her own clothes. He knows there’s no way to get her a bra that’ll fit those 
+massive wobbling tits off the rack, but gets some large panties in the hope they’ll fit. He also 
+picks up a few t-shirts and leggings so she’ll have something to wear, just a few sizes bigger </p>
+<p>than she was getting before. While he’s in the lingerie section, a rather busty woman walks by, 
+with her own cleavage on display in a deep low cut, Frank swears he can hear a few stitches 
+pop in his sweats as the beast between his legs tries to break free. He quickly shuffles along 
+and averts indecent exposure. Finally he goes to the pharmacy to get something very important 
+for tonight, a big pack of jumbo sized condoms. Sure the regular ones might maybe fit, but 
+there’s no denying that if anyone needs them, it’s Frank the Tank and his cannon. </p>
+<p>After he checks out and gets back to the apartment, thankfully not destroying any more clothing 
+in the process, Frank comes in and Amanda’s not in the living room, but he can hear her 
+moaning loudly from her bedroom. He figures it’s past time for pleasantries and goes in to give 
+her her clothes. He’s greeted with, what shouldn’t be a surprising sight, Amanda laying on her 
+bed masturbating with her vibrator. It’s clear she’s been at this a while, as she’s covered in 
+sweat, as are her sheets and blankets. With her laying down he can finally appreciate her new 
+hourglass figure, obviously there’s the larger than life tits flopped down to the sides, above a 
+very toned midsection, which then flares out to a huge set of hips (and presumably, a great ass 
+too). Seeing this, a literal embodiment of lust itself masturbating in front of him sends his cock 
+again into a full erection, shredding an opening into the second set of sweatpants today. He 
+quickly puts her bag down and goes back into his own room, doubting that she’d even noticed 
+his intrusion, though if she had, it probably helped her current cause.  </p>
+<p>For the rest of the evening, both roommates stayed in their respective rooms, masturbating and 
+exploring their new god like bodies. Frank spent a few hours measuring every aspect of his 
+gargantuan penis, and looking at himself in the mirror as he jacked off. At 2 am on the dot, the 
+door to his room burst open, and a sweaty goddess burst in. Amanda pounced on top of him, 
+taking him down onto his bed with force. As if by instinct, Frank grabs her hips and guides her 
+soaking wet groin onto his eternally hard one. Even with the lubrication, it’s still a very tight 
+squeeze, which sends Amanda into by far her loudest moans of the night. Quickly he’s thrusting 
+deep inside of her, barely fitting due to his massive length. With her on top of him, her gigantic 
+tits are hanging down and bouncing with every thrust, like enormous water balloons topped with 
+hard nipples. </p>
+<p>He’s pretty sure that both of them are cumming within seconds, and like before, he can feel that 
+his dick is ejaculating for minutes at a time, and she’s so wet it’s impossible to tell when her 
+orgasms start and stop, as her whole body is moaning and shuddering in ecstasy.  </p>
+<p>After literal hours, as the first lights of dawn peek through the window in his room, the two finally 
+end their marathon celebration of lust. Collapsing on the bed, it’s clear that this is the beginning 
+of an incredible relationship. </p>
+</body>
+</html>

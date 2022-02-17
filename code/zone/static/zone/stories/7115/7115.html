@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Erins Growing Guru</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p><em>Disclaimer: All individuals in this story are eighteen or older. This
+is intended as a work of fiction. The author does not condone sexual
+acts with non-consenting participants. Please enjoy. Constructive
+feedback is appreciated.</em></p>
+<p><em>This story contains breast expansion and ass expansion. If you're not
+into that, you probably won't enjoy this.</em></p>
+<p><em>A cool, yet arid night has just fallen upon the small Arizona town. The
+town's police force and fire department crowded around a small, brown,
+one-story rambler, with off-white trim. Not half an hour past, the
+structure seemed as ordinary as any others on the street. Now, the roof
+had been replaced by a flesh-colored mass, the tops not visible at
+ground level, showing the innards of the walls as they bent to their
+limit to contain the pressure. Rubble dotted the yard around the
+building as well as atop the neighboring homes.\
+\
+As the crowds continue to form, nosy neighbors poking their heads where
+they know it doesn't belong, an investigator in a beige tailored suit
+bends his knee and picks up a small pink and red book. The man brushes
+off the insulation and dust from the cover. It reads "Erin's Diary",
+with stickers from pop culture plastered on the front. Half of the diary
+is entirely soiled with </em><em>something</em><em>- certainly not water- and has
+decimated whatever text had been there. He flips it open to the first
+legible page, about halfway through the total pages:</em></p>
+<p>January 12th, 2033\
+\
+Dear Diary,\
+\
+Today, as a (LATE!) Christmas gift, my parents paid for a bunch of
+private lessons with some beauty guru downtown. Bo-ring! They COMPLETELY
+ignored my wishlist! Sure, they got me a car (not autopilot BTW 🙄), but
+they didn't get me the newest PearPhone LXL, which was what I really
+wanted. Not only that, after I told them I wasn't going to attend the
+classes, they told me that as long as I live under their roof (despite
+graduating(JOB MARKET IS SHIT Y'ALL)) then I'd be going to the damned
+class. The least my parents could do is just tell me they think I'm ugly
+if they're making me go to a beauty guru. I swear you tell your parents
+ONCE that you like doing people's hair, they think you're gonna make it
+your career. I don't have time for that! Plus, I'm not even ugly! If
+anyone who doesn't know me reads this, god forbid, I'm 5'2" (1.6 meters
+if you're a nerd) with a super cute bust (30B) which I guess could be
+bigger. My blonde hair goes down to the small of my back, usually kept
+in a ponytail. My <em>[only]{.underline}</em> downside is that I have a small
+ass 😞. I hope whoever reads this is salivating by now (teehee!). I'll go
+to the lesson but I'm gonna let the instructor know that I'm not gonna
+bother learning anything. It\'s two days from now, Friday, so I get to
+dread it for all of tonight and tomorrow. I'll update this after the
+"session". LAME!!\
+\
+At least my parents are going out of town (another one of dad's business
+meetings), so if I decide to cut class, they'll never know. Too bad I'm
+an honest bitch ¯\_(ツ)_/¯</p>
+<p>January 14th, 2033\
+\
+Dear Diary,\
+\
+Okay- maybe I was a <em>little</em> hasty in my judgment of the class. I was
+anticipating a haggardly old lady straight from the year 1960 to tell me
+that I'm a whore and need to cover up. Imagine my shock (🤯) when the
+teacher of the class was a young HUNK! He was a few inches taller than
+me, maybe even a foot taller than me, and he was very well built. He
+wore a clean cotton shirt and some athletic shorts for our meeting which
+was- get this- a one-on-one meeting. Just me and him!\
+\
+He started by asking me how I felt about myself in terms of beauty. I
+told him I was pretty happy, which was true but wasn't the <em>whole</em>
+truth. He could tell, too- he looked me in the eye and said "What if you
+could be happier? Why settle for less than perfection?". I just about
+melted when I heard that. I couldn't begin to imagine what we were about
+to do. Admittedly, I was a little nervous about his demeanor. This dude
+was acting like he was about to cast a spell, as though he was my fairy
+godfather.\
+\
+Instead, he led me through some stretches- most of them just normal yoga
+poses, nothing crazy- but in the end, he did something different. He had
+one of those diffusers, like the ones from the pyramid schemes. On the
+back, there was a dial ranging from 1 to 12. He handed me the diffuser
+and a small container of oil. When I asked what the oil was, he said it
+was a "home recipe", whatever that means. My homework for the class is
+to leave this on overnight, adding just one drop to the basin before
+bed, making sure to keep windows and doors closed so as not to let the
+vapors get out. I'm not sure what it's supposed to do, but he promised
+that I would "feel the results in the morning". I'm hoping it'll relieve
+some of the tension from my muscles-- I haven't worked that hard since
+high school!\
+\
+I'll update this tomorrow on how I'm feeling. Good night, diary!</p>
+<p>January 15th, 2033\
+\
+Dear Diary,\
+\
+What. The. Fuck.\
+\
+Okay, I know this sounds crazy, but while I was sleeping, I had this
+INSANE dream. In my dream, I was back at the guru's studio, and we were
+stretching like we did yesterday. But UNLIKE yesterday, he began to
+caress my ass while I was bent over-- and I LIKED it. No, I LOVED it.
+Every touch of his sent sparks up my spine, my body <em>craving</em> his grip.
+As he took a firmer grasp of my cheeks, one of his hands wandered north
+and teased my nipple. I began to shake, nearing orgasm from just his
+touch-- then I woke up. But that's not the craziest of it: I could
+swear my bra fit differently yesterday, along with my yoga pants. Both
+seemed... a little cozier, to say the least. When I clasped my bra
+behind my back, I had significantly more spillage over the top than I
+had before, and my nipples were SOOO sensitive! I'm not ready to chalk
+it up to the oil, seeing as my boobs get a little bigger around my
+cycle, but I'm also not due for a visit from the "fairy" for another
+week and a half. I'll make sure I ask the guru about this, but I'm not
+superstitious. I doubt he has anything to do with it. Also... how
+EMBARASSING will it be to ask him if my tits look bigger to him. Or
+maybe would he take the initiative then?\
+\
+After my wet dream (I didn't know those were real until today), I had to
+get creative in the shower this morning, using the detachable nozzle
+(best \$20 I've spent in some time) for some action downstairs. I sat
+down in the shower (try it sometime!) and began to work on my folds with
+my fingers, using the showerhead's narrowest setting to massage my clit.
+I found myself involuntarily bucking my hips up as my breathing
+shallowed.</p>
+<p>Unable to take it anymore, I plunged two, three, four fingers into my
+pussy with my thumb teasing my clit. I started to yell as I finally
+peaked, abruptly convulsing at the hips and bringing my knees to my
+chest as I finished on my clit. I laid under the shower for a solid five
+minutes before I could bring myself to keep getting ready for the day
+ahead.\
+\
+I'm starting to wonder what's in that oil... I've never come that hard
+in my entire life, not even with real partners. Even after my orgasm I
+still felt like I could go again, but I had things to do. Once again, I
+REALLY hope nobody ever gets to read this but me-- I don't think I
+could take the shame 😳😳😳\
+\
+My next appointment is on Monday. It's going to be a long weekend while
+I think about him 😩💦😩💦. Updating this ASAP!</p>
+<p>January 17th, 2033\
+\
+Dear Diary,\
+\
+My initial suspicion-- as outlandish as it seemed-- was true! My
+session today confirmed IT ALL. I can't fucking believe he didn't tell
+me right away, but I guess it makes sense. As the guru said, if he had
+told me that first day that he'd make my ass and titties bigger, I'd
+file sexual harassment charges and he'd go to jail. This way, he says, I
+know that he's not bullshitting me and actually wants to help me get
+sexier. I decided to stay awhile and hear him out.\
+\
+According to the guru, he used to be in the military and was stationed
+in what was formerly Madagascar. During the violent Brothel Wars
+(2024-2027) he was on patrol downtown when a small missile struck a
+building, knocking loose some of the bricks. My guru tackled a man in
+the path of the debris, hurting his legs in the process. The man, who my
+guru just called "Pimpo", was so thankful that he promised he'd do
+anything to help his savior. After Guru's honorable discharge, he came
+home and opened up this salon, receiving the oil from Pimpo to work his
+magic. Pimpo had told him how to use it, but nothing else, because
+apparently "Learning is half the journey".</p>
+<p>After that <em>dumpload</em> of information (I'm sure I'm leaving out a ton of
+random stuff), Guru asked if we could start our session. It seems I'm
+not the only one Guru is fixing. We just did yoga again today, nothing
+sexual (unfortunately).</p>
+<p>However, in the end, Guru told me something important. He told me "Turn
+the dial on the back of the diffuser up to 2, and use only one drop
+again". Unfortunately for him, I'm a dumbass, and as I was getting ready
+for bed, I put two drops in. <em>Oops.</em> I'm sure it'll be fine, though; I
+could certainly use a bit more up top and bottom, and maybe he'll like
+it. I don't see him again until Friday though... maybe I'll try
+experimenting with the oil later this week. I'm sure I have one of my
+old chemistry notebooks lying around. Maybe I can find out what's in the
+oil?\
+\
+I'm getting sleepy so I'm going to finish this entry. I'll write again
+soon, diary. Good night!</p>
+</body>
+</html>

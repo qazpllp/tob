@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>The Apple Doesn't Fall Far from the Tree, Ch. 04</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>Author's Note: The idea for this story and the protagonist's name are based on suggestions 
+from two of my awesome Patrons. Standard disclaimer applies: this story contains graphic 
+depictions of sex, so if it's illegal or immoral for you to be reading this, stop now! All characters
+in sexual scenes are at least eighteen, all situations are entirely fictional, and any 
+resemblance to any real-life individuals or situations is entirely coincidental. Copyright Fidget, 
+2021. All rights reserved. Enjoy!</p>
+<p>The Apple Doesn't Fall Far From the Tree </p>
+<p>by Fidget</p>
+<p>Chapter 4 – Too Many Apples</p>
+<p>Over the next few weeks, Josh watched guiltily as the cheerleaders he had infected with the 
+football's sinister influence involuntarily ripened into sex-obsessed goddesses of femininity 
+and fertility, just as Amy had, and just as Josh had known they would. In the end, he had been
+equally unable to resist his own ravenous new sexual appetites, and had quickly caved to the 
+temptation to increase the number of irresistible bimbos available to him, each of whom was 
+instinctively driven to sate his powerful lusts with their eager, receptive bodies.</p>
+<p>Eventually, Josh found himself in a situation where he was forced to fully enjoy the fruit of his 
+labors. It was the cute brunette, Samantha, whose changes were a few days further along 
+than the other girls. When she approached him yet again for some quality private time in mid-
+January, Josh should have expected the overwhelming lure of the powerful new femininity he 
+had forced upon her, but he was still under the mistaken notion that Amy was somehow 
+unique, and that Samantha couldn't possibly become sexy enough to compete with her and 
+tempt him into infidelity.</p>
+<p>So, Josh was completely blindsided when she finally confronted him with the overwhelming 
+sex appeal of her fully transformed body as it spilled out of her revealing cheerleading outfit, 
+and his need for her quickly began to overpower the diminished self control of his jock body, 
+exacerbated by his hypermasculine urges. To be fair, Samantha didn't look like Amy, not at all,
+but her own idealized features - silky dark brown hair framing a refined, elegant face and 
+smoky green eyes that sparkled with playful promises of pleasure, not to mention her thick, 
+voluptuous new figure - was just as intoxicating as Amy's blonde, bubbly hourglass physique, 
+and within seconds Josh was allowing himself to be led by the hand back to the scene of his 
+original debauchery, his eyes glued to Samantha's ass deliciously bouncing in front of him as 
+his enhanced cock stiffened and eagerly began to prepare for intercourse.</p>
+<p>Calling back to their original conversation, Samantha once again coquettishly asked for a tour
+of the locker room, but Josh could tell from the hungry look in the busty cheerleader's eyes 
+that this time she wanted much more than that first innocent makeout session, driven by 
+youthful hormones but tempered by embarrassment, inexperience, and social inhibitions. This</p>
+<p>was the face of a mature sexual being who knew exactly what her body really wanted, and 
+who knew equally well that Josh wouldn't be able to resist giving it to her.</p>
+<p>Once more in the back corner of the locker room, Samantha forcefully pressed her body 
+against his, her small, soft hands already teasing along the massive rod tenting his athletic 
+shorts, and Josh allowed himself to be maneuvered down onto a bench in the middle of the 
+floor, helpless to resist the powerful femininity of the two massive tits in his face as she 
+smoothly slid his shorts down and his enormous phallus and heavy testicles bounced into 
+view. Samantha was immediately distracted at the sight, having finally come face to face with 
+the daunting rod of tasty man-meat and large, fascinating balls that had filled her dreams for 
+over a month at this point.</p>
+<p>Her tits were still dangling in Josh's face, however, and so his arousal too continued to grow 
+until he finally reached up and began to roughly grope them, squeezing them together and 
+jiggling them back and forth as the creamy, bouncy globes continued to erode his capacity for 
+rational thought.</p>
+<p>Josh vaguely recalled how he'd convinced himself that he had only started changing girls for 
+their own good, and maybe so that they'd jerk him off every once in a while, but now that he 
+had actively come face to face with the results of the football's effects once more, with the 
+irresistible seductresses who needed his dick jerking in their pussies just as bad as Amy had, 
+he realized the truth: he had always intended to fuck these girls. Once faced with this new 
+raw, receptive femininity that was easily as overpowering as Amy's, he recognized that in his 
+current testosterone-flooded body he wouldn't be able to resist, and he realized that that had 
+really been his plan all along.</p>
+<p>He didn't want to resist. He loved the way Samantha looked, the way she felt, the way she 
+smelled, and he loved what being near her did to him, how hard it got his giant cock and how 
+much it made him want to slide it inside her and just thrust. It was so easy to go along with 
+her, to enjoy her body and indulge in harmless, flirty fun with her, and so when Samantha 
+began to straddle him, obeying her own mating instinct, Josh was eager to let her slide down 
+onto the tip of his straining cock and let it slip all too easily into this new, enticing pussy where
+everything felt so perfectly soft and slick and stimulating. Of course, once he had been inside 
+for a second, and both of them had gasped in pleasure and his eyes had met hers, 
+smoldering with mutual, irresistible need, things stopped feeling so perfect to Josh, and he 
+began to need more of that slick stimulation, to chase that perfect sensation once again, and 
+so his hips began rocking automatically, sending his massive, sensitive cock sliding in and out
+of another bimbofied cheerleader, and his lizard brain was once again satisfied, though at the 
+base of his dick a familiar, insidious pressure slowly began to build as well.</p>
+<p>Josh wasn't even thinking about cumming inside her when he entered her, of course. He was 
+past being capable of those sorts of thoughts. He only knew that he needed to thrust himself 
+into this new vision of feminine sexuality, who clearly wanted his cock inside her as much as 
+he did. His mating instincts had entirely taken over his actions, and he began quickly driving 
+himself toward orgasm inside her tight reproductive tract, only aware of the need to continue </p>
+<p>thrusting, and the pleasure he got from doing so, and his large balls continued to tighten as 
+he grew ever closer to his involuntary, lifegiving release.</p>
+<p>The curvy brunette whose tits were bouncing in his face as she rode him, on the other hand, 
+was entirely focused on teasing and squeezing his giant cock until she triggered that release. 
+She too was experiencing nearly debilitating pleasure and bliss with each powerful thrust, but 
+a part of her mind remained razor-focused on the increasingly insistent twitchings of that cock
+inside her as his arousal continued to build from the slick friction of her tight receptacle. She 
+knew exactly what that thick, throbbing cock and those massive twitching balls signified the 
+moment they had come into view; the hyperfertile body the football had given her flooded her 
+slutty mind with excitement and anticipation at the sight, and her ever-present desire to feel a 
+virile cock jerking and surging and spurting inside her began to assert itself with a vengeance.</p>
+<p>This time, however, there was none of the hesitation that had accompanied her earlier 
+dalliances, only a feeling of euphoric satisfaction at finally being able to fully indulge in her 
+new body's strongest craving. Samantha couldn't explain her newfound obsession with feeling
+that monster reflexively jerking inside her, filling her with warm, gooey potential, but that didn't
+make the drive to experience it any less overpowering, and willing Josh to cum inside her 
+became a wordless mantra inside her mind with each thrust. Not that she needed to worry, of 
+course, since Josh's instincts were driving him to do just that, and he didn't notice that with 
+each thrust his dick became a bit more insistent.</p>
+<p>Before either of them knew it, the inexorable coaxing of her body became more than Josh 
+could take. Just when he felt himself losing control as his orgasm triggered and his balls 
+began to tighten in reflex, instinct overcame him once more and he wrapped his powerful 
+arms tightly around her soft, curvy body, pulling her down fully onto his dick as he roared and 
+began mindlessly pumping the copious contents of his heavy balls deep into the fertile young 
+slut.</p>
+<p>Samantha loved the feel of his hard muscles tightening around her body as she felt his cock 
+stiffening inside her, locking her into position and forcing her body to receive what it had 
+craved for so long, and sure enough, a second later she felt the first thick spurt of his load 
+blast powerfully against her cervix and soak into her greedy womb. She reached around 
+underneath herself, where her dainty hand quickly found Josh's massive, weighty testicles 
+reflexively tensing and tightening with the effort of delivering so much of his genetic material 
+into her body. She wasn't sure it would help, especially because her hand felt so tiny against 
+his swollen, pulsing ballsack, but she began to massage and fondle nonetheless as her body 
+drove her to get as much of their contents into her as possible. Despite her eagerness to take 
+it all in, the sheer volume of Josh's spunk quickly filled her tunnel and began to overflow onto 
+the bench, but even so she continued her squeezing and coaxing, knowing instinctively that a 
+steady stream flowing and soaking against her innermost recesses was what her body 
+wanted.</p>
+<p>As Josh finally began to come down from his ecstasy what felt like an eternity later, and his 
+cock's pleasurable pulsing deep within the cunt of a slutty cheerleader who definitely wasn't 
+his girlfriend began to subside, he was finally able to acknowledge the fact that Samantha had
+definitely become just as irresistible as Amy had, and had felt just as good to cum inside. If 
+anything, she had almost felt better, since everything about her was new and different, 
+including the luxurious feel of her tight pussy gripping and stroking his dick, and it seemed like
+his body could tell somehow, giving him an even more intense orgasm than usual, and 
+releasing copious amounts of jizz into her in the process to ensure that she was well and truly
+impregnated.</p>
+<p>Finally, Josh recognized that affecting so many girls with the football had definitely been a 
+huge mistake, though not for the reason he had initially suspected. Before, the other girls had 
+just been an annoying temptation that paled in comparison to the one goddess the football 
+had chosen for him. Now, however, he knew that Amy's hadn't been unique, that the football 
+indiscriminately made sure that every girl could be perfectly tailored to coaxing his cum into 
+her enticing vagina, and now that he had seen how good fucking two of them could be, he 
+could feel his desire to fuck all of them getting stronger. Still, Josh did love Amy, and at that 
+moment committed himself to never abandoning her, no matter what happened with the other 
+busty sluts he had been slowly filling the school with for the past few months.</p>
+<p>He gently lifted Samantha off his body, feeling guilty at the intense aftershocks of pleasure he 
+experienced as he slowly slid her tight, textured pussy up his shaft and his cock released a 
+few final squirts of potent cum into her. She relaxed on the bench next to him with a glazed 
+look of bliss on her face as he put his clothes back on, her body still rewarding her with 
+pleasure at having accomplished its goal, and she sat there absent-mindedly squeezing a 
+heavy breast while the other hand played with her used pussy. Josh's seed continued to drip 
+out of her in large globs, onto the bench and down onto the floor where it began to form a 
+pool. He could already feel the closeness of her naked body and the appealing pull of the 
+cock-sheath nestled between her thick thighs starting to affect him again, so, having accepted
+his fate for better and for worse, he left her there to clean up the mess and went back to 
+class, knowing there was nothing he could do to prevent his cum from having its own natural, 
+transformative effect inside her vulnerable body.</p>
+<p>Maybe she won't get pregnant, he thought to himself hopefully. Amy hadn't gotten pregnant 
+yet, and they'd been fucking non-stop every day. In fact, now that he had resisted a second 
+round with Samantha he could feel his body looking forward to going home and filling up his 
+slutty cheerleader girlfriend once again with the virtually endless supply of thick cum his balls 
+produced.</p>
+<p>That very day, however, Amy finally noticed that she had missed her period, and realized with 
+glee that it wouldn't be long before her tight abdomen began to swell as a result of her 
+frequent intimate exposure to the very cum that was currently working its magic within 
+Samantha. She was ecstatic, and immediately told Josh the good news that evening (as soon</p>
+<p>as she had enjoyed being pumped full of a fresh load, of course). Josh was excited too, 
+though he also realized that this development had likely sealed his fate with Samantha and 
+the other girls who were still deep in the throes of their transformations. Still, there was 
+nothing to be done, and though he was also worried that things had moved a bit too fast 
+between Amy and himself, he also somehow couldn't wait to settle down and start a family 
+with her. He knew that his urges would continue to drive him to seek out other women, 
+especially since he seemingly couldn't stop himself from turning them into busty bimbo sluts 
+obsessed with his cock, but even so he knew deep down that Amy was the only girl for him. 
+Whether that was another one of the football's effects, tying him to the first bimbo he fucked, 
+he had no way of knowing, but either way he knew it was the truth.</p>
+<p>For her part, Amy knew that Josh had begun not-so-subtly pursuing other girls, of course, and
+as ditzy and sex-obsessed as the football had made her, she had immediately figured out 
+what the swelling busts and increasingly slutty behavior of her fellow cheerleaders had 
+signified. Still, if it ever bothered her, she never let it show, even after the other cheerleaders' 
+bellies began to swell like hers was. It may have been that she instinctively knew that Josh 
+was loyal only to her, and so as long as he continued to feed her needy pussy a healthy diet 
+of cock, she was unbothered by his powerful, testosterone-driven urge to sow his wild oats. 
+Not to mention that that obscene, unfettered masculinity was exactly what had drawn her to 
+him in the first place, and she understood the strength of the football's effects all too well. 
+They had led to her own sexy body getting so thoroughly knocked up too, after all.</p>
+<p>Life didn't stop for Josh after receiving this news, of course, and the other cheerleaders he 
+had affected soon followed Samantha's lead in seducing him. As their reproductive urges 
+continued to ramp up and they tired of their fruitless toying with lesser men, they sought Josh 
+out one after another, and each time it was a little easier for Josh to give in to his desire for 
+their nubile young bodies and allow himself to experience the carnal pleasures of their 
+enhanced curves, and, ultimately, their flirty, stimulating pussies. Time and time again he 
+would return to his senses riding the aftershocks of orgasm, balls deep in yet another needy 
+cheerleader bimbo slut as he felt his body reflexively blasting rope after rope of dangerous 
+baby juice into their vulnerable reproductive tracts while they screamed his name.</p>
+<p>Moreover, indulging in his need to spread his seed seemed only to strengthen it, and he 
+began expanding his sights beyond just the cheerleaders, to any girls who came on to him, 
+knowing that all it would take was a quick touch of his football to guarantee that they would be
+willing to fully act out their desires, and as idealized, hypersexual versions of themselves, no 
+less.</p>
+<p>He could have any girl he wanted, and he knew it. Eventually, the power began to go to his 
+head, and he began affecting girls more indiscriminately, even openly carrying the football 
+through the halls with him so he could change girls on a whim. The shy, bookish blonde found
+herself becoming a lot more outgoing as her tits grew out, eventually going out for the 
+cheerleading team, and then going out of her way to be alone with Josh, who savored the </p>
+<p>exquisite sensation of cumming in her. The petite, giggly redhead with freckles and green 
+eyes became a much bustier, curvier, hornier redhead, though she still giggled in mindless 
+bliss when her fun game of "just the tip" ultimately led to Josh ejaculating deep inside her. 
+One touch of his football, and Josh would inevitably get to see what it felt like to combine his 
+DNA with theirs. And it always felt fantastic. So many tempting pussies begging for his seed, 
+and Josh couldn't help but fill them all. Over and over. It was never enough.</p>
+<p>It was only when he accidentally changed one of his former, unpopular friends that he began 
+to consider the results of his actions, albeit briefly. The clumsy, decidedly unattractive girl had 
+accidentally bumped into the football as he carelessly carried it through the halls of the 
+school, and though he hadn't meant to affect her, he noticed her eyes fluttering nonetheless in
+the characteristic look of dazed pleasure all of the girls exhibited as the football's effects took 
+hold within their bodies, and it became increasingly clear over the next few weeks that she 
+had indeed been fully affected.</p>
+<p>Her complexion cleared, and her nerdy body began to swell in all of the enticing ways that the
+other girls' had, and Josh's testosterone-fueled mind was forced to take notice of her 
+developing curves in spite of himself. He hated watching her initial panic at having been 
+infected with whatever had turned the more attractive senior girls into busty sluts, but she too 
+eventually succumbed to the effects and fully embraced her new bimbo body and persona. 
+Once she was far enough along to seek out Josh's attentions, her new body was more than 
+his implacable cock could resist as she continued to swell and tighten, and in spite of his 
+reluctance and guilt he found himself unintentionally cumming in her slutty pussy anyway, 
+spreading his seed yet further. She, of course, loved every second of it. All of the girls did. 
+Once affected, every girl inevitably embraced her slutty new body and slutty new personality, 
+and wanted nothing more than to get Josh alone where they could persuade him to breed 
+them.</p>
+<p>Even so, once he had indulged his reproductive urges with his newest bimbo, he took the 
+incident to heart, realizing that the ball would change anyone who touched it, regardless of his
+own intentions. He resolved to be more careful in the future, though of course the damage 
+had already been done as far as his thoroughly smitten, slutty, impregnated former friend was
+concerned, who quit the yearbook staff soon afterward to join the ever-growing cheerleading 
+team.</p>
+<p>Interest in the cheerleading team was at an all-time high, and the team's numbers continued 
+to grow as more and more busty, athletic young women came forward to try out. In the spring,
+they had the best cheerleading team in the state, as well as the best looking, by far. The girls 
+still deferred to Amy's leadership, not only because she was Josh's chosen mate and the first 
+of the cheer-bimbos, but, once they noticed that she was pregnant, possibly also because 
+they subconsciously knew that they would soon experience the same fate, especially with 
+how often all of them were letting Josh spurt his massive loads inside their unprotected 
+pussies.</p>
+<p>It had gotten increasingly easy to find teachers to sponsor the team as well, after a few of the 
+female teachers got a bit too close to Josh in the hall while he was carrying the football, and a
+few weeks later had gotten much too close to Josh in their classrooms after hours with some 
+hands-on, mutually fulfilling lessons in sex-ed.</p>
+<p>All of Josh's bimbos tried to convince him to dump Amy for them, but he never even 
+considered it. Sex with them was just sex for him, an irresistible bodily function that just 
+happened to result in impregnation, and he never experienced the powerful bonding 
+experience with them that he felt with Amy. "Amy's the only girl for me" is all that he would 
+say, and then he would head out, leaving his most recent load dripping out of the slutty pussy 
+that the increasingly busty girl couldn't resist offering to him.</p>
+<p>Eventually, filling their fertile young bodies with copious amounts of virile seed had its 
+inevitable effect on Samantha and the other earliest-affected cheerleaders, and they began to
+swell just as Amy had as their bodies unconsciously and involuntarily blended their genetic 
+information with Josh's and began to produce his offspring.</p>
+<p>Many of the girls had expected their inevitable pregnancies, given the nature of their recent 
+behavior and the copious volume of Josh's sexy emissions each time he filled them with his 
+catalyzing cum, but just as many of the busty sluts were caught by surprise. They hadn't been
+able to resist their instinct to mate with Josh, so perhaps they thought their repeated 
+couplings wouldn't have consequences, despite the fact that their bodies had swollen into 
+caricatures of fertility in the first place, and their thoughts had become increasingly focused on
+feeling Josh's massive balls tightening and filling them with his fascinating, yummy jizz. Either 
+way, after the deed was done their hyperfertile bodies reacted completely naturally to the 
+potent seed inside them, and used that genetic material to make more copies of Josh, 
+whether they wanted them to or not.</p>
+<p>Even so, in all cases the bimbos were bombarded with powerful maternal instincts as soon as
+the found out they were pregnant, just as Amy had been, and they were all incredibly eager to
+have Josh's babies. Once Josh had made it clear that he wouldn't leave Amy for them, 
+however, the girls instead found themselves drawn toward the other senior jocks as their 
+nesting instincts asserted themselves, and they had no trouble using their hyperfeminine 
+bodies to convince the hormonal young men to slide their cocks into their slick, flirty pussies, 
+just to see what it felt like. It felt great, of course, and without exception the young men found 
+their cocks teased into unprotected ejaculation. The girls loved it, but they couldn't help but be
+aware that they were settling after having experienced Josh's incomparably massive schlong 
+for themselves. Still, cum was cum, and at the end of the day it was all delightfully masculine 
+and practically irresistible. Plus, the girls knew they would need partners to help raise their 
+children, and what better way to snare a horny young man than to offer him all the sex he 
+could ever want with a voluptuous cheerleader straight out of his wet dreams?</p>
+<p>Samatha had had first pick, of course, and mere days after she got her positive test, she 
+could be seen hanging off the arm of the backup quarterback. Over the next few weeks, the </p>
+<p>other jocks had slowly been paired off with the other irresistibly sexy bimbos as well, not 
+knowing that the receptive reproductive organs they were filling daily had already been tied up
+for the next nine months by Josh.</p>
+<p>Some of the girls Josh affected with the football already had boyfriends. Initially these had 
+been accidents, and Josh had regretted it when he saw the girls succumbing to the football's 
+bimbofying effects right before their boyfriends' eyes, but once he saw the blissful looks of 
+happiness on their faces as their girlfriends swelled into voluptuous bimbos, he began to feel 
+significantly less bad about it. The girls' inhibitions shrank as their sexual appetites grew, and 
+the curvy sluts began putting out as much as their delighted boyfriends wanted. Upon seeing 
+how happy the couples were afterward, Josh stopped worrying about whether the girls he 
+affected were already spoken for.</p>
+<p>Unbeknownst to Josh, however, despite their willingness to engage in practically any sexual 
+act as long as it resulted in clenching balls and spurting cocks, the girls still never let their 
+boyfriends cum in them. Then, once they had progressed far enough into their 
+transformations, they were forced to seek Josh out to be properly inseminated, just as all the 
+other girls were. Josh initially tried to resist their advances, but inevitably his cock found its 
+way into their tempting pussies nonetheless, and the stimulation and their overwhelming 
+femininity would cause him to lose control inside of them, and he would end up coating their 
+insides with his genetic material anyway. After a few such sessions, the bimbos would go 
+back to their boyfriends, this time insisting that they empty their balls inside their tight pussies,
+which the men were always more than eager to do. Eventually, Josh began to consider 
+secretly knocking up the girls almost a fee for his services, and everyone was happy.</p>
+<p>Finally, the teachers who had succumbed to the football's influence had begun to see the 
+effects of their private sessions with Josh as well. The quality of their teaching had degraded 
+as their bodies had inexplicably filled out and their priorities had begun to shift, but once they 
+were sure their slutty bodies had gotten exactly what they needed from Josh, the voluptuous, 
+oversexed educators began to seek out private "mentorship" meetings with the principal and 
+other senior male staff, such that by the time their bodies began to swell from the 
+consequences of using their own fertile vaginas to teach Josh about reproductive anatomy, 
+they had already gotten engaged and were busy fucking their lucky older fiances into blissful 
+stupors.</p>
+<p>In all cases, once it became known that the women were pregnant, the men stayed. The girls 
+were just too hot, and the sex was entirely too good to walk away from.</p>
+<p>In early spring, Josh's father finally noticed all of the pregnancies among the surprisingly 
+busty eighteen and nineteen year-old girls around town and asked Josh if it was his doing.</p>
+<p>Josh said yes, feeling his powerful muscles tensing and his temper rising, ready for a 
+confrontation, though he knew his soft-spoken father would never raise a hand against him.</p>
+<p>"Son, I know better than anyone how strong the urges can get. Still, you should stop using the
+ball so willy-nilly. You're changing these girls forever, you know."</p>
+<p>"Oh, like you changed me and Amy forever?" Josh shot back angrily, and his father sat back, 
+deep in thought.</p>
+<p>Perhaps he was beginning to question what he'd done to his son. He'd always assumed that 
+the football had improved his own life, and to be sure, he'd thoroughly enjoyed its effects over 
+the years, and had never questioned his own father's decision to pass the ball down to him. 
+Sure, he'd occasionally been tempted to use the ball on other women, but the special bond 
+that the ball had forged between him and his wife had kept him from doing so. With Josh, 
+however, it was clear that the ball's effects were much more pronounced than they had been 
+with him, and he knew how good it felt to give in to that urge to knock up sexy young women, 
+especially ones who had fallen under the ball's influence.</p>
+<p>"You may be right, son. I gave you the ball, but didn't give you a choice in the matter. Now the 
+ball's your responsibility, and it's up to you to decide how to use it. Just be careful."</p>
+<p>And so the sudden epidemic of incredibly hot cheerleaders just as quickly became an 
+epidemic of incredibly hot pregnant cheerleaders, and their athletic young bodies continued to
+swell as their pregnancies progressed. By the time graduation came, the majority of the 
+eighteen and nineteen year-old seniors were in various stages of showing as the walked 
+across the stage to collect their diplomas, and the furthest along had begun to notice their 
+massive breasts growing even heavier as their bodies prepared for motherhood.</p>
+<p>Josh had no trouble securing a football scholarship to a prestigious state school, even after 
+only having played his senior year, and while his visibly pregnant girlfriend made plans for 
+their wedding, he made plans to move his small family to the big city. Even with her swollen 
+belly, Amy was just as sexually insatiable as always, if not more so, and Josh was more than 
+happy to keep filling her expanding abdomen with cum, morning, noon, and night.</p>
+<p>Still, as he packed for the city, he couldn't help but pack his trusty old football, just in case.</p>
+<p>End of Chapter 4</p>
+<p>Author's Note: Thanks for reading! If you have any feedback, comments, or questions, I'd 
+love to hear from you at fidget1@protonmail.com. If you find yourself enjoying my stories, 
+please consider supporting my work on Patreon, at www.patreon.com/fidget1. Patrons get a 
+full two months of early access to my stories, input into which stories I write, and some other </p>
+<p>fun perks. Every little bit helps, and your support is what enables me to keep doing what I 
+love!</p>
+</body>
+</html>

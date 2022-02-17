@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>The App</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>Bethany eagerly powered on her replacement phone on, even though it
+wasn't new, it was a huge improvement on her last phone, especially
+after its impromptu romp through the washing machine. As she began the
+process of installing all of her usual apps, and getting them setup, she
+noticed an icon she didn't recognise, certainly not an app that she'd
+installed. Certain that she'd done a factory reset of the phone, she
+figured that maybe it had simply been part of the latest bloatware?</p>
+<p>With idle curiosity she tapped the icon for <strong>Total Modification
+Station</strong>. After a brief loading screen, a colourful player select menu
+appeared, but with only one username available, which weirdly, was her
+own name.</p>
+<p>'Hmm, guess it must have gotten it from my address book' she thought to
+herself, tapping it. The screen shifted onto a wall of text, detailing
+the terms and conditions, and explaining that the app would offer a
+selection of options for the player to choose from, with the selection
+being immediately applied. It also warned that after 24 hours a random
+selection would be made for the player, if no choice had been made.
+Making a selection would then bring up a new set of three choices, and a
+new countdown. Points could be earned for rapid selection, which could
+be spent to re-roll choices, power ups, or extend the timer... Her
+finger hovered over the start button...</p>
+<p>'Might as well give it a go, I can always uninstall it!' she thought,
+tapping the button, the logo fading before being replaced with 3
+pictures, one of a peach, one of a melon and another of a cherry. At the
+top of the screen, a countdown appeared, starting at 24 hours, with a
+warning that if a choice wasn't made by the end of the timer, a random
+selection would be made. She pondered which to choose, and finally
+settled on the peach.</p>
+<p>The app made a musical twinkle as the peach image flickered, before the
+screen flashed, fading to reveal she'd gained 200 points, then a 3D
+model appeared which looked surprisingly like Bethany wearing a sun
+dress. The avatar gave twirl, then produced a peach, juggling it from
+hand to hand, then took a bite from the fruit, its juices running down
+her cheek. After a couple more bites the fruit was gone, the avatar
+covered her mouth and belched, bowing forward slightly, then looked
+surprised, grabbing her bottom with both hands.</p>
+<p>Spinning round, the figure seemed to be inspecting her behind, before
+shrugging and looking back at Bethany.</p>
+<p>Bethany had watched the whole thing with mild curiosity, shuffling on
+her seat as she tried to work out what the selection had actually done
+in the game. As she pondered, the app presented her with a new selection
+of a thimble, a fire and a bottle of perfume, as well as resetting the
+24-hour timer. Slightly disappointed that the selection hadn't actually
+done much, she tapped the perfume bottle, and went to close the app.</p>
+<p>She paused, watching as the avatar produced a perfume spritzer and
+proceeded to give herself a couple of sprays, grinning at the screen as
+she did, before wiggling her eyebrows and blowing a kiss. Bethany noted
+she'd been awarded another 200 points, and the timer had reset again.</p>
+<p>'Weird app' she thought, closing it, and going back to sorting her new
+device. Once she had most of it set up, she headed through to the shared
+kitchen, and poured herself a drink, readjusting her jogging bottoms as
+she went. She spent the evening cooking herself dinner, whilst using her
+phone to play music.</p>
+<p>As she was finishing her meal, Tim, her housemate, who she had a bit of
+crush on, came in from his run, sweaty, and breathing heavily.</p>
+<p>'Hey Tim' she greeted him timidly.</p>
+<p>'Oh, heya Beth. Ooo, is that your replacement phone?'</p>
+<p>'Yeah, just been setting it up', she tried to casually lean back against
+the counter, but missed it and stumbled awkwardly. Nervously, she
+readjusted her jogging bottoms again, they weren't sitting comfortably,
+feeling tighter than normal.</p>
+<p>It didn't go unnoticed by Tim, who raised an eyebrow, whilst looking her
+up and down.</p>
+<p>'Have you been doing more squats?' He asked after a moment, stepping
+past her to get himself a drink, taking the opportunity to sneak a
+glance of her behind. He took a deep breath as he filled his glass, and
+exhaled slowly, before swigging down some water, was she wearing a new
+perfume?</p>
+<p>Bethany, gave a quick turn, trying to see her own bum, before jokingly
+replying 'I didn't think it be that noticeable, I mean, I'm a squat
+master of course...' She dropped into a squat position; her grin frozen
+as she heard a loud <em>riiiii-iiip</em>. Looking up in horror at Tim, she
+failed to notice the prominent bulge in his shorts as she ran from to
+her room.</p>
+<p>Tim chuckled at her wardrobe malfunction, and took another deep breath,
+she must have changed her perfume, and the new fragrance was pushing all
+the right buttons. He shook his head, adjusted himself, and headed for a
+shower.</p>
+<p>Back in her room, Bethany was staring at her reflection in the mirror,
+her arse was definitely bigger, no wonder she'd kept having to readjust
+her bottoms... She hid her face in her hands as she thought back to the
+kitchen.</p>
+<p>Slowly, she moved her hands to her bum, giving it an inquisitive
+squeeze, which despite its larger size, felt firmer than normal.
+Continuing to run her hands over her cheeks, she was interrupted by a
+notification on her phone;</p>
+<p><strong>TOTAL MODIFICATION STATION: 20 Hours till random selection</strong></p>
+<p>Rolling her eyes at the reminder, Bethany cleared the notification, and
+got ready for bed, once again pausing briefly to admire her figure in
+the mirror.</p>
+<p>'I guess those squats really are helping...' she mused.</p>
+<p>The next morning her phone had two more notifications from the app, the
+latest warning that only 12 hours remained. Rolling her eyes, she
+ignored it, and began to get ready for work.</p>
+<p>Getting her jeans on was trickier than expected, but the way they now
+hugged her hips had to be seen to be believed. She sighed as she pulled
+her uniform polo top, trying plump up what little curves she had up top,
+the curves of her small A-cups barely visible under the fabric.</p>
+<p>Work was fairly un-eventful, although two of her colleagues had kept
+coming over to pester her more than normal, wanting to continue the
+conversation they'd started during their morning coffee. That, and the
+<strong>TMS</strong> app had been constantly pestering her to make a selection.</p>
+<p>By the end of her 8-hour shift, she was ready to head home and relax,
+however, as she was stepping through the front door, her phone vibrated
+again, with yet another notification from the <strong>TMS</strong> app, this time
+warning her that only an hour remained before the random selection was
+made.</p>
+<p>'Urrrrgh' she groaned, shoving the phone back into her bag, muttering 'I
+need to uninstall that damn thing...'</p>
+<p>There was no sign of Tim, but somewhat unusually, he had left her
+portion of dinner out, with a note.</p>
+<p><em>Hey Beth, made a bit too much pasta-bake, thought you'd appreciate it
+after work! Meant to say yesterday, but keep up the workouts, you're
+looking great!\
+Tim</em></p>
+<p>Bethany bounced from foot to foot excitedly, till now Tim hadn't really
+paid much attention to her, so this was big deal for her! She took the
+tinfoil off the plate, and warmed it in the microwave, settling on the
+sofa to enjoy it in front of the TV.</p>
+<p>After eating, with some mind-numbing tv on in the background, she
+flicked through social media apps on her phone, unwinding after her long
+day. Her phone vibrated again, <strong>TMS</strong> warning her that only a minute
+remained, and it began counting down the remaining seconds, rolling her
+eyes she settled into wait.</p>
+<p>She held her breath as the counter reached 0, and nothing seemed to
+happen. She shook her head placing the phone on the sofa next to her,
+when it vibrated again.</p>
+<p>'What <em>now</em>' she thought, flipping it over to see.</p>
+<p><strong>TMS Random selection made (Melon) -- Bonus points awarded</strong></p>
+<p>'Definitely time to uninstall you, I think!' Bethany muttered, once
+again placing the phone down. Leaning back on the sofa, she pulled at
+her polo top, trying to make the fabric sit flat. No matter how she
+pulled at it though, it wouldn't move out of the way, so reaching up she
+went to flatten it against her chest. Only her chest wasn't flat
+anymore...</p>
+<p>She bolted upright, pulling the collar of her shirt forward to look down
+her own top, whilst still small by anyone's standard, there were now
+solid B-cups. Grabbing her phone, she sprinted back to her room, tore
+her top off and stared at her reflection in the mirror.</p>
+<p>Cupping each breast in a palm, she tried to work out what was going on,
+then the realization hit her... The app! Frantically she unlocked her
+phone, opening the app, to see her avatar holding it hands behind its
+back, and rocking back and forth on its heels, a slight bounce to her
+chest...</p>
+<p>Her score now sat at 1000, with a button labelled '<em>BONUS MENU'</em> to one
+side of it, the timer had reset, and new options were ready for
+selection; a fireball, beachball and a razor, keen to see what else the
+app could do, she eagerly tapped the fire icon.</p>
+<p>The avatar gasped, and her skin appeared to flush, her cheeks becoming
+rosy, with a mischievous smile slowly appearing as she squirmed in her
+dress, another 200 points were added, with an extra 50 being awarded for
+rapid selection.</p>
+<p>Bethany could feel herself getting excited, imagining what would change
+next, but after waiting a minute, nothing seemed to happen. She looked
+back at her reflection, noticing her nipples were hard, whether from
+excitement, or the slight chill in the room, she wasn't quite sure.</p>
+<p>Either way, she decided to pull on an old t-shirt, just in case Tim came
+home early... She smirked, wondering he'd react if he saw her new curves
+without the top.</p>
+<p>She was interrupted by her phone vibrating, reminding her that new
+selections were now available, excitedly noting that the melon was
+available again, it was only after she eagerly tapped it did she realise
+that it was actually a watermelon, and not a regular melon...</p>
+<p>The avatar produced a large slice of watermelon and ate it quite
+messily, grinning up at the screen before seeming to notice the mess
+she'd made and turning to face away from the screen.</p>
+<p>'Hmm, wonder if the watermelon makes a diff... Oh, oh OH!' her thoughts
+disrupted as waves of pins and needles spread across her chest, her
+hands snapping to her front. After a few seconds the tingling eased, but
+was replaced with a warm pressure, pushing against her palms. Slowly her
+breasts began to swell in bursts, first filling, then overflowing her
+hands, t-shirt pulling tight across her chest...</p>
+<p>After several pulses, the swelling stopped, leaving her gripping a
+swollen pair of breasts that only just fit in her t-shirt. Beth was
+breathing heavily and her hands just couldn't seem to leave her new tits
+alone. She squirmed her hips together, relishing how turned on she felt,
+maybe she should try flashing Tim when he got home...</p>
+<p>Her phone, lying where she'd dropping it on the bed, buzzed with another
+notification from <strong>TMS</strong>, grinning she opened the app, and examined the
+new options...</p>
+<ol>
+<li></li>
+<li>
+<p><em>Ladder</em></p>
+</li>
+<li>
+<p><em>Hourglass what</em></p>
+</li>
+<li>
+<p><em>Cake</em></p>
+</li>
+</ol>
+<p>'Well, I think it's <em>time</em> to see else you can do...' chuckling at her
+own joke she tapped the hourglass icon. She watched as her little avatar
+friend, still trying to adjust her dress round her new curves, grinned
+at the screen, then slid her hands down her sides, pushing her waist in
+tight, as if she was putting a corset on.</p>
+<p>The avatar smirked, shimmying on the spot before bending over to show
+off all of her curves, and flaunting her cleavage. This action almost
+made her overbalance, and she waved her arms wildly to prevent falling
+over, yet still tumbled backwards onto her bum. Another 200 points were
+added to her score, again with another 50-point bonus for rapid
+selection.</p>
+<p>Bethany chuckled, then gasped as she felt her stomach tighten weirdly.
+She pulled her t-shirt up slightly, just in time to see her stomach suck
+in slightly, with some of her excess weight seemingly fade away...</p>
+<p>'What on earth...' She whispered, once again pulling her t-shirt off to
+look at her reflection in the mirror.</p>
+<p>'I... I can't believe it!' her hands roaming over her stomach, and
+curves... 'How is this even possible??'</p>
+<p>Downstairs she heard the front-door slam, Tim must be home! She had a
+sudden urge to tease him, and the thought of his reaction stirred
+mischievous feelings deep within her. Grinning, she grabbed the closest
+top, which just so happened to be her work polo shirt, and pulled it on
+over her new chest.</p>
+<p>As she pulled it on, tugging it down over her ample bosom with the top
+button straining to keep her new cleavage contained, she heard Tim start
+to climb the stairs, not wanting to miss her chance she darted over to
+the door, flinging it open just in the nick of time.</p>
+<p>Tim was startled at the sudden interruption of Bethany leaning out of
+her bedroom door, looking slightly dishevelled, flushed and almost
+seemed out of breath.</p>
+<p>'Hey Tim...' she called breathily, her chest was heaving, had she always
+been that busty? He definitely didn't remember her being that gifted
+before, he pondered, even as his eyes gazed lustily over her form.</p>
+<p>'Like something you see?' She giggled when he failed to reply, fingers
+toying with her collar, as her own eyes drifted to what looked like a
+steadily growing bulge in his pants.</p>
+<p>Tim gulped loudly, 'I... Uh... Just got in, been a long day, was going
+to catch some z's...' He motioned towards his room, then seemed to
+become aware his bulge, and made a poor attempt to hide it. 'Did... Did
+you see the pasta-bake I left out for you?' Now flustered himself, he
+made a valiant attempt to change the topic, swinging his backpack round
+to hide his crotch.</p>
+<p>Bethany smiled, blushing as her fingers continued to toy with her top
+button. 'I did, thanks, it was <em>delicious,</em>' she licked her lips slowly
+for emphasis, 'Got anything else that tasty... Ooops' Her toying had
+caused the top button to come undone, and her breasts jiggled slightly
+as their confinement eased slightly.</p>
+<p>Tim eyes widened as he got a peek of the deep cleavage hiding in her
+shirt, gulped again, then hurriedly motioned to his room. 'I... I better
+get some sleep' He darted to his room, closing, then locking the door
+before Bethany could say anything else.</p>
+<p>Once in his room, Tim dropped his bag, and grabbed his cock through his
+trousers.</p>
+<p>'Whaaat the fuuuuck' he breathed softly, how had he never noticed how
+crazy hot his housemate was? Had she been hitting on him? They'd lived
+together for better part of year, with a pretty platonic friendship, and
+now he was getting a hard-on just talking to her...</p>
+<p>For her part, Bethany pouted, frustrated her prey had escaped, watching
+him squirm as she'd flirted had been exciting her far more than she
+cared to admit, and she now felt exceptionally horny. Sighing she pushed
+her door closed and moved back to the bed, picking up her phone, what
+else could the app offer?</p>
+<p>Opening the app, her avatar had undone the top button of the sundress,
+and was switching between gazing down into her cleavage, or shimmying
+with hands on hips. The Bonus menu was flashing, and the countdown was
+ticking away, with just over 23 hours to go, and the new options were;</p>
+<ol>
+<li>
+<p><em>Castle tower</em></p>
+</li>
+<li>
+<p><em>Thimble</em></p>
+</li>
+<li>
+<p><em>Milk Bottle</em></p>
+</li>
+</ol>
+<p>'What on earth do any of these even mean?' she peered at the screen,
+trying to work out the code. After a few seconds, she shrugged, and
+tapped the castle, watching the avatar to see if it'd give a clue.</p>
+<p>It winked up at her from the phone, still shimmying, but now began
+running both hands through her hair as well. The avatar now wore its
+hair down, whilst Bethany had hers in a short bun, and watching it toy
+with its hair made her wonder if maybe she should try growing it out
+again?</p>
+<p>Lost in thought Bethany subconsciously went to release her bun, but was
+snapped back into the moment as her hand encountered a mess of hair.
+When had her bun come loose? She must have looked ridiculous to Tim! She
+looked over to the mirror, and frowned, her hair was a complete mess,
+what was going on?</p>
+<p>She undid her bun carefully and felt her jaw drop as her hair bounced
+out into luxurious curls, falling well past her chest... She stood,
+giving a twirl, and stared incredulously as her hair continued to extend
+plump in volume, eventually settling just above her hips.</p>
+<p>She fluffed her hair a couple of time, at least it felt luxurious, but
+it was going to be a pain to take care of... Someone was bound to notice
+though! How do you hide over a metre of hair growth? The idea came to
+her in flash, her phone! She snatched it up, and opened the app. Her
+avatar grinned up at her, with the score of 1750 flashing above, Bethany
+frowned, unsure how any of these options would help, maybe the bonus
+menu could help...</p>
+<ol>
+<li>
+<p><em>Watermelon</em></p>
+</li>
+<li>
+<p><em>Milk Bottle</em></p>
+</li>
+<li>
+<p><em>Cherry</em></p>
+</li>
+</ol>
+<p>With a sense of growing sense of trepidation, she brought her finger up,
+and slowly pressed the Milk bottle, bracing herself for what might come
+next.</p>
+<p>In the screen her avatar reached up and snatched the milk bottle from
+the icon, and began to guzzle it down, dribbling some onto her chin as
+she went, quickly finishing the whole thing. The empty bottle was tossed
+off screen, then it brushed the back of her hand against the top of her
+sundress, trying to clear off some the spilt milk.</p>
+<p>Only it wasn't spilt milk, the twin damp spots were growing! The avatar
+looked up at the screen and covered its mouth with a hand in shock.</p>
+<p>'Oh no...' Bethany whispered, feeling her own breasts begin to warm, her
+nipples tingling. Reaching up slowly, she gently grasped her swollen
+bosom through the polo shirt, she could feel them throbbing, but just
+couldn't resist giving them an inquisitive squeeze.</p>
+<p>'Aaahhh...' She gasped, her palms moistening as her nipples began to
+leak, rapidly soaking her shirt, the sensation was strangely erotic, and
+she found one of her hands moving to start teasing her crotch through
+her work trousers.</p>
+<p>The more she played with her chest, the more milk seemed to leak from
+her nipples, her breasts now taking on a more swollen shape as the
+pressure within grew.</p>
+<p>After a few minutes, the throbbing eased, but it took several more
+before the flow of milk began to subside.</p>
+<p>She whimpered slightly, the sensations were getting too much, she was
+still turned on, if anything, this latest experience just made her want
+to feel someone, anyone, suck her nipples...</p>
+<p>'I should get Tim to help... Yeah... That could work...' the thought
+of Tim pinning her down, carefully kissing her nipples... Her hand
+slipped under trousers, fingers tracing down to her soaked pussy, the
+moment her first finger brushed against her clit, her imagination had
+Tim bite a nipple.</p>
+<p>What followed were a crazy few minutes of self-pleasure, dimly aware
+that her nipples began leaking again just her climax rocked through her.</p>
+<p>As she lay on the floor of her room, she whimpered slightly; the
+sensations were getting too much! She heard her phone vibrate and she
+struggled to focus on it, reluctantly releasing her breast to open the
+app again.</p>
+<p>Her avatar was breathing heavily, flustered, with a sundress that was
+now barely decent, with obvious damp patches over her nipples. It
+grinned sheepishly, and waved at the screen. She now had 2000 points,
+and 3 choices to choose from;</p>
+<ol>
+<li>
+<p><em>Beachball</em></p>
+</li>
+<li>
+<p><em>Acorns</em></p>
+</li>
+<li>
+<p><em>Thimble</em></p>
+</li>
+</ol>
+<p>'Hmmm,' she pondered, I've not seen the acorns before...' tapping the
+icon. It caused an avalanche of acorns to tumble out of the icon,
+bouncing all over the screen, her avatar bending over to cover her head
+with her hands. The avalanche continued for a few seconds before it
+eased off, letting the avatar straighten up, and begin brushing herself
+off, before gasping and clutching at her chest, which no longer seemed
+to be straining at the dress. In fact, it was completely flat!</p>
+<p>'No, no, noo!' Bethany went to grab her boobs, just in time to feel them
+dwindle away, shrinking rapidly, leaving her even flatter than she'd
+been originally.</p>
+<p>'No fair!' she cried, pulling at her top, the only curves she had left
+was her nipples, that still had droplets of milk. 'My curves....'
+Dejectedly she let go of her top and sulked.</p>
+<p>'Stupid app! I want my tits back!' Snatching up her phone, she looked
+for some way to fix things, 2250 points, a flat avatar and three choices
+blinked on the screen;</p>
+<ol>
+<li>
+<p><em>Perfume Bottle</em></p>
+</li>
+<li>
+<p><em>Peach</em></p>
+</li>
+<li>
+<p><em>Cake</em></p>
+</li>
+</ol>
+<p>'Hmmm... Well, I've already tried those two...' muttering, Bethany
+tapped the cake, hoping to get her curves back. For its part, the avatar
+began eating a cake, stuffing slice after slice into her mouth, cheeks
+bulging.</p>
+<p>Bethany leant forward as she peered at the screen, trying to workout
+what else was changing, her work trousers feeling a bit snug. The avatar
+finished scoffing the cake, then patted its stomach, which had bulged
+out significantly.</p>
+<p>Bethany suddenly felt the button of her trousers pop open, and as her
+gaze moved down, watched with odd fascination as her tummy rolled out
+over the waistband. She was gaining weight, and getting fatter by the
+second! She stared incredulously at her reflection as any semblance of a
+thigh gap vanished, her shirt become tight, but without even a hint of
+cleavage. Even her face looked pudgy as the weight continued to pile on.</p>
+<p>'I just wanted my boobs back...' whimpering dejectedly her hands fell
+to her thighs, and as she knelt in front of the mirror, there was a loud
+<em>rii-iiip</em> as her trousers split, but she was beyond caring. The
+incessant heat in her loins, the excited buzz was now fading. She had to
+fix this!</p>
+<p>Opening the app she pondered her options, deciding to check out the
+bonus menu for the first time, maybe that could help?</p>
+<p><em>BONUS MENU</em></p>
+<ul>
+<li>Supercharge next three selections! -- 1000 Points</li>
+</ul>
+<p><em>For those seeking a speedy change, your next three selections will have
+an extra boost, but must be made simultaneously!</em></p>
+<ul>
+<li>Revert previous choice -- 1500 Points</li>
+</ul>
+<p><em>Made a wrong choice? This will let you undo your latest choice</em></p>
+<ul>
+<li>Choose any unlocked option -- 3000 Points</li>
+</ul>
+<p><em>For those looking to play it safe, choose any icon you've used before</em></p>
+<ul>
+<li>Reset selection -- 100 Points</li>
+</ul>
+<p><em>Nothing taking your fancy? Spend some points to spin the wheel!</em></p>
+<p>'That's could be handy... I've got plenty of points to spend...'</p>
+<p>She excited the bonus menu, and checked out her options</p>
+<ol>
+<li>
+<p><em>Castle tower</em></p>
+</li>
+<li>
+<p><em>Thimble</em></p>
+</li>
+<li>
+<p><em>Cake</em></p>
+</li>
+</ol>
+<p>Before she could make a selection, she hears a knock at her door;</p>
+<p>'Are you okay in there Beth?' Tim called through the door, 'I heard
+weird noises? Just wanted to make sure you were okay...'</p>
+<p>Outside her door Tim was trying to play it cool, but hadn't been able to
+stop thinking about her, even now he had a semi...</p>
+<p>Inside, Beth was panicking, she couldn't let him see her like this!
+'Just a moment Tim!' she stalled, playing for time, as she planned her
+next move...</p>
+<p>'Undo... Undo... There must be an undo... Bingo!!' Muttering to herself,
+she tapped the Bonus Menu revert, and watched as her score rolled back
+by 1500 points. The avatar began to shake, its edges blurring as it
+vibrated, before coming to stop.</p>
+<p>All the extra weight was gone! Bethany crossed her fingers hoping the
+same would happen for her... Her nose tingled, and she felt a sneeze
+building, and reached for a tissue.</p>
+<p>'Aaaa-Chooo!' She caught the sneeze just in the nick of time, but
+opening her eyes, let out a little cry of surprise. 'Wahh!!' All of the
+added weight had vanished</p>
+<p>'Bless you?' Tim spoke through the closed door, 'You sure you're alright
+in there?'</p>
+<p>'Ye-ah...' she paused, 'Just my allergies playing up...?' grimacing, and
+hoping he wouldn't question it, she moved over and opened the door,
+leaning round the door, so he could only see her head. 'Don't suppose
+you could you grab me a glass of water?'</p>
+<p>'Sure, want me to grab some hay-fever tablets too, I think I've got some
+in my room...' He made a strange face, looking at her hair and inhaling
+deeply, 'Have you done something with your hair?</p>
+<p>Crap, she'd forgotten about her longer hair... 'I've been trying
+different styles?' She glanced down, avoiding his eyes, and had to stop
+herself staring at what was an obviously growing bulge in his trousers.
+She looked back up, to see him nod appreciatively at her last comment,
+oblivious to her stare;</p>
+<p>'Well, I really like it! It really works for you! Is that a new perfume
+too?' He inhaled deeply.</p>
+<p>'Sure...' What perfume? She thought, before reminding him, 'Could you
+grab the water?'</p>
+<p>'Oh yeah, sure thing!' He paused to adjust himself, and headed off to
+the kitchen.</p>
+<p>'Phew, that was close... Right' She opened the app, still on the Bonus
+Menu, 'I've not got much time... Supercharge? Worth a try...'</p>
+<p>Her score rolled all the way back to 0, and the app presented a text
+box;</p>
+<p><em>Supercharged quickfire round! You must choose your next three choices,
+before they begin. They will then be applied at three times the
+strength!</em></p>
+<p><em>ROUND ONE</em></p>
+<ol>
+<li>
+<p><em>Castle tower</em></p>
+</li>
+<li>
+<p><em>Thimble</em></p>
+</li>
+<li>
+<p><em>Cake</em></p>
+</li>
+</ol>
+<p>'Well, that's a no brainer!' she chuckled tapping the thimble, 'No more
+cake for me thank you!' She shuddered, imagining what a triple strength
+cake would have done to her... 'And I don't particularly want to be real
+life Rapunzel...'</p>
+<p><em>ROUND TWO</em></p>
+<ol>
+<li>
+<p><em>Hour Glass</em></p>
+</li>
+<li>
+<p><em>Peach</em></p>
+</li>
+<li>
+<p><em>Perfume Bottle</em></p>
+</li>
+</ol>
+<p>Keen to regain her curves, she tapped the hourglass, but smirked as she
+imagined herself with a Beyonce sized arse...</p>
+<p><em>ROUND THREE</em></p>
+<ol>
+<li>
+<p><em>Fire</em></p>
+</li>
+<li>
+<p><em>Watermelon</em></p>
+</li>
+<li>
+<p><em>Milk Bottle</em></p>
+</li>
+</ol>
+<p>'Ah-ha! Gotcha!' Grinning she tapped the watermelon, 'Curves here we
+come!' Then her face froze, 'Wait... Triple charge watermelon?' She
+gulped.</p>
+<p><em>All selections now made, modification sequence starting...</em></p>
+<p>The three icons she selected began spiralling round the screen, like a
+tornado, with the avatar at the centre. One by one the icons zapped out
+of the tornado, knocking the avatar back and forth</p>
+<p><em>Hourglass -BAM- Watermelon -POW- Thimble...</em></p>
+<p>The thimble dropped out last, and ended up on the avatars head, almost
+like a helmet, making Bethany laugh. The screen was then covered by a
+popup</p>
+<p><em>WARNING - Temporary app lockout for reaching 0 points... 1 Hour</em></p>
+<p>'Seriously? Does that mean I have to wait... Oh... Oooo... Nooope,
+definitely not waiting...' She'd begun to grumble, before she felt her
+stomach gurgle and tighten.</p>
+<p>Grinning, she pulled her t-shirt up and watched her reflection as her
+belly flattened, any trace of the rolls of fat from the cake long gone,
+she could almost see her abb muscles. Her hips prickled, before she felt
+them flare out, her poor trousers splitting ever further as they
+widened.</p>
+<p>Standing up, she slowly turned to admire her figure, although it was
+hidden by the shirt, her waist was absurdly slim, with hips and a bum
+that wouldn't have looked out of place on Jessica Rabbit. All she was
+missing was the boobs...</p>
+<p>She fidgeted in her clothes, they were almost comically wrong sized now,
+as she waited for the next change, the one she wanted the most.</p>
+<p>She didn't have long to wait, as she felt her breasts begin to pulse,
+then throb with an intense heat building within. It wasn't just in her
+breasts though, the passion and lust that had dimmed with the cake was
+now roaring again, and she felt a yearning for something, or someone
+between her legs...</p>
+<p>She gripped at her flat chest and stared at her reflection, biting her
+lip as she felt the swelling start. It was slow at first, barely a cup
+size from the first pulse, but she loved how it felt as they began to
+fill into her palms.</p>
+<p>She was enthralled as her breasts began to stretch out her polo shirt
+once more, her breath heavy as she felt her nipples drag across the
+moist fabric. She was dimly aware her nipples were still leaking
+slightly, but she was increasingly focused on the canyon of cleavage
+rapidly forming in front of her.</p>
+<p>'I had to use a mug, as I couldn't find a clean... What the fuck!' The
+mug smashed as it fell from Tim's grip, as he stood in the doorway,
+mouth wide and eyes staring.</p>
+<p>Bethany whirled to face him, almost over balancing from the weight of
+her still swelling breasts. For a moment they both stood there, eyes
+locked in each others form. Bethany feeling her passion burning
+intensely as she watched Tim's cock bulge against his pyjama bottoms. He
+reached up to rub the back of his neck, causing his t-shirt to ride up,
+revealing a trail of chest hair... And was that seriously the tip of
+his shaft poking over the top of the waistband??</p>
+<p>Bethany was starting to suffer a wardrobe malfunction of her own, as her
+polo top was now filled to capacity, but her boobs were showing no signs
+of slowing, and one by one the buttons were popping open, till only one
+stubborn button remained.</p>
+<p>It valiantly held on, even the rest of the shirt began to tear apart,
+her breasts beginning to spill out, creating a shelf in the v neck split
+of her shirt. Their eyes met across her bedroom and whilst looking deep
+into his lust filled eyes, she slowly reached for a nipple, feeling
+slightly concerned as she struggled to stretch her arm far enough. How
+big was she getting?</p>
+<p>Her fingertips brushed against the compressed bump of fabric covering
+her nipple, a groan of pleasure escaping as her breasts surged larger
+still, her nipple slipping out of reach.</p>
+<p><em>POP!</em> The final button launched off her shirt, hitting Tim right
+between the eyes, and with that, the spell was broken.</p>
+<p>'Fuck me Bethany! What's going on??' he stepped towards her, reaching
+out to grab her, before stumbling as he caught her scent. He bent over,
+taking several deep breaths.</p>
+<p>'Tim? Are you... <em>Nyugh.</em>.. Okay?' The pulses of growth were slowing,
+but were still intense, each one accompanied by the sound of fabric
+tearing, as her valiant shirt began to completely disintegrate.</p>
+<p>Tim took one more deep breath, then straightened up, almost at
+attention, in more ways than one. His eyes were wild, as he moved
+purposely towards Bethany, pulling his own shirt off, revealing a toned
+chest, with hair leading in a trail towards his crotch. There, his shaft
+was making a bid for freedom, with an inch now showing above the
+waistband.</p>
+<p>Bethany could feel the gap between her thighs throb with anticipation as
+she looked up at his masculine form.</p>
+<p>'Say... Tim... Why don't <em>you</em> ... Fuck <em>me</em> instead?' she asked
+hesitantly, pulling off the tattered remains of the shirt, gasping as
+her nipples came free, her giant breasts falling forward against her
+trim waist. She could feel milk trickling down from her nipples, but
+couldn't see, let alone reach them to ease the pressure building within.</p>
+<p>Lost for words, Tim could only nod, removing the last of clothes,
+allowing Bethany to take in the rest of his handsome form. From his
+strong legs, pert bum, and finally, the sizeable shaft standing proudly.</p>
+<p>Bethany took a step back, beckoning him towards the bed, letting her own
+trousers fall, her soaked knickers swiftly following. She blushed, aware
+that her bush wasn't neatly trimmed, after all she hadn't been expecting
+this kind of night, but maybe Tim liked that? She felt her bum hit the
+edge of the bed and hopped up onto the mattress, spreading her legs
+invitingly for Tim, whilst pushing her swollen tits together to further
+exaggerate the deep valley of cleavage that filled her lap.</p>
+<p>She felt a blush of pride as his shaft throbbed whilst he watched her
+strip, then he pounced at her, delving atop with the weight of her
+breasts throwing her back onto the bed. Moments later she felt his hot
+mouth close over one of her swollen nipples and groaned as she felt the
+pressure of milk spraying into his eager mouth.</p>
+<p>The size and weight of her breasts pinned her to the bed, and she could
+only just see Tim's head, sucking her nipple.</p>
+<p>The length of his shaft was pressed against her folds, and she began to
+wriggle against it, partly to find the tip, but also to stimulate her
+engorged clit against his hard cock.</p>
+<p>His hips moved back momentarily, and she growled as the pressure of his
+cock disappeared, before she felt his engorged tip forcing its way into
+her slick pussy, which offered little resistance, her thighs slick with
+her pleasure. He was a pro, easing his significant girth in gradually,
+she'd never had a guy this big before, and just as she was starting to
+think she couldn't possibly take anymore, he paused, then began to
+rhythmically thrust, a slow tempo, but gradually increasing...</p>
+<p>Each forceful thrust was making her humongous breasts rock back and
+forth, rippling in tempo with the pleasure from her loins. Tim was
+gripping her nipples, using them to pull himself forward with each
+thrust, he seemed increasingly excited, and eagerly lapped at the milk
+now spurting from each nipple.</p>
+<p>Bethany could feel her orgasm rapidly building, when Tim leant forward
+to start sucking her nipple again, the added debauchery enough to cause
+the wave of pleasure to crash across her. Arching her back, she felt her
+entire body clench from the sensation, her pussy subconsciously
+squeezing his shaft.</p>
+<p>Tim groaned, feeling Bethany squirm as her climax rocked her body, her
+already tight folds clamping down on his shaft, as he continued to
+thrust. He slowed, waiting for her muscles to relax, but they continued
+to squeeze. If anything, her muscles squeezing harder still. Adjusting
+his angle, he grinned at Bethany over her cleavage, catching his breath.</p>
+<p>'Remind me why we haven't done this sooner?' He punctuated the question
+with a squeeze of her breast.</p>
+<p>'Unn-agh, I...' Bethany moaned, 'Don't know...' Breathing heavily she
+gyrated her hips against his, 'But if you get any harder mister, I might
+be in trouble!'</p>
+<p>'Oh really?', he leant forward onto her breasts, 'Then you'd better top
+clenching!'</p>
+<p>Confused, she looked up at him 'But... I'm not?', before her body
+clenched as she hiccupped '*HIC*'</p>
+<p>'Nyahhh' gasping, Tim fell forwards as her pussy clenched tighter round
+his cock, 'B-eth...'</p>
+<p>She could feel his shaft pulsating inside her, seemingly harder and
+bigger than when they'd started, 'It's... It's not me... *HIC*'
+Another spasm, and his cock swelled inside her, now filling her
+completely.</p>
+<p>'So... Grrr...Tight... Grunting, Tim struggled to force his oversized
+cock into her tight slit, completely lost in his own build-up. 'So...
+Close....'</p>
+<p>Another hiccup, and Bethany gasped she felt his cock surge in size
+again, she grasped at the edge of the bed, but struggled to reach. Then
+it dawned on her, he wasn't getting bigger, she was shrinking, with each
+hiccup, she was dwindling...</p>
+<p>'Tim!' Panicking, 'You need to pull out before I... *HIC*' She felt
+herself contract again, his shaft almost painfully tight.</p>
+<p>'But I'm so close...' he growled, but started pulling back</p>
+<p>'I'm... *HIC* shrinking!'</p>
+<p>'You're what?' His cock was forced free as she hiccupped again, but then
+found a new home in her cleavage as he leaned forward. 'Fucking hell!
+You are as well! What the fuck Beth?'</p>
+<p>'I can... *HIC* explain?' The shrinking was speeding up, she couldn't
+have been much more than three feet tall now, and his shaft was almost
+long enough to use the entire length of her cleavage. She could feel it
+still throbbing, and she had a crazy though to try and tease him.</p>
+<p>As he stood dumbfounded, she pressed her giant breasts together, tight
+round his cock, and began to rock back and forth, trying to finish him
+off with a boob-job. The milk leaking from her nipples helped to
+lubricate the motion, and she heard his breath catch, just as she
+hiccupped again.</p>
+<p>'Oh fuuuuuuck...' The combined effort of her breasts rubbing his shaft,
+the warm milk and then feeling her shrink under him was enough to tip
+him over the edge, and his cock sprayed his hot seed all over her
+cleavage, spilling out onto her face and neck.</p>
+<p>As they both lay recovering, Bethany hiccupped for the final time,
+shrinking to a fraction of her former size, barely a foot tall, but with
+breasts that were, ironically, the size of watermelons. She was unable
+to move, but right now, why would she want to?***\</p>
+<hr />
+<p><strong><em>The next morning</em></strong></p>
+<p>The next morning, Bethany was woken by the alarm beeping from her new
+phone, groaning, she reached for it, trying to piece together the events
+from the night before. Her arms encounter nothing but bed sheets, boobs,
+and a giant hairy arm.</p>
+<p>Startled awake, her eyes shot open, and she realised the events of the
+evening before were no dream, she was still tiny, with huge boobs, but
+more importantly, the giant arm, was actually just her housemate Tim,
+who had fallen asleep with her tucked up in his arms like a teddy bear.
+However, there was no way she could reach the phone.</p>
+<p>'A little help?' She elbowed him awake, and after blearily rubbing his
+eyes, he sat up and reached for the phone, almost knocking Bethany out
+of bed in the process.</p>
+<p>'Careful!'</p>
+<p>He cancelled the alarm, 'Whoops, sorry, forgot you were fun-sized' he
+chuckled, picking her up easily, taking the opportunity to give each
+nipple a kiss before sitting her down on the bed. He glanced back at her
+phone, seeing the <strong>TMS</strong> notification.</p>
+<p>'Whats this?' He asked, opening the app</p>
+<p>'Don't mess with that!' She cried, 'It's what caused all of this!'</p>
+<p>'Now I <em>have</em> to take a look...'</p>
+<p>Opening the App, he saw the score of 0, and the three icons flashing
+which were greyed out, a cute avatar of Bethany which sat, perched on a
+giant pair of boobs, sadly looking at the floating text above her head
+that simply read;</p>
+<p>'<em>GAME OVER'\
+You've used all your points, so now you have to start again!\
+New game modes available!</em></p>
+<p><em>RE-START?</em></p>
+<p>Tim grinned as he tapped the screen, 'Hmm, let's see what this app can
+do...'</p>
+</body>
+</html>

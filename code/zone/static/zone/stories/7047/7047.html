@@ -1,0 +1,1406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>The Twins, part 1</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>I knocked on the twin’s bedroom door.  </p>
+<p>My sister called out. “Just a sec…” I could hear her moving in the room. I could also hear 
+another sound, a soft whimpering. Or moaning? Was that my brother? </p>
+<p>She opened the door, just a few inches. I could see most of her face, her dark hair falling over 
+one eye. Her shoulder was bare except for  the thin strap of her tank top, but the rest of her 
+body was out of sight. </p>
+<p>“Yeah, Luke? What?” </p>
+<p>“Do you and Danny want to hang out?” I could still hear the soft moaning coming through the 
+door, from the left side of the room. The bed.  “We could… we could watch some Netflix or…” </p>
+<p>“We’re kind of busy, Luke. Okay?  Just because you’re back home doesn’t mean we have time 
+to hang out. We’ve got our own lives.” </p>
+<p>“But what are you two doing in…” She shut the door before I could finish. But I could still hear 
+that soft sound. What the hell were they doing? I went back to my room and closed the door. </p>
+<p>It was summer. I had left for college two years ago, but now I was back for the break. When I 
+came home last year Danny and Kim had been so excited to see me, and we had spent  the 
+whole summer hanging out and getting into trouble. My younger sibling’s weren’t actually twins, 
+but since they were born less than a year apart and looked so much alike that's what everyone 
+had always called them. They were both short and slender, with dark hair and delicate features 
+they inherited from our Korean mother. I looked a little more like our father. Danny had just 
+graduated from high school, and Kim had graduated the year before.  </p>
+<p>Danny and I had shared this bedroom since we were kids, but when I left home for school he 
+had it all to himself. Last summer when I came back for break I had slept in a sleeping bag on 
+the floor and we had spent the nights talking about girls, anime, my life at school and what 
+Danny wanted to do once he graduated. I had missed my little brother this year and been 
+looking forward to that kind of bonding again. But Mom decided that since I was an adult I 
+needed my own room, and the twins could share a room for the summer. I was surprised when 
+Kim didn’t complain, and for the week and a half I’d been home so far they had mostly stayed in 
+their room. </p>
+<p>At first I thought they must be angry about having to share a room. They were both over 18 now. 
+But I could hear them laughing and giggling. They were having a good time. And they were 
+never apart! How do you stay that close to your sibling? How do you masturbate with your 
+sibling in the same room? Danny and I had a system when we shared a room; always knock 
+and wait for the “all clear”. But Danny and Kim spent all their time in her room and never 
+seemed to be apart, except for the weekends when Kim worked at the mall. </p>
+<p>I was getting jealous and frustrated, and with nothing to do with my summer I spent more and 
+more time wondering what the twins were up to. Sometimes I could hear them listening to music 
+or watching some video on youtube, but more often they were giggling and whispering. But 
+sometimes I could hear something else. I knew what it was immediately. Soft moaning. The 
+slight squeak of bedsprings. The sound of an arm moving with the same motion over and over. I 
+could tell my brother was masturbating. At first I didn’t really think about it at all, but one night, 
+laying in my room scrolling through reddit, I heard those noises and realized that my sister 
+MUST be in the room too. Was she asleep? Did  Danny think she just wouldn’t notice? I hadn’t 
+been in their room, so I didn’t know if they had a partition or any kind of privacy, but the thought 
+of my little brother jacking off in the same room as my little sister…  </p>
+<p>But it wasn’t just my brother. The walls were thin, and after a few nights I realized that the 
+sounds were slightly different, the moans were Kim, not Danny.  </p>
+<p>It was more than a week before I was able to get Danny alone. Kim was at work, and my little 
+brother reluctantly agreed to drive with me to the store. Our parents were gone for the entire 
+summer, so were doing our own grocery shopping. This was the first time I had really spent 
+more than a few minutes with Danny since I had been back, and I hadn’t realized how much he 
+had changed. He had grown his hair out over the summer, and it was now as long as Kim’s. 
+Longer maybe. He wore it in a loose ponytail, with a stray strand falling over his right eye, just 
+like our sister. I realized their glasses were the same too. </p>
+<p>“Kim picked out hers, and I thought they looked good, so I asked Mom for the same kind”.  </p>
+<p>It was the way he dressed now that really stood out to me. We had always had the same taste, 
+although I guess thats because Danny had to wear all of my old clothes when we were growing 
+up. But now he was dressing more like our sister. Black leggings and boots, and a long sleeved 
+dark top that really seemed like it was meant for a girl. It was all hidden under a dark jacket, and 
+I guess you could call it unisex. Maybe? But it was exactly the kind of outfit Kim wore every day. 
+Well, our sister preferred shorter skirts and crop tops. She had taken a job at a teen clothing 
+store at the mall, and this was the kind of stuff they sold.  </p>
+<p>Danny said he liked it. “This is just the kind of stuff kids my age wear, Luke. Everyone dresses 
+like this. I like it. And Kim gets it all for free too. I don’t see what the big deal is.” </p>
+<p>And I didn’t want to make it a big deal. My little brother could dress however he wanted, and the 
+truth was he looked good. Too good, really. Out of the corner of my eye he looked alot like 
+some of the girls I hooked up with at school. So did my sister. I shook my head, trying to drive 
+that thought away. </p>
+<p>I tried to change the subject. “Is it weird sharing a  room with Kim? I feel bad that I’m hogging 
+our old room.” </p>
+<p>“It's fine. It's just for the summer.” </p>
+<p>“But… what do you guys do? Like, you never leave the room.”  </p>
+<p>“We just… just sit around. Texting. We watch videos. You know, we talk…” He trailed off. </p>
+<p>“But, don’t you miss having… having privacy? You know… like when you want to… you know?” </p>
+<p>“Luke, we have a system. Just like when we shared a room.” He didn’t want to say anymore, but 
+it was hard to imagine what kind of system they had.  </p>
+<p>Later at the store I ran into one of my high school friends. We talked about what we had been 
+doing since we graduated, and how different life was. </p>
+<p>“Hey, who was that girl you came in with? She’s kind of hot. Did she come with you from 
+school?” For a moment I had no idea who he was talking about. “Do you mean Danny?” I 
+couldn't believe he was talking about my little brother. </p>
+<p>“Yeah, the chick with the long black hair. Is that her name? I saw you come in together. Is she 
+your girlfriend? Because if not, she’s really my type.”  </p>
+<p>I shook my head. “Danny is… we’re related.” I didn’t know what else to say.  Danny was my type 
+too. </p>
+<p>I didn’t say anything on the way home, and as soon as we were in the door Danny disappeared 
+back into Kim’s room. I could hear him masturbating off and on for the rest of the day. </p>
+<p>That night  I laid in my bed and tried not to listen. I put on headphones and watched porn 
+instead, but that wasn’t what had gotten me hard. The next day I decided I needed to see what 
+was going on in Kim’s room.  </p>
+<p>One of my siblings was in the shower when I woke up, but I wasn’t sure which one. I knocked 
+on the bedroom door, but no one answered. It was unlocked, and I slowly pushed it open.  </p>
+<p>“Kim? Danny? Are you guys up?” But the room was empty. It wasn’t exactly a mess, but you 
+could tell two people had been sharing it. Clothes were laying in piles everywhere, and cans of 
+diet Coke and Rockstar sat on every surface. I had never seen either drink in the kitchen, so I 
+wondered where they came from until I saw the little mini fridge in the corner. Where had that 
+come from?  </p>
+<p>There didn’t seem to be different piles for Kim’s clothes and Danny’s clothes, and honestly I 
+couldn’t tell the difference. I wondered if they could? Were they just sharing clothes? I wondered 
+if Danny was gay. Or maybe trans? Or non-binary? I wished he would tell me. I felt left out, like I 
+wasn’t their older brother anymore. </p>
+<p>Kim’s laptop was laying on a beanbag chair, and Danny’s laptop was on the bed. It was the 
+same princess canopy bed that Kim had gotten for Christmas when she was 10, the kind with 
+semi-transparent curtains that could be tied up at the bed posts. I blinked and did a double take 
+at the fat dildo sitting on the bed near the pillow.   </p>
+<p>“Jesus, Kim! At least put your toys away when you’re sharing your room!” It looked like it was 
+nearly 10 inches long, and glistened in the light. Recently used, I bet.  </p>
+<p>I slipped out of the room before I got caught. It was only as I stepped into the kitchen that I 
+realized there hadn’t been any sign of a sleeping bag. Where was Danny sleeping? </p>
+<p>Later that day I made a discovery while I was taking out the garbage. There were a bunch of 
+diet Coke cans in the garbage can. Mom’s a recycling nut, so I knew she’d be pissed if we threw 
+them away. After I pulled them out and tossed them into the recycling bin I noticed what looked 
+like one of those little medical waste disposal plastic boxes buried deep in the trash, like the 
+kind you use to throw away needles.  I dug it out, and saw thats exactly what it was. My dorm 
+roommate was diabetic, so I had seen these a bunch of times. Was Mom or Dad diabetic now? 
+They hadn’t mentioned it. I carefully opened it up and saw that it was full of used syringes. I 
+wasn’t sure what diabetes needles looked like, but this looked different. More like drugs. What 
+the hell was going on? </p>
+<p>I took a photo with my phone and buried the box back in the trash. Were Kim and Danny using 
+drugs? Is that why they just hung out in their room all day? I mean, it wasn’t a huge deal. I had 
+tried all kinds of stuff in college. But there had been over 20 needles in that box! What were they 
+taking? </p>
+<p>I spent some time in my room trying to google that type of needle, but I didn’t really find out 
+anything at all, and eventually gave up and went to bed. That night I could hear both of the twins 
+masturbating, one after the other. There was no privacy in their room, and only one bed. Did 
+they sleep together? That wasn’t that weird. Except I knew they must be watching each other 
+masturbate.  I imagined Danny stroking himself while Kim watched, and then Kim doing the 
+same. I was so hard. I had been watching porn and getting myself off a few times a day for the 
+last week, but now I had to admit that what was turning me on so much was the thought of my 
+little brother and sister getting off to each other. Watching each other pleasure themselves. 
+They really were just my type. I had never really thought about it before, but my last few 
+girlfriends had been slim girls with long black hair and glasses. Kim fit that description, with nice 
+breasts and a round ass. Danny wasn’t a girl though, but…. But it was easy to imagine he was. 
+He was nearly as pretty as his sister, and when he wore her clothes (and I was convinced now 
+that he did) he really did look like a girl. God, my little brother really did look like a girl. A sexy 
+girl. My type of girl Jesus! </p>
+<p>I came hard, and laid in bed in the dark listening to the twins for another hour before I finally fell 
+asleep. </p>
+<p>The next day I decided I really needed to get out of the house for a while. I had started out 
+feeling frustrated and lonely that my siblings didn’t want to spend any time with me, but now that 
+had turned sexual, and I was beginning to feel pretty weird about the whole thing. My friend Alex 
+was working at a summer camp  and had told me that I could pick up some work as a cook if I 
+wanted. I decided to get away for a few weeks.Surprisingly, Kim and Danny acted disappointed 
+when I told them I was going. Kim almost acted like I had spoiled her plans. </p>
+<p>“But Luke, with Mom and Dad gone this is the perfect chance for us to really hang out and bond! 
+I mean, we’re all adults now!” I should have read way more into that, but I was still upset that the 
+twins had been ignoring me for the last two weeks.  </p>
+<p>That night we ordered pizza and drank a bottle of Dad’s scotch while we watched movies on 
+Netflix. For the first time all summer everything seemed normal, and it was almost enough to 
+make me forget all the weirdness from the last week. And if what happened next hadn't 
+happend I might have. </p>
+<p>After the second movie ended I got up to use the bathroom. I had been sitting between Kim and 
+Danny on the couch, and both of them had been practically laying on me. We had watched tv 
+like that when we were kids, and it wasn’t sexual at all, but my cock was hard, and I had to 
+resist the urge to jack off in the bathroom. </p>
+<p>I came back to the family room a few minutes later, but the lights were off and the twins were 
+gone. Had they gone to bed? It was late, and we had drank a lot. I was a little disappointed, 
+since I was leaving early in the morning and wouldn’t get to say goodby, but I decided to go to 
+bed too.  </p>
+<p>I stumbled into my room and onto my bed. I really was more drunk than I thought. Dad has good 
+taste in scotch! I closed my eyes but couldn't get to sleep, and after several minutes I realized I 
+was listening for the sound of the twins masturbating, something I had grown used to over the 
+last few days., Grown to anticipate and enjoy. I heard something else instead, although I 
+couldn’t figure out what it was. Something coming from the closet. I slowly stood up and stepped 
+across the room. The closets in our rooms shared a thin wall. I remembered cutting my hand on 
+some nails dad had pounded through the back of Kim’s closet to hang a coat rack when we 
+were kids. I opened the closet door. Some of Danny’s clothes were still hanging there, and 
+when I pushed them aside I could see those old nails still sticking through the wall. But below 
+them there was something else. </p>
+<p>There was a small hole, about waist high, cut into the wall. It was a slightly imperfect circle, and 
+the edges were covered in duct tape. I stared at it, trying to imagine it was anything but a glory 
+hole. There was one just like it in one of the toilets at school, although I’m pretty sure it was a 
+joke and no one ever used it. But this… this was for real. I could see the discolored stains on 
+the closet wall that I knew must be dried cum. Kim had been giving Danny blowjobs. </p>
+<p>Everything made more sense now. No wonder they didn’t mind sharing a room. No wonder 
+there was just one bed. No wonder they didn’t have any problem masturbating in front of each 
+other! I stared at the hole, too surprised to move. How long had this been going on? It wasn’t 
+here when I shared the room with Danny, I knew that. </p>
+<p>It was easy to imagine Danny pressed up against the wall, his dick through the shallow hole. It 
+was just as easy for me to imagine Kim on the other side, kneeling with his cock in her mouth. 
+Sucking her own brother’s cock. Sucking it like a slut! </p>
+<p>I was angry and turned on at the same time. I felt like I had been left out. We were always so 
+close, but they chose each other and not me. I know it isn’t right to want to fuck your little 
+brother and sister, but I was jealous.And I couldn’t get the image out of my head. Kim sucking 
+cock like a slut and Danny enjoying it. Kim swallowing her brother’s cum. Danny cumming in his 
+sister’s mouth. Every night, for who knows how long. My cock throbbed in my underwear as I 
+imagined it! </p>
+<p>I was so lost in my imagination I almost didn’t notice the sound. A light scraping. Was… was 
+someone on the other side of the hole? I held my breath, not wanting to move. Not wanting Kim, 
+or Danny, or  both of them, to know that I had discovered their secret. What would I say? </p>
+<p>I waited, but didn’t hear the sound again. Just as I was about to step away I saw a pale finger 
+slip through the hole. It slowly circled the outside the hole, then slipped back inside. A moment 
+later it appeared again, this time beckoning me. I wasn’t sure what to do, and knew I shouldn’t 
+do anything at all. I should just go to bed. But slowly I extended my hand and put two fingers 
+through the hole. </p>
+<p>At first nothing happened, and for a moment I started to wonder if I’d fallen into a  trap. Maybe it 
+only looked like a glory hole? Maybe it was something innocent after all, and Kim was baiting 
+me? But before I could finish those thoughts I felt a wet, warm mouth envelop my fingers. Soft 
+lips closed around my digits, sliding back over each knuckle until my wet fingers slid from her 
+mouth. I slowly pulled my hand away, and a moment later the finger appeared again, beckoning. 
+I didn’t hesitate this time. Maybe I would have if I hadn’t been drunk, but at that moment all I 
+wanted was for my sister to suck my cock. </p>
+<p>I pulled my dick free and guided it through the hole, pressing my body up against the cool closet 
+wall. Again, for just a second, I wondered if this had been a mistake, but that worry disappeared 
+as I felt her fingers wrap around my shaft and her wet tongue lick at my cock head. Her lips 
+pressed against my tip, then slowly opened as she pushed her mouth forward. The inside of her 
+mouth was wet and hot, and my cock throbbed as she swallowed more and more. This is what I 
+had wanted. I had been so jealous, but I was suddenly able to see that I had always wanted my 
+sister. Her beautiful, lean body. Her sarcastic personality. Her long silky hair. Her sharp eyes, 
+framed by her glasses. I had been infatuated with her for years and hadn’t let myself admit it. </p>
+<p>I could hear her sucking, my dick sliding in and out of her mouth with wet slurps. She was an 
+eager cocksucker, taking more and more of my shaft until the tip of my dick was pressing into 
+her throat.I thought of all the girls I had dated, from high school and at college, all the girls I had 
+crushes on, my favorite porn stars and models. They all looked like her. Slim, busty, dark hair, 
+glasses. No wonder I had felt myself growing more and more attracted to Danny. He looked so 
+much like Kim now. </p>
+<p>I felt her swallow my cock, slowly taking it deep into her throat until her lips were pressed around 
+its base. Then slowly she pulled back, letting every inch of my throbbing dick slide out of her wet 
+mouth until only the head was between her lips. She let out a low, soft moan before taking my 
+shaft back in her mouth and throat. I was throbbing and on the verge of cumming when a 
+thought invaded my head.  </p>
+<p>Did that moan sound like Kim… or Danny? </p>
+<p>Was it my little sister giving me a blowjob, or my little brother. Was it Kim sucking my cock like 
+an experienced whore, or Danny? It didn’t matter. As much as I wanted it to be Kim, the thought 
+of Danny on his knees in the closet, dressed in his sister’s clothes, his long dark hair brushed 
+back out of the way as hea eagerly slobbered and licked at my swollen dick sent me over the 
+edge. I closed my eyes and pressed my hips hard against the closet wall, pushing my dick even 
+further into my siblings throat as I came. I heard a strangled gasp as as steaming hot cum 
+spurted into their mouth. I couldn’t stop, I was still thrusting my hips against the hole, pushing 
+my dick into their mouth. I diodn’t know if it was Kim or Danny, but I also didn’t care. I just 
+wanted my sibling to swallow my cum. I wanted both of my siblings to swallow my cum!  </p>
+<p>After what seemed like minutes the wet mouth on the other side of the hole pulled away, my 
+dick escaping from those soft lips with a wet slurp. I slowly pulled away from the hole, my still 
+drooling cock slick with saliva and smearing cum on the edges of the hole. I stared at the glory 
+hole silently, waiting for some sign of my brother or sister. A sound. Their mouth, or that finger. 
+Anything. </p>
+<p>But nothing appeared, and after standing in the closet silently for nearly a half hour I finally 
+stumbled into bed, and fell asleep nearly instantly. </p>
+<p>I was up and out the door the next morning before the twins woke up. It was a long drive to the 
+camp, and Alex had asked me to stop by his parent’s house and pick up some extra clothes for 
+him on the way. But more than anything I wanted to avoid seeing Kim. Or Danny. I couldn’t face 
+my younger brother and sister knowing that one of them had given me the best blowjob of my 
+life just hours before.  </p>
+<p>Camp was a good distraction. The work was easy and the kids were fun, and the staff was 
+mostly young. In between preparing meals and cleaning the kitchen I’d smoke weed with the 
+other cooks, and at night after the kids were in bed  we’d drink around the camp’s big central 
+bonfire and smoke even more week. At the end of my first week I made out with a cute blonde </p>
+<p>who really wasn’t my type at all. But that was on purpose. Now that I knew my type was my 
+sister I was eager to distract myself with someone who was as much her opposite as possible. 
+But we never went further than drunk kissing and groping, and I’d lay in my bunk at night 
+thinking about Kim on her knees, her eager wet mouth wrapped around my dick. Or Danny. I 
+wondered what it would be like to fuck my younger brother. To bend him over the edge of Kim’s 
+princess bed and pull down his girly leggings. Would he be wearing Kim’s panties too? I was 
+sure he would. I’d push those aside and slide my cock up and down the crack between his 
+plump ass cheeks until I found his hole. Slowly I’d ease myself in, until my dick was buried in his 
+butthole. I wondered how different it would be then fucking a girl. Then I’d wonder what it would 
+be like to fuck Kim. Eventually I’d drift off to sleep with cum on my belly and my cock in my 
+hand. </p>
+<p>Two weeks passed fast, and before I knew it I was home again. I sat in the driveway and stared 
+at the house, unsure what to expect. Mom and Dad were still gone, and there was a full month 
+before I was supposed to return to school. I thought about going back early, but… I couldn’t 
+leave. I couldn’t leave all of this unresolved. My relationship with the twins was so fragile. I was 
+their big brother and wanted to be part of their lives…. But I also knew their secret. I knew that 
+they had a sexual relationship. I knew that they were using drugs of some kind. And I knew that 
+one of them had given me a blowjob. </p>
+<p>And I wanted that again. I wanted my sister so bad. Or my brother. Or both.  </p>
+<p>I wasn’t sure what I was expecting when I walked into the house. I had been sitting in the 
+driveway for an hour, so I assumed the twins had noticed. But there was no sign of them when I 
+came inside. I brought my bag to my room, then went to the kitchen to make some lunch. There 
+wasn’t much in the fridge, they clearly hadn’t kept up with the shopping while I was gone. I took 
+the last two slices of bread and made a peanut butter sandwich, finishing off the jar. When I 
+went to throw it away I noticed that the garbage can was full of syringes, like the ones i found 
+before. I counted nearly 30 of them, but I didn’t want to dig deeper to see if there were more 
+buried in the trash. Had the twins just been getting high the entire time I was gone? I could 
+hardly blame them, since I had smoked a LOT over the last two weeks. But this looked like hard 
+drugs! </p>
+<p>I stood outside their door, unsure if I should knock. I could hear one of the twins moaning on the 
+otherside of the door, but I couldn’t tell if it was Kim or Danny. I took a deep breath and 
+knocked, and almost immediately Kim answered. </p>
+<p>“Who is it? Luke, is that you?” </p>
+<p>“I’m back. I’m back from work.” I had told them I’d be coming back today, but I guess they didn’t 
+remember. </p>
+<p>Kim opened the door. Not just a crack, but nearly half way. Immediately the smell of sex rolled 
+out of the room. It smelled like sweat and cum, and i wondered if they’d locked themselves in for </p>
+<p>two weeks of non-stop sex. We’re they fucking? I had no idea. I wanted to fuck Kim so badly, 
+but did Danny?  </p>
+<p>“Oh, you are back. Well, I hope you had fun. We really need some groceries, you know.” If she 
+was embarrassed to see me, or eager to see me, or had any feelings at all I couldn’t tell. Kim’s 
+head was cocked to the side, hair covering one eye, with the same bored and sarcastic 
+expression on her face that she had adopted after graduating high school, and the same 
+vaguely bored and exasperated tone in her voice too. </p>
+<p>I don’t know what I had hoped for. That my little sister would confess that she had sucked my 
+cock, and offer to do it again? That she’d drop to her knees right there in the hall? Instead she 
+acted as disinterested as ever, brushing her long hair away from face. Had it been Danny 
+afterall? Had my little brother sucked me off? Did Kim even know? </p>
+<p>“Can I… can I come in?” Even as I said it I heard Danny moan again, and the bed squeak as he 
+moved. There was a wet, slurping sound coming from  the left side of the room where the bed 
+sat, out of sight. What was he doing? </p>
+<p>“Danny isn’t dressed, Luke. And he’s a little.... busy.” Her lip turned up just a little as she said 
+that, and her eyes locked with mine. Just a hint of a smile. </p>
+<p>“I’d really like to come in, Kim. I’m sure Danny…. I don’t think he’d mind.” I didn’t know what was 
+about to happen, but I could feel my cock getting hard in my pants, and I was breathing heavier. 
+Kim seemed excited too. I could see her skin was flush., She was wearing a low cut black top 
+with long sleeves, and her chest above her cleavage had visibly reddened.I looked up into her 
+eyes and watched as her pupils dilated. Her lips trembled. She was turned on too. </p>
+<p>Danny moaned again, and for a moment I thought Kim would shut the door. But finally she let 
+out a sigh and I saw her body relax. “Sure, Luke. Come in. We missed you.” </p>
+<p>She turned and I followed her into the room. It was an even bigger mess than before, although 
+that wasn’t the first thing I noticed. I could see shopping bags piled in the corner, new clothes 
+and shoes spilling out of them. The closet was open and its contents were pushed aside, the 
+glory hole clearly visible. A cushion under it for kneeling. Kim’s laptop was sitting open on her 
+bean bag chair, a pornhub video paused halfway through on the screen. Had she been 
+watching porn when I knocked? On top of the small refrigerator was an overflowing plastic bin of 
+syringes. Dozens of them. </p>
+<p>None of that was what I noticed first. How could it be? As I stepped into the room I immediately 
+looked to my left at the bed. The princess canopy bed had its pink curtains drawn, the 
+semi-transparent fabric obscuring my view. But I could still see my little brother on the bed. His 
+silhouette was still clear through the gauzy pink fabric. </p>
+<p>“Danny wanted some privacy. He’s taking a little nap” Kim smiled and sat down on her bean </p>
+<p>bag, crossing her long legs. She was just wearing a skirt and socks with her low cut top, and I 
+would have been distracted at any other time. But instead I looked back over at my brother. I 
+could see why he’d want privacy, but Danny was definitely not taking a nap. </p>
+<p>Danny was laying back on a pile of pillows in the middle of the bed. The curtain made it hard to 
+tell if he was dressed, naked or somewhere in between, but I could clearly see his silhouette. I 
+could see the shape of his body, and tell what he was doing. I recognized the up and down 
+motion of his shoulder and arm, the movement of his hips. He was masturbating. He was 
+jacking off. But his other hand was raised, holding something toward his mouth. It wasn’t until he 
+turned his head that I realized my little brother was feeding Kim’s oversized dildo in and out of 
+his mouth. I watched as he sucked and slobbered on the massive rubber cock, wet moans 
+escaping from his tightly packed mouth. </p>
+<p>“How was your trip? Did you make a lot of money?” Kim was staring up at me, a devilish grin on 
+her face. “Did you meet any cute girls?  Any girls that were…. your type?” I looked down at her. 
+She looked so fucking sexy. She brushed her hair away from her face with one hand as she 
+looked up at me. “I know you have  a type.” </p>
+<p>“N-no. No one.” I lied. How could I tell her that the girl I made out with was her exact opposite, 
+but only because I was trying not to think of her. My cock was throbbing in my pants. </p>
+<p>I heard Danny let out a moan, louder than before. He was on his knees now, face buried in the 
+pile of pillows. He was working the dildo in and out of his ass, gasping each time he pushed it in. 
+I couldn’t make out his face through the curtains, but I could tell how much he was enjoying 
+having that rubber dick stretching his ass. I was trembling now. I wanted to climb on the bed 
+with him. I wanted to see what it would be like to fuck my feminine brother. While my sister 
+watched. </p>
+<p>“As you can see, danny is pretty tired. We’ve had a lot of fun while you were gone, but now he 
+needs his rest. I do too.” </p>
+<p>I looked back at my sister. She had her computer on her lap now, covering the hand that she 
+had slipped down under her skirt. Was she rubbing herself? </p>
+<p>“Luke, why don’t you let us rest. You can go to the market and get groceries. Later tonight we 
+can have some fun. Just like old times. I know you’d like that.” She smiled up at me again. I 
+could her arm moving as she rubbed her pussy. She was masturbating right in front of me. 
+Staring right at me. Our eyes were locked. </p>
+<p>“We’ll have so much fun. Just like last time.” </p>
+<p>I left. I was shaking. I wanted to go into the bathroom and jack off, but instead I went out to the 
+car. When had Kim become like this. So manipulative? So dominant. She had always been 
+sarcastic and sly, and thats one of the things I loved about her as my sister, and found attractive </p>
+<p>too. But this was different. She knew exactly what she was doing. She knew exactly what I 
+wanted. She was teasing me with her body, and with Danny.  </p>
+<p>And jesus, what had happened to Danny! How had he changed so much? This wasn’t just 
+dressing in his sisters clothes and masturbating. My brother had been moaning like a slut while 
+drooling all over a fake cock. He had been fucking himself in the ass. The curtain had hidden his 
+face, but I could tell how much he was enjoying it.  </p>
+<p>How had it started? How had my little brother and sister ended up like this? How were they so 
+sexy? How were they so perfect? So exactly what I wanted. And they knew it. Kim knew it, at 
+least. Knew that I had been craving her for years, even if I hadn’t known myself. And now she 
+was even hotter. Now she was even sexier. And she had turned Danny into something just as 
+sexy. Or had my little brother done this to himself? </p>
+<p>I realized I had my cock in my hand., I was sitting in the car in our driveway stroking myself, 
+fantasizing about my slutty brother and my dominant sister. I forced myself to stop, since I didn’t 
+have anything to clean up with. </p>
+<p>I filled up a cart at the grocery store. Bread and lunchmeat. Cheese and crackers. Cans  of 
+soup. I had no idea what the twins actually ate. They were both thin. Kim seemed to live on diet 
+Coke, so I bought a case of that. Was Danny drinking the Rockstar? Or were they both? I 
+bought a case of that too, and then a case of beer. I had a feeling I’d be drinking a lot this week.  </p>
+<p>The twins were still in their room when I came home. I tried to keep calm. I had no idea what 
+was going to happen tonight. Instead of wondering what Kim was planning I started dinner, 
+putting the rice cooker on and preparing some chicken and vegetables for stir fry, just like Mom 
+would. I wondered how Mom hadn’t noticed all these changes happening to her children. I knew 
+she was busy with work, but how could she not see that something was happening.  But there 
+was no way I could ask her, even if she had been here. No matter what happened now, this had 
+to stay a secret. </p>
+<p>I was just finishing the stir fry when Kim came into the kitchen. She had obviously just 
+showered. He hair was still wet, and her skin was flush from the heat.  </p>
+<p>“Danny is taking a shower.” She said as she reached into the fridge to find a diet Coke. She 
+leaned against the counter and took a sip. She had changed her clothes. A white spaghetti strap 
+top with a low neckline that showed off her cleavage. God, when had her breasts gotten so 
+large? Kim had always been busty for her slim build, but in this top she looked enormous. I 
+wasn’t good at judging breast sizes, but I guessed my little sister was a double D cup. She was 
+certainly larger than girlfriend’s I’d had who claimed to be a D. </p>
+<p>Her skirt was new too. Pleated like a school uniform and black with a white stripe. And very 
+short. She would have never been able to wear that at school. I wondered if they let her wear it 
+at her job at the mall? She was wearing thigh high black socks, with white stripes near the top. </p>
+<p>They left her creamy thighs exposed. Years ago while we were watching an anime where one of 
+the characters wore similar socks I had admitted to my sister that they drove me wild. I guess 
+she remembered. </p>
+<p>But if my sister had any plan to seduce me, or flirt with me, or tease me at all, she didn’t let on. 
+Instead she asked me boring questions about college, and told me stories about working in the 
+mall. In a way it's exactly what I had wanted, normal brother and sister chat that I had missed 
+over the last few weeks. The kinds of things we used to talk about. After a few minutes I was 
+relaxed, and I even managed to make Kim laugh with a cheesy joke one of the camp guys had 
+told me. For a few minutes Kim was my little sister again, funny and sarcastic and familiar. </p>
+<p>But that all changed the moment we heard the bathroom door open and Danny step out into the 
+hallway. Kim’s expression changed instantly, her friendly smile and wide eyes turning into a sly 
+expression with a sultry grin. Her posture shifted from relaxed to alert. This Kim was obviously 
+sexual, and my cock throbbed in response. </p>
+<p>“Why don’t you come join us, Danni? Luke made stir fry, and it smells so good! Just like Mom 
+makes it.” She put an emphasis on the word “mom”, and looked over at me as she said it, as if 
+she wanted to remind me that we were all related. That we were siblings. But it wasn’t a 
+warning. Her expression made it clear. She was excited. We were her brothers, and that's what 
+made it hot for her.  </p>
+<p>Danny stepped out from the hall. He was wearing terrycloth bathrobe. Mom had given us all 
+robes for Christmas a few years ago. Danny and I had gotten blue robes, and Kim’s was pink. 
+This one was pink. The robe covered his entire body to the shins, and he pulled it tightly closed, 
+as if he was afraid it would fall open and I would see what he  was hiding inside. I wanted to see 
+what he was hiding. The robe’s puffy collar pushed against his chin, and his long black hair 
+framed his face. He looked so much like Kim. He looked beautiful. As my brother stepped closer 
+I realized  that he was wearing makeup. It was subtle, and matched Kim’s. He sat down next to 
+our sister, and she slid his glasses across the table to him.Danny slowly brushed his hair back 
+behind his ear, locking eyes with me over the rim’s of his glasses as he slid them into place. He 
+gave me a quick, nervous smile.  I could tell he was anxious. But also excited. Kim reached out 
+and took his trembling hand. He looked just like her. Anyone would think they were real twins. </p>
+<p>She turned to look at me across the table. “Luke, we want to share something with you.” </p>
+<p>I could see she was excited. She was trembling too, but unlike Danny she wasn’t anxious. This 
+was Kim on Christmas morning. About to unwrap a present she’d been waiting for all year. </p>
+<p>“Things have been different since you left, Luke. Danny and I missed you, and we started 
+spending more time together…” </p>
+<p>I interrupted her. “I know, Kim. I know what you’ve been doing.” </p>
+<p>“Shhhhh, big brother. Let me finish.” She looked over at Danny and smiled as she squeezed his 
+hand. He was looking at me, visibly nervous. </p>
+<p>“Danny and I are closer now. He missed you in a very certain way, and I helped him understand 
+that. And helping him helped me understand just how I missed you too.” </p>
+<p>I didn’t really understand what she meant at all, but she just smiled slyly. She was enjoying the 
+control she had over the moment, and I could tell she had been waiting for this. </p>
+<p>“I love you so much Luke. I’m sorry we’ve been distant. I know that hurt you. But we weren’t 
+ready yet. We still needed to prepare.” She looked over at Danny again, raising her hand to 
+brush the lock of hair aside that hung over his glasses. Just like her own hair. “But we’re ready 
+now.” </p>
+<p>She stood and stepped away from the table, and Danny stood with her. Kim stepped behind our 
+little brother, her hands on the shoulders of his robes. Danny was staring at me, visibly 
+trembling. </p>
+<p>“Luke, I want you to meet Danni.” </p>
+<p>I just blinked. I didn’t understand. “Kim, I’ve known Danny all his life.” </p>
+<p>“Not Danny, Luke. Danni.” </p>
+<p>Kim gently but firmly pulled our brother’s robe open and let it fall to the floor. Danny didn’t resist. 
+Under the robe Danny… no, Danni… was fully dressed, his outfit matching our sister’s, but in 
+opposite colors. A black spaghetti strap top. A very short white skirt with a black stripe around 
+the hem. And most importantly, those thigh-high socks, black with white strips, framing his full, 
+creamy thighs. With his glasses and subtle makeup, with his long black hair falling over one side 
+of his face, Danni looked just like our sister. They could have really been twins. With one 
+exception. </p>
+<p>Danny’s low cut top was tight across his chest, the straps containing what looked like full round 
+breasts. Breasts that were larger than our sister’s! </p>
+<p>I didn’t understand what I was looking at, and my eyes went back and forth between my brother 
+and sister in confusion. Danni had tits? Big tits? Seeing my brother like this, seeing the 
+transformation he had undergone, seeing how much he had changed, was already enough to 
+shock me, but when my eyes locked on his chest, when I saw his very real cleavage and the 
+wobble of his breasts under that tight, sheer shirt I nearly fell out of the chair onto the kitchen 
+floor! </p>
+<p>“Is… is it a special bra?” Danny was blushing so much he was turning red. I looked at Kim, but 
+she was smiling triumphantly and trying not to giggle. “Is it some kind of fakes? Padding?” </p>
+<p>“They’re not fake, Luke. Danni’s titties are 100% real.” She stepped behind our brother again 
+and lifted his top by the hem, pulling it up sharply until his fat, full breasts bounced free. He 
+wasn’t wearing a bra. They were round and perfect, and gently swayed on his chest as he 
+shifted uncomfortably from foot to foot. Danni was slim, and they were large for his frame. 
+Larger than his sister’s breasts. I couldn’t speak. All I could do was stare. </p>
+<p>“They’re soft, Luke.” Kim reached around Danni from behind with one hand, groping one of his 
+round breasts. It completely filled her hand, and her fingers sank into the firm flesh. Danni let out 
+a sharp, sexy moan and squirmed in our sister’s grip, but didn’t try to pull away. I could tell he 
+was enjoying this. “Look at them, Luke. I know how much you like big breasts. I’ve caught you 
+staring at mine. I wanted Danni to be perfect for you. Danni wanted to be perfect for you.She let 
+me do this to her, Luke! Our new little sister let me do this to her for you!” </p>
+<p>“F-for me?” I didn’t understand. I had formed so many theories in my mind over the last few 
+weeks. That Kim had seduced Danni. That Danni was trans. That Danny liked to crossdress, 
+and Kim had caught him and blackmailed him into a sexual relationship. That my siblings were 
+in love with each other. But I had never thought it had anything to do with me. I had been 
+jealous and felt left out, and after that night in the closet at the gloyhoel I had desperately 
+wanted more, but I couldn’t understand how all this could somehow be for me. </p>
+<hr />
+<p>Kim led us to the couch. She sat on one side of me, and Danny… no, Danni… sat on the other. 
+They looked so much like each other now, but sitting this close (and we were so, so close) I 
+could also see the differences. Danni had a slender, girlish frame, but was still a little broader 
+than our sister. Her jawline was a little more pronounced. Her nose was a little wider. Her hands 
+a little larger. But none of this made her seem masculine to me. Instead for the first time since 
+returning home this summer I could finally see Danni for who she clearly wanted to be… who 
+she was. A beautiful young woman. No… a sexy young woman.  </p>
+<p>She looked so much like our sister, and that was really, really turning me on (and they both 
+knew that, of course), but even if Danni had been a stranger I would have been wildly attracted 
+to her. Her eyes were dark and seductive, and her smile was delicate and shy, but also inviting, 
+as if she was keeping a secret that she hoped I’d find out. Which I guess she had been. Her 
+neck was long and slender and led to smooth shoulders and…. And it was impossible to look at 
+anything else past his collarbone but her tits. Jesus, her tits!  </p>
+<p>They sat high on his chest and were so firm and round that they nearly looked fake. But I could 
+tell by the way they wobbled and shifted  under her top that they weren’t implants. Or I didn’t 
+think they were. I had never known a girl with fake tits, but Kim had said they were real. But they 
+were so big! I had just been staring at my sister’ chest, amazed at how large Kim’s breasts had 
+grown, and Danni’s were even larger. If Kim was really a double D, Danni must have been… an 
+E cup? Is that what came after double D? I wasn’t sure. And even though her torso was wider </p>
+<p>than our sister’s, her breasts looked even more out of proportion! My former brother had 
+become a sexy slim girl with enormous breasts! </p>
+<p>I looked over at our sister, ready for her to explain exactly what she meant when she said that 
+she had turned Danni into… into this new sexy person… for me. Kim’s expression made my 
+eyes go wide. She was clearly turned on, watching me with an intensity that was almost 
+predatory, and breathing so heavily that she was nearly panting. They both were, and I realized 
+I was too. My dick was visibly hard in my jeans, and I knew it was obvious to both of my siblings. 
+We were all turned on. </p>
+<p>“K-Kim… Kim, tell me what…” I looked back and forth between them, totally at a loss for words. 
+I very, very much wanted to turn back to Danni and kiss her. Press my body against her. Let her 
+feel my cock against her, while I felt her new tits against me. But I needed to know what was 
+going on.  </p>
+<p>Kim let out a sigh and reached for the half empty can of Diet Coke she had brought with her 
+from the kitchen. She took a long sip, then leaned back on the arm of the couch, her body 
+turned toward us. “You don’t know this Luke. You probably never even guessed. But just like 
+you’ve been in love with me for years, Danni has been in love with you.” </p>
+<p>I turned to look at Danni to see if it was true, and it very clearly was. My new sister’s eyes were 
+closed tight and her face and chest were red with embarrassment. Hands clenched on her 
+knees, she was visibly trembling. I didn’t know what to say, but I put my hand over hers and 
+squeezed it tight. Before turning back to Kim. </p>
+<p>“I… I’m not in love with you, Kim. I mean- I love you. And… and I guess I’ve always been really 
+attracted to you, but…” But it sounded hollow, even to me. It wasn’t exactly love, but it also 
+wasn’t exactly not love either. </p>
+<p>Kim smiled her knowing, sarcastic smile. The smile that had driven me wild for years. “Well, 
+maybe not LOVE. But infatuation? I used to sneak onto your laptop, big brother. Your porn 
+folders were full of girls who looked so much like me.” She settled back onto the couch and 
+slowly hiked up her short skirt, exposing her panties. I was mesmerized, of course. </p>
+<p>“At first I thought you were into Mom. I mean, all of those women do look like our mother, in a 
+way. And she certainly fits your type.  But I figured it out eventually, Luke. The way you looked 
+at me. The way you acted around me. How my friends always thought you were my boyfriend. 
+Did you know that, Luke? They’d ask about my boyfriend, and I’d always pretend I didn’t know 
+they were talking about you. They’d say “who is that cute guy you always hang out with?” And 
+I’d just laugh and pretend to be oblivious.” </p>
+<p>She slipped her hand down the front of her panties, slowly beginning to rub herself. Her eyes 
+were locked onto mine, and I couldn’t look away. </p>
+<p>“Do you remember the time you brought home that girl for mom and dad to meet? The one you 
+met at cram school? You remember, the one with the long black hair, just like mine? And when 
+you brought her home, what did Mom say? “Oh, she looks so much like your sister!” I remember 
+how much you blushed, and that's when I knew for sure.” </p>
+<p>She paused for a moment, closing her eyes and chewing on her lip as she rubbed her pussy in 
+front of us. Even with her clothes on it was the most erotic thing I had ever seen. “Mmnnhnn… 
+after that… after that I paid closer attention. I realized that every girl you dated, every one you 
+looked at, they all looked like me. I saw that I was always the first person you looked at when 
+you entered a room, and you always watched me leave. You would cancel your plans with 
+friends to hang out with me, and everyone would say what a good brother you were. But I knew. 
+And I liked it. I liked it, Luke.” </p>
+<p>“Danni knew too, and that's how this all started. The three of us spent all of last summer 
+together, hanging out nearly every day. But after you left Danny was so depressed, she almost 
+never left her room. Mom thought she was just nervous about starting her senior year, but I 
+knew she was missing you. One night when Mom and Dad were gone I got Danni drunk and 
+convinced her to tell me everything. And Luke, she had so, so much to tell. Our little sister had 
+been keeping so many secrets pent up inside!” </p>
+<p>I felt Danni shift on the couch next to me. I looked over, but her eyes were still shut, and her 
+head was still turned away from me. She was still trembling. I realized how impossible this must 
+be for her. Everything was coming out now, and as stunned and unsure as I was, Danni was the 
+one with both the most being revealed and the least control. She hadn’t said a word since we 
+had sat down, but I knew if our positions were in reverse I’d be having a full on panic attack.  I 
+put my arm around her shoulder, and she immediately sank into me, her head resting on my 
+shoulder and her chest pressed against my arm. She let out an audible sigh of relief, and I 
+suddenly realized that she must have been worried that I’d reject her. Insead I squeezed her 
+shoulder tightly. Whatever happened, we were still family,  and I loved her. </p>
+<p>Kim seems very pleased with herself. “Danni was missing you, Luke, but it was more than that. 
+She was jealous. She saw how you looked at me. How you were infatuated with me. And she 
+saw how I enjoyed it. And she wanted that for herself. She wanted you to look at her the way 
+you looked at me.” </p>
+<p>“I asked Danny if she was gay, and she told me that she liked boys and girls, but mostly she just 
+liked her big brother. Mostly she just thought about being with her big brother. Feeling your arms 
+wrapped around her. Feeling your cock pressed against her. Kissing you and touching you 
+and…” Kim paused, staring past me at our little sister. Danni had stopped moving entirely, and 
+was blushing so hard that I could feel the heat radiating from her body. But Kim wasn’t staring at 
+her face. Instead her eyes were locked on our little sister's skirt, which was tented by an obvious 
+erection. </p>
+<p>“I… I… I-just wanted....” Danni’s voice was barely a whisper. “I j-just wanted you to… to look at 
+me like you looked at-at her. I-I used to lay in bed and… and imagine I was your girlfriend. 
+And… and…” </p>
+<p>“And thats what gave me the idea. I asked Danni if she was trans, and she said she thoughts he 
+was, but was afraid to tell anyone.  Can you imagine that, Luke? Knowing that you’re really a 
+girl, but being too afraid to say anything? Our poor little sister. Afraid, jealous and hopelessly in 
+love, with nothing to do about any of it. Of course I wanted to help!  The answer was so obvious 
+and simple. Danni was in love with you, and you were in love with me. And I was in love with 
+being the focus of your attention of course! If Danny LOOKED like me, maybe she could catch 
+your attention too. And wouldn't my cute little sister be the perfect girlfriend for my big brother?” </p>
+<p>“Girlfriend? Danni can’t… I mean, even if Danni is… is transitioning and is… you know… coming 
+out as a girl… everyone would still know we’re siblings. We couldn’t… we couldn’t date.”  </p>
+<p>But  I could tell by Kim’s expression that she had an answer to my objection ready. That she 
+had already figured everything out a long time ago, and had just been waiting for this moment 
+when all the pieces fell into place. I watched as she closed her eyes, and slowly bucked her 
+hips, letting out a soft moan as she arched her back. Our sister was cumming right in front of us, 
+getting off on the culmination of her plan to shape her little brother into the perfect girl for her 
+older brother. It was surreal.  </p>
+<p>Danni quickly pulled my attention away, shyly looking up at me, making eye contact for the first 
+time since we sat down. No, I suddenly realized Danni hadn’t been able to look me in the eyes 
+all summer. “W-will you let me be your… your girlfriend? Big brother.... Will you?”  </p>
+<p>My breath caught in my throat. She…. was so beautiful. Sexy. And at that moment I knew I was 
+going to say yes. I knew I was going to be with my new sister. But… “But how, Danni? We won’t 
+be able to keep it a secret. What… what are we going to tell people? Tell Mom and Dad?” </p>
+<p>I could practically hear Kim smiling with satisfaction behind me. “Oh Luke, don’t worry about 
+that. We’ve worked everything out. Haven’t we Danni?” </p>
+<p>Danni nodded. She was staring fixedly at her knees again. </p>
+<p>“At first everything was a secret, which was a lot of fun of course!” Kim relaxed back into the 
+couch again, although her fingers were still down the front of her panties. “We started small. 
+Danni told Mom she didn’t want to get her back to school haircut. She wanted to let it grow out. 
+And it grew fast! By Christmas it was nearly down to her shoulders! She just wore it back in a 
+ponytail at first. We didn’t want Mom and Dad to get suspicious.” </p>
+<p>“Clothes were next. Whenever we were alone Danni would come into my room and try on my 
+clothes. They fit her almost perfectly of course! Oh Luke, she looked so hot no matter what she 
+wore! That's when the real fun started. Seeing my cute new little sister all dressed up was just </p>
+<p>too much for me, and I made Danni masturbate for me. I did, Luke! Mmmmm… she looked so 
+sexy, stroking her dick while she was dressed in my bra and panties, with her hair styled just like 
+mine!” </p>
+<p>Danni was blushing again, but that only made Kim even more excited. “It turns out Danni really 
+liked being watched, Luke. She got off on the attention. And with my little sister in front of me, 
+dressed so pretty, stroking her cock… you know I couldn’t help myself.  You know I couldn't 
+resist!” </p>
+<p>She paused, savoring the moment as Danni looked more mortified than ever. I knew exactly 
+what she was going to say, but I could tell she wanted  me to ask anyway. It was all part of her 
+show. She was enjoying every bit of this. The control she had over both of us. “What did you do, 
+Kim?” </p>
+<p>“I sucked her cock, Luke! I gave our little sister her first blowjob. I waited till she was nice and 
+hard and crawled between her legs. I pushed her hand aside and took her cock between my 
+lips. And she didn’t resist. She didn’t try to stop me, Luke. She let me do whatever I wanted. 
+She let me suck her cock, and play with her cute little ass, and dress her up however I wanted. 
+And she liked it! You liked it, didn’t you Danni? Tell him. Tell Luke!” </p>
+<p>Danni was trembling against me, and his hand was clenching my arm. But I could see her cock 
+was still hard under her skirt, forming an unmistakable tent, and when she spoke I could hear 
+how turned on she was. I realized she had been waiting for this too. “Y-yes. I-I-I liked it. I liked it 
+s-so much. L-Luke…. Big brother…” </p>
+<p>Kim crawled across  the couch and my lap, reaching for Danni’s chin to turn her face toward us. 
+“You loved it. You loved being my little slut! Mmmm…. Tell us what you are Danni. Tell us. It's 
+okay. We love you Danni. We always will. You can tell us what you really are. What you always 
+wanted to be!” </p>
+<p>She turned Danni’s chin until he was looking at us. There were tears in her eyes, but she didn’t 
+look upset. Relieved. And embarrassed. But turned on. The look on my little sister’s face made 
+it clear how deeply, desperately aroused  she was. “I’m a slut. I-I’m a slut for my… for my big 
+brother and s-sister.” </p>
+<p>“That's right, you are. You sexy little slut. Just like your big sister!” Kim looked up at me, a 
+devious smile on her face. She had stretched across my lap to reach Danni, but instead of 
+returning to her side of the couch she simply settled down across my legs and rolled over onto 
+her back. I knew my bonner was poking her right in the shoulder blades, but she didn’t seem to 
+mind at all.  </p>
+<p>“After that we spent all of our time together. I had just gotten my job at the mall, so we started 
+doing Danni’s shopping there. We tried to choose unisex outfits, but Danni looked so cute in 
+girl’s clothes and I just couldn’t help myself!” </p>
+<p>“I-I couldn’t either.” Danni was looking down at her knees again, but her soft lips were pressed 
+into a small smile. “I could finally wear girl’s clothes. I didn’t want to go back.” </p>
+<p>“We decided to tell Mom that Danny was trans, but she wanted to keep it a secret from 
+everyone else. Mom was... “ </p>
+<p>“She was actually really great. Really… really good.” Danni glanced up at me. “I was so afraid 
+she’d freak out, but she said she wanted me to be happy, and that she’d help me tell the rest of 
+the family when I was ready. And she helped me with the doctors too.” </p>
+<p>I glanced down at Danni’s crotch. He obviously still had a dick. Kim saw my look and laughed. 
+“No, no! There was no way I was going to let Danni get rid of her cock. And that's not what she 
+wanted anyway. It was the hormones. The doctors put Danny on hormone therapy with Mom’s 
+permission.” </p>
+<p>Is that how…” My arm was already around Danni’s shoulder, and I gently reached out to cup her 
+breast. It was the first time I had touched my sister’s tits, and she nearly jumped in surprise. It 
+was only a brief touch, but I could feel how firm they were.  “How Danni got her tits? I didn’t 
+know hormones worked that fast.” </p>
+<p>“Well, they don’t. And after a few months I was getting really frustrated. I wanted Danni to have 
+big titties, because I know that's what you like, Luke. And they look so good on her don’t they? 
+Oh Luke, you should see her in her bikini… well, you will.”  She took another sip from her Diet 
+Coke, finishing the can off and tossing it away. My eyes followed its arc as it went over the back 
+of the couch and bounced off the carpet. No wonder the house was a mess. “Anyway, I wanted 
+Danny to have big fat titties, but after a few months it was clear that the hormone treatments 
+weren’t enough. Danny had developed these cute little A-Cup boobies, but even under a sheer 
+top they totally disappeared! So I started looking around the internet, seeing if there were any 
+other treatments. It took awhile, but eventually we found a clinic in Sweden that was doing a 
+drug trial. It wasn’t hard to forge Danni’s doctor’s credentials at all. Can you believe it? Of 
+course, they weren’t interested in just supplying medicine for one patient. They wanted a large 
+enough sample size for their trial. So we told them we had 10 patients!” </p>
+<p>I nodded along, barely able to keep up with what I was hearing. “That's where the needles came 
+from?” </p>
+<p>Kim nodded. “We knew you had found them, but that was okay. We were planning to tell you 
+everything anyway. The new drugs worked… well, you can see for yourself! Within two week 
+Danny’s chest was visibly larger. And even bigger a week later. I’ll show you the photos later. 
+They’re all on my phone. Believe me, watching your little sister’s boobies come in is veeeerrrrry 
+sexy!” </p>
+<p>She reached up and ideally squeezed Danni’s breasts. Danni blushed an even deeper shade of </p>
+<p>red and let out a small, soft moan, but otherwise didn’t stop our sister. “But it wasn’t fast 
+enough, Luke. We knew you’d be home for the summer, and I wanted Danni to be perfect for 
+you. So we decided to up her dose. I didn’t know if it would work, so I chose to try it on myself 
+first.” She shifted her shoulders, causing her breasts to wobble and shake suggestively. “I know 
+you noticed how much I’ve grown. I can always tell when you’re looking at me, Luke. Well, my 
+experiment was a… huuuuge success.” She giggled at her own silly joke. She was clearly 
+enjoying the effect this breast talk was having on me. I knew she could feel my erection pushing 
+into her back. </p>
+<p>“Danni went on triple doses immediately, and she grew so fast that we had to start hiding it from 
+Mom. I made sure Danny had plenty of heavy sweaters and jackets to wear, and thankfully 
+Mom was planning on visiting Dad for the summer anyway.” </p>
+<p>“How… how big is Danni… Danni, how big are your breasts?” I was fondling her tit now, 
+squeezing it gently. It more than filled my palm, and felt amazingly soft. Danni was leaning 
+against me, eyes closed and gasping softly. She started to answer, but Kim quickly spoke for 
+her. </p>
+<p>“We went to my shop for a proper bra fitting. We picked out a few cute bras too. You can see 
+those later. But Danni is a triple D cup. That's the same as an F by the way. Which is very, very 
+big.” My eyes went wide, and I must have sucked in my breath.  </p>
+<p>Danni looked over at me, still blushing, but with a pleased smile. “You were right, sis. He does 
+like my big breasts.” </p>
+<p>“Well, he’ll love them even more in a month.” I looked down at Kim, confused. She gave me a 
+classic Kim smile. Mischievous and cunning. All part of her plan. “We didn’t stop giving her the 
+drugs. Three injections every day. She’s still growing, Luke. She’s getting bigger every day. And 
+we still have more than a month’s worth of injections to go.” </p>
+<p>I sunk back on the couch, totally at a loss for words. My siblings glanced at each other and both 
+giggled. I couldn’t tell who sounded more girly, but there was no way you’d know that one of 
+them was formerly a boy.  </p>
+<p>“H-h-how much.. how much bigger?” I could barely speak. I really loved big tits, and this was… 
+just insane. </p>
+<p>“Weeeeell…. I don’t think we really know. The growth is unpredictable. But… pretty big? We’ve 
+used up less than half the supply, and Danni’s already done from flat to…” She gave our little 
+sister’s tits another squeeze, causing her to shiver against me and let out another sexy moan. 
+“Pornstar big. I think she’s going to get a lot bigger actually. And we might even be able to get 
+more. I’ve been forging reports, and I plan on asking for a re-up…” </p>
+<p>Kim was clearly pleased with herself. “I always wondered what I’d look like with enormous tits! </p>
+<p>I’m a little jealous, actually!” She reached for her Diet Coke, and frowned when she realized 
+she’d tossed it away. “Danni, sweety. Get me another Coke, okay?” </p>
+<p>Danni stood without hesitation. “I-I’ll be back in sec, okay?”  I watched her disappear into the 
+other room. Everything about the way she moved was feminine. </p>
+<p>“You make her get things for you?” I made sure to put a little disapproval into my voice.  </p>
+<p>“Oh shut up! She loves it. You’ll see. Our little sister is sooooo, soooo submissive and eager to 
+please. She does whatever I say, and loves every minute of it. And she’ll love it even more from 
+you. I’ve made sure. You’ll see.” </p>
+<p>“You gave her a blowjob…” </p>
+<p>“Mmmm… so many times. For a girl our sister has such a nice cock! Are you jealous, Luke? I 
+know you are.” </p>
+<p>“So that means it was you in the closet that night…” As soon as I asked I knew the answer. The 
+confusion on Kim’s face was clear. </p>
+<p>Danni was the one who had sucked my cock that night, and Kim had no idea. </p>
+<hr />
+<p>Danni stepped back into the room, a Diet Coke for Kim in her hand. Kim was no longer laying 
+across my lap. She had literally fallen on the floor, and was now looking up at both of us with an 
+absolutely dazed expression on her face. </p>
+<p>Danni froze. “Wha-what happened? What…”But Kim cut her off with a sudden laugh.  </p>
+<p>“You already did it!” </p>
+<p>Danni went completely red, and she clutched the can with both hands as she looked down at 
+our sister. “I-I-I didn’t…. I didn’t think you’d find out. I d-didn’t think Luke would say anything!’ </p>
+<p>“Oh Danni…” Kim climbed to her feet and wrapped her arms around our little sister, giving her a 
+gentle but not very sisterly kiss. “It's okay. It's okay. I knew you couldn’t wait.” She turned to me. 
+“Was it the night we watched the movies? It was, wasn’t it? I fell asleep, and when I woke up 
+Danni was in the closet. She told me he was spying on you, but I know you can’t see anything 
+through that little hole.” </p>
+<p>She took the can from Danni’s hand and sat back down on the couch next to me, pulling Danni 
+onto our laps. Her bare thighs pressed against my crotch, and I knew she could feel the erection 
+through my pants. She looked at me and shifted slightly, just enough to get comfortable. Just </p>
+<p>enough to let me know that she felt it. </p>
+<p>Kim opened her Diet Coke and took a long sip. “We were planning on telling you everything 
+when you got back anyway, but I guess Danni really couldn’t wait.” she smiled, petting our sister 
+on the head like a pet. </p>
+<p>“I- I couldn’t wait. Knowing Luke was going away for two whole weeks… I didn’t want to wait! I 
+thought… if I used the gloryhole… Luke wouldn’t know which one of us it was. He’d probably… I 
+mean, he’d for sure think it was you, Kim. But I knew he wouldn’t say anything. I knew he’d 
+spend the whole two weeks thinking about it, and… and…” </p>
+<p>I took a deep breath. “Actually… I really didn’t know who it was. At first I thought it was Kim for 
+sure. I mean, nothing else made sense. But... “ Another deep breath. We were laying everything 
+out on the table now. Kim was the manipulator, but Danni had already exposed herself so much. 
+It didn’t seem fair to hold anything back from him. “But I wanted it to be you, Danni…” </p>
+<p>They were both quiet for a very long time. Danni sat very still on my lap, not quite looking at me, 
+her cheeks getting redder as I watched. </p>
+<p>“I mean… I had … oh fuck, I can’t believe I’m saying this...I’d been fantasizing about Kim for 
+years. But… but the more I thought about it, the more I realized how… how hot it would be if… if 
+it was my little… if it was you… on the other side… the other side of that hole…” </p>
+<p>We were all quiet for a long time, and I didn’t know what would happen next. Then suddenly Kim 
+let out a shriek of pure happiness, and kicked her legs up in the air on the couch next to us.  </p>
+<p>“Yeeeeeeeeeeessss! Wwhhhhhhooooow! I can’t believe it! I can not fucking sucking believe it!” 
+She jumped to her feet, spilling soda everywhere as she hopped up and down around the 
+couch. “My big brother was in L-O-V-E with me, buuuuuuuuuuut he chose my little sister 
+instead! I did that! I did that!” </p>
+<p>Danni was perfectly still on my lap, but I was staring at Kim as she performed her bizarre victory 
+dance around our living room. She stopped and pointed at me. “Do you have any idea how hot 
+this is? Two siblings, both obsessed with me! One wants to become me, the other wants to fuck 
+me!  </p>
+<p>Danni giggled and I rolled my eyes. “It's not all about you, Kim.” </p>
+<p>She settled back on the couch next to us, still excited. “Of course it's not! It's about all of us! It’s 
+about all the fun we’re going to have now that everything is finally out in the open! Oh Luke, 
+we’ve been planning for so long!” Kim reached across my body to stroke Danni’s cheek, gently 
+running her fingers around the back of our little sister’s neck, then suddenly pulling her toward 
+her. She leaned forward and their lips met, right in front of me. They shared a kiss stretched 
+across my lap, long  and sensual, and when they broke apart they both wiped the drool away </p>
+<p>from their lips and chins in the exact same way. I couldn’t believe how much alike they were. </p>
+<p>“We… we were going to tell you everything… and…” I could feel Danni trembling against me, 
+too embarrassed or nervous or scared to finish what she was saying. But Kim was excited to 
+finish for her. “ And then Danni was going to give you her first blowjob. Well, her first REAL 
+blowjob. She’s been practicing on my favorite dildo for months, Luke. she looks so sexy sucking 
+a cock, even a plastic one!” Her hand was on my pants now, unfastening my belt. </p>
+<p>“But this eager little slut couldn’t wait, could you?”  Danni blushed as she nodded, and slowly 
+stood. As Kim unfastened my pants Danni lifted her skirt. The skirt was already so short, but I let 
+out a soft gasp as she fully exposed her thighs and pink underwear. Panties.I could see her 
+cock straining against them. </p>
+<p>I felt Kim yank boxers down, and my own cock flopped free. I had been hard all this time, and it 
+was thick and pulsing as my sister wrapped her fingers around it. “Since our slutty little sister 
+just couldn’t help herself we’ll have to skip the blowjob. </p>
+<p>I looked over at Kim and she immediately burst out in laughter. The disappointment that Danni 
+wouldn’t be sucking me off must have been plain on my face. “N-no blowjob?” I blurted out 
+anyway, feeling more than a little dumb. Kim gave my cock a quick, confident stroke that sent a 
+shiver all through my body. I never dreamed her hand could feel so good.  </p>
+<p>“Look how eager big brother is for you, Danni! Oh, he wants your mouth so bad! He’s probably 
+thought of nothing else for the last two weeks!” Kim was practically vibrating with excitement as 
+she teased my cock, rubbing her thighs together as she slowly stroked me. “Well don’t work, 
+Luke, there are many, MANY blowjobs in your future…” she leaned closer to my ear and 
+whispered “from both of your sexy siblings. But for now we have something even better 
+planned…” </p>
+<p>Danni hooked her fingers under the edge of her panties and slowly began to slide them down 
+her full smooth thighs. Her cock flopped free, bobbing before us, sending a thin strand of 
+precum flicking across my shirt. Danni slid the panties down her legs, bending at the waist to 
+step out of them. Her breasts were so large that they wobbled  under his top as she bent, 
+cleavage on full display. My cock throbbed and I knew Kim could feel it, but all she did was give 
+it another quick stroke. She whispered into my ear again. </p>
+<p>“Danni has something to ask you, Luke.” </p>
+<p>Danni looked down at me, her pretty eyes magnified by his glasses. She was still lifting her skirt 
+and her cock and thighs were on full display.  </p>
+<p>“B-brother?” Her voice was trembling, and at that moment I wanted so much to stand up and 
+hug heri close. To make sure she knew that everything would be okay. But Kim’s insistent 
+stroking kept me seated. </p>
+<p>“Brother… will you… will you fuck me. And… and make me your… your girlfriend?” </p>
+<p>I nodded. I couldn’t speak. </p>
+<p>Danni let out a deep sigh, and I could see her whole body relax. She had been so tense. Of 
+course she had! My little sister had been waiting to ask me this for months, terrified that I would 
+say no. But how could I? How could I possibly say no to this? </p>
+<p>Danni climbed onto my lap, knees on either side of me. My cock was immediately pressed 
+against the softness of her thighs, and then between her legs under her testicals. She felt so 
+smooth and hot, and suddenly I could barely keep myself from cumming! She put her hands on 
+my shoulders and pressed against me, her enormous breasts pushing against my chest. I could 
+feel her cock trapped between us, throbbing and stiff. She whispered into my ear, just as Kim 
+had done. “I’ve wanted this for so long, big brother. I’ve dreamed about it, about being with you. 
+I’m so happy!” Her voice was trembling. “I’ll be a perfect girlfriend for you, you’ll see!” </p>
+<p>Kim was staring at us, a look of glee on her face. Her hand was trapped awkwardly beneath us, 
+still wrapped around my cock, and she let go with a start. “I almost forgot! Don’t move!” She 
+scrambled off the couch and disappeared down the hall, leaving us alone for the first time. </p>
+<p>I turned my head toward Danni, pressing our foreheads together. My cock was stiff against her 
+taint, and I wanted to find her hole so badly. She gently rolled her hips, pressing her entire body 
+against me. I knew she was ready too. But… “Do you really want to be my girlfriend, Danni? Do 
+you really want this?” It was a ridiculous thing to ask. My little sister had already come so far and 
+done so much. She had changed her life forever. But this was all still sudden for me. So hard to 
+believe. Even with my sister’s cock hot against my stomach. </p>
+<p>“I really do!” Hier voice was husky, and I could see the intensity in her eyes. “It's going to be 
+perfect, Luke. I’ve wanted this for so long, and I’ve done so much… practiced so much! Just to 
+be perfect. For you and… and for me too, Luke.” She leaned forward and kissed me. Softly. 
+Gently. Her lips were hot and wet. It only lasted a moment, and she pulled back with a sly smile 
+“I promise, I promise you won’t regret this. You won’t regret making your slutty little sister your 
+lover.” </p>
+<p>Kim suddenly reappeared, a bottle of lube in one hand and a dildo in the other. “I almost forgot 
+the lube!” She looked at Luke with a serious expression. “Our little sister has a VERY sensitive 
+anus. I’ve taken extra good care of it and I don’t want you ruining it!” Kim’s voice had the same 
+tone as when she let me ride the new bike she had gotten for her 11th birthday. I had crashed it 
+and bent the frame. </p>
+<p>“I promise, I promise!” I knew my sister was serious, but I couldn't help laughing. Danni laughed 
+too. “Don’t worry, big brother. I’ve had… plenty of training. I’m ready for you.” Danni was still 
+pressed against me, and her voice was husky and sultry in my ear. My little sister was so sexy </p>
+<p>that I nearly came all over her taint. Only a deep breath let me keep control, and Danni could 
+tell. She smiled and pressed against me tighter. </p>
+<p>Kim kneeled in front of us and gently slapped Danni’s ass. “Raise your butt, cutey.” I could feel 
+Danni shivered as her asshole was suddenly filled with cold lube. Kim used two fingers to gently 
+coat the inside of her ass, causing Danni to squirm and let out small moans. Our sister finished 
+my giving my cock another squeeze and a few quick strokes, making sure it was coated with 
+lube. When she was done Kim slid onto the couch next to us, an eager look on her face.  </p>
+<p>“Well? Come on, Luke! We’ve all been waiting so long for this!”  </p>
+<p>I put my hands on Danni’s hips and slowly guided her down until my cock was rubbing against 
+her asshole. “Are you… ready?” She nodded, gripping my shoulders tightly. She was looking 
+right into my eyes and I couldn’t believe how sexy she was. How beautiful. </p>
+<p>My cock found her asshole, spreading her open as she slowly sank down my lubed shaft. 
+Danni’s asshole was slick and hot and so tight, but it took my whole dick and my sister settled 
+on my lap with a trembling open mouthed gasp. Her eyes were wide and her breasts pushed 
+against my chest with each heavy breath. </p>
+<p>“Does it hurt?” She shook his head. “You’re so big, but it-it feels good. Ughhhh… Luke, I’m so 
+full. You have to fuck me now. I’ve wanted this for so long! Please, fuck me…” </p>
+<p>I heard an excited squeak and turned to see Kim watching us intently. “What are you waiting 
+for?” Her hands were already down her panties as she leaned back on the couch.  </p>
+<p>I moved my hands from Danni’s waist to her rear, sinking my fingers into the soft flesh of her 
+ass. Danni wrapped her arms around my neck as I pulled her up and closer to me, then raised 
+my hips off the couch and slowly thrust into her. My sister’s ass was tighter than any pussy I had 
+ever been inside, but it felt eager for my cock. Like it had been shaped to take my dick. I learned 
+later that Danni had practiced with a dildo almost every day, but for now all I knew was that she 
+clung to me like she was drowning, moaning each time I pushed my cock deep inside her. I 
+could feel her own dick pulsing against my stomach, throbbing each time I thrust, letting me 
+know just how much my sexy little sister loved being fucked in the ass. </p>
+<p>As we grew used to each other, as Danni’s asshole adjusted to my cock, my thrusts grew faster, 
+and my sister leaned back and began to roll her hips. She met each thrust, gasping and 
+moaning as I pushed deep inside her. It felt incredible. </p>
+<p>Danni’s breasts wobbled and bounced as she rode my cock. The thin strap of her top had 
+slipped down her smooth shoulder, and one of my sister’s full, fat breasts had bounced free. 
+Danni alternated between pressing against me and leaning back to meet my thrusts,and each 
+time she pushed against me I could feel her breasts pressing against my chest, filling all the 
+space between us. My little sister’s enormous tits were unreal. Soft but firm.  And Kim said </p>
+<p>they’d get even bigger. Much bigger. I couldn’t even imagine what Danni would look like even 
+bustier. She was already almost too sexy! </p>
+<p>I wasn’t prepared for my sister to cum., but suddenly she wrapped her arms around me and 
+pressed her face into my neck. “L-Luke! Luke! Fuuuuhhhnnghh! Ohhh fucccck!” She shuddered 
+and suddenly the space between our stomachs was wet and hot,  sticky with Danni’s cum. I had 
+made my sister cum! </p>
+<p>Kim was ecstatic. “Did she cum? Danni, did you cum?” She shoved her hands between us, then 
+pulled it back. Her fingers were sticky with her sister’s cum and she eagerly licked them clean 
+while she watched us. </p>
+<p>Danni was gasping into my ear, pressed against me and hugging my tightly. She was no longer 
+rolling her hips, but instead rocked back and forth as I continued to fuck her. I couldn’t stop., 
+even though I had been on the verge of cumming since the moment my sister pulled down her 
+panties. Pushing deep inside Danni’s ass just felt too good, and I wanted to make our first time 
+last as long as I could. But I knew I couldn’t last long. </p>
+<p>I grabbed my sister’s ass and lifted her up, turned, and then pinned her down on the couch. Her 
+head was laying against the arm rest now, and I was between her legs, my cock still buried in 
+her asshole. It wasn’t the best position to fuck, but I only needed a little more.  </p>
+<p>I looked down at my sister as I slid in and out of her slick anus. Danni’s eyes were shut tight, 
+and she was biting her plump lower lip and whimpering as I pushed into her. Her breasts 
+wobbled against my chest as I thrust, again and again, and then.... </p>
+<p>With a shuddering sigh I came in my sister’s ass, filling her with hot cum. She pulled me tight 
+against her, and we lay pressed together on the couch, both panting. I felt Kim’s hand on my 
+back, gently rubbing back and forth.  </p>
+<p>My sisters. I loved them both so much at that moment. </p>
+<p>Later Kim and Danni disappeared into the bathroom. I could hear the shower running. Danni 
+had just taken a shower less than an hour ago, but I guess she needed another.  I needed one 
+too, but it was clear the girls wanted some privacy.  </p>
+</body>
+</html>

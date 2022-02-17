@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Lucky Tea Chapter 1</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>Thanks for reading!</p>
+<p><strong>Search for \~ to jump to the part with growth.</strong></p>
+<p><strong>You can find me on Reddit at u/BEOasis. I'm a girl and I post nudes,
+for what it's worth. Fair warning, I tragically don't have huge boobs.</strong></p>
+<p>This is chapter one of probably two. Please leave comments about what
+you'd like to see more or less of in the next chapter.</p>
+<p>Oh, and if you shouldn't be reading this where you live or at your age -
+<em>don't</em>. It contains themes of a very sexual nature.</p>
+<hr />
+<p>Daniel looked down at the form of his sleeping wife and smiled softly to
+himself. He was one lucky son of bitch. He and Jessica had met in
+college and got married shortly after they graduated. She was perfect
+for him in practically every way, and he cherished the few moments he
+had every morning before she woke up next to him.</p>
+<p>She was funny as all hell, smart as a whip, and could maneuver expertly
+between demure and powerful as the situation necessitated. But in these
+morning moments when she slept in his arms, all he could pay attention
+to was her warm body against his. She was slightly taller than average
+but remarkably slim. She swore she was just blessed with good genetics,
+but he knew she cared about her figure and worked hard to maintain her
+tiny waist and delicate muscles.</p>
+<p>He pulled her closer to his chest and wrapped his arms around her,
+feeling her heart beat under her breasts. The first time he had seen her
+naked, he was shocked at their size. Though they weren't huge, the 32Ds
+looked big on her lithe frame. She had confided to him in a moment of
+weakness a few weeks prior that she wished they were bigger, and he had
+to admit he wouldn't mind if that were the case, but he was also
+satisfied just as they were.\
+Unfortunately, his act of pulling her closer woke her ever so slightly
+and, within moments, his time of morning appreciation was nearly over.
+As she stretched, her ass, small but perky, pushed innocently against
+his cock and he sighed deeply.</p>
+<p>"G' mrng", she mumbled into the pillow.</p>
+<p>"Good morning my love. See you downstairs soon." And with that, he
+kissed her on the forehead and gently eased himself out of the bed to
+start the rest of his morning ritual.</p>
+<hr />
+<p>Jessica was many things, but a morning person was not one of them.</p>
+<p>She emerged 30 minutes later, bundled in nothing but one of his
+sweatshirts and her favorite thong - a small little white number that he
+had purchased for her on whim. The white somehow managed to give her
+lily-white skin a pinkish glow, and the high-waisted band of the panties
+accentuated her hips, which had expanded ever so slightly since they had
+graduated and she had come into her womanhood. Her nipples were visible
+through the heavy sweatshirt, and he wrapped her in a blanket and guided
+her gently to the couch before plopping her morning cup of tea in his
+hands.</p>
+<p>In the discussion they had had about her secret wish for larger breasts,
+she also admitted that she had done some research into the topic. Not
+wanting implants for various reasons, she had stumbled across something
+called Natural Breast Expansion, or NBE, which dozens of women claimed
+help them grow their busts by one or two cup sizes. The program was a
+bit of a DIY situation, but entailed lots of fenugreek, massages, and
+fennel. One of the ways of getting those two herbs into her diet
+involved something they found called "Mother's Milk Tea". They giggled
+when buying it. If there were a magical tea that could induce lactation,
+Jessica would have been drinking it long ago.</p>
+<p>She had introduced him to the idea of her lactating a few months ago,
+and he hadn't been able to get it out of his mind since. The idea of her
+sitting as she was now, but with breasts heavy with milk and milk
+soaking his sweatshirt that she was wearing drove him wild.</p>
+<p>"What are you thinking about?" She asked, sipping her tea and making
+pointed looks at his cock, slowly growing erect under his sweatpants.</p>
+<p>"Just...the usual." He hadn't told her that 'the usual' also involved
+her 5 months pregnant and with blonde hair, and didn't think now was the
+time to share that little fantasy.</p>
+<p>"Mmm. Me too. Thanks for the tea, by the way. Did you make it
+differently this time? I swear it's sweeter than normal."</p>
+<p>"No, just the same as always. Maybe you're just getting used to its
+taste." The tea, she had confided, tasted distinctly of licorice.</p>
+<p>"Maybe."</p>
+<p>And with that, the two of them sat in amicable silence in the morning
+glow.</p>
+<p>\~\~\~\~\~\~\~\~\~\~\~\~\~\~\~\~\~\~\~\~</p>
+<p>A half hour later, Jessica cocked her head to the side before shooting a
+look at her husband.</p>
+<p>"Daniel? I think...I think my breasts are growing," she said, awe in her
+voice.</p>
+<p>"That's awesome! I didn't except the NBE program to start working so
+soon!" He replied.</p>
+<p>"No. I mean, I think they're growing actively. Like right now."</p>
+<p>"Babe, I love you, and I know that would be great, but
+that's....im...possible." Anything he was going to say after that caught
+in his throat as Jessica arched her back and moaned. Under the sweater
+she was wearing, her breasts indeed looked larger. They sat high and
+proud on her chest, slowly but steadily expanding. It looked as if
+someone had attached a balloon to a faucet and turned the stream of
+water on to half strength, then somehow managed to slip that entire set
+up under her top. He watched, too shocked to move, as her little nipples
+poked harder and firmer through the heavy material.</p>
+<p>"Daniel. Please. I need..." but she couldn't finish her sentence as
+another moan took hold of her. She grasped desperately at the fabric of
+the sweatshirt in an attempt to pull it up over her head, but lost any
+progress she had made when the hem caught on her nipples.</p>
+<p>And Daniel was frozen. The underside of her boobs had just appeared, and
+they were magnificent. The sweater was pulled tight across the rest of
+her chest, and the flesh that was visible had that heavy appearance that
+only really large tits have - perky, yet soft, bouncy, and heavy. He
+knew that when the hem finally released its hold on her nipples, her
+boobs would bounce down on her ribcage and jiggle across her chest, and
+he wanted to see it, badly. All that had to happen was just one more
+growth spurt.</p>
+<p>"Oh my god, Danieelllllll" and she screamed as his dream came true in
+front of his eyes. The underboob that he had been staring at expanded
+outward. There was no more room in the sweater that had once been huge
+on her tiny frame, and the hem of the sweatshirt dug into her heavy
+tits. With a grunt or a moan of effort, she sat up and shimmied the top
+off of her body, and her tits came into view.</p>
+<p>They bounced heavily against her chest as they came free. Each was at
+least double the size they had been when he\'d held her this morning,
+and as far as he could tell, they were still growing. Slowly but surely,
+they filled the space on her torso - becoming pendulous as they touched
+in the middle and continued growing outward. He watched as her hands
+moved, seemingly of their own volition, and wrapped around them,
+reaching for her nipples.</p>
+<p>Previously the carbon copy of a pencil eraser - small, pink, and perky -
+her nipples now were something to behold. They were still pink and
+perky, but had grown as thick around as his thumb and as long as a
+thimble. Every fiber of his being wanted to latch onto them and suck,
+but he satisfied himself by watching her play with them. She pinched
+them softly at first, only to find that even that brought her to a
+scream of pleasure.</p>
+<p>"Daniel. PLEASE. I. Need. You." She managed to gasp out.</p>
+<p>And finally, he was only too happy to oblige.</p>
+<p>Making his way quickly to her side, he grabbed her by the waist, picked
+her up and put her on top of his lap. With her chest at mouth-level, he
+gently kissed one of her tits and kneaded the other with his hands. She
+froze in anticipation, breathing heavily as she waited on his next move.</p>
+<p>His next move was simple - suck. He kissed and licked his way down to
+her nipple and delicately latched on to the thing he had been dreaming
+about since the moment this started. She moaned his name into his the
+top of his head as she doubled forward, pushing her wobbling chest
+further into his mouth.</p>
+<p>Though it seemed she had stopped growing, Daniel no longer cared. The
+world's hottest nipple was in his mouth, and he was going to do
+everything in his power to bring his tiny wife to an orgasm through
+nothing but nipple play. Ever so gently, he ran the bottom of his tongue
+along the underside of her nipple and groaned in satisfaction as she
+began gyrating on top of him.</p>
+<p>"Daniel," she breathed heavily, "you'll make me cum so quickly if you do
+that."</p>
+<p>"Good," he managed to get out from around her areola as he thrust his
+hips in response to her gyrations, "that's exactly what I want." With
+that, he began sucking in earnest, not surprised at all when Jessica
+gasped and grabbed fiercely at his back.</p>
+<p>"Pleaaaseee, Daniel. <em>Please</em> don't stop."</p>
+<p>And he was only too happy to oblige. Grinding against her, his cock rock
+hard beneath her, Daniel kneaded Jessica's other breast and tugged on
+the nipple not presently in his mouth. Her new tits were heavy and soft,
+and he needed both hands to properly massage just one of them. If he had
+to estimate their size, he'd put them solidly in the range of a
+cantaloupe. Smaller than a watermelon, so she had a prayer of going out
+in pubic without looking totally ridiculous, but absolutely massive and
+perfect on her frame.</p>
+<p>Sucking hard on her one nipple, he closed his eyes and imagined that she
+was lactating, a warm stream of liquid gushing into his mouth. He could
+almost taste the milk: sweet, thick, creamy, and...real. Real. Holy
+shit. Daniel swallowed and nearly came on the spot. <em>His</em> wife, the
+woman with massive tits grinding against his lap, was leaking milk into
+his mouth. With even more vigor, he switched breasts and began licking
+at her other nipple. He noticed, almost unconsciously, that her areola
+had darkened slightly and that her nipples had somehow become even
+thicker. The milk flowed steadily, and has he lapped gently at the
+nipple with his tongue, Jessica gasped his name and pulled his head
+tight against it.</p>
+<p>"Daniel. I'm going to cum. I'm going to cum right now. Oh my god!!
+DANIEL!!" And as she screamed his name and he sucked the milk steadily
+out of her massive breast, she soaked through her little white thong and
+collapsed against him.</p>
+<p>Daniel groaned. He was one lucky son of a bitch. There was only one
+thing that could make this better.</p>
+<hr />
+</body>
+</html>

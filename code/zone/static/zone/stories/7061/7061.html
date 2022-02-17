@@ -1,0 +1,1706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Little Sister</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>Little Sister </p>
+<p>Story Concept by Luchodemeyer </p>
+<p>Written by HikerAngel </p>
+<p>1 - The Beginning </p>
+<p>I was here to see Megan, but Maria, her younger sister, answered the door, twirling a lock of 
+light blonde hair and smiling. Maria was a year younger and, unlike Megan, small and slight of 
+build. Megan, my best friend, had blossomed early. By the time we'd started high school, she 
+was a pretty, athletic young woman, managing to make the varsity basketball team as a 
+freshman. This past year, as a junior, she had clearly developed into the best player on the 
+team. </p>
+<p>It was the first Saturday of April and Megan had texted me, asking me to come over. She had 
+seemed excited but wouldn't tell me what the fuss was all about. </p>
+<p>"Hi there, Maria! Is your sister home?" </p>
+<p>"Yeah, she is. We just played basketball in the driveway." </p>
+<p>"Oh yeah? Did you win?" </p>
+<p>Maria's face fell. "No. She always beats me." </p>
+<p>"Well that's too bad." </p>
+<p>"Yeah," she said dully. </p>
+<p>I felt bad for asking the question. Megan was a star athlete. Of course, she'd won. Clearly, I’d 
+touched on a sore subject for Maria. Entering the room, I noticed that the television was on. 
+Looking for something to help me change the subject, I tried to figure out what she'd been 
+watching. </p>
+<p>The show was unmistakable. A woman in blue and red flew down from the sky, then stood up to 
+the villain defiantly, hands on hips. Perfect! I watched that show too! </p>
+<p>"You like Supergirl?" </p>
+<p>Maria blushed. "Yeah, it's my favorite." </p>
+<p>I leaned in conspiratorially. "Don't tell anyone, especially Megan, but I like Supergirl too. I kind of 
+have a crush on Supergirl." </p>
+<p>"You do?" she whispered back, eyes wide. </p>
+<p>I nodded vigorously, and she smiled. </p>
+<p>At that moment, Megan entered the room. "What are you guys whispering about?" </p>
+<p>I gave Maria a serious look and made a zipping motion across my lips, then turned to Megan. 
+"Maria was just telling me about your basketball game. She was a little sad about losing, so I 
+was just cheering her up." </p>
+<p>Megan shrugged and made the most big-sistery comment ever. "I can't help it if I'm just better 
+than her." </p>
+<p>Megan's expression brightened. She bounced up to me, grabbed my hand, and tugged me in 
+the direction of her bedroom. "Come on, Jake! Let me show you my first basketball scholarship 
+offer. It just came in the mail!" </p>
+<p>As I followed Megan out of the living room, I looked over to Maria. She was seated on the 
+couch, smile gone. Instead, her lips had formed a straight line, pressed together tightly, and she 
+was watching Supergirl on television once again. I couldn't help but notice a strange intensity in 
+her blue eyes that hadn't been there before.  </p>
+<p>2 - Progress </p>
+<p>A month later, on my next visit to Megan's house, Maria answered the door again. She seemed 
+taller and small breasts seemed to press her tight t-shirt into a more dramatic shape than it ever 
+had before. Her crystal blue eyes lit up when she saw me. "Jake!" </p>
+<p>She gave me an unexpectedly firm hug, then let me in. I couldn't help but notice she was 
+watching Supergirl again. Reading my gaze, she commented on it. </p>
+<p>"You told me before that you had a crush on Supergirl. Which do you like better, the show or the 
+comic?" </p>
+<p>"The comic," I answered immediately. </p>
+<p>She cocked her head. "Really? I thought that you were going to say the show! The actress that 
+plays her is really pretty." </p>
+<p>"She is, but I've always had a thing for blondes and super-fit physiques. I like how the artists 
+draw her in the comics." </p>
+<p>I wasn't sure why I told her all of that, but I did. And it was true. </p>
+<p>"So you like blondes?" she asked, seeming pleased. </p>
+<p>I nodded. </p>
+<p>"Blonde like me..." she said, eyes distant as she seemed to muse to herself, her voice dropping 
+to a near-whisper.  </p>
+<p>"But super-fit? And strong? And with powers?" she said, voice returning to normal, eyes 
+focusing on me once more. </p>
+<p>“Something like that, yeah,” I said, beginning to feel embarrassed. Why was I talking to Maria 
+about this? I’d never told anyone about these fantasies of mine. For some inexplicable reason, I 
+just felt as if I should tell her. </p>
+<p>“Jake?” Maria’s eyes were glued to mine, gauging me. “Do you think that fantasies and desires 
+can change reality if we want them enough?” </p>
+<p>I felt something in that moment. It was barely noticeable, but electric. The hair on the back of my 
+neck stood. Maria looked slightly dazed, as if she had felt something too. I shook it away, 
+however. </p>
+<p>"Easy there, tiger! It's just a silly fantasy. In real life, I kind of want to go out with your sister." </p>
+<p>Maria's reaction was unexpectedly vehement. She looked shocked, crestfallen. </p>
+<p>"My sister?!” she said, voice rising to a near shout, brows furrowing. I got the feeling that I had 
+just ruined some sort of special moment between us, a moment in which some sort of 
+connection had been forged. “My sister’s a bitch!” </p>
+<p>She stormed off and slammed her door. </p>
+<p>Megan appeared at the bottom of the stairs a moment later, looking around. "What was that all 
+about?" </p>
+<p>"I don't really know," I told her, shrugging my shoulders, honestly mystified. </p>
+<p>3 - Growth Spurt </p>
+<p>In mid-June, on the first day of summer vacation, I pulled into Megan's driveway to the sight of 
+Maria, jumping up and down in celebration, blonde ponytail bouncing behind her. She looked 
+significantly taller and more developed than she had the last time I'd seen her. Her face had 
+always been pretty, but she was quickly gaining a curvy, athletic body to match. Megan wore a 
+frown, gripping the basketball with white-knuckled hands. </p>
+<p>"What's up, guys?" I asked, hopping out of the car, glancing at Megan. </p>
+<p>"Nothing," said Megan tersely. She clearly didn't want to discuss it. </p>
+<p>My gaze shifted to Maria, as she spun around to face me. A massive smile on her face, her blue 
+eyes sparkled with pride. </p>
+<p>"I beat Megan! 21-6!" she announced, then broke into a celebratory dance, chanting the score 
+repeatedly. </p>
+<p>I grinned at her enthusiasm, happy that she had finally managed a win. My smile instantly 
+disappeared as I turned back to Megan. I could tell that she was seriously upset about the loss. 
+I'd been her best friend for a LONG time, and I knew her all too well. That look wasn't simply 
+one of exasperation at her sister's antics; there was genuine anger there about it. </p>
+<p>I walked up to Megan, saying the words before properly considering their impact. "Aw, come on, 
+Meg. Maria's gotta win once in a while, right?" </p>
+<p>She threw the ball at me. Hard. </p>
+<p>I caught it, feeling the sting on my fingers from the force of the throw. Megan was on the varsity 
+basketball team, priding herself on her athletic prowess.  </p>
+<p>Megan stormed into the house. I sighed, set down the ball, and followed her inside. "Sorry, Meg! 
+I didn't mean to make light of it. Seriously!" </p>
+<p>She whirled, cheeks red, her shining chestnut hair swirling under her chin with the motion. "It's 
+not fair, Jake! Maria has always been the baby of the family. She gets spoiled by mom and dad 
+and the relatives. She gets sooo much more rope than I ever did at her age! But I always beat 
+her at games and sports and stuff. That's the whole older sister, younger sister deal, right? It's 
+what makes everything balance out." </p>
+<p>She plopped into her dad's living room armchair, jaw still tense. "Lately, she's started beating 
+me at family game night. And she's been getting better at sports, even though she doesn't really 
+play any. Then today she beats me at basketball. BASKETBALL! That's my fucking sport, Jake! 
+She doesn't get to beat me at that!" </p>
+<p>I walked over to her and rubbed my hand on her upper back. "It's okay, Meg. It's one game. It's 
+not the end of the world. You'll go back to beating her next game." </p>
+<p>"I don't know... She beat me pretty bad, Jake," Megan grumbled. Her green eyes grew glassy. I 
+knew what came next and took quick action to prevent tears from falling. I pulled her up from the 
+chair and into a hug. </p>
+<p>The hug was intended to be friendly, but her body felt wonderful against mine, and romantic 
+thoughts about my best friend rose within me—not for the first time. Though her sister was 
+beginning to close the development gap, Megan was an attractive girl—one of the best looking 
+in school. I couldn't say I hadn't noticed as her body filled out over the last couple of years. I 
+knew I was firmly in the friend zone, so I hadn't acted on it, but holding her against me like this 
+made me long for a change in the nature of our relationship. </p>
+<p>I felt wetness against my chest as we stood there, and looked down to see her eyes squeezed 
+shut, tears soaking into my shirt. Damn. I'd been hoping to avoid that. Her body felt warm 
+against mine, and I attempted to shoo away amorous thoughts before the feelings began to 
+arouse me. Luckily, she pulled back from the hug just as my thoughts began to drift into 
+libidinous territory. </p>
+<p>"Thanks, Jake. You're such a great friend." She sniffed, wiped away the remaining tears. Her 
+emerging smile was like the sun peeking from the parting clouds just after the passing of a 
+storm. </p>
+<p>Her gaze turned distant as I heard the door open, Maria entering the house behind me. Megan's 
+eyes gazed over my shoulder, and I could tell they were following her sister's movement as she 
+moved through the living room out of my sight, narrowing slightly with the hint of an emotion I 
+wasn't used to seeing in her. Was it jealousy? As I heard the sound of Maria's bedroom door 
+close, Megan's eyes snapped to mine with odd intensity. </p>
+<p>"You know the weight training you're always telling me I should do to improve my fitness level?" 
+she asked, her voice soft but abnormally fierce. </p>
+<p>"Yeah?" I responded, slightly taken aback by her sudden passion. </p>
+<p>"I'm in. Tomorrow at 8:00. I'll meet you at the school weight room." </p>
+<p>"Okay!" I said, excitedly. I needed to put in some work this summer to prepare for next fall's 
+wrestling season, and a workout partner would help keep me motivated. What excited me more, 
+however, was the thought of what some weight training would do for her already nice body... </p>
+<p>4 - Preparation </p>
+<p>The next day at 8:00 AM on the dot, I walked into the weight room. I found Megan looking 
+nervous but determined, running a finger along one of the barbells at a bench press station. Her 
+lustrous brown hair in a ponytail, mouth set in a determined frown, it was a far more serious 
+expression than she usually wore. A bright pink sports bra, visible through her thin white t-shirt, 
+held the full Bs that had finished filling in last school year. I still remembered the day she had 
+told me the size of her new bras with pride. Perhaps not coincidentally, it had been the day I'd 
+first begun to look at her as something more than just a friend. </p>
+<p>Tight Lululemon leggings with strategically placed mesh cutouts completed her sporty look, and 
+felt my heartbeat accelerate slightly at the sight of her lean, athletic form. Glancing down her 
+slim but undefined arms, I couldn't wait to see how her body responded to proper weight 
+training. I'd always had a thing for strong, fit women. And she looked as if she were ready to 
+work hard. </p>
+<p>"Okay, so I was reading up on how to achieve maximum results on body transformations, and I 
+started on a super-protein heavy diet. I'm determined not to eat a single carb this summer," 
+Megan announced flatly. </p>
+<p>"Wow! You're really taking your summer workout regimen seriously, Meg. Good for you!" I 
+wasn't so sure if I had the kind of willpower that it took to pull off a change in diet like that, but I 
+resolved that if she could do it, I could do it too. </p>
+<p>I proceeded to show her around the weight room, where we did super sets of exercises with no 
+rest between. Working out like that always got the heart rate up at least as high as cardio even 
+while doing resistance training, intensifying the effectiveness of the workout. </p>
+<p>After two hours, drenched in sweat, I collapsed onto the mats at the side of the free weights 
+area. "You're a machine, Megan! I am seriously impressed!" </p>
+<p>really </p>
+<p>Megan nodded as she sucked in another breath, skin glistening with moisture. "I'm... <huff>... 
+going to... <huff><puff>... do another... <huff><puff>... round of the... <huff> whole thing now..." 
+she managed, walking back to the first station to do another set of dumbbell thrusters without 
+even waiting to catch her breath. </p>
+<p>I shook my head, never having seen anyone work out so hard. Losing to Maria had 
+affected her! I showered, then checked in on Megan before I left. She was cranking out 
+burpees, sweat-soaked t-shirt glued to her body.  </p>
+<p>The following day, Megan was in obvious pain as she walked into the gym a couple of minutes 
+after 8:00. She said nothing about her discomfort, however, and proceeded to do our full body 
+workout routine again. I was sore too, wanting to stop after an hour, but Megan continued on, so 
+I sucked it up and finished the second hour as well. When I went to the showers, I marveled at 
+her drive and discipline. Her muscles must be to the point of complete failure, yet still she 
+continued to push herself.  </p>
+<p>The rest of the summer went by in a similar manner, from June through August, the two of us 
+working out seven days a week until it was the day before school started for our senior year. </p>
+<p>I rolled out of bed, stood before my mirror, and admired what an entire summer of working out 
+like a maniac and healthier eating had done for my body. The extra fifteen pounds of muscle 
+looked great and felt even better. My pecs and biceps bulged with every movement. My 
+six-pack abs were visible and defined. I was as chiseled as an MMA fighter and looked more 
+than ready for the upward move in weight class that I was certainly going to need to take for 
+wrestling this fall. Pulling my workout shirt over my muscled frame, I watched the sleeves stretch 
+in wonder. Maybe with a body like this, Megan would begin to look at me in a different light.  </p>
+<p>I walked into the gym to find Megan already in mid-workout. It was pretty typical for her to come 
+in an hour before and after me to put in some extra time. Her gains had been at least as 
+impressive as mine had been. She had stopped wearing a t-shirt over the sports bra after the 
+first few days after the sopping shirt kept snagging on the gym equipment. I certainly didn't 
+mind. It let me admire her increasingly defined midriff. </p>
+<p>I watched as she rose from her set of bicycle crunches, checking out definition in her upper abs 
+as she did. She already sported a four-pack, and I had no doubt it would be a full six pack to 
+match mine soon. She had put on as much lean mass as I had over the summer—an 
+impressive feat for a girl of her slender build. The hills and valleys of her arms made them a bit 
+larger, but they had changed far more in definition than in size, looking carved and downright 
+powerful for a girl. Her ass, thighs, and calves had each packed on an inch or two of sexy, 
+feminine muscle and looked absolutely spectacular. Her breasts looked at least as large as 
+before, despite the fact that she'd shed a significant percentage of her body fat. </p>
+<p>​
+"Think I'm ready for a rematch with Maria?" she asked me with a wide grin, catching my 
+appraising eyes in the act. </p>
+<p>"I don't think she'll know what hit her!" I said. And I meant it. Megan was the most fit 
+eighteen-year-old girl I had ever seen. I couldn't wait to see her in action on the court! </p>
+<p>"Right answer, Mr. Menion," she said, a mischievous twinkle in her eye. </p>
+<p>A moment later, her slight smile faded suddenly as if a thought had occurred to her. She walked 
+toward me and embraced me. "Thanks, Jake. Thank you so much for everything you've done for 
+me this summer. I couldn't have done this without you." </p>
+<p>I basked in the warmth of her words and their accompanying hug. It was like one of my many 
+Megan-fantasies coming true! I felt my cheeks flush with heat and mumbled some sort of 
+acknowledgement. </p>
+<p>Releasing the hug, she looked up at me. "Wanna come watch the rematch after today's 
+workout?" </p>
+<p>"Of course!" I replied, trying not to sound too eager. </p>
+<p>She winked at me, then went back to the weight bench to continue her workout. </p>
+<p>5 - Rematch </p>
+<p>After the remainder of our workout, we drove together to her house. I waited outside as she 
+went in and collected her sister. I caught a bit of their conversation as they came outside. </p>
+<p>"...lazing around the house, eating junk food, and watching reality TV. A little exercise will do 
+you good, squirt!" Megan finished whatever she'd been saying with a haughty tone. </p>
+<p>Maria rolled her eyes as she came out of the house, then egged her sister on. "I don't need to 
+exercise, Megan. Some of us are just naturally athletic." </p>
+<p>Maria wore a loose-fitting t-shirt and short shorts. It was difficult to tell inside the baggy fabric, 
+but from the pleasantly rounded lumps occasionally visible as the shirt shifted on her chest, her 
+breasts seemed to be roughly the same size as Megan's now, at least a cup size larger than 
+they had been the last time I had seen her. Unlike her breasts, however, which were mostly 
+obscured, her pert backside was clearly visible as it pulled her shorts tight. Its spherical swell </p>
+<p>moment. 
+This
+​</p>
+<p>seemed to have gained at least as much firm muscle as Megan's despite drastic difference in 
+their workout habits. The young blonde's legs looked longer and even more toned than Megan's 
+now! With her slightly shorter upper body, they brought her to the same height as her sister. </p>
+<p>Then she turned toward me, and I caught a glimpse of her face. Good God! She looked like 
+someone who could grace the cover of a magazine! High arching eyebrows, long eyelashes, 
+large, expressive eyes, full lips... She had been cute at the beginning of the summer; but she 
+was beautiful now. Her development over the past few months seemed to be accelerating. She 
+was only seventeen, but she looked to be more woman than girl already. </p>
+<p>Megan, finished sizing up her sister, turned to look at me. I knew I must look surprised—or 
+maybe in awe. That wouldn't do. I was here to support Megan, and here I was admiring her 
+sister! Megan had worked so hard all summer for her moment to shine. </p>
+<p>I pulled my mouth into what I hoped was an encouraging smile, praying that my eyes didn't 
+betray the concern I felt over the development Maria had undergone. No wonder Megan had 
+trained so hard! Look who she had to keep up with! </p>
+<p>Thankfully, Megan didn't seem to notice anything wrong as she returned my smile. She let out a 
+long breath, seeming to steel herself for this moment. </p>
+<p>"You go first, sis. Maybe you'll have a chance if I give you the first shot," Maria said with a smirk, 
+passing her the ball with a hard bounce pass. I smiled inwardly at her attempt at trash talking 
+and at the brazen confidence she was displaying.  </p>
+<p>Megan's eyes darkened with her sister's comment, and she lowered her head, immediately 
+driving toward her sister at an instant sprint, her hard-earned muscles tensing and popping as 
+she moved. Maria seemed unfazed, casually awaiting her determined sister's approach. I 
+cringed, fully expecting Megan to plow into her beautiful blonde sister, knocking her to the 
+ground on her way to the hoop. </p>
+<p>But that wasn't what happened. </p>
+<p>Maria darted out of Megan's way, moving insanely fast despite her casual stance a millisecond 
+earlier. Her hand snaked out to slap the ball away. Megan, clearly surprised that her sister had 
+evaded her, hadn't yet noticed that she no longer had the ball. As Maria collected the ball, 
+Megan jumped up for the layup. Her eyes widened as she realized that she no longer had a ball 
+to shoot! She landed, head swiveling to look for the ball, finally seeing that Maria had taken it 
+back to the edge of the driveway that served as a half-court line. </p>
+<p>Megan turned and tried to run toward her sister and defend, but in her surprise, she stumbled. 
+Maria launched her curvy form upward and shot the ball from the three-point line painted on the </p>
+<p>​
+driveway. The shot fell perfectly, and she beamed as she announced the game's first score. 
+"3-0." </p>
+<p>Megan scowled as Maria passed her the ball once more. This time, Megan stopped at the 
+3-point line herself, taking advantage of the significant space that her sister had given her. Maria 
+moved quickly, however, erasing the distance between them in a heartbeat and leaping into the 
+air just as Megan released her shot. The younger sister snatched the ball cleanly out of mid-air 
+and landed just beyond Megan, ball in hand. She smoothly transitioned into a dribble, tagged 
+the edge of the driveway and ran past a stunned Megan to lay the ball in. "5-0!" </p>
+<p>The rest of the game proceeded in much the same manner, with Maria making moves of 
+extreme athleticism look graceful and easy. Megan, meanwhile, looked more upset with every 
+basket. By the time the score was 19-0, her scowl had reached epic proportions, eyes looking 
+wildly angry. Maria stood at the edge of the court, dribbling casually, seeming amused at her 
+sister's seething frown. </p>
+<p>Megan came forward to defend her sister tightly, fouling the younger girl repeatedly as she 
+slapped at the ball, finally giving her a frustrated shove. Maria didn't stumble backward as I 
+expected, however. Instead, she not only maintained her balance but managed to bull her way 
+forward, knocking Megan to the ground. After two bounding steps, she launched into the sky in 
+a rainbow-shaped leap, slamming the ball through the hoop on her way down from the sky. </p>
+<p>Maria had just dunked the ball! My brain had to repeat the thought before I could believe it. 
+Maria had fucking dunked the basketball, as if she were some sort of NBA player!  </p>
+<p>Geez! </p>
+<p>Maria caught the ball off its bounce on the concrete below the hoop, then tossed it over her 
+shoulder. She shot me a brilliant, white smile before sauntering toward the house. "21-0. 
+Game!" she called out to her sister, closing the door absently behind her. </p>
+<p>Megan, the determined, buff, high school athlete whose confidence I'd watched grow all 
+summer as she put in workouts that would give professional athletes pause, seemed shattered. 
+She sat there, still down on the driveway, arms around her legs, knees pulled into her chest, 
+fighting back tears. </p>
+<p>"I couldn't even score against her!" she said, voice breaking with emotion, eyes looking up at me 
+imploringly as if I could provide some sort of explanation for what had just happened. </p>
+<p>I couldn't. </p>
+<p>So I took a seat on the concrete beside her, leaned over, and pressed my shoulder to hers. She 
+rested her head on it, and I felt her release a shaky breath. We sat like that for what might have </p>
+<p>been an hour before she rose to her feet, head hanging low, and entered the house without a 
+word. </p>
+<p>I shook my head, still in disbelief at what had happened. How was Maria so good? I couldn't 
+believe that she had developed athleticism—and a body!—like that without putting a lot of work 
+in. Megan must have been wrong about her not working out. She had probably been training 
+every minute that Megan had, doing it in secret so as to make Megan overconfident. Even then, 
+to hold Megan scoreless? That was impressive. Megan hadn't taken this rematch lightly at all. 
+All the time we were training, I'd been sure Megan would crush her hapless little sister. It was 
+unbelievable to me that it had been the exact opposite. </p>
+<p>6 - Game Night </p>
+<p>When school started, I was getting appraising looks I never had before. My new and improved 
+body seemed to be garnering unprecedented attention from the girls. But I had eyes only for 
+Megan. We had continued to work out together, but only for about an hour every day, since we 
+each had a number of school activities and practices, but with as much intensity as we could 
+muster. </p>
+<p>At first, shortly after the second loss to her sister, Megan's heart hadn't seemed to be in the 
+workouts, but she had eventually come around. When she dominated the other girls in her first 
+basketball practice of the fall season, it had helped restore some of her rattled confidence. </p>
+<p>It was now mid-October, and I was at the first women's basketball game of the year to cheer her 
+on. As I sat in the stands, watching Megan dominate the court, stronger and far fitter than 
+anyone on the opposing team, I mentally mulled over the speech that I was about to make to my 
+best friend. It was at least the dozenth time I'd practiced it, but I couldn't help myself. </p>
+<p>Megan, we've been friends for years, and I know you better than anyone. I know that you still 
+have an embarrassing love for stuffed unicorns; I know that you have an unhealthy obsession 
+with Justin Bieber music; and I've even been entrusted with your bra size! (This was where she 
+smacked my arm, probably.) Over the past year, my feelings have changed. I still love being 
+your friend, but I want to see if we can be more than that to each other. (Then the music would 
+swell, and she kissed me—or so the scene played out in my mind.) </p>
+<p>I barely paid attention to the second half of the game, though as the buzzer sounded, I looked 
+up to see that our school had won. I rose to my feet, summoning my courage, and walked down 
+the steps to the side of the court where Megan was running off the court with a triumphant 
+smile. </p>
+<p>"Thirty points! Can you believe it?" Megan told me, beaming. </p>
+<p>"I can, Megan!" I replied. I tried to think of my speech, but her amazing smile stripped the words 
+from my mind. Desperate not to chicken out this time, as I had several times before, I forged 
+ahead regardless. </p>
+<p>"Megan, are you going with anyone to homecoming? 'Cause I was thinking maybe you and I..." 
+My throat went dry and rather than risk choking awkwardly, I left the unasked, implied question 
+hanging out there. </p>
+<p>"Oh, that's so sweet, Jake, but I actually do have a date."  </p>
+<p>She did? She hadn't said anything! Why hadn't she told me? </p>
+<p>"O-Oh! Okay. Great! Just thought I'd ask... you know, just in case..." </p>
+<p>"You know what? You should ask Stephanie! The cute black girl from cheer? You two would be 
+so cute together..." </p>
+<p>Stephanie </p>
+<p>cute. But she wasn't Megan. 
+was
+​</p>
+<p>7 - Homecoming </p>
+<p>I did ask Stephanie to the dance. She accepted. We stood at the side of the dance floor, talking 
+loudly to be heard over the loud music in the gym. I tried hard to appear interested in whatever 
+the hell she was saying as I saw Megan stride in, looking elegant in a long, crimson gown that 
+showed her the lean lines of her fit body to good effect. Her hair was up, gold earrings and arm 
+cuffs giving a vaguely Roman look to her style. On her arm was Ron, the star receiver on the 
+football team, already the recipient of a scholarship to play for the University of Florida next 
+year. </p>
+<p>Jealousy surged as I saw Megan looking at him with far too much interest. </p>
+<p>Fucker. </p>
+<p>Fueled by the sudden burst of emotion, I clenched my fingers, launching non-alcoholic punch 
+outward to splatter all over the floor. Thankfully, it had missed Stephanie, as well as her white 
+dress. </p>
+<p>​
+Maria! </p>
+<p>"Sorry!" I grumbled, then rushed off to find some napkins with which to sop up the mess. </p>
+<p>On my way back, I saw another figure enter the gym from the far entrance. She was blonde, 
+voluptuous, her arms and legs unbelievably toned in a short, tight, cobalt-blue dress. She wore 
+no jewelry, as if subtly announcing that her body didn't need sparkling adornment to draw 
+attention. As her face came into view, I saw that the dress matched her brilliant blue eyes and 
+that her face was just as gorgeous as the rest of... </p>
+<p>Oh. My. God. It was </p>
+<p>Eyes jumped to the gorgeous blonde, like disgruntled Star Wars fans to twitter. She didn't seem 
+to have a date but didn't slink into the dance like most of the other singles. Instead, she strode 
+purposefully toward her sister, sexy stilettos clacking with every stride. When she came to a 
+stop, I could see that she was taller than Megan now, by a good inch. Bustier too. In fact, as 
+attractive as Megan was, every part of Maria was just... better. It was as if nature had allowed 
+Maria to one-up her sister in every single category. I had thought Maria attractive enough to be 
+a model before. Now I was certain of it! From her thick blonde mane to her gorgeous face, to 
+her rapidly maturing body, the girl was every bit as attractive as the most beautiful women I'd 
+seen on Instagram in the last month. </p>
+<p>I couldn't hear what they were saying, but Megan didn't seem pleased about what was being 
+said. She seemed even less pleased when she caught her date leering down Maria's 
+décolletage. Whirling angrily, she smacked him hard across the face and stormed out of the 
+gym. </p>
+<p>Maria simply seemed amused by the whole thing. She leaned in to whisper something to the 
+star receiver, then took him to the dance floor for a sultry dance. I couldn't believe Maria's nerve! 
+It was like she'd planned all of this, just to humiliate Megan! Anger at Maria's gall flaring within 
+me, I excused myself from my own date to go outside and look for Megan, to comfort her. </p>
+<p>Pushing open the gym door with a clack, a billow of steam followed me out the door into the 
+cool air. I looked around, but Megan was nowhere to be found. </p>
+<p>I pulled out my phone and texted. "Saw what happened. U ok?" </p>
+<p>No response. </p>
+<p>Disheartened and feeling for Megan, I grudgingly returned to the gym, danced with Stephanie a 
+few times, and glared at Maria from afar—not that she noticed. The girl was becoming seriously 
+attractive, and—if what had just transpired was what it looked like—a serious bitch as well. </p>
+<p>​
+ I thought 
+You know what?
+​</p>
+<p>I should go in there and confront Maria about her bullshit right now! </p>
+<p>About an hour later, I felt the buzz of my phone in my pants pocket and excused myself once 
+again. It was a text from Megan. "Sorry I missed your text." </p>
+<p>Stepping outside, into the cool night, I punched the call button, but she didn't pick up this time 
+either. Another text appeared on my screen as I ended the call. "Don't feel like talking right 
+now." </p>
+<p>We texted back and forth for a good while, Megan venting, me comforting, until Stephanie came 
+outside to bid me a good night. I felt bad that I'd neglected my date for the remainder of the 
+night, but she didn't seem upset. I think she knew that this wasn't a serious date and that my 
+heart belonged to someone else. After I'd rushed out after Megan, I bet she'd put two and two 
+together. </p>
+<p>After Stephanie left, I continued to comfort Megan from outside the school via text until she, too, 
+told me that she was calling it a night. </p>
+<p>My heart ached for her and another flare of anger ignited within me. 
+to myself. </p>
+<p>I started toward the gym entrance to do exactly that, when Maria exited the building. She gave 
+me a heart-melting smile and waved as I neared her, and my anger seemed to fade away. I 
+returned her smile in spite of myself. </p>
+<p>Should I still confront her? Somehow, the radiance of her amazing face and the unmissable 
+prominence of her eye-magnetic cleavage cast her behavior in a different light. How could 
+someone who looked so angelic behave poorly? Still, enough of me felt the need to at least do 
+something to defend Megan's honor. </p>
+<p>"Maria! I can't believe you just danced with Megan's date! Right after he just disrespected her 
+like that." </p>
+<p>Maria looked hurt, her face suddenly crestfallen, a line of concern forming between her huge, 
+luminous eyes. Her expression alone opened a cavity of guilt within me. Had I just hurt this 
+gorgeous girl's feelings? Oh no! </p>
+<p>"You're right, Jake. I just... he complimented me and asked me to dance... I'm just not used to 
+all this attention. I'm not used to having hot guys like him... like you... interested in me." Her long 
+eyelashes closed for a moment. When they reopened, they were glassy. Glistening tears 
+gathered at the bottom of her eyes, threatening to fall. </p>
+<p>Hot guys like me? I wasn't sure what that was all about, so I ignored it. Now I felt downright 
+awful. I'd made little Maria, now this gorgeous creature, cry. </p>
+<p>​
+​
+ really developing fast. It's got to be tough. Just remember that it's 
+are
+​</p>
+<p>"Maria, it's okay. I understand. It's just that you should think about Megan's perspective in all 
+this. I mean, her date is checking you out—which is understandable I guess. You're a really 
+attractive girl! But that's got to be hard on her." </p>
+<p>"Yeah, I guess I forgot what it's like to have someone checking out another girl," she said, eyes 
+still glassy, but no tears falling. Then she seemed to start, bringing a hand to her mouth. "Oh 
+geez! That sounded completely narcissistic, didn't it?" </p>
+<p>It did, now that I thought about it. But I was so enamored with the expressiveness of her eyes, 
+the perfect skin of her face, that I hadn't even noticed.  </p>
+<p>"But even if it sounds bad, it's true! My body's just growing so fast, and there are these model 
+scouts trying to hire me, and guys hitting on me. It's just a lot to take in, you know?" She 
+reached out to touch my arm, eyes wide and imploring as they sought my assurance. The touch 
+from her soft fingers felt electric, sending the nerve endings in my arm afloat. </p>
+<p>"I'm sure it is, Maria. You 
+tough on Megan too. That's all I wanted to tell you." </p>
+<p>"You're such a good friend!" she said, then wound her arms around me in a tight embrace. I 
+couldn't help but feel the warm tingle of desire from the feel of her magnificent body pressing 
+into mine. "I wish I had someone like you..." </p>
+<p>"You do!" I blurted. "I mean, I'm Megan's friend, but I don't see why I can't be yours too." </p>
+<p>Now, why had I done that? That was bound to complicate things... </p>
+<p>"You will?" Maria looked up at me hopefully. God! She was just so innocent. So completely 
+unaware of the power of her mesmerizing eyes. </p>
+<p>She threw her arms around me in an even tighter hug, one which pushed the breath from my 
+lungs and numbed my arms. When she released me, she wore a brilliant, broad smile. </p>
+<p>A mischievous spark entered her eye, and her full lips seemed to move in slow motion as they 
+formed her next question. "Take me home, bestie?" </p>
+<p>"Um, sure!" I said, spellbound by those scarlet lips of hers, trying to decide whether she was 
+wearing lipstick or if that was simply their natural shade now. As I watched them move, the 
+sudden urge to kiss her nearly overpowering. </p>
+<p>I shook myself back to reality, however, and pulled back. If I didn't know better, I would have 
+thought I saw the slightest trace of disappointment in her eyes as her smile faltered 
+momentarily. It returned almost instantly, though, and I dismissed the thought as reading </p>
+<p>​
+something that hadn't actually been there. I hurried to the car, swinging around to pick her up, 
+and brought her home. We made small talk, but I managed to keep my eyes on the road and off 
+Maria's gorgeous face the whole time. I gave her a warm, friendly smile, as she hopped out of 
+the car, then drove away. In the rearview mirror, I saw her standing at the curb in front of her 
+house, watching me drive away, expression inscrutable. </p>
+<p>When I got home, I called Megan. </p>
+<p>"How did you know I wouldn't be sleeping?" Her voice sounded nasal. I could tell she'd been 
+crying. </p>
+<p>"I know you, Megster." </p>
+<p>She laughed, but it quickly gave way to sobs. I spent the rest of the night listening, comforting. It 
+was all I wanted to do. By the end of the night, she felt better. And I knew that helping her was 
+the only thing that was important to me. I didn't realize it for months afterward, but that was the 
+night that I fell madly, completely in love with her. </p>
+<p>8 - Prom </p>
+<p>"Maria's always talking about you, you know," said Megan. "She goes through guys like water 
+these days. Hell, she goes through the guys I bring home like water too!" </p>
+<p>Megan gave a wry smile, her alluring green eyes alight. It was an expression I adored. </p>
+<p>Attractive as she was, over the course of the school year, Megan seemed to have come to 
+terms with her status as the less attractive sister. Probably the less athletic sister too, as absurd 
+as it was to say that about a girl with a basketball scholarship to the University of Florida, when 
+her sister was entirely uninterested in school sports. But I remembered that basketball game 
+last summer, and the ease with which Maria had dispatched Megan. </p>
+<p>Maria had become something of a celebrity around school. Every boy seemed to want to date 
+her. Those who worked up the courage to ask her out, as Megan had noted, seldom lasted 
+more than one date. I had assiduously avoided her for most of the rest of the year, in spite of 
+the fact that I'd said I would be her friend. She had been dangerously attractive before, and from 
+the whispers and murmurs of the gushing young men all over the school, she had only become 
+sexier. </p>
+<p>Can 
+me!
+​</p>
+<p>envies 
+She
+​</p>
+<p>"Maria told me about the night you brought her home from the homecoming dance." Oh, shit! 
+She had! Was Megan upset? I had worked so hard all year to get Megan to see me as 
+something more than a friend! </p>
+<p>"About how you told her she should respect me. How you were the only man that night who 
+didn't ogle her. How you've been the only man all year not to ogle her..." </p>
+<p>I had been braced for a far worse reaction. But it seemed Maria had been truthful—or even 
+generous to me in her depiction of that night. </p>
+<p>"She actually told me that she envies me for having such a good friend. 
+you believe it? That's the first time she's EVER told me that!" Megan's eyes remained locked on 
+mine, with an intensity that bordered on manic. </p>
+<p>"Well, Megan, you know how I feel about you..." </p>
+<p>"I think I do," she said, her eyes and the quiver of her lips imparting more meaning into that 
+phrase than should have been there. I swallowed hard. Was this it? The moment where she 
+realized how I felt about her? That I loved her? </p>
+<p>Megan drew her face close to mine and kissed me. "And I love you too," she whispered. 
+Momentarily stunned, I did nothing. Just sat there, unmoving, as she kissed me. However, I 
+came to my senses as she began to pull back, eyes clouded in confusion. I lunged forward, 
+wrapping my arms around her, pulling her close. Enjoying the taste of one another, we kissed 
+hungrily for long minutes before bringing our make-out session to a close. </p>
+<p>"I've been meaning to ask you something," I said breathlessly, hoping that this time, things went 
+differently than they had the last. "And this seems like a good time to ask it.” </p>
+<p>I grinned the confused expression beginning to form on her face. “Will you go to prom with me?" </p>
+<p>"Ha! I've been wondering when you'd finally ask me!" said Megan with a playful punch to my 
+shoulder. </p>
+<p>"Well, can you blame me for procrastinating after how badly my attempt to ask you out for 
+homecoming went?" I blurted out. </p>
+<p>"Homecoming?" she intoned. I could see the wheels turning in her mind as she thought back to 
+it. "Oh! The game!" she said as she remembered. </p>
+<p>"Wait! That was you asking me out? I thought you were just telling me that we could go out as 
+friends or something. I thought it was a sympathy move! I never..." Her voice trailed off, and she </p>
+<p>​
+​
+looked at me with even more affection, pinching my cheek. "You're so adorable, my little 
+Jakey-wakey!" </p>
+<p>"Okay, so rule #1 if we're going to start dating. Don't EVER do that again!" I laughed. She joined 
+in my laughter, and we left the lunchroom table holding hands. </p>
+<p>9 - Pool Party </p>
+<p>Prom was magical. I don't know that I looked at another person the entire evening. Megan was 
+captivating in her black, open-backed number. I was enthralled by the feel of her slender, fit 
+body moving against mine to the music. I felt electricity as my fingers traced the contours of her 
+bare, muscled back. Lips locked as we exited the school, we had both lost our virginity in the 
+back seat of my car. Cliché, I know. But it was the best kind of cliché. </p>
+<p>We spent the summer sneaking off together whenever we could, making out, making love... 
+basically just taking advantage of our time together before we had to separate for months during 
+our first semesters of college. I was going to school locally, in Atlanta, staying with my parents, 
+while Megan was off to Gainesville to play basketball for UF. </p>
+<p>When I came to her house to pick her up, I always waited in the car, texting her to come out, not 
+wanting to bump into Maria. The system of avoidance I'd maintained for most of the school year 
+had won me the girl of my dreams. Why mess it up now? </p>
+<p>In late August, however, Megan asked me a question that would change all of that and put my 
+nascent relationship to the test. </p>
+<p>"Jake?" </p>
+<p>"Yes, Megan?" </p>
+<p>"Maria asked if I would bring you to her birthday party. She's turning eighteen this weekend, and 
+she wants us both to come. You don't mind, do you? It's a pool party! Doesn't that sound like 
+fun?" </p>
+<p>Pool party, huh? That meant Megan in a swimsuit? Nice! But that also meant Maria in a 
+swimsuit? Oh, God! Alarms went off in my mind. I still remembered our near kiss at 
+homecoming. Could I keep my eyes off gorgeous Maria? Especially a version of her that was 
+even hotter than the one that had been so hypnotic at homecoming, if the word around school 
+was correct? I knew I would need to. My ability to brush off Maria's overwhelming looks were 
+what had landed me Megan in the first place. It was far safer to say no. </p>
+<p>As I looked at Megan's expectant face, her beautiful green eyes, however, I found that I just 
+couldn't decline. "Okay," I said in resignation. </p>
+<p>"Great!" she said excitedly. "My Maria-resistant man is coming! Can't wait!" </p>
+<p>I really hoped that I was Maria-resistant. </p>
+<hr />
+<p>All week, I debated whether to click on Maria's Instagram feed. It was set to private, but I was 
+sure that she’d approve me as a follower. Being a Maria-follower was something of a badge of 
+honor among the guys at school, but I resisted. How hard could it be to avoid looking at Maria in 
+a swimsuit? Sure, she was model-pretty. Maybe supermodel pretty even. </p>
+<p>I could resist a supermodel. </p>
+<p>At a pool party. </p>
+<p>In a bikini. </p>
+<p>I thought about her near-superhuman display of basketball prowess last summer. It had been 
+exactly a year since then. How much stronger would she be? How much faster? She already 
+knew I had a thing for powerful women. </p>
+<p>My palms began to sweat.  </p>
+<p>I focused on a mental image of my incredibly fit, lovely girlfriend, and it helped me to relax a bit. 
+I was able to stay that way until I reached the party. </p>
+<p>I opened the front door, walked through the house, and slid open the glass door in back. </p>
+<p>Nothing could have prepared me for what I saw as my eyes found the edge of the water. </p>
+<p>Long, thick, lustrous golden hair rose slowly from the surface of the pool, insanely long 
+eyelashes blinking rivulets of water out of her eyes as it streamed down her divine face, over 
+her succulent scarlet lips.  </p>
+<p>Her breasts broke the surface of the water next, barely contained by her white bikini's thin 
+triangles of fabric. They were full, proud, and so exquisitely shaped that they quite literally took 
+my breath away. Her body continued its upward ascension as she climbed the steps of the pool, 
+water running down tanned flesh that was so achingly perfect that it almost hurt to look. </p>
+<p>I had been ready to ignore a supermodel. I hadn’t been 
+perfect?!
+​</p>
+<p>Sculpted arms shook off the clear, cool water in a graceful, willowy motion as her eyes began to 
+rise toward me. Her abs and obliques came into view, chiseled into perfect relief. The gorgeous 
+lines of her body swooped inward to a remarkably narrow waist, as if pointing my eyes to the 
+perfection of her defined stomach, before flowing into rounded, muscled hips. Her legs were 
+masterpieces, their endless length carved into miles of meandering silky flesh that defied all my 
+powers of description. </p>
+<p>As her eyes met mine, she twisted those gorgeous abs, turning her body slightly to reveal a 
+heartbreakingly sexy ass that flexed into impossible firmness as she finished her ascension 
+from the pool. She parted her lips in a smile that seemed to complete a part of me I never knew 
+was missing. Her sapphire blue eyes were huge and unbelievably expressive. I felt drawn into 
+their mesmerizing depths the instant her gaze connected with mine, sending my heartbeat 
+racing. </p>
+<p>How could anyone be this 
+ready for this. </p>
+<p>It was unnatural. </p>
+<p>It was impossible. </p>
+<p>It was right in front of me. </p>
+<p>She was a fucking goddess. </p>
+<p>"Jake! You came!" she gushed in a velvet voice, running up to press that unimaginably sexy 
+body against mine. She smelled like roses, felt like heaven. </p>
+<p>Her rippling torso was so defined that I could feel the movement of every muscle of her stomach 
+against mine as her hips rolled subtly but erotically into me. The contact with her outrageously 
+sexy stomach lasted only an instant but left me gasping in pleasure. I nearly orgasmed from her 
+friendly hug alone. </p>
+<p>"Now let's see that awesome physique of yours that Megan keeps bragging about..." Maria bit 
+her lower lip mischievously as she reached out and took the hem of my shirt in her slender 
+fingers. She pulled the t-shirt over my head, exposing the ripped physique I'd worked so hard for 
+over the past year. </p>
+<p>"Oooo... yummy!" Maria said, flinging my shirt aside to leave me standing there in just my swim 
+trunks, visibly aroused. Maria gave a satisfied smirk as she surveyed my awed expression and 
+rock hard erection, seeming to confirm something to herself. </p>
+<p>​
+Suddenly, Maria's eyes rose to something in the distance behind me. I heard the screen door 
+slide open. </p>
+<p>Shit! </p>
+<p>I didn't turn to face her, not wanting her to see the tenting of my swim trunks. Luckily, she 
+grabbed me from behind, covering my eyes with her hands. </p>
+<p>"Guess who!" she giggled. </p>
+<p>"Hi, Megan!" I tried to sound excited to see her, despite my fears that she would discover my 
+visible attraction to her sister. </p>
+<p>She gave a delighted squeak and spun me around, planting a huge kiss on my lips right in front 
+of her sister. She doubled down, sliding her tongue into my mouth and pressing her body into 
+me. She felt my hardness, broke the kiss, and smiled, lips millimeters from mine. </p>
+<p>"Already turned on, I see. Glad you're so happy to see me!" </p>
+<p>Relief flooded through me. She thought the erection was from her attentions—which it's 
+continued presence now was. I supposed it wasn't too dishonest to go along with it. </p>
+<p>"Of course, Meg! You know you're the only one for me." </p>
+<p>I felt a pang of remorse for the attraction I'd felt for Maria just seconds before. But it truly wasn't 
+anything serious. I loved Megan. Nothing Maria could do would change that, no matter how 
+sexy the girl had become. </p>
+<p>Even as I had the thought, however, I could feel Maria's aura behind me. It was this palpable 
+sensual presence that drew my senses toward her, even as I made out with Megan. </p>
+<p>Megan was all over me, hands roaming the smooth muscles of my back before tracing the lines 
+of my abs and the swells of my pecs. I began to do the same, running my hands over the bare 
+skin of her back, under the string of her bikini top. Pressing her body to me, however, I couldn't 
+help but notice how much less firm it was than Maria's, how much less dramatic her body was in 
+its curves and musculature. She was a beautiful, incredibly fit girl. I'd never perceived any 
+shortcomings before, but it was like eating at a fine restaurant for the first time. You never knew 
+what you were missing until you tasted something better. </p>
+<p>When we eventually stopped to come up for air, Megan stepped back, snaking her hands 
+around me back to her sides, shooting her sister a victorious glance. </p>
+<p>Megan circled me to face her sister. "Happy Birthday, Maria. But remember that Jake's not one 
+of your presents. You don't get to have him." </p>
+<p>Maria seemed nonplussed, straightening to emphasize the three-inch height advantage she 
+held over her sister, courtesy of her long, silky legs. "I wouldn't be so sure of that Meg. I can 
+have anyone I want." </p>
+<p>As they stood there trading barbs, I couldn't help but compare the sisters' bodies. Megan was fit, 
+lean, athletic, and beautiful. And she couldn't hold a candle to Maria. Everything Megan had 
+going for her, Maria had it and far more. </p>
+<p>Every muscle of Maria’s arms, her legs, her stomach was distinctly visible as it tensed, flexed, 
+relaxed. When she moved, it was with a graceful elegance that made ballet dancers look 
+clumsy. It added to an overall effect that made her seem hyper-healthy, supernaturally fit. </p>
+<p>But the differences didn't stop there. As outrageously sculpted as Maria's body was, it was also 
+impossibly feminine. Standing in profile before me, Megan's body, which had seemed so curvy 
+whenever I'd held it in the past year seemed sticklike next to the dynamic lines of Maria's. 
+Maria's lower back swooped inward to the most slender of waist I'd ever seen, despite the 
+steel-hard abs that plated its core, before curving outward into a succulently tight ass, the tiny 
+white string of her bikini bottoms the only covering of her supple, deeply tanned hips. </p>
+<p>Maria's breasts, covered so minimally by her bikini top, swelled from her toned chest, erotically 
+shaped perfection, seeming to symbolize her status as the ultimate specimen of the fairer sex. A 
+luxuriant mane of shimmering gold poured over her shoulders and down her marvelously toned 
+back, like golden baptismal waters crowning her earth's first goddess. Glints of platinum and 
+bronze within each strand sparkled the brilliance of the summer sun, as if adorning her with 
+priceless jewelry. </p>
+<p>Her eyelashes were so long that I could actually make them out in profile. Her lips, so 
+deliciously curved, their sumptuous red moist and inviting. </p>
+<p>It really wasn't fair to compare them. Megan was human. Maria was something that transcended 
+mere humanity. She truly did look like a goddess. </p>
+<p>Something similar seemed to occur to Megan in that moment, her beyond-gorgeous sister 
+looking down on her, and the tiniest hint of fear flashed in place of the brazen confidence that 
+she'd had when she pronounced me hers to her sister. Megan’s shoulders slumped ever so 
+slightly. Maria seemed to pick up on Megan's change in demeanor, her tacit acknowledgment of 
+the blonde's seductive superiority. She leaned back slightly, content that she had uncovered a 
+chink in Megan's final layer of armor. </p>
+<p>Maria's electric blue eyes turned to face me, the connection numbing my entire body with a 
+wave of desire the likes of which I'd never experienced. It was like being touched by the divine 
+presence of a nascent goddess. </p>
+<p>"Maybe we should just ask Jake who he'd rather fuck?" The vulgar word seemed incongruous 
+with the gorgeous mouth that delivered it from behind brilliantly white teeth and scarlet lips with 
+that long, flexible pink tongue. </p>
+<p>I panicked. I knew what I needed to do. I needed to pick Megan. </p>
+<p>But I couldn't even take my eyes off of Maria. I imagined those perfect lips on mine, those teeth 
+nipping along my neck, that perfect tongue touching the most sensitive parts of my body... and 
+shivered. </p>
+<p>What man could resist a celestial being like this...? </p>
+<p>Maria laughed melodically. "Just kidding, Jake. I like you. I wouldn't want to put you in an 
+awkward position like that." </p>
+<p>She spun on her heel, magnificent tresses swirling behind her like the cape of an empress and 
+regally strode up to another well-built guy, cuddling to him with a nefarious smile, eliciting an 
+almost drug-induced expression of dopey happiness from the guy. </p>
+<p>Maria had certainly come a long way from the young downtrodden girl I’d known a year ago. I 
+supposed that having half the school wrapped around her little finger had boosted her 
+confidence to the point that she felt that she could behave however she saw fit. </p>
+<p>Megan turned to me wearing a shell-shocked expression. It looked as if the ground had been 
+pulled from under her feet. Maybe it had been. I knew that she viewed me as her rock. And I 
+was still trying to be that for her. It’s just that Maria... </p>
+<p>...Maria. </p>
+<p>Swallowing hard, I gathered my composure and walked over to Megan, giving her a hug. I 
+attempted to reassure her, keeping my gaze, though it took every ounce of will I possessed, 
+from drifting back to Maria. </p>
+<p>“Maria sure is a handful these days, huh?” I said jokingly, trying to keep any tremor of emotion 
+out of my voice. I wasn’t sure how Megan would react, but I thought that playing the whole 
+scene off casually and jokingly would be the best approach. </p>
+<p>“Pfft,” she said, still unsmiling, eyes shifting to look past me to her sister. “You don’t know the 
+half of it, Jake. She can do things. Things that—” Megan trailed off. </p>
+<p>I squeezed her and cut her off with a kiss. “Sorry. It’s my fault. But let’s not talk about Maria 
+anymore, ‘kay?” </p>
+<p>Megan looked surprised… and pleased. As we talked, Megan grew less reticent and more 
+talkative, more her normal self. </p>
+<p>Giving Maria a nervous glance, she led me back into the house, then to her room. When we 
+arrived there, she was all over me again, going down on me for the first time. Afterward, she slid 
+up my chest and placed her face inches from mine, searching my eyes. </p>
+<p>“You’d rather be with me than her, wouldn’t you?” Her voice shook slightly at the end of her 
+question. </p>
+<p>We both knew who she meant. I answered firmly, without hesitation. </p>
+<p>“Of course, Meg. You’re the woman I love.” </p>
+<p>Her eyes filled with warmth and affection, and she kissed me deeply. Rolling to my side, tucking 
+herself between my arm and torso, she began to run a fingertip along the grooves in my 
+muscled stomach. We lay like that for a good while, until she fell asleep there, tucked inside my 
+arm, comforted by my presence. </p>
+<p>I, however, wasn’t able to find the same sort of comfort. Unable to sleep as we lay there for an 
+hour or two, visions of Maria playing through my mind, I extricated myself carefully from Megan 
+and tiptoed away, quietly closing her door behind me. </p>
+<p>I descended the stairs and headed for the front door, hoping to simply sneak away from the 
+party. I didn’t want to chance another run-in with Maria. It almost worked. I had almost reached 
+the door, when I heard a sultry voice behind me. </p>
+<p>“Leaving without saying goodbye?” </p>
+<p>I turned to face Maria’s angelic visage regarding me with amusement once more. It was as if 
+everyone were simply a plaything to her now. </p>
+<p>“It’s okay, you know,” she said, raising a hand to examine her nails. </p>
+<p>“What’s okay?” </p>
+<p>Her sumptuous lashes rose, achingly blue eyes piercing as they met mine. “To prefer me to my 
+sister. It’s not something you can help. It’s just how it is.” </p>
+<p>I thought wryly. 
+We probably are,
+​</p>
+<p>​
+that </p>
+<p>“Megan is my girlfriend. Of course, I prefer her!” There. I’d actually managed to say it! Take 
+Maria! </p>
+<p>Maria frowned. For the first time, she seemed to have been caught off guard by something I’d 
+done. For the first time in a long time, something hadn’t gone as she’d expected. </p>
+<p>She strode up to me, large breasts so firm that they jiggled only slightly as she moved. She 
+slipped a hand behind my head and pressed her voluptuous, red lips into mine. Pillowy soft, 
+they devoured mine hungrily, and I couldn’t help but bask in the feel of it. I’d never felt desire so 
+strong in my life. It was as if we were meant to be together. Her taste, the delicious scent 
+wafting from her corn silk hair, it was all so intoxicating. </p>
+<p>She ended the kiss with a slow, feathery withdrawal, stepping lightly back with that catlike grace 
+she possessed. I was left stunned, lips still puckered, eyes still closed. Imagining. </p>
+<p>“Think about that for a while, then let me know who you really prefer,” she breathed, then spun 
+and walked back out to the pool to play with another of her boy toys. </p>
+<p>I watched her beautiful ass swing with the mesmerizing motion of her tanned hips as she 
+walked, unable to look away. I stumbled out of the house in a stupor to my car and drove home. 
+I didn’t stop thinking about that kiss the entire time. </p>
+<p>10 - Visit </p>
+<p>That night, I agonized over whether to tell Megan about Maria's kiss, finally deciding to be 
+honest with her. I would downplay my feelings of attraction to her younger sister as much as 
+possible, but I needed to ease my conscience and tell her. Besides, the last thing I wanted was 
+for her to learn about it from someone else—particularly from Maria herself. </p>
+<p>The following day, I was back at Megan's house to help her pack for school. Thankfully, I hadn't 
+run into Maria on the way inside this time. </p>
+<p>"Meg, I've got something I have to tell you." She looked hesitant as I took her hands in mine, 
+seeming to expect bad news. "It's Maria.” </p>
+<p>I heard Megan’s sharp intake of breath. Her eyes began to widen. “She, um, kissed me 
+yesterday as I was leaving." </p>
+<p>​
+had </p>
+<p>I'm attracted to 
+you.
+​</p>
+<p>And that's what I told her." 
+you.
+​</p>
+<p>It was a white lie, of course. I 
+did."
+​
+ not her sister. That much was 
+her
+​</p>
+<p>Megan's eyes widened further, pretty features twisting in dismay. She began to pull away. I held 
+her hands firmly, however, finding her eyes once more, even as she tried to look away from me. </p>
+<p>"I didn't kiss her back! I didn't want her to do it... she just 
+kissed her back. But I needed Megan to know that I wanted 
+true. I think. </p>
+<p>Megan blinked rapidly, and tears began to form in her eyes, but she was no longer attempting to 
+pull away. </p>
+<p>"I love </p>
+<p>Megan's face brightened, even as a tear rolled down her cheek. "Y-you told her that? You told 
+her you wanted me instead of her?" </p>
+<p>"I did," I confirmed, nodding. </p>
+<p>Her nascent smile blossomed fully. That might have been the happiest I'd ever seen her. She 
+threw her arms around me and began planting kisses all over my face. I fell backward onto the 
+bed, laughing. She stood above me, beaming, seeming to burst with joy. </p>
+<p>"I know you have a thing for Supergirl, and I've been waiting for the right moment for this. And 
+this is it!" she said with a wink, wiping away the wet streak on the right side of her face. "Be right 
+back!" </p>
+<p>I waited on the bed, curious what Megan was up to. It took a while to find out, but she emerged 
+from the bathroom almost 30 minutes later. She had put on makeup, the bold mascara bringing 
+out the green in her eyes vividly. Her shoulder-length hair, normally in a tightly bound ponytail 
+hung loose, framing her alluring face. My eyes dropped to the form-fitting blue leotard top, 
+molded to her firm, fit figure. A red and yellow shield adorned her chest, making it seem more 
+impressive than normal. A yellow belt hugged her slender waist, with a short, red skater skirt 
+draped over her hips and upper thighs. Knee-high red leather boots and a knee-length red cape 
+completed the costume. Her Supergirl costume was of amazingly high quality and almost 
+seemed to have been tailored to fit her athletic body perfectly. </p>
+<p>"You're drooling," she informed me with a broad smile, snapping me out of my oglefest. </p>
+<p>"B-because... I mean... 
+appraisal. </p>
+<p>She strode confidently toward me. "Let me show you just what a Supergirl can do..." </p>
+<p>We made love three times before I was sated, all three with her in the costume. </p>
+<p>I stammered, unable to help giving her another full-body 
+wow!"
+​</p>
+<p>​
+​
+​
+​
+​
+​
+ turns you on. But I'll have to save it for special occasions," she said with 
+really
+​</p>
+<p>"Now I see what 
+a wink as we lay in her bed together, thoroughly spent. </p>
+<p>"Like when you come home for Thanksgiving?" </p>
+<p>"Absolutely!" she agreed, placing a finger on my nose. "As long as you're a good boy while I'm 
+away." </p>
+<p>"I'll be a boy scout. Promise," I replied, giving her a kiss, then getting out of bed to finish helping 
+her pack, dopey smile on my face. </p>
+<p>11 - Departure </p>
+<p>The following day, I came over one last time to see Megan off to school, only to be greeted at 
+the door by Maria. Her look was more serious than it had been at her birthday party, her 
+flirtatious behavior from the other day more subdued. </p>
+<p>But God, though she wore more clothes this time, she somehow looked even sexier than 
+before, her body seemingly having improved even on its previous perfection in just a few days. 
+There seemed to be no end to the girl's ascending beauty! </p>
+<p>She wore a blue halter top that left her tanned, impossibly defined shoulders and arms bare 
+over tiny red shorts that left her long, smooth legs completely bare. Her massive blonde mane 
+flowed down her bare upper back, caressing her skin with its soft, shifting tresses. </p>
+<p>Seeing Maria in the red and blue outfit, I couldn't help but be reminded of Megan in her 
+Supergirl costume yesterday. For the first time, I began to imagine what Maria might look like in 
+that costume. Maria was the living personification of the hyper-fit, stunningly beautiful woman in 
+the comics. Better even. The thought made my knees weaken with desire before I quickly shut it 
+down. </p>
+<p>Today was about 
+ would lead to! 
+that
+​</p>
+<p>"Megan's inside, Jake," said Maria matter-of-factly, pulling the door open wide and stepping 
+aside to allow me in. Megan's mother and father were just inside, and they greeted me warmly.  </p>
+<p>not Maria! I couldn't afford to fantasize about Maria. Who knows what 
+Megan,
+​</p>
+<p>​
+​
+ not Maria! Remember that! 
+Megan,
+​</p>
+<p>Seeing a pile of luggage by the front door, I offered to help load the car. Megan's dad accepted, 
+thanking me. Maria picked up the largest suitcase and handed it over to me. I took it, then felt it 
+clunk to the floor. I had misjudged its weight. The thing was really heavy! I hefted it upward, 
+leaning to the opposite side in order to lug it out the door to the waiting vehicle. I puzzled over 
+the casual ease with which Maria had handled it. She had been able to pick it up and hand it to 
+me with one arm, even extending it outward, as if it didn't weigh any more than a pound or two. I 
+knew she was strong, given that she could outplay Megan, a scholarship athlete, not to mention 
+dunk a basketball. But this was really something! Handling an eighty-pound suitcase with her 
+arm fully outstretched would take an immense amount of shoulder and core strength. Then 
+again, seeing just how insanely sculpted her abs were in her swimsuit the other day, maybe she 
+really did have that much core strength! I shook away the thought, chiding myself on my train of 
+thought once more. </p>
+<p>Today was about </p>
+<p>I helped Megan's dad bring her luggage to the car, load after load, until it was all stowed tightly 
+away. Maria didn't help with any more of the bags, so I wasn't able to see whether she could 
+repeat the feat. Maybe she had strained something last time and couldn't lift anything else. </p>
+<p>"Is everyone going with you?" I asked Megan as we closed the trunk over the mass of luggage, 
+seeing that the family was all outside now, her dad locking the front door of the house. </p>
+<p>"Yeah, the whole family's going with me for a weekend in Gainesville. I wish it were you going 
+with me instead," said Megan before her voice dropped to a whisper. "Instead, I have to deal 
+with having my stupid bimbo sister around." </p>
+<p>I glanced over to Maria, standing at least thirty feet away, near the front door. Her eyes flashed 
+darkly at Megan's comment. It was almost as if she'd heard it. But that was impossible. Megan's 
+whisper had been barely audible to me, and I was standing right next to her. </p>
+<p>"I love you," I said, hugging Megan tightly to me. </p>
+<p>"I love you too," she replied, eyes glassy as she stepped back. Megan's dad started the car, 
+forcing Megan to wrap up our goodbye. They drove away, Megan waving at me, Maria gazing at 
+me intently.  </p>
+<p>12 - Dream </p>
+<p>​
+ Damn it! So what if she's 
+Maria!
+​</p>
+<p>I tried not to, but I dreamed of Maria every night, reliving the sight of her body rising from the 
+water of the pool, the way her body had felt against mine as I had hugged her in that skimpy, 
+white string bikini, the softness of her lips as they touched mine. </p>
+<p>The erotic dreams left me aroused and drenched in sweat as I awoke each morning, heart 
+leaping at the thought not of seeing Megan but of seeing Maria again. I forced away the 
+unwanted thoughts every time. </p>
+<p>Megan was beautiful. She was athletic. She was smart. She was fun. She was everything I 
+wanted in a woman. So why did I keep dreaming of 
+unbelievably gorgeous. Why did that give her the right to dominate my subconscious mind.  </p>
+<p>I let my head fall back to the pillow in frustration, knowing that it wasn't Maria's fault. It was mine. 
+I couldn't blame my dreams on an innocent eighteen-year-old girl. This was my problem, and I 
+needed to solve it. </p>
+<p>I opened my phone to look at a selfie Megan had taken of the two of us at Maria's birthday 
+party. But even as I tried to look at Megan, to be reminded of the love I felt for her, my eyes 
+drifted to the figure behind her. She was partially obscured by Megan's face, but there was no 
+mistaking the staggeringly perfect body as anyone other than Maria. I threw the phone onto my 
+bed. </p>
+<p>Shit! </p>
+<p>No woman was irresistible, no matter how breathtakingly sexy she was. I just had to resist one 
+girl. A girl that I would have to see again and again if I married Megan. but I could do it. I really 
+could. </p>
+<p>I wondered how Maria would look in a bridesmaid's dress. </p>
+<p>Damn it! </p>
+<p>Maybe I should try to find Maria a steady boyfriend. If she were taken, maybe that would fix 
+things for me. Make me see her as something other than the most awesomely exquisite 
+specimen of womanhood that she currently was. I was certain that I wouldn't have any shortage 
+of guys lining up for the job. </p>
+<p>A text chimed on my phone. </p>
+<p>“Decide yet?” </p>
+<p>It was from Maria. </p>
+<p>​
+“I’m with Megan,” I replied. </p>
+<p>There was no response. </p>
+<p>13 - Thanksgiving </p>
+<p>"...Have you seen her Instagram? She's only posted like ten really tame pictures. She's just so 
+fucking hot! No posts for the last couple months. Don't you follow her, dude?" came my friend's 
+voice through my headset. </p>
+<p>"Nope. Hello? Dating her fucking sister, Einstein." </p>
+<p>"You're missing out, man. Seriously. She is smokin'. Like out-of-this-world hot. Word is, Mr. Fry 
+had a fucking heart attack when she walked into gym wearing a tight yoga outfit!" </p>
+<p>I didn't respond, logging off my computer and stretching instead, finished with my gaming 
+session. It was difficult enough to put thoughts of Maria out of my mind as it was, I didn't need 
+my friends encouraging me to look at her socials. It was Thanksgiving, and I'd simply been 
+killing time since our family dinner in the early afternoon, waiting for Megan to tell me when she 
+was free. Moments later, the text from Megan arrived. </p>
+<p>"Good news! Mom and Dad converted my room to a study, so Dad's letting me stay in the cabin 
+over the holidays! So privacy. Yay! I'll text you the address. Meet me there whenever you can. 
+:)" </p>
+<p>I went to the bathroom, threw on some cologne, mapped the address on my phone, and drove 
+over. I knocked on the door and waited patiently as footsteps came to the entrance from inside. 
+The door opened to reveal Megan, once again in her Supergirl costume, the warm, yellow light 
+of the lanterns emanating from the one-room rustic cabin behind her. </p>
+<p>"Miss me?" she asked with a gorgeous grin, gliding into me for a kiss. </p>
+<p>I had missed her. So badly. I was so looking forward to tonight. </p>
+<p>"I've missed you too," came a sexy voice from behind me... and above? </p>
+<p>I whirled and stepped away from the door into the open clearing. Megan followed closely 
+behind. </p>
+<p>"Up here," came the voice again. </p>
+<p>Supergirl! She had heat vision too! 
+was
+​</p>
+<p>I looked up. It was Supergirl. The real thing. Floating in the air above us. It was too dark to get a 
+good look, but the faint light from the cabin reflected against the shield of her costume, 
+deformed in the most delicious possible way by the two utterly perfect breasts it barely 
+contained. The rest of her was hidden in darkness. </p>
+<p>A sudden burst of red light shot out from somewhere in the shadows above the glowing S 
+shield. Two red beams lanced out from the mysterious figure to the firepit next to us, igniting the 
+firewood with a hiss, a crackle, and a billow of red-yellow flame. </p>
+<p>Holy shit! It really </p>
+<p>The figure descended, time seeming to slow for my awestruck eyes. Firelight danced upward 
+from her feet as she entered its luminous dome. </p>
+<p>Her boots were thin, almost like cloth, stretching and tapering to fit the sleek contours of her 
+calves. They stopped at the knee, smooth, bare thighs ran upward for what seemed like miles of 
+mind-bogglingly shapely and completely flawless flesh. Eventually, the hem of a fire-engine red 
+skirt, fluttering dangerously high on the tanned skin of her legs came into view. The cloth 
+seemed to flare outward as she continued her descent to cover her firm, supple hips. A tiny 
+yellow belt pulled the solid red fabric inward to encircle an impossibly narrow waist. </p>
+<p>I began to hyperventilate. </p>
+<p>Above the belt, a curve-hugging cobalt blue top began. It clung to each carved muscle, each 
+canyon of chiseled muscle that made up her abs. Insanely defined bricks of unimaginable 
+feminine power came into view, two by two, as she came closer to the ground, her abs and 
+obliques flexing and popping into even more dramatic relief as she moved in flight. As the 
+bottom of her ribcage came into view, the blue material of her top began to pull away from her 
+torso to begin the long outward journey that her breasts made necessary. </p>
+<p>My legs wobbled. My head began to spin. </p>
+<p>As her breasts came into view, they cast a dramatically shaped shadow over Megan's gaping 
+face. They were ample, proud, and absolutely spectacular. They were ripe and succulent, giving 
+her stunningly hyper-fit body a nubile lushness that was awe-inspiring. A long, swan-like neck 
+led to a delicate jawline, lusciously full lips, and a strikingly elegant face. </p>
+<p>Maria's face. </p>
+<p>Her azure eyes, so unbelievably expressive, invited me into their oceanic depths. Their 
+spellbinding luminescence seemed to consume my consciousness as they glimmered in the 
+crackling firelight. Thankfully, a swift blink from her shockingly long eyelashes broke my hypnotic </p>
+<p>​
+ and using 
+flying
+​</p>
+<p>trance and allowed me the opportunity to see the high arched of her thin brows and sumptuous 
+waves of golden tresses tumbling over her shoulders and down her scarlet-caped back. </p>
+<p>Maria was Supergirl. </p>
+<p>Except in real life. And so much more than the superhero had ever been in fiction. </p>
+<p>She was far sexier than any actress ever to play the girl of steel. Light years sexier than any of 
+the illustrations in the comics. Sexier than anyone. Ever. </p>
+<p>I had thought her irresistible before, but that was nothing compared to what she looked like now. 
+Her body's development seemed to have not only continued, but accelerated. She had reached 
+an impossible level of perfection, the ultimate vision of what a woman could be. And it wasn't 
+ I swooned, collapsing to the ground in 
+heat vision.
+just her looks. She had been 
+​
+the mere presence of this living incarnation of my ultimate fantasy. She was everything I'd ever 
+dreamed of, yet somehow, impossibly, even more. She was the living embodiment of everything 
+I'd ever hoped for but knew I would never have: a super-goddess made flesh. </p>
+<p>My eyes, overwhelmed by the unimaginable beauty before them, sought momentary relief from 
+this tsunami of sexual perfection they had just drowned in, flicking to Megan for a moment. She 
+seemed diminished, gaunt, sticklike—withering under the radiance of the sun that was Maria. 
+Megan's terrified eyes met mine, seeming to plead with me. </p>
+<p>But I didn't receive the message. I couldn't. Not with Maria there. My mind didn't work. Couldn't 
+work. My eyes moved once again, drawn inexorably to the deity before me. </p>
+<p>Maria moved faster than I could see, taking the wrought-iron poker from next to the fire pit. 
+Holding it before her, she bent it as easily as if it were made of rubber, then threw it, pinning her 
+sister’s arms to her sides and body to the outer wall of the cabin, trapping her. </p>
+<p>“Only one of us deserves to be wearing this costume. And we both know that person is me.” </p>
+<p>Megan looked at Maria in disbelief. But Maria's attention had moved on to me. </p>
+<p>"How?"
+ I asked, my voice an awed whisper. 
+​</p>
+<p>"I don’t know, exactly." She pointed to her ear. "I just wanted to be like Supergirl. Ever since that 
+day you told me about your crush on her. It just began to happen. Like our combined desires 
+made
+ it happen." 
+​</p>
+<p>I felt my face flush as Maria continued. </p>
+<p>​
+​
+"I just keep growing stronger, keep gaining more powers, and just keep getting sexier," she said, 
+eyes wide in a coquettish display as the reflection of flames smoldered within them. "I’m already 
+beyond the girl you showed me in the comics, don’t you think?” </p>
+<p>She walked toward me to give me a better view, ripped abs rippling the fabric of the costume, 
+even as her luscious breasts strained the blue material above them. The thin red skirt swished 
+about her toned thighs as she came to a stop. </p>
+<p>“Every guy in school does favors for me now, Jake. I haven’t done any homework all year, but 
+my teachers are all men, so I just ask them to give me an A, and they do. It’s sooo easy.” </p>
+<p>“The only one who continues to resist me,” she said, her voice dropping into a mind-bendingly 
+sexy purr. “Is you.” </p>
+<p>I heard Megan struggling against the bar that Maria had used to trap her. I thought about 
+looking her way, thought about running over to try to free her. But I didn’t. Couldn’t. My eyes 
+were glued to Maria by a force stronger than all the willpower I possessed—ironic given what 
+she was saying. </p>
+<p>She began to move again, circling around me, reaching out to drag her index finger along my 
+shoulder, to my upper back until she came to a stop directly behind me. She leaned in until her 
+lips nearly touched my ear. </p>
+<p>“It’s odd, don’t you think? After all, I am your fantasy now, aren’t I? Unbelievably strong…” </p>
+<p>She gripped my right tricep with her slender fingers and squeezed. Pain erupted from the spot, 
+and I winced. I could feel her soft lips rise into a smile against my ear at my reaction. </p>
+<p>“...with a body too perfect to actually exist…” </p>
+<p>I felt her full breasts press into my back, her chiseled lower abdomen push against my butt. Her 
+hand released my arm and slithered over my chest, pulling me into her even more firmly. </p>
+<p>My heart, already racing, screamed into another gear. </p>
+<p>“...so sexy that she can have any man she wants…” </p>
+<p>Her scent, already intoxicating, became completely overwhelming. My skin prickled with its heat. 
+My arousal strained against my pants so hard it threatened to burst through. </p>
+<p>She began to move again, nipples sliding along my back and arm, hip touching mine as she slid 
+around my body.  </p>
+<p>evil. </p>
+<p>“...and I want you. I’ve always wanted you.” </p>
+<p>I heard Megan cry out in anguish, but in the same instant, Maria’s eyes found mine, and I was 
+lost inside them, trapped as surely as Megan was, by her gaze alone. </p>
+<p>She backed away from me, iridescent blue eyes never leaving mine, until she stood a few feet 
+away. </p>
+<p>“I’ve been nice. I’ve been patient. But still, you stuck with my bitch of a sister, even with your 
+fantasy before you, ready and willing.” </p>
+<p>Her chin dipped slightly, brows narrowing, the campfire flashing in her now-shadowed eyes. </p>
+<p>I felt a chill course through me. She no longer looked like a golden goddess, but a dark 
+goddess. Almost… </p>
+<p>“That’s when I realized the true nature of your fantasy,” she said, voice rising, becoming more 
+commanding. </p>
+<p>“You pretend you like good girls. You pretend you like patient girls. But you don’t. Not really. 
+Deep down, you want strength. Impossible strength.” </p>
+<p>Maria clenched her fists, tensed all of the muscles in her body. They seemed to grow even 
+harder, more defined, more sculpted before my eyes. It was unbelievable! </p>
+<p>“You want me to take charge.” </p>
+<p>Maria grew another two inches before my eyes, red skirt rising further up her interminable legs. </p>
+<p>“You want me to dominate.” </p>
+<p>Maria’s red and blue costume rippled and changed color, her lush figure growing even more 
+spectacular as it did, light hair fluttering as a wind seemed to rise out of nowhere. </p>
+<p>As Maria began to stride forward, closing the gap between us, her costume finished it’s 
+changes. It was black with silver trim. The S symbol, distorted by her ripe breasts, seemed to 
+writhe upon her dark form as it reflected the light of the fire. Her midriff was no longer covered, 
+its cobbled ridges and flawless, satin skin now exposed to the crisp air. </p>
+<p>She marched toward me, slipped a hand behind my head, and kissed me. Not lightly like last 
+time, but hard. I felt her teeth bite down on my lower lip, tasted the metallic tang of my own 
+blood. </p>
+<p>​
+ what I could be destined to become." 
+imagine
+​</p>
+<p>Her lips devoured me, her body slithered against mine eagerly. She had fully come into her 
+power, embraced it. She knew what she wanted, and she was taking it. I could feel the 
+unspeakable power radiating from her body, as it squirmed against mine. I was completely 
+helpless against her. She could do anything she wanted with me. </p>
+<p>It was too much. I spasmed into my pants, grateful for the release, even as I felt hardness 
+instantly return. </p>
+<p>Her hand slid down my stomach into the waistband of my jeans and tore it apart with a flick of 
+her finger as she broke the kiss to allow me a moment to breathe, smiling. </p>
+<p>“So it is a dark goddess you desire. I can feel your desire inside me, shaping me, feeding me 
+power. Just </p>
+<p>Her words hit me like an anvil. Recalling the unbelievable display of power just moments ago 
+from the inconceivably sexy girl in front of me, my heartbeat pattered still faster. </p>
+<p>Feeling faint, I had a vision. I imagined casual planet-crushing feats of strength as Maria turned 
+mountains to dust under her slender but staggeringly powerful fingers. I saw her floating above 
+masses of people calling out her name, waves of power rolling from her insanely ripped but 
+beyond-sensual body. I imagined her molding the planet to her whims, ruling, dominating every 
+other soul on the planet. I saw Maria slip her sexy fingers into her sister's hair and force her to 
+her knees, bending the young brunette into a bow before her. </p>
+<p>Maria shifted her hips, pulled up her black skirt, and mounted me. My shaft slid along her 
+tanned, inner thighs as they guided me into her sex. </p>
+<p>I became superhumanly hard. I somehow knew that I had suddenly been endowed with the 
+ability to pleasure a goddess.  </p>
+<p>Her lips found my neck as I entered her, and I felt the heat of her breath on my skin as she 
+gasped. </p>
+<p>“Mmmm…” she murmured as I slowly pushed into her. Quivering, I gripped her firm, rounded 
+hips and plunged into her as hard as I could. Her breath caught. I felt her body tense in surprise, 
+felt her clamp down on me, slowing my upward drive. </p>
+<p>But my ascent continued. She moaned, beginning to kiss my neck once more. </p>
+<p>I thrust again, filling her completely. Her head snapped back and she issued a louder moan.  </p>
+<p>For an instant, I heard a sob in the background. It seemed distant, inconsequential. Maria 
+looked up, past me. At someone else. She smiled darkly. I was too preoccupied to care. </p>
+<p>​
+ 
+Maria’s head rocked forward once more, her lips finding my mouth again. Maria’s hips began to 
+undulate as I pulled out and found a rhythm. In and out, in and out. Every plunge into her body 
+building our excitement. This was what our bodies were meant to do. This is what the last two 
+years of our lives had been building toward. This was why she had become my deepest, darkest 
+fantasy. </p>
+<p>This was why she had become my goddess. </p>
+<p>I exploded. I screamed. She cried out. Our bodies bucked in unison, synchronized in a surreal 
+moment of ecstasy. </p>
+<p>In that moment, I became hers. I had no more desire to resist. I welcomed her into my heart, 
+welcomed her into my soul. She had dominated my subconscious for months; now she 
+dominated my consciousness as well. </p>
+<p>Maria’s body surged as another burst of power roared through her, sex seeming to radiate from 
+her now. </p>
+<p>I completely lost control, crawling forward to wrap my arms around her leg, shivers running the 
+length of my spine as my fingers caressed the magnificence of her flesh. I began to kiss her 
+thigh, just wanting to be near her, to taste her skin. As my lips touched her divine body, I 
+convulsed in the throes of complete euphoria, orgasmic energy blasting through me. I felt tears 
+of happiness running down my cheeks as I took a moment to look up at her. </p>
+<p>I had to have more. </p>
+<p>She gave me the slightest of nods, giving me permission to continue as she struggled to speak 
+after taking in the fresh infusion of beauty and power that she had received from our coupling. I 
+ran my mouth up in the inside of her thigh, lips kissing, tongue trailing a line of moisture upward 
+until I found her sex. It was moist. I was turning her on! 
+dominating me and dominating her sister by her presence alone. I smiled and almost laughed in 
+joy, then set to work pleasuring my goddess. </p>
+<p>Lurching, horrified sobs erupted from the other girl. What was her name? The brown-haired 
+one? I couldn't think of it. But it didn't matter. Maria was all that mattered. </p>
+<p>I felt the goddess tilt her head back and begin to moan. Her husky purr was enthralling, a sultry 
+siren's song, heartbreakingly seductive. Pride surged within me as I realized I was exciting her. I 
+doubled down in my efforts to bring her pleasure, pouring my heart and soul into it. I felt 
+striations appearing in the smooth, polished surface of her as and legs as my hands roamed 
+them, looking for purchase. My fingers, however, were unable to dent the surface of her </p>
+<p>was turning her on. She was 
+This
+​</p>
+<p>​
+liquid-steel lower body, muscles tensing and clenching sinuously inside the thin fabric of her 
+skirt. Her movements continued to crescendo. </p>
+<p>I pushed, licked, and worked her from under her skirt, mini-tremors beginning to ripple through 
+the iron hardness of her muscled abdomen. I continued with frantic intensity until I sensed she 
+was nearing release. Then I bit down as hard as I could, betting that this part of her was as 
+super as the rest of her. </p>
+<p>The world seemed to grow silent as Maria's gorgeous lips parted, mouth opening wide. Then 
+she cried out with earth-shaking power. </p>
+<p>For a moment, I thought I'd made a mistake. For a moment, I thought her scream was one of 
+pain. Then the unmistakable bucking of her hips knocked me backwards into the grass before 
+her. I watched her explode in pleasure, perfect body shuddering as every absurdly defined 
+muscle in her body clenched in unison, then released. </p>
+<p>She remained standing, legs quivering for a long moment as her urgent breathing began to 
+slow. She let out one last, long, throaty moan of satisfaction, then gradually began to rise into 
+the air once again, floating above us like the impossibly powerful dark goddess she now was. </p>
+<p>"God, Jake. I’ve never let anyone do that," she said to me, still panting. “They’ve wanted to. 
+They’ve all wanted to. But I wouldn’t. I’ve waited. For you.” </p>
+<p>I beamed with pride, my own pent-up arousal exploding again with the simple knowledge that I'd 
+been her first. Her only. </p>
+<p>Maria turned to her older sister and gave her a heart-stoppingly brilliant smile. "I told you before, 
+Meg. I can have anyone I want," Maria said, her face slipping into the shadows beyond the 
+firelight's radius. </p>
+<p>"Anyone." </p>
+<p>The rest of her body slipped into darkness, and she was gone from sight. </p>
+<p>She was right. She could have anyone. Especially me. </p>
+<p>Find my other free stories at: 
+Hikerangel.com </p>
+<p>My published books at: 
+Amazon.com/author/hikerangel </p>
+<p>And my audio stories at: 
+Superpoweredaudio.com </p>
+</body>
+</html>

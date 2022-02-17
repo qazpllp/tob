@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Button Buster Party Pack 3</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>Questions, comments, or commissions? Send me an email at </p>
+<p>the.be.engineer@gmail.com</p>
+<p>or message me on Discord at BE Engineer#2306 </p>
+<p>1 </p>
+<p>À</p>
+<p>La Mode </p>
+<p>Contains breast and butt expansion </p>
+<p>“I think I’ve got what you’re craving…!” Mike announced happily. 
+Kim looked away from the TV and sat up eagerly in bed. An expression exactly how </p>
+<p>Mike expected overcame her face from excitement. “Ooooh gimme gimme gimme!” she 
+reached. In her grab, the blanket fell away from to reveal her usual blue bra and matching 
+panties. </p>
+<p>“Started relaxing without me, I see.” Mike reached into a shopping bag and withdrew a </p>
+<p>small tub of Kim’s favorite Cookies ‘N Cream frozen treat. </p>
+<p>“Hey it’s Friday night and you were talking forever at the store. I’m going to lie around </p>
+<p>in my underwear if I want!” </p>
+<p>Mike grinned. “Fine by me, so long as you know I’m going to have to join you.” More </p>
+<p>clothes joined Kim’s on the floor as he climbed into bed next to his wife, wrapping an arm 
+around her as she dug a spoon into the ice cream. </p>
+<p>“Mmmmm…!” 
+“How is it? Worth the hour wait?”<br />
+“It’s everything I’ve been craving today.” Kim nestled her head into his bare chest and </p>
+<p>sucked on another spoonful. “Thanks for running out to get it…” </p>
+<p>A kiss was planted on her forehead. “Anything for you. But you know…” Mike’s finger 
+twisted and pulled teasingly at her bra strap and poked into the padded cup. “There’s a couple of 
+things I’ve been craving today too…” </p>
+<p>“Mmmm, I guess you might have earned a little treat for being my errand boy. Let me </p>
+<p>satisfy my cravings then </p>
+<p>can satisfy yours!” 
+I 
+​</p>
+<p>“That’s a better deal than anything I’ve made all month at the office!” 
+The couple sat in silence while the TV played in the background. Kim was fully aware of </p>
+<p>Mike’s wandering hands exploring her scantily-clad body but enjoyed his teasing too much to 
+jump straight to sex. She knew from experience it turned out better to let the sexual tension build 
+up first. </p>
+<p>Another spoonful of ice cream was swallowed eagerly. “Mmm! M-Mmmm…” A </p>
+<p>confused groan came from Kim. </p>
+<p>“Everything all right?” 
+“Yea!” She spooned another bit into her mouth and shuddered. “</p>
+<p>… 
+N-Nnngh
+​</p>
+<p>O-Ooohhh…” </p>
+<p>Kim set the tub on the nightstand and placed a hand over her belly. 
+A concerned expression came over Mike. “What’s wrong?” 
+“I-I don’t...</p>
+<p>know…” Kim groaned. Her body tingled from a rumbling in her 
+nnnngh...
+​
+stomach. A strange combination of bloating and arousal filled her, Kim moaning once more. </p>
+<p>​
+​
+​
+​
+​
+​
+ </p>
+<p>2 </p>
+<p>“Something with that ice cream is…” Kim’s cleavage caught her eye and she straightened her 
+back to get a better look. “Mike, do my boobs look </p>
+<p>to you?” 
+bigger
+​</p>
+<p>“Bigger?” 
+“Y-Yea! They’re definitely bigger!” She turned to face him and presented her chest to </p>
+<p>Mike was happy to inspect them but didn’t see anything obvious. “Maybe a little I </p>
+<p>him. </p>
+<p>guess?”  </p>
+<p>Kim’s stomach growled again and she clutched at her breasts, feeling her D cups fill her </p>
+<p>hands an unusual amount. The band of her bra felt tighter with each breath as did her panties 
+below the blanket. “
+bulging overflow of flesh curving over her bra cups. </p>
+<p>…” Straightening up, Kim’s eyes widened in shock at the 
+N-Nnnghmmmm
+​</p>
+<p>“L-Look at them!” Thrusting her chest out, it became more than obvious her breasts were </p>
+<p>multiple sizes too large for her bra. Cleavage jiggled between the cups in a dark chasm while 
+flesh curved around her shoulder straps and lifted the underwire away from her ribs. </p>
+<p>“Ok, that’s more than a little,” Mike nodded. The sight of his wife’s bra overflowing with </p>
+<p>what looked to be two hefty H-cup tits made his cock throb. </p>
+<p>“What...was in that ice cream??” Kim could feel herself growing hot and aroused. Every 
+inch of her body was singing and what little clothes she did have on were drawing tighter by the 
+second.  </p>
+<p>Grabbing the carton off the nightstand, she inspected the ingredients briefly before </p>
+<p>gasping loudly. “
+milk!” </p>
+<p>Mike, you didn’t get the dairy-free version!! You know I can’t handle 
+Milk!
+​</p>
+<p>“I’m sorry! I was in a rush and I just grabbed the first one I saw and--” 
+ N-No wonder I’m swelling up like a tits-and-ass balloon.” Kim rubbed 
+Oooohhhhh…
+“
+​</p>
+<p>the tops of her mammaries, their enhanced forms stuffed uncomfortably into her bra. “God, 
+they’re getting full… Do they look as big as they feel--” </p>
+<p>Kim looked up at her husband and caught him staring wide-eyed as she rubbed her chest. </p>
+<p>“Oh my gosh! You’re loving this!!” </p>
+<p>Mike stammered for an excuse but stopped when a sly smile crept over Kim’s face. </p>
+<p>Grabbing the carton of ice cream, she took a spoonful and teased it towards her mouth. “Would 
+you like it if I ate some more? I only had a few bites and I’m already about to 
+bra… What might a few more do?” </p>
+<p>out of this 
+pop
+​</p>
+<p>A simple nod was all she needed to know where the night was headed. Kim ate several </p>
+<p>large spoonfuls while Mike eyed her bubbling curves hungrily.  </p>
+<p>“O-Ohhh!” Kim gasped, placing a hand on her stomach. “Here...</p>
+<p>...Here it 
+nnngh
+​</p>
+<p>comes…!” </p>
+<p>Heating up, she kicked the covers off to give Mike a view of her filling panties. Her hips </p>
+<p>were expanding to either side and pulling the elastic taut while the bulge of an aroused pussy </p>
+<p>​
+​
+​
+​
+​
+​
+ </p>
+<p>3 </p>
+<p>pulsed between her thighs. Kim leaned back on the headboard and closed her eyes, relinquishing 
+herself to the growth.  </p>
+<p>“Mmmmmm… Y-You know what this always does to me…” 
+Her belly rumbled, full of ice cream. It sent pulses of growth through her body. Amazed, 
+Mike watched her breasts stretch in every direction and begin to swallow her bra. They quickly 
+ballooned like overripened melons and overtook her chest, each like a basketball stuffed into her 
+lingerie.<br />
+“</p>
+<p>” Kim panted. Each heavy draw of breath made her bust tightly wobble back 
+Ha… Ha…
+​</p>
+<p>and forth. Mike could already hear the milk sloshing and gurgling inside their bloated curves. 
+” 
+Nnnngghhh ooohhh, God… There’s g-going to be a looooot of milk, Mike…!
+“
+​</p>
+<p>Kim’s growth was thrown into high gear. Slowly her lower half was raised on a plumping </p>
+<p>butt, firm cheeks spreading out from her spot on the bed. Her panties popped seams with each 
+movement and quickly began to show their approaching demise. Wetness was spreading between 
+her thighs and across her puffing crotch. Mike tried to contain himself as he saw her pussy’s lips 
+engorge like two small balloons and overflow the fabric, slivers of pink winking at him. </p>
+<p>SNAP!!! 
+Both of them jumped when her bra broke at the front like a gunshot. Catching her beach </p>
+<p>ball udders in her arms, Kim pouted while rubbing her nipples engorged to the size of grapes. 
+“Darn, I liked that bra…” </p>
+<p>“I think it looks much better off of you,” Mike said, leaning in to kiss her. 
+“Uh uh,” she denied, pushing him back, “Show’s not over yet.” Kim stretched her mouth 
+around a heaping spoonful and swallowed expertly, licking a melted dribble from the side of her 
+mouth. “</p>
+<p>That
+ should get things go
+​
+Kim shook with pleasure when her tits shot forward. Larger than beach balls and showing </p>
+<p>” 
+iiiing!! MMM!!
+​</p>
+<p>no signs of stopping, Kim slid onto her back and allowed them to completely cover her chest as 
+she spun her fingers around each nipple. Thin streams of milk ran from the pink nubs and over 
+her firming tits before soaking the sheets. </p>
+<p>“Theeeerrreee’s the milk…” Kim groaned, shivering in ecstasy. 
+Slowly her hips lifted higher into the air atop her swelling rear. Her panties had ridden </p>
+<p>below her waistline and over the curves of her butt, coming to rest in a bundled heap just below 
+her crotch. A slender hand flicked them down her legs and presented a crotch swollen like two 
+fists between slick thighs. The entirety of her hand vanished between them as she played with 
+herself, releasing stunted gasps of excitement from her growing body. </p>
+<p>“S-So big…” Kim groaned, putting on a show for her husband. “These massive </p>
+<p>udders...just won’t stop! And my ass feels like a blimp! 
+and stared at Mike. “Wouldn’t you love to just lose your cock in this engorged pussy?” </p>
+<p>” Kim bit her lower lip 
+MMMMMMM!!
+​</p>
+<p>Kim was verging on becoming more curves than woman. Her breasts had started to 
+encroach onto Mike’s side of the bed, each like a large flattened yoga ball. They shook and 
+jiggled on top of her in tight motions, veins crossing their surface like rivers. Milk gushed from </p>
+<p>​
+​
+​
+​
+​
+ </p>
+<p>4 </p>
+<p>her nipples like faucets making her skin slick and shiny. Staring through her cleavage as her 
+chest rubbed against her cheeks, Kim gazed at her desperate husband. </p>
+<p>Spreading her legs atop an airbag ass, Kim returned to twisting her nipples. “This swollen </p>
+<p>girl is ready now…” she pleaded. </p>
+<p>Mike couldn’t have held back his hunger for another minute if he had too. He clambered </p>
+<p>over the bed, making Kim’s chest shimmy with monstrous ripples in the process as he climbed 
+between her legs. </p>
+<p>“E-Easy!” Kim whimpered, “These puppies are 
+Buried under her own tits, Kim couldn’t see what Mike was doing, though she felt and </p>
+<p>, you know…” 
+really full
+​</p>
+<p>heard him moving around. “Mmmmm, what...
+so much before--</p>
+<p>” 
+AHH!!!
+​</p>
+<p>...are you waiting for? I-I can only engorge 
+nnngh
+​</p>
+<p>Kim shivered and grabbed her nipples as they expanded to twice their size from a sudden </p>
+<p>wave of freezing cold, milk spraying into the ceiling in their sudden tightness. Something cold 
+had landed on top of her swollen crotch. 
+ do you think you’re doing??” she cried out, goosebumps spreading over 
+hell
+​</p>
+<p>“What the </p>
+<p>her naked body. She caught on within seconds when Mike grabbed her thighs. </p>
+<p>“I like my desserts with a side of ice cream,” he chuckled, Kim crying out as he lowered </p>
+<p>his mouth and another wave of growth set in. </p>
+<p>​
+​
+​
+​
+
+Questions, comments, or commissions? Send me an email at </p>
+<p>the.be.engineer@gmail.com</p>
+<p>or message me on Discord at BE Engineer#2306 </p>
+<p>1 </p>
+<p>Tits on a Train </p>
+<p>“God, what a day…” Claire moaned. Even the well-worn cushion of the train seat was </p>
+<p>welcomed by her rear end after the trying day at work. </p>
+<p>As usual for rush hour, the train was fully loaded and brimming with people. It was lucky </p>
+<p>she managed to find a seat before the rush of people at the next stop. Feeling shoulders rub 
+against her own on either side, Claire elected to ignore the bothersome crowds and take the 
+opportunity to close her eyes rather than stare at the wall of people standing in front of her or 
+those sitting on the other side. </p>
+<p>The rhythmic clitter clatter of wheels on rails never failed to lull her into a calming </p>
+<p>trance. Leaning her head back against the window, she allowed her eyes to flutter closed and 
+bring solitary darkness to her weary mind. Inhaling deeply enough to feel her blouse stretch over 
+her bust, Claire prepared for the thirty-minute train ride home. </p>
+<p>“
+” 
+OW!!
+​
+Her eyes shot open and she bolted upright in her seat. A sharp pain had poked her right </p>
+<p>side like a stray needle. Rubbing the tender area with a gentle hand, Claire inspected those 
+closest to her. On her left sat a man staring into the distance while a woman played with an open 
+laptop to her right. Neither looked interested in the startled office worker. Beyond Claire’s 
+immediate area was much the same; dreary workers only trying to make it home without falling 
+asleep. Noone looked like they could give her the time of day. </p>
+<p>“The hell poked me…?” Claire mumbled. The spot on her side no longer felt sore but a 
+growing heat was radiating off her skin. An inspection of the seat itself proved fruitless in the 
+search for a stray wire. “Maybe some kind of bug…” </p>
+<p>The train hurtled down the track and swayed with a gentle motion. Claire fumbled in her </p>
+<p>seat slightly for balance, not feeling herself. Strange sensations flowed through her body and 
+filling her blouse with warmth. Fanning herself with a hand, Claire leaned back into her seat and 
+tried to stem the rush of heat. </p>
+<p>A tinge of discomfort along her bra drew her attention to her breasts. A quick glance 
+revealed nothing out of the ordinary from the surface, but Claire could feel her bra growing more 
+uncomfortable with each breath. </p>
+<p>Claire’s mind flashed with a memory more than fifteen-years-old. It was a sensation she 
+hadn’t felt since puberty but it was unmistakable; her bra was much too small. For a teenage girl 
+watching her body grow and develop it wasn’t uncommon to wake up one morning to find her 
+almost-new bra completely inadequate. For a woman in her early thirties, however, feeling her 
+bra cups pulling into her breasts on all sides was unheard of. </p>
+<p>An ample E-cup, Claire’s bust was nothing to scoff at nor was it easy to find button-ups </p>
+<p>to hide it well enough. As she felt a bulge of soft flesh squeeze below her underwire, she was 
+startled to see her already-form-fitting shirt grow tighter. The train rocked on the old track and 
+sent a gentle wave through the passengers, as well as a shimmy through Claire’s bust. She was </p>
+<p>​
+​
+​
+ </p>
+<p>2 </p>
+<p>used to the train jostling her chest around a little, but the heavy movement she felt shifting under 
+her blouse was completely alien. </p>
+<p>Growing more worried by the second, Claire glanced around her neighbors to see if any </p>
+<p>had noticed her staring at her own chest. None had and she decided to have another glance. 
+Looking down, the sight of her buttons slowly opening like tiny windows made her breath catch 
+in her throat. Cleavage she did not own stared back at her in a curvaceous line before delving 
+into the exposed beige of her bra. The breasts staring back at Claire were not the E-cups she had 
+come to know so well; these were a pair of melon-like tits. </p>
+<p>“U-Uh...Uhhhh…” she whimpered softly, seeing their curves press firmly into her 
+tightening blouse. Flesh overflowed around her bra on every turn and partly swallowed her 
+shoulder straps. Feeling herself growing hot and her face flushing with aroused and embarrassed 
+color, Claire had to stifle a moan as her nipples hardened inside her bra. </p>
+<p>Wandering eyes were taking notice of the woman staring intently at her own breasts </p>
+<p>bulging out of her shirt. Most obvious were the men ogling her swelling cleavage like a crack in 
+the Hoover Dam. 
+“</p>
+<p>…” Claire moaned, feeling her nipples engorge. A pressure was building behind 
+N-Nngh
+​</p>
+<p>them at a constant rate. The larger her skin stretched and bulged under her fighting clothes, the 
+stronger the pressure fought against the backs of her nipples and tingling areolas. </p>
+<p>“Are you alright?” the woman to her right asked, “You seem…” she looked at the 
+volleyball-sized mammaries jutting off Claire’s front threatening to pop multiple buttons, 
+“Y-You seem distressed…” </p>
+<p>“I’m...</p>
+<p>…” Claire squirmed in her seat, doing everything in her power to take small 
+nngh
+​</p>
+<p>breaths and keep her clothes and modesty intact. “I’m just...j-just...fine…” she lied. </p>
+<p>The woman inched away when Claire’s tits swelled angrily into her blouse. Flesh flowed </p>
+<p>into her sleeves and out of her flared collar like two marshmallows being squeezed. Stitches 
+popped along her front as stress line folded across her bust like fissures. </p>
+<p>“Do you need to pump?” the woman whispered in awe, “I have a baby at home too; I </p>
+<p>know how it can get if you can’t find time to empty them--” </p>
+<p>“I-I don’t have a kid,” Claire grunted. Pressure was mounting against her nipples like an </p>
+<p>ocean and her growth was only accelerating. Leaning back more to counteract the immense 
+weight bloating on top of her, she tried to add, “And I’m not...</p>
+<p>...l-lactati--” 
+nnnghh!
+​</p>
+<p>POP POP POP POP 
+SNAP!! 
+All at once Claire’s bloated breasts burst through her buttons and blew her bra in two. </p>
+<p>Clothes shooting to her side, a pair of mammoth mammaries toppled freely into her lap with loud 
+slaps against her stomach. Nipples the size of water bottle caps throbbed and pulsed with 
+freedom before leaking fine trails of dairy. </p>
+<p>Hands flying to cover herself only to become drenched in fluid, her eyes bulged wide. </p>
+<p>“</p>
+<p>” Claire exclaimed, finishing her sentence. 
+L-L-LACTATING?!
+​</p>
+<p>​
+​
+​
+​
+ </p>
+<p>3 </p>
+<p>“Holy 
+Another laughed, clapping as if entertained. “That’s great! I always wondered if I would </p>
+<p>” a man gasped loudly. 
+shit!
+​</p>
+<p>get on one of those prank shows!” </p>
+<p>Filling with fear and milk, Claire stared breathlessly at her chest inching across her </p>
+<p>soaked lap. “I-It’s not a prank!! Somebody do something! My boobs are...
+breath for a moment as pressure surged and milk sprayed into her hands. “M-My boobs are 
+blowing up!!” </p>
+<p>” She had to 
+nnngh!
+​</p>
+<p>Although a spectacle, everyone standing in front of Claire backed away when her udders </p>
+<p>began to overflow her knees. Milk pooled on the floor and every rattle of the train sent ripples 
+across her burgeoning chest. 
+“I-It’s not stopping! </p>
+<p>” she cried, unable to keep her hold on 
+What’s happening to meeee??
+​</p>
+<p>her nipples. Skin slippery with milk, her chest slid between her legs and onto the floor with a 
+splash. Claire had grown so large she hardly needed to lean forward as her chest reached her feet 
+on their own. Still they ballooned and sloshed. </p>
+<p>“You’re getting my stuff wet!!” a man complained, “I should report you for indecent </p>
+<p>exposure!” </p>
+<p>his phone. </p>
+<p>“Those puppies look pretty decent to me,” a teen laughed, recording the entire scene on </p>
+<p>“D-Don’t just stare! </p>
+<p>pressure! G-God, all this </p>
+<p>” she begged, “T-They’re getting tighter! I’m filling with 
+Help me!
+​
+” 
+milk!!
+​</p>
+<p>Panic was slowly filling the train car as the woman engorged to mammoth sizes. Arms 
+resting across the top of her chest, she watched fearfully as they swelled and blocked the aisle. 
+Firming flesh pushed into her legs and into her surrounded seats, shoving passengers aside with 
+her growth. </p>
+<p>“Somebody...S-Somebody milk me...please!” she begged, “I’m so full… I’m </p>
+<p>SO </p>
+<p>” 
+FUCKING FULL!!
+​</p>
+<p>Cleavage rising as high as her own hunched shoulders, the train held its breath as her </p>
+<p>breasts tightened and rounded into large spheres each nearly six feet across.  </p>
+<p>“Look at those veins!” 
+“She’s gonna 
+Those sitting across from Claire stared in shock and awe as soda can nipples inched 
+towards their faces. Pulsing with pressure, they stood into the air atop train-filling tits. Skin 
+becoming drum-tight, the car turned into a swarm of panic. </p>
+<p>!” 
+blow
+​</p>
+<p>“I-I can’t...hold anymoooore!!” Claire yelled, “</p>
+<p>MY BOOBS ARE TOO FULL!! 
+NNNGGH, I-I FEEL LIKE...OoooohhhhhhHHHH...I FEEL LIKE THEY’RE ABOUT 
+” 
+TO...A-ABOUT TOO...AhhhhhHHHHHH!!!!!
+​</p>
+<p>Milk struck the window opposite Claire like two fire hoses. It blasted against the stunned </p>
+<p>passengers and soaked them in head to toe with creamy dairy.  </p>
+<p>​
+​
+​
+​
+​
+​
+​
+​
+ </p>
+<p>4 </p>
+<p>“</p>
+<p>” Claire screamed, feeling milk surge through her 
+Oooooh, GOD, OOOHHH GOD!!!
+​
+glands and nipples. Her release lasted a handful of minutes before tapering off and revealing a 
+stunned silence in the train. </p>
+<p>Many were coughing and sputtering on her milk after having it forced into their mouths. </p>
+<p>Exhausted from the milky letdown, Claire leaned across her half-emptied breasts. Milk still 
+flowed freely but with less force as if her nipples were erotic garden nozzles. 
+“H-Holy shit…” she moaned, “What the hell happened to m--” 
+Ahhh!!
+“
+” A young female intern screamed on the other side of Claire’s breasts. 
+​
+“
+” another yelled. 
+N-Nnngh!! Ooohh, my chest!!
+​
+“W-What’s going ooon?!” 
+The cries came one after another, the train filled with gasps of shock as various drenched </p>
+<p>women suddenly clutched at their bodies and felt their breasts swell against their fingers. </p>
+<p>​
+​
+​
+
+Questions, comments, or commissions? Send me an email at </p>
+<p>the.be.engineer@gmail.com</p>
+<p>or message me on Discord at BE Engineer#2306 </p>
+<p>1 </p>
+<p>Night Job </p>
+<p>Warning: contains tentacles and breast/butt/belly expansion </p>
+<p>“God I need to find a new job…” Macky groaned to herself. “Or at least go into business </p>
+<p>on my own.” </p>
+<p>It was late at night and the nightlife had brought her into a nearby alley down the street </p>
+<p>from a local pub. More specifically, the man in a long trenchcoat had led her into the darkness. It 
+was nothing new; most men preferred her services in barely-lit, secluded locations. It made them 
+feel better about what they were paying for. Macky didn’t mind too much; one hundred dollars 
+was one hundred dollars and men eagerly paid for access to her well-endowed assets. </p>
+<p>Tugging at her red skirt to help shield her legs from the late-night breeze, she followed </p>
+<p>her client into the darkness. Petite with a great set of knockers and a tight ass was a great 
+money-making combo, but not so useful for staying warm. </p>
+<p>The rowdy sounds of the bar faded away and left them alone. “All right, this work for 
+you?” she asked none-too-sweetly. “I don’t feel like having to hitch a ride back to the bar, you 
+know? I’m not allowed to use payment for transportation.” </p>
+<p>“This is fine,” the man said. His voice was slick as if oiled. Aside from his initial request, 
+he had said nothing. Macky had hardly caught a glimpse of his face from under the wide brim of 
+his hat. </p>
+<p>“You a politician or somethin’?” she asked, leaning against the cold brick wall. Its 
+surface was unforgiving against the shiny material of her low-cut shirt, but it was late enough in 
+the night for her not to care. </p>
+<p>“You could say that,” he gruffed. 
+“The private eye look is usually a dead giveaway,” she shrugged. “Not that it matters. We </p>
+<p>doin’ this or what?” </p>
+<p>“If you’re ready.” 
+“Trust me, the goods are good to go.” Macky slipped a thumb under her skirt and drew </p>
+<p>down a pair of panties, tossing them on top of her purse before waiting in the middle of the alley. 
+“Just remember, you do anything kinky and your bill is gonna skyrocket.” </p>
+<p>“No problem.” 
+The man stepped towards her like a predator, a strange movement shifting under his </p>
+<p>trenchcoat like a mass of eels. </p>
+<p>supple cleavage. </p>
+<p>“Am I goin’ front, back, or top, hon?” Macky asked, straightening her top for a view of </p>
+<p>“Little of everything, actually.” 
+“Well that’s going to cost you ext--” 
+Macky’s voice trailed off when the man’s trenchcoat opened. Numerous tendrils fell to </p>
+<p>the pavement, creeping towards the stunned woman like massive serpents in search of food. </p>
+<p>​
+​
+ </p>
+<p>2 </p>
+<p>“W-What the hell?!” she screamed, eyes wide in shock. The sight of tentacles coming </p>
+<p>closer made every fiber of her being want to run, but her feet refused to move. Motion returned a 
+second too late, a slimy arm whipping through the air to wrap around his wrist as she turned to 
+flee. “</p>
+<p>” she cried out again. 
+What the fucking hell?!
+​</p>
+<p>Macky flailed against the mass of muscles, helpless when three other tentacles wound </p>
+<p>their way around her ankles and remaining arm. They lifted her into the air, spreading eagled in 
+the middle of the alley as if it were a circus performance. </p>
+<p>“You’re a freak of nature!” she hissed, struggled against her restraints. 
+“Merely an inspector of such,” the man said slickly. Three more tendrils slipped from his </p>
+<p>slithering form and crept through the air towards Macky’s body. The ends of these were 
+different, topped with small nozzle-like openings.  </p>
+<p>“</p>
+<p>” Macky screamed, seeing them come close enough to trace slimy lines across 
+Ahhhh!!
+​
+her body. “I did NOT--</p>
+<p>” 
+MMGGPHHH!!
+​</p>
+<p>The end of one tentacle shoved itself into her mouth and muffled her speech. It was warm </p>
+<p>against her tongue and cheeks, and too strong to force out without her hands. Her eyes widened 
+when the other two arms twirled around her thighs before vanishing under her flared skirt. </p>
+<p>“</p>
+<p>” she groaned, feeling each of their ends slip inside her body. Macky could only 
+N-Nghh!
+​</p>
+<p>watch as the three tentacles began to expand and thicken, a pressure moving through them like 
+black firehoses. “</p>
+<p>” 
+MMMPHH!
+​</p>
+<p>She gagged when a thick liquid was pumped down her throat. The flow was quick and 
+warm, hardly giving her enough time to swallow between each surge. Her body shivered when 
+the same fluid was forced into her crotch and ass, the tentacles eagerly forcing the man’s 
+substance into her body. </p>
+<p>“</p>
+<p>” Macky moaned. Odd gurgles escaped her stomach as 
+M-Mmmnnngh! MMMNNGHH!!
+​</p>
+<p>she swallowed more liquid, heat starting to warm her chest and butt. It wasn’t long before 
+strange sensations ran over every inch of her skin like a million fingers pushing and pulling on 
+its surface. </p>
+<p>Something bubbled in Macky’s breasts, her top sliding over her prized D-cups. </p>
+<p>“
+” she grunted, eyes widening as she looked down. Swelling hills were growing on her 
+Mmmph??
+​
+chest, filling her shirt with an amount of flesh she had never seen on her own body. They bulged 
+and expanded outwards into the fabric, her tummy becoming exposed as her top drew higher to 
+accommodate her filling volleyballs. The space of her cleavage closed so quickly her heart 
+skipped a few beats. </p>
+<p>Seeing her chest filling out like a pair of water balloons was shocking enough, but when </p>
+<p>Macky felt her thighs close the gap between her spread legs, she truly began to panic. 
+” 
+MMMPPHHHHH!!! MPPHH!!
+“
+​</p>
+<p>The man was motionless save for his extended tentacles, firmly holding the woman in the </p>
+<p>air as her curves grew. Macky could only continue to gulp, filling her body with swallow after </p>
+<p>​
+​
+​
+​
+​
+​
+​
+​
+ </p>
+<p>3 </p>
+<p>swallow of liquid. It rushed into her tits and ass, pushing against her skin with building pressure. 
+The heat radiating off her was like an oven, the ooze funneled into her trembling frame. </p>
+<p>It only took a moment for her mammaries to engorge larger than beach balls. Macky’s </p>
+<p>top had pulled tightly across her bust like a comical sports bra, the fabric refusing to stretch. 
+Throbbing nipples like strawberries pulsed in agony, areolas doming out from the rising 
+pressure. </p>
+<p>Behind her, an ass hung heavily in the air against widening thighs. Macky’s skirt had </p>
+<p>been small to begin with and as a result had drawn tightly around her expanding hips like a 
+restraint. It dug into her skin to create deformed bulges in her curves. Against a rear end nearing 
+the width of two yoga balls, it was only a matter of time before it blew. </p>
+<p>“</p>
+<p>” Macky pulled against the tentacles around her arms, 
+Mmmmmm! M-MMMMHPHHH!!
+​
+her motions only causing her monstrous tits to wobble and shake. A frightening tightness pulled 
+across her skin, the sides of her chest and hips threatening to rub against the sides of the alley. </p>
+<p>SHHRRRRIIIIPP!! 
+Her shirt and skirt burst into shreds, releasing her bloating, naked form to the night. The </p>
+<p>tentacles struggled to keep her in the air when her chest fell forward, hanging off her like 
+massive teardrops. Each fist-sized nipple sang in the cold night from the pressure. Macky could 
+feel her legs being forced apart by her own swelling thighs, each round as an over-inflated car 
+tire. </p>
+<p>The firmness of her skin was the most frightening part. Gallon upon gallon of the goop </p>
+<p>rushed into her with no signs of stopping, yet she could feel her curves growing tight and giving 
+less and less. The light of the moon reflected off her swaying cleavage reaching towards the 
+ground, its surface taut like a drum. 
+“
+” 
+MMMMPPHHH!!
+M-M-MMMPH! 
+​
+​
+To her horror, the flow increased. Macky was positive her blimping breasts and 
+couch-like ass couldn’t take anymore, but something shifted in her body. A rumble vibrated her 
+stomach for the briefest of moments before her eyes bulged and she felt a bloating sensation 
+unlike anything she had felt before. </p>
+<p>An incredible flow of fluid rushed into her abdomen, the combination of all three 
+tentacles filling her belly like a party balloon. Her sides bulged and rounded, the space below her 
+navel tightening before distending over her throbbing pussy. Macky was powerless as her 
+stomach ballooned against her hanging breasts, skin dangerously sliding against itself as her gut 
+lifted her chest into the air on a shelf of flesh. </p>
+<p>” 
+NNNGHH! N-NGGHH!!
+“
+​
+Macky had to arch her back as her tits climbed into the air atop an alley-filling gut. Skin 
+taut and bloated beyond its capacity, her belly button began to tremble and shake, shooting into 
+the air like a fist-sized bump declaring her fullness. Every inch of Macky sloshed like a tanker 
+truck. Just as her belly was nearing the size of her breasts, her skin starting to creak and groan. 
+” 
+NNNNNNNNGGGGHHHHHHHH!!!!
+​</p>
+<p>“</p>
+<p>​
+​
+​
+​
+ </p>
+<p>4 </p>
+<p>The man’s tentacles popped free of her body, spraying their ooze into the air and </p>
+<p>drenching Macky in the process. The fluid was hot and thick, sticking to her skin like glue. It 
+dripped off her in large globs, dissolving her tattered clothes and leaving her bare in the air. </p>
+<p>Gagging for air, Macky was about to scream when her body started to shake. Pressure </p>
+<p>rushed over her skin like a balloon in its final moments as her tits, belly, and ass engorged 
+beyond measure. They reacted to the liquid, pressing into either side of the alley before being 
+forced to grow in awkward shapes from the confines. Macky had never been so terrified of the 
+rough brick surface in her life. </p>
+<p>To her relief, the man released his hold on her arms and legs. She leaned on her van-sized 
+udders, shocked to see her own size holding her aloft in the alley, feet danging against a blimped 
+tummy. Speechless, she could only watch as her skin was lined with an increasing number of 
+stretch marks from still rising pressures. </p>
+<p>The man watched with satisfaction from below, gazing at the still-swelling form of the </p>
+<p>woman as her butt blocked the alley’s entrance while her belly and chest blocked the view of the 
+moon. Skin reaching its utmost limit, he grinned as she shook from the pressures of his fluids, 
+hands unable to indent her skin as she frantically tried to massage its surface. </p>
+<p>“Yes,” he said, turning to walk deeper into the alley. “I think this planet will do nicely…” </p>
+</body>
+</html>

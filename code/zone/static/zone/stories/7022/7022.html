@@ -1,0 +1,2678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Paid in Full, Part IV</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>Warning: The following story contains massively swollen
+breasts, fat-glutted thighs, huge, spankable asses,
+full, fertile bellies, and a lot of sex stuff.�
+If any of that isn�t your bag, then feel free to read one of the other
+73 jillion things on the internet.� If
+that kinda sounds alright to you though, well, just
+keep going.</p>
+<p>Paid in Full, Part IV</p>
+<p>By: Kodos</p>
+<p>����������� The trip
+out to the grocer's wasn't bad, especially with Joanna and her five hundred
+pounds of jigglesome curves asleep back at the cabin instead of making my car
+bottom out on every bump along the road. The grocery store sure was out here in
+the boonies though; it looked like the only change the owners had made since
+the 1970s was getting a credit card reader- I swear I saw a case of Billy Beer
+back in the booze aisle.� Everything they
+had was camping food or junk food, so I picked up a couple rashers of bacon and
+some stuff to cook over the grill by the cabin, including s'mores fixings,
+along with several bags of chips and other high-fat snacks like Joanna could
+never get enough of, a few gallons of ice cream, a case of ice beer, a couple
+dozen chocolate bars, and one of those rectangular cakes that always taste like
+artificial sweetener, even though they've got like ten pounds of sugar in every
+slice.� I hoped it was enough to keep
+Joanna sated at least for a few days, and I was always happy to make dinner
+over an open fire, so even if she was too lazy to cook- not an unusual
+occurrence- we'd both have enough to eat pretty well.</p>
+<p>����������� When I got
+back to the cabin, the huge red evening sun was hanging low and tired in the
+sky, and as I walked inside with the first load of groceries, I heard stifled
+moans coming from the bedroom, interspersed with muffled curses.� I dropped everything on the kitchen counter,
+then ran to the bedroom door, only to find Joanna in bed, laying on her back,
+her sumptuous legs outspread with one hand worked down underneath her belly,
+her other trying to keep one enlarged breast in position so she could lick her
+nipple, which was swollen as if it had already received more than enough
+attention to leave it throbbing against the cool evening air.</p>
+<p>����������� �Need some
+help?� I asked, smiling.</p>
+<p>����������� �Don't
+laugh; it's not funny!� my girlfriend shouted at me, her heavy breast slipping
+free from her grasp and falling with a smack against her chest, �I'm too
+fucking huge to get myself off anymore!�
+This fucking belly and my massive thighs mean I can barely reach myself,
+and my tits are more sensitive than ever, but they're so fucking fat I can
+barely stuff one in my mouth- this is the most frustrating thing ever!�</p>
+<p>����������� �Well, you
+want me to come lend you a hand?� I asked, �Or, you know, any other parts that
+might help get the job done?�</p>
+<p>����������� �Yes, get
+over here and make me scream!� Joanna demanded, pawing ardently at her breasts
+before the expression on her face was replaced with a different kind of hunger,
+�Wait, you're back so- we've got food now?�</p>
+<p>����������� �Yeah, a
+whole fridge full of it; what do you feel like?� I asked, Joanna already
+awkwardly heaving herself out of bed.</p>
+<p>����������� �What do I
+feel like? I feel like I'm fucking starving!� Joanna said as she slid off the
+mattress, the smooth wooden floor creaking under her feet, �I feel like
+stuffing this big, bloated belly with whatever there is to eat until I'm one
+bite away from bursting, and I hate that but it's all I can think about right
+now.� You got booze too, right?�</p>
+<p>����������� �Sure did;
+cheap beer and box wine, whatever you're in the mood for,� I offered, �I got
+plenty of meat we could grill outside, and there's a sandy spot set up for a
+campfire, so I got some chocolate and marshmallows so we can make-�</p>
+<p>����������� �S'mores?�
+Joanna cut me off, practically salivating, �Come on, I'm gonna grab a beer, you
+carry everything else, and let's get outside!�
+You can stuff me with dinner and then you can stuff me again- come on;
+I'm famished!�</p>
+<p>����������� She pushed
+past me and squeezed through the door, as forceful as a runaway train and as
+soft as the plus-sized marshmallows sitting on the kitchen table, seizing a
+blanket off the bed on her way out.�
+Joanna grabbed a whole six pack from the fridge on her way to the screen
+door that opened to the campfire spot.� I
+was busy trying to gather up a large paper bag overflowing with food and
+supplies when I heard Joanna give a squeal of dismay as the closing door
+pinched her overfed bottom as it swung shut.</p>
+<p>����������� A minute
+later I joined her outside.� The sun had
+gone down, and the first few stars were starting to wink into the dark sky-
+this far from the city they glimmered, scintillating in the heavens.� Joanna had spread her blanket across a thick
+log at the side of the campfire, and sat there, perched precarious, naked, and
+bottom-heavy, looking at me expectantly.</p>
+<p>����������� �Okay hon,
+I'm all ready,� She said, smiling as she twisted a lock of her hair around her
+finger, �Come light a fire and feed your hungry girlfriend- I promise I'll make
+it worth your while.�</p>
+<p>����������� I set right
+to work.� Whoever had stayed here last
+had left us a good pile of wood dragged in from the forest, and it didn't take
+long to have a merry fire roaring away, my bewitchingly pleasure-bent
+girlfriend looking on approvingly, already nearly done with her first beer, as
+I got some bratwursts over the fire and found a good stick for roasting the
+marshmallows on.</p>
+<p>����������� I have to
+admit, every time I felt like I was getting used to her being this size,
+something happened to remind me of just how staggeringly voluptuous she had
+become over the last few days.� The
+firelight danced across the vast expanse of her pale, overfed bosom, casting
+every shadow and valley into sharp relief, the sensitive skin of her areolae
+rimpling and tightening in the cool night air, the faint impressions where
+veins traced their way across her yoga ball-sized breasts.� The log she had claimed for a seat was about
+six feet long, and the way her alluringly plush hips spread out across it there
+would barely have been enough room for me to sit beside her even if she hadn't
+perched herself right in the center, leaving me to sit on the ground and look
+up at her enthrallingly enlarged figure in amazement.� Her belly was mostly hidden in the shadow of
+her breasts, though occasionally an errant flicker from the fire illuminated
+its plush lower curve, and the way her legs, from hip to ankle, were so sleek
+and invitingly glutted with fat was irresistible.</p>
+<p>����������� �Hey, you
+can feel me up after you've fed me!� she teased, trying to kick my hand off her
+calf and nearly falling off the log backwards when the ensuing chain reaction
+of jiggling overcame a sense of balance beset by several hundred pounds of
+shapely flesh and the effects of a couple strong drinks downed in rapid
+succession, �Here, I've already got the chocolate and crackers open; give me
+those marshmallows!�</p>
+<p>����������� �Look out,
+they're hot,� I cautioned, gladly passing her a forked stick heavy with molten
+and slightly blackened marshmallows.</p>
+<p>����������� �Mmm- fuck,
+those <em>are</em> right out of the fire aren't they?� Joanna swore, pulling one
+off the stick and popping it right into her mouth, �Ohh, but this is just what
+I've been needing since this all started, a good lay and a good dinner of
+nothing but carbs and empty calories!�</p>
+<p>����������� �You want
+some more?� I asked, already getting another stick loaded up.</p>
+<p>����������� �Fuck yeah,
+keep 'em coming,� Joanna eagerly agreed.�</p>
+<p>����������� For the
+next half hour, she barely said a word, aside from, �Fuck, this is incredible!�
+as she stuffed another fistful of chocolate, marshmallow and graham cracker into
+her mouth, and �Fuck, that's hot!� whenever a dollop of melted goo slipped and
+fell onto the salient shelf of her ponderous bosom, while she steadily worked
+through what I figured to be about twenty pounds of sweets and, from the
+intermittent hiss of pop-tops being pulled, another three beers.</p>
+<p>����������� The few
+stars above had now been joined by a sparkling panoply of their brethren,
+spread across the sky like diamonds spilling from an upturned bag, and in the
+distance the rhythmic hum of insects at the woods' edge was strangely
+comforting.� Exciting as it was to see my
+slacker girlfriend gorging herself and getting drunk, and knowing full well
+what kind of treatment she'd expect once she'd slaked her hunger, there was
+something ineffably sublime about the rest of it, I mused, finding that my own
+dinner was cooked through and stealing a beer from Joanna while there was still
+time to do it without her accusing me of taking the last one.� A month ago getting out of town like this
+would have been the perfect way to spend a couple weeks, and now, with Joanna
+so improbably buxom that she might as well be the goddess of lust incarnate,
+well, it just seemed like things couldn't get any better.� </p>
+<p>����������� Now don't
+get me wrong and think that I'm heartless jackass for taking such pleasure in
+something that my girlfriend was clearly in a lot of distress about, but you
+need to know that being in a lot of distress about things has always pretty
+much been Joanna's default setting, and as much as she fussed about how
+uncomfortable having lap-filling boobs was, or how she was humiliated by the
+mere thought of being seen in public in this condition, or how terrified she
+was that Reyna would get the opportunity to make her even more sensually
+overfilled, this was actually Joanna in her element- the center of her own
+personal drama, the center of my attention, and plenty of stuff to complain
+about while having a perfect excuse not to work and instead lay around the
+house, day drinking and being horny.</p>
+<p>����������� I was
+pulled from my reverie by a satisfied sigh.</p>
+<p>����������� �Mmm, I
+know I said I wanted to stuff myself until I felt like I was about to burst,
+but I think I reached that point about fifteen minutes ago,� Joanna said,
+doubtfully patting her overstuffed belly and sounding infinitely more relaxed
+than she had acted all day, �Why did you keep passing me marshmallows when you
+know how freaked out I am about how fat I'm getting?�</p>
+<p>����������� �I dunno,�
+I said, smiling up at her with a shrug, �Why'd you keep taking them?�</p>
+<p>����������� �Because
+they just taste so amazing, and obviously, I have no control over myself
+anymore,� she sighed again with feigned exasperation, �Seriously, look at my
+belly- it's not just Reyna anymore, some of these jelly-filled rolls are <em>your</em>
+handiwork too!�</p>
+<p>����������� �Hmm, it's
+a little too dark for looking when the fire's starting to die down and your
+boobs cast a big enough shadow to blot out the sun,� I teased, �How about I
+have a feel instead?�</p>
+<p>����������� Not waiting
+for her to protest, I reached between her parted thighs and feeling the
+self-indulgent roundness of her belly nearer to her knees than I expected,
+heavy, taut and soft.</p>
+<p>����������� �See?�
+Joanna exclaimed accusingly, �At this rate, why should Reyna need to pump me
+full of fat until I'm a fucking blimp, when you're more than happy to do the
+job?�</p>
+<p>����������� �Hey now,
+I'm just giving you what you asked for,� I said, exploring the yielding
+fullness of Joanna's well-stuffed underbelly, fingers questing nearer and
+nearer to where her titanic thighs met, �If you want me to throw away all the
+snacks I bought today and go buy you a fridge full of Slim-Fast and weird crap
+made from kelp, just give the word and we can get your new diet started bright
+and early tomorrow morning.�</p>
+<p>����������� �I didn't
+mean it like- Hmph- that!� she argued, her protest interrupted as I found my
+way to her pleasure-primed femininity, �I mean, if you don't mind me being a
+massive cow with a massive belly and -Mmm- overstuffed tits who's too fat to do
+anything besides lay around and- Ahhh! - fuck you, then I'm not going to be the
+one to argue.�</p>
+<p>����������� �Yeah, well
+maybe that's <em>exactly</em> what I want,� I teased, leaning in and kissing her
+swollen belly right below her sensually deep navel as Joanna sucked an eager
+breath through clenched teeth, �In fact, maybe I want you to ride me right now
+so I can explore just how fucking fat your belly is getting while I suck on
+your embarrassingly bloated melons and you smack that enormous ass against me
+until you're too sore to sit down tomorrow.�</p>
+<p>����������� �Oh, yesss,
+please,� Joanna moaned, shuddering as I reached up and began fondling her
+fat-glutted breasts, �You really do like me this huge, right?� Like you're not going to just enjoy fucking
+me for a couple weeks until the novelty of banging a girl with tits so heavy
+she can barely stand up straight wears off and then dump me, right?�</p>
+<p>����������� �Mmm, I don't
+think I'm going to get bored of <em>these</em> any time soon,� I teased as I gave
+her swollen mammaries an fervent squeeze, �Though now that you mention it, just
+how much heavier do you think these monsters would have to be before you
+couldn't carry them around anymore?�</p>
+<p>����������� �Fuck, you
+really do want me to keep expanding like an overinflated blow-up doll!� Joanna
+swore, as if there was any chance she was going to get up and leave while she
+was this turned on, �Ahhh, okay, honestly my tits feel closer to exploding then
+they do to being too heavy to carry around.�
+I mean, just carrying these things from the cabin out to here makes my
+back seize up, but I can't even tell you how tight and stretched my skin feels
+with my melons so bloated I can barely fit through a door.�</p>
+<p>����������� �Oh- and
+where are they the tightest?� I asked, getting up on my knees and kissing her
+swollen nipples as I teased at her immense breasts, �Even in the dark I can see
+you're getting stretchmarks where they hang off your chest.�</p>
+<p>����������� �Mmph-
+fuck, it's not just there,� Joanna admitted, caressing the straining upper
+reaches of her bosom protectively, �It's underneath too- my poor girls feel
+like a couple balloons being filled with lead- I swear, the one thing this fat
+fucking belly does for me is give them a little support, otherwise I think
+they'd already be too bruised and raw to bear.�</p>
+<p>����������� �Well if
+you want, I'd be happy to help you carry them around,� I offered, cupping as
+much of her massive breasts as I could sink my fingers into and giving them a
+gentle heave.</p>
+<p>����������� Ow- stop;
+I'm too fucking big for you to do that kind of thing,� Joanna said, wincing as
+her mammoth bosom quaked, �If you really want to help me, I'm gonna need- I
+dunno- a bra made out of fucking reinforced Kevlar or some junk like that.�</p>
+<p>����������� �Oh, well
+if you're going to be all demanding like that, maybe I'd better just let you
+try to haul these behemoths around the house with no support at all,� I
+suggested, giving one of her taut nipples a playful pinch and savoring the way
+she shuddered in response, �Maybe I want you huge and barely mobile, with
+nothing better to spend your days on then feeding these huge, suckable tits and
+begging me to fuck you.� And I bet you'd
+love it having an excuse to do just that, as long as you could blame it all on me.�</p>
+<p>����������� �Damn it-
+stop playing with me, I'm so horny and anxious right now the last thing I need
+is you fucking with my head,� Joanna shot back, slapping my hand away from her
+breast, �Damn I could really go for another drink right now.�</p>
+<p>����������� �Come on,
+let's have a little ride out here under the stars and I'll bring you a whole
+nother six pack,� I said as she struggled to stand up, her knees trembling as
+they failed her, the log she sat on groaning as it was forced to bear her
+weight again, �I know you're so horny right now you can hardly stand it, and I
+am so ready to make you come until even the neighbors half a mile off can hear
+you scream.�</p>
+<p>����������� �What,
+outside here, by the fire?� Joanna asked, as if she had suddenly realized just
+how naked and exposed she was, �What if someone sees us?�</p>
+<p>����������� �I don't
+care,� I said, standing up and dropping my pants so Joanna could see how hard I
+was, throbbing and erect and inches from her face, �Actually, I hope someone
+does.� If we're going at it and ten years
+from now there's a local legend about the night some guy was out possum hunting
+or some crap and he saw a girl with enormous, swollen tits and an ass as wide
+as a waterbed screwing some guy out by a campfire, I'd really be okay with
+that.�</p>
+<p>����������� �Oh, I love
+it when you're so forceful, it makes me feel like such a desperate, slutty
+girl,� Joanna said, reaching out and grasping my member, �Fine, lay down and
+get ready to give your drunk, overstuffed, cock-hungry girlfriend something to
+scream about.�</p>
+<p>����������� She pushed
+me away, too tipsy and too encumbered by her vast bosom to really knock me
+over, but I got the idea and lay down between her and the fire.� She tried again to stand up- I could tell she
+was hoping to put on a big show, tease me a little before she sat down to be
+filled, but the sheer amount of weight she was struggling with and the way
+she'd been drinking meant that all she could do was slide off the log, onto her
+knees, and awkwardly mount me.� Joanna's
+overburdened ass slapped against my legs as she struggled to find her balance,
+her stuffed belly speared for a moment as she dragged it across my rigid
+shaft.� Trying to support the cumbersome
+bulk of her bosom, Joanna leaned forwards, trying to brace her hands against my
+shoulders, but only succeeded in burying my face under a vast sea of creamy,
+sweat-soaked flesh as her breasts spread until they were in the way of
+everything.</p>
+<p>����������� �Fuck, I
+think I've had too much to drink to do this right now,� she swore, leaning back
+and pressing her hands resignedly to the small of her back, �And I definitely
+shouldn't be doing this after everything else you and Reyna have put me through
+today.�</p>
+<p>����������� �Come on
+now, if you're going to be sore tomorrow, you might as well earn it tonight,� I
+pushed, caressing her massive mammaries as I felt her inner thighs becoming
+slick and hot, �Besides, you're so fucking sexy right now- I'm not gonna be
+able to sleep a wink tonight if you don't let me come inside you.�</p>
+<p>����������� �Mmm, I
+guess maybe a good lay tonight might help me deal with a hangover in the
+morning,� Joanna purred, thoughtfully wiggling her heavy hips, �And fuck, but
+you're hard as a rock already- here, it's tough to get into position with two
+hundred pounds of tits and a big, billowing belly between my eyes and down at
+my- Ahhhh!!�</p>
+<p>����������� My
+girlfriend squealed, tightening around me as her weight drove my cock deep into
+her lust-swollen depths.� Shivers chased
+across the expanse of her hips as I clutched at her, driving myself as deep
+inside her as I could, her enormous breasts, suspended inches above my face,
+quaking helplessly as she came.</p>
+<p>����������� �Oh fuck- I
+didn't know I was already so close to cumming!� she protested, barely able to
+choke out the words, �Fuck, fuck, fuck- be gentle!� That's already three- don't make me- NGGH!�</p>
+<p>����������� I probably
+should have held back, eased her along after a long day, but even though we'd
+barely gone two hours since our rendezvous in the canopy bed, I need her to
+take it rough.� Sure, Joanna was huge,
+and drunk, and tender right now, but after listening to her complain about
+everything all day, there was something deeply and perversely satisfying about
+bringing her to a place where aside from stammered pleas for mercy, all she
+could do with her voice right now was scream with pleasure.</p>
+<p>����������� She bucked
+and arched her back as I grabbed one of her full, low-hanging breasts and
+sucked her nipple fiercely.� She begged
+for relief and clenched around me; I reached as far as I could around her
+fertile hips and spanked her soft, jelly-glutted ass as hard as I could.� She howled as I rolled my hips beneath her,
+reaching all the delicately swollen and exquisitely oversensitive places inside
+her.</p>
+<p>����������� I should
+have stopped- Joanna looked like she was about to faint, the light of the dying
+fire� dancing against the glistening skin
+of her heaving breasts, her voice growing weaker as the bliss wracking her
+overfilled figure grew more intense.� I
+grabbed her other nipple and held it tight between my lips; I throbbed inside
+her as she came again.� I grasped her
+just above the hips and lifted, hoping she would obey, and was rewarded as her
+straining thighs heaved her up, sliding all but the last inch of me out of her
+before her strength gave out and she fell again, impaling herself on me once
+more, her breasts creaking as they endured the sudden drop, her jigglesome ass,
+her well-earned belly slapping against my body.</p>
+<p>����������� �Come on,
+keep going,� I urged, �You know how hard it makes me when you ride me like
+this.�</p>
+<p>����������� �Please-
+Oh, can't you just go ahead and cum?� Joanna begged between ragged breaths, �My
+legs feel like I've just run a marathon and my tits are just excruciatingly
+tender right now!�</p>
+<p>����������� �Mmm, but
+you love it this way,� I insisted, encouraging her hips to rise again, �The way
+every time you come down on my I get harder and harder- don't you want to find
+out just how tight you can stand being right now? - and I know it drives you
+wild when I don't just come, I explode inside of you, pumping you full of my
+cream.�</p>
+<p>����������� �You're a
+fucking monster!� Joanna gasped, rising ponderously and then slamming me hard
+into her depths again,� Fuck- you can't begin to imagine how sore my tits are
+right now.�</p>
+<p>����������� �Mmm, you
+might as well get used to it sooner or later- it's not like these huge, ripe
+melons of yours are going anywhere� I needled her, grabbing one of her bloated
+breasts and squeezing it playfully, �And if this is all such torture, why are
+you still riding me like you're hungry for more?�</p>
+<p>����������� �Because-
+Nghh!- because you're right,� Joanna admitted, arching her back as she rose and
+fell again without any encouragement, �I fucking need this right now, and the
+way you get so- mmhm- so thick and hard, stretching me so tight right before
+you- unnf- shoot your load inside me makes me- ahhhh- makes me cum so hard!�</p>
+<p>����������� That was
+all I could stand.� I came, erupting
+inside of her inflamed femininity. Joanna shrieked, shuddering and gasping as
+if she was about to have a seizure, still grinding her body against mine until
+the last pulse faded and the tremors rippling through her body subsided.</p>
+<p>����������� She rolled
+off me and flopped onto the blanket, exhausted, her massive breasts pressed
+tight against me, heaving rhythmically as she began to catch her breath.� Only a few embers now glowed in the campfire,
+and Joanna somehow looked even more tremendous in the failing light as the stars
+shone above us.</p>
+<p>����������� �You know,
+I know I spend a lot of time bitching about stuff, like being enormous and too
+heavy and tits so enormous I feel like they're gonna to break my back,� Joanna
+sighed after a few minutes, �But you always do give me a good lay.�</p>
+<p>����������� �Well, it's
+not like I'm just doing charity work here,� I said, stroking one silky-smooth
+breast appreciatively, �You've always been fun in bed- well, and anywhere else-
+but these last few days have been incredible.�</p>
+<p>����������� �Mmmm, I
+know, and I think I know just how to keep our little getaway here exciting,�
+Joanna suggested playfully, grabbing my hand and pushing it down against her
+front, to the lower curve of her fertile belly, �How about while we're out
+here, whenever either of us wants to have some little fun, we just go ahead and
+fuck?� No foreplay, no being too tired,
+no not being in the mood- If I want your dick in me, I just gonna come up and
+either jump you or spread myself out on the floor and stare at your cock until
+you're rock hard and balls-deep in me.�
+Same deal for you- if I'm in the kitchen and you see my huge ass bending
+over to get a beer out of the fridge, just come up right behind me and start
+railing me, if I'm asleep you don't even need to wake me up first, I'll be wet
+and ready as soon as I feel your breath on my skin and your cock between my
+legs.�</p>
+<p>����������� �Alright, I
+think I can hold up my end of that deal,� I agreed, smiling at the tantalizing
+gleam in her eyes as I slipped my hand between her supple thighs to play, �I'll
+do my best to rise to the occasion at least.�</p>
+<p>����������� �Mmm-Ahhh!�
+Joanna grinned, gasping as I found my mark, �Ooh, I don't think I need to worry
+about that!�</p>
+<p>����������� Ten minutes
+later she was gasping for breath again, my hand squeezed tight between her
+sensual legs as she trembled beneath the stars, her fingers grabbing eagerly at
+my rigid member.� Ten minutes after that,
+we were both fast asleep, naked beneath the huge night sky.</p>
+<p>����������� </p>
+<p>����������� </p>
+<p>����������� It was
+oddly stimulating waking up with the new day, naked next to the cold ashes of
+the campfire, the sky already blue overhead.�
+Some people get off on being naked in public, somewhere crowded where
+they're in danger of being caught, but this was more intoxicating than that
+could ever be.� Joanna groaned and swore
+as she hoisted herself to her feet, penitently rubbing a knee sore from holding
+her up while riding me, a back stiff from a night spent on the ground, both
+breasts tender from sheer overfullness as she struggled to her feet.</p>
+<p>����������� Just the
+sight of her standing over me, those lavishly overfilled breasts looming out
+above her round belly, nipples erect in the chill morning air and I was ready
+to go again.� Without a word she smiled
+and set off for the cabin, her lush hips rolling as she picked her way barefoot
+through the rough weeds, her ass wobbling hypnotically, I swear from behind she
+looked even bigger than the night before, as if all those calories and drinks
+had settled into her already supple rear, rendering it even more alluringly
+jigglesome than before.</p>
+<p>����������� Joanna
+looked over her shoulder at me, winking.�
+By the time she the porch steps creaked beneath the burden of her
+weight, I was nearly on her.� I seized
+her hand as she reach for the kitchen door, spun her around, and pressed her
+against the weather clapboards of the wall.</p>
+<p>����������� �Out here, again?�
+she asked, apprehensive, though fire blazed in her eyes as I put my hands on
+her shoulders and pushed her down, �But it's so chilly out here, and I the last
+thing I want is to get any splinters now that there's so much more of me.�</p>
+<p>����������� �Lay down
+so I can fuck you right here, � I insisted, pushing harder, �Or I'll have to
+tie you down, spank you, and then fuck you- your choice.�</p>
+<p>����������� Joanna
+didn't say a word, she submissively lay down on the worn planks, spread her
+legs, and spent the next several minutes screaming my name and whimpering
+helplessly as we did it again.</p>
+<p>����������� The next
+few days were a blur of mutual bliss as we gave ourselves over to each other
+completely.� I'd be sitting at the
+kitchen table drinking a cup of coffee, and Joanna would saunter in, sink to
+her knees in front of me, and suck me off like it was her job and she was
+angling for a promotion.� </p>
+<p>����������� I caught
+her in the shower, the translucent curtain around the heavy claw-footed tub
+pushed out wide by the swell of her fulsome hips.� I drew it back, slapped the soap out of her
+hand, and as she bent to retrieve it I was behind her, forcing her down on her
+knees, her titanic breasts spilling over the tub's sides as she clutched at its
+edge for support, her opulent hips rubbing hard against its confines, her ass
+slapping wetly against me as I pounded her senseless.</p>
+<p>����������� She was
+laying out in the grass, sunbathing as I came back from a walk, and wordlessly
+motioned for me to come and straddle her rising belly and fuck her
+generously-lotioned tits until I shot cream all over her graceful neck, her
+eyes dancing with desire as she scooped it up with a couple fingers and licked
+them clean as lasciviously as she was able.</p>
+<p>����������� I found her
+trying yoga on the floor in front of the pot-bellied wood stove, trying to
+bring some relief to legs now obliged to carry several times more weight than
+they were used to.� I sat down and
+kneaded at her sore muscles, working hard and deep since they were now
+submerged under such an ample quantity of fat, until she was murmuring with
+contentment, and then I buried my head between her legs and ate her out until
+even through her fulsome thighs I could hear her plaintive cries of ecstasy.</p>
+<p>����������� She even
+tried to overpower me, dragging me back inside as I ventured out to get more
+firewood before night fell, smiling impishly as she pulled me off my feet and
+down on top of her, reaching down my pants and grabbing me tight as I tried to
+stand up.� It was time to make good on my
+warning, and by the time I actually made it outside to find some fuel, my
+girlfriend was on the floor, wrists tied to the bedpost with a rope from the
+curtains, breasts spilling across the floorboards, spanked so hard she had to
+lay on her belly all the next day, but still begging me to hurry back and make
+her come again.</p>
+<p>����������� And all the
+while, Joanna continued to indulge her other appetites just as vigorously.� When she wasn't fucking me or sleeping, she
+was drinking cheap beer or box chardonnay, and stuffing herself with
+marshmallows, ice cream, or half a sheet cake meant to serve a crowd of
+twenty.� I don't think she was completely
+sober more than a couple hours a day after she first woke up in the late
+morning, though I could hardly complain when she'd get a little tipsy by lunchtime
+and make me a fix of pancakes, naked except for a white and red polka dot apron
+she had found which was so small on her it spent more time trapped between her
+breasts than spread across them, and then sink down on her knees and give me a
+blowjob while I enjoyed my meal.</p>
+<p>����������� Likewise,
+as much as she went on about how heavy her belly was and how much she hated
+cradling it halfheartedly as she waddled between bed and kitchen, it was
+obvious that if it was causing her discomfort, that was mostly because it was
+usually stuffed to the brim with junk food, though again, I didn't mind her
+complaining when she insisted I see for myself what a fat, swollen cow Reyna
+had made her and� Joanna insisted I stick
+my cock between the heavy rolls of her belly and fuck her there until I'd
+spilled my seed in her opulently deep navel.</p>
+<p>����������� �Okay, this
+is going to sound crazy but hear me out, but I think all that slime that Reyna
+crammed into me back at home is still expanding inside of me or something,�
+Joanna announced, staggering out of the bedroom one morning, her massive
+breasts looking particularly swollen and heavy as she struggled vainly to
+support them, �I mean, look at these!� I
+swear my tits weren't this gigantic when we got here, and it feels like
+someone's been pumping them full of jelly while I'm asleep or something.� They must have gained at least another fifty
+pounds since we left town, and look, I've got all these fucking stretchmarks
+like I'm some fat, pregnant girl who won't stop swelling up!�</p>
+<p>����������� �Um, I
+guess it could be something Reyna did,� I allowed charitably, looking up from
+my morning cup of coffee at Joanna's proffered bosom, the upper reaches of
+which were indeed stippled here and there with pale striations betraying just
+how much her skin had been compelled to stretch over the last week, �But, ah-
+do you think that maybe it's possible that it's just because you've been eating
+a lot since we got here?�</p>
+<p>����������� �Fuck me;
+you're right, aren't you?� Joanna said, collapsing to her knees, her
+overstuffed ass slapping against her legs and the kitchen floor as she cradled
+her glutted bosom in her arms forlornly, �I'm going to have to go on a diet
+once we get back home if I don't want to end up turning into a fucking whale
+even without Reyna's help.� Dammit, just
+thinking of food gets me almost as turned on as thinking of your dick, and I'm
+getting more out of shape by the hour- just climbing out of bed and jamming
+myself through the door has got me sweating like a fatty!�</p>
+<p>����������� �Well, if
+it's any consolation,� I offered, taking a sip of my dark roasted and casting
+an appreciative eye at my quivering, glistening girlfriend, �It is a lot hotter
+outside today than it's been since we got here, and I'm not sure the air
+conditioning in this place is quite keeping up with the challenge.�</p>
+<p>����������� �Okay, that
+makes me feel better,� Joanna sighed, wiping the sweat from her forehead and
+frowning at the thermostat, �So just how hot is it in here right now?� It's got to be at least 90 degrees, right?�</p>
+<p>����������� �Ah, if
+this is right- and maybe it isn't,� I hedged, glancing between the thermostat
+and my perspiring girlfriend, �It says here that the kitchen is- ah, 78
+degrees.�</p>
+<p>����������� �Oh fuck me;
+it's got to be hotter than that!� Joanna seethed, �There's no way I've become
+such a cow that <em>that's</em> all it takes to make me melt!� Okay, I can handle this, I just need an
+excuse to be sweating like this and then I'll feel better- oof!- here, let me
+just get off the fucking floor and then you can bend me over the kitchen
+counter here and fuck me silly, maybe that'll take me mind of this fucking
+heat!�</p>
+<p>����������� I was more
+than happy to oblige, and while doing Joanna from behind while she called my
+name and her sumptuous ass smacked wetly against my body was certainly a fun
+way to start the day, I could tell that, at least for her, the magic of getting
+away from it all was, unlike her figure, beginning to wear thin.</p>
+<p>����������� Over the
+next few days, she grew increasingly irritable as the temperature inside
+steadily rose through the 80s.� Her
+elevated libido meant that she didn't stop wanting sex, but the surprise
+blowjobs and playful wrestling quickly fell by the wayside, as I was more and
+more called upon to come and please her in bed where she lay naked with a large
+fan directed at her enervated lushness, more often than not with a beer in one
+hand and a gallon of ice cream in the other, her complaints about the heat and
+being in the middle of nowhere and not getting any bars on her phone pausing
+only when I made her moan with ecstasy, twanging bedsprings and slapping
+breasts only adding to the commotion as I tried to screw her into placidity,
+which actually worked for a few nights, leaving Joanna sprawled across the
+mattress, the skin of her chest flushed red with exertion, her breath heavy but
+even, as I managed to satisfy her well enough to stifle her complaints, at
+least for a few hours.</p>
+<p>����������� �Fuck, I
+feel like I'm about to get heatstroke here!� Joanna bellyached a few days
+later, standing in front of the open fridge, her fat nipples stiffening against
+the cold, �Do you think you could just like, eat me out while I sit in this fucking
+fridge and try not to pass out since you decided to make us stay here in Death
+Valley?�</p>
+<p>����������� �Well, <em>I'd</em>
+be happy to, but I don't think the refrigerator is going to be up to the
+challenge,� I said, noticing how Joanna's hips were nearly two feet wider than
+the aforementioned appliance, �Maybe if you laid on the floor I could-�</p>
+<p>����������� �Oh, right,
+because I'm so fucking huge and my ass is so fucking fat I'd break the fucking
+fridge, right?� Joanna bellowed, turning at me with rage in her eyes, �Fine,
+forget it- I'll just be massive and hot and exhausted and horny and frustrated
+because you're worried about losing our deposit or whatever if I break the
+kitchen with my gigantic fucking ass!�
+You know what?� I can't take this
+any more and I'm about to lose my damn mind- gimme my phone, we're not one hour
+away from our house that has Netflix and air conditioning that actually works
+and like, fifteen different places that deliver dinner, not to mention an
+entire sock drawer full of my favorite toys, and I'm tired of living out here
+like Little House on the Fucking Prairie!�</p>
+<p>����������� �Whoa now,
+what are you planning on doing?� I asked as innocuously as possible as I handed
+my incensed girlfriend her phone about the same way you would pass a raw steak
+to a starving lion, �You're not going to call Reyna and give her a piece of
+your mind, are you?�</p>
+<p>����������� �No- I'm
+not fucking stupid!� Joanna fumed as she stabbed at the keypad, �But she's had
+what, more than a week to use every last cent of that gift card we got her and
+stuff herself until she's so obscenely fucking obese that her bosses have no
+choice but to either send her to whatever the stranger version of Siberia is,
+or leave our fucking planet in embarrassment because one of their agents has
+gone and turned herself into the fucking blob; so I figure either way she's
+probably long gone, and I'll be damned if I stay out here in the sticks for one
+more minute when it's perfectly safe for us at home, okay?�</p>
+<p>����������� Not waiting
+for a response from me, Joanna glared at her phone as our home number rang-
+once, twice, three times- maybe she <em>was</em> right and Reyna had already
+gorged herself into a swift exile and left us alone- four times- okay, I
+wouldn't mind sleeping in a bed with a mattress from this century and being
+able to play an MMO or two after Joanna fell asleep instead of stargazing every
+single night- if the answering machines picked up then maybe Reyna really was
+gone and we could-</p>
+<p>����������� �Hi there!�
+even without the speaker on, I could hear Reyna's exuberance through Joanna's
+phone, �Is this you guys?� Are you still
+on vacation?�</p>
+<p>����������� �Um, yeah,
+we are and we're having a wonderful time,� Joanna said, trying to sound
+pleasant and failing so badly that only someone as naive as Reyna could
+possibly believe her, �I just, ah, wanted to check in and make sure you were
+doing okay, and that everything is alright and all.�</p>
+<p>����������� �Oh, I am
+wonderful and there is so much that's happened since you left!� Reyna exclaimed
+as I leaned in closer to hear, �That place you paid for all that food at for
+me- it's just- I didn't know that anything could taste so good!� I've been there every day since you left and
+it's been the most incredible thing I've ever experienced!�</p>
+<p>����������� �Oh?� I'm so happy to hear you've been enjoying our
+little gift,� Joanna replied sweetly, a wicked grin spreading across her face,
+�And how's work been going?�</p>
+<p>����������� �So, that's
+the part where things have been getting a little, unprecedented,� Reyna said, a
+note of hesitation creeping into her voice, �It turns out that since I already
+struggle with controlling my appetite already, pointing me to a place where I
+can eat as much as I want of almost anything I can imagine- and things I can't
+imagine, the lady who runs the place has some awfully good suggestions- has
+kind of led to me gaining some weight.� A
+lot of it.�</p>
+<p>����������� �Really?�
+Joanna asked excitedly, �And just how much weight is a lot?� </p>
+<p>����������� �Um, I'm
+not really sure, and completely unrelated to anything you guys are going to
+need to buy a new scale because I think I broke yours, sorry, I'll leave you
+some more money to take care of that,� Reyna confessed, still sounding
+cheerful, �All this eating has left me very enlarged- two days ago I was called
+in to account for myself and apparently I am an embarrassment to my people and
+our mission for letting myself become- what did they say?- a wobbling monument
+to gluttony and a disgrace to my mission.�</p>
+<p>����������� �My, but
+that's terrible news!� Joanna said with badly-feigned sympathy, �Whatever is
+going to happen to you now?�</p>
+<p>����������� �Oh, but
+that's the good part- aside from me getting to stuff myself all day for the
+last week and enjoy being all huge and jiggly and- um- excited all the time,�
+Reyna said brightly, �One of the superiors is actually impressed at how easily
+I can eat and grow, and they've recalled me back to another posting where I'll
+be able to indulge my appetites all I want while they study me- it's absolutely
+the perfect job for me!� I'm sorry I
+won't get to say goodbye in person; you've been so kind and generous with me,
+Joanna, but they want me to start with their experiments right away, so I'll be
+leaving in a couple hours.�</p>
+<p>����������� �What,
+like, permanently?� Joanna asked, sounding so excited I expected even Reyna too
+see through her act, �Are you sure?�</p>
+<p>����������� �Yes,
+they're arranging transportation just for me, since I don't exactly fit in the
+seats of your airplanes anymore,� Reyna explained, �Don't worry, aside from the
+scale, I've been taking good care of your house- well, you might need to buy
+some more groceries when you get back- I'll leave some money for that too- but thank
+you so much; you've been the nicest most giving hosts I could ever have asked
+for!�</p>
+<p>����������� �Oh, thank
+you too, Reyna,� Joanna said, actually sounding like the halfway meant it as
+she reached down with her free hand and fondled one of her ponderous mammaries
+absent-mindedly, �You've been very- ah- giving, yourself- we certainly won't
+forget you.�</p>
+<p>����������� �Good luck
+then; I'm sorry I didn't get to say thank you in person,� Reyna enthused, �I
+know you've enjoyed the way I'm able to make you bigger, and right now I've got
+<em>so</em> much to share, just a few minutes together and I could expand you to
+the point where you're whole body would be so sensitive just touching it would
+make you make you scream the way you do when your mate is filling you with his
+penis!� Oh well, maybe we'll meet again
+some time- good luck!�</p>
+<p>����������� I was still
+smiling at Reyna's suggestion as Joanna hung up and fixed me with a bitter
+stare.</p>
+<p>����������� �Oh, and I
+bet you think it would be fun if that creature did get one last chance to pump
+me up into even more of a forswollen slut than I already am?� Joanna accused,
+�Well, too fucking bad for you, she's leaving us forever tonight, and first
+thing in the morning you're going to drive me home so I don't have to spend two
+more nights out here in the middle of nowhere!�</p>
+<p>����������� �Hey now, I
+didn't say anything,� I protested, �And it's not like she's completely wrong-
+I'm not the <em>only</em> one who's been enjoying the new, curvier you- you said
+it yourself that you needed to get away because you actually like feeling
+yourself get bigger- don't make it out like I'm the monster here.�</p>
+<p>����������� �Fuck,
+you're right, I'm just tired, and sweaty and my back is tense and my thighs
+keep chafing together and my tits feel like a couple of overfilled water
+balloons,� Joanna admitted, grabbing a six pack from the fridge and ambling
+towards the bedroom, �I think I'm going to get drunk, pass out in bed bare-ass
+naked, and hope I don't wake up until morning, when it's time for us to leave.�</p>
+<p>����������� �You sure
+you don't want some company?� I asked, following her and squeezing an
+overflowing handful of her quaking rump as I caught up, �I know how horny you
+get when you're drunk- if you ask really nice I could do like Reyna suggested
+and fill you with my penis.�</p>
+<p>����������� �You
+fucking weirdo!� How can you even say it
+like that, jeez?� Joanna swore, pulling away from me as she rushed to the bed
+room, threw herself jiggling onto the creaking mattress and then turned to
+shoot me a lascivious smile, �Well, okay, just as long as you promise you're up
+for sticking it into me at least a couple times.� I'm still buzzed from this morning and yeah,
+I think getting nailed good and hard might put me in a better mood for the rest
+of the night.�</p>
+<p>����������� I woke up
+next to Joanna's lush, slumbering form as dawn peeked through the bedroom
+window, her titanic breasts rising and falling gently in time with her soft
+snoring.� She hadn't been kidding about
+needing some forceful attention- I was more than a little sore and I could only
+imagine how tender she was going to be in a few places once she woke up.� </p>
+<p>����������� As quietly
+as I could, dressed and packed the car with everything except for the skirt and
+tube top she had worn on the trip out, and what few snacks remained uneaten I
+threw in the front seat where they'd be easy to reach when she got hungry on
+the way home.� It was about then that I
+heard a frustrated shout from the bedroom.</p>
+<p>����������� �Fuck, my
+poor tits are about to pop!� Joanna cried, still laying in bed, nearly sobbing
+as she cradled her breasts with one arm, while with her other she tried to
+reach past her bloated bosom and belly to reach between her luxurious thighs,
+�Mmph, and you were right, I've been stuffing myself all week and now I really
+am too fat to reach myself!�</p>
+<p>����������� �Well,
+everything's packed up and with any luck, Reyna's long gone,� I told her, �You
+sure you don't want to just get back home and then I can give you all the
+attention you want?�</p>
+<p>����������� �Mmm, oh
+don't worry, lover, I'm gonna want that too,� Joanna murmured, biting at her
+lip distractedly, �It's just that if I'm this uncomfortable just laying here in
+bed, I know that bumpy ride back home is going to feel like my poor girls are
+stuck in a paint mixer, and all that bouncing and jiggling is just going to get
+me so turned on I'll be begging you to pull the car over before we're halfway
+home so you can drag me into the woods and fuck me right there by the
+road.� But as much fun as that sounds
+like, if anyone saw us we'd probably get arrested, and I'm pretty sure we're
+still in the middle of poison ivy season, so that could end badly a few different
+ways.� Anyway, come give me a
+good-morning pounding to tide me over until we're home, okay?�</p>
+<p>����������� �Well, okay
+then,� I agreed, slipping out of my clothes and climbing on top of her, �If you
+insist.�</p>
+<p>����������� Joanna's
+fulsome body rolled and rippled beneath me as I rode her.� She was obviously tired, and still a little
+drunk from the night before, making me do all the work and barely able to grind
+her soft hips against me as I plowed her deep and hard, her muted gasps of discomfort
+far surpassed by her sharp cries of delight as I touched her deepest places,
+leaving Joanna gasping and breathless as I came, pumping a heavy load into her
+eager depths.</p>
+<p>����������� �Oh- that's
+just what I needed,� she sighed, sleepily rolling out of bed, almost dragged to
+the floor by the weight of her swollen breasts and saved only by the ballast of
+her lush behind, �Fuck, I am definitely hungover right now; can you help me get
+dressed?�</p>
+<p>����������� A minute's
+futile effort was more than enough proof that whether by some slow-acting
+expansion of the slime already filling her body or the far more conventional
+gaining of nearly a week of heavy drinking and carefree gluttony, getting my
+girlfriend decent for public viewing just wasn't in the cards right now.� Even with her laying back on the bed, I
+couldn't force the waistband of her skirt higher than six inches below her
+generous waist, her thighs now filling it completely, and the way her yielding
+belly spilled through the forced-down zipper suggested there was more than one
+reason she was going home bare from the waist down.� </p>
+<p>����������� Hoping to
+keep our car from getting pulled over if anyone got too close a look at her, we
+struggled to load her into the tube top, but barely managed to stretch it over
+her breasts, Joanna cursing and wriggling as it was drawn from translucence to
+near invisibility by her mammoth bustline.�
+I worked to pull it down over her belly, but at that moment she inhaled
+and it snapped off her like a rubber band, her unwieldy bosom slapping down
+against her tummy with a sound like a whip cracking, as she blanched in agony
+and swore again.</p>
+<p>����������� �Fuck it,
+I'm too fucking ginormous for clothes and I'm not staying out here in this
+Grapes of Wrath shanty one more minute,� Joanna said, standing up with
+surprising swiftness and heading towards the door, her sumptuous body aquiver
+with resolve, and still just tipsy enough I worried she might topple over at
+any moment, �I'm probably so fucking fat that I won't even fit in the front
+seat any more, so get out here and help stuff me into the back so I can just spill
+out across the whole width of the car, okay?�</p>
+<p>����������� I opened
+the door as she slid in.� Her skin, still
+slick with sweat from our lovemaking, strained across the vinyl seat with a
+sound like a wet balloon dragged across a window as she huffed and muttered and
+worked herself into the car, wrenching the window crank on the far door clean
+off as she tried to use it to pull herself inside and shrieking at me as I
+slammed the door a little too hard for her comfort, setting her glutted figure
+jiggling like a mountain of jello in an earthquake.</p>
+<p>����������� �Just
+drive, and don't you dare try to play with my tits unless you're ready to pull
+over, drag me out by the side of the road and fuck my brains out,� Joanna
+snapped as I climbed into the driver's seat and realized that the space between
+the two front seats had been inundated by a vast and quiversome tide of
+feminine flesh, �Seriously, just get me home and then you can do whatever you
+want with me.� I know I'm being a total
+bitch and you're being super kind and patient right now, so as soon as I'm back
+in the air conditioning and comfortable, I'll be happy to spend the next six
+hours sucking you off or letting you fuck my tits or whatever you want, but
+right now I am not in a playful mood.�</p>
+<p>����������� �Okay,
+okay- just stay cool,� I urged, putting the car in gear, and turning onto the
+long driveway through the cornstalk sentinels, �I'm gonna drive as gently as I
+can, you just take it easy back there.�</p>
+<p>����������� �Mmm,
+thanks, hon, you always take such good care of me,� Joanna said with relief, a
+moment before we hit a deep rut in the road that made the back end of the car
+nearly bottom out from her weight, �Ouch- we're in the fucking twenty-first
+century, why are there even still dirt roads like this?� Oof- hey, gimme the rest of that cake so I
+can at least stop my stomach from growling and distract myself from the fact
+that the next few miles are going to be like riding a jackhammer home.�</p>
+<p>����������� </p>
+<p>����������� </p>
+<p>����������� An hour and
+some change later, we pulled into the driveway at home, grateful that nobody,
+or at least no police, had noticed the car with a woman riding in the back
+topless and so obscenely top-heavy that the flanks of her breasts pressed
+against the windows.� Joanna was still
+crammed into the back seat, groaning and hurting from the bumpy road and her
+all-too-sensitive body, and at the moment seemed to be swearing at her nipples
+for getting so hard and jabbing so insistently against the hard plastic of the
+back of the front seats while I had the car's air conditioning cranked up,
+though she- like her nipples- perked up when she realized we were finally home.</p>
+<p>����������� �Alright,
+finally!� she sighed, before glancing around furtively, �Hey, um, before I try
+to pry myself out of this tin can, would you mind running in first to unlock
+the door so maybe I can hurry in and the neighbors won't see my huge,
+overstuffed ass wobbling up the front steps?�
+That and- you know- just make sure that Reyna's really, finally gone?�</p>
+<p>����������� �Yeah, of
+course,� I agreed readily, stepping out of the car, �Hey, do you want me to
+leave the A/C running while I go in so you'll be more comfortable while I'm
+checking the house?�</p>
+<p>����������� �Oh, uh,
+that's really thoughtful and everything but um, maybe a little less cold
+wouldn't hurt for a few minutes,� Joanna admitted sheepishly, �It's not like I
+haven't been hot and sweaty already for the last for days and honestly, my nips
+are so hard right now that I think they might actually cut the window like a
+couple of diamonds if I dragged them across the glass right now, so maybe
+giving them a few minutes to go from rock-hard to just long and fat might be
+best, okay?�</p>
+<p>����������� �Okay, I'll
+check things out and then be right back to help you in,� I agreed, taking the
+keys, �Just uh, maybe try not to move around too much so if anyone is out
+taking a walk they won't notice you here in the car being-�</p>
+<p>����������� �Fucking
+enormous?� Joanna asked archly, �Yeah, I got it- I'll be as inconspicuous as a
+naked girl with tits the size of naval mines can be.�</p>
+<p>����������� �Great,
+great, that's just the thing,� I said, smiling encouragingly as I edged away
+from the car, seized by the ridiculous fear that at any moment a parade or some
+other catastrophic yet vanishingly unlikely thing was going to turn the corner
+and burst into view, �I'll be right back.�</p>
+<p>����������� I ran up to
+the door and let myself in.� The house
+looked normal enough, though as I hurriedly explored downstairs I noticed that
+true to her word, Reyna had indeed cleaned out both the pantry and the fridge,
+and that the cushions on the couch looked smooshed as if a stray hippo had been
+napping on them.</p>
+<p>����������� �Uh,
+Reyna?� I called doubtfully from the foot of the stairs, �Anybody home?�</p>
+<p>����������� No answer-
+that was a good sign.</p>
+<p>����������� Upstairs
+there was no sign of her either, the bedrooms were clear, the shower empty-
+though the bathroom scale did look like it had lost a fight with a steamroller-
+Reyna's room was empty, her satchel, her weirdly old-fashioned luggage
+gone.� We were safe.� As I ran down the stairs I noticed a house
+key and one of those curious-looking envelopes on the kitchen counter, I guess
+she'd left us some money to make things square after all, and felt a twinge of
+shame at dealing with her so dishonestly, no matter how much of a problem her
+continued stay had been expanding into.</p>
+<p>����������� �Hey, she's
+gone!� I called to Joanna, running back outside and rushing to open the car
+door, �I think we're safe!�</p>
+<p>����������� �You think,
+or you're sure?� Joanna asked dubiously, looking around like she expected Reyna
+to drop out of a tree or something at any moment and start pumping her full of
+slime, �I kind of need you to be sure about this, understand?� Unless of course you don't mind taking the
+chance that your girlfriend is going to be blown up with green stuff until her
+tits are bigger than the Goodyear Blimp and her ass is the size of- Oh, fuck
+it, nevermind, I can practically see you getting a hard-on just from me
+mentioning it.� Just stop being a perv
+for five minutes and get me inside, okay?�</p>
+<p>����������� �Okay,
+okay, how about you stop freaking out and let me do that while we're still
+alone?� I asked, glancing around nervously as I reached in and pulled at my
+buxom girlfriend's arm, �Come on, hurry up or you're likely to give the
+neighbors a real eyeful!�</p>
+<p>����������� Alright,
+I'm moving as fast as I can!� Joanna protested, the back seat squeaking against
+her skin as she awkwardly slid out, �Oof, it was never this hard climbing out
+of the car when I didn't have an ass a mile wide!�</p>
+<p>����������� �Come on,
+you've got it,� I encouraged her as she popped free of the car and staggered to
+her feet, �I mean, you've got this whole standing up thing, not the mile-wide
+ass thing, at least not quite.� Anyway,
+hurry, before someone <em>does</em> notice.�</p>
+<p>����������� Joanna
+wheezed as she jogged laboriously for the front door, her breasts swinging so
+uncontrollably that she swore every time they slapped together or threatened to
+bounce up and hit her in the face, while her sensually enlarged hips and ass
+swayed and jiggled, clapping despite her best efforts as she willed her thick
+thighs to carry her to the safety of the house.�
+A minute later and she was inside- though not without another curse of
+frustration as one rebellious mammary struck the doorway particularly hard on
+her way in.� I followed at her heels and
+shut the door behind us.</p>
+<p>����������� �See, the
+coast is clear, everything is safe and no one saw you,� I assured Joanna, who
+was leaning heavily against the kitchen counter, panting, �And look, Reyna left
+us a little something to help cover a new scale, or whatever.�</p>
+<p>����������� �Great,
+because that's just what I need right now,� Joanna shot back, �a new scale to
+tell me exactly how fucking massive I am now.�
+If it's at least enough to buy me a case of beer and fuck I dunno, maybe
+a whole wedding cake and a new vibrator, run out and spend it on that instead,
+okay?�</p>
+<p>����������� �Uh, let's
+see here then; she didn't say just how much she was leaving,� I said, undoing
+the clasp on the strangely thick envelope as Joanna sighed and leaned further
+over the counter, her pale breasts spilling nearly all the way across it, �It
+looks like she gave us- holy crap-.�</p>
+<p>����������� �What, is
+it all weird alien space money or something?� she sighed, looking disappointed
+but not surprised, �Just when I was thinking I might get something out of this
+whole ordeal besides a figure� like a
+Thanksgiving Day parade balloon and a whole lot of lower back pain.�</p>
+<p>����������� �No, it's
+not that-� I tried to explain, leafing through the contents of the envelope,
+�There's like, damn- a <em>lot</em> of hundred dollar bills in here.�</p>
+<p>����������� �What,
+seriously?� Joanna said, suddenly alert and engaged, �Here, spread it out on
+the counter- sorry I'm, uh, taking up so much of the top here with my girls and
+all.�</p>
+<p>����������� �Damn,
+there's two hundred grand in here,� I breathed, �piling the cash in lopsided
+stacks next to my girlfriend's opulent bosom, �I dunno how much scales cost
+where Reyna comes from, but, yeah, I think we're gonna be good for a while, at
+least while I'm getting through the rest of school.�</p>
+<p>����������� �Well,
+that's a relief,� Joanna sighed, shooting me a pleasantly unguarded smile,
+�It'll be a lot easier reconciling myself to laying around the house being huge
+and unemployed if we've got enough money in the bank to make ends meet.�</p>
+<p>����������� �Yeah, I
+guess so,� I agreed, still more that a little stunned, �I mean, I know this
+wasn't something you'd have asked for in a million years, but I guess things
+actually turned out okay after-�</p>
+<p>����������� I was interrupted
+by a heavy creak from the front door, followed a moment later by a polite
+knock.</p>
+<p>����������� �Fuck!� It's her again!� Joanna shouted, �Don't let
+her-�</p>
+<p>����������� Her order
+was cut off as the creaking of the front door redoubled as the knob slowly
+turned.� A split second later it exploded
+inwards like it had been kicked.</p>
+<p>����������� Through the
+opening immediately poured the most gargantuan pair of breasts I had ever
+seen.� Reyna was clearly more than twice
+as wide as the door, but even with most of her still standing on the front
+stoop, her gelatinous cleavage spilled more than two feet into the house,
+buoyed aloft by an emerald green belly so exquisitely overstuffed that if not
+for her impeccable posture and unnatural roundness, it would have dragged on
+the floor.� Almost hidden behind the
+mountainous bosom was Reyna's smiling face.</p>
+<p>����������� �Hi, can I
+come back in for a moment?� she asked, though she didn't wait for a reply
+before she started forcing the vast bulk of her figure through the front door,
+�Ow!� It's a good thing I'm so squishy-
+I'm so sensitive all over now that you've helped have so awfully much to
+eat!� Whew, just give me a second here,
+there's so much more of me to carry around right now and I'm still getting used
+to it.�</p>
+<p>����������� As I looked
+on, mesmerized, and Joanna stared in undisguised horror, Reyna cheerfully
+billowed through the door.� Her belly
+stuck out a full yard in front of her, wider than the door frame all by itself,
+while each of her breasts was even more massive, tremulous zeppelins of green
+gelatin so full and heavy I marveled that she was able to hold herself together
+at such a size, her bosom hanging to her knees and broader than she was tall,
+glistening wetly.� With a few squeaks of
+effort, she managed to pull her bloated lower half inside as well, the door groaning
+quietly as she crammed hips more than six feet wide through its portal, looking
+indecently pleased with herself as she finally stood inside the house, her body
+still quivering like a balloon filled to bursting with rich green nectar.</p>
+<p>����������� �So, um-
+Hi, Reyna,� I stammered, taking a step back as I realized I wasn't more than
+three inches from the tremulous extremity of her spectacular bosom, �We thought
+you were already halfway to- ah- wherever it is they you're off to next by
+now.�</p>
+<p>����������� �Oh, you
+are right, I was supposed to be!� Reyna enthused, eagerly clasping her hands
+above her ponderous bust, her entire body aquiver with her usual enthusiasm,
+�But there was a misunderstanding between me and my superiors.� Though I will be permitted to eat as much as
+I desire once I reach my new posting, they are planning on sending me on one of
+your airplanes, so I will have to reduce myself to a more portable size for
+travel.� But I am not worried- now I will
+be able to enjoy gaining all this pleasurable mass again once I arrive, and it
+also means that I can thank you more fully for all the generosity you have
+shown to me.�</p>
+<p>����������� �No, no,
+no, no no- I don't need any thanking, fully or otherwise, thank you very much,�
+Joanna said, the color draining from her face as she backed towards the stairs,
+nearly losing her balance as one ample hip struck the back of the couch, �Fuck-
+I mean, you left us all that money- that more than makes us even!� And besides, you've already shared so much of
+yourself with me- I mean just look at how, um, pleasurably massive I am- I
+couldn't ask you to give me another drop.�</p>
+<p>����������� �Oh, but it
+is no trouble at all!� Reyna insisted, advancing towards my girlfriend with a
+smile on her face, the floor creaking beneath the burden of her body, �I need
+to yield it to a female and you are the only one I know well enough to share
+such intimacy with.� I could never live
+with myself if I just approached some strange human in a store and gave her all
+of <em>this,</em> knowing that I had deprived you, who have shown me such kindness,
+of this gift.�</p>
+<p>����������� �It's okay,
+it's really just fine if you want to go find some random girl on the street and
+blow her up until her ass is as big as a sofa,� Joanna pleaded, awkwardly
+retreating up the stairs, �I just- I don't deserve the honor of being as big as
+you are right now!� There's got to be
+some other girl out there who would appreciate it more.� I know, give me an hour to make some calls-
+I'm sure I can find a few friends who would just jump at the chance to pad out
+their own curves a little!�</p>
+<p>����������� �See, again
+you prove how selfless and giving you are!� Reyna beamed, following Joanna
+closely, stairs groaning beneath her weight, the expanse of her green hip
+bulging between the thin white balusters, �Willing to see this gift shared with
+your friends instead of receiving it all for yourself.� Well, as much as the idea of helping you make
+so many others happy tempts me, I am afraid I have no time!� If I cannot reduce myself to more convenient
+dimensions and be at the airport in the next hour, I will still be obliged to
+give up my size but I will be demoted to a position so shameful I cannot even
+utter what it would entail!�</p>
+<p>����������� �Wait, no-
+I'm still barely able to manage at <em>this</em> size!� Joanna implored, backing
+into the bedroom with Reyna only inches away, �Please, if you make me any
+bigger I'm not sure I- Fuck!�</p>
+<p>����������� Joanna
+tripped against the edge of the bed, toppling backwards onto the king-size
+mattress, her already bloated breasts clapping together with a resounding slap
+as she sprawled out across the bedspread, too heavy and too frightened to
+escape, though with Reyna completely filling the bedroom door, there wasn't
+really anywhere for her to go if she had been more mobile.</p>
+<p>����������� �See,
+always so very thoughtful,� Reyna said brightly as she moved in closer, her
+belly pressed heavily against the edge of the bed, her glistening breasts
+looming out above Joanna, �I was thinking the kitchen would be an acceptable
+place for me to show you my gratitude, but this will be far more comfortable
+for both of us.� In fact, since you are
+already laying down, I think I can make this bring you even more happiness.�</p>
+<p>����������� �Wait, what
+are you doing?� Joanna protested weakly as Reyna leaned forwards, reaching past
+her own unwieldy bosom and pushing my girlfriend's sleek thighs apart, �You
+can't- Ahhhhhh!�</p>
+<p>����������� Reyna
+buried her face between Joanna's legs and from the way my girlfriend
+immediately began to moan and writhe, was obviously making sure she hit all the
+right places as she began to pump herself into Joanna's supine form.</p>
+<p>����������� From the
+bedroom door I watched, not sure whether I was doing nothing because there was
+nothing I could do, or just because this was what I wanted so very badly.� Reyna knelt at the end of the bed, thighs
+like bridge pilings hidden by the translucent immensity of her ass.� Her overfed belly bulged out to either side
+as she leaned in close to fill Joanna, whose legs were thrown over her emerald
+shoulders, Reyna's vast jellylike breasts rubbing against the back of Joanna's
+thighs.</p>
+<p>����������� Reyna was
+still so massive that I couldn't see any change in her yet, but the effect of
+her onslaught of her benevolence on Joanna's figure was immediately clear.� Her belly was rising like an inflatable pool
+toy as Reyna fervently poured her body's mass into Joanna's outstretched form.� It jiggled and quaked as it swelled, already
+larger than if she were nine months pregnant, though infinitely softer,
+spilling out at her sides as it become more majestic with every flick of
+Reyna's tongue.� It was obvious that
+Reyna was giving Joanna's femininity the same treatment as my girlfriend
+screamed and clutched at her expanding belly as low as she could reach,
+thrashing wildly on the bed in excruciating bliss until she was nearly
+insensible.</p>
+<p>����������� As Reyna
+zealously attended to her business, unbothered by the way my girlfriend's belly
+threatened to bury her head, Joanna's ass ballooned beneath her.� In less than a minute her already-opulent
+hips had been filled until they spread across more than half the bed, her
+invitingly wobbly bottom billowing outwards as if her cheeks were a pair of
+water balloons being filled from a firehose, while her thighs swelled like
+jumbo marshmallows in a microwave, thickening and thickening as they expanded
+against the lower latitudes of her growing belly, her knees becoming plumper by
+the second, her calves, right down to her ankles fattening with excess.� I wondered if she'd even be able to walk
+after much more of this treatment, but found my concerns dissolving as I
+thought about what it would feel like to have those supple and beguiling legs
+wrapped around me as I made her come.</p>
+<p>����������� Most
+breathtaking by far though, was the effect of Reyna's fervent ministrations on
+Joanna's bosom.� Even as Reyna pressed
+her verdant tongue to Joanna's aching lips, my girlfriend's breasts had
+eclipsed her ample belly, and now that Reyna was applying herself so lustily,
+Joanna's bustline endured a double measure of what she received elsewhere.� She had already been spectacularly-endowed,
+with breasts fully two feet across, at least when she lay down and gravity
+could spread their bulk across the bed, but now they surged far larger, as
+Reyna forced gallon after gallon of her gratitude into Joanna's submissively
+receptive bosom.� Their pale skin stretched
+as each second left them more stunningly glutted with flesh, areolae drawn
+tantalizingly wide as the sheer volume behind them increased.� Her nipples were fat and firm as they rode
+ever higher on the mounting immensity of Joanna's breasts, so tight that I
+swear I could see them throbbing as she cried out wordlessly and grabbed at the
+billowing mountains weighing down on her chest, her arms all but pinned beneath
+their mass.</p>
+<p>����������� </p>
+<p>����������� I glanced
+down at Reyna's resplendently quiversome behind and saw that her generosity was
+affecting her as well.� She was still
+huge beyond all reason, but her hips were no longer as wide as the bed, her
+belly no longer bulged against the mattress quite so desperately, and her
+breasts seemed to be retreating at about the same rate that Joanna's lower half
+was growing.� I hoped that strangers
+didn't need to breathe, because between Joanna's bloating belly and swiftly
+swelling thighs, she was nearly up to her shoulders in my staggeringly buxom
+girlfriend.� The sight of Joanna growing like
+this had already gotten me rock hard, but looking down at Reyna, bent over and
+on her knees, her slippery overfed ass quivering as she held my girlfriend
+helpless with ecstasy- well, it wasn't the first time since she'd darkened our
+door that I wondered what it would be like to have sex with a stranger,
+particularly the oh so willing and eager-to-please one on the floor before me.</p>
+<p>����������� �Fuck,
+you've got to stop, please!� Joanna begged, clutching protectively at a bosom
+so astoundingly overfilled that her arms, which were beginning to plump up along
+with the rest of her, did little more than sink helplessly into the vast bulk
+of her swelling breasts, �My tits feel are about to burst, and I'm so heavy I
+can't barely move-� Ungggh! I can't even
+panic right with you making me cum like this!�
+Dammit, hon, can't you distract her or something so I can at least catch
+my breath- I'm about to have a heart attack here!�</p>
+<p>����������� I would
+have thought that with her head clamped tightly between Joanna's opulent
+thighs, Reyna wouldn't be able to hear Joanna's desperate pleas for mercy, but
+I was proven wrong as she paused from her efforts at making my girlfriend so
+voluptuous that she could split the seams of a circus tent, and stood up to
+look down and survey the fruits of her labors, smiling.</p>
+<p>����������� �Oh, how
+thoughtless of me, I imagine I am obliging you to take on a good bit more than
+you have before; you probably could benefit from a little break,� Reyna
+admitted as she reached down as caressed one of Joanna's immensely bloated
+thighs approvingly, �In fact, as long as we can resume going at this rate, by
+all means, catch your breath if it has escaped from you.� So, what was this distraction you were
+suggesting for me?�</p>
+<p>����������� �Fuck, I
+dunno, anything;� Joanna gasped, struggling to get as far from Reyna as her
+exhausted and lust-flooded body could manage as she wriggled up high enough to
+rest her head on the pillows, �Hon, hit her with someth- no, forget that, I
+don't want to end up in some Area 51 prison camp or something- I give up, just
+fuck her up, I don't care!�</p>
+<p>����������� �Hmm,�
+murmured Reyna curiously, turning back to look at me, her head turning before
+the rest of her body in a way that was ever so slightly disconcerting, �You
+know, I have to admit, since coming here I have been curious about the way that
+human couples experience sexual pleasure.�
+I've overheard both of you copulating several times and it sounds most
+enjoyable, but my attempts to stimulate such sensation in my own body have
+failed.� My people are all what you would
+think of as female, if you had not noticed, so I have no experience with the
+kind of penetration human intercourse seems to often involve.�</p>
+<p>����������� �Well fuck
+it; that's just perfect then!� Joanna sighed, still panting, �I know I'm going
+to end up as big as a parade balloon here, but can you at least buy me a few
+minutes of rest before I get the next five hundred pounds or whatever poured
+into me by screwing this girl while I try to pull myself together?�</p>
+<p>����������� �Um, I
+guess so, if you really want me to,� I agreed doubtfully, as Joanna had always
+been the possessive type and this seemed very out of character for her, �I
+mean, like, right now?�</p>
+<p>����������� �Oh yes,
+right now!� Reyna said brightly, now facing me eagerly, her still massive
+breasts and belly quaking barely an inch away from my body, �See, your mate has
+moved up on the bed to give us room so you can instruct me, and from the sounds
+she makes when you fill her with your penis, I expect you are very good at
+it.� Please, fill me the same way!�</p>
+<p>����������� I shot one
+last inquiring glance at Joanna, who nodded insistently before collapsing into
+the bed's supportive embrace, then cast an eye towards Reyna, enormous,
+glistening, perpetually eager to please, Reyna, standing right in front of me.</p>
+<p>����������� �So you
+will, then?� Oh, but this will be so much
+fun!� Reyna exclaimed, giving a little hop that set her entire gelatinous
+figure aquiver before she bent down to my fly, her enormous cool, slippery
+breasts hanging heavily against me, �Oh, and how thoughtful you are!� Your penis is already large and engorged so
+you can please me with it- I think this flared part near the end will feel very
+pleasant inside of my body.�</p>
+<p>����������� With my
+girlfriend still panting and wobbling on the bed behind her, Reyna tentatively
+embraced me, her mammoth belly squishing against me down to my knees, her
+tremendous breasts of jelly sliding against me, spilling out around her arms as
+she tried to embrace me, her cleavage pressed tight and cool and wet against my
+body from my neck to where my erect member slipped unbidden between her
+shimmering jade-steeped globes, throbbing against their yielding burden.</p>
+<p>����������� �Oh, but
+this will not do- I am still too full in front for you to reach past my belly
+and penetrate me with your penis,� Reyna sighed with dismay, �Wait, perhaps you
+will be long enough to fill me amply if you take me this way!�</p>
+<p>����������� By way of
+demonstration, Reyna turned away from me, her luscious ass slipping against me
+as she did so, bent over, her elbows on the bed, her honeyed breasts spilling
+out between them, and spread her feet as far apart as she could on the
+floor.� Her lushly swollen belly bulged
+out to either side of her body, and finding space between her parted thighs
+threatened to spill between them too.</p>
+<p>����������� �Please, do
+not tease me, I am ready for you!� Reyna pleaded politely, wiggling her
+sumptuous ass at me invitingly, �Come, fill me while your mate is resting- I am
+so very soft right now, and I am eager to feel the hardness of you inside of
+me!�</p>
+<p>����������� Joanna was
+still laying listlessly against the headboard, and Reyna looked back at me
+expectantly.� I stepped forwards,
+tentatively placing my hands against the glistening surface of her overburdened
+behind, marveling at how slick and yielding her body was, my rod throbbing
+against her glutted cheeks.� It was now
+or never- Joanna needed Reyna distracted and Reyna seemed utterly enthralled by
+the idea of having me rail her.� I moved
+in, my cock sliding between the apex of her parted thighs, and then I was
+inside her, her massive ass cool and wet and welcoming against my body, my
+hands grasping at the small of her back.�
+She was just as intoxicatingly slippery and supple inside as outside,
+and she gave an uncharacteristic gasp of arousal as I entered her.</p>
+<p>����������� �Ooh, but
+this is very different when I tried to stimulate myself!� Reyna sighed, rolling
+her broad-spreading hips against me, �I can see why all the cheerleaders and
+step-sisters in those instructional videos enjoy this experience so much.� Mmm, I imagine the sensation would be even
+more pleasurable if I were tighter around your penis; may I do that, please?�</p>
+<p>����������� �Um, sure,
+if you want,� I agreed, trying to remain composed as I fought the urge to just
+hammer away at Reyna while my girlfriend lay just in front of us, �I mean, if
+this is your first time I want you to enjoy- Nggh!�</p>
+<p>����������� She
+tightened around me suddenly.� Her body
+still slick and welcoming, but hugging my rigid member more tightly.� I couldn't hold back, I thrust into her more
+forcefully, and she gave a stifled cry of surprise, her glistening green form,
+still larger than my recumbent girlfriend, shuddering at my touch.</p>
+<p>����������� �Oh, yes,
+now I can see why so many of your females crave this unceasingly!� Reyna
+exclaimed, still with that strange anthropological detachment even as her
+viscous body slapped against me while I bent her over the bed, �Ah, please, let
+me become tighter around you!�</p>
+<p>����������� �Mmph,
+okay, if you want, but no promises,� I agreed, trying my best not to shoot my
+load inside of her already. �It's just that you're, ah, very arousing, and if
+you want me to keep going, maybe hold off a bit- if you get much tighter I'm
+going to come inside you and then I'll need to rest for a while.�</p>
+<p>����������� �How
+thoughtless of me, trying to increase my own pleasure at your expense,� Reyna
+said with dismay, her entire body now rippling so forcefully that her breasts
+clapped together like mountains of jello as I took her, the entire bed shaking
+and sending Joanna's enlarged endowments quaking as well, �Here, I think I can
+help with that.� Please, do not worry
+about lasting long for me, just enjoy yourself and I will be fine!�</p>
+<p>����������� Reyna grew
+tighter around me again and before I could stop myself I could feel myself
+coming.� It felt different somehow;
+instead of the hot pulse of me exploding inside of her, there was a cool surge
+of something pushing back.� I was still
+so hard, so ready to keep fucking this opulently submissive creature, and now I
+felt like I could keep going a little longer at least.� Reyna tightened again, I entered her
+harder.� She gave another yelp of
+excitement, her body rolling against me like a rising tide as I dug my fingers
+in around her waist, which felt like at any moment it would give way and let my
+hands sink right through her tender substance, but somehow always resisting
+just enough to remain stable.</p>
+<p>����������� �Mmm, yes,
+this is what I have read about in your books about romance,� Reyna gasped,
+reaching out and grasping at her own glutted breasts fervently, �Please, keep
+filling me!� I do not know if there will
+be any males where I am going who will be so gracious as to perform this
+service for me, so please, let me experience this coupling as fully as
+possible!�</p>
+<p>����������� Reyna
+bucked against me, clenching and shuddering as I tried my best to make her
+first experience with a human man a memorable one.� Time and again I felt myself on the brink of
+climax, and every time, the pressure with her green body mounted still
+higher.� I looked down at where we met,
+her surging hips and undulant ass driving me into her relentlessly.� In the dim light of the bedroom, I could see
+the currents of her body swirling where I plunged into her- I found myself
+longing for better light, to see myself inside her, but with the shades closed
+and Reyna still so tremendously fulsome that the bed-frame creaked beneath her
+weight, I could see little more than shadows, dim echoes as I filled her and then
+slid nearly free before impaling her again.</p>
+<p>����������� Oh yes,
+this must be it- this must be- Mmm, what I have studied,� Reyna panted, her
+immense ass still <em>slap-slap-slapping</em> against me as I went faster and
+faster, �Oh my- this is almost more exciting than eating and expanding- oh, I
+think I'm going to- Ahhhh!�</p>
+<p>����������� She
+shivered as if she was going to dissolve, or maybe explode into a million
+pieces, whimpering softly as I brought her to climax, convulsing against me as
+she came.� It was more than too much for
+me- I burst inside of her, like a volcano too long stifled erupting with
+tenfold the violence.� Finally I knew the
+release of spilling my seed inside of Reyna's pliable form as she cried out so
+loudly in a crystal-clear voice like an opera singer reaching the crescendo of
+her performance.� </p>
+<p>����������� And then I
+felt something else.� The same pressure
+that had kept me from coming too soon returned with renewed urgency.� I felt the cool substance of her body pumping
+into my cock, diffusing within it as the tightness of before increased
+intolerably.� Reyna slammed herself
+against me confidently, still cresting the peak of a string of orgasms as the
+same feeling spread to my balls- first cool, then tight, then fuller and fuller
+with each needful pulse.� Moment after
+moment, thrust after thrust it lasted- the pressure mounting higher and
+higher.� Her fulsome thighs rubbed
+against my balls now.� I was amazed how
+hard I still felt, and still she heaved and rolled until she got her fill, now
+whimpering wordlessly as her first time with a man threatened to reduce her to
+a quivering mess.� Reyna somehow still
+felt even tighter as the waves churning inside of her began to subside, her
+lush green thighs pressing all the more insistently against my balls as she
+came for the last time and finally collapsed onto the bed, her breasts
+spreading out under her weight until they lapped at Joanna's feet.</p>
+<p>����������� �My but-
+that was just- well, now I see why your kind are so focused on intercourse,�
+Reyna sighed contentedly, �Oh, and I am sorry for taking so long- it was just
+so very pleasing that I could not bring myself to stop sooner, I apologize if
+this leads to any inconvenience on your part.�</p>
+<p>����������� �Wait,
+inconvenience how?� I asked, confused as I finally stepped back from Reyna's
+glistening lime-hued form, �What did y- oh fuck!�</p>
+<p>����������� �I am
+sorry, while we were being intimate, I thought about how you might have trouble
+penetrating your mate to a satisfying depth now that she is so copiously
+endowed,� Reyna explained, turning to face me and looking down with
+satisfaction, �I did not intend for the process to continue for so long, but
+then once I discovered it was working and the sensation of you filling me more
+and more completely brought me to such a state that I could not stop myself,
+and I just kept wanting more and more until I finally realized what I had done
+to your organ and- well, I am so very sorry but now it is too late for me to
+take it back.�</p>
+<p>����������� I looked
+down too, not that I needed to.� The
+weight alone was enough to tell me what Reyna had done.� It wasn't that she had been tightening around
+me while I fucked her; it was that all the while she had been pumping herself
+into my cock, making it impossibly huge.�
+After a session like that, I should have been ready to rest for a couple
+hours at least, but instead it stood ready at attention, nearly as long as my
+forearm and thick as a Coke can.� My
+balls had endured similar treatment, now swollen larger than grapefruits and
+achingly heavy, throbbing like I was nearly ready to come again.</p>
+<p>����������� �Damn, I
+thought you said you could only do that enlarging thing on women,� I said,
+finally daring to reach down and grasp a shaft too thick to wrap my fingers
+around, �How did you- I mean, I'm huge now!�</p>
+<p>����������� �Mmm, you
+certainly are,� Reyna smiled with satisfaction, running one slick green hand
+along my length and giggling as I tried not to blow a load all over the
+underside of her pendulous bosom, �I thought that either it wouldn't work, so
+no harm would be done in trying, or it would work, and your mate would derive
+additional satisfaction from when you penetrate her and inject your fluids into
+her, though again I did not expect to meet with quite such- <em>sizable</em>
+success- before I am done rewarding her for her generosity, I may have to make
+sure that she is able to safely accept such a thing without injury.�</p>
+<p>����������� �So, is
+this like, just a thing that will last until I get it out of my system?� I
+asked, still in awe at how Reyna had pumped my cock so full it looked- and
+felt- ready to explode, �Or am I going to be this big-�</p>
+<p>����������� �Permanently?�
+she finished for me, looking infinitely tickled at having put me in this
+condition, �Well, if I have studied the anatomy of humans as well as I hope I
+have, it will certainly be smaller after you have ejaculated inside of her, or,
+well, outside of her, I suppose, a few times and your arousal has faded, though
+you will still certainly be considerably larger than you are accustomed to, and
+after a modest refractory period, your member should easily attain its present
+proportions again, when you are preparing to bring your mate the abundance of
+pleasure that you have just given me.�</p>
+<p>����������� �Well, I
+guess I can get used to that,� I said, still a little awestruck at the
+sensation of having several extra pounds of equipment to enjoy, �and don't be
+too sorry, Reyna- I don't think Joanna's going to mind me having a penis like
+this.�</p>
+<p>����������� �A penis
+like what?� Joanna murmured, tossing restlessly where she lay and lifting her
+head and peering through the deep chasm of her cleavage to see what she had
+missed, �Did you finish fucking that green slut yet and is she- Oh, Fuck!�</p>
+<p>����������� �Um, yeah,
+Reyna and I kind of did the thing already,� I said, feeling very confident as
+Reyna stepped out of the way to offer my girlfriend a better view of my new
+developments, �What do you think of this?�</p>
+<p>����������� �Dammit-
+your cock is a fucking monster!� Joanna breathed, equally impressed and
+terrified, �I'm not sure I can take all that- though I guess there's only one
+way to find out!�</p>
+<p>����������� �Oh, I am
+sure you will be able to contain him without too much discomfort,� Reyna
+reassured her as if all this were the most normal thing in the world, �At
+least, once I have finished sharing myself with you, I am positive you will
+appreciate the added length and girth- look!�</p>
+<p>����������� With the
+enthusiasm of a woman on TV at three in the morning demonstrating some new
+salad shooter, Reyna leaned in, grabbed my over-engorged member and began to
+stroke it vigorously.� Her hands were
+just as slick and cool as she was inside, and the sight of Reyna's immense
+bosom jiggling as she jacked me off with my girlfriend laying glutted nearly to
+immobility before me meant that I barely had time to even think of controlling
+myself.� Reyna's cool, swollen breast
+rubbed heavily against my bulging shaft while Joanna gazed down, mesmerized.� </p>
+<p>����������� I couldn't
+take it any longer.� Reyna gave me one
+last squeeze and I erupted, a thick jet of my seed spattering over reclining
+girlfriend's lush figure, fully a pint of glistening cream streaking her skin
+from one fulsome thigh over the fertile rise of her belly and straight down the
+canyon between her bloated melons.� I
+stared, Joanna stared, Reyna looked as wholesomely delighted with herself as if
+she'd just brought home an A+ on an algebra test and expected us to hang it on
+the refrigerator door.</p>
+<p>����������� �Fuck, <em>that</em>
+is a lot of cum,� Joanna said, stunned as she struggled to lift herself up on
+her elbows and disbelievingly ran her fingers across the shimmering stream
+between her breasts, �Seriously, if you want me to blow you after this, I'm
+gonna have to do it on an empty stomach if I don't want to pop.� Also, is it just me or is it just a little- <em>green</em>?�</p>
+<p>����������� �It is! I
+knew you would enjoy it!�� Reyna
+exclaimed happily, still holding onto my member tightly, �I have seen how much
+you enjoy it when I pump myself into your body and make you more enlarged, and
+I know how much you are gratified when your mate injects his fluids into you
+and causes you to become full, so now, even once I am gone, you will both have
+something to remember our time together by!�</p>
+<p>����������� �Well, I
+think you kind of already gave me a couple souvenirs,� Joanna said wryly,
+poking one of her opulent breasts demonstratively, �But I'm not gonna argue, if
+you want to give my boyfriend a monster cock, I'm okay with that, and I always
+did like the taste of a hot load, though I guess the serving size for that meal
+just went up by a few hundred percent, so I'm really okay with- Wait- what do
+you mean 'causes me to become full'?�</p>
+<p>����������� </p>
+<p>����������� �See, now
+that I have planted some of my substance in his glands, his juices will have
+the same effect on you that I do,� Reyna said proudly, �Every time he releases
+himself within you, your mass will increase by, hmm- I should have brought a
+measuring cup- perhaps another half a pound?�</p>
+<p>����������� �So, every
+time he fucks me I'm going to get even fatter?�
+This just keeps getting better,� Joanna said in a tone suggesting that
+it was not, in fact, getting better.</p>
+<p>����������� �Oh, but it
+is still getting better,� Reyna said brightly, �Here, now that you have had
+time to rest, I have increased your mate's capacity for satisfying you, and I
+have received a vigorous education in human intercourse, I believe it is time
+for me to finish repaying your generosity in kind, while also rendering myself
+fit for travel.�</p>
+<p>����������� �Come on,
+aren't I enormous enough already?� Joanna pleaded, sounding more resigned that
+upset, �More than half the bed is already buried under my tits, I've got a
+belly like one of those girls people on the internet pay to livestream eating
+entire wedding cakes, and my ass is so huge that it'll take a fucking gallon of
+coconut oil just to get my hips slippery enough to cram me through the
+door!� Seriously, I've sat next to girls
+huger than you on flights; they don't care as long as you don't smoke in the
+bathroom or threaten to blow up the plane.�
+You'll be fine.�</p>
+<p>����������� �Oh, but
+you are so kind to want to let me keep these delectable proportions,� Reyna
+beamed, gathering up her own vast bosom in overflowing arms and hugging it
+ardently, �That is exactly why you deserve every last ounce that I can bear to
+offer you.� You should not have to be
+content with mammaries that are merely adequate to cover half your bed- by the
+time I am finished, all of it will be in the shadow of your amplified charms;
+you should be content with nothing less.�</p>
+<p>����������� �Okay,
+fine, I'm tired and I'm already massive,� Joanna submitted, stretching her
+sensuously plumped-up legs towards where Reyna waited at the foot of the bed,
+�I'm pretty sure I'm already gonna spend twenty hours a day sleeping,
+masturbating, or getting plowed by King Dong here anyway, you might as well
+give me the full experience.� Just don't
+make me so fucking fat that my tits explode or anything like that, okay?�</p>
+<p>����������� �Do not
+worry, I promise I will not force your breasts to contain more than 98% of
+their maximum safe capacity,� Reyna offered reassuringly as she bent over the
+bed, her glistening green breasts once more pressed against Joanna's thick
+thighs, emerald nipples poking against the lush curve of her overstuffed
+behind.� Reyna turned back to look me up
+and down, �Would you like you enter me again while I finish expanding your
+mate?� Now that I have had a little
+practice, I think I might be able to triple the size of your genitals this
+time, and I would not mind experience the sensation of you penetrating me a second
+time.�</p>
+<p>����������� Joanna
+looked up at me, then down at me with an expression of fear and lust-charged
+curiosity.</p>
+<p>����������� �Um, yeah,
+I think maybe I've had enough,� I said, glancing down at my member, hanging
+against my legs like a ten pound roll of sausage, �At least one person in this
+house need to be able to fit into clothes and ah, I think this is going to be
+more than enough to make her see stars.�</p>
+<p>����������� �Of course,
+Reyna said, turning her attention back to my girlfriend, while giving her
+voluminous bottom a playful shimmy, �So I will only have so much the more to
+fill her with then.� If you change your
+mind before I am finished, you are welcome to initiate sexual relations with
+me.�</p>
+<p>����������� Joanna
+glared at me as Reyna spread her thunderous thighs apart, though I couldn't tell
+if she actually wanted me to have a dick so gigantic I could use it to knock
+down doors, if she wanted my balls to be so distended with cream that she could
+live exclusively on a diet of blow jobs, or if she just resented having to have
+that much more of Reyna pumped into her already glutted body.</p>
+<p>����������� Either way,
+her severe expression didn't last long.�
+Easing herself in between my girlfriend's legs, Reyna hefted her belly
+out of the way, and went to work with an appetite.</p>
+<p>����������� �Oh fuck!
+Oh fuck- she's making me- the pressure is- Ohh!� Joanna cried out as Reyna, who
+still looked like she could tip the scales at north of five hundred pounds,
+labored to pour that staggering weight into Joanna's boundlessly receptive
+body, �Fuck- she's turning me into a fucking blow-up doll the way I'm
+growing!� Nggh- and she's going for my-
+Ahhhh!�</p>
+<p>����������� Joanna
+collapsed back onto the bed, moaning as she came, her hands grasping as low as
+she could reach against the rondure of her trembling belly; Reyna gleefully
+fattening her femininity just as consummately as the rest of her figure.� Hey breasts were swelling up at an alarming
+rate, rising higher and higher as Reyna forced them to gain gallons of fat in
+the span of a few seconds.� It was like
+watching a pair of hot air balloons being readied for service, pink areolae
+being drawn tighter and farther across her two recklessly expanding spheres,
+nipples as firm as ripe strawberries shivering with desire.� The pale skin of Joanna's breasts protested
+weakly as they stretched to accommodate the mounting surfeit within them,
+delicate blue veins here and there dimly visible below her skin as her bosom
+expanded to within a foot of the mattress' edge on either side.</p>
+<p>����������� Reyna was
+finally noticeably smaller, though still so overpowering buxom that I was
+hard-pressed to resist taking her up on her offer for a little more fun, but
+aside from not being entirely sold on the idea of having a dick I could tuck
+into my socks, I realized that after this was over, Joanna was going to be in
+no condition to do much for herself for a while, so I needed to make sure I was
+still able to get around.� Still, the
+sight of that quiversome green behind jiggling just a couple feet away from my
+exposed member was tempting.</p>
+<p>����������� Joanna's
+ass was billowing larger with breathtaking speed.� She was becoming so terribly immense down
+there, her hips spilling nearly as wide as her overfed bosom, her rump glutted
+to the point that she was starting to have trouble keeping her legs stretched out
+towards the foot of the bed, the growing bulk of her soft cheeks beneath her
+forcing her knees towards the ceiling.�
+From the way her bottom rippled as she shuddered with ecstasy, its
+voluptuous curves were just as pleasure-tuned and yielding as her breasts.� Joanna's thighs were swiftly fattening as
+well, expanding like jumbo marshmallows in a microwave, and looking every bit
+as soft.� At her hips, they were thicker
+than barrels, and that sheer, overpowering fullness was rapidly working its way
+downward as Reyna loaded her with gallon after gallon.� As I looked on in awe, her calves suddenly
+bloomed outwards, sleek and full, only her feet being spared Reyna's boundless
+largesse.� Just as with her hips, her
+legs were becoming so sumptuously fat was making it harder for her to keep them
+bent, her ankles rising steadily skyward as her lush limbs became more
+embarrassingly overfull.</p>
+<p>����������� Joanna
+whimpered, her fingers sinking deep into the softness of her burgeoning belly,
+Reyna's efforts to plump up her inner places evidently proceeding apace.� If she'd hated being fat before, I dreaded
+how she'd react when she realized just how much weight Reyna was compelling her
+middle to hold.� Soft as the rest of
+Joanna's flourishing figure, it was trapped between the broad expanse of her
+hips and thighs below, and the punishing weight of her bust bearing down upon
+it.� Rising, her belly spread wider,
+rolls forming and deepening at her sides, a deep fold where it wanted to bulge
+down between her legs, but was pushed up by Reyna's head.� Her navel grew deeper as her belly attained
+more stunningly self-indulgent dimensions, constantly wobbling and rolling as
+beneath all that tantalizing flesh, Joanna bucked her hips, her body desperate
+for more of Reyna's treatment.</p>
+<p>����������� Glancing at
+Joanna's hands still pawing desperately at her belly, I realized that it wasn't
+just her curvier bits that were on the receiving end of Reyna's gratitude.� Her arms were plumping up as well, and though
+largely hidden beneath the two tremulous mountains rising from her chest, the
+way her fingers were getting plump and her elbows softening, from shoulders
+down, they were surely swelling into a state of lush and squeezable fullness as
+well.� Even the day before I'd been able
+to make out the shadow of her ribs, now her sides were accumulating rolls of
+fat, that same fullness spreading up from her belly and suffusing her
+chest.� Joanna's eyes were shut tight,
+her jaw clenched tight one second, then gaping open the next as another cry of
+transcendent pleasure escaped her lips.</p>
+<p>����������� I looked at
+Reyna, she was down to, what- three hundred and fifty pounds or so by the look
+of her, her hips no longer threatening to outdo the king-size bed in breadth,
+her breasts now merely larger than beachballs.�
+And every ounce she lost flooding into my helpless girlfriend.� </p>
+<p>����������� Joanna
+moaned, delirious with bliss, her breasts now fattened to the size of
+overstuffed beanbag chairs.� The
+bedspread rustled softly as they occupied more and more of its territory, the
+bedsprings complained less quietly as the lush burden they were being made to
+support increased inexorably.� Her
+breasts filled nearly the entire breadth of the bed now, rising higher and
+higher as they filled with more, quivering submissively as Reyna laded them
+with bulk as if their capacity were endless.�
+Joanna's areolae each extended fully a foot across, their rosy surface
+bulging gently away from her breasts, so puffed up and billowy that her
+nipples, each now the size of ripe plums, were nearly overwhelmed by the sea of
+gently rimpled velvet skin around them.�
+Where they weren't pushed out of the way by her belly and its blossoming
+rolls, Joanna's breasts nearly reached her hips now, though those hips had
+closed a fair bit of that gap on their own, and were it not for the generous
+heap of pillows my girlfriend was reclining on, I would have worried that she
+was liable to smother herself under her alarmingly replete bosom.</p>
+<p>����������� Reyna,
+sensing her work was almost done and my girlfriend in no condition to protest,
+redoubled her efforts.� Joanna's belly
+quaked as gallon upon gallon pulsed into her opulent body, most of that
+freshly-gained mass quickly finding its way outward, though from the way her
+belly continued to rise and spread more than a little was settling in around
+her middle.� Her hips, her ass were
+spectacularly glutted with fat now, with Reyna's watermelon-sized breasts
+pushed to the edge of the bed as my girlfriend's bottom forced them out of the
+way, her overfed behind now as wide as her bosom had been just a few minutes
+before.� Her thighs were so scandalously
+full that it was hard to tell exactly where her ass ended and they began, even
+her richly dimpled knees were as wide as my shoulders, her calves so thick that
+they even rolled out a little over her ankles, her small feet appearing
+hopelessly unequal to the task of supporting her titanically voluptuous figure.</p>
+<p>����������� There was
+something about the way her body was changing reminded me of Reyna swelling up
+in the shower the week before.� Not just
+that she was growing at a breathtaking rate, but there was this pervasive,
+almost liquid heaviness about her billowing curves.� I'd seen plenty of fat girls in my life, and
+more than a few with tits to match (and been I've lucky enough to get to know
+more than a couple of them), and even a girl who tipped the scales at three
+hundred pounds had a fair bit of sag to her charms but Joanna, even at such
+immense proportions as she had attained, looked like she was indeed, pumped
+full of jelly.� Her breasts were almost
+unnaturally well-rounded considering how much they had to weigh by this point,
+but were still so enticingly soft that the smallest shiver from Joanna set them
+delightfully aquiver.� It was the same
+with her bottom, expanding underneath her like an blow-up mattress- I could
+already tell that if she was actually able to stand up after this, it would
+still be just as lusciously round as it had been this morning, and still so
+enticingly supple that I didn't worry for a moment about being able to take my
+transcendently sensual girlfriend from behind.</p>
+<p>����������� Reyna had to
+be nearly done- she couldn't weigh much more than a couple hundred pounds now,
+chubby, with fat boobs and a round butt, but hardly big enough to get turned
+away at any airport in America.� But she
+was still going, and I wondered just how much more of this Joanna could
+take.� Her breasts already overhung the
+sides of the bed by several inches, and I worried about all that increasingly
+unsupported weigh as her moans of pleasure were mixed with whimpers of
+discomfort.� Her knees towards the
+ceiling, her colossal thighs met the underside of her seductively surfeited
+mammaries.� Still Reyna filled her with
+more.� I could hear her breasts growing,
+distressingly overladen now, the deep, liquid sound of whatever Reyna was made
+of rushing into them, Joanna's body stretching further and further to contain
+it all.� Her areolae were so puffy now
+that they nearly overwhelmed her fat nipples, two throbbingly taut peaks lost
+in a rosy, rimpled sea.� </p>
+<p>����������� There was a
+deep, tortured creaking- Joanna grew tense- and the next moment the bed-frame
+collapsed beneath the ponderous weight of her body.� Her entire figure quaked like a mountain of
+jello in a hurricane, she cried out in surprise, though Reyna seemed utterly
+unfazed, simply falling to her knees and continuing to thank Joanna within an
+inch of her life.</p>
+<p>����������� While Reyna
+was swiftly approaching a state that she could merely be described as curvy,
+Joanna's bust was now dangerously distended.�
+For the first time I noticed pale striations forming against the
+otherwise flawless skin of her breasts, as Reyna's munificence forced Joanna to
+hold more than she safely could.� Her
+belly, her hips, her thighs, none were growing any larger- Reyna was funneling
+all she had left into my girlfriend's already oversaturated bosom.� She cried out weakly- her fingers now
+clutching protectively at the mammoth globes that pinned her arms beneath their
+obscene immensity.����� </p>
+<p>����������� I wanted to
+intervene- I wanted to pull Reyna away, but in the end, I wanted more to see
+just how staggeringly sumptuous Reyna could make my girlfriend.� I didn't have long to wait.� With one last, frenzied surge that forced
+Joanna's teeming breasts to accept a parting burst of several gallons more, her
+breasts so tremendously engorged that to her left, where the bed was just a foot
+away from the wall, Joanna's breast pushed hard against the bedroom wall,
+making her cry out in pain, while to her right, there was a crash as her other
+breast toppled over the nightstand and sent a lamp crashing to the floor.� Reyna's work was complete.� Joanna gasped for breath, at least a quarter
+ton of breast-flesh weighing down on her chest, her entire body trembling with
+excess.</p>
+<p>����������� Reyna
+withdrew herself from between Joanna's legs, my girlfriend's overblown thighs
+filling the empty space with a wet slap that rippled through her entire lower
+half.� Reyna turned to face me, beaming
+cheerfully.� She was even thinner than
+last time, lithe and trim as a gymnast, though even now, her breasts were still
+a pair of round handfuls and her bottom was far more pert and shapely than the
+rest of her figure suggested.</p>
+<p>����������� �I am sorry
+that I have no more to give; you have both been so very kind to me,� Reyna
+said, as if this was all as normal as thanking someone who spent the day
+helping you move by ordering pizza for everyone, �I hope that she- that both of
+you will derive generous amounts of pleasure from my tokens of gratitude.�</p>
+<p>����������� �Um, yeah,
+as long as Joanna doesn't flip out when she comes to and discovers just how
+gigantic you've made her, yeah, I think we're going to have a lot of fun with,
+you know, all of this,� I said, gesturing vaguely towards my member and casting
+a wary look at where my bed-filling girlfriend lay, �She's going to okay,
+right?� I mean, aside from being absolutely
+massive, I'm not going to have to call 911 or something, am I?�</p>
+<p>����������� �Oh, well,
+I've never taken a human female nearly this far, but she should find it easier
+to function after a few days getting used to her new size, though I did inflate
+her libido substantially, so you may need to service her several times a day to
+keep her satisfied,� Reyna explained calmly, her eyes lingering for a moment on
+Joanna's critically overfilled bosom, �Well, perhaps in my eagerness to thank
+your mate as fulsomely as I was able, I may have exceeded my original estimate
+of 98 percent and filled her mammaries with more like 99.7 percent of their
+safe capacity- though I am sure that she will be quite alright once her body
+grows accustomed to its current level of distention.� For the next few days though, yes, perhaps it
+would be wise for her to mostly remain in bed and keep her away from sharp
+objects, just to be on the safe side.�</p>
+<p>����������� �Well, I
+don't think she's going to be after me to take her on any roller coasters or
+take up ax-throwing right now, so I guess we ought to be safe enough,� I said,
+staring over at my insensible girlfriend's mammoth bust a little less
+apprehensively.</p>
+<p>����������� �That is
+good; I do not think she would fit in the little carts anymore, and her breasts
+getting in the way of her elbows would definitely make ax-throwing more
+challenging,� Reyna said brightly, before smiling down at my rising shaft, �But
+it should be quite safe, by the way, for you to fill her with your penis as
+often as the two of you desire, though some parts of her are going to be exceedingly
+receptive for some time.�</p>
+<p>����������� �Got it- <em>don't</em>
+stuff her into a roller coaster, <em>do</em> screw her silly; I think I can
+handle that,� I agreed, Joanna beginning to stir feebly where she lay, �So, as
+much as I appreciate you helping us with, ah, all of this, I think it's
+probably a good idea if you head out before Joanna wakes up again, you know?�</p>
+<p>����������� �Oh, of
+course I understand,� Reyna agreed, �As much as I have been able to fill her
+with, surely when she awakes she will be disappointed to discover that I could
+not render her even more delightfully bountiful- you are so kind to offer to
+help console her instead of expecting me to wait and apologize for not being
+capable of making her any more enlarged.�
+I will speak well of you to all whom I meet, good-bye!�</p>
+<p>����������� And with
+that, Reyna turned on her heel, hurrying from the bedroom and down the
+stairs.� A moment later I heard the front
+door slam closed, and I once again found myself alone with Joanna, blinking
+dreamily as she tried to bring the room into focus.</p>
+<p>����������� �Oh fuck-
+it wasn't a dream- was it?� she murmured absently, her hands patting at the
+underside of her bosom tentatively, before cautiously exploring what they could
+reach of her lush belly, �Fuck, my tits must weigh a ton each and my ass- it's
+like Reyna poured an entire waterbed into me and now I'm filled to the brim and
+it's all sloshing around inside me.�</p>
+<p>����������� �Yeah,
+that's pretty much how it went,� I answered, surprised at how she wasn't losing
+her mind nearly as much as I'd expected, �How do you feel?�</p>
+<p>����������� �Oof, aside
+from being heavier than if I just swallowed a hippo, I just feel really,
+really- full,� Joanna said, �Like if my boobs were balloons, they'd be like, <em>this</em>
+close to popping. It doesn't really hurt though, so I guess I can deal with it,
+and it feels like she pumped my labia up with nearly enough to make them burst
+too, so right now I'm feeling so stupidly horny that even if it kills me, I
+can't wait to find out what sex with you is like with everything inside me all
+swollen up and aching to have you inside me.�
+So, in case you didn't notice, my tits are so fucking huge that I can't
+even see you right now- you want to climb up into bed so I can at least see
+you?�</p>
+<p>����������� �Well,
+Reyna did kind of admit she went a little overboard and maybe sort of made your
+boobs so huge they almost exploded, but she did say they <em>probably</em> won't,
+as long as you're careful,� I said, climbing onto the edge of the mattress and
+standing there, Joanna's opulent ass lapping at my toes like the incoming tide,
+�Here, how's this?�</p>
+<p>����������� �'<em>Probably'</em>,
+she seriously said that?� Fuck- they're
+tingling like they've been stretched out enough to burst, and my poor nipples
+feel like they've been blown up to the size of grapefruits,� Joanna swore,
+�Then again, just seeing that huge fucking cock of yours is making it hard for
+me to worry too much about that; you wanna come stick it in me and find out
+whether that much meat will make me bust or just make me cum until I feel like
+I'm about to?�</p>
+<p>����������� �What,
+right now?� I asked, worried that after all she'd been through a good night's
+rest might be the best thing for Joanna, �I mean, I can try to be gentle- Reyna
+did push you pretty far after all-�</p>
+<p>����������� �Yeah,
+right now. Hell- you're already getting hard just standing there looking down
+at your huge, helpless, horny girlfriend,� Joanna urged, �And fuck being
+gentle- I want you to come and plow me with your massive dick like you're <em>trying</em>
+to make me explode!�</p>
+<p>����������� </p>
+<p>����������� �Alright
+then, no backing out if I'm too much for you to handle,� I teased, stroking
+myself slowly so she could watch wide-eyed as my rod grew so rigid it creaked,
+�Open wide.�</p>
+<p>����������� �Mmph, this
+<em>is</em> wide for me; my thighs are just so fat they rub together even with me
+spread out so far it hurts,� Joanna insisted as I knelt down to take her.� She was enormous- she was everywhere.� My knees sank into the spreading expanse of
+her ass as I tried to position myself between her swollen thighs, which even
+parted as far as she could stretch them, still pressed with insistent heaviness
+against me from waist to knees, �Ooh, I can already feel that huge cock sliding
+between my thighs- Fuck, you're not even inside me yet and I'm already
+afraid.� Here, let me make it a little
+easier for you to give me all that meat.�</p>
+<p>����������� Joanna
+rolled her hips a bit, grabbing at her wobbling belly to try and pull it out of
+the way.� Her breasts lolled farther
+apart as she did so- she flinched as their weight tried to drag her off the bed
+in two directions at once.� Her inner
+thighs were smooth as silk, and already sublimely slippery, though I didn't
+know how much of that was from having Reyna clamped between them and how much
+was just Joanna's overflowing desire.�
+The wetness of her femininity kissed my head as I slipped her- her
+breath caught in her throat as she stretched to contain me.� Inch by inch by inch I slid in deeper, her
+body yielding, surrendering to me as I thrust into her depths.</p>
+<p>����������� �Oh fuck,
+this is what I've been needing!� Joanna sighed, �Come on, I know you've got a
+few more inches to give me.�</p>
+<p>����������� �You're
+sure this isn't too much?� I asked solicitously, my chest pressed against her
+soft, spreading belly, my head and hers both deep in the spreading canyon of
+her cleavage, �You just feel so awfully tight.�</p>
+<p>����������� �Oh, I am
+so agonizingly fucking tight with you in me,� Joanna breathed eagerly, tilting
+her hips to ease my further entry and shuddering as I crammed another couple
+inches inside of her, �Reyna may have filled me to bursting, but she's just so
+fluid, afraid to really test me, aside from these overinflated titties here.� You though- your cock is just so hard and
+thick and rigid- it's too much- I'm a fool to beg for more- it hurts how much
+you're filling me- give me all of it.�</p>
+<p>����������� Smiling,
+Joanna wrapped her legs around me.� My
+feet sank into the lush expanse of her behind.�
+As she struggled to wrap her legs around my body, I felt the opulent
+fullness of her thighs spilling around my waist, deeper, deeper, until from hip
+to knees I was surrounded by my girlfriend's sumptuous charms.</p>
+<p>����������� �Mmm,
+there, now I've got you,� she murmured with satisfaction, �Come on, don't hold
+back, bury it in me to the hilt.� I can
+feel your balls throbbing and I want all that hot, thick cum gushing inside of
+me- after you've given me the kind of savage fucking I deserve.�</p>
+<p>����������� I clutched
+at the sides of her huge belly and held on.�
+Joanna smiled as she felt me probing deeper into her, then gave a choked
+little cry of discomfort as I found the right angle and slid the last five
+inches I had into her straining depths.�
+I swear I could see her go a little pale, like she was about to pass
+out.</p>
+<p>����������� �Are you
+sure you want it rough?� I asked, teasingly, reaching out, grabbing one of her
+turgid nipples and giving it a vigorous pinch, �Are you sure that won't be too
+much for you?�</p>
+<p>����������� �I- I'm
+sure,� she stammered breathlessly, beaming up at me, before turning her head to
+one side and biting her breast so hard that it left an angry red mark as she
+turned again to look up at me, �Now fucking hurt me!�</p>
+<p>����������� I pulled
+back, inch after inch of my length sliding free of her lust-swollen folds, her
+eyes nearly rolling back into her head as I withdrew nearly all of myself from
+her.� She arched her back- a moment later
+I plunged into her completely, impaling her on my straining shaft.� Joanna screamed- I could almost hear her
+stretching within to endure me.� A wave
+of motion billowed through her figure at my entry- her breasts, her belly, her
+thighs, all over her obscenely overfilled form.�</p>
+<p>����������� She looked
+up at me, beseechingly, voiceless and desperate.� I gave it to her again.� And again.�
+And again.� Joanna shrieked
+wordlessly as I gave her what she had demanded, penetrating her with a rhythmic
+urgency as she moaned, her plump hands tightening around my shoulders.� Her tightened shudderingly around me as I
+filled her with more than she could safely hold, her glutted lips wet and
+aching against my skin as I forced them wide open again and again.</p>
+<p>����������� �Oh fuck,�
+Joanna swore, with barely enough breath to speak, �You're getting bigger!� Ah, you can't get any longer- there's no more
+of me to take any more!� You're thicker,
+harder- Oh, I'm not sure I can take this much pain no matter how hard it makes
+me cum.�</p>
+<p>����������� �What-
+didn't you say you wanted it all?� I said, pausing to catch my breath and buck
+my hips a little so that the straining length of my member reached some of her
+more hidden places as she gasped, �You always like it so much when we're
+fucking and you can feel me getting harder and longer inside you; what
+changed?�</p>
+<p>����������� �Fuck-
+you're an absolute sadist!� Joanna cried weakly, trying to dig her nails into
+my shoulders as I gave her another thrusting pulse, �If I actually survive
+this, I might start wanting more of this kind of treatment.�</p>
+<p>����������� �Mmm, I
+think I can think of a few ways to make playtime a little more exciting,� I
+grinned, playing with her- sliding out and back more gently, then pounding her
+just as she began to relax, �I mean, just look at these huge, juicy nipples of
+yours- well, you can't because your big balloon tits are too massive to see
+around- but I bet a couple of nice, springy clothes-pins would make them tingle
+while I plowed you.�</p>
+<p>����������� �Oh yes,
+pinch them for me- make me <em>beg</em> for it!� Joanna sighed, her voice husky
+with desire as she trembled beneath me, �What else?�</p>
+<p>����������� �Well, I'm
+just dying to get a better view of your ass, now that Reyna's pumped it up
+until you're ready to burst,� I offered, grabbing an overflowing handful of her
+hip and savoring how its lushness spilled out between my fingers, �I can barely
+wait for the chance to get you facedown on the floor, maybe a gag to keep you from
+complaining too much, and then just spanking you until your ass is so tender
+you won't be able to sit for a week.�
+Just think of it, you down on your hands and knees, assuming you can
+even reach past your bloated tits anymore, your huge fat belly spreading out on
+the floor under you, when I finally decide I've teased you enough and decide
+you take you from behind.� And since
+you'll be so sore from the spanking, you'll probably have to stay there for a
+while, so if you're lucky and the sight of you on the floor with your fat,
+spankable ass jiggling there makes me as constantly hard as I'm hoping, you
+might just get to enjoy me giving it to you five or six times that night.�</p>
+<p>����������� �Nngh- <em>Mmm</em>,
+yes, I want it like that,� Joanna groaned, her transcendently overfilled figure
+quaking like a mountain of jello as I savored the way she wobbled beneath me,
+around me, everything within reach was her, lush and womanly and inviting, �How
+else are you gonna fuck me?� How are you
+gonna torture me and make me cum before you even get around to spearing me with
+your huge cock?�</p>
+<p>����������� �Mmm, well,
+your tits are just so obscenely heavy and glutted to bursting, I don't think I
+could live with myself if I stopped at a couple clothes-pins and a pinch or
+two,� I mused, fondling her immense melons while I did my best to make sure
+every last inch of her femininity had been probed and stroked by my member,
+�Maybe I just want to see you standing there, exposed and vulnerable, with
+nothing to support these overgorged boobs- just you, naked, leaning forward,
+hands against the wall so even your fat belly couldn't help hold up their
+weight, with these big, swollen breasts hanging, heavy and free and so very
+delicate.�</p>
+<p>����������� �Ooh, I can
+barely take how much they weigh with the whole bed holding them up,� Joanna
+gasped through clenched teeth as I drove home my idea with a deep thrust, �Do
+you know what it would do to me to just leave them dangling there?�</p>
+<p>����������� �Hmm, I
+can't wait to find out,� I said, caressing one of her replete mammaries eagerly
+as I rode her mountainous curves, �I hope your tits aren't quite so huge
+they'll reach the floor- I want to hear them creaking, all that supple, sensual
+weight punishing you for letting Reyna blow them up so obscenely fat.� I want to hear you whimper as they stretch,
+stretchmarks growing deeper and longer as inch by throbbing inch they hang
+closer to the floor.� I want to see your
+nipples turn purple and swell up to double this size as all that weight bears
+down on top of them, I want to feel these blue veins bulging full and proud
+under your tight skin as you struggle not to collapse into a heap on top of
+your own oppressively overfed breasts.�</p>
+<p>����������� �Oh fuck, I
+can feel it already,� Joanna murmured dreamily, biting at her lip as is the
+distress of having all that delicate flesh suspended from her chest was already
+driving her mad, �Mmm, they'll be throbbing within the first minute, if my back
+can even last <em>that</em> long.� You
+might have to let me work my way up to it, lover.� A couple minutes the first day, then you fuck
+me good and hard while I'm helpless on the floor, gasping for breath.� Maybe I'll last a little longer the next day,
+and a little longer after that, as I get used to a little punishment with our
+playtime.�</p>
+<p>����������� �So you
+won't mind then,� I asked, caressing one breast affectionately, �If they start
+getting all saggy and overstretched?�</p>
+<p>����������� �Ohh, bring
+it on- I can only dream about how it'd feel to have them this enormous, but so
+soft and tender that just laying on top of them would make me cum,� Joanna
+responded hungrily, �And besides, I thought those cannonballs Reyna gave you
+are going to pump me up every time you shoot a load inside me anyway; so if my
+girls start feeling a little under-inflated, you'll just have to pump a few
+gallons of cream into me and plump them back up again, if you think you're up
+to the challenge.�</p>
+<p>����������� </p>
+<p>����������� �Ahh, as
+fucking hot as you are, you're going to be gaining another ten pounds a day
+that way from now on,� I admitted, feeling myself nearing the edge already,
+�You'd better plan to get really good at hand jobs in a hurry if you don't want
+to keep packing on even more weight just from me filling you.�</p>
+<p>����������� �You
+actually think I'll need to jerk you off?� Joanna laughed confidently as she
+tightened her thighs around me, �I'll be able to just grab your throbbing cock
+and rub it between my tits for a few seconds and you'll cum all over these
+bloated melons before you can stop yourself.�</p>
+<p>����������� �If I shoot
+my load all over your boobs, it'll be because I feel like it,� I said, entering
+her so deeply it left her breathless, �You're so fucking massive you'll be
+lucky if you can even walk after this.�
+If I want to take you and pump you full of cream until you're begging
+for mercy, you're not going to be in any condition to hold me off.�</p>
+<p>����������� �Mmm,
+that's what I like, when you take charge and just tell me how it's gonna be,�
+Joanna smiled, tightening around me as another climax rippled through her body,
+�Just find me laying here naked in bed, all huge and helpless.� Get naked and get hard, slap me around a
+little and I'll be sopping wet and begging for it before you can even climb on
+top of me.�</p>
+<p>����������� �Oh don't
+worry, I'm going to be filling you up morning, noon and night,� I assured her,
+reaching down and giving her hip a resounding slap, �I'm going to pump you so
+full you'll wake up every morning terrified that you're just one hot load away
+from these bloated melons popping, and I'm going to make you love every second
+of it.�</p>
+<p>����������� �Fuck yes;
+give it to me all day long!� Joanna gasped, as she felt me growing even stiffer
+inside her, �Make me fucking plead for it.�
+Make me lay here and touch myself to turn you on, make me promise to
+give it to you any way you want, if only you'll fuck me even bigger.� I want to hear myself screaming and I want to
+hear my boobs stretching until they're about to burst and then I want you to
+fuck me some more!�</p>
+<p>����������� �Yesss!� I'm gonna make you so much fatter; I want to
+blow you up like a balloon!� I insisted, teeth clenched, Joanna's lush figure
+wobbling beneath me like an overfilled soap bubble in a storm, �I hope you're
+ready to grow!�</p>
+<p>����������� �Ohhhh,
+yes- Cum inside me and make me bigger!� she begged, �I'm so thirsty for it-
+I'll- Ahhhhh!�</p>
+<p>����������� I came,
+filling her, stretching her, as what felt like a gallon of pent-up love gushed
+into her body as she trembled with bliss.�
+After the first rush, several more spurts followed, adding more and more
+to Joanna's overburdened figure as she enthusiastically received me, shuddering
+and tightening around my swollen member.</p>
+<p>����������� �Oh, fuck,
+Reyna was right,� Joanna gasped, grasping at her breasts in awe, �Oh, I can
+feel your cum making me bigger.� My
+belly- may ass, they're fattening up- <em>Ouch!</em>� My tits- <em>Oh no!</em> - they're already too
+full, fuck, maybe I shouldn't have been so greedy- Nngh- this <em>pressure</em>!�</p>
+<p>����������� �Wait, are
+you okay?� I asked, climbing off of her as quickly as I could, sixteen long
+inches sliding wetly from her lust-swollen lips, worried that my weight on her
+obscenely engorged bosom might be too much for her to bear in her delicate
+condition, �What can I do?�</p>
+<p>����������� �Mmm, sorry-
+I just panicked there a little,� Joanna sighed as she patted her bosom
+reassuringly, �I mean, I'm so huge already you probably can't even see the
+difference, but oh, I can <em>feel</em> it.�
+It's like adding a couple more pumps or air to a yoga ball that's already
+overinflated and about to pop- I'm just not used to this much, you know,
+muchness.� Why are you looking at me like
+that?�</p>
+<p>����������� �Sorry,
+it's just, I mean, I know this isn't what you wanted,� I tried to explain, �But
+you're just so fucking hot like this, I can't stop staring at you like an
+idiot.�</p>
+<p>����������� �Mmm, well,
+there certainly <em>is</em> a lot more of me to stare at now,� Joanna admitted,
+caressing her fulsome belly appreciatively, �And since Reyna did at least give
+us a ridiculous pile of money, I guess I won't need to stress about being too
+massive to hold down a job while you're finishing up school, so you should have
+plenty of time to stare at my huge, fucking melons, and a lot more than that
+besides.� Not that I'll mind watching you
+walk around with that fucking meat club slapping against your thighs
+either.� Anyways, I'm sore, and enormous,
+and absolutely fucking spent; you go take a shower or something and I'm gonna
+get some sleep and hope these gigantic fucking tits don't smother me in my
+sleep.� If I'm not awake by ten in the
+morning, I wanna wake up to tasting your cock in my mouth, okay?�</p>
+<p>����������� �I love
+you,� I laughed, grabbing a bath towel on my way out the door, �Just shout if
+you need me to bring you anything that <em>isn't</em> my dick, okay?�</p>
+<p>����������� �Okay, and,
+um, thanks for taking such good care of me through all this,� Joanna said
+uncertainly, �I mean, I know I've been kind of a bitch lately, even before
+Reyna came in and started turning me into a human circus balloon, but, ah,
+thanks for putting up with me.� I love you
+too.�</p>
+<p>����������� �Get some
+rest,� I said as I turned out the light, �I'm going to hold you to that ten in
+the morning thing.�</p>
+<p>���� ***</p>
+<p>����������� �So,
+explain to me again why you're doing this,� I said, trying to balance the
+webcam on the back of the couch across from where Joanna knelt on the living
+room floor, �I mean, we've got plenty of money, why are you so hell-bent all of
+a sudden on being a camgirl?�</p>
+<p>����������� �I dunno-
+it's not like I sat down and figured it out with the fucking quadratic formula
+or something, but now that's it's been a couple months and I don't feel like my
+tits are going to pop every time I touch them- not that you pumping me full of
+your cum all day and night has helped with that- well, and me stuffing myself
+with enough pancakes and ice cream to choke a hippo� Joanna said, glancing down
+at her cleavage as she adjusted her ponderous belly for maximum lift, �Maybe I
+just get off on the idea of a bunch of random guys I never even met thinking
+I'm so hot that they're willing to pay just to watch me play with myself so
+they can jack off- girls too, I'm not discriminating- just thinking of some
+slut dildoing herself into a lather while watching me slap these big,
+overstuffed tits around gets me all turned on.�
+Besides, it's not like I didn't offer you a chance to get in on this
+action.�</p>
+<p>����������� �Yeah,
+there's no way in hell I'm going to fuck you on camera with the entire internet
+watching,� I said, glancing at the laptop to see if I had everything set up
+right, �I'm still hoping to get a job one of these days, and not the kind where
+an acting credit for my massive dick is going to help me land an interview.�</p>
+<p>����������� �Come on,
+you won't know until you actually put it on your resume,� my girlfriend teased
+as she patted her swollen bosom invitingly, �Besides, you don't have to even
+show your face.� I've watched a lot of
+this stuff lately for, um, research purposes; you could just hold the camera
+down while I suck your cock or you titfuck me and give me a pearl necklace or
+something.� You know what, you don't even
+have to show your meat on camera- you can just film me fondling myself while
+lust after your cock and order you not to cum yet for a few minutes and then
+make sure you catch the moment when that cannon of yours blasts its load all
+over me.�</p>
+<p>����������� �What? No,
+no one is going to want to see- wait, really?� I asked.</p>
+<p>����������� �Yeah,
+it'll be fucking awesome- I'll just sit here looking up at you and that huge,
+swollen cock of yours all innocent and overwhelmed, talking about how I don't
+even know where to begin working on a dick like that and egging you on to just
+beat off until you finally cum,� Joanna explained, �If you can actually aim
+that thing, maybe try to catch me with my mouth open, get a little into my hair
+too, and then just aim that hose right between my tits until I've got a gallon
+of whipped cream oozing over them like a couple of vanilla sundaes, okay?�</p>
+<p>����������� �Well, I
+guess, if you really think people will want to watch that,� I agreed with
+waning reluctance, �I suppose it doesn't make that much difference anyway, since
+anyone who knows us is gonna see you and be able to figure out who's on the
+other side of the camera.�</p>
+<p>����������� �Right, so
+just whip that thing out and enjoy yourself,� Joanna urged, �And if halfway
+through you decide I'm being too mouthy and you'd rather listen to me gag on
+your rod than hear me bitching about how horny I am, just go with it,
+okay?� Ooh, and maybe hold the camera up
+a little higher any try to get some of my ass wobbling behind me while I'm
+begging for you to spatter your seed all over my face while you're at it.�</p>
+<p>����������� I was just
+pulling my pants down, awkwardly, since I was already pretty hard just from my
+girlfriend egging me on, when there was a knock on the door.</p>
+<p>����������� �Fuck, I
+bet it's the postal lady with those nipple clamps I ordered,� Joanna swore,
+�Maybe they'll leave them on the porch and you can get them after we're done
+filming so you can help me discover just how much pleasure my poor, swollen
+peaks can take before I pass out.� Ooh-
+or maybe it's a delivery girl, and she can come in and be seduced by my
+monumental melons while you fuck her from behind until she's begging to move in
+with us and be our bisexual fuck doll!�
+That's something that happens, right?</p>
+<p>����������� The
+knocking repeated; hard, insistent, but polite.</p>
+<p>����������� �Here, just
+let me get rid of whoever it is and then we can go ahead without any
+interruptions,� I said, struggling to pull my pants back up as I made my way to
+the front door.</p>
+<p>����������� �Just stick
+your head out; whoever it is doesn't need to see me on my knees with my
+super-sized tits and ass taking up half the room,� Joanna called as I grabbed
+the doorknob.</p>
+<p>����������� �Right,
+like I was going to just throw the door open and let them see me with my
+pajamas looking like I've just stuffed a zucchini down my pants,� I shot back,
+�Of course I'm gonna be di-.�</p>
+<p>����������� The moment
+I turned the doorknob though, the door slammed inward so hard I had to jump out
+of the way to avoid being stuck.</p>
+<p>����������� At the
+threshold stood two green figures.� One,
+short, wide-hipped and full-breasted, with a color I'd have had to describe as
+sour-apple, smiled at me broadly, her eyes taking less than a second to dart
+past me and alight on Joanna's room-filling figure.� The other, with a figure like a housewife
+from a 1950's sitcom, her hair(?) cropped short and a color like the foliage of
+a juniper tree, fixed her stare at what my shorts were doing an incredibly bad
+job of concealing right now.</p>
+<p>����������� �A
+colleague of ours said this was a good place to stay while we studied human
+copulating customs,� the juniper-colored one said, locking eyes with me and
+biting her lip contemplatively, �I've been writing a thesis on human sexuality
+but I can't possibly submit it until I've collected ample experimental data to
+support my ideas on male arousal.�</p>
+<p>����������� �Can we
+stay here?� Reyna said you're the Nicest.
+People. Ever.� the sour apple one asked Joanna brightly, her body practically
+aquiver with anticipation, �We won't be any trouble at all, and I can pay you
+for your hospitality by enlarging you just like she did- well, maybe not just
+like she did; I'm actually better at the whole mass transference thing.� Then again, you look really, really full
+already, but I bet I can enlarge you even more than this if I'm real
+careful!� By the way, are there any good
+human restaurants around here?� I'm just
+dying to sample some of your culture's cuisine, but just give me a couple hours
+to bulk up and I'll be happy to come back and make you double this size so fast
+your head will spin!�</p>
+<p>����������� �Fuck,�
+Joanna sighed.</p>
+</body>
+</html>

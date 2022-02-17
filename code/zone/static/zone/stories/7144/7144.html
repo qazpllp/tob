@@ -1,0 +1,2058 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Hucow Corruption: Ruby</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>Written by Saint Limey</p>
+<p>Word Count: 15669</p>
+<p>Published</p>
+<p>June 28th, 2021, July 19th, 2021, and August 23rd, 2021</p>
+<h2><strong>Part 1</strong></h2>
+<p>Word Count: 2949</p>
+<p>After listening to bursts of laughter, raucous applause, and a folk
+rendition of the Bridal Chorus performed by a local string ensemble at a
+distance of several hundred acres, Officer Ruby Granger was relieved of
+her parameter securing duties, debriefed by Senior Officer Singer, and
+assigned new duties:</p>
+<p>Accompany the wedding party and report any "suspicious behavior".</p>
+<p>So Ruby tailed the group as they left the outdoor ceremony, cataloging
+each detail of the group members and the Whitney Estate as she went.</p>
+<p>Based on Sage's debriefing, the noise she'd overheard at a distance
+earlier in the afternoon, and plain old deduction skills, Ruby assumed
+the ceremony had been beautiful. A white, canopy tent spanned a wide
+swath of old plantation land. The grass was neatly trimmed, left lengthy
+enough to tickle the exposed toes of the bridesmaids. Translucent,
+gossamer trains trailed silver gowns, caressing the calves of women who
+walked with brimful excitement like moving skyscrapers slicing through a
+bushel of stratus clouds.</p>
+<p>Fueled and warmed by the buzz of free champagne, the wedding party hiked
+up their dresses and trotted back toward the Whitney house for dancing,
+celebration, and more alcohol. Most of the guests had left after "I do"s
+were exchanged leaving only an inner circle of friends, neighbors, and
+family to enjoy the late-night festivities.</p>
+<p>The bride led her party up the gentle slope to the family home. Samantha
+Whitney-Barnelby. She was exhausted in the way that only women recently
+married could be. And yet, despite months of planning, coordination, and
+last-minute flexibility, her recently unveiled face betrayed nothing but
+satisfaction as she marched triumphantly into a new life.</p>
+<p>Her partner, Zo Whitney, was less composed. Dark baby hair clinged to
+her cheek from the buckets she had been sweating. One could only wonder
+what it looked like under her tuxedo---probably like she'd gone for a
+swim in the lake at the edge of the property before then dawning her
+jacket, cummerbund, and boutonniere. However, now that the ceremony
+itself was over, she glowed with delight and chased the group of women
+ahead.</p>
+<p>Every few steps, Samantha would glance back toward the lagging Zo. At
+that exact moment, Zo would look up from the back of the group. Their
+eyes would meet, held in permanent reverence and love for one another,
+and everyone between them would swoon all over again.</p>
+<p>They were <em>perfect</em> for one another.</p>
+<p>Everything looked to have gone smoothly---so smoothly in fact that after
+discovering no apparent threat, Ruby found the clip-on module on her
+chest and squeezed the button on the side. Static hissed twice before
+she spoke.</p>
+<p>"Anything else happen?" she asked. "Besides what you told me about
+earlier?"</p>
+<p>"Focus, Granger," Officer Singer replied, sniffing out Ruby's boredom.
+"No chitchat on the comms."</p>
+<p>"Sorry, boss."</p>
+<p>"Though, someone <em>did</em> accidentally step on one of the bridesmaid's
+dresses. Dress came down, tits came flopping out. Hilarious. I'd thought
+about saving that story for later, but you deserve it after staring at
+the open wilderness for the past four hours."</p>
+<p>Ruby groaned, rolling her eyes as she stepped off the grassy field and
+onto a cement porch. The porch wrapped around a three-story,
+country-style ranch. Most of the party had entered the house through
+white french doors.</p>
+<p>"No chit chat in the comms, Singer," Ruby replied, deflated.</p>
+<p>"Hey! That's important intel. She had nice breasts---if you want a
+straight girl's opinion."</p>
+<p>"How nice we talking?"</p>
+<p>"You at the reception yet?"</p>
+<p>"Just stepped inside."</p>
+<p>"Tall brunette, dimpled chin, goldenrod-colored hijab."</p>
+<p>"Goldenrod?"</p>
+<p>"I think it's yellow, but it's written as 'goldenrod' in the wedding
+guide the Whitney's gave us. See her?"</p>
+<p>Ruby scanned the crowd---fifty or so total. What would have been an
+enormous sun room had been transformed into a dance floor. Lights
+flashed colors from the ceiling as music thumped from behind the DJ's
+turntables. Ruby picked an east-facing corner to loom in, taking in all
+the guests. Sure enough, she found a tall woman with a dimpled chin
+wearing a hijab near the drink table. She was talking to some shorter
+woman.</p>
+<p>Ruby waited and waited and. . . There!</p>
+<p>"Granger to Singer, I've got a confirmed visual on the subjects of
+interest. Tits are indeed 'nice'."</p>
+<p>"Ten-four, Granger. No bra, symmetrical areola, small nipples. If I was
+unmarried and ten years younger, I'd---"</p>
+<p>"Could do without your bragging, Singer."</p>
+<p>"Copy."</p>
+<p>"She's pretty, though. Five-eleven is a little tall for me, but damn is
+she killing those heels. Damn," Ruby said, dry and stoic as she
+continued clowning on comms. "Requesting confirmation of her status,
+over?"</p>
+<p>"Single and <em>straight</em>."</p>
+<p>Ruby's brow furrowed. "How do you know that?"</p>
+<p>"It's in the intel the Commissioner Whitney gave us. He was very
+thorough about every guest---wanted no funny business at his daughter's
+wedding."</p>
+<p>"How did Commissioner Whitney figure out that his gay daughter's
+bridesmaid was straight and single?"</p>
+<p>"A voluntary survey, Ruby, done on behalf of any lonesome lesbian
+officers who may be looking for love while on duty, " Sage's voice was
+low and deadpan, ending in a lengthy silence. She finally answered with,
+"He's the <em>Commissioner</em>. He knows things."</p>
+<p>And Ruby could only shrug at such an answer. "Even if you're joking, a
+survey like that would win the praise of every gay woman in the force.
+Dating's rough. One could use such a guidebook---'Ruby Singer, she/her,
+single, gay, top, into brazilian jiu jitsu and unironically reciting
+poetry'. "</p>
+<p>"Aren't you the only gay woman in the force?"</p>
+<p>"Openly, yes. But Mariah's been rather chatty lately---like she wants my
+permission or something. Anyway, I'm sure a list narrowing us down to
+our sexual preference would be both utterly dehumanizing and pragmatic."</p>
+<p>"Speaking of chatty gay police officers," Sage began, letting the
+implication trickle in the pause she took between statements. "I'm off
+of comms for now, Ruby. Stay sharp and let me know if you need a
+break---to pee, flirt, dance, whatever. No alcohol, though. And keep
+things reasonable."</p>
+<p>Ruby smiled. Even if she'd never take up the offer, the fact that Sage
+would extend it to her showed that she cared way more than her
+unflappable demeanor might suggest. Ruby had taken to Sage as a sort of
+mentor, someone that led and directed as the "Senior Agent" but also who
+welcomed prattle about Ruby's personal life.</p>
+<p>"I know the rules, Sage," Ruby said. "I promise to behave."</p>
+<p>"You're a good officer," Sage replied, as if to contrast Ruby with
+others on the force. "Buzz me if you need me. I'll be watching racoons
+fight over dead squirrel carcasses."</p>
+<p>"Tell Ramona I said 'hello'," Ruby answered. "She's the one with the
+mask, the bushy tail, and the bad attitude."</p>
+<p>"You need a girlfriend who'll put up with these crappy-ass jokes," Sage
+retorted before disappearing with a <em>click.</em></p>
+<p>Ruby was alone, then.</p>
+<p>She watched woman after beautiful woman as they reliably cycled between
+their tables, their booze, and the dance floor. Although clearly drunk,
+no one was belligerent---just giggly, clumsy, and touchy. They made
+fools of themselves the way women could when they knew the world wasn't
+there to scrutinize them.</p>
+<p>It looked so <em>fun</em>.</p>
+<p>After half an hour of it, Ruby forced herself to scout out the few men
+at the party to add a healthy dose of reality to the fantasy that was
+forty inebriated women grinding against one another for the hell of it.
+It marginally helped. She didn't feel abject, existential loneliness.
+Instead, she simply "didn't feel like dancing", which was a better
+feeling by far.</p>
+<p>Until she looked at the newlyweds spinning one another like a galaxy, as
+if the universe revolved around shared love. Then, Ruby felt like an icy
+rock tumbling through empty nothing.</p>
+<p><em>Better pack that sappy shit right back into its proper compartment.
+You're on duty.</em></p>
+<p>All of it---the obvious need for affection, attention, support, the
+stress of maintaining her excellent record on the police force, and a
+hankering for physical release that just about tore her in two---went
+back into its box where it leaked like grease stains at the bottom of a
+brown fast food bag.</p>
+<p>Having not had fast food in six months, Ruby fought that craving into
+the box as well and scanned the crowd for the five-hundredth time for
+any suspicious individuals to distract herself from the fact that she'd
+never been more single and was surrounded by a celebration of the
+eternal union of two wholly-deserving individuals---</p>
+<p>Who were gay, like she was---which shouldn't have mattered, even though
+it absolutely did.</p>
+<p>She recognized exactly zero threats beyond excessive drinking and
+questionable behavior resulting from said excessive drinking. And in a
+few hours, even those inconveniences would be neutralized when each of
+the guests had either gone home or retired to one of the six bedrooms to
+sleep off the booze.</p>
+<p>The night would carry on predictably just as the rest of the day had:
+happy wedding, happy guests, sexually-frustrated Ruby.</p>
+<p>Then, a woman appeared that challenged Ruby's predictions---a woman
+besides the one with the goldenrod hijab.</p>
+<p>On the opposite side of the dance floor was a gorgeous pair of sparkling
+eyes holding Ruby's gaze. The woman had been part of the wedding party,
+but Ruby hadn't placed her as anyone important---just another hottie
+that belonged to the flock of hotties Ruby was already being paid
+overtime to babysit.</p>
+<p>But as a loud, bombastic club song blared through the speakers and
+lights bathed the dance floor in amethyst light, the woman kicked her
+toeless heels in a seductive strut angled directly at Ruby. Her
+sashaying hips and general peacocking was so abruptly striking that
+drunken, straight women paused like the Jordan river to watch the buxom
+little bombshell pass.</p>
+<p>Ruby's heart slammed against her chest, tingles rising up to challenge
+her focus. Had she been an ounce less disciplined, her tongue would have
+lulled to her chin at the sight of this pocket-sized beauty crossing the
+universe to find her.</p>
+<p>And those <em>tits</em>. Ruby wasn't stoic enough not to notice the head-sized
+melons on such a small build.</p>
+<p>She did notice that she hadn't detected them earlier, however. How had
+she missed boobs as big as a woman's head on such a petite frame? How
+did she manage to contain herself around them?</p>
+<p>And how had it taken so long to discover that the woman was <em>more</em> than
+some anonymous shortstack with glittery eyes and lulling decolletage?</p>
+<p><em>More than a stranger. . .</em></p>
+<p>She moved off the dance floor, entered the dark corner and brought her
+curvaceous body within a foot of Ruby's before speaking in a sober,
+familiar lilt. "What are <em>you</em> doing here?"</p>
+<p><em>Fey. It's Fey.</em></p>
+<p>Fey was short, the crown of her head clearly visible to someone Ruby's
+height. Her hair had gotten longer, Ruby noticed. Wavier, fuller,
+and---<em>fuck</em>, she couldn't help the impulse to inhale long and deep at
+Fey's presence---somehow more fragrant. Seeing such beauty squeezed at
+Ruby's heart with enough pressure to pop it, but she continued to stare,
+torturing herself with the addition of every detail.</p>
+<p>Fey had gained weight---funny, because Ruby remembered telling her that
+she could only stand to gain by finding some extra pounds. Back then,
+Fey had balked, stating she'd always been a picky eater with a high
+metabolism. Putting on pounds would be more effort than it was worth.</p>
+<p>But Fey's efforts at filling out her frame were Ruby's primary curiosity
+now. The cut of Fey's silver dress ran straight up to the bow of her
+hip, making cute, short legs look all the longer. The cinch of the
+fitted section around her belly looked strained, not to the point of not
+fitting but certainly to the point of fullness. And, of course, fullness
+couldn't be mentioned without mentioning the woman's absurdly
+disproportionate breasts---<em>again</em>. The pair of boobs looked like they
+weighed as much as Fey's whole body would have weighed almost half a
+year ago---when they were intimate enough to notice and comment on
+little changes in one another's bodies.</p>
+<p>When they were still <em>together</em>.</p>
+<p>Silence nested between them even as bassy electronica caused the walls
+to throb. Ruby was transfixed by her old lover, thrown off by her sudden
+appearance and indulging herself---too much---on Fey's changed form.
+Fey, either respectful of or flattered by the bald appreciation of her
+body, indulged Ruby's roaming gaze. The two held a wordless conversation
+for the length of a song.</p>
+<p>Then, pleasantries exchanged, Ruby answered the general inquisitiveness
+on Fey's round face.</p>
+<p>"I'm on security detail".</p>
+<p>"Security detail. So, police force, right? You <em>did</em> want to do the
+whole academy thing. Guess you went through with it," said Fey, and it
+was like every word from her mouth made her tits do <em>something</em>. Her
+sighs made them dip, her gasps made them stand pert. They were the
+liveliest pair of watermelons Ruby had ever seen.</p>
+<p><em>---where the hell did they come from? Damn!</em></p>
+<p>"I did, yea."</p>
+<p>"It's, uh, treating you well?"</p>
+<p>"It's almost boring how well things have gone."</p>
+<p>Fey tilted her head, fanning her lashes at Ruby. "You don't <em>look</em>
+bored."</p>
+<p>"S-Sorry. I was being creepy."</p>
+<p>"You definitely were. But so was I. Guess it's been a while. But, uh,
+hey," Fey took a step closer. One more would have pinned Ruby to the
+wall. "Tonight's a celebration. Based on how awkward this has been
+already---"</p>
+<p>"Awkward? Pfft! No, erm," Ruby hedged while Fey kept talking.</p>
+<p>"Can we agree to just go back to being best buds for now? Pretend the
+fight didn't happen? I wasn't prepared for all of this---seeing you
+again, so soon. I don't want to spoil it. I'll go back to dancing, you
+go back to 'security detail', and we both put off our reunion till the
+next coincidental time."</p>
+<p>Ruby wanted to nod and go along with Fey's plan---<em>badly</em>. But she
+couldn't. She hated hiding behind her job. It felt cowardly. She'd spent
+this time apart from Fey trying <em>not</em> to be a coward that used her job
+to avoid difficult, necessary things.</p>
+<p>Since that's what tore them apart in the first place.</p>
+<p>"I wish things could go back, Fey. God, I do. But I can't." Ruby looked
+over Fey to the dance floor, unable to hold eye contact with the former
+love of her life. "We need to talk this out. Soon. I've got to keep a
+look out right now---Commissioner Whitney would have my head if I let
+anything weird happen on his daughter's wedding night. But there's so
+much I need to say to you---"</p>
+<p>Fey rolled her eyes, cutting Ruby off with an exasperated sigh.</p>
+<p><em>Exasperated? What did I say?</em></p>
+<p>"So who is it you're looking for, exactly?" Fey asked, annoyed. "There
+was another stuck-up-looking woman with a brandless t-shirt and khaki
+pants here earlier. I take it that's your partner? What 'weirdness' is
+all this security meant to be keeping out?"</p>
+<p>It was technically classified, but ancient romantic instinct made Ruby
+want to get back on Fey's good side after upsetting her.</p>
+<p><em>Frankly, Fey didn't have a bad side.</em></p>
+<p>"It's a boring investigation," Ruby began. "A few groups of women
+involved in some troublemaking around town. I'm too low in the chain of
+command to know too many specifics, let alone talk about it, but the
+people up top are calling them 'Hucows'." Ruby's speech slowed. "You
+knew we were trying to keep certain people out?"</p>
+<p>"Isn't that what security does? Keeps undesirable people out of
+important events?"</p>
+<p>"Among other things," Ruby stated. "But you knew we were looking for
+someone specific."</p>
+<p>Ruby prayed that Fey would call her out on being unreasonable, thus
+extinguishing the suspicion swirling in her head.</p>
+<p>Instead, Fey replied with, "Slip of the tongue, Ruby. I've been
+drinking."</p>
+<p>Ruby frowned. "You haven't. Why are you lying to me, Fey?"</p>
+<p>"You're being paranoid."</p>
+<p>Scenes flashed through Ruby's mind:</p>
+<p>Fey's tits. The way the crowd had parted for her. Her smell. Her
+insistence on distancing herself so quickly after starting this
+conversation. Lying about drinking. <em>Huge, veined breasts.</em></p>
+<p>It very well could have been paranoia. After all, Fey didn't look to be
+lying about being unready to see Ruby again.</p>
+<p>But Ruby couldn't leave this alone.</p>
+<p>"Fey. . ." Ruby said.</p>
+<p>Fey, who hadn't so much as flinched under Ruby's scrutiny, now took that
+last step toward Officer Granger. The warmth of her spreading, golden
+chest curled seductively at Fey's waist. Time seemed to slow around
+Fey's tits, flesh that bulged more and more as she pressed them harder
+and harder against Ruby.</p>
+<p>Fey was so close that she barely had to raise her voice above a whisper
+to be heard, even with the deafening music in the room. Ruby's ears all
+but glowed with heat, red with her blushing and itching to listen to
+what her ex would say next.</p>
+<p>"Looking for suspicious people, huh? Well then," Fey said as she hooked
+both her index fingers and pulled her thick, wavy bangs away like
+curtains to reveal a pair of prominent, pinkish humps at the edge of her
+hairline. "Guess you've found your Hucow. And I guess since you don't
+have to look for me anymore, maybe you can spare a few minutes for that
+'chat'?"</p>
+<p>Ruby made a strained exhale as Fey's firm nipples began to harden
+against her. "Sure. Let's chat."</p>
+<p>The two used the shadows to leave the dance floor, Ruby scarcely able to
+believe that Fey had been at the wedding the whole time---that she was a
+<em>hucow</em>.</p>
+<p>"I have to admit," Ruby grumbled, following Fey's exaggerated form down
+quieter hallways. "If you asked me to picture the two of us at a wedding
+six months ago, I wouldn\'t have guessed anything like this."</p>
+<p>Fey was silent.</p>
+<h2><strong>Part 2</strong></h2>
+<p>Word Count: 6600</p>
+<p><em>Fey is a hucow. A hucow. Fey. . .</em></p>
+<p>Fey led Ruby through the halls of the Whitney Estate with a disturbing
+sense of familiarity. Where was she being led? How did Fey know so much
+about the house?</p>
+<p>In retrospect, there were a number of rational speculations:</p>
+<p>Fey was a friend of the family. She came to the wedding early and was
+given a tour. She had some important role to play in the pre-wedding
+activities like planner or photographer or coordinator or stylist. Maybe
+Fey was dating one of the bridesmaids and came to see her new girlfriend
+in a stylish dress and the two were so swept up in the wedding and
+clothes that they ran off to some vacant room and made out for an hour,
+never giving Ruby, the ex, a second thought.</p>
+<p>So maybe that last one was a little <em>less</em> rational.</p>
+<p>But "less rational" adequately described at least fifty-percent of the
+thoughts in Ruby's mind.</p>
+<p>The other fifty-percent were much more troubling:</p>
+<p>How did Fey get wrapped up in everything---the criminal activity, the
+civil unrest, the undermining of city government? Had Officer Singer
+heard Fey's confession over the radio and was back-up being called? Was
+Ruby being led into a trap now? Should she play along so she could learn
+more about the hucow's operations or cut things off?</p>
+<p>Was she in danger?</p>
+<p>She could be, but the hucow phenomenon wasn't yet so pronounced---or
+immediately threatening.</p>
+<p>In fact, local law enforcement hadn't yet been cleared to take any
+direct action against the hucows. Officers were limited to creative,
+subtle sorts of investigation---patrolling five or so minutes later than
+usual, asking seemingly-innocuous questions to pedestrians, taking
+unusual routes through town, and taking low-risk "security detail"
+assignments. Since being a Hucow wasn't a crime, the most that could be
+done was to keep an eye on things at a distance. Cops had to determine
+in the moment whether a chesty woman was conspiring to commit a crime or
+an upstanding citizen who was merely guilty of winning the genetic
+lottery.</p>
+<p>It was unsatisfying work. Least satisfied of all, however, was the
+general public. The whole town buzzed with Hucow news. It was all anyone
+talked about in coffee shops---"Did you hear? Beth quit her job. I bet
+she did it so she can wait hand and foot over some big-tittied bimbo
+cow". Social media concerning the town had comments with hundreds of
+replies. Opinions flew back and forth on both sides of the political
+spectrum.</p>
+<p><em>It's about time someone came through and promoted female sexuality.
+Fuck the prudes!</em></p>
+<p><em>If we don't get someone to fill in for all the women that retire to
+live as servants for these hucows, then we're going to see a collapse of
+our local economy!</em></p>
+<p>Testimonials with sad, sympathetic titles appeared: "<em>Two months sober
+from that Hucow poison. It's more than just bigger boobs. Don't believe
+their lies!</em>"</p>
+<p>Others with triumphant cries: "Women are free! Hucows offer a remedy for
+unlucky genetics and unfair beauty standards."</p>
+<p>Ruby had been assigned an area frequented by populations impacted by
+homelessness just as Hucows were beginning to appear in her area. At
+first, the Director of the Women's Shelter assured her that people were
+transient and often disappeared for up to a week when they had a lucky
+break. But after a few months, a dwindling shelter population, and
+occasionally seeing frequenters of the shelter out and about, the
+conversation between Ruby and the Director changed tone.</p>
+<p>"A few of them have been in to tell me they won't be back," the Director
+said, dark rings under her eyes, lips in a thin line. "I can't help but
+be happy about it. Hucows are feeding people, giving them homes,
+and---you've probably heard already, so I won't sugar coat it---working
+through physical trauma with <em>effective</em> sexual therapy. Women <em>glow</em>
+when they come back to see me, Ruby. It's more than good genital
+wrestling. Their whole lives have changed."</p>
+<p>"So you're in favor of the whole Hucow movement?" Ruby's brow rose,
+though her voice lacked any accusation---she was thrown off by the use
+of the term "genital wrestling".</p>
+<p>"Logistically, yes. I like not having to turn people away at the end of
+the night. But I also know our women. Some will genuinely be saved by
+Hucows. But you can't just fix addiction, dysfunction, and
+self-destructive behavior with sex and titties. I can't help but worry
+that there's something screwy going on---less than kosher, in other
+words."</p>
+<p>The opinion was moderate in a town that was more polarized than ever.
+Nobody knew where the women had come from, but citizens with impressive
+charm and charisma had appeared and were luring in women with promises
+of improved bodies, minds, and futures.</p>
+<p>If Fey could learn the truth, she could be a valuable resource. If Ruby
+still had Fey's trust---which was dubious given that it had taken less
+than three minutes for lies and avoidance to crop up---the two could
+work something out together. Ruby certainly wanted to trust Fey. She
+felt the desire to trust her all the more as she watched Fey's
+mesmerizing hips and full ass stretching her silver evening dress across
+the back.</p>
+<p>Who was more trustworthy than a woman whose tits are so massive that
+they're visible from <em>behind</em>?</p>
+<p>As it turned out, the line betweein trusting someone and wanting to fuck
+them was thin.</p>
+<p>After winding through the maze of the Whitney Estate, Ruby and Fey
+reached their destination: a room on the second floor.</p>
+<p>Fey held the door for Ruby. Ruby passed her ex-lover, catching that same
+sweet whiff and not missing the chance to glance at her diving neckline.
+Inside was one of several master bedrooms. The space was pristine, an
+old cottage theme that ran through the hand-crafted wooden furniture,
+walls, and bedding. Ruby imagined that the inspiration had been taken
+straight from the verdant field outside and the stretching pond beyond
+it, like someone had just taken a slice of natural beauty and plopped it
+in the commissioner's house.</p>
+<p>"The newlyweds are going to consummate here, I think," Fey said, out of
+the blue.</p>
+<p>Ruby was a few steps inside the room and spun. "What?! Then what are
+<em>we</em> doing here?"</p>
+<p>"They won't be up for several hours. Trust me."</p>
+<p>"Can I?"</p>
+<p>"Ugh. <em>Sit</em>."</p>
+<p>Ruby's thumbs hooked into her belt loops.</p>
+<p>Fey sighed. "I'm not going to try anything---as if I even <em>could</em>.
+Please, sit."</p>
+<p>Finding reassurance with the addition of a "please", Ruby took an old,
+gray chair in front of a coffee table. The table was beside a curtained
+window that spanned the height of the room. The view would have been
+beautiful in the morning with a cup of coffee and a blog post about
+Ruby's recent obsession: BJJ---brazillian jiu jitsu.</p>
+<p>Fey took the matching seat across from Ruby and the mental image
+sharpened in focus. Now, the coffee table was for two. The view was
+shared. The blog post was only read halfway because two women who were
+enamored with one another were talking flirtatiously, using words to
+walk a paved, familiar path toward something slow and passionate and
+physical. Jiu Jitsu of another sort---naked, sweaty jiu jutsu that
+didn't stop until long after there was a submission---. . .</p>
+<p>So, like, <em>literally "genital wrestling".</em></p>
+<p>A compliment fled Officer Granger's lips. "You look great tonight.
+Really. I like your dress. It, erm, suits you." Flustered, Ruby fiddled
+with the dial on her radio until it clicked off. She wasn't sure what
+was more troubling: having Sage Singer listening in to her under-cover
+conversations with a literal Hucow, or having Sage Singer listening as
+she flirted like a teenager with her ex-girlfriend.</p>
+<p>Surprisingly, Fey's body language softened. She'd been pissed at Ruby's
+mistrust on the dance floor and her further mistrust just moments prior,
+but Ruby's pitiable opening line had disarmed the Hucow. Fey's curves
+billowed and swelled against one another as she settled in her seat. Her
+expression blended thoughtful caution and genuine affection.</p>
+<p>"Thanks, Ruby. You don't look bad yourself. I mean, you've dressed
+better, that's for sure. But you do look a lot stronger."</p>
+<p>"I've been trying to stay in shape, though the real catalyst was
+probably the police academy." Ruby paused to note how Fey would react to
+a mention of the police. Fey looked on, pretty as a picture, clearly
+listening closely. Ruby continued. "That shit was way, <em>way</em> harder than
+advertised. There's the impression that you get from movies, but that's
+not what it's like at all. I'd compare it to military boot camp---they
+kicked my ass."</p>
+<p>Fey giggled---with her whole body, not just her face. "Kicked it good,
+then, because you're filling those pants all the way out."</p>
+<p>"Pfft! Oh, please. Talk less," Ruby fanned her hand.</p>
+<p>"As if your ego needs it," Fey paused meaningfully. "You know <em>exactly</em>
+how strong you are and you like it."</p>
+<p>That was true. Building muscle was one of Ruby's few vanities. A picky
+eater throughout adolescence, she used to incorrectly assume that being
+skinny was somehow virtuous. However, joining law enforcement put
+demands on her that revealed a weakness of body and character that she
+went about rectifying by eating clean and focusing on endurance six days
+a week.</p>
+<p>The result was a recently-sprouted confidence and an earned respect in
+the community. Though she was no body builder, she felt she could hold
+her own and do her job of protecting others. Others in the community
+thought so too, having told her that there was a qualitative difference
+between her presence and that of "beer-bellied cops". She never
+mentioned to residents that said cops were her superiors. She never
+mentioned to her superiors that the general public thought they could
+unironically reduce their donut intake.</p>
+<p>General approval would have been enough for Ruby, but she pushed herself
+a little harder at the gym when girls started taking notice. Most were
+straight and meant nothing of it, but their requests to poke her biceps
+had done exactly what Fey had alluded to, pumping up Ruby's ego.</p>
+<p>Female affection was particularly helpful right after Fey and Ruby had
+their fallout and subsequent break up---which felt scummy to admit while
+sitting across from Fey as Ruby was now. She knew it wasn't cheating or
+anything, but single-mindedly gunning for physical validation from
+females due to feelings of inadequacy was the type of solution a
+pubescent teenager would concoct. There was no excuse for a woman in her
+mid-twenties to behave in such a way, even if Ruby had made exceptions
+for herself constantly for months.</p>
+<p><em>I'm not attracted to them. They're just friends. I'm just giving them
+pointers on how to improve their squat-thrusts. Don't all friends slap
+each other on the ass at the gym? And hug for lengthy periods of time
+when they greet one another? And makeout in the parking lot?</em></p>
+<p>No. Making out crossed the line. So did having sex in the back of the
+squad car. And even if people didn't call her out on it, Ruby could feel
+the emptiness afterward and know for herself that she needed to change.</p>
+<p>She wasn't going to fill the Fey-shaped hole in her soul with other
+women.</p>
+<p>Flirting paused while Ruby contemplated Fey's complement. "I, uh, do.
+Yes. I know exactly how strong I am. I've worked hard for it and while
+that hasn't always been the healthiest thing, it's been sufficiently
+distracting." Once she'd clinically addressed her mixed motivations, she
+redirected them onto Fey. "You probably knew how hot you were before I
+complimented you. I mean, look at you."</p>
+<p>"I will admit that I was going for 'hot'," Fey replied, stating so as
+she might any other fact. "And I, too, have achieved such levels of
+hotness in ways that were both unhealthy and distracting. I guess we
+both became vain when we went our separate ways."</p>
+<p>Again, words formed and launched without permission from Ruby's brain.
+"For the sake of our character, we should get back together. Before we
+get any worse, that is."</p>
+<p>Fey shot back with, "They still have all the wedding stuff setup
+downstairs. We could just tie the knot now. 'Do you, hucow, take this
+beefcake to be your lawfully wedded partner?'" Fey joked, clutching her
+interlaced fingers to her chest. Only the knuckles of her pinkies were
+left exposed. The rest were covered in the yielding flesh of her tits,
+which jutted forward between and beneath the insides of her arms. "I
+moo! I mean, I <em>do!</em> Hehe."</p>
+<p>Ruby blushed. "<em>Fey</em>. . ."</p>
+<p>"You walked into that. We're at a wedding reception."</p>
+<p>"Still."</p>
+<p>"Yea. . . I know."</p>
+<p>A question loomed between them, acknowledged but cumbersome. Ruby, the
+one most willing to spearhead the hard conversations, shifted back in
+her chair and sighed. She scratched at her thighs as her hands slowly
+balled themselves up, forearms going tight.</p>
+<p>"I'm sorry," Ruby began. Fey turned away, but Ruby kept talking. "I
+would have said 'I do' for you, too. The feeling <em>was</em> mutual. It just
+wasn't the right time."</p>
+<p>Fey shook her head. Ruby started to speak again but Fey suddenly stood
+from her chair, causing Ruby's words to retreat to where they'd
+originated. The "almost-wedding". Its mention was like an event horizon,
+causing time and space to distort in uncomfortable ways around it. Ruby
+pleaded for Fey to say something for what felt like hours. Fey frowned
+with her clenched fists at her sides for just as long.</p>
+<p>They were trapped.</p>
+<p>Ruby went to untrap them. "Fey, listen. I---"</p>
+<p>But the hucow interrupted yet again. This time, she marched around the
+coffee table to Ruby's side. In a fluid motion, the top-heavy hucow spun
+on her toe, flicked back her brunette hair, threw a dagger over her
+shoulder with a glance, and dropped out of open air without warning into
+Ruby's lap.</p>
+<p>"Oof!" Ruby grunted. The initial impact crushed her hips and thighs.
+Without a protective layer of muscle, she could have seriously had the
+wind knocked out of her. It was a spiteful move. Fey was lashing out,
+making sure Ruby got some sort of punishment for presenting such an
+uncomfortable conversation. "The hell, Fey?! Off! Dammit, do you have to
+act like a child over this? Is now really a good time---"</p>
+<p>Fey's retort was unexpected. "I'm more than willing to have this talk.
+The catch is, I won't be able to have the talk if you don't get your
+hands on my tits."</p>
+<p>"That's bullshit---"</p>
+<p>"You know how horny hucows get? Hmm? If not, you've heard the rumors at
+least. Well, they're true. And I'd planned on scratching the itch with
+some bumping and grinding on the dance floor. But instead, here I am,
+too sober and turned on and soldiering on anyway---for <em>you!</em>"</p>
+<p>". . ."</p>
+<p>"Nothing to say now, huh? Well, then." Fey went to get up.</p>
+<p>Ruby made a sound.</p>
+<p>"What?"</p>
+<p>"Don't go. I'll do it---just. . ."</p>
+<p>"If we're doing it, then let's get on with it."</p>
+<p>Ruby wanted to push Fey up and away but had a hard time deciding where
+her hands could go without being interpreted as erotic. If she could
+convince herself that this was strictly business, she would have.
+Instead, she looked over Fey's soft, warm body from behind and concluded
+that there was just too much flesh---thigh curves, hip curves, waist
+curves. Any touch could be misconstrued as sexual.</p>
+<p>Finding no way out of being pinned to a chair by Fey's soft ass, Ruby's
+nostrils flared with a deep inhale and, finally, she spoke. "So that's
+real? I've heard of being too horny to think but is it seriously that
+bad?"</p>
+<p>"It really is <em>that bad. All</em> the time. I've gotten used to it most
+times, but when I'm this full. . ." Fey's answer trailed.</p>
+<p><em>Full of. . .</em> Ruby started, but couldn't complete the thought because
+Fey was reaching to both sides of the chair and stealing Ruby's limp
+arms. The officer did little to stop her as a hucow daintily dropped
+Ruby's hands atop her voluptuous, golden melons.</p>
+<p>"Finally. That's mmmm. . . Much better. Now, m-move your hands and mouth
+at the same time."</p>
+<p>". . ."</p>
+<p>"If you're unwilling to grope, then I'm unwilling to discuss how we
+eloped. Mmmh. Okay. <em>Okay</em>. That's more like it.
+That's---<em>mmmm</em>---better."</p>
+<p>Ruby didn't have to be coached on how to squeeze Fey. Although much,
+much larger, Fey was just as sensitive in the chest---if not more so.
+Ruby had felt up her girlfriend from behind dozens of times, moulding
+little B cups under her palms, familiarizing each knot of pleasure
+tucked behind her pert little bulbs.</p>
+<p>But <em>fuck!</em> Fey's mammaries made speaking an impossibility, at least for
+the first minute or so. It took the last droplets of Ruby's willpower to
+keep from dipping her finger under Fey's silver dress. As tight as it
+was, the dress was still a barrier to Fey\'s warm macro-mammaries.</p>
+<p>The hucow's skin was soft, like it had been lotioned a dozen times
+before she even got out of bed. A gym rat like Ruby could compare each
+breast to a twenty-five pound slam ball, of adequate size to fill a lap
+or hold with two hands. When she squeezed---which she didn't have to be
+asked to do---she felt the slight give in each breast. Mostly, they were
+taut, but she could change their shape, molding them in her hands like
+clay. Addictive, dense, warm---getting even warmer. In fact, the heat of
+Fey's breasts somehow beat out the heat of her wide thighs, which
+conformed to Ruby's lap like memory foam. And the little sounds Fey
+made, those abbreviated moans that caused her head to go heavy and tilt
+slightly to the left, generated the most vivid of fantasies.</p>
+<p>Every moment of intimacy between them cropped up in Ruby's mind.
+Alongside them, new dreams emerged of how Fey's new rack would improve
+and invigorate those same bouts of raunchy, satisfying sex.</p>
+<p>So huge. Fey was so <em>huge</em>. All at once, Ruby knew how so many women had
+been seduced by the call of Hucows. She was having a hard time talking
+herself out of doing exactly what she was doing for Fey in this very
+moment.</p>
+<p>"M-More," Fey began. "Squeezing me like that is making them produce even
+more. A massage would have been fine but now. . . Ruby---. . . Mmmh!"</p>
+<p><em>Producing?!</em></p>
+<p>Had squeezing so much gone too far?</p>
+<p>Ruby realized she was mashing handfuls of Fey's breasts. She quickly
+corrected course. She hadn't meant to veer away from conversation, but
+Fey's tits felt so good that the two had allowed several minutes to pass
+communicating exclusively with their bodies.</p>
+<p>"What had gotten into you?" asked Ruby. "I just have to know. I don't
+mean to be rude---I'm emotional right now, okay, so sorry about how this
+probably sounds. But Fey, this has got to be the most questionable of
+your many questionable decisions."</p>
+<p>Fey didn\'t react to her decisions being called "questionable". She
+answered Ruby's question respectfully. "We'd broken up and I wasn't
+taking it well. For a long time, I felt unlovable. It bled over into my
+work and my boss, noticing, tried to make a move on me and implied that
+if I was uncomfortable with how he consoled his employees that I should
+consider whether or not I should be one."</p>
+<p>Ruby's groping slowed, the muscles in her forearms tensing as she pulled
+Fey closer. "Fucking dirt bag. Babe. . . I'm sorry."</p>
+<p>"I didn't need to consider. I walked out. Felt damned good, too."</p>
+<p>"I bet it did."</p>
+<p>"Are you mad?"</p>
+<p>"At your old boss? Hell yea, I am. We'd even met when you first got that
+job---I shook that slimeball's hand."</p>
+<p>"Easy, tiger. You're pawing the girls a little rough. . ."</p>
+<p>"Oh. . ." Ruby let a puff of air from her nostrils and stopped
+subconsciously trying to milk her ex-girlfriend.</p>
+<p>"What didn't feel good was being jobless and unlovable at the same time.
+I managed to pull myself together enough to go to a few interviews---I
+was open to anything at the time. Then, I saw an ad online for a
+'housekeeper' position. It was pretty obvious by the description what
+they wanted---they described the living situation and I could tell there
+was a chance of this being hucow related. But at the time, there was
+nothing to lose. If it was a legitimate housekeeping position, I'd have
+a job. If it was a <em>housekeeping</em> position, well, I'd at least have
+another chance at feeling loved."</p>
+<p>Ruby lowered her head, her chin resting in the crook between Fey's neck
+and shoulder. "You shouldn't have. You could have called me and I would
+have---"</p>
+<p>"I did try to call you. Several times, actually. You didn't answer."</p>
+<p>"I must have been. . ."</p>
+<p>"Busy?"</p>
+<p>"No. I mean, yes, I was busy. But I was an idiot for being too busy to
+help you---I'm so sorry, Fey."</p>
+<p>"I know. We were broken up though, so you didn't have any obligation to
+help me."</p>
+<p>"Us not sleeping together isn't an excuse to mistreat you."</p>
+<p>"You mistreated me even while we were sleeping together."</p>
+<p>They sat there together. Sat with <em>that.</em></p>
+<p>It transformed the two of them, Fey becoming less of a hucow and more of
+who she always had been to Ruby: a person. She'd lost a promising
+pharmaceutical job shortly after losing a lover. She'd wallowed in
+loneliness. Here she was on the other side of that, changed by it but no
+less fetching or familiar than she'd been before.</p>
+<p>Ruby shouldered the burden of the blame at first, but then realized that
+her tendency to shoulder everything had been the problem from the start.
+Not depending on Fey had been a weakness. Rather than confront the
+weakness, she broadened her shoulders and took on more and more---more
+job, more hustle, more success. Ruby had transformed too, but there had
+been nothing redemptive or meaningful in it. Fey had made the best of a
+bad situation.</p>
+<p>Ruby was simply "she who produced bad situations".</p>
+<p>"All this time," Ruby spoke. "I'd been training to protect strangers. I
+didn't even protect you, Fey."</p>
+<p>"Don't. Be. Sappy. Your caressing game is terrible when you're sappy.
+Look at your hands, lost all their motivation," Fey said. She adjusted
+herself deliberately in Ruby's lap, the soft width of her ass cheeks
+passing back and forth over Ruby's toned thighs. Her shoulders rolled
+back so that her chest pushed out. "I should tell you another story to
+make you mad. You squeezed really good when you were thinking about
+punching my boss in the face."</p>
+<p>"I wasn't---"</p>
+<p>Fey purred. "You were. It was very attractive."</p>
+<p>"Fuck. . ."</p>
+<p>"I'd like to."</p>
+<p>"I'm sorry I neglected you and ignored you and put my shitty job and
+bullshit insecurities before you."</p>
+<p>"You were supposed to say 'me too'," Fey whined softly.</p>
+<p>Ruby, thoroughly on the back foot from having being called out and
+solicited for sex in almost the same breath, didn't know which path to
+choose. In the end, she lifted and pressed Fey's fat udders together
+while asking important catch-up questions---marrying the ideas. "First,
+tell me about what it's like being a hucow---feeling your body change."</p>
+<p>After going limp with sexual bliss, Fey retaliated. "No. First, this."</p>
+<p>And suddenly Ruby didn't care about hearing what it was like for Fey to
+be a hucow.</p>
+<p>Instead, she sank to meet Fey's waiting lips. Her ex tasted like good
+wine, full of earthy tones below a layer of tart and sweetness. Ruby
+tumbled down into Fey's mouth with the same familiarity she had in
+Fey\'s apartment all those months ago. She found a ravenous, sensuous
+tongue that danced as she entered. The two worked their mouths over one
+another, again and again, fishing for deeper, headier passions.</p>
+<p>The squeezing was a natural extension of their oral play. As Ruby
+moaned, her hands moved on their own, working taut, stretched skin under
+her fingers. How could a woman's breasts be this soft? How could they be
+this inviting? As her palms wrapped around them, Ruby detected a new
+amount of warmth and a slight tremble after what felt like a
+breast-centered hot flash. The weight of Fey's breasts, which she partly
+carried with her arms from behind, pushed more against her containing
+limbs. Beneath the best fucking feeling in the world, yet another
+sensation loomed, waiting to dethrone the first:</p>
+<p>Fey answered the question Ruby had only barely put together. "That's for
+you. <em>Mmmh! Mmmh!</em> H-Hucows make milk for people we're attracted
+to---<em>fuck</em>! Yes. . ."</p>
+<p>"Seriously? You answer the question now?!"</p>
+<p>"I'll answer more if we keep going. . ."</p>
+<p>"Mmmh. . ."</p>
+<p>In a bestial heat, Ruby found the taxed ridge of Fey's silver dress and
+yanked it down. Fey yipped, then settled with even deeper passions for
+the woman who just couldn't help but claw through her clothes to get to
+her skin.</p>
+<p>"No, Ruby," Fey whispered, full lips brushing over Ruby's as she warned
+her. "God, I want that, but no. I'd never let you. I---"</p>
+<p>"I know," Ruby's words were heavy with remorse. Every rumor about hucows
+had been spot on so far, so she knew the rumor about how a person
+<em>became</em> a hucow was true. If she drank too much of Fey's milk, she'd
+begin the transformation.</p>
+<p>Ruby would become a hucow.</p>
+<p>"You've worked too hard to throw it away," Fey said, voice airy. "It was
+different for me---I needed to become a hucow. It made sense. But you? I
+couldn't let you do that."</p>
+<p>"I can't believe you're protecting me," Ruby said.</p>
+<p>"Somebody has to."</p>
+<p>"Mmmh!"</p>
+<p>"<em>Yes</em>. . ."</p>
+<p>Ruby stormed Fey's body. She started to lean back but heard the chair
+creak with weakness from their shared body weight. So instead, she
+twisted Fey's voluptuous body around in her lap and hoisted Fey bridal
+style over to the enormous bed. With a muscled toss, Fey went spinning
+in the covers. The hucow looked up, giggling, and noticed that Ruby's
+fingers were at the top button of her shirt.</p>
+<p>"Slow. I want to see. . ." Fey whined, spreading her thighs wide on the
+teal comforter and while she squished her needy boobs together with her
+hands---those milky medicine balls eclipsing her entire torso.</p>
+<p>"Not a chance," replied Ruby, seeing and lusting after Fey's globes.</p>
+<p>Ruby, impatient, ripped her shirt over her head, flicking out her
+dark-red, curly ponytail. Fey's presence had her living in the moment.
+She hadn't felt the rush of passion like this since Fey---there wasn't
+another woman who had even come close. She didn't even know where they
+stood anymore. Did sex mean they were together? Or did their physical
+chemistry put a pause to their gaping emotional scars? Perhaps they'd
+both fled to sex in each other's absence and they were doing so again
+now, picking physical pleasure when they ought to address one another's
+concerns. Perhaps fucking a hucow in heat so she could think again was
+actually the greatest level of consideration and care a partner could
+extend.</p>
+<p>None of it mattered.</p>
+<p>Fey drank in Ruby's exposed top. Before, Ruby had a slender physique, a
+sort of hourglass made of hip and shoulder with a sliver of body
+connecting. The structure had been there all along, which had attracted
+Fey in the first place.</p>
+<p>But Ruby's foundation had been built upon, sculpted, and forged with
+tireless physical rigor. "Slender" wasn't a good word. "Heroic" was
+better.</p>
+<p>Fey gawked.</p>
+<p>"Whoa. Ruby," Fey gasped. She didn't utter a word. Instead, she gasped
+and giggled and gasped again, caught in a loop of disbelief.</p>
+<p>"You're overreacting. Gosh," Ruby scoffed, feeling a little exposed. Her
+thumbs found the loops in her pants again, stupidly shy at Fey's
+flattery. Unfortunately, this merely pulled her pants lower, revealing a
+pair of gray panties to match the gray bra.</p>
+<p>"Hehe, no. Nuh-uh. I'm <em>not</em>---<em>fuck</em>, woman. I just. . . <em>fuck!</em> You
+mean you couldn't have gone to the gym any earlier than the police
+academy? Your physique is incredible," Fey replied, so madly smitten
+that she held her hands in front of her mouth as she giggled. "I mean,
+it's one thing to see you with clothes on. Like, I could tell you were
+toned. But, wow. <em>Wow</em>. I'm surprised your abs didn't leave little cuts
+in all your clothes."</p>
+<p>"Cuts in my---"</p>
+<p>"They're hard as diamonds."</p>
+<p>Ruby rolled her eyes, but she couldn't keep from blushing---or smiling
+for that matter. She gave herself a once over, trying to see herself the
+way Fey saw her. It wasn't like she was all that bulky or big, but
+exercise and good sleep had done her body well. Dips and valleys
+outlined muscle groups, depicting a woman in her physical prime. And
+somehow, she managed to pull it all back together into a feminine
+silhouette. It was her boobs, mostly, Ruby reasoned. They had shrunk but
+hadn't quite disappeared with her extensive training, fully filling her
+C cup sports bra. They looked bigger than they were, largely due to
+their high-sitting pertness and near identical shape and size.</p>
+<p>Which was something vain Ruby had guessed before but was now confirmed
+with Fey's reaction.</p>
+<p>Ruby looked up and saw that Fey was still devouring her. Seeing that Fey
+was reduced to a lady puddle at the sight of her body, Ruby started to
+see herself differently. She made herself look as long and lean as
+possible, tilting her body slightly and combed her fingers through her
+hair like she'd seen in stupid commercials. At the same time, she
+clenched her abs and jutted out her chest, lips open just a slit as if
+mid-sentence.</p>
+<p>"Hehe-he!" Fey guffawed and clapped, too giddy that this entire show was
+for her and only her. Like a bouncy, chesty bullet, she launched across
+the bed and wrapped herself around Ruby. Her soft chest swallowed up
+Ruby's tits---and much of the rest of the show she had been enjoying.
+"So hot!"</p>
+<p>"Stop it! You're making me blush---it's not like I'm some pop star or
+anything."</p>
+<p>"You're better 'cause you're mine."</p>
+<p>It was brief, but Fey staking claim over her made Ruby's heart thunder.</p>
+<p>She was Fey's. . . Always had been, even after months apart.</p>
+<p>"I'm yours, Fey?"</p>
+<p>"You never stopped being mine," Fey muttered.</p>
+<p>Ruby crushed Fey in another fiery kiss, then laid her flat in the bed.
+After two attempts at pulling away---Fey brought her back for more
+kisses, preventing her escape---Ruby surveyed the impossibly attractive
+body of the woman to whom she belonged. She couldn't resist anymore.
+Fey's breasts were calling.</p>
+<p>She drove herself down, still standing on the side of the bed, bent in
+half as her nose dug into the voluminous flesh of Fey's taut creameries.
+She laid fierce kisses over them, eyes closed, eager to lose herself in
+them. She felt Fey's hand on her head, but she refused to stop, her
+tongue extending so that she could lick Fey's titty both near
+and---very, <em>ver</em>y---far.</p>
+<p>She would be careful. She wouldn't swallow any milk. But if she didn't
+get her mouth on Fey's expanding breasts soon, she'd be in more danger
+than becoming a hucow. She might lose herself in a completely different
+way without some dedicated time with the biggest tits she'd ever seen.</p>
+<p>"Mmmn," Fey moaned. "Th-That's good. Just---Mmmm! Like that."</p>
+<p>There was so much <em>breast</em>---all the boob a horny lesbian could wish
+for. And having them grow against her was intense. Nothing was
+subversive or imperceptive about it. Ruby could hear the rumble of milk,
+the constant gurgle of activity. She could feel each blimp growing
+warmer and warmer in undulating waves, and when each creamery was almost
+unbearably warm, they would shudder and push in all directions at once,
+increasing in size. It was an experience like no other: being between
+Fey's massive tits as they grew up and around her face, claustrophobia
+of a queerly addictive kind.</p>
+<p>Ruby thanked her lover for this experience with kisses and moans and
+feverish groping and still felt that she was getting more than she
+gave---still felt that being nestled in Fey's most intimate space while
+milk production churned like stormy seas on both sides was something she
+couldn't adequately repay.</p>
+<p>Ruby's expanding ex writhed in throws of bliss, her body tensing and
+relaxing in stuttering spurts. Breathing ragged, Fey would inhale and
+cause her bosom to rise up till the insides of her breasts became a
+mould for Ruby's face. An exhale later freed Ruby to explore her milky
+vastness once again. But Fey was by no means a passive lover. She let
+Ruby explore but used her hands to guide Ruby around, showing all the
+beautiful attractions of her ballooning tits.</p>
+<p>The magic was in the fact that, even after being shown such wondrous
+places---gently sloping underboob, sideboob wall that rose like a
+mountain, the deepest trenches of her cleavage which produced intense
+tingles of pleasure when kissed---that revisiting them still knocked
+moaning gasps out of Fey. The spaces would shift and change as the
+landscape of Fey's breasts evolved, but her reactions were rewarding to
+cultivate each and every time.</p>
+<p>There was so much detail to Fey's rack, not simply a blob of goodness
+and warmth---which, in many ways, it still was. Instead, each point on
+it was distinctly defined by a reaction, a tempo of breath, a reddening,
+and a warmth. Each spot reacted differently to a tongue, to lips, or to
+teeth. Through each, a slightly different pitch of gurgles could be
+heard. All over Fey's gozongas were venues and galleries and museums.</p>
+<p>Even just calling them "massive, growing titties" felt bitterly short.
+As much as Ruby hated English class growing up, she could justify
+writing a poem about Fey's spectacular gazongas. They amazed Ruby. They
+inspired Ruby. Rarely was passion and pursuit an energizing endeavor, an
+engine that produced its own fuel.</p>
+<p>But loving Fey was its own reward.</p>
+<p>"Babe," Fey sighed, like she was about to disappoint the both of them.
+"You're getting too close."</p>
+<p>"Too close?"</p>
+<p>When Ruby raised her head, she saw that her mouth was on the speckled
+boundary between breast and areola, dancing along the rim of darkened
+territory, venturing closer and closer to Fey's palm-length nipple. Ruby
+had brushed it with her cheek a few times, teasing with the idea before
+thinking better of it. Several times, in fact, Ruby had thought to stop
+toying with love and to let things come to their ultimate
+conclusion---that taking Fey between her lips and filling herself with
+milk would be the most exciting few minutes of her life. The orgasms
+would be worth it. The bonding they gained as a result would be <em>more</em>
+than worth it.</p>
+<p>But the consequences?</p>
+<p>"I'm sorry. I still won't let you do that to yourself---" Fey began, her
+eyes sweet.</p>
+<p>But the sexual tension was frustratingly high and having to pause set
+Ruby into a fury. She pushed further onto the bed with minimal effort
+but impressive force. With little pageantry, her belt came off and the
+paleness of her legs was exposed along with her gray panties. She
+dispensed with the last shred of underwear swiftly and crawled forward,
+freshly nude and blood pounding in her ears.</p>
+<p>Fey submitted, opening herself, voice trembling as she whispered, "Yes",
+<em>ad infinitum</em>. Crisp sheets ruffled as Ruby positioned her left knee
+outside of Fey's golden leg. With authority, she grasped Fey's short,
+thick thigh and thrust her pelvis inward till her pussy kissed Fey's
+womanhood, which was poorly guarded by the lower hem of her dress.</p>
+<p>A cocktail of forces pushed Ruby to trib powerfully with Fey. She was
+pent up, in love, fully devoted to their shared bodily pleasures and yet
+barred to the sweetest parts of Fey by circumstance. But in a way, none
+of it mattered. Action dissolved her thoughts. Feelings suffocated her
+questions.</p>
+<p>Her throbbing clit found Fey's and Ruby spent the months of training and
+strengthening of her body to thrust herself in full-bodied waves of love
+into Fey's dripping center. Every pulsing throb of her heart sent her
+forward, her jaw slacking at the impossible pleasure. Her pelvis came up
+and crashed into Fey's softness, the shockwave causing Fey's tits to
+swing upward and around, nipples like clock hands.</p>
+<p>It was bliss. It was, in equal part, agony.</p>
+<p>She'd starved herself of this sort of emotional vulnerability and now
+delivered it to Fey raw. Her body slanted forward, pushing the sweet
+hucow's leg lower and lower toward the bed. Some of her thrusts missed
+their mark, her intensity putting even sex on hold so Ruby could fully
+express herself.</p>
+<p><em>I missed you. I'm sorry. You're beautiful. I'm sorry. I hurt you. I'm
+sorry.</em></p>
+<p><em>Smack! Smack! Clap!</em> sounded Ruby's powerful pussy fucking.</p>
+<p>Moans flowed between them. The sheets swallowed them. The plush mattress
+took the brunt of their lovemaking, forgiving enough to absorb the thin
+sheen of sweat as they tossed and turned and wrestled.</p>
+<p>Orgasm splintered from Fey's pussy like cracks in ice, bending and
+snapping and forking into each part of her. Her head tilted back. She
+clawed at the sheets, muscles in her stomach trembling as they tensed
+and pulled her away from the mattress to be nearer still to Ruby. Her
+breasts came up and surrounded the narrower partner. They were huge and
+undeniably sexy. The heat of them was scorching as quarter-width nipples
+dragged across Ruby's dangling breasts, branding the officer for all
+hucow kind. And yet, impossibly, Fey's hucow tits, which were larger
+than the very pillows that cradled the back of Fey's head, felt that
+much more fragile.</p>
+<p>Ruby rolled into her lover, hips flush and orgasm shooting stars through
+her fluttering lashes. Her right hand gripped Fey's thigh as she forced
+her body to keep moving through the most powerful orgasm she'd ever had.
+Her clit had all but gone numb with pleasure. Her pussy's walls closed,
+empty and yet somehow full. At its peak, Ruby couldn't keep her head and
+blacked out momentarily, finding herself fallen forward with her arms
+propped up on both sides of Fey's head. Her ex's breathing was too
+erotic to ignore, and with closed eyes she found Fey's mouths to kiss
+her again.</p>
+<p>They moaned at this. Every conjoined part of their bodies came alive.
+Even with orgasm retreating, it was as if something was building between
+them---something that couldn't be fully understood with just one orgasm.</p>
+<p>Ruby expressed exactly this while Fey continued to kiss her neck. "Did
+we just start something?"</p>
+<p>Fey's groans were throaty and satisfied. Her heartbeat was tangible
+everywhere: from her palms that lay beneath Ruby's palms to her breasts
+which were so large now that they lifted Ruby slightly off of her and
+extended a foot or so on each side of their splayed bodies.</p>
+<p>"Can this be the start of something? Please?"</p>
+<p>"Yes, Fey."</p>
+<p>"Even if you're a cop and I'm, well, under investigation with the other
+hucows?"</p>
+<p>". . ." Ruby's sex-addled brain couldn't put into words her conflicted,
+messy emotions. She could only act.</p>
+<p>"Ruby. . . don't," Fey said, though her defence had weakened
+significantly from being fucked so thoroughly.</p>
+<p>"Let's start something," Ruby growled.</p>
+<p>"Not. <em>That</em>."</p>
+<p>"Are you saying that to protect me?"</p>
+<p>"Of course. I love you."</p>
+<p>". . ."</p>
+<p>"Don't. . ."</p>
+<p>"I love you too, Fey. So much." Ruby didn't know the full extent of her
+own feelings until her body moved for her---higher and higher, toward
+the most sacred space for a hucow.</p>
+<p>A shriek of pure joy pierced the night. Broken, heated love sealed two
+lovers more meaningfully than any wedding ceremony.</p>
+<p>Fey's milk rushed forth like a broken dam.</p>
+<p>And a burst of milk filled Ruby's mouth.</p>
+<h2></h2>
+<h2><strong>Part 3</strong></h2>
+<p>Word Count: 6084</p>
+<p>Consequences.</p>
+<p>There would be quite a few of them for drinking milk straight from a
+hucow. There was no scarcity of rumors, panic, or buzz about the effects
+that hucow milk had on previously-normal women.</p>
+<p>Whether Ruby believed the milk would make her the healthiest she'd ever
+been or send her into immediate cardiac arrest---that it would damn her
+to hell to burn for one-thousand years or that it would make her queen
+of the afterlife with an army of busty demons and Lilith as her side
+chick. Anything felt possible.</p>
+<p>She was but one phone search away from learning what the world thought
+her fate to be. Any fear or confidence or inkling or meditation could be
+supported with minimal effort. She only needed to stop what she was
+doing and check.</p>
+<p>But it never occurred to her to do so.</p>
+<p>Earlier, her worries had been like a plane turbine at the back of her
+head, deafening and dangerous and uncontrolled. Now, they were like air
+conditioning or comets or the milk spoiling in her refrigerator: surely
+occurring but invisible---important but also, just as meaningfully, <em>not
+at all</em> important.</p>
+<p>Ruby couldn't think of a single thing that would matter more in the next
+few minutes than Fey Ferreira because nothing in the city, in the
+cosmos, or in her refrigerator was as important and lovely---and
+<em>huge</em>---as Fey was.</p>
+<p>In <em>every</em> possible way.</p>
+<p>Ruby took a thick, hucow nipple into her mouth and started sucking,
+leaving her every care behind.</p>
+<p>"<em>Ngh!</em> S-So---. . ." Fey winced, then issued a warning through her
+clenched jaw. "Here it comes. So much is . . . <em>coming</em>!"</p>
+<p>A decadent ablution pushed its way to Ruby's throat, a parcel of thick
+sweetness that she could never have been prepared for. This was the
+<em>real thing.</em> She wasn't lapping at Fey's leakage anymore as she'd done
+during sex. That had only been the suggestion of sweetness---a flavor
+muted by the taste of Fey's soft flesh, forced to fight for attention
+with their near-orgasmic states. This was hucow milk, entirely and
+consumingly. There was nothing to distract from its taste or detract
+from its volumes---just a force, a weight, a heat, and a rush.</p>
+<p>It not only filled Ruby's maw, but occupied her entire mind, her tongue
+picking apart the surprising complexity and flavor. Sweet with a
+full-bodied intricacy. Not scalding but warmer than body temperature,
+like it was made-to-order for this exact moment.</p>
+<p><em>That's for you. Hucows make milk for people we're attracted to. . .</em></p>
+<p>Those had been Fey's words. This milk <em>was</em> ready-made just for Ruby.
+Fey had admitted it while sitting in Ruby's lap just a few feet and an
+eternity away. They looked huge then, from above, over Fey's shoulder as
+Ruby squeezed and lusted after their softness. Now, they were properly
+Ruby's---in the similarly new and fragile that all of Fey was now, once
+more, properly Ruby's.</p>
+<p><em>I can't believe I thought she was big then. . .</em></p>
+<p>They were much bigger now, suitably large to lean on. Being a hucow in
+heat had caused Fey to grow---for more milk to be made and mixed
+underneath her blue-veined flesh. It was Ruby's position atop one of
+Fey's bean bags that enabled her to keep drinking; the weight of her
+body wrapped around her lover's fleshy, gurgling mountain that kept her
+from literally being blown away by the hydrant of milk.</p>
+<p>All for Ruby. After all this time, just for Ruby.</p>
+<p>Fey's feelings had never faded. It was real---this was <em>real</em>. And the
+fact that Ruby nearly choked several times on breastmilk put a metric to
+it. If hucows made milk for those they were attracted to, then Fey's
+love could be measured.</p>
+<p>How much did Fey love Ruby? Enough to drown her. . .</p>
+<p>In breastmilk, of course, but that didn't dispense with the reality of
+the situation: that Ruby had to swallow constantly or choke.</p>
+<p>Fey's cream wasn't oppressively thick, but it moved quickly---so fast
+that small streams of overflow trickled down the sides of her breasty
+bluffs, overflowing Ruby's eager mouth. It was so <em>much</em>. She'd kept it
+almost entirely to herself too, and her nipple throbbed in controlled
+jolts against the inside of Ruby's left cheek like Fey's whole body was
+unwinding, letting loose its devastating productivity without hesitance.</p>
+<p>Fey sighed. "Right there. That's so good. <em>Mmmh</em>. . . Take it all,
+Ruby---it's what you get for being so <em>stubborn</em>, hehe."</p>
+<p>Ruby had a few quips in mind but had to hold them. Her mouth was far too
+busy for banter, occupied by band after band of hot ambrosia pelting her
+cheek, swirling in her mouth, and racing down her throat. Her tongue
+flicked after the initial swallow, coaxing Fey's bed-spanning titties
+for more smooth cream. With a tilt of her head, she used her tongue and
+cheek to stroke Fey's lengthy, sweetness-spewing node. She felt the
+nipple tremble in her mouth and moaned when it offered another geyser of
+richness. Ruby inhaled with a reckless, heady vigor, facing down the
+endlessly fluid like a competitive drinker.</p>
+<p>It seemed like it wouldn't end. Ruby's eyes lost focus at some corner of
+the room, finding it easier to turn herself off so that she could be
+what Fey needed: a vessel for release. The torrent of liquid went on and
+on, Ruby's throat and belly complaining at the sudden demand, her tongue
+rebutting as it asked for more. Both parties would go back and forth, a
+twinge of discomfort and the grip of deliciousness, until Fey's writhing
+and satisfied moaning would wake Ruby from her vacancy and drag her back
+into the warm, naked now.</p>
+<p>Fey looked so goddamn <em>happy</em>. She wore contentedness with ease,
+orgasm-soaked lips bent into a bewitching, silly grin. She'd bring up a
+hand---around and then above the tits that had her pinned to the
+bed---and stroke Ruby's arm, arousal spiking once more at the touch of
+unyielding muscle.</p>
+<p>Ruby was objectified and ogled and filled with cream. Then, with a pair
+of quick taps, she came awake once more and beheld Fey's hair strewn
+like a chocolate-brown halo around her head.</p>
+<p>"There, there. Sorry that the initial bit took so long. I had a lot
+saved up, but it shouldn't be so bad now."</p>
+<p>This came as a sort of relief to Ruby, who was saddened that she was no
+longer desperately needed but thankful to no longer be a water balloon
+on the wrong side of an opened dam.</p>
+<p>"G-Good---" Ruby muttered, then coughed to clear her battered throat.</p>
+<p>"Oh my god! Ruby!" Fey said, panicking. "I'm sorry. You were doing so
+good. Oh god! I was so dumb. I should have stopped to---"</p>
+<p>Ruby brought her hand down against Fey's giant breast with a loud,
+playful <em>SMACK!</em> Fey yelped in response, jerking away from the noise
+more than the pain. Her titanic pillowy titty rippled with the impact as
+Ruby composed herself.</p>
+<p>"D-Did I at least help clear out some of your milk?" asked Ruby.</p>
+<p>"Y-You did great. I don't feel like I'm going to explode anymore. . ."</p>
+<p>"Then I've done my job as your lover, and---"</p>
+<p>"In my <em>left</em> breast. The other needs some work. Oh," Fey added, as if
+it was just occurring to her. "And if we leave them both like this,
+they'll probably keep growing because, erm, y-you're. . ."</p>
+<p>Fey gestured to Ruby's body in a general sweep of her hand.</p>
+<p><em>Naked. Gleaming from sweaty efforts. Red hair bunched and heavy.</em></p>
+<p>"Looking at you makes me want to take an anatomy course so I can know
+the names of the muscles I'm drooling over," Fey managed.</p>
+<p><em>GLLLRBT! Gurgle. Gurgle.</em></p>
+<p>Ruby rolled her eyes, absolutely smitten and absolutely averse to
+divulging that fact. "You wanna keep staring at me, or do you want your
+milky cow titties sucked?"</p>
+<p>"You're making me pick between my favorite children, Ruby."</p>
+<p>Ruby placed a hand on her stomach, noting the bump that had started to
+push away from her tight waist. "It's not my choice. Your milk has
+already ruined my figure. Either I keep drinking or you have to deal
+with the disappearance of my abs." She gave her exposed tummy a slap.</p>
+<p>"It's actually a nice contrast. Suits you well---all bodybuilder up top
+and milk pregnant from the tits down."</p>
+<p>"But I worked so hard for my flat stomach."</p>
+<p>"I know. I kinda like ruining that work with milk, somehow. Spite,
+maybe. Like, I'll never have a flat tummy no matter what, so as hot as
+yours is---was?---I like having the milk that you'd give up your figure
+over."</p>
+<p>"That's. . . a little nefarious."</p>
+<p>"I may not be a devil, but I do have horns."</p>
+<p>Ruby pouted.</p>
+<p>Fey giggled. "I like you, Ruby, whatever shape your body is. Don't get
+all fussy."</p>
+<p>"I'm not fussy," Ruby fussed. "And maybe I'd believe you more if you
+could say all of that without squeezing my biceps."</p>
+<p>Fey, whose hand actually hadn't stopped squeezing Ruby's arm as she
+spoke, gave herself a quick slap on the wrist and smiled innocently.
+"Whoops! Okay. Suck my tits. I promise not to objectify you too much."</p>
+<p>"I love you---you muscle-obsessed dummy."</p>
+<p>"I love you too. Now, hush and suck my other tit."</p>
+<p>Ruby, again, obeyed. She used her mouth to usher in a series of
+rapturous orgasms for the both of them as she allowed Fey's flow to
+steal her away once more. Each breast audibly gurgled, milk escaping
+from each, though only the one under Ruby's ministrations let loose its
+full deluge, like Fey's body didn't want any milk to go to waste.</p>
+<p>Knowing what to expect, Ruby quickly performed the urgent care necessary
+to bring Fey's right titty down to a manageable milk rate. It was
+probably just a few minutes shaved off her previous time, but it felt
+shorter to Ruby because Fey's hoarse voice spoke sweet words to her as
+she drank:</p>
+<p>"You're stubborn, Ruby. So <em>damned</em> stubborn. But I c-can't help but
+love you. . ." Fey scolded, frustration wrapped in a soft, lovely
+exterior.</p>
+<p><em>Gulp. Gulp.</em></p>
+<p>Ruby moaned, eyes closed, mind swimming. She spared a few words. "You
+taste amazing, babe."</p>
+<p>"You aren't listening."</p>
+<p>"You said you love me."</p>
+<p>"And?"</p>
+<p>"That I'm stubborn."</p>
+<p>"Annoyingly so."</p>
+<p>"I'm sorry," Ruby moaned, then opened wide again and swallowed Fey's
+nipple anew leaving no amount of it exposed to the air. She drew in a
+dozen or so more gulps of thick, creamy goodness.</p>
+<p><em>Gulp. Gulp. Gulp!</em></p>
+<p>Fey grinned, besotted beyond help. "Stubborn, but mine---gone for a
+while, but mine all over again."</p>
+<p>Ruby drank and drank, her libido raging with each swallow. As much as
+breastfeeding from Fey was a soothing experience, she could feel that a
+single orgasm hadn't been enough and to her surprise, she found that by
+simply stuffing herself with milk, she could arrive at equal pleasures.
+Fey's milk was delicious. Her nipple, likewise, was turgid and needy
+under her squeezing lips and massaging tongue. The flesh glowed with
+heat, more than a foot for each breast when entirely spread out on the
+bed as they were.</p>
+<p>Ruby came several times. The tingles of each orgasm lingered longer now
+that she was full of milk. She suspected she could eventually get to a
+point of constant sensitivity---of every caress and touch being enough
+to work her toward another orgasm. And not the sort that waned or became
+boring after two or three, but full-on climaxes as if she'd spent an
+hour on foreplay before each one.</p>
+<p>She wondered if she was transforming into a hucow, the most primordial
+parts of her psyche awakened with sex and breastmilk. That had to be the
+allure of the whole hucow business: the ability to fuck and suck and
+fall in love anew without the need for moderation. The fact that Fey had
+put herself together with makeup and perfume and a dress---<em>fuck!</em> How
+did she have the self-control to pull that little silver sleeve over her
+sloshing, fleshy curves and then suffer for hours clothed?---was a
+testament to either her desperation for love or her indomitable mental
+acuity. Probably both, though as drunk as Ruby was with another climax
+rolling through her, she chose to put Fey in as positive a light as she
+could: willful, level-headed, mature.</p>
+<p>It helped Ruby love Fey more---which she thought was impossible but felt
+all the deeper as she drank the slower, easier flow behind the storm.</p>
+<p>Ruby gulped louder, her efforts redoubling. She was exhausted---"drowsy"
+felt like an apt descriptor. She hadn't yet adapted to the pleasures her
+body was experiencing. One woman could only endure so many rounds of
+lust and gluttony before she wore thin, and she felt the wall that was
+her limit approaching.</p>
+<p>She also felt her physiology changing within her, the same way she might
+feel anticipation before a powerful storm or when she felt her thigh
+slipping into place for a submission on the jiu jitsu mats. It was right
+<em>there.</em> No amount of being full or tired or sleepy could deter her even
+though, in all likelihood, her body had put those obstacles in her way
+to do just that.</p>
+<p>But nothing could keep her from knowing Fey more wholly; no sacrifice
+was too much if she could feel in herself what Fey felt every day.</p>
+<p>Ruby had won her lover back, and she would drink until she understood
+Fey enough to never wrong her again.</p>
+<p>So she drank and drank, stomach pushing further and further, falling
+deeper and deeper. Her body burned with the heat of the milk sac her
+tummy had become.</p>
+<p>After about fifteen minutes of diligence and arousal, Fey was not as
+taut as she had been when she started. The edge of fullness in Fey's
+ragged moans was gone, but Ruby didn't stop drinking. She merely darted
+across the bed to Fey's other breast and found yet more milk to stuff
+into her growing globe of a belly.</p>
+<p>It never ran out. No matter how much she drank, Ruby knew Fey's love
+would never run out. The fantasies of such a thing weren't a mystery to
+Ruby: they would be out for groceries and Ruby would skip breakfast to
+have an excuse for Fey to pop out a titty and nurse her in the parking
+lot. They'd go on dates, dinner and a movie where dessert came hot and
+fresh from Fey's body-dwarfing creameries. Every morning and every
+night, after a generous wrestle or romp, they could fold themselves
+together in a bed just like the one they currently occupied, and pretend
+there was nothing else that mattered in the whole world besides Fey's
+creamy tits and Ruby's addiction to them.</p>
+<p>Ruby liked that. Fey, who cooed and kissed the top of Ruby's head,
+seemed to like that.</p>
+<p>Ruby pulled away from Fey's left breast yet another half hour hence. She
+gave it a few licks before laying her head against the warmth of Fey's
+soft, naked body.</p>
+<p>"Finished, love?" Fey whispered, gratitude wrapped up in her gentle
+words. Without waiting for a response, she said, "Let me up. I wanna
+hold you."</p>
+<p>"My jaw just got tired," Ruby admitted. She went to push up off the bed
+but found her limbs wobbly and distant. "Whoa. I feel funny. Drunk,
+almost."</p>
+<p>"That's normal. As is being sleepy. I think I slept three or four days
+straight after my first dose because I got to Ph---. . . I ended up
+drinking quite a bit of hindmilk."</p>
+<p>"Hindmilk? Wait. How far did I get?"</p>
+<p>"C'mere."</p>
+<p>Fey, though smaller, muscled her way into a sitting position and swung
+her legs out from the side of the bed. She guided Ruby to her by the
+hand and wrapped her woman---her <em>love</em>---around her. It was a difficult
+feat, Ruby realized, because the larger muscled woman was now glutted
+with a swell of milk that caused her stomach to jut forward like someone
+thirty or forty pounds heavier than her. Complications worsened when Fey
+pulled Ruby around and their tits brushed together, Ruby's unchanged
+orbs against Fey's, which were planetary in comparison. The sensitivity
+had both of them seizing up with pleasure. Nipples scrubbing against
+soft boobies was arrestingly sensational regardless of size.</p>
+<p>It was an effortfully logistical headache, but love and tits were,
+perhaps, the only things more stubborn than Officer Ruby Granger and the
+two arrived at a comfortable position with Fey holding Ruby in her lap,
+red hair and arms poking out from a blanket of titty flesh.</p>
+<p>"Hindmilk is very fatty and thick. You can't rush it---especially when
+you're working through the thinner stuff. It can take hours to---"</p>
+<p>"How far did I get?" Ruby said, voice slurring some. "You started
+getting pretty thick towards the end."</p>
+<p>"You, well, you didn't <em>quite</em> make it to my hindmilk. I don't make much
+of it as is---it's this weird imbalance I'm working on fixing where I
+make a ton of foremilk really fast. It's what makes me get so big so
+quickly, and---. . . Ruby."</p>
+<p>". . ." Ruby turned some, lips wrapping around Fey's nipple.</p>
+<p>"Woman, please. It's not a competition," Fey giggled. "Besides, if you
+get to my hindmilk, you might sleep for weeks."</p>
+<p><em>Gulp. Gulp. Gulp. Gulp.</em></p>
+<p>"<em>Mmmh!</em> Fuck, that's fantastic---Ruby Granger! Stop it. You aren't even
+close, you glutton!"</p>
+<p>Ruby released Fey from her mouth, pouting. "That's another thing. This
+sleep business. I can't sleep that long---not for days," Ruby commented,
+even as she rolled her head into the crook of Fey's arm and breast for
+warmth. "I'll miss work. People will worry and I might lose my job."</p>
+<p>"You should have thought about that before drinking a hucow's milk. You
+can't reverse this stuff---to my knowledge."</p>
+<p>"Exactly. It means I can't ever walk away from you again," Ruby said,
+fighting to keep her eyes open. "It's not marriage, but it's a sort of
+bond, right?"</p>
+<p>"Ruby," Fey remarked. She tilted forward to present her nipple to Ruby.
+"You earned it. . ."</p>
+<p>Despite complaints of a sore jaw, Ruby detected the warm, hard peak and
+sucked it into her mouth for a few more draws of milk. These mouthfuls
+were slower, lovely and relaxing. They were what Ruby wanted to wake to
+every morning and be nursed with after a stressful day on the streets.
+She wondered how anything could be thicker or sweeter than what she was
+currently tasting and committed herself to understanding it. <em>Fey's
+hindmilk</em>. It felt worth every effort to find.</p>
+<p>When Ruby's lips came away with a <em>pop!</em>, they were coated with a
+shimmering moisture and connected to Fey by a strand of spittle.</p>
+<p>"There's something I have to tell you," said Fey, after a lengthy
+stretch reserved for swaddling Ruby against her tits.</p>
+<p>"Anything, Fey." When her milky lover didn't respond right away, Ruby
+rolled away from Fey to look her eye to eye. "What's up? Something
+wrong?"</p>
+<p>"After tonight," Fey paused, so brief that only someone as close to her
+as Ruby would have noticed. "I'll have to disappear for a little while.
+It's, well, it's <em>required</em> that I be with my Mistress for a few days
+after nights like these."</p>
+<p>Ruby, whose belly was being rubbed sweetly by Fey as she admitted this,
+couldn't for the life of her get the words she'd heard to unscramble
+themselves in her head. "Come again? Disappear? B-But. . . Nights like
+what, exactly?"</p>
+<p><em>Fey is. . . leaving?</em></p>
+<p>"My Mistress was the one who sent me to this wedding. I was supposed to
+find new members for the harem," Fey said, straight and sober as a
+cancer diagnosis. "Which you technically became because you drank from
+my breasts for a <em>long</em> time. But I also love you, and there's no way
+I'd let the Mistress anywhere near you, not when you work for the
+police. She'd be tempted to use you and I---I can't. . ." Fey's voice
+cracked. Ruby noticed before Fey could reseal the gap---a gap brought
+about when Fey imagined what harm would come to Ruby if she met the
+"Mistress".</p>
+<p>Fey continued. "So, I'll take the fall. I'll have to come up with an
+excuse for the missing milk, but that won't be hard. I\'ll be housebound
+for a few days, too. Standard stuff. But then, I'll be allowed to be out
+again and I'll come find you."</p>
+<p>Ruby had quietly listened, using her cop training to keep the confusion
+and pain off her face. Her first words after Fey's explanation were,
+"What the hell are you talking about, Fey?"</p>
+<p>Then, there was a shift through the house.</p>
+<p>Where there'd been the thumping of music, there was now shouting.
+Outside the window was an array of flashing red-and-blue lights,
+diffused by the heavy curtains so that the whole room flashed the two
+colors like a strobe. Swimming up through Ruby's awareness came the
+sound of sirens and someone speaking over a loudspeaker---a voice she
+recognized: Sage Singer.</p>
+<p>Fey, suddenly in the midst of police sirens and loudspeakers and
+strobing lights, was hauntingly calm. She continued to Ruby's belly as
+heavy footsteps came storming up the stairs.</p>
+<p>"The hell's going on?" Ruby's eyes widened, a degree of fury rising up
+along with concern. "Fey, talk. You have a Mistress? You seduced me into
+drinking your milk to serve some <em>Mistress</em>?"</p>
+<p>Fey went to say something, but Ruby interrupted her by snapping herself
+away. She came out with a clumsy roll, slamming against the floor beside
+the bed and shuffling while her legs found themselves under her weight.
+Light and sound worsened her delirium. Gravity she wasn't used to
+shackled her to the hardness of the floor beneath her. It was a fight to
+keep from seeing multiple Feys, adding to the confusion.</p>
+<p>Fey didn't reply. Ruby knew her face, though.</p>
+<p>She'd made that lovely, love-sodden face when she'd answered Ruby's
+earlier question:</p>
+<p><em>"Are you saying that to protect me?"</em></p>
+<p><em>"Of course. I love you."</em></p>
+<p>"Fey. No. I can't believe that you---. . . <em>Ngh!</em>" Ruby's composure
+failed. Her poor coordination sent her back against the Whitney bedroom
+wall on her butt.</p>
+<p>Fey stood. Spoke. "I was asked to attend this wedding to try and recruit
+Samantha."</p>
+<p>"The Commissioner's daughter. . ."</p>
+<p>"But instead, I found you. And you drank all the milk that was supposed
+to turn her into a hucow. Instead, well. . ."</p>
+<p>Ruby saw red, was ready to fling whatever bevy of insults best portrayed
+her utter sense of betrayal. But before she could speak the bitterness
+on her tongue, the room door flung open.</p>
+<p>Fey and Ruby turned to it.</p>
+<p>Standing in the doorway was an impossibly attractive woman. Her skin was
+pale and smooth, set off by her raven hair, round glasses, and eyes like
+sour olives. Ruby had to double take, but she was almost certain she saw
+a single white nub raised at the woman's hairline. A horn. A <em>hucow</em>.</p>
+<p>And for some reason, the horn came to Ruby's awareness before the tits
+that would have swung near her navel, if not for a sturdy-looking black
+dress. Almost concealed at the crown of her cleavage was a jewel wrapped
+in gold that dangled from a chain around her neck.</p>
+<p>"We're leaving now, Fey," said the woman with authority, even though she
+looked to be near Fey's age. "Cops are here. I managed to get the bride
+since <em>someone</em> was distracted."</p>
+<p>"Sorry, Elise," Fey said, genuinely sorry.</p>
+<p>She met the woman in the middle of the room like it was nothing and the
+two immediately exchanged intimacies, groping each other's tits and
+kissing one another deeply. Ruby boiled at how hot and bothered the goth
+chick---"Elise"---seemed to be when kissing Fey. She also felt her heart
+crack a little at how Fey seemed so familiar with some stranger.</p>
+<p><em>They weren't strangers, though. They were both hucow. They were working
+together. . .</em></p>
+<p>"More of that later," Elise said, her eyes crawling seductively up and
+down Fey's body.</p>
+<p>Ruby's eyes did the same, though instead of Fey's round ass or unbarred
+bosom, Ruby paid particular attention to the nubby horns at Fey's
+hairline.</p>
+<p>"Sure. You seem pretty full, still. We could do something about that,"
+Fey answered.</p>
+<p>"It's from the bride. She was more than accommodating tonight."</p>
+<p>"Aww, you like her?"</p>
+<p>"You've got some nerve teasing me. You're just lucky I was watching your
+back tonight or we'd have nothing to report to Mistress Phira."</p>
+<p>"I don't know what I'd do without a milk sister like you, Elise," Fey
+giggled.</p>
+<p>Elise turned, attempting to pull Fey out of the room by the hand. But
+Fey resisted momentarily and turned to regard Ruby.</p>
+<p>Ruby, legs wobbling, was on the verge of collapsing from the desire for
+rest. Nothing but utter confusion and doubt kept her wakeful.</p>
+<p>Seeing this, Fey pulled fully away from Elise and trotted back across
+the room. Fey's small hands grabbed Ruby by the cheeks and laid into the
+cop with a kiss that burned hot enough to shame a sun---or <em>twenty</em>. It
+was the sort of kiss that you couldn't fake, one that spoke a novel's
+worth of words without saying anything at all. And Ruby, despite how
+painful it was to be the one left in the dark, felt a persistent pang of
+love for Fey.</p>
+<p>Quietly, so that Elise couldn't hear, Fey spoke. "Don't fight it. Sleep.
+Then, stay hydrated and start milking yourself twice a day. You're going
+to be sensitive. You're going to be horny. Do what you can to cope until
+I find you. Then, I'll <em>help</em> you. I <em>love</em> you, Ruby. And whatever you
+do, do not broadcast that you're a hucow. There are other. . .
+<em>factions</em> that don't play nice with Mistress Phira---or anyone who has
+been turned by any of her servants."</p>
+<p>Ruby didn't have the strength to speak. Fey's kiss and the stirring
+moment had taken almost everything from her.</p>
+<p>Fey swooped forward yet again and kissed Ruby deep once more, an
+abbreviated version of the kiss that had made Ruby feel featherlight.
+When it was over Ruby collapsed, eyelids like heavy drapes that blinked
+in and out of wakefulness.</p>
+<p>The last images she remembered came to her like still shots:</p>
+<p>Fey being escorted from the room like a princess by Elise. Fey turning
+one last time to look at Ruby. The empty room with the blue and red
+squadcar lights. Officers entering the room. Then, blackness.</p>
+<p>Ruby had wanted to understand Fey.</p>
+<p>Laying impotent and nude on cool, hardwood floors, alone, but made even
+lonelier by her ignorance of what forces had separated her from the
+woman she loved. . .</p>
+<p>Ruby understood.</p>
+<p>And it all but broke her.</p>
+<p>Ruby collapsed.</p>
+<p>Ruby woke up in a ward; she could tell by the smell of medicine and
+excessively-used sanitizing wipes. There was some talking to her right
+and then, into her room rushed Sage and a female nurse.</p>
+<p>"Morning, sunshine," Officer Singer said, deadpan. "Nurse said you might
+be waking up. I gave up half a tuna sandwich to welcome you back to the
+world of the living."</p>
+<p>Ruby was still putting the pieces together, how she was apparently
+alive---how Sage should have just wrapped up and <em>saved</em> the other half
+of her tuna sandwich rather than using it to guilt her subordinates.</p>
+<p><em>I've been asleep for a while</em>, Ruby thought. In fact, she hadn't had
+such a good night's rest since childhood. She felt entirely rejuvenated,
+and wakefulness came without the groggy aftertaste that often demanded
+coffee. She rolled her shoulders a little bit, feeling ready to start
+the shift she'd overslept for. That was until the aforementioned nurse
+pushed past Sage and rushed around the bed to check at some urgently
+beeping machine.</p>
+<p>"It goes crazy if you move too much," the nurse said as an apology.</p>
+<p>Ruby politely apologized back---and then found herself in an impolite
+trance as she admired the nurse's curvy body. A round ass in teal scrubs
+transfixed the lesbian officer, a knot tightened in Ruby's stomach as a
+familiar need to have her way with the closest suitable mate sprouted
+and bloomed unbidden in her mind.</p>
+<p><em>She's not even that hot. In fact, she's sorta average. But fuck! Her
+tits look great in those scrubs---full and probably soft. And dammit if
+those pants aren't squeezing her butt so well. Mmmh. . .</em></p>
+<p>"Feeling lively, Granger?" asked Officer Singer.</p>
+<p>Only then, and after needing to fight the urge to continue, did Ruby
+blink into an understanding of the situation. Sage was on her right,
+having come closer to better examine the previously snoozing officer.
+The nurse, who had lingered by the machine a little longer than
+necessary, backed away respectfully, though her eyes were an obvious
+invitation the likes of which suggested that she appreciated the weight
+of Ruby's gaze.</p>
+<p>"Yes? Umm, no. I mean, I'm awake. I'm good," Ruby sputtered at last,
+running a hand through her red hair and feeling an unusual pull on her
+body. She chalked it up to weighty limbs from a hard sleep.</p>
+<p>That was until Officer Singer leaned down---smelling unusually
+fragrant---and spoke. "Your headlights are on, Ruby. And it ain't all
+that cold in here."</p>
+<p>Ruby instinctively pulled her blankets up to her chest. Though, in so
+doing, her hands met a softness and resistance she didn't recognize.
+Something had gotten in the way. When she looked to see what it was, she
+found a set of party balloon-sized gazongas standing pert between her
+arms. At the impact of her hands, they jiggled erratically, unrestrained
+by a bra, and just as Sage had alluded, her sweater-stretchers each
+sported a fat, marble-sized nipples that the pathetic paper hospital
+gown they'd put her in had no hope of hiding.</p>
+<p>Ruby's eyes went wide. Information was rushing at her so quickly that
+she couldn't put it all together. Feeling "junior" in status, age, and
+understanding, Ruby looked up at Sage. "What's going on?"</p>
+<p>"Glad I have your attention. Here's the short of it, Granger," Sage
+began, leaning back and crossing her arms. "Five nights ago, you were
+found in the master suite of the commissioner's house in a semi-comatic
+state. After rushing you to this quaint little clinic, we learned that
+your vitals were stable but that your physiology was changing to match
+what we now understand to be hucow physiology. Over the course of that
+semi-comatic period, you've been sustained not by intravenous nutrients,
+but by whatever was in your bloated belly. Your breasts have---there's
+no subtle way to put this---turned into literal milk balloons, filled
+with an absurd quantity of breast milk. And, now that you're awake and
+in good condition, I've been instructed to escort you to a predetermined
+point where some state and government agencies would like to learn a
+little more about who you've turned into and what happened that night."</p>
+<p>Ruby was silent for this whole run down, but responded the only
+reasonable way a woman could given the circumstances. "Respectfully,
+what the fuck are you getting at, boss?"</p>
+<p>"You're a hucow now, Ruby. It's tragic. But even with the tragedy of
+losing an officer to this, we can use you to better understand what kind
+of enemy the police force is up against."</p>
+<p>"'Losing an officer'?"</p>
+<p>Sage continued. "In fact, we intend to do exactly that: learn from your
+first-hand experience. Now then, that heartrate monitor is getting
+annoyingly fast so either you're about to pass out again or you're
+thinking about fucking Justyce. In either case, I'll leave the two of
+you alone to figure that out. I'll have a change of clothes and a meal
+ready for you when you get done. Justyce, as soon as she's ready, I'm
+ordering that she be discharged from this ward by authority of
+Commissioner Whitney."</p>
+<p>Sage walked out of the room, though Ruby could tell that there was an
+unease about her gait as she left that wasn't typical of her boss.
+Either way, she turned to regard her nurse.</p>
+<p>The young nurse, a woman with brunette hair in tight braids and
+chocolate-colored eyes approached the edge of the ward bed. Immediately
+at her closeness, Ruby felt herself lusting again. Usually, lust felt
+like a gentle knock on a door she could choose to open. Lust now felt
+like a police raid, bursting down her door and strongly insisting that
+she observe its demands. She couldn't remember the last time she'd felt
+this horny out of bum-fuck nowhere. Maybe when she was hoeing it up
+after the break up, but even then it was more of a pink cloud and less
+of a rose quartz baseball bat.</p>
+<p>Last time she felt this ready to fuck was. . .</p>
+<p><em>You're going to be sensitive. You're going to be horny. Do what you can
+to cope until I find you.</em></p>
+<p><em>Until I find you. . .</em></p>
+<p><em>Fey.</em></p>
+<p>"I'm sorry about my boss," Ruby said, shrugging. She wanted to feel bad
+for herself, but couldn't because she felt such strong tingling in her
+womanhood and tits. "You don't have to, uh, do anything you aren't
+comfortable with. I'm more than capable of---"</p>
+<p>"Actually, I'd be thrilled. It's actually really difficult to treat a
+hucow---like, uh, harder than most people think. There's a lot of
+pheromones---or something <em>like</em> pheromones? Either way, I haven't
+gotten a break from <em>whatever</em> it is since you arrived at this clinic
+five nights ago. The police force was pretty adamant about me being one
+of the only people outside the force to be with you."</p>
+<p>Ruby read the subtext. "They haven't let you meet with anybody for five
+days?"</p>
+<p>"My parents and boyfriend know I'm okay. But no. Not really. . ."</p>
+<p>"Boyfriend. . ." No sex for five days while treating a hucow sounded
+like hell. Ruby brought her hand up to the corners of her hair and felt.
+. . nothing. She had the effect of a hucow, but not the horns? How much
+of a hucow was she? Then, she weighed the size of one of her tits with
+her palm. She felt its raw heat and weight as well as the shift of
+liquid inside her titty.</p>
+<p><em>Definitely hucow.</em></p>
+<p>"Are you feeling any discomfort?"</p>
+<p>Just that quickly, Ruby had forgotten the woman she wanted to have sex
+with. "No! No, I'm alright. I'm just, erm, sorry that you had to be here
+with me instead of home with your family. With your boyfriend. . ."</p>
+<p>This time, Justyce read the subtext. "It's part of the job. And trust
+me, the relationship is very open. He'd be jealous if he knew that I was
+getting involved with a hucow, though. You guys are, like, heroes."</p>
+<p>Ruby didn't yet feel like a part of whoever "you guys" was. "Thanks, I
+guess?"</p>
+<p>"Didn't mean to make that sound weird. I make a lot of things weird.
+Sorry for that. I'm not going to make anything else weird."</p>
+<p>Ruby smirked. "Who washed me while I was in a coma?"</p>
+<p>Justyce cracked a smile---pearly white. "Yours truly."</p>
+<p>"There is nothing weirder than wanting to have sex with a woman who
+sponge bathed you, so unless you can beat that, then I think we're clear
+for takeoff."</p>
+<p>"I wouldn't mind 'taking off' something right now."</p>
+<p>"Be my guest. . ."</p>
+<p>Justice pulled her scrubs over her head, revealing a white bra that
+looked brilliant against her deep ebony skin. "Five days of waiting.
+Finally," she groaned, the days of being bombarded with sexual
+stimulation clearly exasperating.</p>
+<p>It had likewise been five days for Ruby, so when Justice crawled into
+her bed, Ruby ravaged the young nurse's body with explosively intimate
+sex, the likes of which had a female sanitation worker---someone else
+who was probably cleared to be in the ward with Ruby---curiously
+approaching as she came to "change out linens". It was the last time
+Ruby might ever see the women, so she held nothing back and exercised
+the full extent of her lusts by pounding and squeezing and fingering and
+sucking with such ravenousness that her linens---and two pairs of
+panties---were soaked with sex.</p>
+<p>When Sage returned over an hour later to claim Ruby, she found her
+partner nestled between Justyce's dark, thick thighs, devouring a
+dripping pussy with no intentions of stopping.</p>
+<p>"F-Fuck. Th-That's <em>four!</em> I-I'm cumming again, Ruby---<em>yes! Mmmh!</em>"
+Justyce growled, then chuckled.</p>
+<p>Sage intuited that the chuckling had to do with the absurdity of being
+made to climax four times in the span of sixty-seven minutes. She, in
+turn, chuckled, though her own pussy was only tingling a little when she
+observed the threesome.</p>
+<p>"Hucows. . ." Sage rolled her eyes. She hugged herself tightly around
+her chest, her teeth sinking into her bottom lip. "Fucking hucows."</p>
+</body>
+</html>

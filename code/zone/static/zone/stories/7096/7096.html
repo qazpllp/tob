@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>The Domes of Callantha, chapter 6</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>E. N. Dowd </p>
+<p>The Domes of Callantha </p>
+<p>47 </p>
+<p>THE DOMES OF CALLANTHA </p>
+<p>A Breast Expansion Fantasy 
+by E. N. Dowd </p>
+<p>This story contains descriptions of nudity, body modification, sexual acts, 
+and ridiculously large breasts. Don’t say you weren’t warned. </p>
+<p>Comments? Compliments? Complaints? Email the author at: storiesbyendowd@gmail.com </p>
+<p>Chapter 6 
+THE HORNED RIDER </p>
+<p>The grass rustled briefly, and Nella popped up with her cloak hastily wrapped around </p>
+<p>her torso. “Young lady!” she said severely. “Don’t you know better than to sneak up on 
+people like that?” </p>
+<p>The blonde appeared not to notice. She was too busy staring at Clay, blinking hard </p>
+<p>and looking confused. “Have I met you before?” </p>
+<p>“In Broken Arm,” he answered curtly. “‘What’s your excuse for eating,’ remember? </p>
+<p>You were quite rude about it.” </p>
+<p>“What, as rude as this?” Nella demanded. 
+“Close,” he said. “Maybe you two haven’t met. Bryony, this is Nella, the fair flower </p>
+<p>of our little village. She’s sweet, charming, friendly, polite, and probably a lot of other 
+things you’re not. Nella, this is Bryony. She belongs to that Callanthan woman who blew 
+through a few days ago.” </p>
+<p>“Charmed,” Nella said frostily. 
+“I’m sorry,” Bryony responded, blinking away tears. “Aren’t you the boy with the </p>
+<p>bad leg?” </p>
+<p>“I got better. Aren’t you the girl with the bad manners?” 
+“I guess I got better too. Please, I need your help. They’ve taken Lady Elira.” 
+“Who has?” 
+Bryony tried to shrug and winced in pain. “Men on horseback. Their leader wore a </p>
+<p>mask—a human skull with goat horns.” </p>
+<p>“Oh, him,” Nella said contemptuously. “I know him. He comes down to the shore </p>
+<p>E. N. Dowd </p>
+<p>The Domes of Callantha </p>
+<p>48 </p>
+<p>once a year to trade. I never saw anyone so stingy—never made a penny off him or his 
+men.” </p>
+<p>“Plainsmen are like that,” Clay said. “They tend to think women are only good for 
+packing tents and making babies. If they gave your mistress a rough welcome, I’m not 
+surprised.” </p>
+<p>“Frankly,” Nella added, “I think Mister Skull-face would rather fuck his horse.” 
+“You’re joking,” Bryony said colorlessly. 
+“No, really. Well, maybe not his own horse. But when a plainsman becomes chief of 
+his clan, they have a ritual where he has sex with a white mare and then slaughters it. It’s 
+supposed to have something to do with their gods, but I think they just get a kick out of it. 
+I saw it once—from a safe distance.” </p>
+<p>Bryony looked sick. “That’s disgusting. What do they do with the poor mare?” 
+“Eat the meat, drink the blood, burn the rest as a sacrifice.” 
+“Fortunately,” Clay said, trying to sound jaunty, “they don’t do that with human 
+captives. Still, not people you want to mess with. What was your mistress thinking?” </p>
+<p>The blonde sighed. “You know how she loves collecting strong young men. Someone </p>
+<p>in the last village told her where she could find some, and she just couldn’t resist.” 
+“And plainsmen are not the kind of people you turn into sex slaves,” Clay said. </p>
+<p>“Especially if you’re a woman and not a horse.” </p>
+<p>“So what happened?” Nella asked. 
+“We marched into their camp just as usual—‘Make way for the Countess!’ and all 
+that. But nobody seemed that interested in my mistress, and when she started picking out 
+young men, the leader said ‘Seize the wench!’ and they just overpowered us. Poor Kavro 
+got a chest full of cracked ribs, and one of the bearers might not walk again. A few of us 
+made a run for it, but the riders chased us down.” </p>
+<p>“How did you get away?” 
+“Fell in a ditch full of thorns,” Bryony admitted. “They rode right by me. It took me 
+hours to wiggle free and go for help. Please—you’ve got to help me find someone. We’re 
+not too far from that village, are we?” </p>
+<p>“Those people know better than to mess with plainsmen,” Clay said grimly. 
+“Maybe there’s something we can do,” Nella suggested. 
+“Three of us against a whole troop of mounted warriors? Sounds like a fair fight.” 
+“Not that, silly.” The redhead patted him on the cheek. “I’m thinking of something </p>
+<p>else, my magic man.” </p>
+<p>“Oh, no. I am not using my power on those horsemen. Maybe it works on men, </p>
+<p>maybe not—but I don’t, and that’s final.” </p>
+<p>“Clay! Not that either. What I mean is… you can grow all sorts of things, can’t you? </p>
+<p>Not just these?” Nella gave her breasts a squeeze through the coarse gray fabric of her 
+cloak. </p>
+<p>E. N. Dowd </p>
+<p>The Domes of Callantha </p>
+<p>49 </p>
+<p>“Well… yes.” 
+“And your mistress has how many servant girls exactly?” 
+“Five, not counting me,” Bryony said. “What are you planning?” 
+“I think I know,” Clay said sourly. “It’ll be spectacular, if it doesn’t get me killed </p>
+<p>first.” </p>
+<p>Nella took a moment to dress properly, and Clay put on most of his clothes. Seeing 
+Bryony shiver in the night air, he gave her his sheepskin jacket to wear over the shreds of 
+her own clothing. “All right,” he said in a surly tone. “Keep low, keep quiet, and watch 
+my back.” </p>
+<p>The three of them sneaked through the grass beside the road for some time before the 
+red flicker of a large campfire came into view. A plume of smoke rose into the starry sky, 
+forming a small gray cloud in the still air. From that point they turned aside, keeping their 
+distance until the fire disappeared behind the silhouette of a large leather tent. There were 
+half a dozen tents in the riders’ camp, but it was easy to guess which one held the 
+prisoners, as two dim figures were standing guard outside it, just at the limit of the 
+firelight. They were too lazy or too cocksure to keep watch on all sides. </p>
+<p>“Wait here,” Clay whispered, and began creeping toward the back of the tent on all 
+fours. It seemed to take half the night before he was pulling gingerly at a tent peg, gritting 
+his teeth, trying desperately to do the job in silence. His heart was beating so hard, he felt 
+sure the men on watch would hear it. But nothing happened, and he managed to lift a 
+section of the leather wall and creep underneath without being noticed. </p>
+<p>It was pitch dark inside, except for a sliver of red firelight seeping in at the tent flap. </p>
+<p>In the deep gloom, Clay could barely see two rows of deeper shadows, seven in each 
+row—human bodies laid out on the ground like coffins. At this distance he could not 
+make out faces or even sexes, but he could tell they were all bound hand and foot. As he 
+crept between the rows, peering at each shadowed face, he noticed a fifteenth figure lying 
+alone at the far end. He guessed that was the one he was after. </p>
+<p>It seemed to take him hours to crawl past the tent flap, afraid the sliver of light would </p>
+<p>land on him and give him away. Somehow he made it to the spot where the fifteenth 
+figure lay. That one, too, was tied up with thick horsehide thongs that cut into the tender 
+flesh of her wrists and ankles. In between, the huge mound of her covered breasts told 
+him this could only be Countess Elira. Gingerly he reached out and touched her lightly on 
+the shoulder. “Lady,” he whispered. “Lady Elira, can you hear me?” </p>
+<p>Her shoulder twitched, and she turned her head to see who had laid a hand on her. </p>
+<p>“What do you want? Are you one of them?” </p>
+<p>“Quiet in there, witch!” one of the watchmen shouted. “No talking! That goes double </p>
+<p>for the rest of you cunts.” </p>
+<p>Clay froze and held his breath until he felt sure the plainsman was no longer paying </p>
+<p>E. N. Dowd </p>
+<p>The Domes of Callantha </p>
+<p>50 </p>
+<p>close attention. “My name is Clay,” he murmured when he dared. “We met at Broken 
+Arm. You asked me directions to the guesthouse.” He couldn’t resist adding, “If you’d 
+stayed there, you would have been better off.” </p>
+<p>“Goddess!” Elira hissed. “What are you doing here? They’ll kill you if they find you.” 
+“I have a plan,” he assured her. “But I need to borrow one of your girls.” 
+The countess’s answering whisper was sharp with suspicion. “What are you going to </p>
+<p>“I won’t harm her, if that’s what you mean. You’ll get her back safe and sound. Is it a </p>
+<p>do to her?” </p>
+<p>deal?” </p>
+<p>Elira nodded. “Whichever one you want. Just hurry!” 
+Clay patted her shoulder and backed off the way he came. Just to be safe, he waited 
+until he was almost at the lifted tent peg before he picked one of the countess’s girls: a 
+short, slim brunette, wide awake and trembling with fear. “Don’t be afraid, I’m here to 
+help. What’s your name, sweetheart?” </p>
+<p>“Damiana, master.” 
+“Mine’s Clay. Hold still while I cut you loose.” 
+He fished his knife out of his trouser pocket, unsheathed it, and slowly sawed at the 
+girl’s bonds until the stiff horsehide snapped. Ankles first, then wrists. “Can you move?” </p>
+<p>Damiana flexed her fingers and wiggled her feet. “A little.” 
+“Good. Follow me, and by the Goddess, keep quiet.” </p>
+<p>They crawled out the opening Clay had made in the back of the tent. He led the girl 
+on through the grass until he was quite sure the camp was out of earshot. They sat face to 
+face, cross-legged, while he tackled the tricky job of explaining what he meant to do. </p>
+<p>He began by asking, “How do you feel about the countess?” 
+“Feel?” she said wonderingly. “She’s my mistress—my life. She owns me.” 
+“Do you like being owned?” 
+Tears filled the girl’s dark eyes. “Please don’t take me away from her. I… I need her.” 
+“I wouldn’t dream of it,” he reassured her, giving her hand a friendly squeeze. “But I </p>
+<p>need you to help me rescue her. I want… I guess you could call it a diversion.” </p>
+<p>“Anything,” she agreed quickly. “I’d give my life for her. I’d charge a hundred </p>
+<p>horsemen to save her.” </p>
+<p>“Now, now, I don’t want that. But I have to make some… uh… changes first. You </p>
+<p>need to survive this, too, and that won’t happen without some….” </p>
+<p>“Transformations?” Damiana suggested. “That’s what Her Ladyship calls them.” She </p>
+<p>sighed and started to undress. </p>
+<p>“Wait, what are you doing?” 
+“That’s how it works, isn’t it? You’re going to change me with sex magic, like Her </p>
+<p>Ladyship does. Only then I’ll be your slave instead of hers, and… and—” The slim </p>
+<p>E. N. Dowd </p>
+<p>The Domes of Callantha </p>
+<p>51 </p>
+<p>brunette began to weep softly. It seemed she really did want to stay with the woman who 
+had enslaved her. </p>
+<p>“There, there,” he said, gently brushing her cheek. “You won’t be my slave, and I 
+promised to give you back to her safe and sound. But you’re right, it is sex magic. I hope 
+you don’t mind terribly.” </p>
+<p>Damiana smiled through her tears. “For my mistress, anything.” 
+“All right. You’re not a moaner, are you? This will be a lot safer if we’re quiet. Here, </p>
+<p>let me help you with that skirt.” </p>
+<p>When she was naked, he looked her over closely. Her breasts were smaller than he 
+expected, considering the countess’s tastes; with their pale, puffy nipples, they reminded 
+him of large lemons. She was definitely thinner than he liked, though not nearly as skinny 
+as Tani. Her skin was dense and creamy, her hair shoulder-length and wavy, with bangs 
+like Elira’s. She had a full mouth and a flawless smile, and her brown eyes looked at him 
+with an expression of perfect trust. </p>
+<p>“Do what you have to do,” she said softly. 
+If Clay understood his new powers correctly, he needed to keep his cock safely out of </p>
+<p>this girl’s pussy. He had no intention of making these changes permanent. Nevertheless, 
+he wanted her to enjoy the effects while they lasted. “Tell me, Damiana. If you could 
+change something about your body, just for your own pleasure, what would it be?” </p>
+<p>“Her Ladyship likes me the way I am.” 
+“She gave me permission,” he said smoothly. “Go on. Anything you like.” 
+“Well… These.” The girl touched her breasts shyly. “More of these. A bit curvier 
+down here”—one hand slid down to pat a slender buttock. “But mostly? I wish I could be 
+tall. I mean, really tall, like six feet, with miles of legs. I don’t like being short.” 
+Clay smiled wickedly. “I think you’re going to like what I have in mind.” 
+He stretched out on his side, motioned to Damiana to lie with her back against him. 
+Holding her close from behind, he started by kissing her neck, slowly, sensuously, from 
+earlobe to shoulder, an inch at a time. She began to sigh and coo, gyrating her hips 
+against his pelvis. His right hand traveled slowly down her body, cupping a pert breast, 
+tracing the shallow curve of her slender waist, till he came to her upper thigh and took 
+tight hold. Then he let his power flow. </p>
+<p>Damiana gasped. Her whole body writhed and bucked as the changes began. By 
+biting her bottom lip so savagely that the blood ran, she just managed not to scream. </p>
+<p>“I’m hurting you,” Clay said in dismay. 
+“Don’t stop,” she moaned. “Don’t—” Then her breath was cut short as a fresh round </p>
+<p>of spasms racked her body. </p>
+<p>If she could have told Clay what she felt, she would have said that every muscle was 
+tearing itself to shreds, every bone breaking. She felt as if she were exploding from inside, 
+filled with a white-hot fire that overflowed her flesh, pushing her outward in every </p>
+<p>E. N. Dowd </p>
+<p>The Domes of Callantha </p>
+<p>52 </p>
+<p>direction. Damiana had never felt such pain. But she was not Elira’s willing slave for 
+nothing. Pain and pleasure were intertwined in her nerves, her organs, her brain. In the 
+suddenness of the moment it was all pain, a searing agony that should have made her 
+black out, but somehow did not. Then she grabbed Clay’s wrist, her long nails digging in 
+hard enough to break the skin, and forced his hand to her crotch. As soon as his fingers 
+found her pussy, stroking her with his magic, all the pain turned to blinding pleasure—
+and the explosion was released. 
+Damiana began to grow. 
+For just a second or two, her breasts were puffing up like oversized mushrooms, her </p>
+<p>legs and buttocks taking on strength and thickness, while the rest of her remained the 
+same. Then the lightning within her spread out and engulfed her whole being, a storm of 
+ecstasy and torment. Her legs were growing longer as well as thicker. She could feel—
+Clay could even hear—the popping in her back as her spine lengthened and her ribs 
+outgrew their moorings. Red-green lights seemed to explode inside her eyes as her skull 
+started to expand. The sheer intensity of the transformation blew out her last defenses, 
+and her mind was ripped apart by the magnitude of her orgasm. It went on— </p>
+<p>And on— 
+And on— 
+The ground was shifting beneath her, and Clay, tossing like a flag in a high wind, was </p>
+<p>beginning to lose his hold. Damiana felt his hand torn away from her achingly lustful 
+pussy, but she was already bursting with his magic and its work was not finished yet. 
+Bigger and bigger she swelled, sprawling over the quaking field, limbs beating savagely 
+against the earth. The longer her orgasm went on, the faster she grew. When a moan of 
+insane pleasure finally tore its way out of her throat, her voice was an octave deeper than 
+before, a hundred times louder. Vaguely she heard Clay fall with a thud somewhere 
+nearby, his curses almost drowned out by her own orgasmic roar. </p>
+<p>Finally, gradually, growth and power, pain and pleasure, ebbed away and dwindled to </p>
+<p>a stop. </p>
+<p>she must be— </p>
+<p>Panting hard, Damiana rolled over and pushed herself up off the ground. As she rose 
+unsteadily to her feet, sheer altitude made her dizzy. Clay was up and running toward her, 
+an impossibly tiny figure, not even coming up to her knees. That meant— </p>
+<p>Damiana had always been good with numbers. If Clay himself had not changed, then </p>
+<p>—Oh, my Goddess— 
+—something over forty feet tall. 
+“Come on!” Clay was yelling up at her. “We’ve got to save your mistress!” 
+But she was already ahead of him, shaking the earth with twenty-foot strides. </p>
+<p>The best way for a captive to leave a cell, Elira felt sure, was on her own two feet, </p>
+<p>E. N. Dowd </p>
+<p>The Domes of Callantha </p>
+<p>53 </p>
+<p>cold, proud, and unbowed. The second-best way was kicking and screaming; that at least 
+showed she was resisting. But when the two plainsman guards came for her in the tent, it 
+was so sudden that she had no choice but to go out the worst way—carried like a sack of 
+flour. Before she could react, they had dragged her halfway around the dying campfire 
+and dumped her face-up at their leader’s feet. </p>
+<p>The man with the horned skull mask was sitting astride a saddle that had been </p>
+<p>propped on a sort of backless chair frame. Elira supposed that was these people’s idea of 
+a throne. In his hand was a spear with a wicked steel head. His eyes showed no 
+expression as he looked down at her through the eye sockets of the mask. “Up,” he told 
+the two watchmen. They hauled her to her feet and set her facing him. Her hands and feet 
+were still bound, but they were taking no chances: their gloved hands gripped her like 
+claws, digging painfully into her elbows and shoulders. </p>
+<p>“What do you want from me?” Elira asked, but he cut her short. 
+“Be silent, witch. Your voice shall put no spell on us.” His voice had a weird sound, 
+muffled and reverberating at the same time, and he spoke in a flat, lifeless tone. “I am the 
+Horned Rider of the Golden Manes. You trespass in our lands and prey on my men with 
+your magic. For this you have earned death.” </p>
+<p>She looked up at him with contrition in her face and tears in her eyes. “Forgive me, </p>
+<p>Horned Rider. I meant no—” </p>
+<p>“Be silent!” the masked man roared. “I know your kind. You come to steal my riders, </p>
+<p>make thralls of them by dark arts. We are free men, and suffer no living creature to 
+enslave our wills.” </p>
+<p>Several of the plainsmen had gathered around the fire to listen. “Hear me, riders! This </p>
+<p>woman’s guilt is plain. She has done witchery and trespass, and she shall not live to see 
+another sun. Her thralls shall be taken to the seashore, to be put aboard ship for the slave 
+marts of the south. A fitting end for those weak enough to submit to a witch.” </p>
+<p>“Please—” Elira sobbed. This was not how the visit of a Callanthan countess was </p>
+<p>supposed to work out. </p>
+<p>“Quiet!” one of the guards snapped, giving her a backhand slap across the temple. </p>
+<p>She would have fallen down if the other one’s grip had allowed her to move. </p>
+<p>“Riders!” the leader ordered the men gathered around. “Bring the captives. Those fit </p>
+<p>to travel will come with us at dawn. The rest—” </p>
+<p>A long, deep sound like the trumpeting of a bull elephant broke from the east, 
+drowning out the Horned Rider’s voice. Most of the plainsmen ran for their horses, 
+yelling in fear and alarm. </p>
+<p>“More witchery!” the Horned Rider shouted after them. “Find me the creature that </p>
+<p>fouls our plains, and bring me its head!” He dismounted from his saddle throne and 
+headed for the roped-off paddock where the horses were waiting. His pace was a proud, 
+stately march; a Horned Rider ran for no one. Before he reached the enclosure, the distant </p>
+<p>E. N. Dowd </p>
+<p>The Domes of Callantha </p>
+<p>54 </p>
+<p>roar was replaced by a rhythmic thunder that sent tremors through the ground, like a giant 
+approaching in full stride. </p>
+<p>The two watchmen released their grip on Elira and ran, leaving her to fall flat on her 
+face. That is, she would have fallen flat if her gigantic bosom had allowed it. Her breasts 
+broke her fall, though she rather wished they hadn’t. They would probably be sore for 
+days. </p>
+<p>The thundering sound grew louder and closer. Suddenly a voice boomed out, too </p>
+<p>huge to be human: “Ladyship! What have they done to you?” </p>
+<p>Elira thrashed her tied-up legs and wriggled her hips, trying to flip over on her back. </p>
+<p>When she finally managed it, she was staring up at a naked giantess towering over the 
+little cluster of tents. The giantess was so tall the firelight barely reached her head, but 
+Elira could just make out dark hair and an enormous face that reminded her of— </p>
+<p>“Dami!” she gasped. “Damiana, is that you?” 
+If the giantess heard, she took no notice. Two more strides took her right over Elira’s </p>
+<p>head on her way to the paddock. The tents shook like jellies in the wind of her passing. 
+Horses were rearing and neighing in panic. Some dragged their pickets and galloped off 
+into the night, others held still just long enough for their riders to mount up and flee. The 
+leader, leaving dignity behind, broke into a run at the last moment, but before he could 
+reach his warhorse, a huge hand swooped down from the sky and snatched him right off 
+the ground. His legs windmilled in mid-air, still trying to run. The giantess shook him 
+like a kitten, sending his spear and horned mask flying. </p>
+<p>Without the mask, Elira saw, he was an unimpressive young man with sandy hair and 
+a weak chin. She didn’t have a chance to look at him for long. Damiana—was that really 
+her? But how?—hoisted him up to her own eye level and fixed him with a furious gaze. 
+“Wench!” he yelled. “Unhand me! I am the Horned Rider of—oogh!” Her fist </p>
+<p>squeezed tight around his chest, emptying his lungs. Somehow he sucked in enough air to 
+say: “Know your place, woman! Put me down!” </p>
+<p>His words did nothing to lessen Damiana’s fury. “My place? My place? Little man, </p>
+<p>my place is wherever I choose. Let my mistress go!” </p>
+<p>“She is a witch and a—urk!” Damiana squeezed him even tighter. 
+If anyone had asked, Elira’s slave girl would probably have admitted that she was not </p>
+<p>quite in her right mind. She was still disoriented from the changes, from the sheer 
+hugeness of her own body, the smallness of everything around her. Her emotions, her 
+urges, all were magnified along with her flesh. A giant rage filled her giant frame, more 
+anger than she had ever felt or knew what to do with. She was angry because her countess 
+was a prisoner, because her fellow servants were captured and hurt—because this Horned 
+Rider was such a conceited, loudmouthed ass. He didn’t have the sense to quit squawking. 
+She was also angry because Clay had given her the most intensely sexual experience of 
+her life, and then stopped, not even giving her a proper fuck. So horny! She desperately </p>
+<p>E. N. Dowd </p>
+<p>The Domes of Callantha </p>
+<p>55 </p>
+<p>needed to finish herself off. </p>
+<p>So the newly-made giantess changed her grip on the little man in her hand, taking him </p>
+<p>firmly by the legs. Damiana didn’t mind having sex in the clean grass, but the 
+plainsmen’s camp was not a tidy place. Looking around, she decided that the best thing to 
+do was sit down on the leather roof of the Horned Rider’s tent. It buckled and ripped, the 
+tent pole snapping under her weight, the contents crushed to powder. Not a comfortable 
+seat, but better than the bare ground. She spread her twenty-foot legs, squeezed a three-
+foot boob in her free hand, and with a moan of anticipation, stuffed the plainsmen’s 
+leader in her gaping pussy, right down to the ankles. </p>
+<p>The Horned Rider squirmed and struggled inside her. So many sensations! And so 
+many feet of sensitive vagina to feel them all with. Damiana had never imagined as much 
+pleasure and pain as Clay gave her when he made her grow. This pleasure was almost as 
+strong, but without the pain. Crushing the little man’s feet in her hand, she used them as a 
+handle for her living dildo, thrusting him in and out, in and out, fucking herself with his 
+entire body. </p>
+<p>In her insanely aroused state, it did not take long for her to find the release she craved. </p>
+<p>As she came, she bellowed so hard that the rest of the tents were blown down, and the 
+last few plainsmen in the area fell flat on their faces. Sighing with enormous satisfaction, 
+she pulled the fainting man out of her pussy and tossed him aside like a dirty 
+handkerchief. He fell on the wreckage of a tent, breathless, stunned, and soaked to the 
+skin with her juices. </p>
+<p>Morning was breaking as Nella and Bryony found their way to the ruined camp. Clay </p>
+<p>was already there, freeing the other captives. Damiana had cut Elira’s bonds before he 
+arrived, and was now wandering over the grassy plain with her giant strides, retrieving 
+the lost baggage ponies and the two carthorses. When she returned, she laid Kavro and 
+the injured bearer tenderly on the cart, then lifted up Clay and pressed him against her 
+colossal breasts, almost smothering him with a grateful boob hug. </p>
+<p>“Who’s the big girl?” Nella asked, regarding the giantess with a jaundiced eye. 
+“One of Elira’s,” Clay called down to her. “Her name is Damiana.” 
+“Like the plant? That’s an aphrodisiac, isn’t it?” 
+“I wouldn’t know.” 
+“How long will she stay like that?” Elira asked anxiously once the giantess had set </p>
+<p>him down beside her. </p>
+<p>“I don’t know,” Clay admitted. “I’ve never done anything quite like it.” 
+“I hope it isn’t too long,” the countess said, craning her neck to examine the looming </p>
+<p>figure. “It’ll cost a fortune to feed her.” 
+“Worth it, though, don’t you think?” 
+“Definitely,” Elira answered warmly. “All right, everyone. We’d better get out of </p>
+<p>E. N. Dowd </p>
+<p>The Domes of Callantha </p>
+<p>56 </p>
+<p>here.” </p>
+<p>“Where are we going?” Bryony wanted to know. 
+“Let our new friends decide. At the moment, I think I trust their judgment better than </p>
+<p>mine.” </p>
+<p>As for the riders of the Golden Mane, when they had finally rounded up their </p>
+<p>panicked horses, they gathered for a war council at their women’s and children’s camp, 
+five miles away. They quickly decided to migrate a couple of hundred miles inland, to a 
+nice safe territory where no witch had ever set foot, and nobody had heard of the 
+Callanthans or their magic. </p>
+</body>
+</html>

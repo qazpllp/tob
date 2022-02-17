@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Two Steps v2</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>"...powerful two step formula... get the body of your deepest desires... GUARANTEED to work! Huh..."</p>
+<p>She rolled the small bottle around in her hand, reading the label over. After an agonizing week's wait,  it had finally arrived.</p>
+<p>Genetics and puberty had not been kind to Katie. While she watched her peers grow taller, thicker, and sexier throughout her school life, she remained tiny, flat, and skinny. Her 'growth' spurt she had looked forward to during puberty left her at a still laughable 5'2'', and the closest thing she had to 'breasts' was slightly softer skin on her chest. She was flat, underweight with visible ribs, and the closest thing she had to curves was a thigh gap between her bony hips and legs. Truth be told, Katie was still a fairly attractive girl, with a slightly sharp face, large eyes, and short, fluffy brown hair that framed her cute facial features, giving a somewhat boyish look to her. However, after countless years of bullying, whispered insults, and a growing sense of inferiority to the astounding curves her detractors always seemed to be blessed with, the idea of looking 'cute' and 'boyish' were the furthest thing from what she wanted.</p>
+<p>Katie downed the contents of the small bottle. She had found a mysterious, but seemingly legitimate website selling various cosmetic medicines and strange formulas, promising 'a full overhaul of your looks' and 'get the body you've always wanted', among various other attractive taglines. After years of torment, jeers, and insults, she was more than ready to try anything to add some curves to her figure. As the sweet liquid passed her lips, she immediately felt a strange warmth and tingling inside her body. It persisted for several seconds before fading, leaving her feeling the same as ever.</p>
+<p>"Huh. Well, it definitely felt like it did... something. Now what?" She checked the label again.</p>
+<p>"'Wait up to 15 minutes for bottle's contents to take effect.' 15 minutes? Laaaame." She looked up at the clock, then at the mirror, looking over her lackluster figure for, hopefully, one last time.</p>
+<p>"Well, here's hoping..."</p>
+<p>The wait was agonizing. She paced back and forth around the room, desperately trying to find something to occupy her racing mind, checking the clock entirely too often. After nearly 13 minutes on the dot, she felt it.</p>
+<p>"Oh!  It's starting!" she gasped, and ran to the mirror once more. Her usual skinny body looked back at her, clad in a simple light gray undershirt and cotton panties. An enormous sense of heat spread through her chest, and she watched in amazement and shock as her nipples started to grow harder, longer, more erect. Behind these rock-hard twin points, her soft chest tissue rapidly swelled out, pulsing with her breaths and heartbeats, increasing in size. As. Bs. Cs? Ds! Es?!</p>
+<p>"Holy fuck! Holy shit! It feels amazing!", Katie screamed; in a matter of seconds, on her previously spare chest, there now existed an astounding set of gargantuan, wobbling tits, easily the size of softballs if not larger, capped with thumb-sized nipples that were as hard as rocks. Her modest undershirt that once reached down past her waist now failed to cover even as far as the ludicrous teats that now adorned these gravity-defying behemoths.</p>
+<p>Before she had the time to appreciate her absurd and bountiful rack, the heat flew down to her hips and ass, and her once skinny hips and flat ass followed suit, surging out to untold sizes. Her hips gained several inches in each direction, causing her once subtle thigh gap to widen to downright erotic widths; what could once fit maybe one hand could now easily fit two fists side-by-side. Her lackluster, pasty butt shot out behind her, now full, soft, creamy, and wobbling; each fat cheek reaching a size and shape not too dissimilar to her now astounding rack, but with more weight, and slightly more firmness.</p>
+<p>"I can't believe it's working! It-it feels so fucking good! I-I'm gonna fucking cuuuuummm!!", Katie shrieked. Her previously loose panties had been pulled deep between her legs by the sudden feet and inches added to her hips and rear, cleaving into her pussy. Between this friction, the heightened sensitivity of her body from the drug, and the sheer primal awe of what she was seeing in the mirror, she couldn't hold back. The strongest orgasm she had ever experienced wracked her body, shooting up and down her spine, as her knees buckled and a torrent of juices stained her panties, dribbling down her legs. Thankfully, nobody was home at the time, as she let out an ear-piercing shriek of pleasure that anyone would have easily understood as 'orgasmic'. She collapsed to the floor, vision blurred, heart pounding, and simply basked in the feeling for several minutes as she caught her breath.</p>
+<p>"F-fuck... <em>hah</em> oh my god... that... <em>hah</em> felt amazing... <em>hah</em>", she gasped.</p>
+<p>It was several minutes before her thoughts returned to her.</p>
+<p>"Holy shit. I'm a fucking sex bomb now." Katie immediately lept to her feet, inspecting her new body. Indeed, her previously pathetic, square figure was now adorned by the enormous sets of twin orbs on either end of her body that were her new ass and tits. Her hips were now significantly wider than her shoulders, which nicely complemented her ample posterior... although she wondered if she might now struggle fitting through some doorways. Even her face seemed slightly changed, with a more feminine softness to her jawline, and her lips were seemingly somewhat plumper and softer. Her nipples, somewhat troublingly, had not seemed to relax whatsoever following her mind-blasting orgasm.</p>
+<p>"Oh well," she thought, "these won't be too hard to cover up. I like wearing baggy clothes anyway."</p>
+<p>She took a few minutes to strike various provocative poses in the mirror, thoroughly examining her new curves. In honesty, it was the hottest thing she had ever seen.</p>
+<p>"Hahahaha... just wait until those bitches at school see me now: sex goddess Katie is here to show you dumb sluts what a real woman looks like!", she gloated to herself, running her hands over her sensitive, smooth, pudding-soft T&amp;A. Suddenly, a thought crossed her mind.</p>
+<p>"Wait, didn't the bottle say 'two steps' on it? If this is the first step, what's the seco- ".</p>
+<p>She never had a chance to finish that thought. In an instant, her prodigious rack exploded off her chest, instantly multiplying in size to easily twice, three, four times the size of beanbag chairs. As she doubled over onto the pillowy expanse of her freakishly huge tits, her already overly thick nipples shot out to the size of 5 paint cans stacked on top of each other, denting the wall with their diamond-level hardness and size. Another crash of heat rushed over her body as hundreds of gallons of milk began to blast from each monolithic nipple, at the speed and intensity of firehoses. The electricity coursing through her body moved downwards and through her waist, which instantly grew tauter, shrinking to impossible hourglass proportions at no more than 10 inches around. Her legs rapidly stretched upwards, easily gaining 4 or 5 feet in length, leaving her bent over her tits doggystyle position; her hips followed suit and audibly creaked outwards, similarly gaining several feet of width in either direction and instantly destroying the now far-too-tight panties she once wore, leaving a thigh gap that was now wider than she was previously tall. Her ass rapidly expanded to ludicrous levels, forming a perfect, wobbling quarter-circle easily the size of 3 large pillows stacked on top of each other. In-between, her titanic asscheeks were quickly spread apart by her now enormously fat, plush asshole, which had grown to at least the size of a car tire, and was now clearly visible even between her prodigious, barn door-stopping ass.</p>
+<p>Her pussy similarly flared outwards, pink lips stretching and widening in turn, as her vaginal cavity gaped wider and deeper. The lining of her pussy walls grew thicker, softer, deeper, and wetter, as countless gallons of fluids flooded from her gigantic cunt, creating a veritable tsunami of pussy juice that cascaded down her legs and began forming a rapidly expanding pool around her feet. Inside the gaping chasm that used to be a normal, virgin pussy, her cervix relaxed, effectively creating more inches of depth and allowing free access to her womb, which began producing tens of thousands of eggs per second, desperately ready for fertilization; one could easily plunge both their arms into her cavernous pussy with inches to spare. Her clit instantly shot out of its hood with a similar speed as her nipples, striking the floor with incredible force. Hundreds of thousands of orgasms wracked Katie's brain and body as a ceaseless scream of pleasure escaped her now rapidly expanding lips, which began to quickly overtake and subsume her nose and vision. Her mouth grew wider and rounder, and a strange set of clattering sounds momentarily filled the room: clearly in an effort to create the ideal facefucking experience, her teeth had cleanly fallen out onto the floor, allowing a thick, 30-foot-long prehensile tongue to roll out of her pillowy face-covering lips, and now utterly obscene foot-wide mouth. It quickly snaked its way downwards between her endless cleavage, around her candlestick waist that could be easily gripped with one hand, and wrapped its way around her throbbing pink baseball bat-sized clit. The spare dozen feet of tongue that were not busy vigorously jerking off her clit plunged itself into the depths of her cunt, rapidly thrusting in and out, deftly massaging the bumpy lining of her vaginal walls.</p>
+<p>As the billions of simultaneous orgasms coursing through her body annihilated her sanity, Katie's last vestiges of consciousness faded away, overwritten by the formation of new pleasure centers in her brain.</p>
+<p>The last thing she thought before her mind was erased forever was "Just wait... until they see me now...".</p>
+<p>"...powerful two step formula... get the body of your deepest desires... GUARANTEED to work! Huh..."</p>
+<p>She rolled the small bottle around in her hand, reading the label over. After an agonizing week's wait,  it had finally arrived.</p>
+<p>Genetics and puberty had not been kind to Katie. While she watched her peers grow taller, thicker, and sexier throughout her school life, she remained tiny, flat, and skinny. Her 'growth' spurt she had looked forward to during puberty left her at a still laughable 5'2'', and the closest thing she had to 'breasts' was slightly softer skin on her chest. She was flat, underweight with visible ribs, and the closest thing she had to curves was a thigh gap between her bony hips and legs. Truth be told, Katie was still a fairly attractive girl, with a slightly sharp face, large eyes, and short, fluffy brown hair that framed her cute facial features, giving a somewhat boyish look to her. However, after countless years of bullying, whispered insults, and a growing sense of inferiority to the astounding curves her detractors always seemed to be blessed with, the idea of looking 'cute' and 'boyish' were the furthest thing from what she wanted.</p>
+<p>Katie downed the contents of the small bottle. She had found a mysterious, but seemingly legitimate website selling various cosmetic medicines and strange formulas, promising 'a full overhaul of your looks' and 'get the body you've always wanted', among various other attractive taglines. After years of torment, jeers, and insults, she was more than ready to try anything to add some curves to her figure. As the sweet liquid passed her lips, she immediately felt a strange warmth and tingling inside her body. It persisted for several seconds before fading, leaving her feeling the same as ever.</p>
+<p>"Huh. Well, it definitely felt like it did... something. Now what?" She checked the label again.</p>
+<p>"'Wait up to 15 minutes for bottle's contents to take effect.' 15 minutes? Laaaame." She looked up at the clock, then at the mirror, looking over her lackluster figure for, hopefully, one last time.</p>
+<p>"Well, here's hoping..."</p>
+<p>The wait was agonizing. She paced back and forth around the room, desperately trying to find something to occupy her racing mind, checking the clock entirely too often. After nearly 13 minutes on the dot, she felt it.</p>
+<p>"Oh!  It's starting!" she gasped, and ran to the mirror once more. Her usual skinny body looked back at her, clad in a simple light gray undershirt and cotton panties. An enormous sense of heat spread through her chest, and she watched in amazement and shock as her nipples started to grow harder, longer, more erect. Behind these rock-hard twin points, her soft chest tissue rapidly swelled out, pulsing with her breaths and heartbeats, increasing in size. As. Bs. Cs? Ds! Es?!</p>
+<p>"Holy fuck! Holy shit! It feels amazing!", Katie screamed; in a matter of seconds, on her previously spare chest, there now existed an astounding set of gargantuan, wobbling tits, easily the size of softballs if not larger, capped with thumb-sized nipples that were as hard as rocks. Her modest undershirt that once reached down past her waist now failed to cover even as far as the ludicrous teats that now adorned these gravity-defying behemoths.</p>
+<p>Before she had the time to appreciate her absurd and bountiful rack, the heat flew down to her hips and ass, and her once skinny hips and flat ass followed suit, surging out to untold sizes. Her hips gained several inches in each direction, causing her once subtle thigh gap to widen to downright erotic widths; what could once fit maybe one hand could now easily fit two fists side-by-side. Her lackluster, pasty butt shot out behind her, now full, soft, creamy, and wobbling; each fat cheek reaching a size and shape not too dissimilar to her now astounding rack, but with more weight, and slightly more firmness.</p>
+<p>"I can't believe it's working! It-it feels so fucking good! I-I'm gonna fucking cuuuuummm!!", Katie shrieked. Her previously loose panties had been pulled deep between her legs by the sudden feet and inches added to her hips and rear, cleaving into her pussy. Between this friction, the heightened sensitivity of her body from the drug, and the sheer primal awe of what she was seeing in the mirror, she couldn't hold back. The strongest orgasm she had ever experienced wracked her body, shooting up and down her spine, as her knees buckled and a torrent of juices stained her panties, dribbling down her legs. Thankfully, nobody was home at the time, as she let out an ear-piercing shriek of pleasure that anyone would have easily understood as 'orgasmic'. She collapsed to the floor, vision blurred, heart pounding, and simply basked in the feeling for several minutes as she caught her breath.</p>
+<p>"F-fuck... <em>hah</em> oh my god... that... <em>hah</em> felt amazing... <em>hah</em>", she gasped.</p>
+<p>It was several minutes before her thoughts returned to her.</p>
+<p>"Holy shit. I'm a fucking sex bomb now." Katie immediately lept to her feet, inspecting her new body. Indeed, her previously pathetic, square figure was now adorned by the enormous sets of twin orbs on either end of her body that were her new ass and tits. Her hips were now significantly wider than her shoulders, which nicely complemented her ample posterior... although she wondered if she might now struggle fitting through some doorways. Even her face seemed slightly changed, with a more feminine softness to her jawline, and her lips were seemingly somewhat plumper and softer. Her nipples, somewhat troublingly, had not seemed to relax whatsoever following her mind-blasting orgasm.</p>
+<p>"Oh well," she thought, "these won't be too hard to cover up. I like wearing baggy clothes anyway."</p>
+<p>She took a few minutes to strike various provocative poses in the mirror, thoroughly examining her new curves. In honesty, it was the hottest thing she had ever seen.</p>
+<p>"Hahahaha... just wait until those bitches at school see me now: sex goddess Katie is here to show you dumb sluts what a real woman looks like!", she gloated to herself, running her hands over her sensitive, smooth, pudding-soft T&amp;A. Suddenly, a thought crossed her mind.</p>
+<p>"Wait, didn't the bottle say 'two steps' on it? If this is the first step, what's the seco- ".</p>
+<p>She never had a chance to finish that thought. In an instant, her prodigious rack exploded off her chest, instantly multiplying in size to easily twice, three, four times the size of beanbag chairs. As she doubled over onto the pillowy expanse of her freakishly huge tits, her already overly thick nipples shot out to the size of 5 paint cans stacked on top of each other, denting the wall with their diamond-level hardness and size. Another crash of heat rushed over her body as hundreds of gallons of milk began to blast from each monolithic nipple, at the speed and intensity of firehoses. The electricity coursing through her body moved downwards and through her waist, which instantly grew tauter, shrinking to impossible hourglass proportions at no more than 10 inches around. Her legs rapidly stretched upwards, easily gaining 4 or 5 feet in length, leaving her bent over her tits doggystyle position; her hips followed suit and audibly creaked outwards, similarly gaining several feet of width in either direction and instantly destroying the now far-too-tight panties she once wore, leaving a thigh gap that was now wider than she was previously tall. Her ass rapidly expanded to ludicrous levels, forming a perfect, wobbling quarter-circle easily the size of 3 large pillows stacked on top of each other. In-between, her titanic asscheeks were quickly spread apart by her now enormously fat, plush asshole, which had grown to at least the size of a car tire, and was now clearly visible even between her prodigious, barn door-stopping ass.</p>
+<p>Her pussy similarly flared outwards, pink lips stretching and widening in turn, as her vaginal cavity gaped wider and deeper. The lining of her pussy walls grew thicker, softer, deeper, and wetter, as countless gallons of fluids flooded from her gigantic cunt, creating a veritable tsunami of pussy juice that cascaded down her legs and began forming a rapidly expanding pool around her feet. Inside the gaping chasm that used to be a normal, virgin pussy, her cervix relaxed, effectively creating more inches of depth and allowing free access to her womb, which began producing tens of thousands of eggs per second, desperately ready for fertilization; one could easily plunge both their arms into her cavernous pussy with inches to spare. Her clit instantly shot out of its hood with a similar speed as her nipples, striking the floor with incredible force. Hundreds of thousands of orgasms wracked Katie's brain and body as a ceaseless scream of pleasure escaped her now rapidly expanding lips, which began to quickly overtake and subsume her nose and vision. A thick 30-foot-long prehensile tongue began to roll out of her pillowy face-covering lips and widening blowjob-queen mouth; it quickly snaked its way downwards between her endless cleavage, around her candlestick waist that could be easily gripped with one hand, and wrapped its way around her throbbing pink baseball bat-sized clit. The spare dozen feet of tongue that were not busy vigorously jerking off her clit plunged itself into the depths of her cunt, rapidly thrusting in and out, deftly massaging the bumpy lining of her vaginal walls.</p>
+<p>As the billions of simultaneous orgasms coursing through her body annihilated her sanity, Katie's last vestiges of consciousness faded away, overwritten by the formation of new pleasure centers in her brain.</p>
+<p>The last thing she thought before her mind was erased forever was "Just wait... until they see me now...".</p>
+<p>Thanks for reading my story!</p>
+<p>Due to popular demand, I have included a 'lite' version of Two Steps that cuts out a particularly extreme line that was contained in the original. If you're a bit sensitive, try reading this new version. If you like your body modification as intense as possible, however, the original is still here, better than ever! '3'</p>
+<hr />
+<p>Contact:</p>
+<p>Twitter: @Alabaster_White</p>
+<p>Deviantart: longpass</p>
+</body>
+</html>

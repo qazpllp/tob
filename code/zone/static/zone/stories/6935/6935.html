@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Growth Therapy</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>Aria was nervous about everything. Her work, her family, the news, you name it and she’s had some kind of nightmare scenario planned out for it. It’s not like she wanted to be a nervous wreck, but her mind had gotten so used to worry it was hard for her to just unwind. That’s why for the past year she has been seeing Dr. Grace Newton about her worries. The doctor had put her on medication and different therapies one after the other with little to no results. Over the year, though, Aria began to trust Dr. Newton more and more, and would do anything she said.</p>
+<p>“Dr. Newton looks...different.” Aria noted as she stepped into the calm, moodily lit office. “Aria, it’s good to see you again.” The doctor said warmly, shaking her patients hand. In all her sessions, Dr. Newton tried to be as warm and inviting as possible, since she knew how easy it was to frighten her patient. As she sat down on the chair across from her doctor, Aria still couldn’t help but wonder what’s different about Newton. New haircut? New outfit? Nope, she’s still dressed like the same middle aged doctor she’s been seeing for the past year.</p>
+<p>“So, last time I sent you off to a yoga studio,” Dr. Newton said as she shuffled through a thick folder, “how did that go?” Aria shook her head. “Terribly...” She sighed. “The music was....was too loud, and I couldn’t relax because I was afraid that I’d tip over and hit my head.” While both of those explanations were accurate, the biggest reason was that the yoga session she attended was filled with cute moms in tight pants, and Aria was a massive fucking lesbian. She couldn’t focus around the plethora of cute girls doing stretching their bodies and sweating all around her.</p>
+<p>Alas, the poor girl would never be popular with the ladies. Aria compared herself to a twig, and it wouldn’t be inaccurate. The girl was 6’1, only 115 pounds, and so lacking in curves you’d think she was a desert highway. Thanks to her messy, shoulder length black hair and choice to almost exclusively dress in hoodies often got her confused for a boy. Her “hopeless” love life and “pathetic” body were perhaps the two things that made her most nervous. After all, she was very lonely, and a cute, really affectionate girlfriend would help...Not to mention, someone to squeeze her hand and tell her everything is going to be okay would be a big gain with her fight against her own anxiety. Snuggling on the couch....getting dinner...doing couples cosplay at anime conventions...All the while, telling someone that she loves them, and getting the same statement returned in kind, along with maybe a kiss, too.</p>
+<p>Damnit, her mind was wandering! As she was snapped back to reality, the thing that seemed off about Dr. Newton clicked in her mind. “Her boobs are bigger!” She internally gasped. Aria could definitely tell that her doctor’s shirt was a little tighter, and had more of an ‘oomph’ in the chest department. “She looks nicer with them...they suit her...” Her brain started wandering again, before she mentally shook herself back into focus for real this time.</p>
+<p>“So, I’m recommending a very new and experimental kind of physical therapy.” Dr Newton said, handing Aria a card. The card read, “Relaxing Growth Therapy. Change your body, change your mind,” as well as a phone number and directions. “It’s very new, but I tried it out myself, and I hope it’ll have great results.” Dr. Newton explained. At this point, Aria was becoming desperate for help with her problem, so she was willing to try out this new kind of therapy that did sound a little odd... For the rest of the session she played with the card, and after an hour of talking and getting some feelings out, Aria headed home with the card tucked in her pocket.</p>
+<p>“Chie...I love you! I want to spend the rest of my life with you!” One anime girl said to the other, bringing her love closer to her with one swift, confidant pull of her crush’s hips. Aria sighed. Usually these girl romance animes helped her feel better, but recently they just made her feel sad. “I’ve never even dated anyone...” Aria sighed, clasping her laptop shut. She rolled over onto her side, staring at the card she placed on her nightstand. “Tomorrow I’ll go and see them...” She said to herself, shutting off the lamp light.</p>
+<p>The Mendlewood Growth Therapy Clinic was housed in an inconspicuous little jumble of rent buildings. The first thing Aria noticed when she entered was that the waiting room was pretty barren... No paintings, no posters, not even any magazines or informational pamphlets. Not to mention, there wasn’t anyone else waiting. “I can help you, ma’am!” The secretary called from behind a little kiosk. “You can do this...” Aria said, mentally steeling herself for the scariest thing of all...a conversation with a stranger in public! “I’m A-Aria Geanne, Dr. Newton sent...sent me.” Even with her preparations, she still fumbled over her words. After a few clicks on her computer, the secretary said, “Oh! You’ll have Ms. Mendlewood herself! Follow me.” Aria followed the nurse into a room and was told to relax until the doctor came.</p>
+<p>The room was...strange. It looked more like something you’d see in a dance studio, with a padded floor and a big mirror lining the back wall. Again, the room lacked any kind of decoration or even windows for that matter. “What if I read the address wrong...What if Dr. Newton sent me to a secret murderer’s den without knowing it! That’s why this doesn’t look like any therapy clinic I’ve been to before!” Her mind started to race. “I gotta get out of here!” She shakily dashed to the door, before it opened and in walked a very peculiar woman who stopped her in her tracks. “Hello Aria, I’m Bailey Mendlewood.” She said.</p>
+<p>“Her boobs are huge!!!” Aria’s mind shouted. Huge would be an understatement. Bailey’s boobs were so large that they came down to her knees, but it’s not because they were sagging, they were just so LARGE that they obscured most of her torso. Somehow she could fit a plain white dress shirt over them without every single button being popped off in an instant. As she approached, they bounced and wobbled like they were alive and fighting tooth and nail to be free. Tearing her eyes away from her boobs for a second, Aria noticed that Bailey was a few inches taller than her. Her long orange hair was expertly put into a cute little ponytail. Somehow, this made Aria even more nervous.</p>
+<p>“I’ll be your growth therapist for this session, and hopefully future sessions if you decide to come back!” Bailey said excitedly, her boobs nodding along with her. “I assume Dr. Newton didn’t tell you too much about what this will entail?” She asked. “N-n-n-no... some kind of....physical therapy...?” Aria could hardly breathe with this woman. “She’s a goddess! A great big beautiful boob goddess!” Kept ringing in her mind. “Well, Aria, it’s a kind of therapy where we use my, ahem, assets, to help you calm down, and grow your own body.” Bailey explained, getting down on the padded floor. Her boobs looked even bigger kneeling, as now her whole body except for her head was obscured behind the titanic walls of her tits. “A-assets? G-g-grow my own body?!” Aria didn’t want to flat out ask her, “Am I gonna get boobs as big as yours?!” although it was definitely on her mind. “You see, Aria, I believe that an important aspect of facing your problems is being confident in yourself.” Bailey started to explain as she casually began unbuttoning her shirt. “W-w-wait, are you sure that this is okay?!” Aria tried to interject, although her eyes were glued to the pool of cleavage that was getting bigger and bigger with every button being removed. “Is this okay with you would be a better question. You see, when people dislike their bodies, they can’t be confidant in themselves, at least to a degree. Some people are self-conscious about their size, and thus...I help them grow.” Bailey’s breasts looked even larger now that there was nothing holding them back. Her breasts were almost perfectly round, with just enough sag to keep them looking real. “Y-y-y-yeah...I’m okay with this...” There was no doubt that Aria was freaking out over the hottest girl in the Universe taking her top off, but she didn’t want to leave...Out of some morbid sense of curiosity, she made herself stay.</p>
+<p>“Please, Aria, kneel down with your back turned to me.” Bailey instructed. “U-ummm....Okay...” Aria did as she was told, kneeling down in front of her new therapist. She noted how warm being close to Bailey was. “She does have two massive hand heaters right there...” She thought to herself. Aria closer her eyes, and began to breathe.</p>
+<p>Meanwhile, behind Aria, Bailey was getting ready for the therapy. She placed both hands under her breasts, making sure she could get a good grip on them. “Hmmmph!” She grunted. In one fell swoop, she lifted both breasts apart, and held them inches behind Aria’s unsuspecting head. She placed each breast on Aria’s shoulders, making perfectly sure that they wouldn’t fall off. Somehow, they were balanced. Aria’s eyes shot open. “W-w-w-What are you doing?!” She exclaimed, feeling trapped in between the two giant breasts. “The therapy. Now shush, you’re safe...Nothing can hurt you inside here...Can you breathe?” Bailey said as soothingly as she could. There was just enough space for Aria to still breathe in the boob ocean. “Y-Yes...” She mumbled. The heat from inside was damn near overwhelming, and soon she began to sweat. “You’re safe...nothing bad can happen to you inside the safe haven of my breasts...I need you to believe me. Do you believe me, Aria?” Bailey began to slowly massage the sides of her boobs, rubbing Aria’s cheeks from the inside. “I-I believe you...” Something about Bailey made Aria trust in her. Maybe it was the calming voice, how kind she had been, or maybe....just maybe....it was the boulders stapled onto her chest. “I’m glad you believe me. I’d never do anything to hurt you or make you upset...My breasts are like shields from every bad thing in the world.” Bailey continued. As she talked, she heard Aria give little squeaks of confirmation from inside her cleavage. “Aria, you’re scared of everything...But you don’t deserve to be. You’re so kind and sweet...” From inside Bailey’s cleavage, her words had a slight echo. Aria couldn’t keep herself from crying at hearing Bailey’s nice words. Something weird was going on.</p>
+<p>“But my boobs wont be protecting you forever.” Bailey stopped moving her breasts. “That’s why you need to grow your own...grow your own boobs...grow...grow...grow!” The heat was becoming unbearable to Aria. Some strange feeling started spreading out through her chest. Bailey kept on repeating ‘grow’ over and over again, ringing inside Aria’s head. “Grow...” She whispered to herself. “Grow...grow...grow! GROW!” Aria started chanting along with Bailey.</p>
+<p>As if on command, Aria’s boobs started to grow. Pushing out from her flat chest, she could feel them swelling fast, pushing against her hoodie. In what felt like both an instant and an enternity, her boobs were quickly outgrowing her little A cup bra. “Grow! Grow! Grow! Grow!”  The two girls chanted in unison. Aria couldn’t believe what was happening. It felt like heaven... She wanted more.... She NEEDED more! In another instant, her hoodie began to tear and rip, the holes being immediately filled with pale, soft, enlarging boob flesh. After a few more seconds, Aria’s hoodie was left in tatters on the floor, as her boobs surged to watermelon sizes. She couldn’t stop herself from coping a feel with enough intensity to make you think that she was dying. All the while, the two girls continued to moan, “Grow! Grow! Grow! Grow!” together. Aria’s boobs began to press against her knees, making her moan even louder due to their sensitivity. Bailey just continued to chant, occasionally rubbing her own breasts for emphasis. As they grew, the little crack between Bailey’s breasts soon began to be plugged by her own boobs. It was like a solar eclipse, the light being overtaken by more boob blocks.</p>
+<p>After what felt like hours of growing, even though it was a few short minutes, Aria could feel her boobs begin to slow down, eventually coming to a halt. “Now...don’t you feel just a little more confident?” Bailey asked, slowly lifting her boobs away, and stepping back from Aria. “Wow...” Was all the girl could say, staring at her breasts. They were almost as big as her, with the same shape and size as Bailey’s! Yet, when Aria tried to stand, it felt like she was still flat! “H-how’d you do this?!” She gasped, coming down from the growth high she experienced just a few moments before. “It’s a very long, scientific explanation, Aria. All you need to know is that you can definitely live with them, with little to no back pain!” Bailey giggled. A nurse walked in, and handed Aria a perfectly sized purple shirt, with the “Mendlewood Growth Therapy” logo printed on it. “This is complimentary, as apologies for destroyed clothing.” The nurse explained, motioning to the scraps of what was Aria’s hoodie. “Oh....it’s fine.” She said, putting the shirt on with ease. “Huh...” She said to herself, staring at how her newfound boobs wobbled from within, bursting with excitement from their new size. “You’ll get used to it!” The nurse chuckled, leaving the room.</p>
+<p>Aria looked back at Bailey, now dressing herself back into her white dress shirt. Her heart was beating a million miles a second. Her brain shouted, “DON’T DO IT!” Every bone in her body told her that this was a bad idea. Yet her legs moved on their own, being pulled along by the bouncing of the giant, newfound breasts. She was going to do it.</p>
+<p>“Hey, would you like to go out with me Sunday night?”</p>
+</body>
+</html>

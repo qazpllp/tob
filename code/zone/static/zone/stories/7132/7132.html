@@ -1,0 +1,1343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>The Pumpkin Princess</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>Written by BE Engineer. Support me on Patreon for art and monthly stories for as little as $1/month! https://www.patreon.com/beengineer</p>
+<p>The Pumpkin Princess</p>
+<p>1</p>
+<p>2</p>
+<p>“Mom… You cannot be serious.”
+“I am!”
+“Have you seen this thing?!”
+“I have!”
+“And you still want me to wear it?!”
+“I do!”
+Natalie was at a loss for words. Draped across her bed was a fantastical dress as orange as</p>
+<p>the most festive pumpkin. It flowed like something out of a bedtime story. The front was
+decorated in tacky fake gems and sparkles peppered the many layers of fabric. It was going to
+take weeks just to get the glitter off her bed.</p>
+<p>Natalie’s mother refused to pick up on her daughter’s disdain. “You always loved the</p>
+<p>pumpkin princess when you were little! Now you get to be her!”</p>
+<p>“I liked seeing her, Mom… When I was seven. I didn’t want to be her.” Foggy memories
+of various women stepping into the role over the years sprang to mind. They were always slight
+of figure as if they were Tinkerbell working a side gig. This directly contrasted Natalie’s frame,
+most notably her ample upper endowment. “This thing probably won’t even fit me!” she argued
+further.</p>
+<p>Her mother scoffed and waved a hand in dismissal. “No need to worry; I had little old
+Mary let the bust out a little just for you! Otherwise, I agree, it would have been far too risque
+for a children’s event.”</p>
+<p>Excuses were becoming more difficult to come by. Natalie sighed and pulled a stray lock</p>
+<p>of red hair behind her ear. For as long as she could remember, one of the local farms had
+provided Autumn entertainment for the city. From late September through Halloween, the
+property would be bustling with couples, parents, and their children. Pumpkin patches were the
+main draw but other attractions included country traditions such as corn mazes, corn pits, tractor
+rides, a pumpkin cannon, and of course a slew of fresh Autumn treats.</p>
+<p>Natalie’s mother was always happy to involve herself in any way possible. This meant</p>
+<p>going where her help was most needed at the time. Natalie was lucky enough to avoid being
+pulled into the same fate thanks to attending college out of state. With graduation several months
+in her rearview mirror, however, she now found herself exposed to her mother’s whimsey.</p>
+<p>“When I heard Hector needed a new pumpkin princess this year, I knew it was meant to</p>
+<p>be!” Her mother beamed.</p>
+<p>This was the worst-case scenario. Usually a bubbly, kid-loving woman would assume the</p>
+<p>princess’s role. When not spending most of her time in the pumpkin patch, the princess would
+wander the crowds and attractions in her bright orange dress while drawing the eyes of all the
+children. Her job was to bring a little bit of harvest magic. Kids loved her, guys enjoyed
+experiencing the repressed sexual urges brought on by the sight of a woman faintly reminiscent
+of various Disney princesses from childhood. The pumpkin princess was popular enough to have
+a spot in every local family’s photo album.</p>
+<p>Natalie sighed. “I really don’t want to, Mom…”</p>
+<p>3</p>
+<p>“After all the fun you’ve had at Hector’s farm over the years? He’s even offering to pay</p>
+<p>five dollars an hour!”</p>
+<p>Feigned brightness illuminated Natalie’s face. “I can retire early!”
+“Oh hush. You’ll enjoy it.”
+“You realize I’m allergic to pumpkins, right? Like, you’re going to have a pumpkin</p>
+<p>princess that gets itchy and puffy around pumpkins. Does that sound right to you?”</p>
+<p>“Just take your medicine and you’ll be fine! You’ve survived every other year. Plus, you</p>
+<p>don’t have to stay in the pumpkin patch the entire time if you don’t want to.”</p>
+<p>Natalie was losing this fight. “Why don’t you be the princess? You seem awfully excited</p>
+<p>about it.”</p>
+<p>“I would, but they need my help at the mini-doughnut stand this year. They’re</p>
+<p>short-handed and I’m the only one who knows how to work the doughnut maker.”</p>
+<p>There was nothing else she could say at this point. Resigning herself, Natalie held the</p>
+<p>dress against her body. The orange color was blinding. Sitting on the bed was a matching crown
+designed to look like a lid cut off the top of a jack-o-lantern, complete with a large green stem.</p>
+<p>“Dear God…”
+Her mother’s eyes were watery with glee. “Ooohhh you’re going to be so cute!!”
+Cute wasn’t the word Natalie would have used. Risky sounded better. The dress had no</p>
+<p>straps of any kind; it would be a miracle if she made it through this ordeal without one or both of
+her E-cups escaping the strapless bodice in some way. If nothing else, she was sure to seed some
+confusing feeling in her younger fans. No doubt her boyfriend, Saul, would enjoy the costume
+enough for both of them.</p>
+<p>Natalie released a heavy sigh. Escape was impossible; she was doomed to be the ruler of
+squash. “Fine. I’ll do it. But I want access to free unlimited mini-doughnuts while I’m working.”</p>
+<p>( . Y . )   ( . Y . )   ( . Y . )   ( . Y . )   ( . Y . )</p>
+<p>Natalie’s work as the local Autumn mascot began the following week. Being
+mid-September the crowds were fairly light. It was a welcome relief from her fear of being
+overwhelmed by patrons to the farm but soon enough the pumpkin patch would be flooded with
+people. It was only a matter of time until the primary patch was so picked clean that the owner
+would have to open the reserve patch behind the corn maze.</p>
+<p>The first few days dragged on without much issue. Aside from the occasional crying</p>
+<p>child or guy with sticky eyes, patrolling the farm with an air of fantasy-based regality proved to
+be somewhat pleasant. Natalie found some amount of joy in watching young children’s faces
+light up when they saw her. The pumpkin cannon on the other side of the corn maze was a
+welcomed spectacle as well. Its constant KA-THUNK as it sent the orange orbs across the back
+field made the air shake. The splatters could be heard across the farm. These were usually
+followed by the cheers of sugar-hyped children.</p>
+<p>4</p>
+<p>The corn maze had become a special type of sanctuary whenever Natalie found herself</p>
+<p>overwhelmed. By the second day she’d traveled its walls enough to memorize a straight path
+from entrance to exit. If a child encountered her inside, she made sure to greet them as if they
+had discovered her secret hiding place.</p>
+<p>All of this was fueled by a diet made mostly of mini-doughnuts. The hot, sweet rings kept</p>
+<p>Natalie warm in the revealing dress and absence of a coat. They almost made it worth being
+ogled by bored dads all day. As Natalie had expected, as well as to their wife’s or girlfriend’s
+frustration, every male gaze lingered on her boosted cleavage. It was clear the old lady had
+underestimated Natalie’s bust size. She had to pay constant attention and constantly pull the front
+up time and time again when she felt herself bulging over the brim.</p>
+<p>However, the biggest problem facing Natalie wasn’t the risk of her breasts freeing
+themselves of their prison; it was her allergy. What was supposed to have been a year's supply of
+medication had dwindled considerably over her first few days. The dress was itchy enough
+without the nearby pumpkins making her scratch like crazy. By the end of the day, her dress felt
+tighter than when she began due to the constant exposure to pumpkins.</p>
+<p>Her allergy was not a common one. Doctors often shrugged in perplexment when asked</p>
+<p>about the cause. The condition wasn’t life-threatening but it was enough to dissuade Natalie from
+carving pumpkins every year for the sake of fitting in her bra the next day. The smell of pumpkin
+alone was enough to make her cleavage itch and her nipples puff up like tiny marshmallows.
+Coming into contact with the orange devils put her in danger of dramatic swelling, often in the
+order of multiple cup sizes. It was a personal quirk she kept secret as best she could. This
+included keeping the private knowledge from boyfriends, friends, and extended family. It wasn’t
+worth the risk of exposing herself to possible pranks.</p>
+<p>Thus, to be safe, Natalie had taken to eating her allergy medicine like candy. It succeeded
+in holding back the tide of pumpkin-based effects for the time being, but she could still feel their
+presence surrounding her throughout the day. They seemed to taunt her as she walked among
+their homes. The distinct orange color surrounding her on all sides was enough to make her
+nervous.</p>
+<p>Through all of this her boyfriend was a shining ray of support. Everyday Saul made a
+point to visit the farm for at least a few minutes and spend time with Natalie. They would talk
+and laugh about her new princess responsibilities and he would chuckle in the background while
+she played her role to a star-struck fan.</p>
+<p>Natalie found his support sweet but his true interests were easy to discern. In truth, Saul
+made little effort to hide them. He was caught staring at her orange-clad bust more than anyone
+else. She couldn’t blame him; Saul had been a notorious boob-man since the day they’d met.
+Natalie often believed it was only because of her low-cut shirt that he noticed her in the first
+place, but he was sweet and kind-hearted enough to make up for his pronounced sexual interests.
+She was more than happy to provide the costume-clad view of her body for her loving significant
+other.</p>
+<p>5</p>
+<p>This often led to flirtatious whispers when he paid her a visit during working hours.</p>
+<p>These encounters all consisted of similar banter. She would have put a stop to it if playing along
+hadn’t become so entertaining.</p>
+<p>“You can cast a spell on me any time, you know!” Saul admitted after sneaking up behind</p>
+<p>Natalie’s face turned red to match her hair. “Shut up… Someone is going to hear you!”
+KA-THUNK!
+The cannon fired in the distance. Its heavy release never failed to make Natalie jump in</p>
+<p>her.</p>
+<p>surprise.</p>
+<p>Saul flirted further. “Why don’t you show me what that pumpkin magic of yours can do?”
+She turned her cheap plastic fairy wand over in her hands. “Sorry, no magic here unless</p>
+<p>you’re under the age of eight!” Turning towards him, she bopped his nose with the wand. Natalie
+lowered her voice to a whisper and said, “I’ll tell you a secret though.”</p>
+<p>“Yea…?” he ogled. Saul’s eyes were locked on her cleavage. Even with her constant</p>
+<p>stream of allergy medications, the pumpkin-filled environment couldn’t help but make her chest
+plump ever so slightly. Saul couldn’t explain the excess mass but he wasn’t about to complain.</p>
+<p>Natalie leaned in so no one would hear. “Princesses don’t wear panties.”
+This caught him completely off guard. If Saul didn’t know any better, he would have</p>
+<p>guessed Natalie was starting to get more into her role with every passing day.</p>
+<p>“Pumpkin Princess! Pumpkin Princess!”
+A group of young girls called out for Natalie as they ran towards the patch. It was time</p>
+<p>for her to fulfill her role. Before turning away from Saul, she relished his speechless expression
+of bottled-up arousal. “Heh, maybe I do have a little magic after all! Why don’t you walk off
+those dirty thoughts you’re having and go grab me some mini-doughnuts? I have my subjects to
+attend to.”</p>
+<p>The girls approached and Natalie turned towards them with open arms and an excited
+voice. Saul couldn’t help but wonder if her little secret had come from a place of truth or only
+jest. It was a question he intended on answering sooner rather than later. Watching his
+well-endowed girlfriend parade around as one of his first childhood crushes was becoming more
+than he could bear.</p>
+<p>Natalie knew she would have to let Saul have his fun eventually. Their back and forth</p>
+<p>teasing had become enough to leave her sexually wanting after every shift. In addition to this, as
+annoying as it was, she did have to admit the dress did an amazing job of making her breasts
+look incredible.</p>
+<p>The end of Natalie’s first week as the pumpkin princess was approaching. It became
+easier dealing with people as time went on and she learned how best to interact with the children.
+She only wished the same could be said for her allergies. Every day was a battle against the
+pumpkins. Although her meds were managing to keep the worst of the side effects at bay, she
+could feel their effectiveness dwindling. The longer she spent around the squash-infested farm,</p>
+<p>6</p>
+<p>the more dangerous her situation would become. Simply fitting in her dress by the end of the day
+was going to be a challenge by the end of October.</p>
+<p>It was a chilly Friday morning when Natalie was getting dressed in the farmer’s barn. The</p>
+<p>drafty, rural setting wasn’t nearly as comfortable as her room, but the dress was far too
+cumbersome for her to wear while driving. She made it a priority to change her garments as
+quickly as possible or run the risk of somebody wandering in at an inopportune moment.</p>
+<p>Shirt, bra, and pants draped over a nearby crate, Natalie carefully stepped into the orange
+gown. Whether it was only in her head due to the color, or was the result of her past week spent
+wandering the patch, the scent of pumpkin drifted into her nostrils.</p>
+<p>“N-Nngh… Goddamit…” she winced and wrapped an arm across her bust. Her allergies</p>
+<p>were bad this morning. Not yet even among the evil vegetables and her chest already felt full.
+The dress was only halfway on before Natalie gave up and went on the defensive. With a pile of
+orange lace sitting on top of her hips, she rushed to her bag and the bottle of allergy pills stored
+inside.</p>
+<p>“Damn pumpkins,” Natalie grumbled, “Whoever heard of such a ridiculous allergy??”</p>
+<p>Pills rattled loosely inside the bottle; she would be needing a refill soon.</p>
+<p>CRREEAAAK
+She froze at the distinct sound of the barn door swinging open.
+“H-Hey! Occupied!” she squeaked. A desperate grab to pull her dress up the remainder of</p>
+<p>her body almost caused her pills to spill.
+“Nice pumpkins, Princess!”
+Natalie was ready to cry out until she saw her boyfriend’s grinning expression staring at</p>
+<p>her from a stack of hay bales. Her pulse slammed on the brakes and a sigh of relief exhaled itself
+from her lungs. “Very funny. I thought some perv had snuck in!” Mind scattered, Natalie set the
+open pill bottle on a nearby stack of crates when Saul approached.</p>
+<p>Saul weighed his hands up and down at her words. “Weeeell… I was hoping to catch a</p>
+<p>nice peep show. So you’re not wrong.”</p>
+<p>Looking down at herself, Natalie motioned to her breasts still bared to the world. The</p>
+<p>dress’ bodice was scrunched underneath them from her hurried attempt at modesty. “Oh is this
+not enough? Gotta come sooner next time then!” She snickered then said, “Would you mind
+helping me into this thing? It’s impossible to get it on all of the way without a third arm
+sometimes.”</p>
+<p>Saul was more than happy to oblige. Stepping behind her, Natalie waited for his hands to</p>
+<p>help pull the dress over her bust. Instead she felt his fingers sink into the warm depths of her
+breasts.</p>
+<p>“Ahh!! Your hands are freezing!” she squealed.
+Saul’s grip was firm and unyielding. He started massaging Natalie in small circles with</p>
+<p>rhythmic squeezes and nipple pinches.</p>
+<p>manhandling.</p>
+<p>“M-Mmmm… That’s better...” Closing her eyes, she leaned her head back to enjoy the</p>
+<p>7</p>
+<p>Saul pulled her close. “You know, I’ve always had a crush on the pumpkin princess.”
+“Oh yea…? Nnngh!” Heightened sensitivity was driving Natalie up the wall as Saul
+played with her nipples. The pills could only prevent so much. Feeling one of his hands slip
+down the front of her dress and caress her stomach and navel, she moaned and bit her lip.</p>
+<p>“I gotta say,” Saul whispered in her ear, “Out of all the pumpkin princesses I’ve seen, you</p>
+<p>fill the role very well.”</p>
+<p>A hand sank into her tit to overflow his palm. There were certain times Natalie found her
+allergy useful, such as when there was a boyfriend around who enjoyed feeling her curves bulge
+out of his grasp. If their relationship ever got to a point where she felt comfortable telling Saul
+about it, he was sure to request a slice of pumpkin pie for dessert.</p>
+<p>“A-Ahhhh… Mmmnnghhh…” Natalie couldn’t take much more of his groping. Not only
+that, but the farm was going to open soon and the pumpkin princess was half-naked in the barn
+getting felt up. Bending forward out of Saul’s grasp, she leaned onto the stack of crates and stuck
+her rear towards him. Her breasts swayed in midair to point towards the floor.</p>
+<p>Tempting eyes fluttered over her shoulder when she asked, “Tell me more about this</p>
+<p>crush. Is there anything you’ve ever wanted to do to the pumpkin princess?” Her butt waggled
+temptingly with the question.</p>
+<p>“There is one thing…” Saul smiled and stepped closer to grab her hips. They were buried</p>
+<p>under a bundle of puffy fabric. “Someone once told me princesses don’t wear any panties.”</p>
+<p>“Mmmmm oh yea…?” Natalie arched her back to accentuate her ass. “You want to take a</p>
+<p>look and see for yourself?”</p>
+<p>She turned her head forward when Saul began sifting through her many dress layers. The</p>
+<p>back half rose up her bare thighs before folding over her back to expose Natalie’s unwrapped
+hips. A teasing glistening of moisture between her thighs guided Saul to her crotch. It bulged
+between her legs as she fully presented herself.</p>
+<p>“Well…?” she cooed.
+“I don’t see any…” Saul grabbed her tiny hips. The softness of her skin never ceased to</p>
+<p>drive him wild.</p>
+<p>do to the pumpkin princess.”</p>
+<p>“That’s one mystery solved! But suuuurely there must be more you’ve always wanted to</p>
+<p>ZIIIP!
+“Mmngh!” Natalie chewed on her lip at the recognizable sound of Saul’s pants unzipping.</p>
+<p>His belt clanked around his ankles moments later and the bulge of a hard, warm cock pressed
+against her backside.</p>
+<p>SMACK!
+RATTLE!
+“Aaugh!!” Natalie’s body shook when Saul entered. He started slowly until her dripping</p>
+<p>wetness begged him to fully enter. The force made her grab the crates for support, as well as
+cause her allergy bottle to jostle.</p>
+<p>SMACK!</p>
+<p>8</p>
+<p>RATTLE!
+“Nngh!! G-Grab my tits!!” she pleaded while pressing her forehead into the wood.
+Firm hands wrapped around her knockers. Saul expertly used them to pull her back into</p>
+<p>his hips, thrusting himself in and out at the same time.</p>
+<p>SMACK!
+RATTLE!
+The sound of the wobbling pill bottle was lost to both their ears. Amid the slick noises of</p>
+<p>colliding pelvises and Natalie’s labored gasps, nothing else mattered. Saul stared down at the
+orange-clad beauty taking his cock and begging for more. Countless daydreams from pubescence
+came to fruition all at once as he felt her large breasts squish in his grasp.</p>
+<p>“Ahhh!! Ahhhmmmm!! H-Harder!!” Natalie’s mouth fell open for breath. Such vigorous</p>
+<p>sex was causing her pumpkin crown to fall askew.</p>
+<p>SMACK!
+RATTLE!
+SMACK!
+RATTLE!
+The sensations of her breasts bouncing up and down were driving her mad. “Squeeze my</p>
+<p>giant pumpkins!!!”</p>
+<p>SMACK!
+RATTLE!
+Saul was stiffening inside her and nearing the edge. Much more and Natalie knew her</p>
+<p>pumpkin would be stuffed.</p>
+<p>“F-Fuck me!! Fuck your big-titted pumpkin princess!!”
+SMACK!
+RATTLE!
+SMACK!
+RATTLE!
+The crown fell from her head to the ground below. Strands of red hair clung to her face.</p>
+<p>Natalie’s nails dug into the shaking crates as she screamed, “Aahhh I’m gonna COME!!”</p>
+<p>Saul’s hands left her breasts to fly to Natalie’s hips. They grabbed her ass and held her</p>
+<p>with no intention of letting go as his cock started to throb.</p>
+<p>SMACK!
+CLATTER!!!
+“NNGH!!!”
+Cum rushed into Natalie’s body like cream filling as her thighs quivered with sexual</p>
+<p>orgasm. Every masculine pump made her breasts wobble and shake. They glowed a dull orange
+in the light reflecting off her dress as she stared down with blurry vision.</p>
+<p>Exhausted, Saul’s hands left his girlfriend’s body and he pulled out. Few sexual</p>
+<p>encounters could hold a candle to this.</p>
+<p>9</p>
+<p>“O-Oh my God…” Natalie groaned. She raised herself up in hopes to still be able to stand</p>
+<p>on two feet. “That was...the most amazing--”</p>
+<p>She froze. The bottle of pills was nowhere to be seen.
+“Uh oh,” Natalie squeaked.
+Ignoring the fluids dripping down her thighs, she ran around the stack of crates. The color
+drained further from her face with every step. When she reached the other side, her heart sank to
+find the bottle empty and every last pill stuck in a mixture of mud and other mystery barn-floor
+substances.</p>
+<p>“No no no no NOO!!! Shit!!”
+Saul was taken aback by the extreme reaction. “What is it??” He was yet to pull his pants</p>
+<p>up.</p>
+<p>Natalie stooped down in hopes of finding any salvageable pills. There were none. “My</p>
+<p>allergy medicine! It’s all ruined!!”
+“You have allergies?”
+“Y-Yes! Only during the Fall…” She stood up and looked around the barn hopelessly.</p>
+<p>Dizzying feelings of faint made her woozy. “Crap what am I going to do?!”</p>
+<p>“Well it’s just allergies. You’ll be fine for a day, right? A little stuffy nose or watery eyes</p>
+<p>never killed anyone.”</p>
+<p>Natalie chewed on her lip. The entire pumpkin patch might as well have been a minefield</p>
+<p>and she was going to have to explore it all day. The thought alone made her sex-heavy breasts
+feel even heavier. “Crap!” She turned to Saul looking for any kind of hope. “I’m allergic to
+pumpkins, Saul… And they’re everywhere outside.”</p>
+<p>Saul snorted. “Seriously? And you’re working as the pumpkin princess?”
+“It’s not funny!” Natalie knew he couldn’t possibly understand the extent of her</p>
+<p>condition.</p>
+<p>He waved his hand in apology. “Sorry, sorry… I’ve just never heard of that before.</p>
+<p>Maybe it won’t be so bad! When was the last time you were around a pumpkin without your
+meds?”</p>
+<p>The question made her think. “Seventh? Eighth grade?”
+“That’s a long time. How do you know you haven’t grown out of it? I was allergic to</p>
+<p>strawberries until I was fifteen, then it just got better!”</p>
+<p>The suggestion made her feel a little better but the tightness in her breasts made her think</p>
+<p>otherwise. “I guess I haven’t really gone without them during the fall season in a while…
+M-Maybe it will be fine.”</p>
+<p>KNOCK KNOCK KNOCK
+“Almost ready in there, Pumpkin Princess?”
+Natalie froze. Her mom was calling from outside the barn door. “CRAP!” she hissed.
+Looking down, she found herself half-naked with Saul’s cum still wet on her thighs. “More like a
+pumpkin slut,” she grumbled. “B-Be right out!”</p>
+<p>“You’re going to be fine,” Saul assured her.</p>
+<p>10</p>
+<p>She looked at him in desperation. “Help me get this thing on! I’ll have to worry about the</p>
+<p>pills later.”</p>
+<p>The dress was on in a flash and cinched tight enough to cause her breasts to bulge into a
+jiggling shelf. It wasn’t modest but it would have to do. Natalie planted a kiss on her boyfriend’s
+lips. “Wait a few minutes after I’m gone then you can sneak out.”</p>
+<p>Saul watched her rush towards the door. “I’ll see you out there!” he called, relishing the
+incredible experience still fresh on his manhood. He wasn’t certain, but Natalie’s breasts looked
+more packed into the dress than usual.</p>
+<p>( . Y . )   ( . Y . )   ( . Y . )   ( . Y . )   ( . Y . )</p>
+<p>“Mom… Do you think I could skip today?”
+Natalie’s mother hardly glanced back. “Are you kidding?? It’s the first Friday of the</p>
+<p>season and you’re the main attraction! You can’t leave!”</p>
+<p>The heaviness in her steps made Natalie think otherwise. An abundance of cleavage made</p>
+<p>it very clear she had not yet outgrown her allergies. “I really think I should--”</p>
+<p>She was interrupted when her mother caught sight of her inadequate coverage. “Honestly,
+Natalie, I know you’re not happy about this, but you could still try to dress appropriately! Come
+here before someone sees.”</p>
+<p>Timidly, Natalie approached her mother’s outstretched hands. Fingers pulled at the
+dress’s neckline to force it higher. The amount of jiggling on Natalie’s front was enough to make
+her gasp. “I-I really think I should go home, Mom! I’m out of my allergy meds!”</p>
+<p>“Mary really didn’t let this thing out enough for you, did she?” Staring at her daughter’s
+bulging chest, she sighed after raising the neckline only an inch. “That will have to do for now.
+Don’t bend too far forward.”</p>
+<p>The air was being forced from Natalie’s lungs. Under such compressive force, her breasts</p>
+<p>felt ready to burst free. “S-Sure! Why not!” she squeaked uncomfortably. Taking a deep breath
+was a gamble.</p>
+<p>“Now get out there and be the best pumpkin princess you can be! I’ll be at the doughnut</p>
+<p>stand when you need a snack.”</p>
+<p>The pumpkin patch taunted her when Natalie approached. Every step made her chest</p>
+<p>tingle in anxious anticipation. Extra bounce coupled with an ill-fitting costume could only end in
+so many ways. Nonchalantly, she scratched the top of her cleavage to relieve a growing itch.
+“Outgrow my allergies my ass…” she grumbled while making an effort to pursue the</p>
+<p>pumpkin patch with as much distance between her and the pumpkins as possible. “I’m carrying
+around a couple of G-cups and it’s not even noon!”</p>
+<p>Her predicament wasn’t going unnoticed by the farm’s patrons. Male gazes lingered in</p>
+<p>her direction. Usually it was the young girls who were excited to get their picture with the
+pumpkin princess. Now, it seemed their fathers were all too eager to send them over for a photo.</p>
+<p>11</p>
+<p>Natalie wasn’t oblivious, as much as they liked to think so; every time she stooped down to put
+an arm around an adoring fan, she knew the men were hoping something would pop out.</p>
+<p>If it wasn’t the horny dads, it was the eyes of wandering boyfriends. Their dates would</p>
+<p>glare at them until the spell was broken. This often translated into an animalistic tension between
+Natalie and the other girls should they cross paths. They didn’t appreciate her stealing their
+boyfriends’ attention in such a way. Natalie wasn’t sure what they expected her to do about it.
+Sometimes she wanted to offer the esteemed position to them so she could go home and pull on a
+thick sweater.</p>
+<p>CRREEAAAAK
+Worrying sounds drifted from aching stitches. Tightness was spreading across the dress.
+Despite her best efforts, Natalie’s pumpkin avoidance could only get her so far. The color alone
+was enough to affect her body. Only an hour into her shift and she could feel the dress giving out.
+The bodice was becoming so tight the lack of oxygen was making her lightheaded.</p>
+<p>“Whew… Ok…” she told herself softly, “Just make it until lunch. Maybe then you can
+hide in the car and things will settle down enough for you to make it through the rest of the day
+before--”</p>
+<p>CRREEEEAAAK
+“N-Nngh!”
+A stifling moan drew the attention of several pumpkin pickers. They stared at the</p>
+<p>blushing princess and the chest bulging out of her dress more with every inhale.</p>
+<p>“Sorry!” Natalie waved weakly.
+The situation was becoming unbearable. Turning away from the majority of the crowd</p>
+<p>and facing the corn maze, she attempted a calm glance downward.</p>
+<p>“EEP!!”
+The color drained from Natalie’s face with a startled squeak. She knew it was bad, but not</p>
+<p>this bad. Her breasts were noticeably bigger and far too big for her dress. Swollen globes like
+honeydews had stretched the costume to its limit. An obscene amount of skin jiggled plain as day
+for any curious eyes.</p>
+<p>CRREEAAAAK
+“Shit! CRAP!!” Natalie swore under her breath with panic when she saw her cleavage
+rise. Much more of this and her nipples were going to expose themselves to the frigid Fall air.
+Unless they tore through her costume first.</p>
+<p>“I’m not going to make it to lunch at this rate!” As private as one could be when</p>
+<p>surrounded by dozens of pairs of eyes, she did what she could to pull her dress up. It didn’t
+budge; the fabric was wedged against the center of her breasts. Underneath the taut bodice
+Natalie could feel her bloating curves rubbing across her bottom ribs. “I won’t even make it
+another ten minutes at this rate!”</p>
+<p>It had never been this bad. There had been tight bras and one or two lost buttons, but</p>
+<p>Natalie felt as though her breasts were ballooning with weight and girth. “I can’t spend any more
+time in this damn pumpkin patch if I want to keep from flashing the entire farm!”</p>
+<p>12</p>
+<p>It took every ounce of will not to wrap her arms across the top and bottom of her bust</p>
+<p>when Natalie turned to leave. Her steps were dangerously unsteady. One wrong move could spell
+disaster.</p>
+<p>CREEEAAAAAK
+“I gotta get out of here,” she whimpered.
+KA-THUNK!
+“Ahh!!” She jumped at the cannon’s roar. It’s obnoxious pumpkin throwing was the last</p>
+<p>thing she needed. “D-Damn thing!”</p>
+<p>The edge of the pumpkin patch was just ahead. If she could escape its wrath, she could</p>
+<p>explore the other attractions and avoid any more dangerous encounters. “Just PLEASE hang on!”
+she pleaded to her swelling tits, “I’ll get away from the patch and--”</p>
+<p>“Pumpkin Princess!! Wait!!”
+The call of a voice filled with wonder stopped Natalie in her hurried tracks. Turning
+around, she saw a girl no older than seven stumbling toward her with a pumpkin filling her arms.
+Every fiber of Natalie’s being wanted to scratch up and down her cleavage. “Why hello!”</p>
+<p>she smiled as warmly as she could, “What can I do for you?? Oh my, that’s a lovely pumpkin
+you’ve got there!” Behind the girl stood her mother with a camera. This wasn’t going to be
+quick.</p>
+<p>The little girl beamed with pride. “I searched all over for the perfect one!” Becoming</p>
+<p>more timid, she held it towards Natalie. “Can you fill it with magic, please? I want it to be extra
+scary on Halloween!!”</p>
+<p>Natalie gulped. This was a common request from her younger audience. What good was a</p>
+<p>magical pumpkin princess if she couldn’t bring a little magic into her pumpkins.</p>
+<p>“Get next to her, sweetie!” the girl’s mother instructed. There was a smile on her face but</p>
+<p>she was clearly unnerved by the excessive amount of cleavage overflowing on this children’s
+entertainer.</p>
+<p>“L-Let me see your pumpkin!” Natalie accepted. Squatting down, she took the pumpkin</p>
+<p>in her arms. There was no choice but to hug it against her chest in order for her to work her
+magic wand. “Nnnnghmmm…” The pumpkin burned against her skin. A rush of tightness within
+the bodice almost made her fall off her feet.</p>
+<p>“W-What...a great pumpkin!” she congratulated. “I can barely hold it!”
+“Say cheese!” the mom said.
+“Cheese!!”
+Natalie smiled with the ecstatic girl and struck a magical pose. Down below, she knew</p>
+<p>the camera was capturing what must have been an unseemly amount of skin bulging around the
+pumpkin. This picture was guaranteed not to make it into any frames.</p>
+<p>SNAP!!
+“Bless my pumpkin now!” the girl cheered after the picture.
+“U-Uhh…” Natalie could barely think. Having direct contact with the pumpkin was</p>
+<p>making her head spin and her breasts engorge. The mom stared in approaching disgust.</p>
+<p>13</p>
+<p>CRREEEAAAAAK!!
+“Nnngh!!!” An intense wave of swelling made Natalie shudder. She didn’t have to look</p>
+<p>down to know her nipples were about to pop out. It was unavoidable when there were two
+watermelons-worth of flesh stuffed down her dress. Glancing at the mother, Natalie noticed she
+was no longer feigning a smile. Her appearance was borderline inappropriate.</p>
+<p>“Pumpkin Princess…?” the girl asked.
+CRREEAAAAAAK!!
+“Uhhh… Nnngh… Uhhh…” Taking her wand and a chance, Natalie waved it over the</p>
+<p>pumpkin. “B-Bibbidi bobbidi boo, may this pumpkin be extra scary for you!!”</p>
+<p>CRREEEEAAAAAAAAKKK!!!
+POP!!
+“Ahhh!!”
+The magic seemed to affect Natalie instead. A seam blew open loudly on the side of her
+torso like a gunshot. Heaps of flesh pressed into her biceps and engulfed the girl’s pumpkin in
+pillowy warmth. With a hand like lightning, Natalie dropped her wand and wrapped an arm
+across the front of her mammaries. The distinct sensation of erect nipples prodded against her
+bare forearm.</p>
+<p>“H-H-Here you go!” Natalie laughed nervously while handing the pumpkin back to its</p>
+<p>owner. “Don’t drop it!”
+“Yay!!”
+Death stares shot from the mom’s eyes like daggers when she took her child’s hand</p>
+<p>aggressively and pulled her away. “What do we say?” she said growled.</p>
+<p>“Thank you, Pumpkin Princess! Can we go watch the pumpkin cannon now, Mommy??”
+“Have a nice Fall!!” Natalie forced herself to grin until the mom led her daughter away.</p>
+<p>Then the panic set in. Had it not been for her quick reaction, her chest would have fallen out
+completely. Swollen nipples fought against her arm while her hand struggled to keep ahold of the
+dress.</p>
+<p>“Too big… This is too big!” she whimpered. “God my boobs feel MASSIVE!! I need to</p>
+<p>get out of here!!”</p>
+<p>A break wouldn’t fix the situation but it would help. Natalie fled the dangerous pumpkin
+patch as quickly as she dared. Leaving it behind brought instant relief to her continuous swelling
+but it didn’t solve her existing problem. It would be a miracle if nobody complained about the
+risque princess wandering the farm with her tits bulging around her arm. Every step was a chore
+not to burst out of her dress. If one seam had blown, others were sure to follow.</p>
+<p>“If I could just calm down, things would get a little better,” Natalie assured herself. All
+she needed was a break; a break from trying to stay contained and a break from the interested
+eyes lingering on her front. If she was lucky, her mom would recognize the situation and let her
+go home.</p>
+<p>14</p>
+<p>“M-Mom…?” Natalie called out upon approaching the mini-doughnut stand. She was</p>
+<p>lucky to have caught it during a lull in customers. The cashier in the booth, a woman she
+recognized as Carrie, saw Natalie approaching after giving a couple their order.</p>
+<p>“Oh, Natalie!” the woman called. “I was wondering when I would see--” She hesitated</p>
+<p>upon seeing Natalie’s enlarged bust.</p>
+<p>“Here for my daily dose of sugar! And having a slight wardrobe malfunction while I’m at</p>
+<p>it,” Natalie explained. It wasn’t completely untruthful, not when her nipples were only being
+concealed by her trembling arm. “Is my mom in there?? I need to talk to her...”</p>
+<p>“No, I’m afraid not! She had to step away for a minute to help somewhere else…”
+Carrie’s eyes were wide with confusion. She was certain Natalie was much smaller the last time
+she saw her, though the dress never did fit quite right.</p>
+<p>Natalie cursed under her breath for carpooling with her mother. “Got any spare doughnuts</p>
+<p>in there?” she asked with dwindling hope.</p>
+<p>“I do! Saved a hot batch just for you!” Carrie turned around before returning with a small</p>
+<p>container of steaming mini-doughnuts. They made Natalie’s mouth water and her hands warm
+against the paper walls. Upon handing them through the window, however, Carrie whispered,
+“You should pull your dress up, dear; you’re about to fall right out of it! People are staring!”
+A thumb and finger gripped the dress as best they could but it would be impossible to</p>
+<p>stuff herself back in without both hands and a little privacy. “Thanks for the tip!” Natalie winced.
+“I think I’ll step behind the booth for a minute and do just that!”</p>
+<p>Luckily, the mini-doughnut booth was situated on the outside of the festivities. There was</p>
+<p>nothing waiting on the other side other than an open field with no observers. Natalie leaned
+against the small wooden building and breathed a sigh of relief. Letting her cradling arm fall to
+her side revealed just how dire the situation had become.</p>
+<p>“Dammit…” she moaned, taking a doughnut and eating the pastry in one bite. Its sweet</p>
+<p>warmth soothed her a little. “I’m fucking huge.”</p>
+<p>Breasts like basketballs poured out of her dress. Their bottom halves remained stuffed
+inside, but everything from her nipples up was exposed plain as day. Natalie thought it was a
+wonder she had managed to keep them contained for so long in the first place. She wanted to
+hide but sneaking off wasn’t an option considering she was dressed as the most popular local Fall
+celebrity.</p>
+<p>“That kid just had to have her pumpkin blessed…” Natalie crammed another doughnut</p>
+<p>into her cheeks. “That thing made me blow up like a balloon!”</p>
+<p>With a doughnut in one hand and her dress in the other, Natalie attempted to pull the
+bodice up enough to conceal her nipples. The thimble-sized nubs quivered as she bounced up and
+down on her heels and her chest heaved with a great weight.</p>
+<p>“C-Come on!” she grunted with her mouth full. Now using both hands, she pulled the</p>
+<p>dress away while pushing her chest down into the orange prison. “Nnnghh get in there!!”</p>
+<p>Skin bulged and squeezed together over her fingers. The blown-out seam on her side
+widened as flesh squished through the hole. Forcing them flat and down across her stomach,</p>
+<p>15</p>
+<p>Natalie was satisfied with the result. She appeared oddly misshapen as if her entire torso were
+rounding out, but she had some form of modesty.</p>
+<p>“This dress was not designed for this kind of stress.” Another bite of doughnut passed</p>
+<p>through her lips. “As long as I don’t go around hugging any more pumpkins, I should be able to
+make it the rest of the day and--”
+GUUURRRRGLE
+Natalie froze. Several locks of red hair fell in front of her eyes as the world stood still.</p>
+<p>Dropping the remaining doughnut, she placed both hands on her belly and bent forward.
+“O-Oohhh my God… What the hell??”
+CRRREEEAAAAAAK
+Cleavage bubbled up. Eyes widening as her stomach filled with pressure, Natalie could</p>
+<p>feel her allergy returning stronger than ever. Bloating tightness spread under her dress like a
+volcano readying its eruption. On her lips, she detected a faint taste which made her turn white as
+a sheet.</p>
+<p>“N-No… Oh please no…” she begged.
+CRREEEEAAAAAKK!!
+Grunting, she called out to the booth behind her. “Carrie… Nnngh… C-Carrie! Those</p>
+<p>doughnuts tasted...a little different than normal!”</p>
+<p>A cheerful reply came from around the corner as she was serving several customers. “I’m</p>
+<p>glad you noticed! We’re trying a new pumpkin pie batter today! What do you think??”</p>
+<p>Natalie felt like she was about to blow. Hugging a pumpkin was one thing, ingesting one</p>
+<p>was another.</p>
+<p>CRREEAAAAAAK!!!
+Her dress pulled at the seams. Flesh pressed under her hands and Natalie panicked at the</p>
+<p>irrational fear that her belly had begun swelling as well. Only then did she realize it was her
+breasts expanding their territory. Having been forced so unnaturally far down the front, her
+breasts were expanding across her stomach as much as they were rising from the bodice. She
+couldn’t fully see over her bubbling cleavage, but from the soft masses under her fingers, she
+guessed she likely appeared to be several months pregnant. Her heart beat as loudly as the sound
+of the cannon firing in the distance.</p>
+<p>“Natalie? What did you think of the doughnuts?” Carrie asked again.
+“V-V-Very good!”
+GRRROOOAAAAAAN
+RIIIP!!!
+KA-THUNK!!
+A tear opened on the back of the dress. “Eep!! I-I loved them!!” The sounds of the farm
+died away. All the conversing people, the laughing children, and the ka-thunk of the cannon all
+faded to leave Natalie’s heavy breathing. Her breasts were beyond watermelons and after the
+disastrous doughnuts she just ate, they weren’t about to stop.</p>
+<p>16</p>
+<p>“This is bad. This is very, very bad.” She needed help. She needed to get away from this</p>
+<p>farm and its cursed orange orbs. With so many bulging mounds trapped by the dress, she was
+beginning to look like an orange raspberry.</p>
+<p>“Saul,” she realized suddenly. “Saul is still here!”
+The sliver of hope was dashed when she considered how she would find him. Leaving the
+privacy of the booth was out of the question; she would be flooded with children within minutes.
+Already she could hear them calling her name as if they were playing hide and go seek. Perhaps
+Saul was looking for her already. They hadn’t crossed paths since the fateful encounter in the
+barn. Natalie cursed the dress’s lack of pockets and the absence of her phone. She was going to
+have to rely on luck.</p>
+<p>CREEEAAAAAK
+“N-Nngh… Please be close by, Saul,” she prayed. It was too risky to expose herself too</p>
+<p>much. Hugging her chest for steadiness, she peeked her head around the corner of the booth.
+The farm was bustling with more people by the minute. Nary a pumpkin in the patch</p>
+<p>wasn’t under inspection by an excited child.</p>
+<p>KA-THUNK!
+“Ahh!” A far-off thud made Natalie jump higher than normal due to her situation. Being</p>
+<p>bound in such tight fabric was making her skittish; any loud sound could mean the end of the
+dress.</p>
+<p>Her eyes scanned the crowds. Hope soared when she caught sight of a familiar head of</p>
+<p>blonde hair standing near the candy apple booth. He wasn’t far.</p>
+<p>“Saul!” Natalie whispered in far too quiet of a voice for him to possibly hear. She began
+waving an arm madly while trying to keep her body out of sight. In time, the movement caught
+his, and several others’, eye.</p>
+<p>“Natalie…?” he wondered, gawking at the sight. A distinct panic in her eyes made him</p>
+<p>leave his place in line and approach her hiding spot.
+“What’s wrong? What are you doing back--”
+“I am not over my allergies, Saul! I am NOT over my allergies!!” Natalie sprang her
+frustration on him without warning. Heavy breathing made her dress expand like a balloon ready
+to burst.</p>
+<p>Saul was speechless. There was enough flesh packed down the front of Natalie’s dress to
+almost double her weight. Cleavage deep enough to swallow his arm rose up and down with her
+stressed breaths.</p>
+<p>CRREEAAAAAK
+“N-Natalie… Your chest is--”
+“I KNOW!! Pumpkins make my boobs blow up, all right?! I can’t get near the things</p>
+<p>without my tits popping out of my bra!! There, now you know!! Can you help me get out of
+here?!”</p>
+<p>17</p>
+<p>Saul continued staring. Several new rips had opened in the time they were talking.</p>
+<p>Watching her doughnut-fueled growth enhance her tits in realtime was every fantasy he could
+have ever hoped for.</p>
+<p>“SAUL!! FOCUS!! I’m about to explode out of my dress in front of an entire fair’s worth</p>
+<p>of people LOOKING FOR ME!! What do I do?!”</p>
+<p>He gawked with a trembling jaw. This was a lot for his mind to process all at once. “I...I</p>
+<p>could run to your place and grab more allergy medicine??”</p>
+<p>GRRROOAAAAAN
+“Nnnghh!! Ooohhh I’ll be as big as the bouncy castle by the time you get back!!” Natalie</p>
+<p>was near hysterics.</p>
+<p>stupid dress!”</p>
+<p>“Ok, ok! We need to get you out of here then!”
+“I can’t leave without my mom catching me! I’m a giant walking traffic cone in this</p>
+<p>CRREEAAAAAAK
+Natalie whimpered as flesh bulged. Both arms wrapped themselves around her chest.</p>
+<p>There was no more room over her stomach and her breasts had begun rising up and out. “Saul,
+please help!! This dress isn’t going to last much longer!!”</p>
+<p>His mind raced, not only from a want to help his girlfriend but also from a desire to find</p>
+<p>the two of them privacy. “Uhhh… How about this!” He pointed to the corn maze. Its entrance sat
+near the dreaded pumpkin patch. “Go in the corn maze, then cut through the back and go across
+the back field. I’ll meet you on the other side with my car! Your mom won’t know you left, she’ll
+think you’re just wandering the maze!”</p>
+<p>Natalie considered his plan. Panic gripped her when she realized she would have to
+traverse the spare pumpkin patch behind the corn maze in order to make it to the road, as well as
+avoid any debris from the cannon. Its aim was known to be exceptionally poor. Assuming she
+would still be able to walk by the end of it, the plan could work.</p>
+<p>“O-Ok… Ok let’s do it!”
+Saul already had his keys in-hand. “I’ll meet you on the other side, all right? Just run</p>
+<p>through the maze. Cut through the corn if you need to!”</p>
+<p>KA-THUNK!
+“Ahh!!” The cannon made her jump once again. She swore she could feel the thud travel</p>
+<p>through the ground and over her chest. Natalie wasn’t sure she could handle this.</p>
+<p>“I’ll see you there, ok?” Saul confirmed.
+“I-I’ll be there!”
+Sealing their rendezvous with a kiss, they parted ways.</p>
+<p>( . Y . )   ( . Y . )   ( . Y . )   ( . Y . )   ( . Y . )</p>
+<p>“Ok… Ok, Natalie… You can do this.”</p>
+<p>18</p>
+<p>Stepping out from behind the mini-doughnut booth felt more like leaving the girl’s locker</p>
+<p>room without her clothes. There was no hiding her engorged situation. The best-case scenario
+had her audience assuming she was pregnant. Such a massive amount of flesh stuffed down her
+shirt appeared far too unnatural for them to assume it was all the work of her swollen tits.</p>
+<p>“Pumpkin Princess! There you are!”
+“Crap! Crap!” Natalie secured her chest with an arm and increased her walking pace to a</p>
+<p>gentle bouncing trot. Playing her role for the kids was important but not important enough for
+her to blow through her dress.</p>
+<p>“Pumpkin Princess…?”
+Their disappointed calls died away when she rushed past the pumpkin patch and into the</p>
+<p>corn maze without hesitation. “Sorry, kids. This princess has some pumpkins to take care of.”
+The sudden reduction of people was a blessing. Natalie felt secluded among the
+eight-foot-tall corn stalks. The bustle of the fair was muffled within its walls. Even the cannon
+sounded distant as if she’d wandered into a hidden land.</p>
+<p>This didn’t mean there weren’t people around to catch sight of the busty princess. Every
+now and then she would turn a corner and run into a couple looking for the exit. Their reaction
+was usually the same, unless Natalie had been walking brisk enough to run chest-first into them
+and knock one or both to the ground.</p>
+<p>CRREEAAAAAK
+“Oohhhh, those damn doughnuts!!” she groaned. “I could have handled this if it weren’t</p>
+<p>for them!! I’ve never been this big in my--”</p>
+<p>GRROOAAAAAN
+“W-Whoa… Nnngh!!!” Natalie stumbled and hugged her breasts. Cleavage engulfed her</p>
+<p>collarbones and bubbled over the dress like two plump muffin tops. “O-Oh please, just hang on a
+little longer!”
+POW!!
+“Nnnghmm!!!”
+A piece of jeweled stitching burst open on her front. An angry nipple an inch in diameter
+had decided it was time to escape. Using her fingers, she could feel its thick pink flesh squeezing
+through the tear.</p>
+<p>“A-Aaahhgghh!!” Natalie shivered with nervous delight. It was far too sensitive and</p>
+<p>brought her knees together. “Maybe...nnngh...M-Maybe princesses should wear panties…” she
+whimpered, feeling her thighs become slick.</p>
+<p>The situation was becoming desperate. Although she knew the path through the maze</p>
+<p>well, Natalie started running straight towards the back where she knew the spare pumpkin patch
+lay in wait. Corn stalks grabbed at her dress when she squeezed through the maze walls. Dried
+leaves clung to the lace and itched up her bare legs.</p>
+<p>CRREAAAAAAK</p>
+<p>19</p>
+<p>“Come on… Come on! Almost there!” Fingers dug into her dress in an effort to hold it
+together. Once she was in Saul’s car it would be free to explode from her body. Until then, she
+prayed she wouldn’t be running across an open field stark naked.</p>
+<p>Ahead she caught sight of flashes of orange. The pumpkin patch was within reach.</p>
+<p>Crossing its dangerous territory would mean an increase to her swelling but it was a necessary
+risk. Natalie didn’t dare slow down. She plowed through the corn stalks like a mad rhino.
+Stopping would mean becoming a slave to her heaving new weight. At this point much of her
+momentum was created by her chest trying to pull her forward while her legs worked to keep up.
+One final wall remained. Leaning headfirst, Natalie prepared for the dozens of dry fingers</p>
+<p>prepared to grab at her body. The pumpkins waiting on the other side burned as if she were
+running towards a bonfire but there was no stopping her path now.</p>
+<p>Then, a split second before escaping the maze, Natalie saw movement through the corn.
+BWOOOMPH!!
+THUD!!
+“Ow!! Hey, watch it!!”
+“My latte!!”
+Two strangers collided with her rushing breasts: a man and a woman. They appeared to</p>
+<p>be sharing an embrace before Natalie managed to ram them at full speed. All three fell to the
+ground with Natalie falling backward on her rear. A steaming heat washed over her chest in a
+sweet wave.</p>
+<p>The couple was prepared to yell at her for ruining their moment until they recognized the</p>
+<p>princess. Then they saw her chest.</p>
+<p>Natalie was furious. So much effort to escape the farm was tossed away. Standing had</p>
+<p>been difficult enough on its own, much less rising back to her feet and carting herself across the
+field. “What the hell are you two doing?!” she snapped, staring at their wide eyes from over her
+chest, “This pumpkin patch is off limits!! You’re not supposed to be back here!! You--”</p>
+<p>GUUUURRRGLE
+Natalie stopped yelling and stared at her chest. Her cleavage was soaked in a hot brown</p>
+<p>liquid. It seeped between her mammaries and coated them in a sweet film. The
+doughnut-reminiscent scent made her tremble with fear. Most concerning was the intense
+build-up of pressure.</p>
+<p>GUUUUURRRRRRGLE
+“N-Nngh!!!” she whimpered.
+The couple rose to their feet. The woman, glancing at her spilled cup on the ground,</p>
+<p>approached Natalie and extended a hand. “Are you all right?? Let me help--”</p>
+<p>GRRROOOAAAAAN
+“U-U-Uhhhhnnghhh!!!” Natalie gasped when her breasts expanded like balloons. “M-My</p>
+<p>BOOBS!!!” she cried, leaning back on her arms.
+Flesh billowed in every direction.
+Natalie heaved with growth. “What was in that latte?!”</p>
+<p>20</p>
+<p>“I-It was pumpkin spice!!” the woman answered nervously as if being accused.
+CRREEAAAAAK!!!
+POW!!
+POW POW!!!
+SHHRRRRRIIIPP!!!
+Her breasts swelled to immense proportions. Several new holes opened on the dress to
+accompany her new girth but it would never be enough. Cleavage bulged up and into Natalie’s
+face. Skin rubbed across her stomach and caused the sides of her abdomen to round out. Nipples
+capable of filling a man’s mouth forced their way through widening tears. Legs trembling as her
+heels kicked in the dirt, Natalie knew she wouldn’t rise to her feet again. Scattered pumpkins all
+around her laughed with orange grins. Standing over her, the man took several shocked steps
+back as if in fear of a bomb. His date pulled her hand back in fright as Natalie’s chest inched
+closer and closer to the breaking point. She was paralyzed with confusion as Natalie whimpered
+into her cleavage.</p>
+<p>“M-M-Miss?” the woman asked in a shaky voice. “Are...Are you all ri--”
+BOOM!!!</p>
+<p>21</p>
+<p>Natalie’s dress burst apart into a shower of tattered orange fabric and glitter. The force of</p>
+<p>her breasts’ release was enough to push her backward and her hands into the dirt. In an instant
+the length of her body from her neck to her thighs was naught but a rounded slope of jiggling
+flesh.</p>
+<p>They continued to bloat outwards and engulf her legs. The curves forced themselves</p>
+<p>between her thighs, forcing her to spread her legs as they swelled across the dirt. “N-No more!!
+Please!! I can’t get any bigger!!” Natalie whined. Several pumpkins were within range. It would
+be only moments until she came into contact with them.</p>
+<p>“Ooooh God!!! I-I can’t...stop swelling!! My tits feel SO BIG!!!” Pleaded eyes stared at</p>
+<p>the only people available to help. “Please!! G-Get the pumpkins away from me!! They’re making
+my breasts grow!!”</p>
+<p>They made no move to help, paralyzed with sheer confusion.
+Natalie’s skin brushed against several of the orange orbs.
+SWEEEEEELL
+“Aahhhh make it stoooop!!”
+Natalie’s chest surged forth. Each breast overcame four feet in diameter. Their size was</p>
+<p>enough to force Natalie forward until her legs flung behind her. Both arms draped across her
+chest as if hugging them might dispel their engorgement.</p>
+<p>SWEEEEEEEELLLLL
+“G-Get them away!! Get them AWAY FROM ME!!”
+The couple only stared in utter disbelief. It looked like they were about to respond in</p>
+<p>some meaningful way until--
+KA-THUNK!!
+Time stood still. Overhead, a whistling sailed ever closer. Like an evil shooting star,
+Natalie caught sight of a pumpkin careening through the air. Her heart begged for it to find
+another target, but as it fell back to Earth, Natalie knew fate was too cruel for any other outcome.
+“O-Oh no.”</p>
+<p>BWOOOOPM--BLOOOOSH!!!
+“A-AHHNNNGHH!!!!”
+The pumpkin landed squarely in her firm cleavage before exploding in a shower of</p>
+<p>orange. It coated Natalie’s couch-sized knockers in slime and seeds. The energy from the
+collision rushed around her chest like a mad bull sending her heaving up and down as if someone
+had performed a cannonball onto a water bed.</p>
+<p>GRRROOOOOAAAAAAAAANNNNNNNN!!!!!
+“OH NOOOOO!!!!” Natalie scraped off whatever she could of the goop. Most of it was</p>
+<p>out of her reach. Already she could feel it making her skin tingle and burn.</p>
+<p>The woman fell backward in fear from the pumpkin’s heavenly arrival. “Mike what’s</p>
+<p>happening to her?!” she cried. Her boyfriend was at her side in an instant, helping her to her feet
+as they fled the scene.</p>
+<p>“Don’t go!! Don’t leave me here!!!”</p>
+<p>22</p>
+<p>They didn’t look back.
+GUUUUURRRRGLE!!!!
+“Oooohhhhhh my CHEST!!!”
+Flesh was rising feet by the minute. Like a parade float, Natalie’s bust expanded in all</p>
+<p>directions. There was no telling how large she could grow after the pumpkin’s explosion within
+her cleavage. Based on the pressure within her breasts, however, Natalie feared the worst.</p>
+<p>HEEEAAAAAVE!!!
+A wall of skin pressed against her. Arms to either side of her head to fight the fleshy tide,
+Natalie could feel herself being pushed back across the dirt. The top of her chest loomed several
+feet overhead. Somewhere in front, she could feel her nipples growing in pulsing surges. Each
+could have filled an oil drum with their plump forms.</p>
+<p>“T-Too big!!! Nnnnghhh this is...t-too big!!! Stop swelling!!!”
+SBLOOSH!!!
+SBLOOSH SBLOOOSH!!!
+“H-HAHH!!! AAAUUUGHH!!!”
+Pumpkin exploded under her breasts as she grew. With her mountainous tits growing</p>
+<p>across the patch, the squashes were crushed beneath her. Each one added fuel to her
+bloat-causing fire.</p>
+<p>GRRRROOOAAAAAAAAAAAAN
+“OHHH THEY’RE GETTING SO TIGHT!!! MY SKIN IS STREEEETCHING!!!”
+The sounds of the fair behind her died away. Natalie couldn’t be sure if it was because
+they had taken notice of the shadow cast by her knockers, or if she simply couldn’t hear them
+due to her being swallowed into her cleavage. Taut skin shifted and massaged all around.</p>
+<p>SBLOOSH SBLOOOSH!!!
+SBLOOSH SBLOOOSH!!!
+GUUUUURRRGGGLLE!!
+Dozens of pumpkins added their contents to the surface of her chest. The ground below</p>
+<p>started to sink from her weight. A row of corn stalks was flattened behind her.</p>
+<p>“N-No...No more!!! I can’t take it!!! I...I-I feel like...nnnnnghhmm!!! God my chest feels</p>
+<p>like...” Natalie dripped with sweat and sexual fluids. The slightest breeze against her sedan-sized
+nipples brought her to the brink of fainting. Far overhead her breasts reached towards the sky.
+They stood over fifty meters wide. Covered in the corpses of so many pumpkins, they had taken
+on an orange glow. Pounding against their sides felt akin to punching the wall of an
+above-ground pool.</p>
+<p>GRRRRROOOOAAAAAAN!!!
+“I DON’T THINK I CAN SWELL ANY BIGGEEEEERRRRR!!!”
+Natalie screamed along with her chest as it bloated to its fullest. Bouncing ripples and</p>
+<p>gurgles filled her ears until the goliath pair of tits came to a heaving standstill. Natalie gasped in
+exhaustion while fighting against her fleshy prison.</p>
+<p>23</p>
+<p>On the outside of her chest the soil texture changed suddenly. She could no longer feel</p>
+<p>pumpkins bursting beneath her girth. With a start, she realized she’d outgrowth the entire
+pumpkin patch. She hadn’t reached her limit; there was nothing left to push her larger.</p>
+<p>“T-Thank...GOD,” she panted. “No more. Not a single cup. This pumpkin princess is</p>
+<p>DONE.” Natalie fought within her cleavage and yelled in frustration, “I FEEL LIKE A
+FUCKING BLIMP!!”</p>
+<p>From across the field, Saul watched with a slack-jawed expression. From what he was
+certain to be his girlfriend had sprouted a monolithic pair of breasts blotting out a significant
+portion of the horizon. Much of the farm was hidden behind the heaving mass. Never in his life
+would he have guessed Natalie harbored such an allergy. In truth he wasn’t even convinced he
+wasn’t dreaming.</p>
+<p>“Best pumpkin princess ever…” he mouthed, now fully believing in magic after today’s</p>
+<p>events. A single nipple would have made for a king-sized bed.</p>
+<p>It was impossible to take his eyes off the sight until something caught his eye down the</p>
+<p>field. Looking closely, he was startled to see the two excited men operating the pumpkin cannon.
+They were eagerly working to reload the attraction. Its nozzle was pointing suspiciously towards
+Natalie’s direction.</p>
+<p>“Oh no,” he whispered.
+KA-THUNK!!</p>
+</body>
+</html>

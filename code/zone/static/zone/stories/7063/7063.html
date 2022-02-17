@@ -1,0 +1,2323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Rachael's Ascension</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>Rachael’s Ascension </p>
+<p>By HikerAngel and Au Goose </p>
+<p>Rachael’s butt was cold. They’d given her an adult’s hospital gown and it didn’t fit at all. 
+Not that the flimsy paper gowns ever did, but still. </p>
+<p>The nurse had measured her height: 4’10”. Still. Would she ever grow any taller? It was 
+her senior year and her chances of making it to even five-foot-nuthin’ seemed bleak. </p>
+<p>Then came the scale. 81 lbs. Tiny. </p>
+<p>Rachael twirled a finger in her dry red hair, lost in thought for the remainder of the 
+check-up. Her twin brother Chad was pretty small, too, but at least he had a 
+genius-level IQ! She was only an average student at best. Combine that with a 
+below-average body and you got a below-average person. What she wouldn’t give to be 
+bigger, to be better, to be beautiful… </p>
+<hr />
+<p>Rachael barged through the front door, shoulders set with purpose. Instead of going to 
+her room to sulk, she banged on her brother’s door. </p>
+<p>“Chad, you have to help me! I’m freaking tiny. I’m going to finish high school without 
+ever having gone on a single date!”  Her tiny fist beat on the door to punctuate each 
+point. “What’s the use of getting a big fat biochem scholarship to MIT if you can’t help 
+your favorite sister get over the damn five-foot-mark!? Maybe let me grow some 
+breasts? You know, like a pill or something to give me the puberty I never had?” The 
+final thump of her diminutive hands rattled the whole house. </p>
+<p>Chad finally opened the door. 
+now?” He was fond of his sister and he knew all too well that she wasn’t happy with her 
+petite frame or plain features. He was certainly willing to help her but he’d never 
+considered trying anything like what she was asking. Human experimentation? She 
+wanted him to, but would it be ethical? </p>
+<p>“Whoa! Slow down, Rache! You want me to do what </p>
+<p>​
+ you to make me 
+want
+​</p>
+<p>Rachael tried to slow down the thundering beat of her heart. “I 
+beautiful and sexy and tall and AMAZING!” She poured a lifetime’s worth of dreams and 
+desires that her ugly duckling-self might one day become a swan into one impassioned 
+plea. </p>
+<p>“Ahhh! Got it. Let me see what I can do.” </p>
+<p>Rachael’s furrowed brow relaxed. She stepped through the open door and hugged her 
+brother in excitement.“Oh my God! Thank you so much for trying. Even if it doesn’t 
+work, it means so much!” </p>
+<p>For weeks, Chad spent every evening curled up reading pharmaceutical briefs and 
+running simulations on his notebook, trying to come up with a way to give his sister what 
+she wanted. Then he had an idea he was pretty sure would either be his Ph.D. thesis or 
+get him banned for life for unethical research: a formula to trigger evolutionary 
+acceleration, a kind of automatic self-improvement. The concept was elegant: it should 
+let his sister ‘cure herself’ of anything she didn’t like about her body. If the critical 
+reactions actually worked it would open entirely new branches of genetic medicine. </p>
+<p>Right before their first midterms, he was fairly certain he had something that would help 
+her. He was still a little reluctant to simply give it to her—it’s not like he could get FDA 
+approval for his do-it-yourself psychoactive gene therapy. The ingredients were simple 
+enough and unlikely to do much harm. But forcibly accelerating evolution might vary 
+wildly from person to person, tapping into their genes and their ideal self-image. Those 
+would be the X-factors. Fortunately, his sister’s craving for an extra helping of puberty 
+should constrain the more extreme possible results. </p>
+<p>Rachael would ask him about his progress sometimes after having an extra shitty day at 
+school. He knew she was hanging all her hopes on him. She called his work ‘the potion’ 
+and the idea that she thought he was mixing bat wings and newt eyes in a cauldron 
+always made him smile. </p>
+<p>To celebrate the magic moment finally arriving, he put the first dose in a little crystal 
+flask their mother used to keep perfume in. He knocked on her door after dinner. 
+Rachael’s eyes lit up when she saw him holding what was obviously THE potion at last. </p>
+<p>“Is that it? That will make me better?” she whispered. After making her twin promise to 
+help her, she’d felt so silly. But here he was. </p>
+<p>​
+“Here’s hoping…” Chad offered. </p>
+<p>He gave her the flask. She plucked out the stopper and drank it down in one gulp 
+without ceremony. Then she sucked in her lips to get every last drop. </p>
+<p>Chad watched as Rachael’s eyes rolled back in her head, her eyelashes fluttering 
+closed as she slumped against the wall, body softly quivering. She cooed softly as her 
+breasts bulged from virtually non-existent to small lemon-sized lumps under her shirt. 
+She gasped as her legs lengthened until the hem of her pants showed her ankles. She 
+ran her hands down her flanks in one long sweep while her hips swelled, filling her 
+child-sized jeans to nearly busting. </p>
+<p>Chad was shocked. The heightened evolutionary state had worked far faster than he 
+had anticipated. More surprisingly: the potion had worked at all! </p>
+<p>Rachael’s eyes fluttered back open. “Holy freaking heck. That felt incredible,” she 
+whispered to herself huskily. It had felt like... like sex. What she imagined sex would be 
+like, at least. </p>
+<p>“Well, you look incredible too, sister mine,” Chad motioned toward her dressing mirror. 
+“Come see for yourself.” </p>
+<p>Rachael stared open-mouthed at what she saw. She was still fairly small, but she 
+looked 
+the shape of her chin more feminine. </p>
+<p>Her gaze traveled to her small breasts. She cupped them in her hands. “Wow!” she said 
+simply, too entranced by the exploration of her new body to say any more. Raising the 
+hem of her shirt revealed a sleek, flat stomach with just a hint of muscle tone. She ran 
+her hand along the smooth flesh. It felt firm, toned. Her eyes traveled down wider hips 
+and longer legs, noticing how much the hem had risen up her flared calves. </p>
+<p>“I 
+and threw her arms around him. </p>
+<p>“Thank you so much, Chad! You are the best brother ever…” Glimmering tears welled in 
+her eyes. </p>
+<p>be over five feet now!” Rachael giggled in excitement. She turned back to Chad 
+must
+​</p>
+<p>for the first time in her life. Her eyes seemed larger, her eyelashes longer, 
+cute
+​</p>
+<p>​
+​
+“Just promise me that you’ll dress conservatively for a while, Rache, You don’t want 
+people to notice so many changes all at once. Remember: no one can know or my 
+whole future is screwed.” </p>
+<p>“Of course! You got it,” Rachael said, squeezing him harder, her cheek pressing her 
+gratitude into his chest. </p>
+<hr />
+<p>Chad smiled. His sister was happy. So happy in fact, she’d talked him into a second 
+dose after a weeklong campaign of randomly cheering ‘for science!’ and teasing him 
+that he was afraid of his sister being taller than him. No such luck for Rachael: she’d 
+grown exactly two more inches, leaving him with -barely- an inch more height compared 
+to her new 5’2” frame. Round two hadn’t stopped her from asking for more, but he’d 
+finally refused, convincing her he needed to do some deeper simulations before there 
+could be any more ‘experiments’. The formula still worked too fast and maybe too well. </p>
+<p>For the last couple of weeks, Rachael had worn loose-fitting sweaters and pants to 
+mask her improved body. Or, at least she did until the glee club started posting the date 
+of the homecoming dance around school. When he ran into his sister in the halls the 
+next day, she was looking especially radiant… in a crop tank and skinny jeans! </p>
+<p>“Rachael? What the hell! I thought you were going to hide your body for a while!” </p>
+<p>“I did hide it for a while. I’m tired of hiding! I feel like a superhero having to stay in her 
+secret identity all the time.” She bounced up and down on her tiptoes. “What good is 
+having this rockin’ new body if I can never show it?” </p>
+<p>Chad frowned but admitted this day had to come. </p>
+<p>“Plus, the secret’s out. I went to the gym with Amanda and Caley,” Rachael continued, 
+“They noticed the new me when I was changing in the locker room... I couldn't help it. I 
+had to tell them. They weren’t buying that this,” she flexed her arm and a formidable 
+bulge sprang up, “was ‘just a growth spurt’. I mean come on? I can probably bench 
+press 
+now. My test scores are up. I stopped wearing contacts. I haven’t had a 
+you 
+​
+pimple in weeks. And I’m 
+ sensitive now, you know, down there?" She did a flirty 
+sooo
+​
+little wiggle with her sleek hips. </p>
+<p>​
+​
+you</p>
+<p>"WHAT!!?!" Chad raised his voice. She hadn’t mentioned any of these ...side effects... 
+before. </p>
+<p>"Shhhh...quiet down, Chad!" said Rachael. "People will hear you!" </p>
+<p>Chad fumed but forced himself to lower his voice. </p>
+<p>"Rachael, you have to tell them not to say anything. I did all this to help 
+. I’m YEARS 
+away from being ready to publish! If this gets out now I’ll lose my scholarship or worse... </p>
+<p>"I know, Chad. I'm sorry, really. They caught me off guard and I didn't know what to say, 
+so it just kind of ...came out." Rachael said apologetically. Then, her expression 
+changed. "If it helps, I think Amanda is into you. Just think... you could give her some 
+formula, and she could be your hottie girlfriend," she said slyly. </p>
+<p>Chad paused. That would be more data, a larger sample size for his research... </p>
+<p>"And if you give me a little more, you could get a preview..." Rachael said with a glint in 
+her eye before heading to her last class of the day. </p>
+<p>Walking home after school, Chad tried to rationalize expanding the trial pool. Rachael's 
+words tempted him more than he would admit. Amanda was short and flat-chested but 
+had a cute face. He’d kinda had a crush on her when she first became one of Rachaels’ 
+friends. He 
+ argue she’d make a good comparison study, starting out so close to 
+could
+​
+his sister’s original size. Hmm... </p>
+<p>Chad was dumping his backpack on the kitchen table when the doorbell rang. Opening 
+the door, Amanda and Rachael’s other friend Caley were standing there looking faintly 
+nervous. </p>
+<p>“Hi, Chad!” they both said at the same time, to their mutual embarrassment. </p>
+<p>“Hi…?” That they’d both changed into baggy clothes for this little visit couldn’t be a 
+coincidence. Amanda’s workout hoodie looked like a tent on her. “Listen, I’ve got a 
+pretty good idea what this is about, so why don’t you both come to my room. We can 
+talk it out.” </p>
+<p>As they walked into his room, their eyes were immediately drawn to the crystal flask of 
+blue liquid on his desk. </p>
+<p>​
+​
+​
+ when she says mean things like that... Because they’re 
+laugh
+​</p>
+<p>“Is that it?” Amanda asked. “Is that the potion that made Rachael… grow?” </p>
+<p>“Yes, it is, but…” Chad started. </p>
+<p>“You have to give it to me, Chad.” Her tone made that outcome a statement of fact. 
+“Being small sucks so much! I’ve been picked on and bullied and I have always, 
+, 
+always
+​
+always
+ wanted to be tall and beautiful. Please, Chad, please…” Amanda said in a rush. 
+​</p>
+<p>Chad stood there, stunned by Amanda’s passionate plea. “Well, Amanda—” </p>
+<p>“You don’t know how I’ve felt! Watching everyone grow taller and curvier while Rachael, 
+Caley, and I are all stuck as little girls. That bitch Veronica calls us ‘Team Pygmy’. 
+People laugh, Chad. They 
+true!” </p>
+<p>“Caley and I, we’ve given up. We’ve given up on homecoming, on prom, on dating, on 
+anyone wanting us. When we saw what you did for Rachael, you gave us something 
+that we haven’t had in ages… Hope!” </p>
+<p>“Homecoming is coming up in a couple of weeks. I want to go with someone. I want to 
+dress up. I want to be pretty. To be 
+means to us. To me.” Amanda implored. </p>
+<p>And then Rachael walked in. </p>
+<p>“Rachael!” Amanda exclaimed her voice nearly a squeak, “We were just asking Chad…” </p>
+<p>“If you could take 
+melted into a grin. “I know. I kind of suggested it.” </p>
+<p>“Rachael,” Amanda began again. “We aren’t trying to take it from you…” she paused. 
+“Wait… what?” </p>
+<p>“I suggested it,” Rachael said. “I want you guys to have what I’m getting: the chance to 
+finish high school on my own terms. No more ‘Team Pygmy’. For any of us....” </p>
+<p>Rachael walked over to her brother. “Chad, I love you so much for this opportunity. I 
+want you to make us the hottest girls in the school. I want to experience life at the top </p>
+<p>potion.” Rachael cut her off, looking stern. Then her stony face 
+My
+​</p>
+<p>. Please, Chad. Now you know what this 
+desired
+​</p>
+<p>​
+​
+​
+​
+me </p>
+<p>were 
+they
+​</p>
+<p>like Veronica and Lexi and the other cheerleaders. I want them to wish 
+like I’ve wished I was one of them all this time. I don’t want to put them down. I just want 
+to turn the tables and prove I am a better person than that.” </p>
+<p>Rachael looked over at Amanda. “You know… Amanda thinks you’re cute. She admires 
+your intellect and your good heart.” Then she conspiratorially mock-whispered, “And I 
+think she’s into your red hair.” </p>
+<p>Amanda blushed, taking exaggerated interest in a section of bare, ivory wall in an effort 
+to avoid Chad’s eyes.  </p>
+<p>Rachael continued, “She would be beyond grateful if you did this for her.” </p>
+<p>“Alright already! I can split this new batch three ways. I’ve been improving the formula, 
+so that should be plenty to start at least a small reaction. We know it works for you, but 
+it could make them very sick. So we’ll see what happens... Based on the results I’ll 
+decide if it’s safe for them to have a full dose. </p>
+<p>They all nodded in agreement. It was hard to argue with his logic. With that, Chad 
+removed the stopper from the flask and poured a third of the fluid into a cup, handing it 
+to his sister. He poured Caley’s dose and finally, Amanda’s. </p>
+<p>The trio raised their paper cups in a toast. Caley blurted out “Fuck ‘Team Pygmy!’” and 
+then they all drank. </p>
+<p>Amanda still couldn’t meet Chad’s eyes. As he tried to think of something encouraging 
+to say to her, he noticed Rachael starting to transform again. </p>
+<p>“This feels different than last time.” Rachael clutched her stomach and flopped onto 
+Chad’s bed. “It’s more intense… ughh.” </p>
+<p>As they watched, Rachael began to add sexy, toned muscle to her frame. Her shoulders 
+and arms toned up, not to where they were bulky but shapely and defined. As she 
+sprawled on his bed, Chad caught glimpses of her tightening abs becoming slightly 
+visible under her smooth, flawless skin. Her legs added more inches packed with 
+shapely muscle. He estimated she’d gained about three inches, up from her previous 
+results. She’d be so pleased she was finally taller than him. He was suddenly glad he’d 
+only given each of them a third of a full dose. The revised formula was 
+Rachael’s squirming began to slow, Chad could see her breasts standing high on the </p>
+<p>. As 
+strong
+​</p>
+<p>​
+​
+​
+walls of her ribcage, lifted by the foundation of her thickening pecs. She’d gained 
+another cup size too. </p>
+<p>Caley gasped. She was busy looking at the mirror, struck by the clearer complexion and 
+slightly prettier face looking back at her. Even her hair had become a glossier, a more 
+complete shade of midnight-black. Chad didn’t think her body seemed all that different 
+though. If she had grown, it was less than an inch. As he shifted to better examine her 
+figure under her unflattering clothes, he heard a thud. </p>
+<p>Amanda had collapsed to the ground behind his bed. He could only see her face from 
+this angle, but it was changing quickly. Very quickly. Her cheekbones rose and became 
+more pronounced, her eyes enlarging and taking on a sexy slant. Her eyelashes grew 
+longer and bolder. Her lips inflated to a delicious pout, turning a natural coral pink. Her 
+hair went from dishwater blond to a shining, lustrous mane of platinum silk. </p>
+<p>Chad stared in awe while Amanda’s face resculpted itself from cute… to pretty… to 
+beautiful… to gorgeous… to breathtaking. She was responding to the serum 
+dramatically better than his sister ever had. He wondered what variables had driven her 
+explosive transformation and performed so poorly in Caley’s case. </p>
+<p>As her eyes fluttered open, she climbed back to her feet and stepped away from the 
+bed. </p>
+<p>That’s when they all realized she was considerably taller, towering almost half a foot 
+over Rachael’s new height of 5’6”. Her tent-like hoodie now only barely covered her 
+waist and the chest looked really tight. As his gaze fell to her long legs, he saw her 
+formerly loose-fitting jeans had split like banana peels, hanging in ragged strips from a 
+sequin belt still slung around her slender waist. Sexy, toned hips that strained her bikini 
+underwear to the limit led his eyes to trace her sinuous thighs. As his eyes continued 
+their descent, he took in her sculpted calves, tapering to thin ankles, and dainty feet that 
+still fit in her sneakers. </p>
+<p>Gulping, Chad watched her mouth-wateringly leggy form cross his whole room in only 
+three strides, the swaying of her hips making her torn pants swirl like a belly dancer 
+outfit. Annoyed by them tangling around her legs, Amanda snapped her belt with a 
+single tug from one hooked finger, dropping the torn strips of her ‘skirt’ to the floor. She 
+pulled her hoodie over her head in front of his mirrored closet doors. The back of her 
+bra had split and the front draped over two heavy, rounded breasts, the shallow cups 
+comically stretched over her aggressively perky areolas and jutting nipples—features </p>
+<p>. He pried his eyes away from their bounty to savor the slim, 
+all of them
+​</p>
+<p>that were now bigger than her entire breasts had been, perched atop voluptuous 
+mounds that probably surpassed the volume of all of their school’s cheerleaders put 
+together. Really, 
+sexy muscle that defined her back, shoulders, and arms, noting the powerful, carved 
+abs that cobbled her stomach. His breath caught as Amanda lifted one fist and 
+stretched towards the ceiling, raising her opposite knee in a Supergirl pose. For a 
+moment he was certain she was about to launch into the clouds, leaving the hole in his 
+ceiling as the only proof that such a captivating blonde beauty could exist at all. As if 
+sharing his fantasy, she went up on tiptoe and gave a little hop, brushing her knuckles 
+against the ceiling. </p>
+<p>Yeah… Amanda wasn’t just the hottest girl in school now; she was easily the most 
+beautiful girl he had ever seen. </p>
+<p>Amanda’s rational mind wanted to reject the R-rated superhero silhouette in the mirror. 
+It couldn’t be real, much less her! Still, she lifted her arms in a double bicep flex and the 
+sleek fitness beauty in the mirror copied her, sending a fresh rush of blood to Chad’s 
+groin. Tears welled up in Amanda’s eyes as she spied Chad’s waist-level ‘vote of 
+approval’ reflected in the mirror—seeing him respond to her new body gave it a more 
+solid, visceral sort of reality. She sprang over to him in a single bound of her long, 
+slender legs and slipped her hands under his arms... </p>
+<p>He squeaked like a mouse when she picked him up and pressed her lips to his. Then 
+she held him at arm’s length inches above the carpet like he weighed no more than her 
+backpack, basking in his awed expression before passionately embracing him and 
+kissing him hungrily again. </p>
+<p>Chad was beyond stunned. She kissed him! Little Amanda had become a super babe 
+and then kissed him! And not just a little peck on the cheek. Amanda’s tongue swirled 
+around his until he had to pull away just to breathe. </p>
+<p>“Wow! Amanda… wha?” Chad stammered, his eyes searching hers. Was she just 
+teasing him or did she really like him? </p>
+<p>“Thank you, Chad! Thank you so much.” Amanda said huskily. “I’m hotter than 
+Supergirl, now! This is beyond anything I ever imagined.” </p>
+<p>‘
+’ he thought. Well, that would explain the pose. He grinned at 
+ a Supergirl fan.
+is
+She 
+​
+​
+​
+her. “I thought you were gonna fly away there for a second.” </p>
+<p>​
+​
+... 
+Nooo
+​</p>
+<p>wanted to.” he sighed, not intending anyone to hear him. 
+really
+​</p>
+<p>She blushed. “Could I?! Fly, I mean? That would be the 
+.” Then she gave him a 
+best
+​
+goofy smile, trying to make light of how much the idea appealed to her. But her eyes 
+were filled with expectant longing. </p>
+<p>He paused. Could his ‘potion’ unlock that kind of evolutionary potential for her? No. No 
+way. Not in less than a million years. Except his sister had displayed all kinds of 
+unexpected ‘side effects’ as she grew. ...So, maybe? </p>
+<p>“Only if you </p>
+<p>Amanda’s face lit up with a dazzling smile, thinking he’d meant that almost silent 
+admission to be their little secret. A sexy, ‘Super’ secret that sent a sensual chill through 
+her. The tightening of her nipples brushed aside the little cups of her bra, giving Chad 
+an ideal view of them: thick as the tips of his thumbs, over an inch long, the same 
+cotton-candy pink as her succulent lips. </p>
+<p>It was Amanda’s turn to squeak like a mouse, crossing her arms over her chest in 
+complete embarrassment. In one sinuous twist she slipped out of the somewhat less 
+than useless remnants of her A-cup bra and turned her back to Chad as she slipped her 
+hoodie back on. </p>
+<p>“Ug, how do porn stars manage these things?” Amanda wondered, finally getting her 
+top back in place. </p>
+<p>“Theirs aren’t as big.” Caley snarked, looking down at her own flat chest, same as it 
+ever was. </p>
+<p>Amanda decided since her pants were a total write-off with her new figure she would 
+help herself to Chad’s dresser, searching for a pair of sweats. Finding a clean pair, she 
+looked to Chad expectantly. </p>
+<p>Chad, however, was lost in thought again, too distracted to catch her nonverbal 
+question. His mind picked away at the problem, trying to explain everything they had 
+just witnessed. Why had Amanda responded so well to her evolutionary boost? Why 
+had Caley not? Amanda was so passionate about wanting to become more beautiful… 
+It seemed like a factor almost impossible to quantify. Caley hadn’t said much, so maybe 
+there </p>
+<p>the kernel of a working hypothesis there. 
+was
+​</p>
+<p>​
+​
+​
+​
+He had to find out, already considering adjustments to the formula. If it were true that 
+desire drove results... Then Amanda’s fantasizing about becoming better than Supergirl 
+frightened him just a little bit. She’d grown so much with just a partial dose. Was it 
+because each of them had gained the same small percentage of what they hoped would 
+happen? </p>
+<p>“Chad? Could I borrow these?” Amanda finally said, noticing Chad’s distant look and 
+dangling the pants in front of it to draw his attention. She was still used to being ignored. </p>
+<p>Chad startled. “Wha… oh… yes, of course.” </p>
+<p>Pulling his sweatpants on stretched the fabric to the limit over her fertile hips and the 
+Chad-sized legs only reached her mid-calf. </p>
+<p>Rachael stood next to her brother watching Amanda as she donned his sweatpants. 
+“Chad, how is Amanda so beautiful? I mean, that was my third time. She just blew past 
+me with one dose!” </p>
+<p>“I don’t know,” Chad responded. “I’m wondering that myself. It must have something to 
+do with her DNA… or maybe her hormone levels at the moment of ingestion…” he 
+trailed off, still rejecting the notion that after watching Rachael’s progress for weeks, she 
+might just have </p>
+<p>“I guess I’ll need another shot to catch up,” Rachael said, eyes still glued to Amanda’s 
+sleek, sexy body. She went on, voice pitched so only he could hear her,  “...Or maybe 
+two doses. God, she’s hot. You are so getting laid, brother mine.” </p>
+<p>Across the room, Amanda winked at him like she’d heard every whispered word, nipples 
+tenting her hoodie again. This time, instead of blushing, she did a little shimmy for him, 
+making her chest jiggle. </p>
+<p>Rachael laughed at her brother’s wide-eyes astonishment. Had he not realized 
+Amanda’s gratitude might get... 
+bombshell was way out of his league now. Hell, she was out of everyone’s league. Or 
+she would be, once she had some proper clothes to show off that incredible body of 
+hers. </p>
+<p>“While Chad works on the next potion, let’s go shopping!” Rachael declared. “I can’t wait 
+to see how some new clothes will look on this new, even sexier body!!” </p>
+<p>? Well maybe not so surprising: the 5’11 
+intimate
+​</p>
+<p>. 
+wanted it more
+​</p>
+<p>​
+​
+ 
+Amanda glanced down at her overstuffed hoodie and too small sweatpants and nodded 
+in agreement. “Absolutely! Let’s go!” </p>
+<p>Caley stood quietly in the corner all but forgotten, her expression alternating between 
+dejectedness and envy as she looked at Rachael and Amanda’s tall, svelte bodies. “I 
+think I’ll pass. I didn’t change enough to need new clothes.” </p>
+<p>Amanda’s expression quickly shifted to concern. “Oh! I’m so sorry, Caley! I was so 
+surprised by what happened to me… I didn’t even think about what you must be 
+feeling…” </p>
+<p>Rachael went to her side and hugged Caley. “Sorry, Cay. You do look prettier. We just 
+need to get you more of the potion. So what if it takes a couple doses? You’ll be 
+gorgeous! You’ll see.” </p>
+<p>Caley broke the hug, eyes welling with tears. Not saying anything, she left Chad’s room. </p>
+<p>After a moment of looking at the door after Caley left, Rachael turned to Amanda. “I feel 
+bad, but she is prettier. We’ll make sure she’s the next one to get a dose. Maybe two. 
+You’ll get right on that, won’t you, Chad?” </p>
+<p>“Yeah,” Chad said, still lost in thought. Could it really be a simple as the subject’s desire 
+to change? </p>
+<p>With that, Rachael and Amanda headed out, their excitement and giggles starting to 
+build as they thought about all the outfits that they would have to try out on their new, 
+beautiful bodies. </p>
+<p>Still moping across the street, Caley watched them leave then slunk away in the other 
+direction, tears streaming down her cheeks. On one hand, she was happy to be a bit 
+prettier, but on the other hand, after seeing how utterly gorgeous Amanda and Rachael 
+were, she felt disappointed, envious, and jealous. ‘
+’ 
+prettier than me? Even my friends are leaving me behind.
+​</p>
+<p>Caley searched her feelings, then decided that this was the real core of her sadness. 
+She felt lonely, helpless, and left behind. </p>
+<p>When she got home, she ran to her room and shut the door. She needed to think. </p>
+<p>Why do they get to be so much </p>
+<p>​
+ 
+She thought about what her favorite teacher, Mr. Matthews, would tell her: Action 
+defeats helplessness, so take action! </p>
+<p>So how could she take action? What had Chad said? Something about DNA and 
+something about hormones. Well, she couldn’t do anything about her DNA, but she 
+could do something about hormones. She grabbed her phone and googled “female 
+hormones.” </p>
+<p>As the web sites came up, she clicked the first article. Estrogen is the primary female 
+hormone, she read in the very first sentence. Pulling up her search bar again, she typed 
+in “estrogen supplements.” It looked like she could get these at the drug store over the 
+counter. Great! Action defeats helplessness… thank you, Mr. Matthews! </p>
+<p>Excited, she wiped away her tears, hopped onto her bike and rode to the drug store. </p>
+<p>Searching the shelves, she found what she was looking for and went to the checkout. 
+The man at the checkout looked surprised and said “Usually these are for menopausal 
+women, but you’re just a kid! Are these for your mom?” </p>
+<p>“First, I’m eighteen. I just look young. And it’s none of your business what they are for!” 
+Caley said feistily. </p>
+<p>“Okay, okay!” said the man, thinking that maybe it was to help her with her emotional 
+control! </p>
+<p>Dropping the bottle of pills into her backpack, she hopped back onto her bike and rode 
+back to Rachael’s house. </p>
+<p>Chad greeted her at the door, “Rachael and Amanda went to the mall. They’re probably 
+still there if you want to hook up with them.” </p>
+<p>“Actually, I was hoping to see you. Are you working on another batch of the potion?” </p>
+<p>“Just finishing one up for you, actually,” Chad said. He’d wanted to run more tests on 
+the new formula but Racheal was right: Caley needed more ASAP. Still, the results 
+shouldn’t have been so erratic. </p>
+<p>“Perfect! I want to try an experiment…” Caley said. </p>
+<p>“What did you have in mind?” Chad asked, a little nervous at her newfound enthusiasm. </p>
+<p>“You said that it might have worked like that on Amanda because of her DNA, right?” 
+Caley asked. </p>
+<p>“Right…” Chad agreed, pleased she’d been paying attention to the science. </p>
+<p>“But you also said something about hormones…” Caley said, looking hopefully into 
+Chad’s eyes. </p>
+<p>“Yes, that could also be a factor. The formula acts as an evolutionary amplifier so it 
+might be responsive to hormonal states.” </p>
+<p>“Well, I went to the drug store and got these,” Caley said, pulling the bottle of pills from 
+her backpack. “It’s estrogen. I was thinking that maybe if I take some of these before my 
+next dose, it might work better on me.” </p>
+<p>Chad thought for a moment. </p>
+<p>“That… might… work,” he said slowly, rubbing his chin. He was starting to think the 
+placebo effect might be more important than the chemistry. It should at least help her to 
+believe
+ she was really going to improve this time. 
+​</p>
+<p>With that, Chad led Caley back to his room, where a new batch of the blue potion 
+waited in the crystal flask on his desk. </p>
+<p>Caley looked at the flask eagerly, then pulled out her bottle of estrogen. She looked at 
+the back. The instructions said to take two pills. “It says to take two pills,” she told Chad. 
+“Maybe I’ll take more, just to make sure…” </p>
+<p>“Caley, let’s just stick with the normal dose for now,” Chad said. “This is already 
+introducing an unknown variable into the equation. Let’s not do anything even crazier 
+than what we’re already doing here.” </p>
+<p>Looking up at Chad, she said, “Alright, fine. I’ll be right back.” </p>
+<p>Caley went downstairs, poured a glass of water, and downed two pills. Pausing, her lips 
+formed a sly smile. She dumped another handful of pills into her hand and downed them 
+two at a time. This was going to work. She knew it this time, absolutely KNEW IT. </p>
+<p>Walking back up the stairs, Caley practically trembled in anticipation. </p>
+<p>As Chad reached for the flask to pour her a glass, Caley snatched the flask first and 
+downed the whole thing. She wiped a few stray drops of liquid from her chin with the 
+back of her hand as her lips curled into a wide, Cheshire smile. </p>
+<p>As Caley stood there, smiling, she began to feel strange. Her chest began to tingle. 
+Then her hips. Then her arms, her legs, her face. Then a feeling of ecstasy erupted 
+throughout her body. Falling backward onto the bed, she thrashed helplessly as orgasm 
+after orgasm rocked her body. </p>
+<p>Chad looked on in amazement as Caley’s legs stretched longer and longer, packing on 
+feminine muscle. Her breasts strained her tight sweater, tears formed along each side. 
+Caley’s swelling hips split the seams of her jeans, the tears traveling further and further 
+down her legs as she grew. Her bra was biting into her torso now. She thought about 
+trying to unhook it, then decided ‘
+arms and spread her lats with a muscular shrug, bursting out of the pitiful little girl’s bra 
+with a sharp elastic snap, startling Chad like a deer hearing a gunshot. </p>
+<p>Her eyes had been the most affected the first time, but now everything on her face was 
+in play. Caley’s nose shifted, cheekbones becoming more prominent, lips swelling, eyes 
+enlarging. Her face and body were already breathtaking, easily as stunning as 
+Amanda’s, but the changes were not slowing down yet. </p>
+<p>As Caley bucked into the most intense orgasm yet, Chad’s jaw dropped wide open. 
+Caley’s beauty was beyond anything he could have imagined. Thick, lustrous raven hair 
+framed her impossibly perfect face. Huge, firm breasts swelled from under the remnants 
+of her sweater, now more of a crop top. Her abs were beyond defined, carved into a 
+perfect 8-pack. Her arms swelled ever-so-slightly giving her a dancer’s lean physique. 
+Her rounded, muscular hips and butt sent Chad’s desire into overdrive, as he imagined 
+plunging himself into them. Her legs were perfection itself, long, slender, and sculpted. </p>
+<p>Caley purred as she came down from the first multiple-orgasm experience she’d ever 
+had. Her eyes fluttered open, flashing ridiculously long eyelashes, as her large sapphire 
+eyes came to rest on Chad’s. </p>
+<p>’. She raised her 
+fuck it, I’m not wearing this again!
+​</p>
+<p>​
+ 
+Caley’s sensual, blood-red lips opened. “I think it worked.” Her voice was seductive and 
+husky, stoking Chad’s rapidly rising desire. </p>
+<p>Chad was completely spellbound, his attention rapt to every detail of her sublime face 
+and voluptuous body. </p>
+<p>Caley slowly stretched, her lithe, graceful movements causing Chad’s eyes to pop out of 
+his head. </p>
+<p>Rising slowly and deliberately, every movement made in a graceful elegance like that of 
+a ballerina, Caley pressed her body to Chad’s in the most sensual embrace of his life. 
+As her full breasts and supple hips pressed into his body, Chad couldn’t contain himself 
+anymore, his hips bucking as a powerful involuntary orgasm claimed him. </p>
+<p>Caley’s luscious lips formed a wide smile. “I take it, you like the new me,” she 
+whispered, voice dripping sex. </p>
+<p>Chad nodded spastically, biting his lower lip, unable to speak. </p>
+<p>Caley pulled away, not bothering to find anything to cover her exposed body beneath 
+the torn, cropped sweater aside from her stretched, threadbare knickers, and walked 
+out the door. </p>
+<p>Sauntering down the sidewalk half-clothed, she thought about what she wanted to do 
+next. Her heart was exploding with joy–she had made Chad cum with a friendly hug. 
+She hadn’t even looked at herself yet, but she somehow knew that she was beyond 
+sexy. In fact, she could sense the desire of the men that were driving by on the street, 
+jaws hanging open. </p>
+<p>Caley felt a sense of confidence that she had never had. She just knew that she could 
+have any man that she wanted. I can’t wait to see what I look like, but I also kind of like 
+waiting. 
+It’s like trying to decide whether to open your presents on Christmas Eve or on 
+Christmas morning.  </p>
+<p>As she strode confidently, long legs covering the distance quickly, she noticed a 
+beachwear store ahead. Stepping into the store, Caley looked around. The cashier, was 
+the queen bitch herself: Veronica from her high school. The normally stuck-up 
+cheerleader’s eyes widened in shock. The most beautiful woman that she had ever </p>
+<p>​
+I am so frigging beautiful that it’s hard for even me to look away. </p>
+<p>seen had just strolled in. Her body put the most gorgeous models and actresses to 
+absolute shame! What was she doing here? …And why was she wearing a torn 
+crop-sweater and panties? </p>
+<p>Caley sauntered to the bikinis, grabbed a DD-cup top and bottom, along with a sarong 
+and a mesh crop top. On her way to the changing room, she snagged a pair of men’s 
+size flip-flops from a rack as well. Slipping the bottoms over her lithe hips and pushing 
+her large breasts into the cups of the top, she then tied on the sarong and slid the top 
+over her full chest and turned to the mirror. </p>
+<p>Oh. My. God. Caley turned from side to side, admiring a body that would have made 
+Helen of Troy envious. 
+ she 
+I can’t wait to show Rachael and Amanda now; they won’t know what hit them!
+​
+thought. </p>
+<p>Paying the shocked cheerleader/cashier, Caley ran her hands along her athletic, sexy 
+frame, remembering with the purest joy how she looked in her revealing beachwear. 
+She was so happy and so grateful at how the day was turning out. </p>
+<p>Veronica, on the other hand, had no idea she’d dodged a bullet. In her distraction, Caley 
+had barely recognized her campus nemesis. If she had realized the easy target fate had 
+served up, she would have crushed Veronica’s ego like a bug, and done it with relish. 
+Instead, she was thinking about how she really needed to thank Chad properly… and 
+Mr. Matthews. </p>
+<p>It was Mr. Matthews who had given her the advice that took her from despair to 
+perfection. He had taught her how to turn from helplessness to action. She wanted to 
+thank him for it… Mr. Matthews was an attractive, single, thirty-year-old guy too. A sly 
+smile formed on her puffy lips. 
+I’m sure I can think of something to give him that he’d 
+really like, now. </p>
+<p>Pulling out her phone, Caley looked up Mr. Matthews’s address online. It wasn’t even 
+very far from here! She took off at a brisk walk, her long, smooth, muscled legs good for 
+more than just looks. </p>
+<p>As she rang the doorbell, she bit her lower lip, bouncing slightly in excitement. She had 
+never had the body to be able to seduce anyone before, let alone one of her teachers. 
+But now, with her stratospheric level of beauty, she was game to try… and pretty sure 
+that she would succeed. </p>
+<p>​
+​
+ 
+Mr. Matthews opened the door and stood face-to-face with the most beautiful woman 
+alive. She had to be. Her thin dark eyebrows arched above large, sparkling blue eyes. 
+Her cheekbones were prominent, her nose small and perfect. Her full, naturally red lips 
+made him lick his own, unconsciously. </p>
+<p>A long, graceful neck led to full, ripe breasts that pressed her crop top to its limit. Her 
+bare shoulders and upper arms were the perfect balance of athletic muscle and 
+femininity. Her bare stomach was defined by smooth, chiseled abs. Her hips swelled out 
+in firm, supple perfection. Her sarong left her right leg bare, showing off its shapely, slim 
+flawlessness. </p>
+<p>As his gaze again rose to meet her mischievous eyes, she stepped forward and kissed 
+him deeply on the lips. His eyes widened in astonishment. </p>
+<p>“Hi, Mr. Matthews,” Caley spoke, breathily, releasing the kiss. “I hope that you don’t 
+mind. I’ve always wanted to do that.” </p>
+<p>He just gaped at her, his lips tingling like an electric shock. </p>
+<p>“Besides, I owe you that and a lot more,” she continued. “Since I wouldn’t have this…” 
+she motioned downward along her body. “Without you.” </p>
+<p>Mr. Mathews continued his fish out of water act, still processing that one 
+overwhelmingly erotic kiss. </p>
+<p>“I know that it might be a little difficult to recognize me, but I’m Caley.” </p>
+<p>That snapped him out of it. “Caley? How…?” </p>
+<p>“I was tired of being small and mousy and dull and… and… I wanted to be pretty! 
+Things went wrong, but then I remembered what you said about taking action when 
+you’re feeling helpless. And it worked! And I became beautiful. Even more beautiful than 
+my friends.” Caley blurted out in a torrent of childish enthusiasm and gratitude, losing 
+her seductively entrancing demeanor for the moment. </p>
+<p>“Are you all right?” Mr. Matthews asked, easing into teacher-mode now that he realized 
+he was dealing with a needy student, not his fantasy woman. </p>
+<p>“Of course I am. Don’t I look alright to you?” Caley protested, further deflating the spell 
+of enchantment woven by her fit, attractive body. </p>
+<p>“Caley, I am glad that you’re grateful and that you took my advice to heart.” Mr. 
+Matthews lectured, now in full teacher mode. “But you’re my student and kissing me 
+isn’t an acceptable way to express yourself.” </p>
+<p>“But Mr. Matthews, I want to do so much more than kiss you,” said Caley, her eyes 
+sparkling with desire. </p>
+<p>“Now, Caley. Let’s talk about this at school. It’s really not appropriate for you to be here 
+at my house.” </p>
+<p>“But I am eighteen! I can do what I want!” cried Caley, sensing Mr. Matthews slipping 
+away from her. The petulance broke her spell entirely. </p>
+<p>“Caley. I’m not sure what is going on or how you changed so much, but I can’t do this 
+with you. As beautiful as you are—and as much as I might be attracted to you—that’s… 
+not who I am. I’m sorry.” </p>
+<p>With that, he closed the door. </p>
+<p>Caley stood there, shocked, stunned, and hurt. Here she was, maybe the most beautiful 
+girl in the world. And she 
+down her face. </p>
+<p>Then, thinking again of Mr. Matthews’ words, she decided. Action would fix this. 
+Sadness slowly transformed to anger this time, a smouldering flame fueled by rejection.  </p>
+<p>She. Would. Have. What. She. Wanted. </p>
+<p>Caley composed herself and started walking, her beautiful features hardening. 
+to see Chad again. </p>
+<p>As she walked, her outrage at being rejected flared before bubbling down into a 
+steaming simmer in the pit of her stomach. She would get her revenge. She would grow 
+so beautiful, so unbelievably sexy that no red-blooded man could resist her. Hell, she 
+would grow so devastatingly gorgeous that no </p>
+<p>still
+ couldn’t have what she wanted. Tears began to stream 
+​
+ she thought. 
+It’s not fair,
+​</p>
+<p>It’s so not fair. </p>
+<p>could resist her. A sinister smile 
+woman
+​</p>
+<p>It’s time </p>
+<p>​
+​
+​
+​
+​
+accompanied the thought, as she imagined seducing even her enhanced friends. And 
+she had a plan for just how to do it. </p>
+<hr />
+<p>Fifteen minutes later, Chad was opening the door for her again, hardly able to breathe 
+in the presence of the incredible raven-haired beauty filling the doorway. </p>
+<p>“Chad… Chad. My incredibly handsome and devastatingly brilliant Chad,” Caley purred 
+in her sexiest, sultriest voice. “I want more potion and I want you. Inside. Me.” she 
+whispered into his ear while tracing a fingernail on his shirt, a dangerous glint in her 
+eye. </p>
+<p>“Uh…okay.” Chad stammered, not knowing what to say. He had just finished another 
+batch, but this was getting ridiculous. He was, however, a teenage boy. And teenage 
+boys were particularly susceptible to seduction by insanely hot girls. </p>
+<p>Caley had no trouble with Chad as she had with Mr. Matthews, taking his hand and 
+leading him back to his room. </p>
+<p>“So… I was thinking. Since hormone pills have an effect on the potion, maybe other 
+things that create hormones could help, too.” Caley turned her large eyes back to 
+Chad’s. </p>
+<p>Caley’s doe-eyed optical smolder made Chad’s member spring to attention. </p>
+<p>“Things like… making love.” She continued. </p>
+<p>“What do you think, Chad? Would you like to make love to the most beautiful girl that 
+you’ve ever seen while she becomes even sexier?” Caley’s eyes took a dark, sexy look 
+as she tilted her chin down slightly, hand snaking out to grasp the latest vial of serum. </p>
+<p>“Not to mention that I still have all those estrogen pills in my system…” she said, voice 
+dropping to a husky rasp. </p>
+<p>Chad gulped audibly, unable to speak. </p>
+<p>My God, she is sexy. </p>
+<p>goddess… 
+your
+​</p>
+<p>creation…” she promised. 
+your
+​</p>
+<p>Caley sauntered to Chad’s nightstand and set down the crystal bottle, strolling around 
+behind Chad’s frozen form, trailing a perfectly manicured nail along his shoulder to his 
+back. </p>
+<p>“I could become a goddess, ascending in your arms…” she whispered into his ear from 
+behind, emphasizing the word “goddess.” </p>
+<p>“I would be </p>
+<p>Chad came hard at the thought. </p>
+<p>Caley rubbed her firm hips against his, and his cock couldn’t get any harder, pushing 
+into her as she slid her body around his until they were face-to-face, bodies pressed 
+together. </p>
+<p>Caley pulled her crop top over her head, in a languidly sexy show. She made a 
+deliberate display out of reaching back to unclasp her bikini top, letting it fall to the floor 
+and revealing her mouth-watering breasts to him for the first time before pressing them 
+back to his chest. </p>
+<p>Next, she worked her long fingers purposefully to untie her sarong. Her hands moving to 
+each side of her hips, she pushed the fabric of her bikini bottoms, one side at a time, 
+one inch at a time, until they finished their strained descent over her perfect posterior 
+and fell to the floor. </p>
+<p>Caley raised her hand, palm to Chad’s chest and gave a slight push, unbalancing him 
+and causing him to fall on his back to the bed. She gave a Cheshire smile as she 
+watched him land, eyes wide and paralyzed in a heady, emotional cocktail of desire, 
+fear, and anticipation. </p>
+<p>Caley straddled Chad, her long legs folding to each side of his skinny thighs. Her hips 
+brought her sex over his member, and they both gasped when her lower lips parted 
+around his trembling tip. She slowly, methodically, lowered herself onto him until she 
+completely engulfed his length in the hot darkness of her pelvis. As she began to move 
+to a rising rhythm, heartbeat quickening, she reached over for the flask and drank it all 
+down. A full dose this time, triple what she’d taken before. She pulled Chad’s hands up 
+to cup her magnificent breasts. “Time to become a fucking 
+setting new goals for herself and for the reaction about to begin. </p>
+<p>.” she moaned, 
+Goddess
+​</p>
+<p>​
+​
+​
+​
+A moment later, it started. Chad could feel her body tremble. With the massive amount 
+of hormones and potion flooding Caley’s body, he had no idea what to expect from the 
+evolutionary episode about to unfold inside her body, except that he was pretty sure that 
+it was going to be spectacular. This was already the greatest day of his life, as pleasure 
+coursed through him. </p>
+<p>“Hhnnnn…” cried Caley, her body tensing from the pain/pleasure. He felt so good inside 
+her! He wasn’t her first lay, but she’d never been so well equipped to appreciate a 
+clumsy but enthusiastic teen-fuck before. </p>
+<p>Then she screamed. It was overwhelming… “The sensation… My God… No, 
+Goddess…” Her eyes closed. </p>
+<p>Orgasms started to rock her, one after the other. </p>
+<p>Her back arched. </p>
+<p>She moaned. </p>
+<p>She cried out. </p>
+<p>Her eyes fluttered back open, finding Chad’s. </p>
+<p>“It’s happening. A Goddess, Chad… it’s happening…” </p>
+<p>Chad watched as her face changed for the third time that day. It was angelic before. 
+Now… now, it was beyond human. It was transcendent. He couldn’t imagine more 
+beauty. He couldn’t imagine her level of beauty even as he watched it form before his 
+very eyes. His heart leaped as her insanely long, bold eyelashes fluttered open to 
+reveal painfully gorgeous sapphire eyes. Her eyes gleamed with desire, with passion, 
+with lust. </p>
+<p>“Caley. Caley. Caley.” He chanted in time with their moving bodies. </p>
+<p>Her chiseled abs clenched as her latest orgasm hit her, showing every muscle, the hard 
+curve of her obliques, her Adonis belt clearly defined. Her large, firm breasts swelled, 
+pushing outward as her back arched. The curvaceous swells sending spasms of 
+pleasure to his very core, knowing he was the only one who would ever feel them at the 
+moment Caley became divine. </p>
+<p>she could tear me </p>
+<p>’ he thought ‘
+She’s too much for me,
+​</p>
+<p>“Caley... Caley... Caley...” Chad grunted, losing himself in her. </p>
+<p>Caley ripped the arms off his desk chair with an errant shrug. Her hips gripped his 
+member with unbelievable intensity, as Chad’s vision began to dim, blackness closing in 
+from the edges of his vision. ‘
+” 
+apart like tissue paper!
+​</p>
+<p>“Oh Caley, No… Caley... no. Caley!” pain and pleasure blurred together as her 
+ legs grew longer and even more sensual, her 
+superhuman strength surged again. Her
+thighs packed with dense, feminine muscle, the striations appearing and disappearing 
+as she came over and over. Her whole body tensed with climax, answered by a loud 
+wooden crunch. The orgasmic clenching of her delicious toes had torn through his 
+carpet and then pierced the heavy boards beneath. The matching compression of 
+Chad’s dick took him out like a sleeper hold. He faded out in the middle of screaming 
+out Caley’s name for the twentieth time, begging her to stop. </p>
+<p>Chad’s final strangled cry brought Caley back from the pain/pleasure that had 
+consumed her utterly. Sweat sheened her body and her damp hair hung to her 
+shoulders in wild streamers. Animal lust permeated her being. She was a wild, 
+dark-haired beast.  </p>
+<p>The Goddess of Lust. </p>
+<p>The Goddess of Fuck. </p>
+<p>Looking down at Chad’s limp form, she cocked her head to the side, puzzled that he 
+was no longer worshiping her. Then she slowly and deliberately turned to look in his 
+mirrored closet door. It was Christmas day for her; no need to wait before opening 
+present! </p>
+<p>It looked like her present was ‘Perfection’. Beyond perfection, really. Every part of her 
+was superhumanly beautiful. She had the perfect hourglass shape. The perfect toned 
+physique. Perfect milky skin. Perfect raven hair. Perfect legs. Perfect ass. Perfect 
+breasts. </p>
+<p>Perfect. </p>
+<p>this </p>
+<p>​
+​
+​
+​
+Rising from Chad was a display of superhuman grace. Her every movement a 
+masterpiece of carnal art. She trailed a long fingernail along Chad’s leg as she silently 
+thanked him again. She hardly noticed his weight at all as she tossed his exhausted 
+form onto his bed. She felt up for another go already but he’d earned a little rest. </p>
+<p>Sweeping up her garments from the floor, the new goddess tried to clothe herself once 
+more. She struggled into the bikini top, it’s DD-cups insufficient to the task of holding her 
+breasts, making it look like a too-small push-up bra. She discarded the crop top. No way 
+that was going to fit – it had been tight before! </p>
+<p>She inched the bottoms up her legs to her hips, threads straining to nearly breaking 
+before she managed to pull them up to her waist. </p>
+<p>She walked over the mirror again, admiring herself again, a darkly satisfied expression 
+on her hauntingly flawless face. No man can resist me now. she thought, knowing it with 
+certainty. I wonder about women… </p>
+<p>Destiny seemed eager to settle the question: at that exact moment, Chad’s door swung 
+open, and Rachael and Amanda walked in, hands full of shopping bags. They both 
+stopped suddenly, bags falling to the floor as complete and utter shock graced their 
+beautiful features. </p>
+<p>“You like?” Her honied sensuality washed over her friends like an ocean wave, sending 
+shudders of desire through them. </p>
+<p>“Cay… Caley…? Is that you?” rasped Rachael timidly. </p>
+<p>Rachael’s eyes and Amanda’s eyes were glued to the vision of femininity before them, 
+unable to look away. </p>
+<p>Amanda bit her lower lip. “My God, Caley… what have you done?” she said, lust evident 
+on her own rather less alluring face. </p>
+<p>“Not ‘God’, ‘God
+displayed in a room-brightening smile before peering at their shopping bags. “But 
+enough about me? What’d you get?” </p>
+<p>’. As in… what I’ve become.” Caley replied, perfect, brilliant teeth 
+dess
+​</p>
+<p>​
+Neither Rachael nor Amanda could think. Thoughts of kissing her blood-red lips 
+completely consumed Rachael’s mind. Visions of licking Caley’s pristine skin filled 
+Amanda’s. Caley’s question went unanswered. </p>
+<p>Caley’s smile widened as she saw how her angelic visage ensorcelled her friends. She 
+took a step toward them, pheromones rolling off her unbelievable body in waves. </p>
+<p>A drop of drool slipped from Rachael’s full lips. Amanda stopped herself from falling 
+over, but only barely. </p>
+<p>Caley took another deliberate step toward them, bathing them in her luminous 
+elegance, knowing one step closer would crush the last of their resistance. </p>
+<p>Amanda finally moved, rushing toward Caley, hormones raging inside her as she 
+wrapped her arms around Caley, trying to press as much of herself as she could into 
+Caley’s stunning body. Amanda’s lips reached up to Caley’s, and a moan escaped her 
+lips as her muscles clenched in ecstasy. “Hmmmm…” </p>
+<p>Amanda’s desire spiked as she pressed herself against Caley’s perfection. She kissed 
+Caley hungrily, not seeing the taller girl’s cruelly amused expression. She wanted Caley 
+sooo much. She wanted to bask in her ultimate beauty. Be part of it. </p>
+<p>Rachael followed Amanda’s lead pressing into Caley’s other side, a splash of her sexual 
+juices wetting her inner thighs when her lips found Caley’s bare nipple. </p>
+<p>Seeing her, Amanda quickly took Caley’s other nipple in her mouth, the two of them 
+sucking and flicking Caley’s ruby tips with wanton abandon. Caley arched her back and 
+crooned, the quick, erratic rasping of their tongues driving her to the brink of orgasm. 
+Her new sensitivity was unreal! Their instinctive worship of her body was so good she 
+could almost forgive them. Almost. </p>
+<p>They still needed to learn how much she had outgrown them in every way.  </p>
+<p>Caley stroked their hair, Amanda’s red bob with the long, delicate fingers of her left 
+hand, and Rachael’s platinum tresses with those of her right, pressing their faces into 
+her incomparable breasts. Multiple orgasms coursed through them with each caress 
+until they screamed themselves hoarse. Caley kept going, wringing them out completely 
+like old wet towels until they crumpled to the same carpet she’d ruined while fucking 
+Chad. That seemed a suitable punishment for their having abandoned her. Their </p>
+<p>tormentor piled them on the bed next to him, the lot of them senseless and shuddering 
+from their exposure to her angelic body. </p>
+<p>I should probably cover up a bit. Can’t have everyone collapsing as I walk by, now can 
+‘
+I?’
+ Caley mused, delighted at the effect she had on her sexy friends. 
+​</p>
+<p>’ she thought. Showing so much skin is not 
+This face makes me the ultimate seductress.
+‘
+​
+even fair to them. I need to figure out how to dial back the pheromones too. She poked 
+through the bags of clothes that Amanda and Rachael had brought from the mall, 
+pulling out a few things that looked stretchy enough to try on her ultra-bombshell body. </p>
+<p>‘
+’ she thought, her 
+Let’s see Mr. Oh-so-Prim-and-Proper-Matthews resist me now…
+​
+ravishing lips taking on a sexy pout. </p>
+<p>Caley settled on a slinky, red dress, barely able to pull it on over the firm swells of her 
+superhumanly-proportioned frame. “Pygmy? Phhh. More like rabbit. Jessica Rabbit.” </p>
+<p>As Caley rang Mr. Matthews’ doorbell, she felt a sudden pang of fear. What if he still 
+didn’t like her? No, she thought. She should be beyond this type of insecurity now. I 
+mean… just look at her! Supermodels would cry in despair looking at her… </p>
+<p>She put on her best coquettish expression as the door began to open, and Mr. 
+Matthews’ pants bulged the moment that sex goddess Caley came into view. </p>
+<p>“Hello, Mr. Matthews.” she breathed, leveling her best come-hither look at him as she 
+cocked an uber-luscious hip. “Got time for me now?” </p>
+<p>He came. Hard. </p>
+<p>Caley slinked toward him, snapping the security chain on his door without even noticing, 
+pressing her perfectly formed breasts into his hard chest, eliciting a whimper from a 
+still-quivering Mr. Matthews.”I’m not bad, I’m just drawn that way…” she quoted Jessica 
+Rabbit with a musical laugh. </p>
+<p>He came again. </p>
+<p>Caley cocked her head slightly, extravagantly thick black hair cascading over her 
+shoulder. Her luxuriant eyelashes closed as she moved her plump, ruby lips toward his 
+mouth. She found it, sucking his lower lip between her soft, pillowy lips. </p>
+<p>​
+​
+​
+Good </p>
+<p>He can’t resist me anymore, he’s not </p>
+<p>’ she thought. ‘
+Oh, this is so easy,
+​</p>
+<p>’ 
+How can anyone be this impossibly sexy?
+​</p>
+<p>He came again. ‘
+even trying... I love it!
+’ 
+​</p>
+<p>Caley slowly pulled her head back, huge, radiant blue eyes opening gradually. Watching 
+him crumble before her beauty made her pupils dilate and her nipples tighten into 
+arrowheads digging into her dress. Toying with him was heaven but she couldn’t deny 
+herself much longer. </p>
+<p>As her mesmerizing eyes locked onto his, Mr. Matthews’ heart palpitated wildly. ‘
+lord,
+’ he thought. ‘
+​</p>
+<p>As if in answer, Caley brought her perfect, manicured hands to his chest and pushed 
+him back into his house, lifting her svelte leg to tap the front door closed behind her. </p>
+<p>Caley’s smoldering gaze never leaving his wide eyes, her clever fingers unbuckled his 
+belt. “I know that you thought that you didn’t want me before. I know that you thought 
+that me being here, kissing you, was inappropriate. You were right because even with 
+how good I looked, I was still just a little girl on the inside. So I fixed that. I’m a woman, 
+now. A woman who just happens to be the sexiest, most desirable, most delectable 
+specimen of femininity ever to walk the face of the earth.” </p>
+<p>Shuddering on the edge of another climax, he couldn’t agree more. </p>
+<p>”So, let’s be clear what happens next: You’re going to fuck me like a wild beast because 
+you want to… or because I MAKE you want to…” The total reversal of authority 
+between them had Amanda so aroused she was about to go off right there. But she 
+could still hold on just long enough to make good on her threat: he would crave her with 
+every cell in his body! </p>
+<p>Completely blown away by her unimaginably sensual magnetism, Mr. Matthews’ body 
+wrested control from his helpless, desire-saturated brain. His arms wrapped around her 
+and pulled her impossibly narrow waist towards him. His pants dropped as he ripped 
+open Caley’s crimson dress. He stepped over the rags to slam her hungry naked body 
+against the inside of the closed door, his engorged tool slapping against her creamy 
+thighs. </p>
+<p>“Yes, Mr. Mathews, Yeess! Ohhhh! …now </p>
+<p>.” she snarled. </p>
+<p>Fuck Me</p>
+<p>​
+​
+​
+​
+​
+​
+There was no refusing her divine command. Her teacher was now her toy, thrusting 
+himself into the sexiest schoolgirl ever with berserk animal passion. Her firm, lithe body 
+felt so strong, her clenching sex firing pulses of inhuman pleasure through his muscled 
+torso. Her legs squeezed his hips with irresistible strength. Her breasts bounced freely 
+as he clawed at them, his teeth and nails unable to scratch or mar them in any way. </p>
+<p>They were not equal partners: she determined the tempo. She decided exactly how 
+deep every thrust would be allowed to penetrate her. And despite his frenzied need, this 
+sex was strictly for her pleasure. He was no longer a person; he was her instrument. </p>
+<p>Caley gasped and arched in the throes of far more than just the physical pleasure of 
+being stuffed with a desperate lover’s cock: she was releasing all her pent up desires 
+through this single act of raw sexual conquest. She screamed as an orgasm years in 
+the making consumed her. </p>
+<p>And with that, she was over him. Her incomparable body had totally dominated the 
+object of her long infatuation, revealing that figure she’d built up in her mind was only 
+this easily corrupted toy. He was… beneath her. </p>
+<p>Now he needed to be punished for rejecting her. </p>
+<p>Mr. Mathews wept with joy when he brought his most beloved student, the love of his 
+life, the most beautiful woman in the world to her shrieking climax, so proud he’d been 
+able to unleash such ecstasy from her supple, nubile body. His own prolonged orgasm 
+wracked his overwhelmed body until his tensed biceps gave out and they slid to the 
+floor. His knees wobbled and collapsed, falling onto his back. Amanda rode him down, 
+her lavish thighs pinning him inside her incredibly soft, tight cleft. She loomed over him 
+now, fondling her exquisite breasts like she was only getting started, her face held in a 
+somewhat disturbing smile. He felt her working his shaft mercilessly with nothing but her 
+inner grip, instinctively wielding techniques no high school senior should know, 
+extracting orgasm after orgasm until he blacked out. Even then she continued to lash 
+his body with carnal delight, making certain she’d driven him all the way down into a 
+pleasure-induced coma. </p>
+<p>“Serves you right, making me love you then turning me away. You’re lucky I don’t fuck 
+your brains right out of your skull. Literally.” She gave her breasts one more squeeze 
+’ she thought. ‘
+Oh, this body feels so good.
+with enough force to crush bones. ‘
+​
+there isn't a man... or woman... that can keep up with me now…
+’ 
+​</p>
+<p>Too bad </p>
+<p>​
+​
+All but destroying her obsession had closed the book on that chapter of her life. She 
+needed to be open to new possibilities. She was going to have to adapt to her new 
+status as the Goddess of Fuck. Helplessness might call for action but power demanded 
+gratification! </p>
+<p>She walked gracefully into Mr. Matthews’ bedroom, pulling a button-down shirt from his 
+closet and draping it over her hypersexy, athletic torso and leaving her exquisite legs 
+bare. She pranced back out to where he lay before the front door and hefted his 180 lb. 
+body up. It was surprisingly easy! She carried him to his bed and gently laid him down. </p>
+<p>‘
+’ thought Caley. It 
+Wow! I guess these firm, feminine muscles really aren’t just for show,
+​
+seemed appropriate for a superhuman beauty to be superhumanly strong as well. 
+Maybe she hadn’t reached the potion’s limits yet? She licked her perfect lips in 
+anticipation. ‘
+problem… I can be pretty convincing…
+’ Caley’s sly grin was back.<br />
+​</p>
+<p>Hmmmm… I’ll just have to convince Chad I need more. Shouldn’t be a </p>
+<hr />
+<p>he 
+What just happened?
+​</p>
+<p>Chad awoke on his bed, thoughts groggy and unfocused. 
+thought. </p>
+<p>As Chad sat up, Rachael and Amanda began to stir to either side. </p>
+<p>"What was that?" Rachael questioned, trying to wrap her mind around her encounter 
+with Caley. "What happened to Caley?" </p>
+<p>Chad answered sheepishly. “She sorta figured out how to make the potion more 
+effective using estrogen, and…” He swallowed nervously, “...um ...sex. I should have 
+never let her....” </p>
+<p>He shook his head. “...she was was just so persuasive. I couldn't help it!” </p>
+<p>Rachael's eyes widened. "Oh my God! Chad, she's out of control. We have to stop her - 
+who knows what she'll do. I just wanted us to have a wonderful high school experience! 
+This is getting out of hand!” </p>
+<p>Chad's brilliant mind raced. "First, let's get to school. I can work in one of the chemistry 
+classrooms. She's bound to come back here at some point, and if she gets here while 
+we're still here, we won't be able to do anything!” </p>
+<p>​
+​
+​
+ 
+With that, Chad, Amanda, and Rachael gathered up their things and headed to school. 
+As they passed the drug store, Chad paused. “Let me get a few things here first…” </p>
+<p>After Chad made a few purchases, they continued on to the chemistry lab at school. 
+Chad pulled up a stool and got to work. </p>
+<p>“What are you going to do?” Rachael asked. </p>
+<p>“The only way that I can think of to stop her at this point is to make someone even more 
+of a god or goddess than she is. It has to be someone that won’t let the power corrupt 
+them.” </p>
+<p>He continued. “I don’t think that I could do it. Just being with Caley was so intoxicating 
+that I helped her even more. I don’t think that I can resist temptation like that. Do you 
+think you or Amanda could?” </p>
+<p>Rachael turned, thinking. “Let me talk to Amanda. We’ll figure something out.” </p>
+<p>As Chad frantically rearranged the workbench and laid out his ingredients, Rachael 
+walked over to Amanda, who was lost in thought, looking out the window. “Rachael, I 
+just want to be a cheerleader! I want to be tall and beautiful. I want to have a boyfriend 
+and go to dances. Why did Caley go so far?” </p>
+<p>“I don’t know, Mandy. She’s got a mean streak and she’s always had her little 
+obsessions… Like her crush on Mr. Matthews.” </p>
+<p>“I don’t want you to have to do this. I want you to be a cheerleader. I want you to go on 
+regular dates… heck, you can date my brother if you want to.” She gave a sly smile. </p>
+<p>A hint of a smile tugged at the corner of Amanda’s full lips. “But what will you do? What 
+will your life be like?” </p>
+<p>“I don’t know. I’ve always wanted to become the swan… So I guess my wish will be 
+magnified a bit.” She hugged Amanda, the shaking of her arms expressing the fears she 
+couldn’t name. </p>
+<p>They huddled together quietly, thinking about the future and waiting. </p>
+<p>ths</p>
+<p>​ into the </p>
+<p>After twenty minutes of agonizing eternity, Chad exclaimed “Done! Okay, I’m ready… 
+who’s getting mega-dosed?” He came to them holding a 2-liter soda bottle he’d 
+repurposed. It was half-full of shimmering blue liquid. </p>
+<p>“The Freaking Hell? It’s gonna take that much?!?” Racheal blurted out. </p>
+<p>“What?” He looked down at his hands. “Oh. No. God, no. The equipment here has 
+crappy calibration. I had to move a decimal point.” He looked meaningfully at the drain 
+of one of the sinks then decided he didn’t really want to pour the other 9/10
+sewer. His head ducked under the edge of a workbench as he slipped the sloshing 
+bottle into a project locker. He’d have to neutralize the key ingredients later. The stuff 
+was just too dangerous to leave lying around campus. </p>
+<p>He turned back to them holding the traditional perfume vial he’d brought with him to the 
+school. “This will be plenty, believe me. So, who’s up?” </p>
+<p>Rachael stepped toward him, steeling herself. “I am.” </p>
+<p>“Last chance to abort. Are you sure you can handle this? Making you into a bigger 
+Caley is a pretty drastic solution...” Chad asked with trepidation. </p>
+<p>“Yes.” She was pleased there was only a hint of hesitation in her voice. </p>
+<p>“Alright. This version has trigger hormones already added to make it more effective. 
+Caley’s is really strong due to the muscle density features that I added last time, so I 
+increased those effects too. It should let you surpass Caley in pretty much every way… 
+but there’s always the X-factor…” Chad said. </p>
+<p>“Let’s do this!” Rachael said. ‘Ascension’ was starting to sound pretty good to her. </p>
+<p>“Wait! Amanda and I won’t be able to come anywhere near you until you learn to control 
+your presence. You know what being around Caley did to you two.” Chad set the flask 
+on the worktable and grabbed the fire blanket from the wall and a half dozen hanging 
+lab coats. “You’ll need to cover up so that people can’t see you.” </p>
+<p>“Good thinking,” she accepted the pile before digging into her bag of clothes from the 
+mall and pulling out her yoga top and pants. Pulling them onto her gorgeous 5’6” body 
+was pure pleasure. Outgrowing them would be even more so. Then she turned to </p>
+<p>​
+No, just borrowing it,
+’ she promised 
+​
+Here it comes… </p>
+<p>story?” the bombshell blonde whispered, licking the last drops from her 
+my
+​</p>
+<p>retrieve the flask from the table, only to find Amanda was cradling it in both hands just 
+below her chin. </p>
+<p>“Amanda?” </p>
+<p>“Sorry, Rache.” She gave her friend a kind of sad smile. “But if Chad’s only gonna make 
+one goddess, shouldn’t it be the one of us he can sleep with afterward?” </p>
+<p>Amanda put the flask to her lips and drank the entire bottle in quick, nervous gulps. 
+ she thought. She knew Rache wanted to be the hero of the story. 
+‘This is a terrible idea’
+​
+“What if it’s 
+lips. </p>
+<p>It felt like she was stealing Rachael’s ascension. ‘
+herself as she felt the warmth growing in her belly. </p>
+<p>“Uh, Sis? We should run.” </p>
+<p>Rachael looked at her brother in confusion, hearing the dread in his voice. Behind her, 
+Amanda crumpled to the ground, softly moaning. </p>
+<p>“I figured you were gonna be the one to take on Caley, so I made that batch 
+super-strong. That flask held enough to make 
+Amanda, quivering on the tiled floor. “But with her X-factor... You saw how much the 
+ as responsive as you. She is 
+five times
+first dose affected her. Amanda's more than 
+​
+incredible."  </p>
+<p>After Caley's ascension he had secretly wished it had been Amanda so fully unleashed. 
+He’d wanted to see what would happen if the potion made all her ‘hotter than Supergirl’ 
+fantasies came true! </p>
+<p>Rachael turned back to Amanda, whose clothes were already creaking from being 
+stretched across her expanding curves. “She’s gonna get 
+That wasn’t the plan at all! She was supposed to be the one to stop their sex-crazed 
+schoolmate… </p>
+<p>“More like fifteen. No offense, but she's already got more going for her than you.” He 
+took his sister’s hand. “Really, we need to run.” </p>
+<p>a goddess twice.” He nodded to 
+you
+​</p>
+<p>as hot as Caley?” 
+ten times
+​</p>
+<p>​
+​
+​
+​
+​
+​
+. I’m a 
+Supergirl
+​</p>
+<p>!” She repeated the mantra over and 
+Supergirl
+​</p>
+<p>Even through the rising tide of lust churning inside, Amanda heard the twins talking 
+about her before scampering off. Somehow her genes – her X-factor – made her 
+something 
+. She felt a burst of fierce arousal hearing Chad call her 'incredible' 
+special
+​
+and her whole body grew warmer as the potion reacted. Somehow she could sense 
+what had Chad feeling so horny: the same secret thrill he’d felt when she’d pretended 
+she could fly. She just had to want it enough! </p>
+<p>“I’m a supergirl. I’m a 
+over as each spasm of pleasure ran through her, a self-fulfilling prophecy of accelerated 
+evolution as the protean formula fizzed in her veins. </p>
+<p>She tossed and turned on the floor, her measurements ebbing and cresting like waves 
+. Her beauty began to grow 
+better
+in a storm, each orgasm leaving her healthier, sexier, 
+​
+vast and dangerous, a living sexual riptide; any sailor who dared these waters would 
+surely drown in her. </p>
+<p>Chad and Rachael ran, haunted by Amanda’s increasingly urgent moans of pleasure. 
+Then her shouts of pleasure. Then her screams of pleasure. Their hasty retreat became 
+more of a shambling lurch as the girl's escalating climaxes gained an insidious hypnotic 
+quality. </p>
+<p>The forces reshaping Amanda soon decided gravity wasn’t so tough. Beakers and 
+chairs began to skitter around her shuddering body like she was in a room full of 
+poltergeists. Books began to float and the workbenches tugged against the bolts 
+fastening them to the floor as everything began to revolve around Amanda. In the 
+middle of this growing windless tornado of loose papers and lab equipment, a very 
+womanly silhouette rose from the floor, twirling in the eye of the storm like an impossibly 
+elegant ballet dancer, leaping from a stage of empty air as orgasm after orgasm 
+delivered more strength, more power, more beauty to her ever more breathtaking body. 
+The blossoming Supergirl cried out over and over, her powerful voice filling the entire 
+campus with the seductive sounds of her superhuman ecstasy. </p>
+<p>Body trembling, heart pounding, Rachael desperately pushed her brother through the 
+doorway into the band classroom and slammed the thickly padded door. Chad shook 
+his head, still dazed by Amanda's ...aggressively feminine sounds. </p>
+<p>"She's, uh, really enjoying that, isn't she?" </p>
+<p>​
+​
+​
+​
+Rachael slapped him on the back of the head. She couldn’t help wondering how she 
+would've felt 'enjoying that'. Even if it supposedly would only have been a fifth as good 
+for her. Dammit! It should have been her. They'd decided. But it was hard to stay mad at 
+ that 
+sounded
+Amanda when her every grunt and purr set your knees quaking. If she 
+​
+good through a mostly sound-proof door, what could she possibly look like now? She 
+could imagine a blonde version of Caley, but trying to multiply that by ten broke her 
+brain. </p>
+<p>Back at the chem lab, Amanda was wondering the same thing. After long minutes of 
+ecstasy that could only barely be classified as mere 'multiple orgasms', the impressions 
+came in disjointed bursts. She had muscles? No, she was strung with smooth steel 
+cables that crackled with the promise of astonishing strength. Her hair? That had 
+transformed into a thick mane of shining platinum. Was she taller? Standing made the 
+whole room seem smaller. If she stretched, she could brush the ceiling with her elbows! 
+She must be taller than any guy in the whole school. Wow! </p>
+<p>But was she sexy? She looked directly down. </p>
+<p>“O. M. G., look at me!” Amanda gasped: elegant hands that must be hers were 
+suddenly clutching the creamy globes of her enormous chest. Nipples like fresh 
+strawberries jutted from between her splayed fingers. Her perky mounds might be only 
+100% perfect but they were well over 1,000% irresistible. If she were to strike a 
+cheesecake pose with this body, guys would be cumming before she even got to the 
+wink. </p>
+<p>Curious about the full extent of the changes to her body, she stalked with the regal 
+grace of a feline predator toward the window to study her faint reflection in the glass. </p>
+<p>She was magnificent to a level that she could never have conceived of an hour ago. 
+Caley, as completely stunning as she was, couldn’t hold a candle to Amanda’s 
+perfection. The disparity between her and Caley was like that between a supermodel 
+and her original 4’10” self. She was heartbreakingly exquisite. Ravishing curves rippled 
+with an athletic sensuality that could fill any other woman with hopeless envy… and 
+probably desire. </p>
+<p>She twisted to see a backside that was sculpted into every bit the aesthetic perfection 
+as the front. Her body absolutely sizzled with seductive power. She couldn’t wait to see 
+what it could </p>
+<p>do. 
+really
+​</p>
+<p>​
+​
+really </p>
+<p>Because there was one more little thing Chad had thought was possible, if she 
+wanted it. Something that should be easy for a Supergirl, right? She looked at the 
+ceiling and raised her fist, lifting her opposite knee… </p>
+<p>Chad and Rachael both startled as a pulsating boom shook the entire building. 
+Moments later another concussive blast shivered the windows for blocks around. 
+Rachael looked at her brother. “Did your girlfriend just explode?!” she asked, still a little 
+miffed with Amanda. </p>
+<p>Chad shrugged, “I have no idea what that was. ...Still, I don’t hear her anymore, so 
+maybe we should go look?” </p>
+<p>They crept back to the chem-lab, fingers stuffed in their ears in case Amanda started 
+moaning again. The room was completely trashed with tables knocked over and chairs 
+embedded in the walls. It did look like some kind of Amanda-bomb had gone off. In the 
+center of it all was a small pile of rough concrete chunks, lit by a bright column of dusty 
+daylight. </p>
+<p>“Where is she!?” Rachael asked, becoming increasingly guilty and frantic as she circled 
+the room peering through the dust. She didn’t really want Amanda to have exploded! </p>
+<p>Chad walked to the central pile and looked up. There was a ragged hole the size of a 
+manhole cover ripped through the ceiling tiles. ...And through the concrete second floor. 
+...And through the floor above that. There was blue sky shining through the hole in the 
+roof above that. He burst into laughter at the Loony Toon absurdity of it. He belatedly 
+realized the second ‘explosion’ they’d heard had been a sonic boom as their missing 
+friend had accelerated past the speed of sound. </p>
+<p>Rachael glared at his wholly inappropriate mirth. Amanda was missing! He turned to 
+her, still struggling with the giggles. </p>
+<p>“I wouldn’t worry, Sis. I think Amanda’s doing just </p>
+<p>Rachael picked her way through the smashed furniture to join him. Then she looked up. </p>
+<p>“No. Freaking. Way!” </p>
+<p>…” 
+Super
+​</p>
+<hr />
+<p>​
+​
+Blocks away, Caley’s inspection of Mr. Matthews’s body was interrupted by a startling 
+boom echoing across the city. She was fairly certain he was bigger than he was a few 
+minutes ago? Her uber-perfect six-foot body had allowed her to look him straight in the 
+eye at the door. She would swear that his feet had only reached the end of the bed 
+before, but now they dangled over the edge by a couple of inches. As her gaze roamed 
+up his body, she tried to remember if he had looked so muscular, so defined before they 
+had sex. </p>
+<p>‘I wonder if…’ she thought to herself when suddenly the door flew open. </p>
+<p>“I knew you’d be here!” Amanda exclaimed, shrugging off the blankets she had used to 
+prevent starting a riot when she’d landed in front of the building and slipped inside. Her 
+words were a symphony of desire that filled any heard it with indescribable need. </p>
+<p>Caley’s eyes were riveted to this new edition of Amanda. Her every thought, her every 
+feeling, her entire being was drawn to the divine creature like a moth to the flame. </p>
+<p>Caley realized she’d been demoted to only a demigod, for here was a True Goddess, 
+6’4” and crackling with the power of absolute desire. Caley was a star, but Amanda had 
+become a supernova of beauty, her radiance a palpable force invading every corner of 
+the room. </p>
+<p>Amanda’s face was so heavenly, so supreme, a choir of angels began to hum quietly in 
+Caley’s mind as she gazed upon it. Her friend’s breasts were enormous and seemed to 
+still be swelling as her gaze lingered. The span of her muscular arms made Caley ache 
+with longing to have them around her. The curves of her lats flowed into a tiny waist, 
+embossed with chiseled abs announcing the superhuman strength and power she 
+possessed. </p>
+<p>Amanda’s hips were the epitome of femininity, triggering the single strongest orgasm in 
+the already impressive catalog of Caley’s sex-life. Squeezing her eyes slightly open as 
+the intense pleasure hit her in waves, she couldn’t help but try to absorb the sight of the 
+rest of Amanda’s divine body. </p>
+<p>Her legs were neverending sinuous works of art. Visions of them wrapping around her 
+flashed through Caley’s mind like a strobe light. </p>
+<p>Amanda was beauty personified. Amanda was sex incarnate. She defined the very 
+concepts. </p>
+<p>Caley rushed toward Amanda, consumed by rapture at the mere sight of the One True 
+Goddess. Caley touched her and the world exploded in ecstasy. The True Goddess 
+wrapped the little demigod in her arms and spoke again. Her velvet voice made the 
+words into a symphony of dirty whispers, “It’s okay, Cay. I’ll take care of you.” </p>
+<p>Lost in orgasmic pleasure, body quivering with impossible desire, Caley went limp in 
+Amanda’s arms. </p>
+<hr />
+<p>Well, stopping Caley had turned out to be a bit of an anti-climax. </p>
+<p>It left Amanda pondering how to proceed. She was too much for her friends. She was 
+too much for everyone. And that was not fun. She wanted to be able to be with them 
+and with the boy who had done this for her. She needed to be able to control her radiant 
+Super-sex appeal. How could she gain that control? Maybe the rest of the 
+more-Caley-than-Caley potion? It might be a mistake, but her mistakes had been pretty 
+awesome lately. What did she have to lose? </p>
+<p>Still, she didn’t want to melt Chad’s brains to mush with her unchecked glory. She 
+needed someone to go in and get it. </p>
+<p>Amanda knelt next to Caley, touching her shoulder with one perfectly manicured 
+fingernail. Caley began to squirm in a half-conscious fit of desire, but she didn’t wake. 
+She was totally out, probably for hours. </p>
+<p>That pretty much left Rachael. </p>
+<p>Amanda flew to the edge of the school grounds, hiding in some bushes like a naughty 
+kid. Then she whispered, whispered to Rachael. “Bring it to me.” She knew Rachael 
+would understand. And obey. </p>
+<p>Inside the school, Rachael jerked as if someone had pinched her. She’d been roaming 
+the halls, checking to see if anyone else had been on campus or had gotten hurt when 
+Amanda had blasted through the roof. Chad had gone to the gym to “take about a 
+million cold showers” he’d said. </p>
+<p>She had to find the rest of the potion. It was needed. ...somebody… need it. She had to. </p>
+<p>’ she finally realized. She could please 
+It was Amanda who had asked for it!
+​</p>
+<p>Rachael re-entered the lab searching for the locker Chad had put the bottle in. 
+Everything had moved around but she was determined. She had to find it. It was 
+needed.  </p>
+<p>I should take it myself. 
+There! She held it up to the light, almost a full liter of the potion. “
+’ Racheal startled at 
+Drink it all. Then Amanda... Amanda would love me like I love Her.
+​
+that thought. Did she love Amanda? She DID love Amanda! While unexpected, the 
+realization warmed her. Amanda was a good, caring person. She was such a good 
+match for Chad. She should be family... </p>
+<p>Rachael lifted the jug to her lips, then stopped. She should give it all to Amanda. It was 
+needed. ‘
+Amanda by giving it to her. The thought of pleasing Amanda sent Rachael into another 
+gasping fit of intense pleasure, nearly causing her to drop the plastic bottle. </p>
+<p>It was decided then, she would bring it back to Amanda. Somehow, she knew where 
+Amanda was, Her Presence guiding Rachael with its promise of ecstasy. </p>
+<p>As she walked to the edge of the school, Amanda arose out of shrubbery like Eve 
+stepping out of the Garden of Eden. Rachael gasped, seeing Amanda’s beyond 
+hyper-sexy form for the first time. She squinted like Amanda was the Sun, fighting the 
+ripples of radiant sensuality to get close to Her. To hand Amanda the final ingredient of 
+her destiny. </p>
+<p>Amanda took the big bottle from Rachael’s hand, then tipped it back and started 
+drinking, not even bothering with the few blue droplets that ran down her face and 
+splashed on her breasts. Nine times what she had swallowed last time. Enough to 
+shatter every boundary. </p>
+<p>Amanda’s orgasmic cry washed over the neighborhood like a tsunami. The grass grew 
+greener, more vibrant. The trees creaked as they grew taller, healthier. Everyone who 
+heard it collapsed in trembling rapture. Even the houses within the range of Her cry 
+looked cleaner, shinier, newer. </p>
+<p>As Her Unutterably Mind-Blowing Beauty swelled beyond imagination, a vortex of 
+sexuality surrounded Her. Racheal was blown 50 feet away by its staggering force, 
+where she lay, unmoving. </p>
+<p>​
+​
+Then, Her vortex subsided as Amanda’s fingers curled with effort. Her Carnal 
+Luminescence drawing back within Her. </p>
+<p>She yelped in joy, causing a brief wave of rapture to blast from her as she momentarily 
+lost control again, resulting in another brief surge in beauty to her surroundings. </p>
+<p>Oops! She thought. I’ll have to watch that. I still don’t know My own power. </p>
+<p>She giggled in delight, taking care not to release Her True Voice. </p>
+<p>Amanda shrank Her Ultra Goddess form to merely ultra-supermodel proportions, taking 
+care that it wouldn’t be too overwhelming for everyone, but still sexy beyond any human 
+female to ever walk the face of the earth. No need to overdo it. </p>
+<p>Amanda curled Her delectable index finger and Rachael was instantly healed. She 
+curled her other index finger and across town, the sleeping Caley’s beauty diminished 
+until it fell slightly below her own current level. ‘
+new Aphrodite, now can I?
+’ Amanda thought with a mischievous sparkle in her eye. 
+​</p>
+<p>Yes. Things were going to work out after all. She made the very best mistakes! </p>
+<p>Can’t have Caley looking better than the </p>
+<hr />
+<p>On Monday, as Mr. Matthews walked into the classroom, all of the female students 
+tittered. He looked like an Abercrombie model on steroids. His smooth, muscled frame, 
+stretching the sleeves and chest of his button-up shirt to the straining point. Amanda, 
+sitting at her desk in the back, smooth, sexy legs crossed, gazed wide-eyed at Mr. 
+Matthews’ virile new appearance. </p>
+<p>“Hello, class,” he said, in a deep, masculine voice that sent shivers down Amanda’s 
+spine. </p>
+<p>She had had fun making out with Chad over the weekend, teasing him with tantalizing 
+glimpses of her luscious body whenever she could. She liked Chad a lot… but damn… 
+Mr. Matthews was HOT. Her thoughts drifted to what it would be like if she… No! She 
+shouldn’t think that way! </p>
+<p>​
+Her gaze, however, was gradually drawn back to Mr. Matthews, and his firm, manly lips 
+as she couldn’t stop her mind from wondering what it would be like to kiss him. She 
+might have to give Chad a little boost at some point... </p>
+<p>Every girl in the room spent the class fidgeting, crossing and re-crossing their legs as 
+they imagined the things they wanted their strapping teacher to do to them. </p>
+<hr />
+<p>, she 
+Thank you, Amanda
+​</p>
+<p>After class, Caley remained at her desk until the rest of the students had left the room. 
+Amanda gave her a knowing look, curling a finger as she exited the room. Caley 
+responded with a Mona Lisa smirk and a quick wink. </p>
+<p>As the last student left the room, Amanda paused in the hallway, willing the door closed 
+and locked, coating its window with a gloss of steam. </p>
+<p>Caley rose languidly from her seat and approached Mr. Matthews, his eyes finding hers 
+with a curious gaze. As she walked slowly toward him, each leg crossing before the 
+other, her legs seemed to gain an inch with every step. 
+thought, knowing that the Goddess herself was gifting her with a stream of ascending 
+beauty. She could feel it flowing into her. The feeling was… tantalizing.  </p>
+<p>Mr. Matthews gulped at the incredible beauty before him. There was a strange 
+half-familiarity in the air. Like a dream he’d had. ...One that ended badly for him. She set 
+one cheek of her luscious ass on his hardwood desk and leaned toward him. He 
+couldn’t help but notice that her butt looked even better now than it had when class 
+ended. Was she becoming more beautiful as each moment passed? Beautiful like no 
+student should be? It sure seemed that way… </p>
+<p>“Yeah. I’m </p>
+<p>His sense of </p>
+<p>“Remember what you did to me?” Caley said softly, a hint of seduction entering her 
+voice. </p>
+<p>“What!” he said in alarm. “I-I think you have it backward. It was more like what you did to 
+me! It’s not like I… I...” </p>
+<p>Caley. And it wasn’t all a dream.” 
+that
+​</p>
+<p>turned to terror. 
+deja vu
+​</p>
+<p>​
+​
+​
+“Like you wanted me?” Caley licked her lips. “Like you couldn’t get enough…?” </p>
+<p>Caley spun on the ever-firmer hemispheres of her ass, placing a bulging, shapely calf 
+on either armrest of his chair, trapping him like a mouse between the paws of a cat. A 
+sizzlingly sexy cat. </p>
+<p>Mr. Matthew’s gaze rose from her smooth, sexy thighs back to her eyes, which seemed 
+more luminous, more mesmerizing than they had been just a moment ago. His thoughts 
+seemed to evaporate like steam from boiling water as he lost himself in those eyes. </p>
+<p>Caley slid toward him, her knees rising higher in the air, skirt sliding down 
+ever-more-perfect thighs until it lay in a crumple on her lap, covering almost nothing 
+now. </p>
+<p>She removed her feet from the armrests of his chair and kicked off her shoes. She 
+slipped her manicured toes behind him, feeling the strength of his well-muscled back, 
+and began to pull him slowly toward her. </p>
+<p>Mr. Matthews felt the strength in her powerful legs, knowing that he couldn’t escape 
+their grip even if he wanted to. And he really didn’t want to… </p>
+<p>Caley pulled him into her until his body touched hers, his lips just inches away from 
+hers, which were becoming rosier and fuller by the second now. She moistened them 
+with a long, pink tongue, feeling Mr. Matthews shudder as she did. </p>
+<p>“I’m sorry.” she said, her voice now a husky whisper. </p>
+<p>“Sorry…?” he gasped, their lips were about to meet. </p>
+<p>“I was ...cruel, last time. I was just a little… 
+to make it up to you…” she said, her long eyelashes fluttering closed. </p>
+<p>Their lips met, and Caley couldn’t help but let a burst of her actual power escape her 
+iron grip. She heard a soft yelp from Mr. Matthews as her arms squeezed him a little too 
+tightly. </p>
+<p>Her mouth breathed heat into his already burning body as her mouth sensually stoked 
+his desire. Her lips and fingers pressed into him, massaging arousal into every part of 
+his body.  </p>
+<p>… by your reaction. I’ve been meaning 
+upset
+​</p>
+<p>​
+ 
+His mouth leaving hers momentarily while his body quivered like the string on a violin 
+played by a maestro, he rasped in a husky voice. </p>
+<p>“My God… how can you be so sexy…?” </p>
+<p>Caley offered a predatory smile, whispering, “I have the best friends.” She flipped him, 
+his back landing on the hard surface of the desk. Her nimble fingers pulled apart his belt 
+and pants, revealing his huge, steel erection. She moistened her lips. </p>
+<p>As she slid their plumpness over his shaft, his head tilted back in ecstasy… </p>
+<p>Outside the room, Amanda smiled as all the sensations from Caley’s “apology” to her 
+favorite teacher flowed through her. She was fairly certain that gorgeous hunk wouldn’t 
+be able to walk normally for the next few days. </p>
+<hr />
+<p>As Rachael stood before the mirror, putting in her hoop earrings, she sucked in her lips 
+to spread her lipstick more evenly. She was beautiful. Gorgeous, even. Her newly 
+purchased LBD, accentuated her full breasts, tiny waist, and supple hips. She slipped 
+on her black, ankle-strap heels and admired how they made her toned calves look. </p>
+<p>She reached over to her dresser and put on the pendant she had picked out for the 
+occasion. It was a football, appropriate, she thought because she was going to the 
+homecoming dance with the quarterback of the football team. At the beginning of the 
+school year, she would never have thought 
+ would happen! She felt herself smile. 
+that
+​</p>
+<p>She felt her skin tingle with arousal and knew even before she heard the knock on her 
+bedroom door, that Amanda was here. </p>
+<p><em>Knock, knock, knock</em> </p>
+<p>Grinning in amusement at her prescience, she opened the door to reveal her utterly 
+breathtaking friend. She could never seem to grow accustomed to just how beautiful 
+Amanda now was… even when she knew that her friend was suppressing most of her 
+true form, which would instantly overwhelm mere mortals like her. </p>
+<p>​
+ self for homecoming, so I guess we’ll both find out tonight…” 
+full
+​</p>
+<p>“Hi, Amanda,” she said, detecting a husky tone to her own voice. She couldn’t help it. 
+Amanda’s presence generated amorous feelings in anyone she was near, even in her 
+“subdued” state. </p>
+<p>“Hi, Rache. Can you believe we’re actually looking forward to homecoming this year? 
+And look at your bad self, snagging a quarterback even…” She nudged Rachael’s 
+shoulder. </p>
+<p>“Well, since the school’s resident goddess was taken, what was the poor boy to do? 
+Fortunately for Rick, I was there to comfort him. I think Veronica might be a little jealous, 
+though.” Rachael said with a wink. “What does Chad think of the new you?” </p>
+<p>“I’ve been saving my </p>
+<p>Rachael looked her friend over. She looked both refined and sexy in her floor-length 
+gown, diamond earrings and a diamond bracelet providing a hint of the opulence of her 
+true, impossibly exquisite beauty. And it was fair to say 
+Amanda. </p>
+<p>Rachael had to admit Amanda’s restraint after becoming a goddess had been amazing. 
+It was probably for the best that she had been the one to drink the 
+more-Caley-than-Caley potion. But sometimes she still daydreamed... </p>
+<p>“Oh, Rache, I’m finally returning that thing I borrowed...” </p>
+<p>Rachael cocked her head. What thing? Amanda wasn’t carrying anything and didn’t 
+have a purse… But she was 
+ at her intently. Rachael felt a faint tingle, her legs 
+looking
+​
+stretching in that magic way, her pert breasts straining gently against the already tight 
+fabric of her black dress. </p>
+<p>“Wha…?” Rachael exclaimed. </p>
+<p>Amanda gave a smile that seemed to make the rest of the room dim in comparison. </p>
+<p>“You know.” Amanda leaned in to whisper in her ear, “I’m returning that potion of yours I 
+borrowed—exactly ‘e
+midnight to get it all,
+won’t mind dating a soon-to-be hyper-sexy demigoddess, will he?” she asked with 
+feigned innocence. </p>
+<p>nough to make 
+ Cinderella.” She pulled away with a musical laugh, “Your ‘poor boy’ </p>
+<p>, so it takes until 
+slowly</p>
+<p>a goddess twice’. But
+you
+​
+​</p>
+<p>wore stilettos like 
+nobody
+​</p>
+<p>​
+​
+​
+​
+​
+​
+​
+​
+ 
+Rachael’s eyes flew to the mirror, knowing that by midnight the gorgeous young woman 
+in its reflection would be no more than an ugly duckling compared to the swan she was 
+about to become. Tears welled in her eyes as she ran to her friend, flinging her arms 
+around Amanda. </p>
+<p>“Thank you so much, Amanda!” she said, eyes closed, a tear sending a drop of 
+mascara down her perfect complexion. “This is going to be the best homecoming dance 
+EVER!” </p>
+<p>Amanda shared another radiant smile. “‘Team Goddess’ wouldn’t be complete without 
+you.” </p>
+<hr />
+<p>They met Chad in the quad after the big game, ready to start the evening’s festivities. </p>
+<p>“Where’s Caley?” he asked as his eyes drank in the sinuous curves filling out Amanda’s 
+luxurious gown. She was showing of. More than usual. </p>
+<p>Rachael gave him a 
+. “Word is, she and Mr. Matthews…” She trailed off, glancing 
+look
+​
+around to ensure no unwanted ears were near. </p>
+<p>Realization dawned on Chad’s features. </p>
+<p>“Ahhhh... I see.” </p>
+<p>Rick, the quarterback came up to Rachael, an awed look in his eyes. </p>
+<p>“Rachael… you look…” His eyes conveyed the sentiment far better than did his mouth. </p>
+<p>Rachael shot a look of gratitude to Amanda, who nodded back to her. Her ‘poor boy’ 
+had no idea how good she’d look by midnight. Rick gallantly pinned a corsage to her 
+dress before she took his arm, pulling him eagerly towards the dance floor. </p>
+<p>Amanda gracefully draped a slender arm on Chad’s shoulder, behind his neck, pressing 
+her perfect body to his, eliciting a gulp that was audible even over the dance music. </p>
+<p>​
+“Remember what I told you two weeks ago, Chad?” she said softly. Chad had to strain 
+to hear her over the thumping of the music in the gym. Or was that his heartbeat? His 
+brows furrowed as he tried to recall her words. </p>
+<p>“What was it?” Chad asked as Amanda guided him to the dance floor, beginning to 
+undulate her body against him to the music. </p>
+<p>“I told you that I wanted to go to homecoming with someone. I told you that I wanted to 
+dress up. I told you that I wanted to be pretty, to be 
+.” She seemed to relish that 
+desired
+​
+last word, not wanting to let it leave her luscious lips, as her tongue lingered behind her 
+perfect lower teeth. </p>
+<p>“I told you my dreams,” she said in a seductive tone, her body seeming to swell against 
+his. “And you made them come true…” </p>
+<p>Her lips sought his kiss languidly as if she cherished every moment of this moment with 
+Chad. The rest of the world seemed to fall away as Amanda’s lips touched Chad’s, their 
+plush softness pulsing thrills through his body to his very soul. All that existed were her 
+lips, her hands, her body. Her slender arms wrapped around him and lifted him like he 
+weighed no more than her backpack. Then she went up on tiptoe, then on point like a 
+ballerina, and then finally she left the ground behind altogether, holding them both one 
+single inch above the dance floor: their little secret. </p>
+<p>The sensations crashed into Chad like waves, the pleasure of being embraced by this 
+really 
+glorious Supergirl making him shudder. Amanda smiled to herself. Wait until she 
+got started
+she thought. She clenched her full seductive power in an iron grip, 
+… 
+​
+mastering her own urges to simply ravish him on the spot, determined to make her 
+to Chad last. 
+thank you 
+​</p>
+<p>A 
+the back of her mind since the day she had seen Mr. Matthews return to class. Even 
+through his euphoric daze, Chad felt his sleeves tighten and his chest bulge out, 
+causing Amanda’s breasts to push into him that much more firmly inside the steel coil of 
+her arms. </p>
+<p>Amanda watched Chad’s jaw become manlier, his cheekbones becoming prominent 
+and sculpted. His hair seemed to thicken and shimmer. She ran her fingers down his 
+back as sinew swelled beneath his skin. Her sleek stomach slid against his muscled </p>
+<p>that started with a little upgrade, a possibility that she had tucked away in 
+thank you
+​</p>
+<p>​
+​
+​
+​
+torso as his abs cobbled into steel bricks against them. She could feel their protruding 
+forms even through his shirt and her dress. She couldn’t wait to taste them later… </p>
+<hr />
+<p>with large beautiful </p>
+<p>It had taken all of Amada’s preternatural grace to fit them both through Chad’s bedroom 
+window with their bodies entwined and her lips plastering kisses all over Chad’s face 
+with urgent passion. He registered pain as Amanda smashed him up against the wall 
+without them ever touching the floor, his broad back and athletic butt crushing against it. </p>
+<p>Amanda slid her body against his and looked up at his now 6’2” form 
+eyes, her slender finger simply ripping the front of his belt apart, bits of twisted metal 
+spinning away with a dull ‘ping!’. Amanda knelt in front of him, her face conspicuously 
+level with the hard cock that her slender fingers revealed as she pulled down his boxers. </p>
+<p>Her eyes never leaving his, she took a polished nail and ran it underneath his member. 
+She felt him shudder under her touch. She instinctively knew how to please a man 
+better than anyone on Earth and she was just getting started. </p>
+<p>She had talents to match her matchless body. She knew what he wanted. It didn’t hurt 
+that she was breathtakingly beautiful either. Impossibly so, as she eased gradually 
+toward the utter perfection of her true form. She was grateful to Chad. He had helped 
+her, quite literally making her dreams come true - even dreams of flying - and she 
+wanted to show him how very much it meant to her. </p>
+<p>She licked her ruby lips and placed them over his tip, letting just a bit of teeth touch. 
+She shivered again and tasted a bit of salt. Ooooh, he’s 
+was going to be over far too soon if she didn’t slow down the sensation. One of these 
+days, she would see what would happen if she held 
+short. And messy. </p>
+<p>She had always had a bit of a soft spot for Rachael’s brother. For the first time since her 
+final ascension, she really needed for the act of making love to be as inhumanly perfect 
+as her body. </p>
+<p>She touched each side of his hips, holding them tightly as she continued her erotic art. 
+She withdrew the teeth. They would be too much to make it last, to make it memorable. 
+And she wanted to make it memorable for him, something he would 
+she used just her soft, full lips. </p>
+<p>back. It would probably be 
+nothing
+​</p>
+<p>ready. She pouted. This 
+really
+​</p>
+<p>forget. So 
+never
+​</p>
+<p>​
+​
+​
+​
+ need to 
+did
+​</p>
+<p>Well, that’s gonna make cosplaying Elsa </p>
+<p>She slid down his length slowly. She couldn’t help but use her tongue, undulating 
+pressure and release all the way. That might be too much as well, but she 
+make this memorable. </p>
+<p>As she rose back up, she shrugged a lock of thick, luxurious hair that was getting in her 
+way to put it back in place. Then she realized that kind of petty annoyance was for 
+mortals. With little more than a thought, her silken masses of platinum braided 
+themselves into a neatly elegant French braid. ‘
+’ She wanted to giggle, but her mouth was otherwise occupied. 
+easy.
+​</p>
+<p>The tips of her fingers felt his glutes tighten as he became more aroused. Okay, she 
+needed to slow it down even more. She needed to draw out his pleasure. She wanted 
+him to whimper in ecstasy before she was done. Only then would she know that she 
+had succeeded. 
+she repeated in her mind like a mantra. 
+Not too much, not too soon, 
+​
+She continued to use her tongue but just pressed it upward, no undulations. </p>
+<p>Up to the tip, she gave a brief kiss and glanced once more to his eyes, drinking in her 
+gyrations, not yet closed in rapture. Good, that would change soon, but she wanted to 
+give him another view first. As she enveloped him once again, she shimmied her 
+shoulders, causing the top of her gown to loosen and slide an extra inch down her large, 
+succulent breasts. Men could never resist her breasts. She couldn’t see his eyes, but 
+she knew exactly where they were looking. She breathed in through her nose to push 
+them outward further, tightening her ridiculously toned abs as she resituated herself on 
+her long, sexy legs. </p>
+<p>This time, as she reached his hilt, he seemed more relaxed, enjoying. His glutes were 
+still tensed, but not with imminent climax. Excellent, she wasn’t overdoing it anymore. 
+They could indulge in foreplay a little longer. She smiled ever so slightly despite her full 
+mouth. She couldn’t help but push out her lower jaw to press her bottom teeth in the 
+lightest, gentlest contact with his sensitive flesh. She dragged the light contact upward 
+as she rose again. </p>
+<p>Oops! That may have been too much! He clenched under her hands. She removed her 
+lips at the top, glancing upward. His eyes were closed now, his head tilting back, no 
+longer watching her little show, just feeling her smoldering strokes. Like a shark, she 
+could actually sense the electricity of desire flowing through him, watch the sparks 
+scatter as her bright white teeth gave him another nip. </p>
+<p>​
+​
+​
+She had gone too quickly again; she had wanted to make it last at least another stroke, 
+but he was too far gone now for that to happen. On to the fireworks then… She gripped 
+him harder with her small hands, hard enough for him to feel fingertips digging into his 
+buttock and thumbs kneading his flexors. She orchestrated the sensual massage of his 
+erogenous zones as she dragged her teeth along top and bottom, tongue leaving a 
+second moist, hot trail to join the ecstasy of sensation that she knew her teeth were 
+providing. </p>
+<p>“Gaaahhhhhh….!” </p>
+<p>There was that moan she was listening for, the aching moan of pure, unadulterated 
+need. She could feel his hips begin to buck in involuntary spasms as she reached his 
+hilt again. She rolled her tongue from bottom to top in time with his rising orgasm. She 
+tasted his heat as it entered her mouth. She relished the taste, the happy ending for this 
+chapter in her story. She used her tongue to milk him, feeling wave after wave of 
+clenching, sucking, aching pleasure roll through him. Coaxing the last of his gift, his 
+ambrosial fluids from his tip with teeth and tongue, she released him. A thread of saliva 
+reaching from manhood to mouth until it finally fell away. </p>
+<p>She uncoiled her long limbs, her head rising up his body, dragging her full breasts 
+against quads and cock and abs as she stood. She trailed kisses upward as well, her 
+full lips scented with the salty heat of his recent climax. As she reached her full height, 
+she titled her lips upward and found his mouth, devouring it in passion. </p>
+<p>In her own rising desire, her feet left the ground, taking him with her, their bodies 
+intertwined in a slow aerial twirl.
+Her hands roamed his strong back as she ran her foot </p>
+<p>along the outside of his lower leg. She could feel moisture below, as she thought about 
+what she was doing to him. With spellbinding beauty and sensual skill, she wanted to 
+leave him breathless and burning for her. She knew that she had and that she would 
+again. </p>
+<p>As she moved her lips to the sensitive flesh of his neck, her nubile body slid against his 
+in tantalizing, torturous temptation. She undulated her hips to bring him back to life and 
+gave his neck a light bite, feeling him squirm. She readied herself for round two of her 
+enthralling, voluptuous 
+, her curvaceous body trapping Chad against a wall a 
+thank you
+​
+foot above the floor. They rolled over each other, bodies writhing in unison, climbing the 
+wall, Amanda’s toe catching and tearing his Dr. Who poster as they twisted around each 
+other. </p>
+<p>​
+​
+​
+As they reached the ceiling, Amanda’s silky calves slithering around the back of his legs 
+as Chad finally entered her. Amanda shivered with exquisite pain as she experienced a 
+man inside her for the first time. As he bore deeper within her, she moaned with her 
+velvet voice. </p>
+<p>“This is my first time, you know,” she breathed, teeth clenched as she felt him grind 
+against her canal as he strove to fill her. “I’ve only ever been with you.” </p>
+<p>The words came out haltingly as she gasped between the words, sensations she had 
+never before felt convulsing her inner muscles. Craving even more of this mysterious 
+pleasure, a pulse of wild energy slipped the leash of her control. Suddenly the virile 
+cock responsible for her unexpected delight impaled her deepest reaches, growing half 
+again larger in both length and girth. “Ooooh, that’s better,” she gasped breathily. “Now 
+HARDER!” </p>
+<p>Chad shuddered as he heard the words that somehow, impossibly, made his enormous 
+new tool even harder. Pride and elation filled him. This glorious angel, a literal Supergirl, 
+who could have ANYONE, had chosen him to be her first, the only man to ever make 
+love to this virgin goddess. </p>
+<p>Amanda’s lips, hands, fingers, teeth… every part of her seemed to envelop him in bliss. 
+Bodies twisting, clenching, arching at the top of the room sent chunks of plaster and 
+drywall careening to the floor while Amanda coaxed unimaginable pleasure out of him 
+with her writhing, divine body. </p>
+<p>As he finally pushed his epic length completely into her, he felt her trembling response, 
+her quiver gaining intensity as he crashed into her depths, thundering into her as they 
+both erupted. Fireworks filled her vision as she felt herself filled to bursting for the first 
+time, primal urges bucking her hips into his, punctuating his thrusts with rapturous 
+bursts of unbearable pleasure. Amanda lost her grasp on the mask concealing her full 
+goddesshood as she screamed her fulfillment, growing two inches taller than him as her 
+delicious body radiated preposterous levels of sensual power, surrounding Chad with 
+pure, unadulterated femininity. </p>
+<p>As they came down from this first shared climax, Amanda guided Chad’s hands down 
+the erotic voluptuousness of her undulating, satin hips, introducing him to pleasure 
+never before felt by a human body, using her powers to prevent him from losing 
+consciousness as his heartbeat fluttered with the room-rattling crescendos of sexual 
+need and release. She continued to pile ecstasy upon surging ecstasy through the long </p>
+<p>night, doing things to him no other woman ever could, devastating him—and 
+herself—with her impossibly perfect body. She finally brought this ultimate sexual 
+odyssey to an end. The dawn—and her unequivocal destruction of Chad’s 
+consciousness as she wrung a seventeenth ejaculation from his limp, exhausted 
+body—brought the night to a fitting close. </p>
+<p>’ she thought with a contented sigh as she tucked him 
+‘What a way to lose my virginity,
+​
+into his bed to recover. Inspired sexual artistry for next time fluttered into her thoughts 
+as she bit her lower lip. Glassy-eyed, she gazed at him with simmering affection. Then 
+she struck a classic pose, raising her fist and lifting the opposite knee. She flew out the 
+empty window into the sunrise, her ultrafeminine form so radiantly beautiful that it 
+outclassed even the sun’s golden light. </p>
+<p>Find my other free stories at: 
+Hikerangel.com </p>
+<p>My published books at: 
+Amazon.com/author/hikerangel </p>
+<p>And my audio stories at: 
+Superpoweredaudio.com </p>
+</body>
+</html>

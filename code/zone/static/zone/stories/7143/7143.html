@@ -1,0 +1,1306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Monster Blood</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>Questions, comments, or commissions? Send me an email at the.be.engineer@gmail.com or message me on Discord at BE Engineer#2306.
+Or check out my Patreon for exclusive monthly stories and captions for as little as $1/month!  https://www.patreon.com/beengineer</p>
+<p>1</p>
+<p>2</p>
+<p>Lacey raced around her house with party supplies in hand. Only two hours ago her</p>
+<p>parents had finally departed to celebrate their anniversary, leaving her alone for the Halloween
+weekend. This left far less time to prepare than she initially thought. Most of the food was yet to
+be set out and it wouldn’t be long before the early birds started knocking at her door.</p>
+<p>In the midst of the rush her friend’s voice came through the phone pinned between her</p>
+<p>shoulder and ear.</p>
+<p>“This is going to be so much fun!! I can’t believe you’re actually going through with this!</p>
+<p>It’s like something out of a sitcom!” Kate’s excitement was enough to make Lacey wince from
+the shrill voice.</p>
+<p>“I know! But--whoa!!” Lacey dropped several plastic bowls after not watching her step.
+“There’s so much to do still! Do you want to come over and help set up? I’m about ready to pass
+out trying to get everything ready!”</p>
+<p>The call for help fell on deaf ears. “Is your costume ready yet?? Are you still going as</p>
+<p>Poison Ivy? I finally found a plaid skirt short enough for what I want!”</p>
+<p>“It’s almost done!” Lacey was pouring two bags of snacks at once into different bowls.</p>
+<p>“I’m still...putting on the finishing touches!”</p>
+<p>“And you have what I need for mine?”
+Lacey took a moment to breathe. All of this running around was making it hard to stay</p>
+<p>upbeat and enjoy herself. Kate’s lack of sympathy and willingness to help only added to the
+turmoil. “Yes, Kate! My bra is at your service…”</p>
+<p>“Perfect! It’s so small it’ll push my boobs up to my neck! Paul won’t know what hit him
+when he sees me.” Lacey could sense the lust in her friend’s voice when Kate added, “I’m going
+to make every schoolgirl fantasy of his come true tonight.”</p>
+<p>Silence filled the connection until Kate realized what she’d said. “ Oh, n-no offense…</p>
+<p>About the bra thing…”</p>
+<p>Lacey waved the comment from her mind. “None taken, I guess. My bras are basically</p>
+<p>mega push-ups to you. Assuming it even fits…” Mental images of Kate trying to wear her
+lingerie were more self-deprecating than they were humorous. “Don’t you have any old bras of
+your own you could wear?? I remember you wearing push-up bras in high school!”</p>
+<p>“I threw them all out after my last growth spurt! They didn’t fit!”
+“Lucky you…” Lacey sighed. Under her top sat her lifelong B-cups. They had just</p>
+<p>enough mass to add a teasing bit of definition to the Autumn-striped sweater but not enough to
+keep a boy’s attention. “Would you mind telling me your secret sometime? You know, share the
+wealth?”</p>
+<p>“Then it wouldn’t be a secret!” Kate sang.
+Lacey blinked in an effort to read her friend’s tone. “You know, sometimes you act as if
+you actually did something to make yourself grow instead of just getting lucky with genetics.”</p>
+<p>“Hmmmm… I don’t knoooow!” Kate hummed.</p>
+<p>3</p>
+<p>If there was a secret, Lacey knew she wasn’t prying it from Kate’s lips any time soon.</p>
+<p>Not before the party at least. Finishing up the snack table, she headed for the garage. “Ok, I need
+to go so I can finish my costume and give the paint time to dry. See you tonight?”</p>
+<p>“See you tonight!”
+CLICK!
+The call ended and Lacey set about to the remaining task of finishing her Halloween</p>
+<p>costume. Through sheer luck, fate had aligned in such a way as to usher her parents out of town
+in time for the party-prone holiday. Such territory was unknown to her. Though light, bubbly, and
+full of energy, her social life left much to be desired outside her closest group of friends. On a
+whim, she decided to throw a costume party and push herself outside her comfort zone. If she
+happened to find a boy in her bed the next morning, it was only icing on the cake. Kate called it a
+quarter-life crisis, but Lacey insisted it was for the sake of broadening her horizons and
+experiencing new things.</p>
+<p>“Ok… Ok, where is it?” she asked herself. Bare feet padded across the garage floor on</p>
+<p>the way to her father’s workbench. An old white bra was clenched in her hand ready for a
+makeover. It would be trash after tonight.</p>
+<p>Shifting eyes scanned the packed shelves of spray cans and lubricants. “Have more stuff,</p>
+<p>Dad.” A far corner was dedicated solely to paint supplies. Standing on her tiptoes, she searched
+the contents.</p>
+<p>“Gold… Red… White… Another white… Clear…” Lacey rattled the colors off as she</p>
+<p>saw them. The longer it took, the more she began to fear she may not find what she sought.
+“Come on! Where’s the green?!”</p>
+<p>Shoving aside a grey bucket of decade-old spray cans, Lacey spied a green lid near the</p>
+<p>back. It sat behind a small urn labeled ‘Trigger’, a name she recognized as her father’s childhood
+dog. Moving it aside revealed a small metal container with a green rubber lid. The label was
+covered in lime rivulets oozing down the side like a poster for an 80s horror movie.</p>
+<p>“Monster Blood…” Lacey said, reading the label. Much of it had worn off due to time.</p>
+<p>Turning it over revealed viscous liquid sloshing inside. “Never heard of that brand. Sounds like a
+good name for green paint, though!”</p>
+<p>POP!
+The lid peeled away along with the dust of several decades. Despite its age, a bright green</p>
+<p>substance sloshed around the container. Lacey smiled.</p>
+<p>“Looks like green paint to me!”
+Throwing her bra onto the workbench along with the can of monster blood and a
+paintbrush, Lacey took to coating her undergarment in the green hue. It flowed over the cotton
+cups and spandex straps like syrup and seeped deep into the padding. When left alone for several
+seconds, it self-leveled to create a shiny glaze and reflected the fluorescent light overhead.</p>
+<p>4</p>
+<p>“Maybe I will keep this bra after tonight,” she thought, “It looks kind of cool! Kind of
+like a sour candy apple bra!” The inside was sure to stick to her breasts after the thick coating
+she’d applied, but it was worth it for the appearance.</p>
+<p>A tap of her finger told her the paint was quick to dry. Shocked but not one to complain,</p>
+<p>she grabbed a bag of fake green leaves she had prepared previously. Quick hands set to work
+spurred on by excitement and a tinge of arousal at her costume. It didn’t take long before the bra
+was covered in a layer of green leaves sewn into the painted fabric.</p>
+<p>Lacey held it into the air and marveled at her work. “Perfect! I’m actually really</p>
+<p>impressed by myself!”</p>
+<p>Beaming, she glanced at a clock on the wall. It featured a half-naked woman lying across</p>
+<p>the hood of a muscle car. There wasn’t much time for Lacey to admire her handiwork. The sun
+was setting and soon it would be time to put her leaf-covered bra to the test. Lacey only wished
+she had something more to fill its cups.</p>
+<p>( . Y . )   ( . Y . )   ( . Y . )   ( . Y . )   ( . Y . )</p>
+<p>KNOCK KNOCK
+Flustered, Lacey opened her front door to find Kate standing there with a set of clothes</p>
+<p>draped over one hand. They didn’t need to be on her body for Lacey to recognize how little
+fabric made them up.</p>
+<p>“You’re not dressed yet??” Kate exclaimed.
+“I’ve been too busy setting up for the party!”
+“But you need to get yourself ready too!”
+Lacey wrung her hands nervously and glanced around the decorations and food spread</p>
+<p>throughout the downstairs. “I just want to make sure people have a good time…”</p>
+<p>“They will! Now let’s get dressed before any of them get here!” Kate pushed her way</p>
+<p>through the door.</p>
+<p>“Welcome to my home!” Lacey invited sarcastically.
+Kate was already on her way up the stairs. By the time Lacey caught up and found her in</p>
+<p>the middle of her bedroom, Kate was already undressing.</p>
+<p>“A warning would have been nice!” Lacey recoiled after seeing her friend bend over to</p>
+<p>remove her underwear in favor of a pink thong.</p>
+<p>“Oh grow up, we’ve changed together at school for years.” Kate straightened up and
+snapped the thong to her hips. Bare breasts distended from her torso like luscious ripe fruits.
+Lacey could never admit how much she wanted to squeeze Kate’s assets from behind at that
+moment, mostly for the thrill of seeing the bulging experience from a first-person point of view.
+Somehow, as Kate’s bust wobbled back and forth while stepping into a plaid mini-skirt, Lacey
+felt her friend had grown yet again. Despite them being into their twenties, over the last year
+Kate’s breasts had gained not only a handful of extra cup sizes but also enhanced their shape and</p>
+<p>5</p>
+<p>firmness. Kate was insistent on denying implants. Her changes had been too gradual for such a
+method as well. The wonderful mounds taunted Lacey from afar with their mysterious ability for
+post-pubescent growth.</p>
+<p>“Where is it??” Kate asked after donning her skirt.
+Lacey knew exactly what she wanted. “It’s on the bed. Under my leaf bra.”
+Kate’s eyes lit up when she saw a black B-cup sitting on the bed under a pile of fake</p>
+<p>leaves. She snatched it away before removing a hand from it in disgust. “Eeeewww, what did
+you do to it??”
+“Huh?”
+“It’s covered in green stuff!”
+Lacey looked over to find both her bra and Kate’s hand covered in green liquid. “Oh</p>
+<p>no!!” she cried out, “I thought the paint on my bra was dry!! I-I know it was!!”</p>
+<p>Kate flung her hand back and forth to try and remove the paint. It wasn’t easy to remove.</p>
+<p>She inspected the borrowed piece of her costume with a frown. “Well… At least the paint only
+got on the inside of the cups… And I’m willing to bet Paul won’t complain if I ask for some help
+cleaning paint off my boobs.”</p>
+<p>With a shrug Kate slipped her arms into the bra. Lacey had secretly been waiting to see
+this event. How would her B-cup handle Kate’s hanging treasures? They each held their breath
+for different reasons when the concave padding connected with Kate’s skin and sank into her
+mammaries.</p>
+<p>“N-Nnngh… It’s...really tight,” Kate grunted, struggling to clasp it behind her back.
+SNAP!
+“Ahh! There we go!”
+Lacey gulped. There was flesh at every corner. The poor bra looked ready to give up. It</p>
+<p>wasn’t meant for this daunting task. It wasn’t born with the underwire necessary for such weight.
+Overflowing skin bulged from the cups at every seam like some kind of erotic seize weapon
+loaded and ready to fire.</p>
+<p>“Oohhhhh that’s cold!!” Kate shivered after the bra settled. “I-I think some of the paint
+soaked into the padding!” Adjusting the cups, Kate placed them on the bottom of her breasts so
+they connected with her ribs. With so much mass stuffed into them, her nipples peeked into the
+open and skin heaped around the shoulder straps. There was no doubt in Lacey’s mind that Kate
+would fall out of she bent forward.</p>
+<p>She admired herself in a vanity mirror. “God this thing makes me look huge!!” Kate</p>
+<p>giggled and groped herself. “Talk about bringing enough tit for the class!” Grabbing her blouse,
+she began the task of stretching the buttons over her boosted bust. She caught Lacey staring with
+envy from across the room. “Where’s the rest of your Poison Ivy costume?”</p>
+<p>Lacey sprang out of her trance. “Oh! It’s right here!” She dove into her closet
+momentarily to retrieve the homemade outfit. “I had to hide it from my parents. They would
+never let me wear something like this, no matter how old I am.”</p>
+<p>6</p>
+<p>A miniskirt made of leaves strung across a green elastic waistband fluttered in her hand.
+Going down the sides were green curtains made of a sheer fabric designed to tantalize and tease.
+Kate’s eyes bulged at the sight of the thing. “Wow… You’re really going for the
+maximum amount of skin, huh? Like seriously, if there’s a breeze people will get an eyeful.”
+“I-It’s not that revealing,” Lacey lied. She knew full well she risked exposing intimate
+parts of herself tonight. It was something she had been psyching herself up for all month. “It’s
+basically the same costume Poison Ivy wore in Gotham by Gaslight! Just enough to be sexy.”</p>
+<p>Kate snorted at her friend’s knowledge of comic book characters. “More like just enough</p>
+<p>to lure a guy from a Halloween party into bed.”</p>
+<p>“Shush.”
+“Well hurry up and get those leaves on! People are going to be here soon!”
+Lacey hesitated with the hope of privacy but realized it was a foolish request given her</p>
+<p>intentions for the night. Stepping out of her pajama pants and pulling her sweater overhead,
+Lacey revealed her slender frame devoid of any underwear. Her bare breasts seemed minuscule
+compared to what had been hanging free in the same room only minutes ago.</p>
+<p>Careful not to damage the sewn-on leaves, Lacey stepped into her skirt of foliage and
+drew it around her hips. It sat exceedingly high with the tips of the leaves reaching only a few
+inches below her pelvis. Following up with her painted bra, she stood before Kate feeling more
+naked than before.</p>
+<p>Her friend’s mouth hung open. “WOW that’s hot. Like...seriously, I might even try and
+get into bed with you tonight, Lace. Is something like that even legal to wear around people??
+You’re really not going to wear underwear with that??”</p>
+<p>Lacey’s face was beet-red. She certainly felt like her lack of underwear was obvious.</p>
+<p>Every leaf was placed precisely to cover what needed to be. This didn’t mean certain curves and
+contours of her pelvis, butt, and thighs weren’t visible. It also didn’t mean an awkward step or
+mishap wouldn’t flash everyone in the vicinity. The bra had even been enhanced to give her a
+respectable amount of cleavage considering what she had to work with.</p>
+<p>Her heart raced while wondering if she was actually brave enough to dress as Poison Ivy</p>
+<p>to such an extreme extent. “I-I wanted to feel a little daring tonight… My parents are gone and
+I’m throwing a big party; I might as well be a little risque while I’m at it… Plus the leaves are
+big enough nobody can see anything!” She moved her hips in several directions and inspected
+the results. More skin peeked through than she anticipated. “R-Right??”</p>
+<p>Kate was speechless. “I… I’m going to be honest, Lace; you’re making me feel like I’m</p>
+<p>wearing a nun’s habit right now. And I’m dressed as a slutty schoolgirl!” Lacey’s face turned
+redder. “By the way!” Kate laughed. She quickly turned around and bent forward like a model.
+With the help of her hand, her skirt flipped up and she groped her chest. “How do I look? Think
+Paul will have any complaints?”
+CRREEEAAAAK</p>
+<p>7</p>
+<p>Lacey’s eyes moved from the pink thong running between her friend’s thighs to her
+tortured bra showing through Kate’s thin white blouse. It complained under her squeezing
+fingers. “You look like you’re about to break my bra!” Lacey said, voicing her concern.</p>
+<p>Kate chucked. “Ehh it’ll last a few hours.” A glance in the mirror was enough to make</p>
+<p>her caress her chest while smoothing her shirt. “God, this cleavage… Your bra lifts my boobs to
+the moon!”</p>
+<p>Lacey knew Kate was changing the subject to help her feel more comfortable in her Ivy
+costume. It had only turned her attention from one insecurity to another. “Well, you are like four
+times bigger than I am… I was surprised they even fit in a bra as small as mine…”</p>
+<p>The words left her mouth with a more somber tone than Lacey intended. Kate picked up</p>
+<p>on this and sensed her envy. “You really do want to be bigger, don’t you?”</p>
+<p>There was no hesitation when Lacey nodded in confirmation. The topic had been
+broached many times before; Lacey’s breast envy was well-known. She didn’t think Kate fully
+knew the extent. Glancing down at her leafy attire, she tried to imagine what it might look like if
+a pair of breasts like Kate’s were nestled atop her frame. Lacey’s chest tingled at the very
+thought. If she imagined hard enough, her bra already felt tighter.</p>
+<p>“They just seem nice to have…” Lacey confessed. “I-I like squeezing things! And they</p>
+<p>look so soft and...fun!” She glanced away in embarrassment. “And...I kind of wish I was so big I
+couldn’t see my feet…”</p>
+<p>Kate laughed lightly with amusement. “Who doesn’t like squeezing things?” A part of
+her went out to Lacey. The difference in their endowments had never been so clear to her as it
+was right now, due to Lacey’s candidness and the extreme tightness of her bra. It felt tighter by
+the minute.</p>
+<p>“Listen,” Kate said slowly, “If it really means that much to you, maybe I can tell you my</p>
+<p>little secret… You are sacrificing your bra for me, after all…”</p>
+<p>Lacey’s eyes illuminated like fireworks. The fact alone that an actual secret existed was</p>
+<p>one thing, but it was another for Kate to be willing to share. “Really?? Can you tell me right
+now?! Kate I can’t tell you how much I’ve always wanted--”</p>
+<p>DING DONG!
+The doorbell rang throughout the house.
+“People are here!!” Kate gasped. Rushing to the bedroom door, she made for the stairs.
+She caught Lacey’s wounded expression before she left. Passing a wink, Kate assured her, “I’ll
+tell you later. Promise.”</p>
+<p>( . Y . )   ( . Y . )   ( . Y . )   ( . Y . )   ( . Y . )</p>
+<p>Lacey’s house was busier than any time she could remember in the last decade. Between</p>
+<p>the loud music blaring from every room, people wandering about in costumes ranging from
+bulky to body-hugging, and the general air of Halloween excitement, it was hard for Lacey to</p>
+<p>8</p>
+<p>hear herself think. There was one other reason her mind found itself scrambled, however: her
+costume.</p>
+<p>A thin curtain of leaves draped across her nether region was far more revealing than she</p>
+<p>had prepared herself for. Before tonight, walking around without a shirt in a bra was too high of a
+mountain to climb. Now, as she walked around her own party feeling naked, Lacey knew her
+cheeks were bright red. Nobody could see anything directly but this didn’t stop curious eyes
+from trying. Lacey could feel gazes lingering on her navel and upper thighs with hopes for an
+odd twist of her body to reveal what was most certainly an uncovered pussy below.</p>
+<p>It made her heart race and sweat bead on her exposed cleavage. Half of Lacey’s mind</p>
+<p>screamed at her to run upstairs and reclaim the panties she’d left on the floor only an hour ago.
+The other half, fogged by several drinks, found a primal thrill in playing the seductive role of
+Poison Ivy. Strutting around her crowded house in nothing but leaves made her feel like the
+queen of the jungle. It didn’t matter what costume any of the other girls wore that night; it was
+nowhere near as daring as her own and their boyfriends couldn’t help but stare with drooling
+mouths.</p>
+<p>It was Lacey’s first time experiencing such sexual attention. A lack of breasts had left her</p>
+<p>far less appealing than other girls, but teasing a glimpse of her crotch beneath a single
+loosely-fitted leaf caused eyes to stick to her like glue. It was better than she could have
+imagined. It was thrilling and exhilarating. It made her heart race, her loins warm, and her
+nipples throb in her painted bra. It was intoxicating.</p>
+<p>“Niiiice costume, Lacey!” a guy named Hal complimented. His eyes never came above</p>
+<p>her breasts. “I didn’t know there would be a jungle girl here! We should have coordinated!”</p>
+<p>“T-Thanks!” Likewise, her own gaze lingered on his exposed muscles on display for a</p>
+<p>caveman costume. She didn’t dare correct him in saying she was Poison Ivy.</p>
+<p>CLATTER
+“Uh ooooh!” a group of guys chided behind her, “We dropped some chips! Could you</p>
+<p>pick ‘em up for us, Lacey?”</p>
+<p>They elbowed each other with their clever plan. Lacey knew better than to fall for it.</p>
+<p>“Sorry! You make a mess, you clean it up!” The disappointment on their faces was golden.</p>
+<p>Lacey hurried away before she could be stopped again. It was going to be easier than she</p>
+<p>thought finding a guy for the night. At this rate she was going to have her pick. The possibility
+made her bra strain with tightness from her short breaths. The longer the party wore on, the more
+she noticed an increasing amount of attention around her breasts. It struck her as odd,
+considering the bra-covered region was the most modest portion of her costume and contained
+the least to ogle. It certainly didn’t feel very empty, however.</p>
+<p>“Lace!!” a voice called from the kitchen. It was a welcomed relief to see Kate, even if she
+was wrapped in the wandering hands of her boyfriend. They hadn’t left her body since his arrival
+and after several hardy drinks, they had devolved into heavy squeezing and lifting up her skirt.
+Lacey couldn’t very well blame his drunken arousal; Kate’s blouse and borrowed bra looked</p>
+<p>9</p>
+<p>ready to explode. How she’d managed to get them closed in the first place made Lacey pause; it
+seemed an impossible task given how large her breasts appeared. Lacey knew it was time to
+accept she would never wear that bra again.</p>
+<p>“Kate!” Lacey replied, “Having a good time??” From the color in the cheeks and her soft</p>
+<p>giggles as Paul caressed her, Lacey needed no response.</p>
+<p>Her friend had to yell over the music. “Hell yea!! What about you?? You’re the talk of the</p>
+<p>party in those leaves! Even I can’t help but stare!! You look hotter every time I see you!!”</p>
+<p>Blushing hard and clasping her hands over the front of her pelvis instinctively, Lacey</p>
+<p>accepted the comment. She felt extremely attractive. The excitement of such an outfit had
+brought a tingling to her chest which refused to cease. “Thanks!” She watched Paul’s hands sink
+to Kate’s chest with no regard for who may be watching. They appeared full and tight in his grip.
+“I-I…” Lacey had to swallow from watching Kate bite her lip to fight his grasp. “I...I think I’m
+starting to get used to how much skin I have on dis--”</p>
+<p>“We’re out of Doritos!!”
+“NOOOO!!!”
+The kitchen area erupted into a storm of displeasure at the announcement. Lacey was</p>
+<p>prepared for such a catastrophe. “Calm down, calm down!” she laughed over the roar. Her
+costume garnered near-instant attention. “I have more!”</p>
+<p>“Yaaaaayy!!”
+“Excuse me for a second,” she said to Kate.
+Lacey entered the pantry. Taking care not to stretch in such a way that would hike her leaf</p>
+<p>skirt high enough to reveal everything, she grabbed a new bag of snacks. Hungry gaggles of
+monsters and ghouls watched as she came to refill the bowl. “Plenty more where that came
+from!” she promised.</p>
+<p>A nearby girl slapped her boyfriend on the arm. “Stare a little more, why don’t ya?</p>
+<p>Jesus…”</p>
+<p>“What?? I like her costume!” he responded with a shrug.
+Lacey blushed at his praise. At the end of the table she could feel a group of men staring</p>
+<p>at her torso. They made no efforts to hide their conversation.</p>
+<p>“Great set of tits on her…”
+“Is that Lacey? From high school??”
+“Fuck me if it is! She was flatter than a day-old soda, remember?”
+“Hey Poison Ivy! What happens if I throw a bucket of Miracle Grow on you??”
+Lacey giggled and did her best not to shy away from the attention. “What do you think</p>
+<p>would happen??” she teased, setting down the chips and motioning to her costume, “I would
+grow right out of this thing!”</p>
+<p>SNAP!!</p>
+<p>10</p>
+<p>Something in the corner of her vision fluttered to the ground. Stooping down while
+cautiously keeping her back straight, and well aware of the hopeful eyes watching her skirt,
+Lacey picked up a leaf from the floor.</p>
+<p>“How did this fall off…?” she questioned.
+Looking closer, she discovered the thread she’d used to sew it onto her bra was snapped
+in half. A glance at her side revealed a gaping spot of green cotton where it had fallen. It looked
+as though her bra had stretched to the point of breaking the loop of thread.</p>
+<p>“What the…” Lacey grabbed the bare patch of her bra in perplexment. It was tight around</p>
+<p>her body. Wetness met with her grasp and she recoiled in surprise to find her palm covered in
+green goo. “It’s still not dry??”</p>
+<p>SNAP!
+Before her eyes, another leaf was released. Lacey caught it in midair. Between her
+ever-tightening bra and the heightening intensity of the tingling in her breasts, she was sobering
+up more by the minute. Heavy masses carried her forward from the motion of grabbing the leaf.</p>
+<p>“W-Whoa…” she swooned from loss of balance. Out of instinct, her hands flew to the
+source of the weighty shifting. They collided with two soft masses completely alien to Lacey.
+She squeaked in shock before looking down, now paying attention to more than just her breaking
+costume.</p>
+<p>Her bra was heaped with flesh. Two large grapefruits were stuffed into the tiny
+undergarment. It was lifting away from her torso and pulling tighter with each and every breath.
+With so much mass stuffed into such a confined space, Lacey was entranced by the heavenly line
+of pale cleavage striking between her groping hands. Multiple fingers sank into her skin up to the
+first knuckle. A thin trail of green liquid squished from between her mounds and ran down her
+stomach.</p>
+<p>“O-Oh my God!” she squeaked again. Lacey’s hands held onto her swollen chest for what</p>
+<p>seemed like ages while she ogled their pale forms and the straining bra. “I-I-I...I have boobs??”</p>
+<p>“Hey, Lacey!! Calm down over there!!” Kate chided from the kitchen.
+Lacey looked up to find half of the party watching her grope and ogle herself. “Ahh!” she
+gasped, letting herself go. The room of witnesses laughed at what they assumed to be a drunken
+girl’s sexy prank. “T-This costume might be a little revealing!” she whimpered.</p>
+<p>In the kitchen, Kate chuckled at her friend’s predicament and turned her attention to Paul.
+A rock-hard erection had been prodding her back all night. “You can thank Lacey for this lovely
+view down my blouse, by the way.”</p>
+<p>Paul grinned and ran a finger under a cup. A nipple slipped free for all to see. “You’re</p>
+<p>going to have to keep that tiny bra. I hope you know that.”</p>
+<p>“Oh really?” Kate inhaled deep and arched her back. The bra wouldn’t allow for much
+before she risked bursting free. “I’m not even sure I could fit into this thing again if I had to!”
+Stress lines ran across the front of Kate’s blouse. Flesh folded over itself in the
+schoolgirl’s cotton prison. Inside the cups she could feel the green paint still wet against her</p>
+<p>11</p>
+<p>breasts. It was stimulating her nipples beyond anything she’d ever experienced. They hadn’t left
+their rock-hard forms since she’d gotten dressed.</p>
+<p>GUUUURRRGLE
+“N-Nnngh…” Kate groaned. Fabric creased firm into her back.
+“You all right…?” Paul asked, biting Kate’s ear.
+“Yea… Yea…” Panting, she released she couldn’t breathe. “I think this</p>
+<p>costume...nngh...is just a little...too much!” Eyes of arousal tempted Paul as she gasped. “I think
+I’m getting full…”</p>
+<p>A shaking hand reached for her blouse to undo the topmost button. It needed only to be</p>
+<p>brushed before it sprang open.</p>
+<p>BWOOMP!
+GUUURGLE
+“Nnnmmmmmgh!!” Kate shivered at the release of her breasts. They felt like two bloated</p>
+<p>watermelons stuffed down her shirt. Running a hand behind her to grab Paul’s member, she
+whispered into his ear, “I-I think...mmmnngh!!!...it might be time...a-already!” Moisture covered
+her lips. She delivered a demanding squeeze to his shaft. “Help a full girl out?”</p>
+<p>Paul nodded like a puppy ready for a treat. Kate smiled excitedly at Lacey before taking</p>
+<p>Paul’s hand and leading him towards the stairs.</p>
+<p>From her position, Lacey watched the entire scene unfold. She was short of breath from</p>
+<p>the absolute girth of Kate’s breasts. Undoing a single button had sent them jiggling like
+basketballs reaching beyond her elbows. Kate was big, but Lacey knew she wasn’t that big.</p>
+<p>“She looked like she was going to fall over…” Lacey whispered in disbelief. She couldn’t</p>
+<p>explain it, nor prove it was only in her head. She did know Kate had just taken Paul up to her
+room for some Halloween fun. She only hoped they would stay off her bed. Beyond that, nothing
+else mattered aside from her own enhancement.</p>
+<p>“Hey, Lacey!”
+For the first time that night, two girls were trying to grab her attention. Lacey recognized</p>
+<p>them from high school but barely knew them otherwise. “Hey, guys!” Their names had faded
+away long ago.</p>
+<p>“We love your costume!”
+Lacey grinned with pride. “O-Oh! Thanks! I--”
+“What kind of props did you use?” the other girl asked.
+“Uhhh… Props?” Lacey cocked her head. “I used an old bra and some fake leaves, but</p>
+<p>other than that I--”</p>
+<p>“No, I mean your boobs!! I do a lot of cosplay and I wish I could make myself that big</p>
+<p>and have such realistic cleavage! Are they foam? Latex?”</p>
+<p>Lacey began stammering. “I-I didn’t use anything! These are just my--”
+CRRREEEAAAAK</p>
+<p>12</p>
+<p>“Eeep!!” Lacey shuddered when her bra tightened and her breasts distended. Like two
+swelling fruits, they expanded outward into her cups and bulged in heavy overflows. Several
+inches were added to her girth before they stopped at a size resembling cantaloupes. She looked
+down at her bust in shock and awe, unable to know how to cope with such a drastic change in her
+anatomy. Beneath her leaf skirt, slick fluids were leaking onto her thighs.</p>
+<p>“Whoooaaaa! Awesome effects!!” the first girl cheered. “Those look real!! My boyfriend</p>
+<p>would lose his mind if I had a costume that could do that!”</p>
+<p>The second doubled down for her cosplay needs. “Did you use balloons?? Maybe some</p>
+<p>kind of bodysuit fit for your torso?? Is there an air pump wired into the bra??”</p>
+<p>CRREEAAAAAAK
+The fabric pulled drum-tight. “A-A-Ahhh!!” Confused, Lacey wrapped her arms across</p>
+<p>her tits as they began feeling ready to pop free. “Yup!! Y-Yup!! Some balloons and a tiny pump!!
+Had to do my Poison Ivy justice!!” she lied. Anything to get her free of their questions.</p>
+<p>CRRREEEEEAAAAAAK
+“Ahh!! O-Oohh!!” Lacey jumped. “Excuse me for a minute!!!” Holding her breasts in her</p>
+<p>arms, she pushed her way through an ogling crowd to the bathroom and locked the door behind
+her.</p>
+<p>“Oooohhhh my God… O-Ooohh my God what’s happening to me??” Lacey nearly fell</p>
+<p>over from her haste in entering the bathroom. She clambered for the counter to catch her fall
+before leaning over the sink and staring into the mirror. Hands flailing for her bra clasp, she
+winced as it drew tighter. “My boobs feel...feel so--”</p>
+<p>FWIP!!
+Her bra flung open.
+Lacey stared in amazement. “--BIG.”
+Breasts like volleyballs hung from her frame in plump, luscious globes. With a shape</p>
+<p>firm enough to make any bra model envious, they pressed into each other in a battle for space.
+Nipples like half baby carrots trembled on their fronts. Monster blood dripped from her pale
+curves and pink nubs as if it had been drizzled on. On the sink below, her bra cups were saturated
+with the goop.</p>
+<p>Lacey paid no mind to the strange content covering her chest, nor its presence in her</p>
+<p>brassier. She was entirely focused on her perfectly-engorged mammaries.</p>
+<p>“I-I...I have…” She gulped, afraid saying it aloud might cause them to vanish under her</p>
+<p>own hands. “I...have TITS!!”</p>
+<p>Lacey sank her fingers into them with evolving greed.
+“NNNGHHH!!! OOHHHH YES!!” Her knees fell into the counter as they weakened and
+trembled. So much sensitivity had never come from her chest. The sheer act of squeezing herself
+sent her into a spiral of dizzying arousal. It wasn’t until her thumb and finger inched to her nipple
+and delivered a semi-cautious pinch that she screamed.</p>
+<p>“AUUUGH!!!!”</p>
+<p>13</p>
+<p>Fluid dripped down one of her thighs. Covered in the green paint, her breasts were slick</p>
+<p>and warm. A foggy mind urged her to massage the goop into her breasts. It dripped to the sink
+below and onto her bra as she did so, coating herself in its throbbing essence. “H-Hoooly crap…
+GOD these things...are everything I hoped they would be!!”</p>
+<p>STREEEEEETCH
+“M-MMMM!!!” Lacey whimpered and perspired when her skin swelled in her grasp. Like</p>
+<p>feeling two water balloons filling in her hands, she shook with anticipation. “T-They’re still
+getting bigger!! How is this possible?!”</p>
+<p>Heat rushed throughout her body in rising waves. Lifting them up and allowing their slick</p>
+<p>surfaces to slip from her hands, she listened to them fall against her naked torso and fill the
+bathroom with satisfying slaps of bloated skin.</p>
+<p>“O-oohh my… Oh they’re so sensitive…”
+Lacey bit her lip when she pinched her nipples and stretched them away from her. The</p>
+<p>rush of ecstasy made her feel like she was floating. Paint continued running down her body and
+hands. Lacey couldn’t have cared less. She could clean it up later. She didn’t care if it never
+dried. There was no point in worrying about something so trivial when her womanly dreams
+were finally coming true.</p>
+<p>“I’m...nnngh...I-I think I’m bigger than Kate!!”
+The idea of such a monumental achievement threw her libido into overdrive. Squeezing a</p>
+<p>puffy nipple, one of her hands slipped down her waist and between two leaves to find her
+sopping pussy. The dripping sight had been hidden from view by a thin layer of cheap green
+plastic for the last half hour. It was time to give it the attention it deserved.</p>
+<p>Lacey’s fingers dove deep. She’d never been so glad to have forgone panties. Massaging</p>
+<p>a volleyball tit with one hand and fingering herself with the other, she began to rock in
+approaching orgasm. Her mouth fell open to a silent scream. Heat gushed through her
+mammaries and personal lubricant coated her hand. She felt she was going to explode from the
+building pleasure if she didn’t come soon.</p>
+<p>KNOCK
+KNOCK
+KNOCK
+“Hey!! Other people need to use the bathroom, you know!!” somebody yelled from</p>
+<p>outside.</p>
+<p>“C-Coming!! I’m...coming!!” Lacey yelled.
+The people outside didn’t know how honest she was being.
+“NNNNGGGAAAAHHHH!!!!”
+Tremors shook her body like the ocean and she fell forward. Green paint ran from her</p>
+<p>chest into the sink, matching the fluid she felt running over her wrist. “Dear God…” she moaned.
+It had never been so hard for her to catch her breath, nor had an orgasm ever come so
+effortlessly. “T-These tits...are incredible… My nipples are orgasm buttons!”</p>
+<p>14</p>
+<p>KNOCK!!
+KNOCK!!
+KNOCK!!
+“Hurry up in there!!”
+Panting still, Lacey washed the sink of paint before grabbing her bra. The dripping cups</p>
+<p>delved into her chest and pushed flesh over her collarbones before the clasp met at her back. She
+stared in wonder at the bulges dominating the garment. “They’re beautiful…” she awed, taking
+in their majesty. She didn’t care how or why they were growing.</p>
+<p>CRREEEAAAAAAK!!
+“N-Nnngh!!”
+Lacey winced when the bra tugged and her swelling continued. Clarity was returning</p>
+<p>with her orgasmic waves fading. Under a breath of discomfort as her shoulders tightened and she
+found her balance uneasy, she muttered, “I wonder if they’re going to stop soon…”</p>
+<p>Still catching her breath, she tucked an arm under her chest and opened the bathroom
+door to a line of people. She strode past them standing as straight as her heaving chest would
+allow while her thighs slid against each other and leaves dripped with her personal lubricant.</p>
+<p>Eyes were attracted to her chest like moths to a lantern. Confidence flourished from her</p>
+<p>core with every bouncing step. Seams creaked and groaned against the two melons stuffed inside
+her bra.</p>
+<p>“Lacey! Where did you get those prosthetics??” the girl from earlier insisted.
+Lacey grinned with pride and arched her back. Across the room a guy’s drink fell from</p>
+<p>his hand due to erotic the sight. “Who says they’re fake?”</p>
+<p>SNAP!!
+Another leaf broke free of its tether. It was left on the floor without a second thought.</p>
+<p>Lacey couldn’t have cared less about her costume at this point. All that mattered was its contents.
+As she walked, however, she found herself having to pull down the elastic around her waist. It
+was riding higher and higher despite her adjustments. There wasn’t much margin for error in her
+wardrobe; if she didn’t pay attention, she would find herself walking around with everything in
+plain view.</p>
+<p>“Mmm…” A sexual moan vibrated her lips. Friskiness was taking over. A part of her</p>
+<p>enjoyed the thought of flashing her enthralled audience. Little by little, she started correcting her
+leaves less and less. Private contours on her pelvis peeked around the green foliage. At precise
+angles, slivers of glistening pink could be seen.</p>
+<p>“Nice legs, Ivy; you’ve been doin’ some growing looks like!” a thirsty-eyed vampire</p>
+<p>complimented on his way down the hall.</p>
+<p>Lacey felt like a walking pair of breasts and thighs. Nobody was looking above her neck</p>
+<p>for the first time in her life and she couldn’t have been happier.</p>
+<p>CRREEEAAAAAK</p>
+<p>15</p>
+<p>Her bra’s complaints fell on deaf ears. Finding joy in landing her weight on her heels as</p>
+<p>she walked to produce a healthy amount of bounce, Lacey strode into the middle of the party.
+“How about we turn the music up??” she announced.</p>
+<p>“Wooooo!!!” The room cheered when she approached the blaring entertainment system.
+Then, as she bent forward at the hips, the cheers turned to horny hollers and whistles as Lacey
+flashed her crotch from behind. A teasing bulge between her thighs wouldn’t be an image the
+men in the room would soon forget, or their jealous dates.</p>
+<p>“Whoops!” Lacey giggled, making no rush to stand up, “I think this costume might be a</p>
+<p>little small for me!!” Straightening up required both arms to cradle her chest.</p>
+<p>CRREEEAAAAAAAK
+“Nnnngh…!” The weight of her breasts was more than she thought such a size would</p>
+<p>produce. It tugged at her petite shoulders without mercy. There were sure to be red marks left on
+her skin from the cable-tight bra.
+“Take it ooooff!!”
+“Show us your tits!!”
+The party was devolving into a raucous of primal urges. As much as she loved her</p>
+<p>growing breasts, Lacey was finding it hard to keep up.</p>
+<p>A concerned girl pointed towards Lacey’s abdomen. “Oh no! Lacey, I think your</p>
+<p>costume’s paint is running!”</p>
+<p>Lacey glanced down to follow the girl’s focus but was met with an expanse of flesh.</p>
+<p>Nothing was visible below her breasts. The thrill of not being able to see her own feet made her
+gush with arousal. Then, for a split second, the fog in Lacey’s head lifted and the weight of her
+breasts hung heavier than ever.</p>
+<p>“O-Oh God they’re getting kind of big…” she whispered. A hand across her stomach</p>
+<p>found several rivulets of monster blood dripping from her bra. “I’m like a walking pair of tits…!”</p>
+<p>CRREEEAAAAAAK
+The concerned girl backed away when Lacey’s breasts bloated towards her. “Are you</p>
+<p>ok…??”</p>
+<p>“U-Uuuuhhhh…”
+“Lacey! L-Lacey!!”
+Paul was pushing his way towards her through the crowd. Concern filled his face and she</p>
+<p>realized Kate wasn’t trapped in his arms. “What’s wrong?” Lacey inquired.</p>
+<p>“It’s Kate…!” Paul breathed several times trying to find the right words. “She’s…</p>
+<p>H-Her…” It refused to leave his lips. “She’s in your room! She told me to find you!”</p>
+<p>The lack of color in his cheeks told her Paul was frantic. Something had happened. With
+her costume feeling smaller by the second and drops of green goo falling to the floor behind her,
+Lacey led the way upstairs. She didn’t need to be told about the all-revealing view Paul enjoyed
+while walking behind her.</p>
+<p>16</p>
+<p>“Oh… Oh wow…” Lacey huffed at the top. Her lungs were screaming for air. Her arms</p>
+<p>shook from the effort of holding herself steady.</p>
+<p>CRREEEAAAAAAK!!!
+A red flag rose in the back of her mind. For the first time since growing, Lacey found</p>
+<p>herself considering her breasts a burden. They were becoming a pair of anchors.
+“K...Kate…?” she panted while approaching her closed bedroom.
+“Mmmmnnngh!!!! Ahhhhh!!!” Only an animalistic moan came from within.
+“Kate what is it??”
+“Oohhhh GOD I’m SO FUUULL!!! MMNNGHH!!!!”
+Lacey went to open the door but Paul grabbed her hand. His throat was dry as he spoke.</p>
+<p>“I don’t know what’s happening to her,” he confessed. “She just started getting bigger!”</p>
+<p>Lacey gulped as her bra clamped tighter. “Getting bigger?”
+Color flushed Paul’s cheeks as he revealed personal information. “S-She’s
+been...inducing lactation to make herself bigger and...I think something is wrong.”</p>
+<p>Lacey blinked in shock. “Lactation? Like milking herself??”
+Paul nodded and released her hand.
+“NNNGHHH!!!! Laceeeeyyy!!! Help meee!!” Kate bellowed.
+Filled with trepidation about the scene waiting for her inside, Lacey opened her bedroom.</p>
+<p>There was no way to adequately prepare herself.</p>
+<p>“MMMMMMM LACEEYY!!!”
+Lacey stared on in stunned silence as the door closed behind her. “K-K-Kate??”
+Bloating across a significant portion of her bed was Kate. The remnants of what looked to</p>
+<p>be her bra were strewn across the floor. Imprisoned in a blouse ready to explode were the two
+largest breasts Lacey had ever seen, as well as imagined. Enough to cover Kate’s body from neck
+to hips, they pinned her down like giant scoops of vanilla ice cream. Nipples bloated to the size
+of soup cans leaked milk like pink hydrants to the extent of causing fluid to run over the sides of
+the mattress. Much like Lacey, green goo could be seen covering Kate’s chest like veins. With
+her arms trying to wrap around her bust, Kate’s eyes were seen peeking over the top of her
+engorged udders. Below, her legs sat spread to give a clear view up her miniskirt and the sopping
+thong waiting there.</p>
+<p>“Kate…” Lacey whimpered. “K-Kate you’re HUGE!!!”
+“Mmmnnnghh!! You don’t have to tell me that!! What’s happening to me?!”
+SPUUURRT!!
+“A-Ahhh!!!” Milk sprayed the ceiling when Kate’s nipples released a shower of dairy.</p>
+<p>Flushed with color and gasping from the orgasmic sensations of such milk-based swelling, Kate
+eyed her friend from over her chest. “Looks...nnghaaah...Looks like...you’ve done some growing
+yourself!”</p>
+<p>GUUURRRGLE</p>
+<p>17</p>
+<p>“M-M-Mmmm!!!” Milk surged, causing Kate to tremble against her chest as it heaved an</p>
+<p>entire foot in diameter. “I-I thought...you looked bigger earlier!!” Kate laughed weakly. “Are
+they all you hope they would--Nnngh!!!”</p>
+<p>“Nnnghmmmm!!”
+CRREEEAAAAAK!!
+Together, the two girls fell prey to their breasts’ simultaneous growth. Fabric strained and</p>
+<p>filled the room with aching stitches.</p>
+<p>“O-Oohh God… This milk!!” Kate rubbed her mammaries before squeezing them for</p>
+<p>another spray of fluid. “I don’t know what’s wrong with me!! The lactation caused some growth,
+but not like this!! I’m a walking milk tank!! I was big enough as it was!!”</p>
+<p>GUURRRGLE
+“Mmmnngh!!” Kate whimpered and saw a river of green gush from her cleavage. “I</p>
+<p>think...something is wrong with that paint you used, Lace!! It’s making our chests grow!!
+And...A-And I think it’s...making my milk grow inside of me too!! No matter how much of this
+green stuff I wipe off, more keeps coming!! I-I’ve never had to hold this much milk!”</p>
+<p>Lacey found the claim ridiculous, despite the absurd contents bulging over her arms.</p>
+<p>“The paint?? Kate, that's insane! It was only green--NNGH!!”</p>
+<p>The tingling surged like lightning and struck Lacey’s breasts. Several inches of growth</p>
+<p>bloated her tits to the point of her flesh engulfing her bra straps. The sudden addition of so much
+weight sent her stumbling backward where she caught herself on her vanity.</p>
+<p>“O-Oohhhh… Oh these things are really getting heavy…” Lacey moaned. It was</p>
+<p>becoming unbearable. “I don’t know...how much more I can--”</p>
+<p>Her eyes turned up to a frightful reflection.
+It was hard to see anything other than her breasts. Taking up the majority of the
+reflections, her three mirrors revealed the full extent of what her chest had become. As large as
+beach balls, Lacey’s breasts sat heavy in her trembling hands. Her bra was stretched beyond
+recognition and would soon face a fate of vanishing completely into her flesh if it didn’t snap
+soon. Lacey’s mouth fell open into a horrified gawk at her sheer girth. Just as concerning was the
+top of her head refusing to fit in the mirror. An unexplained increase of height made her
+reflection alien and pulse-pounding. Cast in the shadow of her bust, Lacey could see her skirt
+covering only the most minuscule amount of her crotch. How long it had been so naked was a
+mystery. The act of walking surely exposed her pussy. She didn’t need to turn around to know
+her ass was on full display.</p>
+<p>18</p>
+<p>Lacey’s jaw trembled. She’d been so enthralled by her new breasts that she had no idea</p>
+<p>just how far her growth had progressed. Now faced with her development in three different
+views, she shook in fright. She glanced between her chest and Kate’s heaving in the background.
+“O-O-Oh my God!! I’M MASSIVE!!! K-KATE I’M GETTING WAY TOO BIG!!”
+“You’re getting too big?! Lacey I’m about to break your bed in half!!”
+POW!!
+POW POW!!
+“Aahhughhh!!!” Kate howled when her chest blew her blouse open and buttons shot</p>
+<p>against the ceiling. No longer contained, they spread out to fill Lacey’s bed from edge to edge.
+Her arms were nowhere to be seen. “Holy shit!!!” Kate stared.</p>
+<p>19</p>
+<p>Lacey was facing troubles of her own. The ground seemed further away than normal and</p>
+<p>her legs elongated. Her room as a whole had taken on a different perspective as if she were
+standing on a small step stool. The bottom of her crotch inched into view from below the largest
+leaf.</p>
+<p>“L-Lacey!! Lacey!!” Kate panicked.
+CRREEEAAAAAAAAAK!!!!
+“Mngh!!” It wasn’t Kate’s cries that brought Lacey back, but the extreme tightness of her</p>
+<p>bra.</p>
+<p>Kate panicked. “Go get that paint!! The label has to say something about this!!</p>
+<p>Something about exposure to skin!! O-Or allergic reactions!! Anything!!”</p>
+<p>SPUUURRRRT!!!
+“Aahhhh!! Please!!” Kate’s eyes widened when milk gushed in rivers and skin swallowed</p>
+<p>her legs. “Before I turn into a fountain!! I can’t hold much more milk!!!”</p>
+<p>Lacey tried speaking but her mouth was too dry. Her breasts suddenly felt far too heavy</p>
+<p>and cumbersome to move. How she’d been walking this long was beyond comprehension.
+“I’ll...I-I’ll be right back!!”</p>
+<p>Almost falling forward, Lacey grabbed for her door handle and opened it just enough to
+squeeze through. Her breasts bulged against the frame as she did so, spiking the tightness in her
+bra.</p>
+<p>“Is Kate all right?!” Paul asked in a flurry, trying to see past Lacey’s body into her room.</p>
+<p>“I heard screaming!”</p>
+<p>went straight to her head!”</p>
+<p>CRREEEAAAAAK!!
+“M-Mmm!!” Lacey tried to keep her cool. “Kate is just...taking a breather! All that milk</p>
+<p>Paul started to respond but instead fell silent when a trail of green goo raced from Lacey’s
+cleavage and down her abdomen before caressing her naked crotch and traveling down her thigh.
+Everything tingled momentarily and the world shrank by a tiny amount. For the first time, Lacey
+could see the top of Paul’s head. He stared in silence at his girlfriend’s friend’s development and
+nakedness.</p>
+<p>“I’ll be right back, Paul!!” Lacey promised, making her way to the stairs while making</p>
+<p>sure to use the wall for support. “Don’t go in my room!”</p>
+<p>“S-Sure…” he said slowly as Lacey took heavy-breasted steps down the stairs.
+The house had transformed into an obstacle course unfit for a woman of Lacey’s
+endowment. Given her drastic transformation, not a soul believed her breasts were real. This led
+to curious hands and fingers reaching out to poke and grope her chest as she fell into people on
+her way to the garage.</p>
+<p>“M-Mmmm!! S-stop touching them please!!” she begged. Every brush sent shocks of</p>
+<p>pleasure through her system. With her loins completely exposed, there was no hiding the
+resulting moisture. “Excuse me!! I...I need to get through!!”</p>
+<p>20</p>
+<p>“Awooo!!” someone howled, “I’ve always wanted to see Poison Ivy naked!!”
+“Looks like Poison Ivy trims her hedges!! Talk about irony!!”
+The jokes and adoration failed to register for Lacey. Relief was in sight when she grasped</p>
+<p>the garage door and threw it open. Muffled party sounds thumped behind her when it closed.</p>
+<p>“Where is it?? Where’s the can?!” she panicked. Every second bloated her breasts larger.
+CRREEEAAAAAAAK!!!
+“Ooohhhh my BRA!! I’m too big for this thing!!!” Traveling by an awkward combination</p>
+<p>of stumbles and steps, Lacey made her way to her father’s workbench. The can of paint was
+waiting where she’d left it. Horrifically, it was overflowing with a sea of green goo leaking onto
+the floor in a shiny puddle. “WHAT THE HELL IS THIS STUFF?!” she screamed, recoiling at
+the shocking sight.</p>
+<p>Steeling herself, Lacey grabbed the bubbling can and wiped it clean to read the back</p>
+<p>label. Her breasts inched outward as her eyes flew across the lines.</p>
+<p>Monster Blood
+Apply for a larger-than-life experience</p>
+<p>Lacey’s heart beat against her chest. “What does that even mean?! Why is there so much</p>
+<p>of it?! It’s like it’s growing!!”</p>
+<p>CRREEAAAAAAAK!!!
+“Ohhhhh my bra!! M-My bra can’t...take this anymore!!” Lacey gasped for air as the</p>
+<p>garment restricted her breathing. She brushed more goo off the label. She was starting to miss
+being able to see her feet. Hope revealed itself then.</p>
+<p>Neutralize with saltwater</p>
+<p>CRREEEEAAAAAK!!
+“Saltwater!!” she cried out while grimacing. The can was returned to the workbench. “We</p>
+<p>need saltwater!! I’ll just--”
+BOOM!!!
+Like a bomb going off, Lacey’s bra exploded in several places. Her monumental chest</p>
+<p>burst forth into its natural shape. The momentum of such mass sent her careening to the ground
+with flailing arms. A stray hand caught the edge of the can of gurgling monster blood to tilt it
+over the workbench.</p>
+<p>SPLASH!!
+Lacey sat on the ground in horror. Dripping from head to toe, the contents of the can</p>
+<p>coated her body in green slime. It seeped between her breasts and ran down her back and
+abdomen. Her thighs were slick with the substance and she could feel it sticking between her butt
+as she fought to stand up in the slippery puddle. Tingling flared across her being.</p>
+<p>21</p>
+<p>“G-Gotta hurry!” She didn’t waste time concerning herself with the mess. Intense</p>
+<p>sensations were assaulting every inch of her body. Going on all fours before rising to her feet,
+Lacey noticed her breasts reached beyond her hips like suspended yoga balls. Running through
+the party naked was the least of her problems at this point.</p>
+<p>“Ooohhhhhhh!!! No no no!! No more!! I didn’t want boobs this big!!” she begged,</p>
+<p>making her way towards the door. The top of the doorframe brushed unnaturally close to her
+head. The skirt sitting around her belly button was ready to snap though it provided zero privacy
+at this point. “I’m big enough!! I’m big enough!! Hang on Kate!!”</p>
+<p>The house welcomed her with the roar of her party. For a moment there was no reaction</p>
+<p>until people started taking notice of the naked slime-covered girl standing a foot taller than
+anyone else carrying her breasts in her arms. Lacey noticed the tops of their heads slowly pulling
+away.</p>
+<p>SNAP!!
+Under her breasts, her skirt finally snapped like twine. She was utterly naked. It didn’t</p>
+<p>matter anymore.</p>
+<p>“T-Too big!! I’m too BIG!!” Monster blood dripped from her hair and into her face. Her
+breasts were too slippery to hold. Every time she grabbed at them they were bigger. Slowly they
+extended to her knees, pushing people over like wrecking balls. Stunned silence fell around her
+as she waddled her way through the crowd. Green footprints marked her desperate travels.</p>
+<p>“What the hell happened to her…?”
+“Is this some kind of prank?”
+She paid the whispers no mind. “Hah… Haaaah!!! Ohhh I can’t carry them!!” Lacey</p>
+<p>cried. Knees buckling, she stood amid the party as her breasts grew too large. “N-N-N-No
+please!!!” Lacey pleaded to her body when she felt her knees startling to buckle. The floor was a
+long way down and felt even further with the bulbous fleshy masses pulling her towards the
+carpet. “I-I NEED TO GET TO THE--”</p>
+<p>She fell.
+THUD!!!!!
+The house shook when the eight-foot-tall girl fell to her hands and knees. Several men
+stumbled back in shock and awe at the surprise crotch presenting itself to them. Lacey had no
+mental capacity to mind to her lack of modesty; her breasts were too busy expanding beneath her
+like fleshy airbags.</p>
+<p>Monster blood dripped from her face to her creeping cleavage. “S-Stop!! STOP
+GROWING!!” Skin bulged around her wrists until she was forced to apply her weight to her
+chest. It bulged across the floor, causing several people to step out of the way.</p>
+<p>“Saltwater!!” Lacey screamed like a lunatic to the stupefied crowd, “SALTWATER!!</p>
+<p>Please!!”</p>
+<p>“What is she screaming about?”
+“Something about saltwater?”</p>
+<p>22</p>
+<p>A sexually-violent scream from above rattled the windows. Everybody looked towards
+the ceiling with sheer confusion. “AUUUUGHH!!!!!! MY BOOBS CAN’T HOLD ANY MORE
+MILK!!!”</p>
+<p>“Kate?! KATE!!” Lacey yelled, “We need saltwater!!! Somebody get me saltwater!!</p>
+<p>Before either of us gets any big--”</p>
+<p>GRRRROOAAAAAAAAANN
+Lacey froze. The sound of creaking wood rattled her brain. “O-Oh no.”
+The ceiling above started to bow. Plaster and drywall cracked and snapped in giant</p>
+<p>shards. Shaking them from their trance, the party goers screamed in a panic when the ceiling’s
+integrity failed.</p>
+<p>“EVERYBODY RUN!!”
+They scattered in all directions and pushed against the walls. The ceiling cracked in the</p>
+<p>center. Debris poured down as light shone through the broken floor. Within seconds of the chaos,
+it reached the breaking point and--</p>
+<p>CRASH!!!
+BWOOOOMPHHH-SLOOOOSH!!!
+The ground jumped when Kate fell through the floor as a blimp-like pile of milky</p>
+<p>mounds. Bloated skin stretched to fill the space and pressed against everyone in the vicinity.
+Even Lacey was caught in the mess, her growing body thrown against the wall. She stared in fear
+at the trash can-sized nipples throbbing and leaking milk.</p>
+<p>GUUURRRRGGGLE!!
+An orgasmic scream came from below the feminine heaps. “AAAHHHHH!!!!!! I CAN’T</p>
+<p>HOLD IT ANYMOOOORREEEE!!!!!”</p>
+<p>GUUUURRRRRGGLLLLEEE!!!!!
+Fighting to keep the file of flesh from crushing her, Lacey felt the creamy fluid swirling</p>
+<p>against Kate’s skin. It was taut and firm, vibrating like a bomb ready to explode. As their tops
+reached towards the ceiling, Lacey and the rest of her guests were pinned against the walls by
+crushing pressures.</p>
+<p>“IT’S TOO MUCH MIIIILK!!!!”
+FWOOOOOSH!!!!
+“A-AHHHH!!! AAAHHHH OOOHHH MY GOOOOD!!!!” Kate screamed, coming close</p>
+<p>to fainting from the sensation.</p>
+<p>Milk erupted from the pool-filling udders in a white-washing torrent. It swept through the
+house like a tsunami, leaving no one untouched by the creamy release. It lasted for a full minute
+before the flow ended. Kate’s victims fell to the ground, gasping for air and wiping the milk from
+their faces. Lacey, heaving against the far wall with her head brushing against the ceiling and her
+breasts filling her lap, noticed a rejuvenated tingling traveling through her body. The chaotic
+disaster of her destroyed house didn’t even register. Kate lay in the center, pinned under a pair of</p>
+<p>23</p>
+<p>breasts rivaling a queen-size bed moaning from a mind-rending orgasm. Milk continued spurting
+from her nipples in lingering waves.</p>
+<p>Lacey looked around the room and held her breath. Among the sea of white were swirls
+of thick green goo. It refused to mix and clung to each and every person in thick, slimy curtains.
+Lacey’s eyes bulged when her legs inched across the floor and her chest groaned with a new
+wave of intense swelling. The fear gripping her chest restricted any words from leaving her
+mouth.</p>
+<p>The house was silent. No one dared say a word after the bizarre, destructive event. Their
+attention would have been focused on the two naked girls with massive breasts if their attention
+wasn’t directed inward, their gazes lingering on their own bodies. Slowly, people began tugging
+at their shifting costumes. Seam by seam, various elements tightened and pulled.</p>
+<p>One girl found her voice, noticing enhanced cleavage stretching her neckline. With milk</p>
+<p>and monster blood dripping from her brow, she said softly, “I-I feel kind of funny…”</p>
+</body>
+</html>

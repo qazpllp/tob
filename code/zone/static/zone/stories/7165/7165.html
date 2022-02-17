@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Sweet As Honey</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>Author’s Note: If you are under 18 turn back now! This is NOT for you. </p>
+<p>This was a ton of fun to write! I appreciate any feedback I’ve gotten and I hope readers continue to enjoy. 
+Feel free to follow me on deviantart at a-spooky-ghost which is the best place to contact me. </p>
+<p>Sweet As Honey </p>
+<p>There was nowhere else for Queen to run. Her hive had been utterly overrun by the oncoming 
+horde of wasps. Nothing was left for her but to stay hidden under a leaf and hope she could 
+escape before she was found. Just as the thought crossed her mind three drones from the 
+invading force lifted her cover away. She assumed, and prepared, for the worst to happen. </p>
+<p>“Apporto apis…ad me,” an ethereal voice suddenly echoed on the wind. Queen looked up for its 
+source but the wasps began to advance upon her. She shakily threw her arms up as though to 
+defend herself. </p>
+<p>“Apporto! Apis! Ad me!” the voice rang out once more. A feeling of vertigo overtook Queen just 
+as her vision went black. Nothing had punctured her skin nor caused any pain for which she was 
+thankful. </p>
+<p>“Oh, no, it’s ap-es. I just summoned the bee,” a nearby masculine voice lamented. Queen opened 
+her eyes and to her great delight was uninjured. However, she was no longer sitting in the ruins 
+of her hive hiding under a leaf. A glance around the room suggested she was in another hive 
+entirely but it was made of wood. Perhaps, she thought, this was instead a tree that had been 
+hollowed out. In fact, she had been transported to a house somewhere in London. </p>
+<p>“Uh, ah, er,” Queen heard the male’s voice sputtering. Looking at him he appeared human which 
+was a rare sight. He had a short mop of brown hair, fair skin and looked to be about the height of 
+an average sunflower—5’10”. </p>
+<p>“We would have you give us your name,” Queen directed the man. Despite retaining her posh 
+inflection her voice lacked the royal timbre to which she had become accustomed. A quick look 
+down at herself proved her theory correct; she had been reduced to the size of a worker. She 
+wore a black and yellow striped skirt over her relatively generous hips and ass. A black and 
+yellow striped crop top was draped over a firm pair of C-cup breasts. A rather small bee 
+abdomen protruded from the base of her spine, decorated by alternating bands of black and 
+yellow. </p>
+<p>At 5’1” Queen was utterly dwarfed by the cowering human before her. Her black hair was tied 
+up in a double bun atop her head while still providing bangs hanging low enough on her head to 
+fully obscure her eyes. Her skin was the shade of deep gold, nearly the color of honey itself. Two 
+short antennae stuck out from atop her head. The proud and literal Queen bee placed two of her 
+arms on her hips, and folded the other two over her torso, pushing her breasts up and into her top 
+somewhat. </p>
+<p>“A-A-A-Archie,” he fumbled over pronouncing his own name, “w-w-w…are you a 
+bee…person?” </p>
+<p>“You may refer to us as Queen, or ‘majesty’, or not at all!” Queen huffed, “now, enough of this 
+palaver!” </p>
+<p>Just then Queen’s wings began fluttering, causing purple mist to spread throughout the room. 
+When Archie took a single breath, the entire mass seemed to rush into his throat. He exhaled and 
+suddenly his concerns melted away. </p>
+<p>“Now, Archie, be a good drone and take us to this colony’s so-called ‘queen’,” the matriarch 
+ordered. </p>
+<p>“A queen…” Archie spoke as though in a daze. His mind groggily attempted to find somebody 
+that fit. Enough reason was left that he could think of Buckingham palace and dismiss it 
+immediately as an unreasonable option. What next came to mind was his girlfriend, Rose. He 
+immediately turned and walked through the doorway. </p>
+<p>Queen followed Archie out after taking one last look at the room. She’d been brought to the 
+chamber inside of a chalk circle drawn on the ground and filled with symbols she couldn’t 
+comprehend. A leatherbound book that looked so twisted it was in pain was sitting on the ground 
+next to the circle. All concerns related to what she’d seen evaporated as she followed Archie out. </p>
+<p>They entered the house’s entryway, rounded a corner and arrived at a closed door. Archie swung 
+it open, revealing a short brunette woman sitting a desk working on a large laptop. The brunette 
+looked up at Archie with pained expression. Queen presumed that this person was the pretender 
+she sought. </p>
+<p>“Oh, Archie, you know I’m workin’,” Rose bemoaned the interruption in a thick cockney accent. 
+The young woman was dressed in blue sweatpants and a grey t-shirt, with her hair tied up in a 
+messy bun. </p>
+<p>Queen stepped forward, pushing Archie aside as she forced her way into the room. While Rose 
+began offering an objection, Queen flashed a brilliant and wide smile as she lifted up her top to 
+reveal her smooth, naked breasts. Stiff pink nipples capped her golden globes which began to 
+engorge. A viscous yellow substance began to leak from both breasts, filling the room with an 
+unnaturally sweet scent. In the blink of an eye Queen shoved a honey-producing breast into 
+Rose’s open mouth. </p>
+<p>All concerns immediately vacated Rose’s mind the moment Queen’s honey touched her tongue. 
+Initially she only drank in the honey that flowed from Queen’s breast into her mouth. Warmth 
+spread throughout her body with each delicious drop. Queen watched as Rose pushed further into 
+her breast, and then grasped it with both hands. </p>
+<p>A soft moan escaped Queen’s lips, elicited by Rose’s increasing enthusiasm. Beads of sweat 
+began to form on Rose’s forehead as her body’s temperature struck a peak. Her brunette hair 
+began to darken until it matched Queen’s shade of black. Her sweatpants seemed to melt away 
+until they had been separated into a thong and thigh-high fishnet stockings that tightly hugged 
+her legs. Rose’s shirt, too, had shrunk into a sleeveless crop top. </p>
+<p>Honey was beginning to pool on the ground from out of Queen’s unattended breast. Both of her 
+left arms were lifting the tit from which Rose was feeding while her right arms had begun to 
+massage her other tit. Though Archie was still in a stupor he recognized something was 
+happening to his girlfriend. The new, skimpier clothing revealed that her hips and thighs were 
+piling on inches of soft, pliant flesh. As though she was adjusting her sitting position, she seemed 
+to rise from the chair’s cushion. The supple skin pouring into her hips and thighs was being 
+shared by her ass. </p>
+<p>A golden discoloration began spreading over Rose’s face, starting from her mouth. Each gulp of 
+honey caused the hue to spread further until her skin matched Queen’s own. Her lips plumped 
+until they were soft and pillowy. Though muffled by the continued feeding, Rose let out an 
+aroused moan. Both of her hands gradually withdrew from Queen’s delicious breast in order to 
+grope her own. </p>
+<p>Inch after inch of generously-soft breastflesh began to push Rose’s hands up and out. Though her 
+new top was rather small it was sturdy. Her breasts surged outward until cleavage could be seen 
+bulging over her top. The crop top stretched to its very limit against the rising tide of boob that 
+crashed against it. Archie noticed the scene seemed to turn in a way that bothered him, somehow. 
+In the midst of Rose’s expanding thighs and billowing breasts she seemed to be sitting even 
+higher on the chair. </p>
+<p>Not yet had Rose’s ass finished its generous swelling, but it alone was not responsible for her 
+increased position. Her legs, too, had begun expanding away from her body as though to make 
+room for the rest of her to grow larger. The additional strain caused her stockings to pinch 
+against her deliciously thick thighs. </p>
+<p>When Queen withdrew her breasts, Rose had soared to a statuesque 6’1”, and boasted a double-
+E-cup bust that created cleavage both above and below her top. Her ass, hips and thighs jiggled 
+atop a pair of legs that seemed to stretch on without end. Black and yellow stripes began 
+manifesting on her clothing to match Queen’s own. Rose’s hair had re-styled itself as a bowl cut 
+to include bangs that covered her eyes, also like Queen’s. </p>
+<p>“Oh, mmm…majesty,” Rose mumbled through a haze of arousal. She couldn’t stop her hands 
+from exploring the sensitivity of her new body. A rush of heat spread throughout Queen’s own 
+body but she chose to store it away. </p>
+<p>“Yes, that will do, my love,” Queen said sweetly. She noticed that not a drop of honey was left 
+on the tit from which Rose had been feeding. In the meantime, she scooped what remained from 
+her right breast and offered it to Rose. Her expression changed as she turned to face Archie. </p>
+<p>“We require more drones. You must find us more, just like this one,” Queen motioned to Rose. 
+Behind the conversing pair Rose had consumed the extra honey. Her assets swelled outward 
+once more, which finally left her at 6’3” and triple-E-cup breasts. Rose stood to go to her 
+majesty’s side but her thighs caught on the chair’s armrests. </p>
+<p>“None…here, Queen,” Archie struggled to think through the fog. In the background Rose 
+struggled to pry the chair from her body. The vigorous motion sent her curves into a bouncing, 
+jiggling avalanche. Her breasts threatened to bounce out of her inadequate top yet stayed 
+miraculously contained. </p>
+<p>“Oh, my resplendent majesty! My gorgeous Queen!” Rose’s voice had utterly changed to match 
+Queen’s posh accent, “this drone knows how to add to your hive!” </p>
+<p>Just as Queen turned to face Rose the chair was finally pulled free. As though on cue, a bee 
+abdomen burst from her back just above her ass, and a pair of antennae sprouted from atop her 
+head. </p>
+<p>“The human, Rose, was part of her own hive. This drone can compel them to this place!” Rose 
+explained enthusiastically. </p>
+<p>“We find this an acceptable proposal,” Queen faced Archie once again, “but our hive must still 
+grow! You will leave this place in search of more subjects, and only return when you have found 
+another pretender queen to bring to us! Do you understand?” </p>
+<p>Archie nodded along and went about taking leave of the house. Rose then began making calls on 
+her phone to as many contacts as she could. Satisfied that her drones were performing their 
+assigned tasks, Queen found her way to the bedroom and passed out on the bed. Nightmarish 
+visions of her former colony being sundered under the force of a thousand wasps plagued her 
+mind. </p>
+<p>Soft, whispering voices brought Queen out of her slumber. She fully awoke to the sight of two 
+women that seemed Rose’s age sitting on the bed. One of them, a blond, had been poking her leg 
+under the assumption that her skin color would rub off like paint. The other woman, a brunette 
+like Rose had been, she realized was leaning over her body in preparation to poke one of her 
+antennae. </p>
+<p>“Do you find our form pleasing?” Queen purred seductively. </p>
+<p>“Izzit a costume?” The blond asked in a cockney accent similar to Rose’s. </p>
+<p>“We would hear your names before speaking about ourselves,” Queen sat up in the bed. </p>
+<p>“Lily,” said the brunette. </p>
+<p>“Iris,” the blond answered with a nervous laugh. </p>
+<p>The commonality in Rose, Lily and Iris’ names did not escape Queen’s notice. A broad smile 
+spread across her partially-obscured face. She cupped both breasts with one each of her left and 
+right arms, pulling the crop top up and revealing them with the others. An anticipatory shiver ran 
+through her body. Honey was already beginning to leak from the tips of her engorged nipples. </p>
+<p>Just as fast as before Queen scooped a right hand over a breast and shoved two honey-covered 
+digits into Lily’s mouth. The brunette’s face burned bright red and she hungrily locked her lips 
+on Queen’s right breast. Iris let out a frightful scream but came to Lily’s side rather than run. 
+Queen once again pushed two fingers dripping with her honey into the woman’s mouth. </p>
+<p>Iris wasted no time latching to Queen’s left breast. The suckling women’s clothing underwent 
+the first change. Lily was soon clad in a backless halter top and a miniskirt. Iris’ clothing shrunk 
+inward until she was wearing a sports bra and leggings so tight, they looked like they were 
+painted on. Warmth spread throughout all three women’s bodies. Honey flowed freely into Iris 
+and Lily’s eager mouths without end. The both of them let out moans between each gulp as their 
+transformations continued. </p>
+<p>Deliciously soft and supple skin began pouring into Iris and Lily’s thighs, hips and asses. They 
+both moved further in on the bed, sitting on their knees as they drank more deeply of Queen’s 
+honey. Their thighs continued bubbling outward, their hips flared and their buttocks rounded and 
+plumped. Iris’ miniskirt was slowly pushed outward by her bottom half until her cheeks could be 
+seen poking out from the bottom. Lily’s leggings left nothing to the imagination, perfectly 
+molded to her bubbling, heart-shaped buttocks, swelling thighs and flaring hips. </p>
+<p>Queen’s willpower was losing the battle against the rising tide of heat within her own body. 
+Panting, she began to moan softly. Still resolute, she knew what came next and brought two arms 
+up to support each of her ever-lactating breasts. A roiling tide of boob began to push outward 
+from both Iris and Lily at that moment. Cleavage puffed up and out of Iris’ halter top, her tits 
+distending more of the garment with each mouthful of honey she swallowed. </p>
+<p>A generous swell of titflesh began to rise from Lily’s sports bra. Her boobs inched outward, 
+swelling upward out of the bra. Despite the ever-increasing volume of boob, the bra held strong 
+and firm, creating a tight canyon of cleavage absolutely exploding from the neckline. Both Iris 
+and Lily began to explore their swelling bodies, withdrawing their hands from Queen’s breasts. 
+The sight of her swelling drones finally drove the matriarch over the edge. </p>
+<p>While both Iris and Lily were still swelling and growing, Queen began her own expansion. 
+Inches piled onto her thighs until they easily overwhelmed her miniskirt. Her hips pumped 
+outward in rapid, jiggling spurts. The matriarch’s buttocks began soaring outward in every 
+direction, pushing her up from the bed. With every inch that generously poured into her growing 
+thighs, expanding hips and inflating rear end her own clothing began to transform. </p>
+<p>Queen’s miniskirt slid down from her generous hips as though it had a mind of its own. The 
+inadequate skirt seemed to split in two, extending along her legs into a pair of black and yellow 
+stockings. A piece of fabric stayed behind to mold itself into a thong bikini bottom.  </p>
+<p>Queen's thighs overfilled and overflowed the clothing, pinched and bulging by her stockings. Her 
+hips strained against the unyielding strings and her buttocks nearly swallowed the thong as they 
+continued their outward conquest. Her crop top split entirely in two, molded itself into black and 
+yellow elbow gloves, and left her topless. </p>
+<p>Iris and Lily passed out of D-cup range when Queen felt the warmth center on her own chest. 
+She instinctively reached out and with two arms for each girl, grasped the backs of their heads to 
+pushed them into her breasts. No sooner had she done so did her tits begin to swell. The vigorous 
+motion of her drones’ suckling caused her bust to wobble. </p>
+<p>Each time Iris and Lily drank of Queen’s honey their heads were pushed further away from their 
+master’s divine body. More and more, her boobs surged larger in every direction without end. 
+Gold spread out over the girls' skin, eliminating all blemishes, stretch marks or scars. Just as it 
+seemed Queen's growing body was barely catching up to her two drones, the warmth she had 
+stored from Rose’s transformation unleashed. </p>
+<p>Queen’s thighs swelled until, in her kneeling position, they pushed against one another, creating 
+a wall of soft, pillowy flesh. Her hips flowed outward several inches and her buttocks pumped 
+and plumped into a pillowy heart shape. As though running from her torso, her breasts billowed 
+until their size eclipsed Iris and Lily’s heads. </p>
+<p>Not for a moment did Queen’s rapid growth cease, but as it went onward her face underwent its 
+own change. Her shimmering black hair burst from its confinement in the double buns and fell 
+softly upon her shoulders. Still, her hair grew outward, pouring both over and behind her 
+shoulders until it pooled on the bed. Had she been standing, her hair would have been long 
+enough to touch the ground. Her bangs pulled back, revealing her enchanting purple eyes. </p>
+<p>Queen’s face reshaped somewhat, losing its round shape to become more recognizably mature. 
+Her features became sharper, her lips plump and suddenly layered by glossy black lipstick. Still, 
+enough of a layer of fat remained on her face to retain a modicum of softness. She bit her lower 
+lip as the pressure from her growing drones seemed to increase. </p>
+<p>So desperate were Iris and Lily to drink of Queen’s honey that they had ceased fondling their 
+own enlarging bodies. Both girls were moving forward, reaching out to their matriarch’s body. 
+Much as Queen’s breasts seemed to push them away, the girls pressed inward until they could 
+get a single hand around her back. The three hugged each other and, at such close proximity, 
+began swelling into one another. </p>
+<p>Both Iris and Lily’s breasts brushed up against each other. Queen could feel the bottoms her own 
+breasts, having passed M-cups, brushing against the tops of the girls’ chests. Both of the former 
+humans had piled inch after inch into their legs as well, their bodies expanding upward to dwarf 
+Queen even further. Their busts threatened to push up and over her own as they pushed to greater 
+heights. </p>
+<p>Queen found the wherewithal to take a deep breath. An electric jolt ran through her expanding 
+body. In small spurts at first, her body grew taller inches at a time. Her legs slid across the bed, 
+her shoulders rose up over the girls’ heads and her torso stretched as if only to give more space 
+for her breasts to conquer. Her growth spurts were coming faster and faster until her entire body 
+was surging upward. </p>
+<p>As Queen grew to match Rose’s penultimate height of 6’1” there came a knock at the door. A 
+trio of orgasmic, muffled moans answered the interloper’s request. Iris and Lily still outmatched 
+her at 6’2”, but her growth continued increasing in speed. For every inch the girls piled onto their 
+assets and height, Queen added two, and then three. The mounting weight of the three growing 
+women caused the bed’s wooden frame to creak in protest. </p>
+<p>Onward did Queen’s body surge, passing the 7’0” mark with a shudder. At such proportions 
+every single movement created a cascade of jiggling across her succulent body. While still 
+proportionate, the layer of baby fat that lined her body ensured not one inch of her lacked the 
+supple softness that was obviously abundant in her generous hips and breasts. Lily and Iris had 
+just barely crested 6’3” when the door was opened. Rose stepped and was brought to the bed by 
+a single twitch of Queen’s antennae. </p>
+<p>Queen placed a finger in each of the suckling girls’ mouths, which sucked and licked her fingers 
+with as much abandon as they did her honey nipples. She withdrew them both, covered in honey 
+and offered them to Rose. With a delighted squeal, Rose drank from Queen’s outstretched hands. 
+Even from such a modest amount, her body swelled outward and upward once more. Her tits 
+plumped outward most of all, balancing her from bottom-heavy to an hourglass figure. </p>
+<p>Then, Queen released her hands from the other girls’ heads as their growth came to a slow stop. 
+Iris, Lily and Rose each topped out at 6’5”, HH-cup breasts, and a set of thighs, hips and asses 
+that were unparalleled with the exception of one person. With a final spurt, Queen’s body settled 
+on 7’7” tall, boasting triple-Q-cup breasts that perfectly balanced out her plump buttocks, 
+generous hips and supple thighs. </p>
+<p>The bed delivered another complaint before collapsing under the quartet’s combined weight. A 
+fit of giggles broke out from the three former humans. Queen, however, remained aloft even to 
+her own surprise. What were formerly a pair of dull, crystalline wings had transformed. 
+Enormous and fairylike, a prismatic shimmer fluttered across them with each flap. With just 
+these three drones, she thought, my glory is restored. </p>
+<p>“We are pleased, but our work is not over,” Queen tutted. As Lily and Iris stood antennae 
+sprouted from their heads, and bee abdomens grew from out of their backs. Pheromones from 
+their Queen communicated their directive. They spoke out in unison. </p>
+<p>“The hive must grow.”  </p>
+</body>
+</html>

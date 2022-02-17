@@ -1,0 +1,1174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Deck of Changes: Hollywood</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>Deck of Change: Hollywood </p>
+<p>By Nightshade </p>
+<p>Author’s Note: </p>
+<p>This story is a writeup of a playtest session of a transformation based card game I am working 
+on, so the narrative and the style of the transformations might be a bit more random than you are 
+used  to.  Still,  I  think  it  flows  pretty  well.  Please  leave  feedback,  and  if  you  liked  it  enough  to 
+want more, or have a suggestion for who should draw from the deck next, please let me know!  </p>
+<p>Obviously contains adult fetish material and sexual situations, proceed at your own risk.  </p>
+<p>Thanks for reading! </p>
+<p>Prologue </p>
+<p>Sarah was beginning to grow increasingly frustrated with the California lifestyle. It was a 
+feeling that had been growing in her mind for a few months, but had come to a head in the last 
+half hour. </p>
+<p>She had moved out to Los Angeles after graduating college, doing her post graduate work 
+at  a  high  priced  Southern  California  medical  school.  As  the  years  dragged  on,  she  became 
+increasingly  bored  with  the  work,  and  had  decided  to  pursue  a  career  in  acting.  Still,  it  was  a 
+competitive field and she had little success despite her good looks; mostly a few small roles in B 
+movies  and  student  films.  As  graduation  drew  nearer,  she  found  herself  contemplating  simply 
+giving up and moving back home; she knew that she couldn’t possibly pursue acting at the same 
+time  as  a  medical  internship,  there  just  weren’t  enough  hours  in  the  day.  Besides,  her  parents 
+wouldn’t continue to pay for her expensive LA rent if she chose to forego her medical career and 
+spend her days as a wannabee actress. </p>
+<p>Today, all that tension had come to a head. She had gotten a text from her agent  telling 
+her that he had managed to  get  her a last  minute audition,  and  Sarah had quickly gotten ready 
+and rushed to the address, which, as far as she could tell, didn’t exist.  Her phone sent her to a 
+building  that  just  wasn’t  there.  She  confirmed  the  address,  and  then  spent  the  next  hour 
+searching, growing more and more frustrated as she went in circles. About half an hour ago she 
+had  had  enough,  and  decided  that  if  this  role  didn’t  pan  out  for  her,  she  was  done  with 
+Hollywood, and would be leaving California as soon as she graduated. </p>
+<p>Eventually she decided to park her car and try and find the place on foot. And that was 
+how  she  found  herself  walking  down  a  narrow  alleyway  between  the  buildings  that  her  phone 
+said should be on either side of the casting agency. She rounded a corner and saw an unmarked 
+door with a short woman standing outside of it. </p>
+<p>“You here for the audition?” Sarah asked. </p>
+<p>“Yes,” the other woman nodded. </p>
+<p>“Me too,” Sarah responded as she stuck out her hand and introduced herself. </p>
+<p>“Mary,” said the shorter woman as she took her hand. Sarah’s heart sank; she knew that if this 
+was her competition, one of them would be sorely disappointed. </p>
+<p>Both  were  pretty  girls,  with  fair  skin  and  dark  hair,  but  that  was  where  the  similarities </p>
+<p>ended. </p>
+<p>Sarah was tall and athletic, nearly six feet in height, although she always listed her height 
+as 5’10, as she had quickly learned that anything taller was too threatening for a woman. She had 
+a slender figure, with toned muscles, broad shoulders, and narrow hips. She had a square jaw, her 
+dark  hair  was  cut  short,  and  her  eyes  were  a  pale  blue.  She  was  slender,  with  perky  B-cup 
+breasts, and the only real fat on her body was her thick thighs and cute heart shaped ass. She was 
+dressed in a violet tank top and dark grey leggings, with black leather ankle boots. </p>
+<p>Mary, on the other hand, had an oval shaped face with full lips and dark green eyes; she 
+wore heavy glasses and her hair was pulled back in a ponytail. She was short and curvy, a few 
+pounds away from pudgy, with a round bubble butt and a pair of full C-cup breasts that looked 
+even larger on her tiny body. She was almost five years younger than Sarah, and was dressed in a 
+baggy pink sweatshirt, faded blue jeans, and a pair of old gray sneakers. </p>
+<p>Mary had come to California to attend film school, with the hope of one day becoming a 
+famous  director,  but  after  receiving  a  lot  of  praise  narrating  her  own  student  projects,  she  had 
+decided to  give  acting a try, mostly  to  get  her name out  there, but  the fame or the money that 
+could come along with it didn’t hurt either. </p>
+<p>“This the place?” Sarah asked, and Mary responded “I think so.” Sarah opened the door and held 
+it open for Mary to enter first. </p>
+<p>They were smiling at one another as they headed inside, but both women had made the 
+conscious  decision  not  to  like  one  another,  as  they  might  soon  find  themselves  in  direct 
+competition for the same part. </p>
+<p>The Shuffle </p>
+<p>This  was  not  your  typical  casting  office.  It  was  a  small  dark  room,  lit  only  by  a  single 
+lamp which hung like a spotlight above a large round table in its center. The room’s edges were 
+cluttered, but in the gloom it was impossible to tell by what.  </p>
+<p>A  woman  sat  on  the  far  side  of  the  table.  She  was  pale  and  thin,  middle  aged  with  a 
+motherly  look  about  her.  Her  orange  hair  was  pulled  back  tight,  her  eyes  were  rimmed  with 
+smoky makeup, and she was dressed in a modest and somehow antiquated black dress. </p>
+<p>She gestured for the young actresses to  take a seat  and welcomed them in  a soft voice. 
+Sarah and Mary, too stunned to protest, sat down across from one another, Mary on the woman’s 
+right and Sarah to her left. </p>
+<p>“We’re here for an audition. Is this the right place?” Sarah asked. </p>
+<p>“Yes and no,” the woman replied, “It’s not an audition per se, but you will be taking on a new 
+role, and you may well win the fame and fortune you desire. Or maybe not. Regardless, you are 
+exactly where you are supposed to be.” </p>
+<p>The girls were puzzled, but this wasn’t the most unusual thing they had seen in LA, so 
+they played along. Suddenly, the woman was shuffling a deck of oversized playing cards, their 
+backs yellowed with age and covered in  a strange swirling design reminiscent of yin and yang 
+patterns. </p>
+<p>“Oh,” Sarah said, “Are you a fortune teller?” </p>
+<p>“Something like that,” the redhead said quietly as a small smile crossed her thin lips. </p>
+<p>“We need to go then,” Mary cut in, “We have an audition soon, and we still don’t know where it 
+is.” </p>
+<p>“This won’t take long” the dealer said, in a soothing voice. “Oh,” Mary exhaled and settled down 
+in the low backed leather chair. </p>
+<p>“Before we start, I must tell you that this is not a standard deck. A normal tarot deck can only tell 
+your  future,  and  to  be  honest,  most  of  them  can’t  even  do  that.  This  one  will  actually  change 
+your fate, in both direction, and there are absolutely no returns. Once a card is drawn, it cannot 
+be undone. Do you agree?” </p>
+<p>“I guess…” Sarah said hesitantly. </p>
+<p>“Sure…” Mary said mockingly. </p>
+<p>across from one another. </p>
+<p>A strange sensation filled the room, and then settled upon the two young women who sat </p>
+<p>Suddenly, Sarah squeaked as she felt a sharp pain in her ears. She brought her hands up 
+to the sides of her head, but the pain was gone as quickly as it had arrived. When she pulled her 
+hands away, she saw a half dozen small metal rings in them, which she quickly recognized as the </p>
+<p>earrings she had been wearing. She ran a finger along the outer edge of her ear, and found only 
+smooth flesh. </p>
+<p>“What the…?” </p>
+<p>The  dealer  dismissed  her  concern  and  stated  matter-of-factly  “The  Deck  wants  a  blank 
+canvas  to  work  with.  It  heals  you  before  the  game,  and  then  if  it  decides  it  likes  you  pierced, 
+pierced you will be forevermore.” </p>
+<p>Before  either  of  her  guests  could  fully  process  what  she  meant  or  how  this  was 
+happening,  she  finished  her  shuffle  and  laid  the  deck  upon  the  table  in  front  of  her.  Then,  she 
+flipped the top card over in front of Sarah. </p>
+<p>“The game begins.” </p>
+<p>Round One </p>
+<p>The  card  showed  a  drawing  in  the  style  of  a  nineteenth  century  woodcut,  although 
+painted in vibrant colors. It depicted a very young woman of indeterminate ethnicity and with a 
+mouth  full  of  predatory  fangs.  She  was  looking down  in  horror  at  a  golden  basin  filled  with  a 
+liquid  that  was  too  red  to  be  wine.  Across  the  bottom  of  the  card  was  written  the  words  The 
+Vampyre. </p>
+<p>“A very special card to begin with. This card does almost nothing on its own, but instead </p>
+<p>will steal whatever fate the deck decides to bless your opponent with.” </p>
+<p>Mary  looked  up  at  Sarah,  and  briefly  noticed  that  the  woman’s  canine  teeth  seemed </p>
+<p>especially  long  and  sharp,  but  her  musing  was  interrupted  by  the  dealer  turning  to  her  and 
+flipping over another card and laying it down on the table. </p>
+<p>It  depicted  an  image  of  an  impossibly  tall  man,  so  large  that  his  head  was  lost  in  the </p>
+<p>clouds, and his back foot disappeared over the horizon. He was boldly striding forward, heedless 
+of the agrarian countryside that he trampled beneath his immense feet. The Colossus. </p>
+<p>Nothing  happened  for  a  moment,  and  then  Mary  noticed  that  her  point  of  view  was </p>
+<p>dropping as the room seemed to stretch about her. As she saw the other women looking down at 
+her, she realized that she was shrinking. </p>
+<p>At the same time, Sarah was growing larger by an equal amount. Her clothes grew tight </p>
+<p>on her expanding frame as she looked down upon the table. </p>
+<p>The change stopped quickly, and the effect was not too terribly severe, but both women 
+felt panic rise in their hearts. Their new perspectives made them feel like freaks, and in unison 
+they  wondered  why  the  cards  couldn’t  have  been  drawn  the  other  way  around!  If  Mary  had 
+stolen some of Sarah’s height, they would both be normal. Now, the already tall girl was nearly 
+six and a half feet, while the shorter woman would need high heels to reach five, and maybe not 
+even then. </p>
+<p>They  both  panicked,  and  their  minds  were  filled  with  a  rush  of  thoughts,  the  two  most </p>
+<p>prominent among them being “This is impossible,” and “I have to get away!” </p>
+<p>But  before their panic addled bodies could  rise  from  the table, their new reality  seeped 
+into  their  minds.  It  was  subtle  and  insidious,  but  still  forceful.  They  both  grew  calm  as  their 
+memories adjusted, giving them an entire lifetime to get used to their new heights. </p>
+<p>Sarah  could  remember  years  of  being  teased  at  school  for  being  taller  than  any  of  the 
+boys in her school, and then of moving to Hollywood and being told again and again that there 
+were  no  parts  for  women  her  size.  Mary  remembered  endless  short  jokes,  of  not  being  taken 
+seriously, of boys literally picking her up, and of her friends treating her like a living doll. </p>
+<p>This was their new normal. </p>
+<p>Round Two </p>
+<p>The  next  card  to  be  drawn  showed  a  brightly  wrapped  box  left  anonymously  on  a </p>
+<p>doorstep of a rundown house in the middle the night. Generosity it read. </p>
+<p>“Another special card,” the dealer said  flatly.  “Whatever card I draw next will apply to </p>
+<p>both of you equally. And without missing a beat, she did so. </p>
+<p>The card showed a group of old men, gazing lustfully at a  very young girl who walked </p>
+<p>innocently down the street in front of them, dressed in an archaic school uniform. The Maiden. </p>
+<p>Suddenly, both Mary and Sarah felt a rush of vitality as the last ten years of their lives </p>
+<p>were washed away. </p>
+<p>Sarah’s skin grew tauter and the care lines on her face faded away. Her slender physique 
+filled out slightly with baby fat, and her cheek and collar bones faded from view. When it was 
+done, she looked like a girl who had just graduated high school, the picture of vibrant youth and 
+health. </p>
+<p>The change was more dramatic on Mary, who had been younger to start with. Her oval 
+face narrowed, and youthful freckles appeared across her cheeks and the bridge of her nose. Her 
+figure  slimmed  slightly,  and  she  felt  a  curious  tingle  as  the  stubble  on  her  legs  and  armpits 
+vanished,  and  then  a  more  intense  one  between  her  legs  as  her  dark  bush  of  pubic  hair  was 
+replaced  with  a  thin  fuzz,  and  her  ponytail  divided  into  a  pair  of  schoolgirl  pigtails.  Whereas 
+Sarah looked like she had just graduated high school, Mary looked like she had yet to start it. </p>
+<p>Sarah’s mind reworked itself. Memories of college and med school faded away like mist. 
+In her mind, she had come to California at the end of her senior year, and convinced her parents 
+to pay for her to try and break into acting before starting her pre-med courses the following year. </p>
+<p>For Mary, the change involved the loss of many pivotal moments in her life. Graduating 
+from high school and college, her first job, her acceptance to film school, learning to drive, her 
+first serious boyfriend, and even leaving her parents house to live alone for the first time. In her 
+new  reality,  she  was  on  summer  vacation  to  Disneyland  with  her  parents  and  had  snuck  away 
+while touring Hollywood. </p>
+<p>Round Three </p>
+<p>“This next draw will determine your style,” the dealer intoned, as if reading from a script. </p>
+<p>She flipped two cards and set one down in front of each of them. </p>
+<p>Sarah’s  card  showed  an  image  of  the  Santa  Cruz  beach  boardwalk  as  it  had  been  a 
+hundred years ago, an old fashioned wooden carnival built along the sea, with happy people in 
+old  fashioned  swimwear  playing  in  the  surf  in  front  of  it.  Text  looped  around  the  base  of  the 
+card, reading I Wish They All Could be California Girls.” </p>
+<p>“What  a  weird  deck,”  Sarah  mused  aloud,  “nineteenth  century  art,  an  image  from  the </p>
+<p>early twentieth, and a song lyric from the sixties.” </p>
+<p>The  dealer  said  something  about  the  card  changing  itself  over  time,  but  Sarah  wasn’t 
+really  listening  anymore,  her  whole  life  was  too  busy  being  overwritten,  and  conflicting 
+memories  fighting  for  a  place  in  her  mind.  When  it  was  over,  all  she  ever  remembered  was 
+growing up here in Southern California, born and raised. Hoping since childhood to be an actress 
+or a doctor, like her heroes on TV. </p>
+<p>She looked down  again, “Oh,  I get  it. Like the  Katy  Parry song. Cool!” She said  in  an 
+exaggerated  Valley  Girl  accent  that  would  be  her  only  manner  of  speaking  from  now  on,  that 
+would see people treating her like a reject from the set of Clueless wherever she want. </p>
+<p>At the same time, Mary’s card showed a gloomy woman sitting in a corner, dark shadows </p>
+<p>covering her face like a veil. The Mourner, it read. </p>
+<p>Suddenly,  her  entire  ensemble  changed.  Her  makeup  grew  dark  and  exaggerated,  black 
+circles  of  eyeliner  forming  around  her  eyes,  like  a  young  girl  without  much  experience  in 
+makeup  trying  to  look  oh  so  very  Goth,  and  her  skin  grew  pale  as  her  foundation  changed  to 
+match. </p>
+<p>Her pink sweater changed into a black corset with silver studs, which left her shoulders 
+bare and her pale breasts sticking out proudly. Her pants changed into a voluminous black skirt, 
+and her sneakers into a pair of black leather platform boots. </p>
+<p>Mary felt her glasses vanish, and when her vision refocused a moment later she saw her 
+arms were now ghostly pale. When she saw Sarah’s eyes widen in surprise, she pulled a compact 
+out of her purse to evaluate the damage. When she saw her racoon eyes looking back at her, she 
+immediately tried to wipe some of the excess makeup away, but it was no use. </p>
+<p>“Changes cannot be returned.” The dealer admonished. </p>
+<p>“So I’m stuck this way?” Mary pouted. </p>
+<p>“Afraid so,” said the dealer. </p>
+<p>“This  game’s  dumb,”  the  tiny  Goth  said  in  a  soft  sulky  voice  that  would  become  her 
+normal  way  of  speaking,  and  she  slouched  back  in  her  chair,  her  pale  face  now  barely  visible 
+above the lip of the table. </p>
+<p>Mary hated this game. She hated this whole stupid trip. She had thought it was fun to get 
+away from hick-town, but she hadn’t counted on the sun, or the noise, or being forced to spend 
+so much time with her family. It was their fault she had snuck away, and it was their fault she 
+was being forced to play this stupid game and being transformed into somebody else. </p>
+<p>Round Four </p>
+<p>“And,  as  the  last  round  determined  your  new  style,  the  next  cards  will  tell  of  your </p>
+<p>background,” she said in the same monotone voice, and flipped another pair. </p>
+<p>Sarah’s  card  showed  a  redheaded  woman  sitting  on  a  grassy  hillside,  looking  forlornly </p>
+<p>out over the sea. It read The Luck of the Irish. </p>
+<p>Sarah didn’t notice as small patches of orange-brown freckles appeared on every exposed </p>
+<p>portion of her already fair skin, or when her eyes changed from the grey blue of the morning sky 
+to a brilliant  emerald green. Nor did she notice as her dark hair was changed into a cheap dye 
+job, with her red roots clearly visible beneath.  </p>
+<p>Mary  noticed  all  of  this,  but  was  far  too  busy  reacting  to  her  own  changes  to  say 
+anything. Her card depicted a group of Spanish conquistadors emerging from the trees to gaze in 
+wonder at a young woman swimming nude in a clear pool, her beautiful brown skin standing in 
+sharp contrast to their own pallid features, and her long black hair floating about her like a silky 
+cloud. It read Native Born. </p>
+<p>Mary suddenly felt her facial features swimming, as her eyes took on a beautiful almond 
+shape and her cheekbones became more prominent. Her hair straightened and took on a glossy 
+black sheen. She assumed that her skin had also taken on a coppery shade, but beneath the thick 
+alabaster foundation that she always wore, it would be impossible to tell. </p>
+<p>Her  head  swam  as  she  remembered  growing  up  on  Cherokee  tribal  land  in  North 
+Carolina, but fought it away. Her parents weren’t Indians, they were white trash. Weren’t they? 
+She tried to clear her head, but couldn’t, and sank deeper into her pout. </p>
+<p>Round Five </p>
+<p>Sarah was eager to draw again. She wasn’t sure how the game worked, but judging by the 
+look on Mary’s face, she was winning, and that was good enough for her. The dealer turned over 
+the  next  card  and  revealed  a  mannequin  sitting  in  the  window  of  an  abandoned  store.  It  was 
+draped in expensive and utterly fashionable clothes, and though it was obviously the work of a 
+master craftsman, there was something off-putting about its beautiful but not quite human face. 
+The card read The Doll. </p>
+<p>Suddenly, Sarah’s entire person changed. Her tank top and leggings were gone, replaced 
+by an expensive dress with a flowing violet pattern that darkened as it reached the bottom of her 
+short skirt. Her black leather boots grew fancier and morphed into the product of an expensive 
+designer that charged nearly a thousand dollars a pair. </p>
+<p>Her face became far prettier and more feminine, but there was something oddly artificial 
+about it. Her makeup grew nearly as thick as Mary’s, though it was obviously applied with far 
+greater skill. Her glossy pink lips swelled up with collagen until they were bigger and fuller than 
+Mary’s, but with an unnaturally puffy pout to them. </p>
+<p>All  of  the  hair  below  Sarah’s  neck  disappeared,  as  if  the  victim  of  dozens  of  sessions 
+beneath the beautician’s laser. Then her nails transformed into a pair of long red press-ons, and 
+her  eye  lashes  became  long  and  dark  with  luxurious  extensions  that  she  would  never  again  be 
+able to  remove. Her short hair morphed into a three hundred dollar cut,  and the cheap dye job 
+was replaced by a jet-black coif; flawless but far too dark to be natural. </p>
+<p>The most dramatic change was her chest, which ballooned outwards into a perfect pair of 
+double  D-cups  that  were  so  round  and  sat  so  high  on  her  chest  that  they  were  obviously  fake. 
+Sarah stared down  at  them  in  confusion,  and brought  her hands up  and  cupped them, gripping 
+tight enough for her to feel the silicone implants within squishing beneath her fingertips. </p>
+<p>“Where did these come from?” She wondered, and then she remembered. Her daddy had 
+bought them for her when she thirteen and hadn’t been developing as fast as some of the other 
+girls in her class. She still thought they were the nicest thing anyone had ever gotten her, and she 
+smiled happily at the way they bounced when she let them go. Her dad had paid top dollar for 
+them,  to  leave  her  without  scars  and  to  retain  that  natural  jiggle,  and  they  were  worth  every 
+penny. </p>
+<p>Sarah  thought  back  over  her  childhood,  about  how  competitive  she  had  been  with  the 
+other  girls,  and  how  she  always  had  to  have  the  best.  She  always  wore  the  most  expensive 
+clothes,  the  most  expensive  shoes,  and  most  makeup,  always  had  to  have  the  latest  style.  She 
+didn’t have many close friends, but everyone at school had always described the tall girl in the 
+same way: fashionably fake. </p>
+<p>Sarah  had  always  been  obsessed  with  cosmetic  surgery,  and  had  had  dozens  of 
+procedures done in the last few months to giver her the perfect features. If her dreams of acting 
+didn’t  pan  out,  she  planned  to  go  to  medical  school  and  become  a  cosmetic  surgeon  herself, 
+helping other girls to stay in LA and live that perfect Hollywood lifestyle. </p>
+<p>Mary’s  changes  were  less  far  reaching,  but  far  more  noticeable  at  a  glance.  Her  card 
+showed a mature woman with small children looking up at her, sitting on her lap or napping with 
+their head’s resting on her generous breasts. The Matron. </p>
+<p>Mary’s chest began to inflate. Her corset adjusted itself, but could barely keep up. When 
+the growth finally finished, her tits stretched in front of her, roughly the size and shape of gallon 
+milk jugs, and almost as pale. They were obscenely large on her petite frame, and Mary grunted 
+in annoyance and attempted to cross her arms across her chest in displeasure, but found that she 
+was no longer able to do so, and would instead settle for folding them in her lap below the table. </p>
+<p>Sarah looked across the table at Mary, and saw that her white face and been joined by an 
+obscene amount of pale cleavage, and was instantly jealous. But she calmed herself to think that 
+the younger girl’s melon shaped breasts would likely sag down past her navel if she ever took off 
+that corset, unlike her own heavenly spheres. </p>
+<p>Round Six </p>
+<p>Sarah’s card showed a young woman climbing out the window of her parent’s house, and </p>
+<p>it read The Virgin. </p>
+<p>Sarah  felt  an  intense  squeezing  sensation  in  her  groin,  as  her  genitals  grew  somewhat 
+smaller  and  neater,  and  her  hymen  reknit  itself.  But  it  didn’t  stop  there,  and  the  tightening 
+increased. </p>
+<p>Memories of boyfriends, sex, and even her first kiss disappeared from her mind. She was 
+now  almost  entirely  asexual.  She  had  no  interest  in  men  whatsoever,  and  though  she  still 
+appreciated the beauty of the female form, it was only in the way that an artist appreciates their 
+work, nothing more. </p>
+<p>Even masturbation was  lost to  her. Her vagina was too  tight for even a single finger to 
+penetrate, and the one time that she had tried to experimentally push a pencil eraser up there, her 
+attempt  had  been  met  with  intense  pain.  Her  doctor  had  said  it  was  vaginal  contractions,  the 
+worst she had ever seen, and she gave Sarah the options for treatment, but the young woman had 
+ignored them, having never had an orgasm, she couldn’t see what she was missing. </p>
+<p>Mary’s card showed the picture of a young woman handing a knife to an older man and </p>
+<p>looking up at him with pleading eyes, it read The Siren. </p>
+<p>When nothing happened, Mary asked aloud “What did that do?” but her question was its </p>
+<p>own answer; her voice had grown high pitched and taken on a soft and gentle tone. “’Whatever,” 
+she muttered, the musical sound barely above a whisper. </p>
+<p>Round Seven </p>
+<p>In  the  seventh  round,  the  Generosity  card  made  another  appearance,  although  this  time 
+the  image  showed  the  same  scene  in  the  morning  light,  the  box  open,  the  crooked  house’s 
+occupants horrified by whatever was inside, although it was mercifully hidden from the viewer 
+by the angle of the illustration. </p>
+<p>“We  know  what  that  means,”  the  dealer  said,  trying  to  feign  enthusiasm as  she  flipped 
+another card. It showed an old fashioned Greek vase sitting in a dilapidated temple, with several 
+long white feathers resting near its base. It had a long neck and a thick lower potion, and it read 
+The Amphora. </p>
+<p>Both women immediately felt the flesh of their legs sliding across the leather seats they 
+rested on. Their hips were growing significantly wider, Sarah’s narrow hips and Mary’s thicker 
+set expanded evenly, until both girls had pelvises that were broader than their shoulders, but that 
+was not the end. </p>
+<p>Both  girls  felt  themselves  rising  upwards  as  their  butt-cheeks  began  to  inflate  like </p>
+<p>balloons, growing significantly larger and rounder. </p>
+<p>At  first,  Sarah  was  alarmed  about  what  this  change  would  do  to  her  figure.  Then  she 
+realized that  it was the twenty-first  century and that  big  butts  were in.  She  then recalled being 
+disappointed  in  her  own  natural  behind,  and  going  in  for  injection  after  injection,  and  wasn’t 
+satisfied until her butt was bigger and shapelier than any of the Kardashians. It was a beautiful 
+sight to behold, but the huge round behind was obviously fake on the slender white girl, which 
+was exactly how Sarah liked it. </p>
+<p>Mary’s  butt  was  of  a  more  natural  shape,  but  no  less  big  and  round.  As  the  swelling 
+stopped and she felt herself about to panic, the only thought that entered the brunette’s mind was 
+relief that she hadn’t worn jeans today. But then, a stranger thought entered her mind, she had the 
+distinct memory of putting on pants this morning. She was confused. </p>
+<p>As she thought about her pants, her mind began to wonder, to memories of growing up 
+and being teased for her bubble butt, even more than her height. When she had hit puberty, she 
+had taken on an obscenely pear shaped figure, and it seemed every snack she ate went directly to 
+her ass. She had long since given up the idea of ever finding pants that fit, and thought her curvy 
+body might look  good now, she was resigned to  the knowledge that she would have the lower 
+body of a morbidly obese woman by the time she was in her thirties. </p>
+<p>She  breathed  in  slowly,  and  tried  to  wrap  herself  in  her  Gothiness  like  a  shroud.  She 
+didn’t care what she looked like, she was smart and artistic. She wasn’t shallow and fake like the 
+silicone  swollen  bitch  who  sat  across  from  her.  Mary  smirked  mockingly  at  Sarah,  and  Sarah 
+glared back. </p>
+<p>Round Eight </p>
+<p>This time, Sarah’s card showed an ancient theater mask, long neglected, its once bright </p>
+<p>colors faded by the sun. It read The Ivory Mask. </p>
+<p>Sarah suddenly felt her face freeze. Her glare grew slack, and transformed into the worst 
+case  of  resting  bitch  face  Mary  had  ever  seen.  Sarah  tried  to  move  her  face,  but  found  it 
+paralyzed, even blinking was an effort. She ran her fingers over her puffy lips and designer nose, 
+and  found  that  everything  was  still  there,  just  frozen.  “Like,  oh  my  god, what  happened?”  she 
+managed to squeak, and though she was able to move her lips, her expression never changed. </p>
+<p>Mary’s card showed a woman in 1920’s garb seated at a table, cigarette in hand, a strange </p>
+<p>smile on her face. An odd bulge under the tablecloth revealed that she was not alone. The card 
+read The Poet’s Tongue. </p>
+<p>Mary  suddenly  felt  a  tightness  in  her  mouth,  and  had  trouble  breathing,  and  when  she </p>
+<p>opened  wide  to  gasp  for  air,  her  tongue  rolled  down  her  chin.  She  mumbled  something,  but 
+nobody could make out what it was. </p>
+<p>Again,  their  pasts  changed  slowly,  and  their  memories  with  them.  Sarah  reassured </p>
+<p>herself, rationalizing that facial paralysis was an expected side effect of Botox. The doctor had 
+told her to  wait between injections, but she hadn’t listened. She knew the risks, but if it was a 
+choice between expressions and looking young forever, it was an easy choice. Soon, she was as 
+impassive on the inside about the whole affair as she was on the outside. </p>
+<p>Mary remembered always having an exceptionally long tongue, and doing tricks for her 
+friends  in  elementary  school,  licking  the  tip  of  her  nose  or  the  point  of  her  chin,  or  tying  and 
+untying knots with her tongue. She had trouble speaking as a kid, but she had mostly gotten it 
+under control. She still had a slight lisp, which grew more pronounced when she was excited, but 
+with her soft gentle voice most people thought it was terribly cute on the tiny girl. And, like most 
+things, people thinking her cute made her even mopeyer. </p>
+<p>Round Nine </p>
+<p>Sarah’s  ninth  card  showed  a  young  ballerina  pirouetting  on  a  stage  before  a </p>
+<p>judgmental audience. The Dancer it read. </p>
+<p>Suddenly, there was a loud bang as Sarah’s knees thumped against the underside of the 
+table.  She had always been freakishly tall, but proportionately so. Now, her body was shifting, 
+her  swanlike  neck  and  lengthy  torso  shrank  slightly,  as  her  legs  began  to  grow  longer  and 
+shapelier.  When  it  was  finished,  her  legs  were  over  sixty  percent  of  her  six  feet  five  inches, 
+leaving her looking like something out of an anime or an early nineties comic book. </p>
+<p>She  felt  her  thighs  press  together  in  her  chair  as  they  took  on  an  even  fuller  and  more </p>
+<p>feminine shape, and she felt the heels on her expensive boots grow longer and longer. </p>
+<p>Again, her history changed. She remembered insisting on wearing nothing but high heels 
+from a very young age; even though everyone tried to tell her that it was a terrible look for such a 
+naturally tall girl. But she didn’t care. </p>
+<p>As  she  got  older  and  more  practiced  in  heels,  she  found  it  harder  and  harder  to  walk 
+without them, and when she had tried to go barefoot the first night after her breast augmentation 
+she  had  practically  toppled  over.  Thinking  back  now,  she  realized  she  must  have  chronically 
+contracted the tendons in her legs, with a brief and unconnected memory of a college anatomy 
+class that flitted into her head and then burst like a deep sea fish rising towards the light.  </p>
+<p>Whatever the reason, it was heels for her from then on. The higher the better, and screw 
+anyone who judged her for it. She even had high-heeled slippers for going to the bathroom in the 
+night. </p>
+<p>Mary’s  card  showed  a  man  cruelly  beating  his  prisoner  with  a  bullwhip.  The  victim 
+smiled softly through the pain, as if he alone realized who was truly in control here. The Martyr. </p>
+<p>Mary  braced  herself  for  another  unwelcome  change,  but  when  none  came  she  asked </p>
+<p>“What does that do?” </p>
+<p>“You’ll find out when you’re older,” the dealer said as she smiled dismissively. </p>
+<p>“Bitsch…” Mary muttered. </p>
+<p>Round Ten </p>
+<p>Generosity again. This time the owners of the crooked house had wrapped the box back 
+up and regifted it to one of their neighbors. The follow-up card once again showed the buxom 
+visage of The Matron, and her accompanying brood. </p>
+<p>“We already had that one,” Mary pouted. </p>
+<p>The dealer shrugged, “It’s a very common card.” </p>
+<p>Both  girls  knew  what  was  coming  next.  Mary  looked  down  in  horror  as  her  breasts 
+expanded, and cut painfully into the side of the heavy oaken tabletop. She straightened up, and 
+readjusted  them  in  her  rapidly  expanding  corset,  so  that  they  rested  atop  the  table.  The  dealer 
+quickly grabbed Mary’s cards and moved them to a new position where they were not at risk of 
+being  enveloped.  When  the  process  was  finished,  Mary’s  breasts  lay  atop  the  table,  extending 
+nearly  two  feet  from  her  torso,  barely  contained  by  her  bustier  and  looking  like  a  pair  of  pale 
+watermelons. </p>
+<p>Sarah, on the other hand, giggled, and remarked about how totally awesome this was. Her 
+breasts swelled like perfect spheres, larger and larger, until they were each bigger than her head, 
+easily the size of basketballs, nearly as round, and with just as much bounce. </p>
+<p>Sarah loved her perfect boobies. She had been naturally well endowed as a child, but that 
+wasn’t  enough  for  her.  She  had  gotten  her  first  pair  of  implants  in  middle  school,  and  had 
+steadily upsized every year. She only waited long  enough between surgeries to ensure that she 
+wouldn’t have any scarring. </p>
+<p>Sarah wasn’t satisfied though, and wouldn’t be until she had the biggest pair in the whole </p>
+<p>Mary hated her boobs. They made her look like a freak. The only good thing she could </p>
+<p>say about  them was that they took  some attention away from  her butt. She thought they might 
+already  be  the  biggest  in  the  world,  at  least  proportionally  if  not  in  absolute  terms,  and  was 
+currently  paralyzed  in  dread  at  the  thought  of  getting  undressed  tonight,  when  she  would  feel 
+them slap against her thighs and she would see just how far below her crotch they hung when 
+unsupported. </p>
+<p>world. </p>
+<p>Round Eleven </p>
+<p>Sarah was smiling on the inside at Mary’s discomfort, and was so eager to proceed that 
+she almost drew her own card, but before her long nails could touch the ancient paper the dealer 
+smacked  them  away.  Sarah’s  eyes  smoldered  at  the  older  woman,  but  her  face  showed  no 
+expression as she patiently waited to be handed her next card. </p>
+<p>When it was finally dealt, is showed an inhumanly slender woman, with violet skin and 
+long pointed ears, being chased through a rocky wilderness, being careful not to spill a drop from 
+the  goblet  of  wine  she  held  close  to  her  small  chest.  The  Maenad  it  said,  although  the  name 
+meant  nothing  to  Sarah.  Mary  vaguely  got  the  reference,  and  began  to  imagine  ways  it  might 
+mess Sarah up even further. </p>
+<p>The only outward change was a slight alteration to the shape of Sarah’s ears as they grew 
+slightly longer and more pointed. Nothing quite inhuman or worth more than a second look, but 
+Mary thought she looked like she was getting ready to cosplay as Mr. Spock’s slutty sister. Sarah 
+didn’t even notice. Instead her mind was preoccupied by a strange tightness in her chest. It felt 
+kind of like when she had just upsized her implants, the alien feeling of growth and stretching 
+skin, and she poked at her chest tentatively, although aside from some slightly jiggling there was 
+no immediate effect. </p>
+<p>Mary’s changes were, again immediately apparent. Her card showed a woman in roman 
+finery, wearing a white folded toga and with her hair done up in gold and jewels. She was sitting 
+alone in front of a great  feast, a table straining under the weight of all the various delicacies it 
+held. The woman’s eyes burned with an unnatural lust, and the card read Gluttony. </p>
+<p>Mary’s  arms  and  shoulders  immediately  grew  thicker,  the  top  of  her  corset  cutting 
+painfully  into  her  pale  flesh.  Her  stomach  began  to  swell,  and  her  corset  tried  to  shift  to 
+accommodate it, but  it was already strained far  past  the point  than it had ever been tailored to 
+accommodate, and it burst. Mary was pushed away from the table and momentarily  revealed a 
+large  and  almost  perfectly  round  pot-belly  before  it  was  covered  by  her  unsupported  breasts, 
+breasts which now completely filled her lap and, as they themselves swelled, inched towards her 
+knees. </p>
+<p>As before, her hips and butt got the worst of it, and even her pale, youthful skin began to 
+give way to cellulite as the fleshy spheres of her backside began to fill her chair, threatening to 
+leave her stuck in place. The growth stopped with her meaty thighs, leaving them almost as big 
+as Sarah’s but without the musculature required to keep their shape. </p>
+<p>She figured that in the last thirty seconds she had gained at least twenty five pounds. Not </p>
+<p>a huge amount, but on such a tiny young girl it seemed like a ton. </p>
+<p>Mary tried to cover her sudden nudity, but there simply wasn’t enough fabric remaining 
+in her busted corset and shredded skirt, and every movement sent her whole body to jiggling. She 
+lowered her head on the table in defeat, and Sarah felt a brief pang of sympathy for her, before 
+stealing herself and forcing her to remember that they were competing, even if she couldn’t quite 
+remember how or for what. </p>
+<p>When she tried, she suddenly remembered what the sensation in her breasts was. During 
+puberty, when most of the other girls were getting their first periods, she had instead begun to 
+lactate. But, it wasn’t milk, no. It was something like a potent red wine, intoxicating and almost 
+as delicious as it was addictive. She didn’t know how it happened or why, and she didn’t care. 
+All she knew is that it made her very popular at parties, and that was what really mattered. </p>
+<p>Round Twelve </p>
+<p>Sarah’s thoughts were  interrupted by  the dealer placing  the next  card in  front of her.  It 
+was an image of a powerful woman standing on an ancient battlefield, wearing nothing save the 
+blood of her enemies. It read The Amazon. </p>
+<p>Like  Mary  before  her,  Sarah  suddenly  felt  growth  all  over  her  body,  an  uncomfortable 
+tightness as  her clothes struggled to  adjust to  her new physique. Unlike  Mary’s transfiguration 
+though, Sarah’s new weight came in the form of pure muscle. Her already toned muscles bulged 
+outwards,  until  they  were  clearly  visible  at  all  times,  giving  her  the  physique  of  a  practiced 
+fitness model. </p>
+<p>Her  stomach  grew  flat  and  smooth,  and  her  arms  and  shoulders  took  on  a  broad  and 
+ruggedly powerful look, and her already shapely legs bulged with muscle, and her massive thighs 
+felt like they could press a thousand pounds, or snap the neck of anyone who dared to put their 
+head between them. </p>
+<p>The transformation was, all in  all, not  too  extreme compared to  her other changes. She 
+had the bulk and definition of someone who spent a few hours in the gym every day, but had just 
+enough  padding  on  her  frame  to  ensure  that  she  was  still  sleek  and  feminine,  rather  than  the 
+bulging  and  overly  veiny  muscles  that  one  would  see  on  a  competition  bodybuilder  or  steroid 
+junky. </p>
+<p>Mary didn’t want  to  draw a card. She was trying to  get  her head straight.  It  didn’t feel 
+right, none of it. She knew this was wrong. She couldn’t remember ever being anything else, but 
+she  knew  that  she  hadn’t  always  been  this  strange  amalgam  of  Wednesday  Addams  and  a 
+Paleolithic fertility idol. </p>
+<p>But the dealer was insistent. Her voice was equal parts stern and gentle, like the mother </p>
+<p>Mary wasn’t sure whether or not she ever had. “It’s almost over.” </p>
+<p>Mary  looked  up,  her  dark  green  eyes  swimming  and  threatening  to  burst  into 
+tears, and she nodded. The dealer revealed the picture of a large white cow, her udder bulging 
+beneath her, her dark and oddly human eyes looking expectantly at the viewer. Io it read. </p>
+<p>“Fuck…”  Mary  moaned.  She  knew  what  was  coming  next.  Her  nipples  suddenly  grew 
+larger  and  more  sensitive,  and  took  on  a  soft  bubblegum  pink  color  that  made  them  stand  out 
+against her pallid skin. Each was now thicker than her thumb and nearly twice as long, looking 
+more like obscene cow teats than human nipples. </p>
+<p>But, Mary new that it wouldn’t end there, and a moment later there was an uncomfortable 
+tightness in her breasts. Milk, of course there was milk. She could barely even reach her nipples 
+anymore, how the hell was she supposed to milk herself? </p>
+<p>“It could be worse,” the dealer sighed, “you could have gotten her brother Minos.” </p>
+<p>Round Thirteen </p>
+<p>Sarah was enjoying the look of discomfort on Mary’s face, and watched with pleasure as </p>
+<p>she squirmed in her seat. “Like, come on, hit me.” She said. </p>
+<p>The dealer obliged, revealing a card which showed a pretty girl sitting with her back to an 
+intense  discussion  taking  place  at  some  ancient  Athenian  university,  but  she  merely  smiled 
+placidly and played with her long blonde hair while she stared off into space. The Empty Book. </p>
+<p>Suddenly, Sarah’s head went funny. She found it hard to pay attention to anything, and 
+found herself looking off into space, dreaming of makeup and thinking about what surgery to get 
+next.  In an instant, her plans to go to medical school disappeared. She had barely been able to 
+pass  high  school,  her  high  marks  in  P.E  barely  buoying  up  her  grades,  and  even  that  would 
+probably  have  been  insufficient  without  help  from  her  rich  father  and  the  teachers  who  were 
+mesmerized by the girl’s stunning looks and horny boys who were eager to do her homework for 
+her. </p>
+<p>No, she would be an actress, or maybe a model. Nothing else would do. </p>
+<p>Mary smiled as she watched the intelligence drain out of Sarah’s eyes, replaced with the 
+vapid look of a stereotypical blonde bimbo right out of a bad eighties sitcom. Mary may be stuck 
+in  this  strange  body,  but  at  least  she  was  still  herself.  She  could  still  live  out  her  dreams  of 
+directing sexy music videos for up and coming Goth bands. </p>
+<p>The  dealer  turned  over  another  card,  which  revealed  a  corpulent  robber  baron  with  his </p>
+<p>hand stuck firmly in a jar. It read Greed. </p>
+<p>“Oh no,” the dealer said, showing the first genuine concern she had all day. </p>
+<p>“What?” Mary asked nervously, trying her best to look cool. </p>
+<p>“Well, the Greed card copies your opponent’s most recent change…” </p>
+<p>Mary’s  heart  began  to  drop,  just  as  her  breasts  had  when  her  corset  had  given  out </p>
+<p>moments before. And then the dealer continued. </p>
+<p>“… three times over.” </p>
+<p>“No!” Mary wailed petulantly, but it was too late. As before, her reality rewrote itself and 
+her memories grew fuzzy, but this time they didn’t refocus. Instead,  Mary was left perpetually 
+confused and scared. </p>
+<p>What  just  happened?  Who  was  she?  Why  was  she  naked?  What  was  she  doing  in  this 
+strange  place?  When  did  she  get  here?  What  were  the  pictures  on  the  table?  Why  did  her  tits 
+hurt? Who was the big scary lady sitting across from her, and why was she always glaring? Mary 
+did her best to sink back in her chair and hug her breasts to her, hiding her face in her pillowy 
+cleavage as she began to cry. </p>
+<p>“Sarah, its time for you to draw” the dealer said, trying to get the airheaded valley girl’s </p>
+<p>Round Fourteen </p>
+<p>attention. </p>
+<p>“A card.” </p>
+<p>“Draw what?” She said, puzzled. </p>
+<p>“Ok, but like, I don’t have a pen,” Sarah intoned patronizingly. </p>
+<p>“Just take a card,” the dealer sighed </p>
+<p>“Ok, Geeze. Why didn’t you just, like, say so?” </p>
+<p>Sarah took the card that the mean old lady offered her and looked at the pretty picture, of 
+a seventeenth  century clipper ship  on the high  seas. One sailor looked overboard, panicked by 
+something he saw in the water. It read The Sodomites. </p>
+<p>Sarah tried several times to read the card, but couldn’t quite manage. Eventually she said </p>
+<p>“Soda Might? Is that like, a protein drink or something?” </p>
+<p>“Not quite,” the dealer responded. She was actually kind of curious, it was the first time she had 
+ever seen that card drawn after The Virgin and she wondered how they would interact. </p>
+<p>“Mary?” The dealer said. </p>
+<p>“It’s your turn to draw.” </p>
+<p>“Take a card.” </p>
+<p>“Huh?”  The  young  girl  tentatively  looked  up  from  her  own  milky  cleavage,  tears  streaming 
+down her makeup covered face.  </p>
+<p>“What?”  Mary  asked  softly.  She  couldn’t  remember  who  the  redheaded  lady  was  or  what  she 
+wanted from her. </p>
+<p>“Uh….” Mary moaned softly, trying to figure out what was expected of her. </p>
+<p>“Here.” The dealer said, forcing a card into her hand. </p>
+<p>It showed a woman eagerly biting into a pomegranate, its juices staining her skin red, and 
+flowing over her sensuous lips. Mary liked the colors, but couldn’t figure out what was going on 
+in the picture, let alone read the words Aphrodite’s Kiss that adorned the bottom. </p>
+<p>Mary stared blankly at the card, and then her face began to feel funny. Her lips started to </p>
+<p>swell and swell, until they had more than doubled in size. They didn’t stop until they were huge, 
+bigger than Angelina Jolie or any other woman in Hollywood, even bigger than Sarah’s collagen 
+filled porn-star lips, but they were so shapely and perfect that they were obviously real.  </p>
+<p>Her mouth dominated the lower half of her face, like the wax lips you could buy at some </p>
+<p>candy stores, and they were every bit as red. </p>
+<p>She  ran  her  newly  elongated  tongue  over  them,  and  then  gasped  and  shuddered  in </p>
+<p>pleasure. They were so sensitive. </p>
+<p>For her part, Sarah sat staring blankly for a moment, before she noticed what a good time 
+Mary seemed to be having. She started to feel jealous, and then began to squirm uneasily in her 
+seat. She felt, empty, somehow, and oh so horny. </p>
+<p>Her  thoughts  drifted  back  a  few  years,  when  she  would  feel  this  way  all  the  time.  She 
+couldn’t  masturbate  normally,  her  stupid  ‘giney  was  broken,  so  she  had  to  get  creative.  She 
+would sneak phallic objects from around the house, and try  sticking them up her butt. She had 
+had  her  first  orgasm  one  night  when,  alone  at  home  and  wound  up,  she  had  taken  one  of  her 
+mother’s nice candles off the dinner table and gingerly inserted it all the way into her anus. It had 
+been  wonderful,  and  shortly  thereafter  she  had  begun  to  secretly  buy  a  vast  collection  of 
+vibrators and butt-plugs of various shapes and sizes. </p>
+<p>She glanced longingly at her purse. She knew there was an expensive glass dildo inside, 
+one  of  her  favorites.  If  she  had  known  this  game  was  going  to  take  so  long,  she  would  have 
+snuck it up her butt before leaving the house this morning so she could bounce on it a bit when 
+she started to get bored, like now. But it was too late for that. She didn’t see a bathroom, and she 
+didn’t think she  could  do it under the table  without being  noticed, so she just hoped the game 
+would be over soon.  </p>
+<p>It would be. </p>
+<p>Final Round </p>
+<p>The dealer was  glad the game was  almost  over.  She felt bad for the both  the girls,  and 
+was tired of fighting to get their attention. She caught Sarah’s gaze as the young actress looked 
+up from her purse and back to the table, and she drew her final card. </p>
+<p>It depicted a pale woman sitting regally on a throne made of ice. The Snow Queen. </p>
+<p>“Like Elsa?” Sarah asked. “Yes, like Elsa,” the dealer nodded, though she had no idea what the 
+young woman was referring to. </p>
+<p>Suddenly, a chill went through Sarah’s body. Her fair skin grew even paler, and became 
+perpetually cool to the touch. Her shot glass sized nipples stiffened in the cold, and she doubted 
+they would ever thaw. She wished she had brought a coat, but then she realized it would do her 
+no good, clothes were just for looks, not for keeping warm. </p>
+<p>Mary  took  her  last  card  from  the  strange  lady.  It  showed  the  picture  of  an  exasperated </p>
+<p>mother dog, curled protectively around a litter of newborn pups. The Loyal Hound it read. </p>
+<p>Mary giggled softly  and smiled “Cute puppy!” She put the card down and immediately </p>
+<p>forgot about it. Then, a change washed over her, she felt so vulnerable, and so affectionate. She 
+needed to touch someone, and to be touched, right now. She looked up, saw Sarah, and then did 
+her best  to  leap from  her chair and launch herself into  Sarah’s lap, fiercely  wrapping  her arms 
+around the giant woman and holding on as if for dear life. </p>
+<p>Sarah  started  in  alarm,  and  tried  to  push  the  smaller  girl  away,  but  when  she  felt  the 
+warmth emanating from her, she softened slightly. She couldn’t remember why she was mad at 
+Mary in the first place, and so she stroked the frightened Goth’s hair, and then adjusted her seat 
+so that Mary could lay her head between Sarah’s magnificent breasts. A moment later, Mary’s 
+head  was  completely  engulfed  by  Sarah’s  cleavage,  protected  from  every  sensation  except  the 
+cool touch of her smooth skin and the soothing sound of her heartbeat. </p>
+<p>They sat that way for a few moments, before she got bored and looked around. She saw 
+the  dealer  staring  at  them  softly,  her  face  a  mixture  or  tenderness  and  pity.  The  deck  was 
+nowhere to be seen, and the tabletop was bare. </p>
+<p>“Are we, like, done here or something?” Sarah asked. </p>
+<p>“I think so.” </p>
+<p>“Good.  I  think  I  like,  had  somewhere  to  be?”  Sarah  asked,  trying  to  remember  why  she  came 
+here in the first place. </p>
+<p>Sarah pushed away from the table and stood to her full height, towering above the other 
+two women, the difference made even more extreme by the heels she wore, boots that wouldn’t 
+be out of place at an S&amp;M club. </p>
+<p>Mary clung to her waist, and upon seeing her, the dealer said “One more thing.” </p>
+<p>“Mary, do you know no how to get home?” </p>
+<p>The  small  brunette  looked  up  at  her  uncertainly.  She  wasn’t  even  sure  if  Mary  was  her  name. 
+After a moment she shook her head, and in her small, soft, gentle voice she said “No.” </p>
+<p>“Do you remember where you live?” </p>
+<p>“No.” She genuinely didn’t. Her past was all a blur. </p>
+<p>“Do you know where your parents are?” </p>
+<p>“Do you know who your parents are?” </p>
+<p>“Do you know who you are?” </p>
+<p>“No.” </p>
+<p>“Huh?” </p>
+<p>“No…” she squeaked. She couldn’t remember anything before this room, and she began to cry 
+again, and she turned her face upwards, pressing it into the side of one of Sarah’s perfect breasts. </p>
+<p>“What a ditz,” Sarah said absentmindedly as she stroked the crying girl’s pigtails and then pulled 
+out her phone and promptly forgot all about Mary and the fateful game that had made them into 
+the women they now were. </p>
+<p>“Indeed,” the dealer said, “But I think there’s only one thing we can do about it now.” </p>
+<p>Epilogue </p>
+<p>Sarah’s career as an actress wasn’t much to speak of; there wasn’t much call for someone 
+with her… unusual… physique. Besides, what good was an actress who couldn’t move her face 
+and whose ability to  remember her lines was fleeting at  best? Still, she had been in  a few soft 
+core fetish movies, as well as playing lesbian vampires or barbarian queens in low budget genre 
+flicks  whose  main  selling  points  were  excessive  gore  and  nudity.  Her  agent  told  her  that  she 
+might break into the big times if the Red Sonja movie ever got off the ground, but not to hold her 
+breath. </p>
+<p>Still,  she  loved  the  California  life!  Who  had  time  for  acting  anyway?  Her  days  were 
+packed with going to the gym, sunbathing (not that it did any good), endless appointments with 
+hair  dressers,  manicurists,  beauticians,  and  cosmetic  surgeons,  and  of  course  lots  and  lots  of 
+shopping. Her nights were filled with endless partying at every club in L.A. </p>
+<p>She spent money freely, and her credit card bills never seemed to come due. Any worries 
+she  might  have,  including  lingering  memories  of  her  previous  life,  quickly  vanished  from  her 
+mind, leaving her head blissfully empty once again. She hoped life would stay like this forever, 
+and who knew, maybe thanks to the magical tarot deck, it would. </p>
+<p>Mary  was  basically  Sarah’s  pet.  She  couldn’t  really  remember  anything  about  her 
+previous life, and trying to do so just made her feel even gloomier than usual. She spent her days 
+moping around their expensive condo, and waiting for Sarah to get home.  </p>
+<p>Sarah had tried to teach her to do housework, but she wasn’t able to remember her tasks, 
+heck,  most  days  she  couldn’t  even  remember  how  to  dress  herself,  and  the  large  closet  full  of 
+edgy black garments went unused as she spent her days in the nude. </p>
+<p>Still, it wasn’t a bad life, and her biggest concern was that Sarah would forget to milk her 
+when she got home, which the vapid girl frequently did. And, unless she was having a good day, 
+Mary lacked the vocabulary to really express her need to be expressed. </p>
+<p>She spent her nights as close to Sarah as possible, taking every opportunity to be close to 
+her, even following her  into the shower or the hot  tub  when she would  allow it. They  weren’t 
+lovers per se, Sarah had no interest in sex, and Mary no longer had any conception of it. She just 
+knew that she loved to be close to Sarah, and that if the tall girl would let her, she would lick and 
+kiss her all over. She especially loved liking Sarah’s nipples, she didn’t know why but they made 
+her feel good, her thoughts even fuzzier than usual. </p>
+<p>Mary’s  favorite  thing  in  the  world  was  when  she  was  bad  and  Sarah  spanked  her 
+prodigious bottom, for unbeknownst to either girl that was now the only way Mary could achieve 
+orgasm. It was so good that Mary might have been bad on purpose, that is if she was still smart 
+enough to connect cause and effect. </p>
+<p>And  so  Mary’s  simple  life  was  complete,  and  she  would  end  each  day  snuggled  up 
+against Sarah in their shared bed. Sarah, for her part, treated Mary like a living stuffed animal, 
+cuddling up against her soft and curvy body for what little warmth it could provide. </p>
+<p>And,  as  for  the  mysterious  woman  and  her  deck  of  cards,  well,  they  moved  on  from 
+Hollywood, and where they would end up next and whose life they would transform when they 
+got there? Well, that’s a tale for another day. </p>
+</body>
+</html>

@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Fool's Day</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>Zunny was a mischievous little fairy. Like most of her kind she adored
+to play little tricks on her friends here and there. Turn their hair
+different colors, make doors get stuck, shrink their clothes and other
+such fun things. She was most fond of her female friends and expressed
+her affection for them most of all. Though she did push her luck a
+little bit further when she felt amorous.\</p>
+<p>Today was the day of fools however and that meant she was out doing what
+she enjoyed most. She fluttered about in her clothing resembling a kind
+of magical bodysuit with frills at the shoulders and hips. The magic
+emanating from her form was a light color and gave her clothing and long
+hair a pink and white appearance. When she smiled she displayed a duo
+row of vicious looking shark teeth.\</p>
+<p>Her two antennae, as well as her pointy ears, bounced up and down. She
+could sense her first victim nearby! Her gently glowing pink eyes locked
+onto one of her friends. A short little goblin girl with the prettiest
+of looks. Zunny recognized Ezzy by her short and vibrant blue and pink
+hair. Upon her round face was a pert nose, pair of plump lips and exotic
+eyelinered eyes.\</p>
+<p>Zunny had always found the light green skinned Ezzy so very appealing.
+Especially her clothing. It was fishnet separating high heels and a
+tight bodice that accentuated curvature along with a very fuzzy mantle
+wrapped around her neck. Such a strangely attractive look that she just
+loved.\</p>
+<p>\"Oh my, oh my!\" Zunny cried out as she tumbled through the air over
+Ezzy carelessly. \"Ezzy you look so nice today!\"\</p>
+<p>Ezzy seemed to look around a bit puzzled for a moment and then finally
+caught Zunny above her. Her lips curved into a smile at first. \"Oh, hey
+thanks Z-\" She immediately stopped as she realized just who she was
+speaking to and exactly what day it was. \"W-wait! Zunny d-\" Ezzy began
+in a panic, but she was far too late.\</p>
+<p>As Zunny tumbled overhead joyously, she sprinkled fairy dust all over
+her friend. Ezzy started to get rather upset, but the rage died down the
+moment her modest chest started to plump outward. \"Guh!\" She grit her
+teeth and watched as a valley suddenly formed betwixt her growing bust.
+A full second later and her lower half suffered a similar fate. A soft
+gurgling filled the air as her butt began blowing up. Her hips creaked
+alongside her outfit and fishnet while she grew curvier and curvier.\</p>
+<p><strong>BOING</strong> went her breasts and <strong>BLOOMPF</strong> went her lower half. Her
+clothing complained as it stretched and struggled to keep her features
+contained. Ezzy\'s eyes started to roll back a bit and her tongue began
+to hang out of her mouth. She let out several pleasure filled moans. Her
+knees came together, the gap between her thighs gradually shrinking from
+how plump her thighs were getting.\</p>
+<p>It only took a few moments for the girl to go from pretty to gorgeous in
+Zunny\'s eyes. Though she loved to see her friends blow up, she knew
+darn well that they found it embarrassing. She knew they liked it though
+even if they\'d never admit it. \"Happy fools day Ezzy!\" Zunny called
+out as she soared away from the satisfied goblin.\</p>
+<p>Onward she flew through the city. As she went about her business she
+brought mischief. A car trying to order at a drive through? She shrunk
+the sign so that a high pitched squeaky voice came out. A guy eating a
+burrito? A quick zap doubled it\'s size and deliciousness. Annoying
+poodle barking? She turned it into a slightly more annoying rooster.\</p>
+<p>She continued her silliness all the way to the nearby college where
+there was a game of football being played. She soared overhead and then
+dove in down to the stands where she recognized her friend Ilum. He was
+a young elf boy who had a crush on the cute cat girl next to him. The
+both of them were wearing fairly normal attire such as t-shirts, jeans
+and whatnot while discussing something related to foreign animation. She
+seemed to be warming up to him quite a bit. Naturally Zunny was going to
+ruin it.\</p>
+<p>\"Hey Ilum!\" Zunny swirled around in front of the two, waving to the
+two young lovers.\</p>
+<p>\"Oh!\" Ilum seemed rather taken off guard. \"Hello Zunny!\" He smiled
+and waved back completely unaware of what day it was.\</p>
+<p>\"Happy Fool\'s day!\" She threw her hands up and spread her powder all
+over Ilum with great enthusiasm.\</p>
+<p>\"Is that what day it is? Well you have a happy uhm...oh wait!\" Once
+he realized the danger it was far too late. The first to change was his
+hair. The short black strands quickly grew down his back and chest. His
+long pointed ears shot up in surprise. Next came his boyhood. A slow
+sucking sound followed by a quick little <em>\'schloop\'</em> and she was ready
+to join the cheer squad.\</p>
+<p>Though she could certainly use better looks. That was next in line as
+her lips plumped nice and full. Then the shape softened and eyebrows
+thinned. Her eyelashes extended and nose shrunk into a cute button
+shape. It wasn\'t long for Zunny to approve of her girly looks.\</p>
+<p>Of course she needed some curvature. The powder still held some effects
+in it\'s bag. Ilum\'s chest bulged and then recessed a few times before
+a pair of tits swelled outward. Perky nipples displayed themselves
+through the thin t-shirt. Her hips jutted outward and then she rose a
+few centimeters from her ass and thighs expanding. \"Eeeep!\" She cried
+out in her new feminine voice. Naturally the adorable girl next to them
+watched with wide eyes.\</p>
+<p>\"So glad you like it! You two have a great evening now!\" And with that
+she was off. Or at least far enough away that Ilum could no longer
+retaliate. Fortunately it wouldn\'t hinder Ilum\'s attempts with the cat
+girl.\</p>
+<p>Zunny was very pleased with herself so far, but now she saw the real
+cheer leading squad. These college students would surely enjoy more
+curvature to help the cheer with. At least that\'s what Zunny thought.\</p>
+<p>While fluttering over the cheering ladies of various races she twirled
+and followed with their little moves. Naturally her dance moves were
+sillier and resulted in dust spewing all over them. A few minutes later
+and the entire squad had busts as big as watermelons and equally giant
+asses.\</p>
+<p>The reception was very mixed. A blonde elf girl pulled her skirt down in
+the back in an effort to cover her huge rear. The oni girl who acted as
+the bottom of pyramids flaunted herself. A brunette kitty girl, who had
+been very flat, had to struggle to keep her shirt down as big, round
+under boob threatened to expose her nipples.\</p>
+<p>Zunny watched with delight as the ball was hiked. Numerous members of
+both sides were very distracted by the cheer team. Zunny giggled and
+then used her magic to have several banana peels appear in the field. A
+few of the more confused football players slipped on them. The
+quarterback, with no one to toss the ball to, was sacked in mere
+seconds. Zunny left shortly thereafter.\</p>
+<p>Onward she went leaving a trail of mischief and silly jokes. As she
+reached one end of the city she spied a manor at the very far edge. It
+was a dark and mysterious one nestled at a nice spot near the peak.
+Surprisingly Zunny knew the mistress of this manor. Salicity was a woman
+with a lucky streak of selling very popular potions that brought her
+into a large amount of money. But with it had come some issues with love
+and trust.\</p>
+<p>Zunny specifically remembered eavesdropping on a conversation and
+learning that she\'d often said she wished she could have a hundred of
+her lover\'s babies. Then she proposed to her girlfriend, who promptly
+denied her in favor of a richer man stating that she wasn\'t actually
+that interested in other women. Now the poor woman spent most of her
+time experimenting in her lab alone.\</p>
+<p>\"Poor Salicity.\" Zunny wondered to herself about the rich woman who
+was no doubt without much company. Perhaps she could bring some
+happiness to her with a nice fool\'s day joke. At this thought she
+perked up and immediately twirled onward toward the grand house. \"I
+think I know just the thing for her!\"\</p>
+<p>It took her some time to figure a way into the building. Even though it
+was an older house, all the windows had been magically locked. Salicity
+was no amateur and Zunny had never before been able to play a joke on
+her. But she was able to find a way in through the chimney. Down it she
+went utilizing a little magic to protect against the fire and smoke. She
+emerged and had a quick look around.\</p>
+<p>Things were really quite dark and dimly lit. The room itself was mostly
+clean save for the side where her alchemy bench was. Fortune was shining
+for Zunny today for right then and there Salicity was working. Zunny
+carefully zipped behind a nearby bookcase to keep herself concealed. She
+peered out from behind it to get a good look at the woman.\</p>
+<p>Salicity was certainly an older elf, but hardly showed it. Though it was
+hard to tell with how tired and miserable her expression was. She looked
+like she hadn\'t slept in weeks and even her lengthy pointed ears seemed
+to droop.\</p>
+<p>Still Zunny found her thick, womanly lips and thinner face to be quite
+sexy. Her eyes were an irresistable shape with thick eyebrows adorning
+them. One of those eyes was hidden behind a large cropping of black and
+purple hair that fell about one side of her face. The rest of her hair
+was lengthy and fell all the way down past her ass. Zunny couldn\'t
+fathom why anyone wouldn\'t like her, she certainly looked beautiful.\</p>
+<p>Perhaps it was the pale grey, almost purple tone to her skin? The
+tattoos under her eyes or on her shoulders and back?\</p>
+<p>Or maybe it was the blackish purple raven wings she\'d sprouted through
+experimentation. Maybe. Zunny liked them and she enjoyed the body they
+were attached to as well as her outfit. A black leather halter top
+adorned the upper part of her torso while similar boots and gloves
+wrapped her limbs. She had a skirt that was split at the thighs to
+expose them. All of her clothing was accented somehow with purple cloth
+and golden metallic bits. Even the top of her wings and the headband she
+wore followed this theme.\</p>
+<p>Zunny was a fan. It had a regal look to it. But oh how sad she appeared.
+Zunny couldn\'t help but feel terrible for her with how her lips were
+traced down and she appeared so miserable. She\'d have to do something
+that really brightened her day.\</p>
+<p>So with her mind made up, Zunny hovered out from behind the bookcase and
+over to the morose Salicity. She was rather distracted and Zunny wasn\'t
+exactly sure how to introduce herself, so she did it just the same way
+she\'d done with everyone else. \"Happy Fool\'s day!\" She shouted as
+she threw a whole handful of some of her best fairy dust. Salicity
+gasped, dropped what she was working on to the ground and turned to face
+Zunny. As she did so, Zunny rushed in and gently poked the woman\'s
+exposed navel before retreating with a giggle.\</p>
+<p>\"Good heavens!\" Salicity cried out in her deep, thick voice. To say
+she was surprised was an understatement. She took quite a long moment to
+assess Zunny before responding. \"Who are you?\" As she asked this
+question the fairy dust was already starting to kick in. Her halter top
+bulged and complained from flesh swelling from within. The low gurgling
+of her tits starting to expand filled the room. Her eyes jumped down to
+her own bust, still very confused by what was going on. \"W-what?!\"
+Salicity\'s cheeks darkened.\</p>
+<p>\"Hello! I\'m Zunny!\" She eagerly smiled to the woman who was quickly
+being overtaken by the sensations filling her body. \"I came to wish you
+a happy Fool\'s day! You seemed like you might enjoy some company for
+the holiday!\"\</p>
+<p>Her worried, nervous expression said it all, though she also had things
+to say. \"I don\'t...ahn...recall...\" She struggled with the magic
+coursing through her body. Her hips started to widen, the belt on her
+skirt digging into them. Soft sounds of her ass and thighs plumping
+accompanied those of her breasts billowing out.\</p>
+<p>In spite of the fairy dust\'s ability to incapacitate the others through
+intense euphoria, Salicity seemed rather resilient. She gasped a few
+times and let out a moan here and there, but she was not fully taken.
+She managed a few more words in between shivering and gasping. \"I
+didn\'t ask for company! I-I\'m alone...for a reason...\" Her wings
+flared up and then settled. Her hips surged outward again and her belt
+tightened. It whined loudly and then the loud pop of the buckle breaking
+sounded. She stumbled before using the workbench to prop her inflating
+body up.\</p>
+<p>\"Yes and that\'s because you don\'t come out at all! So I came to you
+and I wanted to make sure it was something special you\'d remember!\"
+Zunny swirled around Salicity who amazingly kept her eyes on the fairy
+the whole time.\</p>
+<p>Salicity panted loudly, struggling to keep her breath. It was a struggle
+she was slowly starting to lose herself to. Each breath became hotter
+laced with sounds of arousal. Her bust was getting so big that her top
+was even moaning.</p>
+<p>\"Special? You\'re j-just making me sexier you pervy amateur!\" And
+indeed she was definitely getting sexier. Her thighs swelled against one
+another and pushed her skirt further apart.\</p>
+<p>\"But that\'s not all! I heard you wanted to have hundreds of babies!\"
+Zunny grinned her sharp little teeth and rubbed her hands together like
+a villain.\</p>
+<p>\"Excuse me?\" As she asked this another sudden surge bolted through her
+body and she arched her back in ecstasy. Her knees buckled against one
+another for a few moments her wings tensed up. Then her eyes went as
+wide as can be. Her expression couldn\'t possibly be more intense. \"You
+didn\'t.\"\</p>
+<p>\"Yep! Hundreds of little fairies!\" Zunny paused. \"Er...fake magic
+fairies mind you. Wouldn\'t want to have to pay child support heh!\"\</p>
+<p>\"F-fairies?\" Salicity swallowed heavily and the bubbling audio of her
+womb beginning to fill full reached both their ears. She seemed quite
+mad, pissed even, but it rapidly started to fade as her exposed belly
+started to bulge out. Gurgling filled the air alongside a gradually
+growing giggling from within. Even as her stomach swelled, her bust
+billowed outward past the size of watermelons. Her halter top was too
+resilient however so she was left with a massive pair of tits slowly
+swelling out of the bottom and pushing against her rapidly growing baby
+bump.\</p>
+<p>Salicity\'s expression transformed to one of mixed excitement and anger.
+It was clear she couldn\'t let something like this slide, but it was
+obvious she was loving it at the same time. Torn between emotions. She
+hobbled sideways and almost fell, but her wings helped to stabilize her
+long enough for her to land on the edge of her bed.\</p>
+<p>Her hips had grown so vast that they\'d easily support the children
+growing within her and her thighs had become massive hunks of supple
+flesh. She huffed loudly and leaned back to give room to her big round
+belly. It kept filling bigger and bigger, a loud straining sound
+accompanying it until an abrupt <em>\'pop\'</em> sound signaled her navel
+becoming an outie. Her hands slid up and down the taut flesh gently
+feeling the pressure within.\</p>
+<p>Salicity\'s cheeks were dark and her ears were perked up showing just
+how much she was enjoying her blimping body. Hearts were in her eyes and
+her tongue was starting to peek out of her mouth.
+\"Ngghhh...can\'t...let you get...away with this...\" Both of her
+hands were up on her belly which was passing the size of an exercise
+ball now. Her tits had slowed their size and were only as big as
+basketballs, but her halter top was finally starting to show signs of
+failure.\</p>
+<p>She tried to lean back to make more room, but the snickering fairies
+inside her wouldn\'t allow enough space and the halter top began to come
+apart. The pressure inside her womb kept building from all the little
+fairies inside and that in turn pushed up against her massive bust. It
+then pushed outward against the leather until finally the <em>pip pip pip</em>
+of leather seams coming apart signaled it\'s end. One quick
+<strong>SHHHRIIIPPPP</strong> and the halter top ripped apart around her neck and
+then another as it tore apart around her arms.\</p>
+<p>The shreds fell to the bed and let her nipples free. They were fully
+erect, puffy dark grey shapes and clearly throbbing from all the pent up
+milk from within. Salicity threw both hands up to them, a mistake that
+caused her to let out a cry of pleasure from just touching them. A
+careful squeeze and she began to leak. Tighter and she squirted. She bit
+her lower lip and played for a few moments more before forcing herself
+to resist.\</p>
+<p>Somehow, even against the pounding of her heart and the tight knots
+between her thighs she managed to hold off. \"You want to...play
+tricks? How about I...play one on you!\" She huffed and puffed, wings
+stiffening. Even while she continued to inflate she lifted her hands
+above her head.\</p>
+<p>Zunny, who was much too busy reveling in the luscious look of Salicity
+becoming the mother of many fairies, didn\'t notice the two tiny shadowy
+tentacles wrap around her legs. It was only after she was tugged to the
+alchemy bench did she notice that she might be in a bit of trouble
+herself. Salicity, still managing to contain herself, stood and pressed
+one arm behind her back. Her whole form sloshed and jiggled while she
+took the few steps over to her alchemy bench required.\</p>
+<p>\"What the heck?!\" Zunny shouted in confusion. She struggled with the
+tentacles, but couldn\'t get free.\</p>
+<p>\"You want to impregnate me? The lady of this manor?\" Zunny was
+impressed with her control even as she continued growing. Her belly had
+gotten so big that her flesh was starting to creak loudly. \"And you
+didn\'t even court me with dinner! How rude!\" Her act dropped briefly
+as a surge of additional fairies formed within. Her eyes half rolled
+back and her tongue flopped out of her mouth with a moan. \"So
+good...\"\</p>
+<p>She shook her head and regained her composure even as sweat dripped down
+her forehead. \"Let me show you how we treated pranksters where I come
+from.\" She snapped her fingers and another tentacle dove right into her
+form through her cloths. It wriggled inside her and then began to pump
+magic that Zunny was unfamiliar with.\</p>
+<p>Zunny\'s eyes went wide with bewilderment as it was finally her turn to
+grow. But it wasn\'t just a single bodypart. Instead her whole form grew
+and her clothes along with it. Zunny was puzzled by what was happening,
+but when all was said and done she had grown to the size of a regular
+woman and was now being bent backwards over the workstation with a
+bloated woman leering at her.\</p>
+<p>Zunny had no time to really grasp what was happening. The tentacle was
+pulled free and then suddenly thrust right up into her. She felt the
+thick thing in a way she\'d never experienced before and had no way of
+knowing how to react. As it filled her and wriggled though she
+understood. Her body quivered and she gasped with lust. \"What
+the...hell?\" She crossed her legs to somehow try and stop the
+invasion, but it was simply passing right through both her clothes and
+legs. Yet somehow she felt it filling her.\</p>
+<p>\"Your reaction is wonderful and...ahhhhhhnnn...\" Salicity couldn\'t
+help but moan several more times. Her own knees jerked together
+struggling to stay strong in spite of being intensely aroused. Once she
+managed to recover a bit, she finished. \"I\'m going to
+enjoy...ah...impregnating you with your own medicine!\"\</p>
+<p>\"No way! GUH!\" Zunny felt her heart jump into her throat as the
+tentacle rammed itself deeper in several times. Then she experienced the
+tentacle bulging big and she couldn\'t help but whimper joy. Her wings
+fluttered uselessly in the more experienced woman\'s grasp as more of
+the bulges passed into her. Zunny was still quite confused and didn\'t
+fully grasp what was happening until she saw her own belly starting to
+blow up while Salicity\'s was starting to shrink.\</p>
+<p>Zunny wanted to object, but instead out came several cries of pleasure
+as the pumping intensified. The pressure inside her built and grew until
+she too felt her belly button \'pop\' out. She watched through pleasure
+addled eyes as Salicity\'s stomach gradually flattened and her own grew
+out to the size of an enormous beach ball. Bigger and bigger she grew,
+panting and moaning. The loud gurgling of the pumping filled her ears
+and euphoria filled her mind. Her body suit became immeasurably tight
+around her, but never once ripped.\</p>
+<p>Even her curvature grew. Her tits ballooned outward restrained only by
+the miraculous material of her bodysuit. Her ass inflated like pillowy
+marshmellows and her thighs filled so full that there was no gap between
+her thighs to speak of.\</p>
+<p>She\'d never experienced anything like this before in spite of
+delivering it upon others numerous times. So when finally she was filled
+to the brim and all of the fairies were now inside her, she could do
+little but whine softly.\</p>
+<p>\"Phew...that was certainly an ordeal.\" Salicity\'s belly had become
+mostly flat. She showed a sliver of mercy and helped the bedazzled fairy
+onto the bed before propping her up with pillows. Her own body was still
+immensely curvy with tits bigger than basketballs and curves to match.
+Every little movement made them jiggle. \"Why fairy would you do such a
+thing to me?\" She released Zunny from her magic tentacles.\</p>
+<p>\"Because...you got dumped...and seemed lonely.\"\</p>
+<p>\"Hmpf. Perhaps, but hardly worth impregnating me with fairies as a
+\'joke\'. I hope you\'ve learned your lesson.\" Salicity smiled and
+slammed her hands into her vast hips. Her tits bounced from the motion.
+Zunny just started to giggle between moans. Salicity frowned at this.
+\"What has you giggling?\"\</p>
+<p>After a moment Zunny managed to respond. \"Well you only transferred
+about fourty or so fairies worth to me soooo...\" She gave Salicity a
+very pleased look and watched as her womb began inflating once more full
+of new fairies.\</p>
+<p>\"Oh you have to be...ngghhh...kidding me...\" Both hands wrapped
+around the baby bulge as it once more stretched her womb full. Out it
+went and instead of fighting it this time she decided to park herself
+right next to Zunny and just enjoy it. She absolutely did and afterward
+the two lie next to one another with their massive, giggling guts.\</p>
+<p>Salicity had some of her servants come to make them more comfortable and
+even in spite of their protests about her sudden change in shape, they
+listened. She even managed to have one of them bring her a new bra that
+was only a few sizes too small. She found herself strangely pleased to
+just be this giant shape even bigger than her new companion. Her womb
+was so full and even though she felt exhausted she also felt somehow
+satisfied.\</p>
+<p>Eventually the two overly pregnant woman sat next to one another
+relating stories of mischief while resting their hands on their
+distended stomachs.</p>
+</body>
+</html>

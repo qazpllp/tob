@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Raptured, Part I</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>Raptured</p>
+<p>By: Blargenofram</p>
+<p>Kelly was in the shower when it started. A short, thin blonde, she had
+just finished high school and was getting ready to go celebrate with her
+boyfriend. She was a straight-A student; introverted but not stuck-up.
+The stereotypical girl-next-door with a good head on her shoulders. She
+was running an internal stick of herself while she shampoo\'ed her cute
+chin length blonde hair. She was cute, she was self-aware enough to know
+her strengths- she had a very nice symmetrical face with cupids-bow
+lips-but she was lacking in some areas. Her blue eyes glanced down at
+herself with regret- she had not yet developed much curves as she would
+like. Her mom was statuesque, why wasn\'t she? "It\'s not fair." she
+muttered while soaping the tiny mounds on her chest, "Why won\'t you
+grow??" she was proud of her skinny physique but she wanted more. Her
+internal monologue was interrupted by a quivering feeling behind each of
+her nipples. "Oh?" she pressed her hands against her breasts, causing
+them to fully disappear into her chest. Nothing felt different, but then
+she felt a pulse, as if her breasts were pressing outwards against her
+hands. "Are...are you trying to grow?" she questioned herself, and her
+sanity, but was only answered by another pulsing feeling. She released
+her mounds and stared at them, but saw nothing.</p>
+<p>"Whatever." she sighed with a mix of relief and frustration and left the
+shower to dry off. While toweling she paused and lightly cupped herself
+again. "Is it my imagination...or do you feel...bigger?" she looked at
+herself in the mirror and hoisted her small breasts, looking for a
+difference and turning profile to see if they stuck out any further. It
+wasn\'t noticeable...but they felt more substantial than they had in
+the shower, and while drying them off they seemed to jiggle just a bit.
+That\'s when she felt another pulsing sensation and she immediately
+looked down. "You ARE growing...aren\'t you?"</p>
+<p>She hefted them again in her fingers. There wasn\'t doubt anymore- they
+were bigger. She had a sudden flash of trepidation. Clearly this
+shouldn\'t be happening...not this quickly? Unsure what to make of it,
+she decided to continue getting ready, when the pulsing sensation
+happened again. This time she clamped down on her breasts, not allowing
+them any room to expand. She felt a weak pressure against her hands for
+a second or two, which then dissipated and sent a tingle through her
+whole body. She shivered and felt...weird. She looked at herself again
+the in mirror. Something seemed off, but she couldn\'t tell what it was.
+"What...oh!" yet another pulsing feeling, and she clamped down on her
+chest again, and again, a weak pressure (or was it stronger?) for a
+couple seconds, followed by a tingle in her body, but this time she
+noticed, she had gotten taller!</p>
+<p>She took a moment to contemplate her plight. Her breasts were trying to
+grow, an odd, inhumanely fast pace of surging waves, but they were
+trying to grow nonetheless. When she denied them their growth
+it...spread to the rest of her body. A slow smile crept across her
+face. She wasn\'t sure what was going on...but she was going to take
+advantage of it. "Somebody\'s about to grow up." she stated to her
+reflection.</p>
+<p>Before another growth pulse hit her she quickly put on her smallest bra,
+a padded bra that would bring her up to an A cup, which she normally
+didn\'t fill out anyway, and noticed it was a bit more full. Still not
+completely, but she definitely took up more space in the cups than she
+had. "You\'ll be filling this out soon!" she continued with a
+button-down silk blouse and a tartan skirt- a more adult version of the
+schoolgirl uniform she was finally free from; something for her
+boyfriend to enjoy. She barely showed under the shirt and noticed with
+some chagrin that she\'d never pass for 18, but then her spirits lifted
+knowing that was about to change. She then got an idea and set up her
+phone to record herself in the bathroom. "Sean\'s going to love this."
+she started doing her makeup, thinking of her boyfriend\'s possible
+reactions and deciding to role-play the innocent, secretly waiting for
+the next event.</p>
+<p>As if in response, the pulse went through her breasts again, and she
+-felt- them move against the padding of the bra cups, shifting and
+taking up more ro0m inside the cups. She undid a couple buttons and
+looked down; sure enough, she had almost filled it out! "Oh my gosh!"
+she couldn\'t mask a feeling of delight as yet another pulse cruised
+through her chest and she actually -saw- them grow into the cups,
+filling them completely. She gave a little shriek and buttoned up her
+shirt, then clutched her chest as if in an attempt to protect herself
+from it. "What is happening to me...?" the pulsing feeling was coming
+consistently now, in slow methodical waves every few seconds. The
+feeling was quickly becoming intoxicating as her body kept responding to
+the stimulus.</p>
+<p>Her taught AA cup breasts were pressing insistently against her bra and
+shirt, but the garments were not giving in. The pressure was definitely
+gaining in force, and she could hear seams creaking with her
+breath...but still her mounds were suppressed as mounds. She felt the
+familiar dissipation exactly like when she had been holding herself flat
+before with her hands. She glanced in the mirror and saw it: she was
+taller! "What is going on?" she asked her reflection in mock surprise.</p>
+<p>Her body seemed to tremble and grow a bit more in response, she was
+close to 5\'4\'\' now. The pressure in her bra and shirt was increasing,
+and the creaking was louder and more frequent. She gasped with
+realization. "Oh my gosh...I\'m growing out of my clothes!" she
+exclaimed with a mixture of excitement and horror. She -should- be
+terrified, this wasn\'t natural! But...it felt good...and the results
+were appealing, so far. She grew a bit more, untucking her shirt from
+her skirt, and noticed she was getting leggy, and her hips had actually
+widened, ever so slightly, turning her skirt into something more
+alluring and flirty as a pert behind began to stick out into it as well.
+She was slowly morphing from the girl-next-door into the high-school
+hottie, despite even her current cup size.</p>
+<p>"Unh..." she grunted as she continued to grow, reaching 5\'5\'\'.
+Everything was getting longer, and her ribcage and shoulders were
+starting to fight against her bra and top.</p>
+<p>"I have to...resist...MMH...oh...UHN...AAAH!" she pretended to
+fight the changes and tried holding back the pressure she felt building
+up in her. It was indescribable but she managed to hold herself in check
+for a moment... but then lost her grip on it, and was repaid for her
+efforts with the pulsing becoming more constant as she steadily ascended
+to 5\'7\'\'. She was looking like a model who had dressed up in her
+little sisters clothes as a joke. They kind of fit due to her slender
+build...but not really.</p>
+<p>Her shirt was now exposing her belly button, out of slack and though she
+wasn\'t busty by any stretch of the imagination...yet...she was
+definitely showing a bit of curve up top as a result. Her buttons pulled
+at their holes, exposing gaps where she could see her still tiny breasts
+begging for more space. The bra strap adjusters got jerked down as far
+as they could go. Her shoulders started winning the fight as the seam
+down her back began to fail, ripping down past her bra hook, which was
+bending out of shape. She admired her reflection, loving the changes and
+wanting more. She decided to play this out as long as she could.</p>
+<p>She could feel the edges of her breasts starting to finally peek around
+the small padded cups. Through the strained opening between her buttons
+she saw the telltale bulge over the top of the cups. She grabbed her
+breasts, trying to press them flat but not completely succeeding like
+she used to. "Sssstop ...growing....OH!!" she shouted. She was
+answered by her top button pinging off as she reached 5\'8\'\'. She kept
+her grip on her chest, though, determined now. "I...I won\'t let them-
+EEK!" she was interrupted by her left strap failing under her shirt with
+a loud snapping sound, followed quickly by the left. She could feel the
+solitary hook on her back strap starting to fail.</p>
+<p>She bit her lip, staring at herself in the mirror with a mixture of
+desire and determination, and doubled down on her chest. "I...I can\'t
+keep them small...much...longerrrr...." her whole body seemed to
+vibrate in response to her words, the verbal admission that she was
+fighting a losing battle. A loud sexual moan escaped her lips and she
+gasped and clamped her mouth shut, shaking her head slowly from side to
+side. She noticed her hair was growing well past her shoulders now, and
+looking down at her hands still firmly on her breasts, her nails were
+longer as well. A climax was building between her legs, one she
+couldn\'t suppress. She began moaning quietly as she exhaled through her
+nose, but it was getting louder against her will. She was soon 5\'9\'\'
+and her skirt was looking more fit for a stripper, now also taught
+across slender but curvy hips. Another button came off the front of her
+shirt, followed by more ripping of the back seam. The pressure inside
+her breasts was palpable, they wanted to be huge and resented their
+confinement. She could feel their weight gradually increasing despite
+her best efforts.</p>
+<p>"mmm...mmhmm....mmm! MmmMMMMAAH! AHA! AAAH!" she was losing control
+completely as her moans forced her mouth open. Her hands flew to her
+mouth to keep it shut. In that same instant she shot up yet one more
+inch to 5\'10\'\', popping off the next two buttons on her shirt and
+exposing a very confined pair of breasts in what would look to an
+outsider as if she were wearing a training bra on a bet. Her breasts,
+released by her hands, immediately spread out laterally around the tiny
+cups, meeting above her sternum in a bit of forced cleavage she never
+had, or felt before, causing another loud gasp. Her bra hook creaked
+ominously as she returned her hands to their position, but she knew with
+her breasts expanded baseline there was no holding them back anymore, so
+instead of clamping down on them, she cupped them gently and let them
+push outwards, feeling them growing and overtaking the puny bra. The
+hook pulled halfway out of it\'s place and her breasts surged outward
+now, their soft bulges were outgrowing the garment in every direction.</p>
+<p>The hook finally broke free of it\'s stitching as she climaxed and G cup
+breasts lurched out into her shirt, causing all but the bottom two
+buttons to rip off and creating a long line of tight cleavage. She
+stumbled forward into the bathroom counter to get her bearings. She
+pulled her destroyed bra out from under her skin-tight shirt and looked
+at her reflection, still breathing heavily. She unbuttoned the las
+defiant button and gently fondled her new assets, starting in amazement
+at her transformation. She still looked like her...if she had drawn
+herself as a hot anime girl! Her face was mostly the same, but her body
+was unreal: long lines, slim waist (in fact, the same as before it all
+started), modest hips, cute butt, and an amazing rack. She realized she
+was still recording and flashed a dazzling smile while she tied a knot
+with her shirt, turning it into a halter squeeing her now huge breasts
+together and recreating the cleavage she just attained, then as a last
+minute thought she pulled her now mid-back length blonde hair into two
+loose ponytails, and her image of a fantasy school girl was complete.
+She turned off her phone recording and snapped a couple selfies before
+texting Sean to ask when he was going to pick her up. It was time to go
+meet her boyfriend.</p>
+</body>
+</html>

@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Ball's Pyramid</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>**DISCLAIMER</p>
+<p>**This is a work of erotic fiction. If you don't want to read that sort of thing, then don't. If you're not legally allowed to read that sort of thing, then don't. </p>
+<p>Ball's Pyramid, Chapter 1.</p>
+<p>Ever since their first summer of college, Lulu and her friends had played a bit of a game with each other: get as far away as you can from civilization without touching your bank account. That first year, 'away from civilization' meant camping in the woods behind their college's student center in a couple of tents. But now, 5 years out of college, Lulu and her friends had really upped their game. They spent the year leading up to their vacations fundraising, putting money in literal piggy banks, and networking with airline pilots. </p>
+<p>Last year, Lulu's friend Meg had won by getting herself to the western coast of Greenland in a little under two weeks '97 no thanks, of course, to the rather intimate relationship she had formed with the couple of self-proclaimed 'pro adventurers' Liam and Ben. </p>
+<p>But this year, Lulu knew she had it in the bag. She'd spent the year contacting various travel agencies, paying ridiculous amounts of money up front, and training her body for the ultimate adventure. She was going to climb Ball's Pyramid: the uninhabited, 18,000-foot-tall remains of a volcano in the middle of the Pacific Ocean. For months she had practiced rock climbing with heavy packs on her back, and had watched as her body had transformed from the rail-thin girl she was in college to a gently muscled woman. She was, however, disappointed when her curves, previously limited, shrank to next to nothing as her breasts simply became muscle. Nonetheless, she remembered chuckling to herself in front of a mirror before she left. The girls wouldn't know what to think when she made it back to claim the annual prize. This year, they had all chipped in to purchase the winner an all-expenses paid trip to a singles resort on a tropical island, and she was going to win.</p>
+<p>At least, that's what she had thought until she was halfway up the ridiculous 18,000 foot climb. Her arms ached, she was freezing cold, and the summit was another 9 Empire State buildings above her. Groaning, she tucked herself into a crevice to rest as she pulled a snack out of her bag. Sighing deeply, she took her final windbreaker out of her bag and started to slip it on, leaning even deeper into the crevice to do so. As she tugged the jacket on, she realized that her back was surprisingly already warm. The crevice, gratefully, seemed to have a natural air vent, heating it from the inside. Surprised at her discovery, Lulu turned around as well as she could and flipped on her flashlight to find that the crevice was actually something closer to a cave, the heat pouring from somewhere just out of sight. Intrigued, and having no desire to continue her climb at the moment, Lulu wormed her way into the rock, following the warmth into the mountain. After about twenty minutes, Lulu realized she no longer needed her flashlight. Silently praying that the 'remains' of the volcano hadn't suddenly become active again, she flicked off her flashlight and laid still, allowing her eyes to adjust to the light.</p>
+<p>A few yards ahead, the tunnel she had been crawling through gently sloped downwards into a massive cavern lit by bioluminescence. The walls glowed a beautiful blue color, and the plant life on the ground, ranging in size from a blade of grass to a huge palm tree, glowed even more magnificent shades of green. In the center of the room was a small puddle, shimmering as it reflected the light coming from all around it. It was like she was trapped inside of a jewel that mankind had never seen. Edging herself downward, she rested a moment to take off her windbreaker, chuckling that she had put it on in the first place, then decided it was hot enough to remove all of her other layers as well. She shoved them back in her bag as she slowly stood, wearing her hiking shorts and a simple tank top. She'd obviously forgone the sports bra, since she had no breasts to speak of, and tugged absentmindedly at her underwear, simple seamless things made for mountain climbers. </p>
+<p>Lulu, now standing, stretched to get some of the ache out of her muscles from the ridiculous climb and the subsequent crawl through a cave. The bioluminescence hovered just above her outstretched hand, and Lulu giggled. She was definitely winning that trip to the singles resort. There was no way any human being had ever seen something like this, and she was going to get proof. Stretching even taller, she ran her fingers against the blue of the ceiling and gasped as she felt the soft bioluminescence give way under her touch, removing her hand to find that the gentle blue glow clung to her fingers. Like the rest of the cavern, it was warm, and as she inspected it on her fingers she swore she could feel it growing warmer. Suppressing the sudden and obvious thought that she maybe shouldn't have touched the glowing, unknown-to-mankind substance, she wiped her fingers off on her pants. Or rather, she wiped them off on where her pants would have been had she not just taken them off in lieu of the shorts. So what ended up happening was that she simply wiped the glow onto her thighs and groaned internally as she felt the warmth spread there, too. Shaking it off as the simple exposure to a foreign element, Lulu straightened her shoulders and continued down the slope, determined to not stop until she stood in the middle of the room despite feeling the warmth spread from her fingers slowly up her arms and from her thighs slowly up and down her legs.</p>
+<p>By thee time she reached the middle of the cavern, she was practically panting. The warmth had spread to her entire body, and she was more than a bit embarrassed to notice how the heat concentrated behind her nipples and her crotch. Ignoring it as well as she could, she took the final step she needed to reach the small, glistening puddle she had seen as she surveyed the room'85and promptly tripped as the toe of her hiking boot caught on a small stalagmite she had overlooked in her determination to reach the puddle. Cursing as she went down, Lulu threw out her arms only to find them engulfed by cool, clear water. The puddle, larger than she had initially thought, was chilly to the touch despite the temperature of the room, but as she fumbled into an upright position, she was grateful that she had fallen on her front, allowing the water to calm the heat behind her breasts.</p>
+<p>Sitting there sputtering, as she had swallowed some of the water in her fall, for a moment, Lulu took stock of her situation. She was alone in a place no human had ever set foot in, surrounded by an unknown, glowing material, sitting in a body of surprisingly cool water that she had accidentally also consumed a bit of, with heat pouring out of the most sensitive parts of her body. And the heat, she noticed, was growing stronger by the second despite the cooling influence of the water. Her breath caught in her throat as she tried to stand up out of the puddle, surprised to find that the water had also taken on a glowing quality which now encompassed her entire body. Realizing her situation was turning rather grim, she looked down nervously at her nipples, which were as hard as a rock and, she swore, larger than they had ever been. Pulling back her shirt, she gasped as she realized that her nipples were indeed bigger than normal, and in fact were actively growing. She watched in horror, trying to ignore the pleasurable feeling of the warmth as her nipples lengthened to a ridiculous inch long before thickening out to the size of a nickel, surrounded by areola the circumference of a shot glass. Moaning quietly, she let her tank top fall back to her body and reached up to touch the tents that were poking out through the fabric. She fell again into the puddle, soaking her tank top even further, when she made contact with her nipples. Never in her life had she experienced an orgasm that good, much less from just brushing her nipples against something. </p>
+<p>Trying hard to concentrate, Lulu focused again on the heat now building in other places in her body. She felt herself rise gently out of the puddle as her ass expanded underneath her, stretching her shorts to their capacity and causing her underwear to ride up, looking far more like a Brazilian thong than anything she had originally intended to wear. But the fabric, now taught between her ass, felt ridiculously good and she rubbed her thighs together, forcing herself to cum again as her legs lengthened and her thighs thickened to accommodate her generous ass. The second orgasm did nothing to quell the heat now concentrating again behind her nipples, and she prayed that she wasn't about to experience another nipple growth spurt. They were already disproportionate to her still non-existent chest.</p>
+<p>Like the glowing aura had her thoughts, she watched in awe as her breasts slowly grew out from her chest. Moaning, her nipples pushed against the fabric of her soaked tank top as her breasts picked up speed, surging from a AA cup to something approaching a B cup in a matter of seconds. The fabric of her shirt was a coarse, heavy duty fabric with little stretch made for rock climbers, and the earlier growth of her nipples had already stretched the top nearly to its maximum. The sudden expansion of her boobs, because she felt that they were at least boobs at this point, nearly did the shirt in, and Lulu was left gasping for breath as her nipples pushed hard against the top, the mass of flesh behind them continuing to grow. Without warning, the fabric of the tank top split open and Lulu watched as her boobs sprung out of their confinement. Though she had thought they were a B cup, seeing them free and in the open made her realize just how much they had grown as the heavy D-cup tits hung like teardrops. And the heat only persisted.</p>
+<p>Moaning, Lulu reached a hand up to play with her tits as they continued to grow. She tweaked her nipples and came almost instantly again. Noticing that the orgasms felt better the more submerged in the water she was, she threw all caution to the wind as pure lust overtook her, and fully laid down in the water, chest heaving above her as her tits grew, and grew, and grew. Past the range of a D cup, Lulu's tits became heavy on top of her as they grew larger than softballs, but still they looked too small for her nipples. Arching her back as pleasure overtook her yet again, she spluttered as she accidentally dipped her head below the water and swallowed some of the mysterious liquid. Twenty minutes ago she would have been terrified at the prospect of consuming the strange substance, but now she reveled in the feeling of the cool water rush down her throat. She swore she could feel it spread through her body, and was unsurprised when she sat back up only to find her hair a slightly lighter shade of brown, her fingernails perfectly manicured, and any blemish she could recall completely vanished. She was sure that, if she had a mirror, she would see her face becoming subtly different '97 more feminine, to match the fertility-goddess body she was quickly acquiring.</p>
+<p>As the thought of a fertility goddess crossed her mind, Lulu groaned with pleasure as the heat gathered behind her nipples once again. Her breast expansion had slowed somewhat, leaving perky, but pendulous orbs the size of large honeydew melons hanging from her chest. But the glow wasn't done with her, and Lulu reached up to tweak her nipples, hoping to relieve some of the heat. As she squeezed them, allowing an orgasm to course through her yet again, she watched in awe as a creamy white liquid began to leak from her thick nipples. Eyes wide, she carefully put her hands underneath one of her heavy tits and delicately hoisted the nipple towards her face, tilting her head downward in excitement. With a bit of a stretch, she was able to latch on to the dripping nipple and, without a second thought, she sucked as hard as she could. She was rewarded instantly with a mind-blowing orgasm as she felt the milky substance flow through her. And still she continued to suck, letting the pleasure build in every part of her body. She sucked as she felt her breasts continue to grow, more steadily now, past the point of melons and into the realm of small watermelons. She sucked as her tongue elongated out of her mouth, enabling her to latch on to her breast even more firmly. She sucked as her legs became slightly longer, and her nipples even slightly bigger. She sucked until the blue glow clouded her vision and the incredible erotic energy finally maxed out. One hand on her boob, the other deep within her folds, her mouth latched around a nipple, Lulu screamed with pleasure as she came one final time before settling in the pool of liquid and letting the heat of the cavern lull her to sleep.</p>
+<p>**NOTES</p>
+<p>**This is the first chapter of what will probably be three, depending on how all of you like it. The next chapter will focus on the aftermath and the powers she is left with as she reunites with the girls. The final chapter will likely bring in the pro-adventurer friends mentioned briefly here.</p>
+<p>**However, the future direction of this is very malleable. Comment what you'd like to see, and I'll make it happen!</p>
+<p>**I'm planning on having some futanari and pregnancy. If you don't like that, speak now or forever hold your peace.</p>
+<p>**Also, is .txt a good file format, or do you all have a different preference?</p>
+</body>
+</html>

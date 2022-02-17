@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Bewitched, Ch. 2: A Powerful Urge</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>BEWITCHED - CHAPTER 2</p>
+<p>A Powerful Urge</p>
+<p>By CoolAlmonds</p>
+<p>A NOTE FROM THE AUTHOR: Hello! I saw that most of the comments on the previous chapter mentioned a lack of BE for a BE story, so I've tried to improve that with this chapter. I'm still new to writing and stuff, so I'm glad to get some constructive criticism! Thanks for reading!</p>
+<pre><code>Sarah pulled her car into her driveway. She and Amanda hopped out and started walking inside, both thinking of very different things. Sarah was thinking about magic, and what she would teach Amanda on her first day as a witch. Amanda was thinking about sex.
+
+It was just a few hours ago that Amanda (formerly Adam) had undergone the shocking and incredibly pleasurable process of transforming into a girl, and she couldn’t keep her hands off of herself. She rubbed her hands over her chest, shivering as her hands ran over her stiff nipples under her shirt. And as strange as it felt, she wanted sex in her new female body. And she wanted it bad. She undressed Sarah with her eyes as the two made their way to the door.
+
+CAlright, hot stuff, here we are!” exclaimed Sarah. CYour family has no clue who you are, so this’ll be your home from now on. And I’ll just warn you- there’s a reason I never let you into my house before. Ready?”
+
+CUh huh,” said Amanda absentmindedly. She wasn’t thinking about the house.
+
+Sarah pushed open the door, to reveal way was decidedly not the inside of a suburban house. It was a full blown witch’s den, with cracked stone walls, shelves of bottles and potions, and... a laptop on a desk.
+
+CYes, I have a computer. It’s not the Middle Ages,” said Sarah.
+
+Sarah gave Amanda a little while to look around at her new home; the room Sarah had materialized for her, the bathrooms, the mini fridge... but soon, Sarah called Amanda back into the main room for her first lesson. Amanda sat cross legged on the floor and looked up at Sarah. Sarah snapped and instantly, her clothes changed into a tight, black, flowing dress that almost seemed to glow purple.
+
+CNow, the first thing you’ll need to do is find out how to tap into your powers,” Sarah explained. CSince you’ve only had them for an hour or two, actually performing some magic is going to be quite difficult- but I’m confident we can coax some magic out of you. I’ve got a book of some simple spells around here somewhere...”
+
+Amanda was not listening in the slightest. She was horny- and completely distracted by Sarah’s body. Sarah’s body wasn’t as impressive as Amanda’s new body, but Amanda was addicted to the way Sarah’s glowing dress hugged her figure. She rubbed her thumb over her nipple, poking through her top. She wanted to put her hands all over Sarah’s body, and to push her lips against Sarah’s lips, and...
+
+Amanda couldn’t ignore the growing heat in her lower regions. She started rubbing her pussy through her pants while Sarah flipped through a spell book.
+
+CNow I want you to... uh...” Sarah said, her voice growing increasingly flustered. Her face turned red as she felt herself getting more and more horny. She looked up from her book to see Amanda, staring at her hungrily and feeling up her new body.
+
+CAre you” Sarah said, breathily, Cmaking me horny? How are you” But before she could finish her question, Sarah was distracted by a new feeling welling up inside her. A warm, tingling feeling, that spread to her breasts and filled them with such a sudden, hot pleasure that she couldn’t help but let out a gasping moan. Her hands shot to her breasts, grabbing them through the soft fabric of her dress.
+
+Amanda continued to stare at Sarah’s body, rubbing her pussy with increasing intensity. She pinched her nipple, and bit her lip. She loved watching Sarah grow more and more flustered as her body filled up with more and more pleasure. She wanted to see more.
+
+It was just then that Sarah noticed something- the chest of her dress was feeling strangely tight. That shouldn’t be possible, considering this was a dress she had materialized just for herself. But the warmth and pleasure filling her boobs was just too much to ignore, and she continued fondling her slowly growing breasts through her dress.
+
+Amanda wasn’t satisfied. She rubbed herself harder and focused on Sarah’s swelling breasts even more intensely.
+
+Suddenly, Sarah’s boobs started expanding out even faster. They were now just as big as Amanda’s, but were being held back by Sarah’s dress. Her breasts were squeezed together, showing off huge amounts of cleavage, and fighting against Sarah’s dress. As Sarah moaned and gave her tits a hard squeeze, her dress failed. It ripped halfway down her front, and her breasts spilled out. CFuck it,” she said breathily, and snapped. Her dress vanished into thin air, and she stood completely naked in front of Amanda. Sarah started grabbing at her naked breasts, which had grown to the size of her head.
+
+Amanda couldn’t just sit back and watch anymore. She threw off her pants and shirt, and walked up to where Sarah stood, completely naked. Sarah grabbed Amanda’s face and pushed herself into a passionate kiss, while her breasts continued to swell.
+
+Amanda grabbed at Sarah’s breasts with one hand, and fingered herself with the other. It occurred to her that this was her first time fingering herself, and shivered as she felt a finger enter her pussy for the first time. She grabbed a handful of Sarah’s incredible chest, and only grabbed harder as she felt Sarah moan into their kiss. Amanda felt Sarah’s breasts swelling in her hand; they were at least the size of beach balls now. Each one was soft and jiggly, and both girls were loving it.
+
+Suddenly, Sarah grabbed at Amanda’s chest as well. She felt up her breasts, and started playing with her nipples. The feeling of her breasts and pussy all being touched at once put Amanda over the edge. She began convulsing as she came, moaning loudly into the kiss. Sarah began quivering as well, Amanda’s orgasm triggering her own. The two girls moaned, and made out, and squeezed each other’s breasts until they broke apart, breathing heavily.
+
+CWhat...” Sarah gasped, between heavy breaths, C...was that.”
+
+CI... I don’t know!” said Amanda. CAll I know is I was eyeing you up and ignoring your lesson, when all of all of a sudden... it felt like my arousal was... feeding into you? I think? Did I do magic?”
+
+CI, uh...” said Sarah, holding and staring at her breasts, now twice the size of her head. CI’m pretty sure you did! Thanks for these babies, by the way. I look great.” She snapped her fingers and materialized a new dress, one that fit around her new massive tits. CYou performed an Empathis spell- you manipulated someone’s emotions- without even thinking about it! On your first try! Not to mention...” she jiggled her huge boobs. CYou are incredibly powerful. But you need to control that power, or else your emotions might control it instead.”
+
+CI don’t know...” said Amanda. She grabbed Sarah’s face and kissed her deeply. CI think I like letting my emotions control me...”
+</code></pre>
+<p>TO BE CONTINUED</p>
+</body>
+</html>

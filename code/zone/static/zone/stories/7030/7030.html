@@ -1,0 +1,1419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Wishes Ad Infinitum - Act V</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>Wishes: Ad Infinitum  </p>
+<p>Part Five </p>
+<p>Inspired by a concept from Max Mammaries </p>
+<p>ACT V – ‘New’ Vickie’ Story </p>
+<p>*Day 30 </p>
+<p>Midnight came and the world changed. </p>
+<p>Vickie woke up to another day weighed down by her cavernous 
+breasts. 
+ She didn’t see Dan next to her; but knew he could be anywhere 
+in the house. It didn’t matter where particularly, unless he was 
+right besides her within arm’s reach he may as well have been a 
+mile away. 
+ She looked around her room and realised that her bed had 
+changed in the night, almost doubling inside to something that the 
+old Vickie would have considered palatial! 
+ It was far larger than she was used to… Wider, designed just to 
+accommodate her enormous, fat, heavy breasts that lay before 
+her like twin pillows. 
+ Heavy pillows, bolted to her ribcage, warm and sensitive to the 
+touch. She’d been sleeping on her right side, so that breast was 
+squeezed out beneath her left tit that overflowed its neighbour. 
+She could feel the weight of herself, left boob pressing down on 
+right boob, the weight not painful but clear and ever present. 
+ Gingerly she reached over them, having to squeeze her elbow up 
+extra high to get clearance, and prodded the upper tit. It wobbled 
+ferociously, not just under its own momentum but because of the 
+unstable support her flattened right tit offered. 
+ The prod hadn’t been hard but it hurt more than she’d expected. 
+ Looking up past her all-encompassing breasts she saw, hanging 
+off the edge of her custom wheelchair, her ‘new’ bra waiting right 
+by the bedside. 
+ The wheelchair had changed; it was wider at the front with no 
+arm rests any more. Presumably arm rests would just dig into and 
+squeeze her tits. However a new addition to the changed device </p>
+<p>was a shelf that had been installed behind the headrest, a wide 
+gently curved cradle that looked like a lunch tray for whoever was 
+standing behind her. 
+ Her ‘bra’, if that’s what she was calling this fabric monstrosity, 
+was resting on the tray for her. It overflowed both sides and hung 
+all the way down to the floor. She’d used to laugh about the fact 
+she could stick her entire head into Laura’s bra cups but this 
+beast resembled a circus tent more than a piece of clothing. 
+ The old Vickie could have just leant over and grabbed it; just two 
+feet away, but the new Vickie was going to have to manoeuvre 
+around two rather large obstacles first. 
+ She decided rather than try to sit up, which would inevitably be 
+painful and stretch her back muscles to their limit, she would just 
+shuffle forwards until her breasts were at the edge of the bed. 
+ She could just ‘ease’ herself into a standing position. 
+ The concept was good but the execution was inelegant in the 
+extreme. As she was lying in the centre of the mattress with 
+nothing to give herself purchase against she realised that her 
+boobs weighed enough to offer some pretty firm resistance to her 
+attempts to push forwards. 
+ Simply shuffling her body, using her arms to pull herself along the 
+bed, was impossible because all she did was push her upper 
+body into her tits. She felt herself compressing, the cleavage of 
+each breast swelling out, pounds of flesh rising into the air as her 
+ribcage displaced them. 
+ They moved a ‘little’ but only an inch and she now had a chin full 
+of ripe cleavage swelling up at her. This was crazy, she was going 
+to have to at least separate them in order to be able to move. 
+ She realised that she could crawl downwards, using her arms 
+and legs to wriggle down to bed and into her cleavage. The pliant 
+flesh allowed her some flexibility, her breasts were heavy in 
+totality but the weight was evenly dispersed along their spherical 
+mass. Small sections of cleavage were totally mobile and flowed 
+around her as she forced herself down into the canyon. </p>
+<p>A wall of tit rose to cover her face as she wriggled down the bed, 
+a massive body of flesh that threatened to smoother her. As her 
+body travelled down the bed she was hoping she could pull, 
+rather than push, her breasts along with her but the risk of 
+suffocation was too high. 
+ There was one alternative… 
+ Awkwardly, shoving hand and then entire arm under her heavy 
+tit, wriggling her fingers to find purchase to get under, so got her 
+right arm extended around her right breast. The weight, and the 
+warmth, pushing down onto her hand was incredible but she was 
+strong enough to push through.  Then, awkwardly reaching over 
+with her left, she used the weight of her own immensity to heave 
+herself, pushing her left one up and onto its neighbour. 
+ Heaving herself upwards with arms and all her body strength, 
+and helped once she was past the initial surge by continued 
+momentum and also gravity pulling her left breast so it flowed 
+down onto the bed besides its twin, she made it! 
+ Now she was crawling; each of her hands and knees on the 
+mattress and the rest of her torso resting lightly on her boobs. 
+They swelled out beneath her, occupying almost all of the space 
+from her pelvis to her chin. 
+ For a moment, panting for breath, she lay on top of herself, 
+feeling like an over-exposed turtle tipped onto its back. 
+ The plan had been to sit up but immediately she knew that would 
+be a bad idea. Instead out of the corner of her eye she saw the 
+wheelchair waiting right by the side of the bed; all she would have 
+to do is roll to the other side of her boobs and pull a few inches 
+backwards to the edge of the mattress. 
+ Going down was harder than going up; as gravity pulled on her 
+right breast and it in turn pulled against her. She had to let go of 
+the mattress, balancing now on just one arm and one leg, and use 
+her other to hoist up the engorged flesh and slide it over her other 
+tit. </p>
+<p>She had just rolled over her breasts to lie, exhausted, on the far 
+side of them. 
+ But now she was at the edge of the bed and she could shuffle 
+just an inch backwards to feel her legs hang over the ledge. 
+Shuffling and turning her forced herself to face her boobs straight 
+on and then she was standing! 
+ Or rather, half of her was standing, but the other half was still 
+waiting, plomped on the edge of the mattress, pale flesh wobbling 
+with each of her breasts. Vickie stared in amazement at her new 
+body, at the two enormous globes that could rest on her mattress 
+almost undisturbed by her stood before them. Her skin was clear 
+and beautiful; it showed hardly any stretch marks despite the vast 
+amount of growth and only a few light freckles dotted over her 
+vast surface. Staring critically at them she recognised the pattern 
+and shape of the things; they were here boobs all right, just 
+turned into two monstrously large beasts that weighed enough to 
+make her want to cry. 
+ In fact they were on the verge of becoming their own separate 
+entities; no longer really a ‘part’ of her directly but something else 
+just along for the journey. 
+ At the far end of her extremity, possibly out of reach (something 
+she was not prepared to test) were her nipples. Both were fully 
+erect, twin torpedoes pointed outwards in the direction of the far 
+all. They just looked so fucking big, even though they were also 
+so far away, it was unbelievable. 
+ I mean, all of this was unbelievable. A month ago she had been 
+very nearly flat chested but the rest of her boobs were just fat. 
+She had an acre of amorphous smooth flesh; it jiggled and 
+deformed and flowed to fill whatever space was available. Her 
+nipples however were a specific feature, they were distinct and 
+obvious. They stood out, even compared to the acreage around 
+them, as something unusual. 
+ Now she was upright she was able to see something she hadn’t 
+noticed before; a new implement had appeared on the wall above </p>
+<p>the headboard. It was a long, vertical metal bar protruding just an 
+inch out from the wall. It started just above the headboard and 
+stood pointed upwards towards the ceiling, about a foot in length. 
+ At the bottom it was set into a metal bracket that looked like a 
+swivel point. She reached out and pulled down on the bar and 
+with horror watched as it swung out over the bed to form a 
+convenient pull bar just a few feet above where she had been 
+sleeping. 
+ Gears in her head turning she realised that in this new world she 
+was supposed to just pull this bar down over her and use it to 
+heave herself upright! The faff rolling over her boobs had been for 
+nothing however because this was all new for her she hadn’t 
+known. 
+ Bugger. 
+ Reaching over her shoulder Vickie grabbed the enormous bra 
+and yanked it off the edge of her wheelchair. She pulled and the 
+re-enforced fabric kept coming. Each of the cups were larger than 
+most dresses! 
+  She read the label – it mentioned a date of manufacture and a 
+postage address but no description of size say ‘bespoke custom 
+fit’ - and set about trying to put it on. She had to pull and shove 
+yards of flesh to heave herself into the cups and then yank on the 
+fabric to get it tight around her ribs. In a moment of self-hatred 
+she imagined that her breasts were each the size of giant 
+garbage bags, just full of wobbling sensitive flesh. 
+ There were more straps than she was used to. The normal back 
+and shoulder straps were absolutely enormous but they had 
+several other smaller fastenings as well. It was designed to self 
+re-enforce using not just her upper ribs but her entire torso to lift 
+her enormous bosom. 
+ With the bra on however she could feel the weight was no longer 
+just pulling on the front of her ribs but equally distributed over her 
+whole upper body. Shoulders, chest, ribs and waist were all </p>
+<p>wrapped up in this enormous, industrial contraption that lifted and 
+pulled her vastness in towards her. 
+ Her enormous breasts slapped into her thighs. Even in the bra 
+which hugged them close to her body there was no stopping 
+them.<br />
+ And as she tentatively stood she reached out to keep one arm on 
+her wheelchair for support. She COULD stand, that was true, but 
+she doubted she’d be able to walk without toppling forwards onto 
+her heavy tits. 
+ In fact she might not be able to walk at all as she could feel her 
+flesh pushing back into her thighs. Each step forward would be a 
+step pushing against her immense weight, possible but 
+dangerously unbalancing. 
+ Other clothing after the bra, it appeared, was a limited selection. 
+ This ‘contraption’ that had swallowed her breasts also engulfed 
+most of her upper torso so she just had to put on some knickers, 
+socks and jeans to complete the set.  She wasn’t very 
+comfortable with how exposed her arms were so she slipped on a 
+cardigan that, hilariously, offered the potential of putting just the 
+top two buttons on the front so it was secured to her neck and 
+breastbone. Below the breastbone the fabric hung open and fell 
+sideways as her massive beanbag shaped boobs blossomed 
+outwards. 
+ Beanbags, she thought as she peered down at them. Just a 
+month ago the old Vickie could have reclined on these and felt 
+quite comfortable. 
+ Critically she looked down at her wheelchair and the shelf 
+installed by the handles, the place where if she was sitting would 
+be directly behind her head. There was a small shelf there, one 
+she’d assumed was for storage but looking at it she saw two 
+shallow seat-like indentations on the top, and she realized 
+immediately what its purpose was. 
+ She carefully rolled one and then the other into the cart and was 
+delighted it was just the right height for her boobs to rest on </p>
+<p>comfortably. Now she could use the chair to carry herself around 
+the house! 
+ It lifted her vastness up so her thighs were unimpeded and by 
+reaching her arm around she could hold the edge of the chair and 
+steer herself. 
+ Inelegant, definitely, but a practical solution to her disability, and 
+infinitely preferable to sitting in the chair and letting them fill her 
+lap as she had suffered for most of the previous day. 
+ Tears came. Vickie wasn’t sure what the emotion was; relief that 
+she wasn’t completely trapped or despair that this was what her 
+life had become. </p>
+<p>By mid-afternoon Vickie had adjusted. 
+ She was getting used to walking with her rollator / wheelchair. 
+She felt like an old woman aged before her time; she 
+remembered her granny had pottered around with one of these 
+strollers for a few years before she died, pushing the little thing 
+before her wherever she went in a futile attempt to stay upright. 
+ If you lived long enough gravity was inevitable, it would get you in 
+the end, but she’d thought she had another forty years before 
+getting to this point. 
+ Damn the Dream Chest and damn herself for starting down this 
+road. 
+ After a wasted morning wallowing in her own self-anger Vickie 
+determined to spend the afternoon looking for a ray of sunshine. 
+As an overly well-stacked woman daily tasks were more difficult 
+than she was used to but not impossible. 
+ It was the simple things that she found she just had to take care 
+over. Getting up and down off the sofa for example – easy as long 
+as she kept her body low, using her arms to press down on her 
+boobs even as her body descended to ensure they didn’t spring 
+up and smack her in the face. </p>
+<p>She found a tape measure in her sowing box and determined to 
+do some measurements to find out just how big she was. After 
+several weeks of constant change she wanted some certainty 
+about where, and exactly who, she was at this point in time. 
+ The only problem she discovered was that the tape stopped at 60 
+inches, and that wasn’t enough for her to go all the way around 
+her giant tits! Holding one end of the tape in each hand she threw 
+the centre forwards but it just wasn’t long enough to go past the 
+edge of her plunging cleavage! 
+ And whatever unknown dimensions she had achieved now would 
+be dwarfed tomorrow as she swelled even further! 
+ There was no point dwelling. The chest was gone, she was 
+certain of that though she had no idea how. She had resigned 
+herself to the hope that the magic would have to stop somewhere. 
+This couldn’t go on forever, it had to stop eventually… 
+ All she could do now was try and get some pleasure out along 
+the way. She texted Dan to ask him to let her know what time he’d 
+be back, and she planned a surprise for him on his return. 
+ She warned him to rush back to satisfy her as soon as possible 
+and he promised he would be back as soon as possible. 
+ The bathroom shower had been modified with a fold out chair 
+beneath the shower head so she could sit and wash herself. It 
+took some doing but she managed to get the enormous bra off 
+and heave her boobs onto her lap. 
+ The warm water felt heavenly cascading from the shower onto 
+her tits, waves of pleasure lapping across her vast surface as she 
+began to wash herself. It wasn’t easy, and she couldn’t ‘quite’ 
+reach all of her boobs, but she managed to rub the majority of her 
+bulk down with warm water. 
+ Then, satisfied she was clean, she decided to ignore the bra, 
+hoisted first her left then her right breast into the stroller, and 
+wheeled herself over to the kitchen where she manoeuvred her 
+immensity onto the kitchen counter. </p>
+<p>She had deliberately positioned herself on the counter between 
+the fridge and the waffle maker. Once she was satisfied she was 
+clean she poured pre-mixed batter, spent half an hour preparing 
+several waffles, which she laid over her vast boobs. 
+ Waffles were followed by whipped cream, chocolate sprinkles. 
+ “I hope you’re hungry,” she grinned as she sent him a 
+photograph of just a small portion of her left boob. The 
+photograph showed a chocolate waffle, nothing untoward at all, 
+until you realised the plate it was sat on was flesh coloured! 
+ The door opened just a few minutes before she was finished and 
+Dan walked in clutching a shopping bag and an enormous grin. 
+He paused in the doorway, a flushed look on his face as he 
+surveyed the massive buffet that overflowed the kitchen counter. 
+ Each of her fat breasts was coated in whipped cream, with a 
+hearty meal of waffles, chocolate sprinkles and, in her hand ready 
+to be scooped from the container, ice cream. 
+ “Wow,” he said, eyes wide and a massive grin on his face. 
+ “Wow indeed,” Vickie said, running her forefinger along her left 
+tit. She was able to scoop up a thick wadge of cream that she 
+slowly slipped between her lips and sucked until it was all gone. “I 
+said I’d serve you dinner Dan. Here I am; now get your kit off, 
+come over here, and lick me clean.” 
+ The only thing he could say was ‘Yes Ma’am”. </p>
+<p>An hour later, once the whipped cream was gone and he had 
+roughly licked the muck off her breasts, the two of them heaved 
+her breasts back onto her stroller and he guided her back to the 
+bedroom. 
+ Lying flat on her back her huge bosom spread out around her, an 
+acre of flesh rolling to either side of her torso. Her pliant flesh 
+smothered everything from her forearms, several feet of mattress 
+and her chest. If she let them roll upwards they pressed against </p>
+<p>her chin and, unless she used her hands to pull them aside, she 
+found it actually impossible to look down at herself! 
+ And she could feel her body sinking into the mattress far deeper 
+than she ever had before! The old Vickie had been as light as a 
+feather but now she probably weighed at least three times what 
+she used two when you combined the extra muscle mass on top 
+of the tits! 
+ She spread her breasts our invitingly and grinned up at Dan. The 
+sensation as the two of them played with her flesh was delightful, 
+his hands manipulating her as he grasped her boobs from below 
+(from a distant spot she couldn’t reach around to grasp herself) 
+and gently rocked her immensity up and down. 
+ Like twin mountains collapsing beneath an earthquake the two of 
+them delighted as the twin masses jiggled with each and every 
+motion of her body. She couldn’t even slightly lift herself off the 
+bed even if she strained herself but it didn’t take much strength to 
+make them wobble! 
+ Even the gentlest push would loll her boobs upwards and she 
+was able to kiss and nibble at her own cleavage, a self-motorboat 
+that Dan joined in on. Once she could feel his head embedded 
+within her deep valley of flesh she wiggled her shoulders and 
+watched as her udders shook from side to side around him. 
+ His hands grasped onto her enormous nipples for support and 
+she screamed with delight at his firm touch! 
+ It was all so perfect, the two of them were made for each other, 
+the only problem was she was noticing now that his hands felt so 
+small! 
+ Before she had delighted in feeling him standing behind her with 
+his arms around her body clutching her from the front. She could 
+lean back into in and feel his hardness pressing against her back 
+whilst his hands massaged and stroked her boobs. 
+ But now, though they tried that, he could only rub at her vast 
+sides. He could still manipulate and play with her breasts; they 
+were heavy but they had enough flexibility and momentum to roll </p>
+<p>and tumble when prodded. But his little fingers could not reach 
+her most sensitive areas and it just left her wanting more. 
+ She needed him to cuddle her, to rub his whole body against her 
+immense breasts. How fucked was that? It took a whole body to 
+rub her boobs! He had to spread his arms wide to embrace just 
+one at a time! 
+ And tomorrow, she realised with a shiver of dread, he would feel 
+even smaller still! </p>
+<p>8:09 AM 
+Don’t you think we’ve done enough Laura? </p>
+<p>8:11 AM 
+Do you think we have? I think she 
+could stand another few days growth. </p>
+<p>8:11 AM 
+She’s in a wheelchair now; the world keeps 
+changing every day to accommodate her even 
+further. Leave it any longer and we don’t 
+Know what will happen. </p>
+<p>8:20 AM 
+What if we made her even stronger? 
+What if she could actually lift those beasts? </p>
+<p>8:21 AM 
+Are you mad? </p>
+<p>8:21 AM 
+She wouldn’t know we had done it. She 
+would think she had always been super 
+strong and able to walk! </p>
+<p>*Day 31 </p>
+<p>Midnight came and the world changed again. </p>
+<p>Vickie awoke, smiled, and reached her arms up to stretch. 
+ With a heave she reached down, wrapped both her hands 
+around her left breast and heaved it towards the edge of the bed. 
+She didn’t need two hands to lift because of the weight but purely 
+because of the unwieldy mass of the things. 
+ Left breast shifted she turned her hands to the right and, as she 
+pushed, she followed it with her body. Upwards she came, body 
+almost dragged upright by her shifting tits, until eventually she 
+was ready to stand. 
+ Boobs hanging free she stood, her body rising into the air, the 
+stretched flesh of her under-bust slapping against her knees. She 
+could feel her rippling back muscles taking the strain but 
+somehow she was fine with this. 
+ Her back muscles rippled with power as they hefted kilograms of 
+otherwise unsupported pendulous flesh skywards and, despite 
+their best efforts, they held back against the swaying jiggle as a 
+new centre of gravity began to assert itself. 
+ She marvelled at her arms and legs which, if possible, were even 
+more muscular than she had made them just a month before. She 
+thought her new sedentary lifestyle would mean she’d lose the 
+muscle mass she’d developed but if anything she was gaining. 
+ Even if she didn’t travel very far it took a lot of energy to get her 
+boobs moving. 
+ Dan was nowhere to be seen, but that was fine, she treasured 
+having a few minutes each morning to explore her new body. She 
+was bigger, there was no doubt about that, but save for the mass 
+and space her breasts occupied she felt perfectly fine! 
+ There was a mirror in the corner of the room and so she reached 
+up and used the pull bar to manoeuvre her immense bulk to the 
+wheelchair. Slapping each tit onto the mobile lap tray she then </p>
+<p>pushed herself towards the mirror and took a long, hard look at 
+herself. 
+ All she could see was a face peering over two mountains of pale 
+flesh. 
+ Her boobs were incredibly round. On her torso they sagged but 
+when planted on a firm surface, such as her new mobile carrier, 
+they formed twin gigantic spheres that flowed out before her. 
+ At the end of these planetoid orbs were nipples that, ridiculously, 
+looked larger than her fists! It was impossible for her to reach 
+around the vast swathes of flesh between her and her extremities 
+but… 
+ “Dan,” she called, hoping for some response. </p>
+<p>It was a good day to be alive. </p>
+<p>8:30 AM 
+We need to talk. 
+This is wrong. </p>
+<p>Vickie was waiting in the kitchen when her unexpected guests 
+arrived. 
+ She glanced down at her cleavage and wondered for a second 
+whether she could answer the door dressed like this. Her bra was 
+on, so her nipples were technically covered, although their 
+obscene mass showed clearly as bulges in the fabric. 
+ Lower down she had sweatpants on, tight fitting ones that 
+hugged her ass and only a little more flesh besides. But then, </p>
+<p>from the front, who would care about that? She was almost all 
+boob and muscle and loving it! 
+ She’d been doing her morning exercises before deciding to 
+prepare lunch. Her Olympian boobs meant that running and 
+jumping were out but she could do a fair amount of exercise on 
+her yoga matt.<br />
+ Alongside all the changes to her body the world was continuing 
+to adjust around her. Their home was now almost entirely open 
+plan with doors separating only the bathroom from the rest of the 
+house. She could wander around at ease knowing she’d never 
+have to squeeze her breasts through any narrow gaps. 
+ They had set a weights room up in the corner of the house so 
+she could work her muscles and keep in shape as best as 
+possible. Plus she had bought a fitness video game that she 
+could do stretches and simple exercises with. 
+ Not push ups of course, couldn’t get low enough to the ground to 
+do them properly, but almost anything that required simple 
+stretches whilst standing was fine. She wasn’t going to let the 
+boobs hold her down; more strength was all she needed, a little 
+more strength and a little more space so she didn’t knock over 
+things directly in front of her whilst turning. 
+ She was a little surprised to see Jane standing by the front door, 
+looking more than a little concerned. She was also a little 
+surprised to see that the door had completely changed; it was no 
+longer just a normal door but a double width, specially fitted, 
+sliding panel that she could shove in and out of place. 
+ As she slid the door open and stepped back, glanced down at 
+how much room her boobs were occupying blocking the doorway, 
+and stepped back again, Jane got a clear look at her enormous 
+cleavage. 
+ “Fucking hell Vickie, you’re massive,” she said, hand rushing to 
+her mouth. 
+ “Just never seem to stop growing,” Vickie nodded, which made 
+Jane laugh, but then to her surprise the woman leant forwards, </p>
+<p>squeezed right boob affectionately and said; “I didn’t mean these 
+puppies! I meant your arms, you’re getting more ripped every 
+day!” 
+ “I am!” Vickie agreed, looking more than a little confused. 
+ But of course, for Jane, in this new world, she had always had 
+breasts big enough to smuggle handbags between. She felt a 
+rush of warmth and excitement run through her body at the 
+contact – it was the first time her new breasts had been touched 
+by anyone but Dan and the contact sent a rush of passion through 
+her that she had to fight down. “It’s not like you two to just drop in 
+unannounced; is something wrong?” 
+ “Well yes, Penny and I have been talking,” Jane said, stepping 
+through the door. “In just the last month the world has changes so 
+much! I mean, I’m the mayor now, Penny’s business is doing 
+great, and your muscles must be really helping with that back 
+pain!” 
+ “New muscles,” Vickie nodded, giving them an emphasised shrug 
+with both of her shoulders. This small movement set off a chain 
+reaction in her breasts as a literal wave of breast flesh ran down 
+from her small body forwards, towards the front of her boob, the 
+entire enormous planetoid spheres rising up with one enormous 
+ripple before, as her nipples wiggled in excitement, the wave 
+rebounded and ran back along the boobs towards Vickie. 
+ The jiggle lasted for nearly twenty seconds as her ponderous tits 
+swayed up and down and back and forth before finally, with the 
+aid of her arms to coral them together, coming to a natural halt. 
+ “I still think you should have just wished them smaller,” Jane said 
+with a wry smile. 
+ “I could never do that to the puppies,” Vickie replied with a 
+mortified smile. “This is a perfect compromise. But what did Laura 
+have to say?” 
+ “She said she doesn’t like the idea that the world keeps 
+changing. She also said that Penny is freaking out – she wasn’t 
+there when we made our wishes, she can’t see how the worlds </p>
+<p>changed. It’s just the three of us Vickie! You, me and Laura, we’re 
+the only ones who remember how things used to be!” 
+ Oh, how wrong you are, Vickie thought but said nothing. 
+ “And your obsession with finding the Dream Chest, getting us to 
+help you use it so you could wish for more back support, enough 
+muscle mass to carry your… yourself around more easily. We all 
+supported you! But for Penny’s sake we have to stop.” 
+ “Have to stop?” Vickie repeated dumbly. 
+ “We don’t want you to use it again, and we want you to bring a 
+halt to your original wish. We know that you’ve grown, you’re 
+much bigger, great! But when you’ve had enough we all want to 
+get together, make sure this is the end and… Seal the Dream 
+Chest away somewhere safe where no one else can use it.” 
+ “But I don’t have…” Vickie began, confused. The things Jane was 
+saying, the way she was talking made no sense. “Jane, the 
+Dream Chest isn’t here. I can’t stop the wishes…” 
+ “Of course its not here, it wouldn’t be safe here, anyone could 
+use it!” Jane said. “It’s in a secret vault, securely under lock and 
+key where no one can get at it without our four keys. After how 
+angry Penny got when she missed out – although it’s her fault, we 
+all thought you were mad and she was busy with her work… But 
+no. After what happened to me and also how angry Penny got we 
+all agreed to put it somewhere safe.” 
+ Her friend was giving Vickie a strange look, as though she was 
+repeating information that she should already know. But this was 
+new, this was a terrible change that had occurred without her 
+knowledge. 
+ How often had the world rewritten itself like this now? 30 times at 
+least! 
+ Things could get out of hand so quickly… 
+ “So we can go and get it?” Vickie repeated. 
+ “As soon as your happy with your new muscles,” Jane nodded. 
+“As soon as we can gather all of us; we need all four keys!” </p>
+<p>“I think I’m ready,” Vickie said, struggling to keep tears from her 
+eyes. 
+ A sudden rush of emotion had swollen up within her. 
+ Blessed relief! And end was in sight to this constant changing, to 
+the endless growth and the re-discovery of her swollen body each 
+morning. “Jane, I think I’m happy where I am. Can we go now?” 
+ Jane looked confused, as though she had expected an 
+argument. What she wasn’t expecting was for her friend to dive 
+forwards and pull her into a massive side on bear hug. Vickie 
+could feel her friends body pinned against the side of her boob, 
+her arms and tits digging into the extremities of her flesh. 
+ “Well, without Penny and Laura there wouldn’t be much point,” 
+Jane said, “We do need all four keys.” 
+ “Ring them,” Vickie urged, before pausing and adding; “And I 
+didn’t ask.. Do you want a drink?” 
+ “Drinks first, then phone calls,” Jane said with a smile. </p>
+<p>Penny was keen and agreed immediately. 
+ ‘Any time,’ she said with a smile. 
+ Laura’s phone rang and rang and then went to answerphone. 
+ Jane tried three times across the afternoon but no one answered. 
+The feeling of joy that had flooded Vickie was slowly turning to 
+dread; and eventually crushing disappointment when Jane said; 
+“Well, she might have a night shift tonight. She’ll be free 
+tomorrow, I’ll get my secretary to get a word with her boss to 
+make sure she calls me. One more day of extra muscle won’t do 
+you any harm…. I thought you’d want a few more days still!” 
+ “I can walk,” Vickie said, with a faint half smile, “That’s all I care 
+about right now. Got to be strong to stay upright!” 
+ “Yeah,” Jane nodded. “I’ve always admired you Vickie. You’ve 
+been carrying these things all the time I’ve known you… Stuck in 
+that wheelchair, unable to have surgery and having to put up with </p>
+<p>the constant innuendo and abuse… From women and men! But 
+you’ve always stayed positive and that’s what I’ve always loved 
+about you.” 
+ Positive… 
+ Vickie thought about it and did her best to smile back although 
+the despair, if only in part, had returned. </p>
+<p>*Day 32 </p>
+<p>Vickie slept through her next growth spurt. 
+ Now she knew she was going to get the Dream Chest back the 
+nagging terror in the back of her mind had disappeared. Vickie felt 
+like a whole new woman, one who was finally able to just explore 
+her new body and enjoy it for the marvel it was. 
+ Boobs that ran all the way from her neck to her knees! Massive 
+spherical teats that swelled with pride and abundant femininity! 
+Pleasure centres that made her shiver just by running a hand 
+down the length, such a long, long length, of her breasts. Tracing 
+a curve from her ribs forwards she could push her hand along 
+until her arms were completely expended and her breasts never 
+ran out, it was just warm, comforting flesh as far as she could 
+reach. 
+ And they felt SO GOOD! 
+ And Dan came home and gave her the pleasure she needed. Her 
+most sensitive parts had grown too far forwards for her to reach, 
+even with her strong arms pulling on the flesh her boobs were just 
+too big to squeeze them back towards her face. 
+ But he was the most skilled man ever when it came to pleasuring 
+her! 
+ And though tonight she knew she would swell again; that the size 
+and the weight would increase even further, weighing her down 
+even more, at least this would be the last time. 
+ What Vickie could not figure out was how, or why, in this new 
+universe Jane’s security people had ended up with the chest. 
+ What possible reason would the new ‘past’ Vickie have had to 
+hand such a precious item over? 
+ What strange twist of fate would allow her to give up possession 
+of her most treasured item whilst still suffering the growing curse 
+of her increasingly magnificent bosom? 
+ It made no sense. But she trusted her friends, she had always 
+trusted them, it would be fine. </p>
+<p>As soon as she’d finished eating breakfast she texted Jane to 
+ask if Laura had replied but no, apparently there had been no 
+response. To pass the time she went to the weights room and 
+pumped iron solidly from 10 AM to lunch. 
+ Her muscles gleamed beneath the neon strip lights Dan had 
+installed to make the room look like an actual gym. She did reps 
+of 12 on each arm of her 100 kilo dumbells, and then looked 
+longingly at the 250 kg barbell for a full body lift. 
+ It was difficult to do because, reaching the floor over her breasts 
+was clearly impossible. There was only so far she could lean 
+forwards before her tits were filling the gap between her torso and 
+her legs and pushing back up at her. 
+ There was a leg machine with a special sling to lift her boobs up, 
+off her knees, and let her work out her lower body though. She 
+didn’t’ spent long in it as it meant suffering squishing her face into 
+her cleavage and exercising blind once she was in position, 
+however given she had to walk with these enormous weights she 
+couldn’t afford to just focus on her arms! 
+ After lunch she ate solidly for an hour, her screaming muscles 
+begging for new sustenance and then went back to the gym. At 2 
+pm she phoned Jane herself but the mobile phone rang and then 
+reached voicemail. 
+ Doubt was beginning to set back in but she pushed it to the back 
+of her mind and returned to the gym. 
+ The muscles in her calves had swollen to the point where, 
+standing side on and examining her new body in the mirror, she 
+doubted she could have squeezed her legs into any conventional 
+pair of trousers. 
+ Looking up the name of the muscles on her phone she 
+discovered the engorged diamond shaped mass as the back of 
+her leg was named the gastrocnemius, which wasn’t a word she 
+recognised, but clearly was an important one because hers had 
+swollen to be at least four inches across! </p>
+<p>However the muscle clearly worked because as she stepped 
+forwards she could see it flatten against her shin, pulling itself 
+upwards and down and into her legs. Stretching her legs she 
+could feel the immense tension in these muscles, something her 
+old body had never even remotely experienced. 
+ Of course, her legs had better be powerful, she had a lot of upper 
+body strength to lift! Her boobs were bigger again but, to be 
+honest, as long as she could hold herself upright an extra half 
+inch barely mattered. 
+ She was long past the size where she could reach around her 
+boobs. They were just enormous pendulous masses that filled all 
+the space before her, ensuring she either had to interact with the 
+world from a distance or side on. 
+ She ate dinner off her cleavage, placing a tablecloth over herself 
+and simply sitting on a chair in the corner of her kitchen. Her 
+massive boobs rested on her upper legs, spilling over her knees 
+and filling the air at least three feet out in front of her, providing an 
+instant table! 
+ And when Dan came home she pushed him against the wall, 
+trapped between her enormous breasts, and told him that if he 
+could force his way out she’d give him blowjobs every night for 
+the next week! 
+ Feeling him squirm his way out from between them and then, out 
+of desperation, try to shove her flesh aside tickled but it was 
+hopeless! Her boobs weighted over two thirds of what he did and 
+she had him pinned in place exactly where she wanted him! 
+ “If you want out of there then try heading down,” she said 
+invitingly, pointing with her finger towards the floor. “But you’re 
+going to have to do something for me if you want my legs to 
+open!”  </p>
+<p>8:30 PM 
+Answer your damn phone! 
+NOW! </p>
+<p>8:32 PM 
+Or I’ll tell her what you’ve done! </p>
+<p>The phone bleeped just before 10 pm. 
+ Too tired to move Vickie asked Dan to pick her phone off the 
+bedside table. He crawled up to her, placed one hand on her left 
+boob, and heaved himself up and over her! She watched with 
+amusement at the way that he struggled to push himself over her 
+two breasts and reach out to the phone without overbalancing. 
+Though her boobs were massive they did not make convenient 
+supports. 
+ But the sensation of him resting on them was heavenly! 
+ She waited until he had his fingers around her phone before, with 
+a massive grin, she jiggled her upper chest just to watch him fall! 
+He nearly saved himself, jabbing out with his left hand to support 
+himself against a synthetic pillow, but her wobbling breast 
+rebounded and jiggled back upwards and smacked him in the 
+side. 
+ With a gentle cry he fell to the bed and Vickie instantly rolled over 
+to smoother him beneath her! 
+ She had almost all of him smothered, everything except his 
+outstretched hand that still clutched her mobile phone! Gingerly 
+she snatched it off him and, with some delight, read the message 
+from Jane. </p>
+<p>“Finally got hold of Laura; she’s off work tomorrow. We’ll pick you 
+up at 10 am.” 
+ Thank god, Vikckie thought, before remembering she had a 
+prisoner trapped beneath her breasts who was probably 
+suffocating. 
+ Oh well, she thought, at least he’d be happy if this was the way 
+her went… </p>
+<p>*Day 33 </p>
+<p>Vickie stayed awake till midnight to feel her breasts grow one final 
+time. 
+ She couldn’t explain to Dan why she wanted to stay up – he had 
+no idea his girlfriend was going through some unholy 
+metamorphosis each night. As she changed the world changed 
+with her, suggesting to all but herself that she had always been 
+this freakishly endowed. 
+ But now that it was over and she finally had an end in sight she 
+wanted to see the new woman she was about to become. 
+ She had prepared herself, placed herself in the kitchen and 
+braced herself to stand. She did it completely unsupported; no 
+monster bra and no granny stroller. She would face this final 
+assault on her upper body strength head on. 
+ And as midnight struck the world changed for the final time! 
+ She could feel warmth flooding through her bosom. She could 
+feel the skin stretching, not in a painful way but a pleasant one, as 
+new nerve endings rushed to fill the new acres of flesh spreading 
+out beneath her. 
+ Her boobs wobbled and then swelled forwards, advancing 
+nipples pushed onwards by bulging flesh. She could feel her 
+under boobs rolling down her thighs, advancing perilously close to 
+her knees. 
+ She took in a deep breath and watched as a tide of motion 
+overtook the sagging, tear shaped, Olympian sized tits that had 
+nearly filled her living room. 
+ She had long since past the point where she could no longer 
+reach over her boobs but now, she suspected, no one stood 
+before her could reach her. 
+ Even if they both stretched their arms to their furthest point her 
+breasts had formed an impossible barrier that would prevent 
+anyone approaching her face on unless they squeezed into the 
+deep valley between them, and the side compression she could </p>
+<p>feel as her puppies shoved each other sideways was no laughing 
+matter! 
+ Thankfully the one thing she was most scared off didn’t happen. 
+She had dreaded being able to feel the kitchen floor pressing into 
+the base of her flesh. It was probably a near run thing – standing 
+as tall and straight as possible the two spheres hung so low there 
+could simply not be much gap between their lowest point and the 
+floor, but it hadn’t happened. 
+ If she could keep them clear of the ground then she could walk. It 
+was as simple as that! 
+ So this was what she had become. Marvelling herself in the 
+mirror Vickie turned a few times and grinned at the freakish shape 
+before her. 
+ It was… bizarre but also completely right. 
+ Vickie Ellis, the woman with the largest natural tits in the world. 
+ Probably! </p>
+<p>0:06 AM 
+OUCH! WHAT DID YOU DO? </p>
+<p>0:17 AM 
+Concentrate! 
+You’ll figure it out! </p>
+<p>Penny lay in bed, staring at her phone, trying to decompile a new 
+universe of memories that had all of a sudden come flooding into 
+her head on the stroke of midnight. </p>
+<p>It was actually very nearly painful, trying to sort through the 
+different sets of histories that the Dream Chest had created. 
+ She could remember the old Vickie now, and all of the 
+intermediate women who had briefly flared into being over the last 
+month. 
+ But now there was an entire second set of Vickies, nearly 
+another twenty at least who were all subtly different from the 
+others. 
+ This sudden rush of new memories had nearly overwhelmed her. 
+It made no sense unless… </p>
+<p>0:15 AM 
+How did you do it? </p>
+<p>0:17 AM 
+I wished that she had never 
+removed her original wish 
+From the Dream Chest! </p>
+<p>Jane lay in bed only peripherally aware that the universe had 
+changed again. 
+ Vickie’s muscles would have swollen, she knew, but she couldn’t 
+picture it in her mind. 
+ Instead, she only knew of her friend with the world’s most terrible 
+affliction of gigantomastia imaginable and the terrible ordeal she 
+had gone through to regain some form of independence! 
+ And she knew a lot more now about her new life, this new reality 
+where the city all but worshiped at her feet. She could do a lot of 
+good here, she knew, however she could also have a lot of fun as 
+she went. </p>
+<p>0:20 AM 
+Every morning her boobs have 
+Grown, but so have her muscles. 
+Our friend is a true Amazon now! </p>
+<p>Laura lay on her front, grinning as she clutched her mobile phone 
+and sent one last naked selfie to her fans. 
+ A midnight session had been called for this special occasion. 
+ God had it been worth it! 
+ She felt so smug right now; it had all worked out beautifully. Jane 
+believed that the Dream Chest was stored somewhere safe, 
+Vickie had been punished for daring to transgress the titans but 
+now, hopefully, in a safe way. 
+ And Penny, dear sweet Penny who thought she knew everything. 
+ Wasn’t she in for a shock in the morning! </p>
+<p>0:22 AM 
+I’ve not done anything except<br />
+Give her the wishes she asked for! 
+Punishment enough for anyone… </p>
+<p>As the sun rose Vickie was doing squats in the gym space of their 
+flat. 
+ Her bulging muscles were crying for attention so she had 
+lumbered out of bed without disturbing Dan, helped herself to a 
+glass of protein shake and started exercising without bothering to 
+dress herself. 
+ At this stage there weren’t many clothes that would cope with her 
+doing exercises; she had just too much swollen flesh to handle. 
+Both her enormous boobs and bulging muscles demonstrated two 
+obscenely different growths. 
+ She had pulled a low table before her and rested the undersides 
+of her magnificent behemoths on the table. With them balanced 
+and raised off the floor she was able to do the majority of the 
+exercise ‘mostly’ unencumbered by them, probably only half of 
+their 15 kilos of weight was pulling down on her and at this point 
+that felt like almost nothing! 
+ Her toes were pointed outwards, her abs tense and her butt 
+poking as far backwards as possible she shifted her body weight 
+forwards and backwards. Forwards and backwards; up and down, 
+her body rose and fell rhythmically. The only problem was the 
+sensation of her knees digging into the undersides of her breasts 
+when she reached her lowest point but it wasn’t painful as much 
+as it was odd. 
+ Not as odd as the forwards lunge felt though. Keeping her torso 
+straight she kicked one leg out of a time and had to aim her 
+cleavage so that the raised knee fell between her massive boobs. 
+ At the lowest point of the lunge each of her boobs rested on the 
+ground either side of her feet, and then as she pulled herself back 
+upright they lifted up off the floor and wobbled ferociously as they 
+slapped back together after rubbing past her thighs. 
+ But she had down four sets of ten lunges already this morning, 
+and another four sets of squats. Her legs were tingling with 
+energy, her lower body caked in sweat whilst her upper body 
+trembled for attention. </p>
+<p>She would lift weights for another ten minutes and then go rouse 
+Dan. All this exercise had made her feel a little horny and her 
+boobs needed his attention. They felt left out! 
+ At this point Vickie realised she had transformed herself into two 
+very different extreme versions of femininity. Half of her was all 
+fat; soft, slovenly, bulbous, sensual, curvy fat that hung 
+ungraciously and jostled for attention. Her entire lower vision was 
+full of breast flesh and she could feel them aching for attention. 
+ But the rest of her body, everything that wasn’t chest space, was 
+rippling with hard, rigid, straight, rippling muscle that bulged with 
+every movement. Her muscles were so large they had to shift and 
+compress each other whenever she moved at all, a movement as 
+simple as flexing her bicep caused ripples (hard, compressive 
+ripples not the soft undulations of her boobs) all along her 
+forearm. 
+ Half of Vickie was as hard as a rock whilst the other half, and it 
+nearly was a half, was as soft and pliant as a stuffed pillowcase. A 
+heavy pillowcase, one that could cause someone some real harm 
+if she smacked them with it, but that was the beauty of the 
+paradox she had become! 
+ Her enormous, stacks of fatty flesh were the perfect weightlifting 
+challenge! The rest of her body had adapted to cope and, though 
+she missed being able to see anything below her collarbone or 
+move her hands around in front of her below her neckline, the 
+positive, joyous sensations she got from every inch of rippling 
+flesh was worth it. 
+ She was big; in every possible way. A firm, tight, wide, muscular 
+ass and pliant, planetoid boobs that could smoother a small (or 
+even a medium sized) dog. 
+ She’d been worried for a while after loosing the Dream Chest but 
+tonight she’d get it back, remove her wish, and it would all be fine. 
+ The others didn’t need to know she had done this to herself; they 
+thought the muscle was the invention to solve the boobs that </p>
+<p>she’d had since birth. Ouch, she thought, imagine the old waifish 
+little Vickie lumbered with these behemoth tits. 
+ The old Vickie would have been crushed to death by two massive 
+piles of flesh that probably each weighed half of what she did! 
+ And as she pumped iron she thanked the heavens that this was 
+going to end here. With each flex of her arm she could feel, she 
+could see, her boobs swaying from side the side before her. She 
+could feel the wind against her nipples as they bobbed back and 
+forth a ridiculous distance due to the exaggerated pendulous 
+notion of her massive tits. 
+ It was a nice feeling but she only had a few more inches of 
+growth before she’d feel the floor brush against the undersides of 
+her boobs. 
+ And she wasn’t sure how much raw strength would be able to 
+cope when it wasn’t just gravity but friction she’d be fighting to 
+move! 
+ She had done the workout naked; honestly, when her body got 
+mobile the best defence she had against jiggle was her own tight 
+muscles. She was so huge and stacked she barely felt the cold 
+any more – even her most sensitive areas were padded by layers 
+and layers of warm fat! 
+ But for modesties sake when she was done she went to find her 
+monster bra and some pants. The monster bra had changed, the 
+old one had been built to contain her but this new was just an 
+enormous cup that her boobs rested in. 
+ It gave some support, and it restricted some jiggle, but mostly it 
+just held her nipples down a little bit to prevent passers by getting 
+an eyeful! 
+ When the van finally arrived Vickie heaved her breasts into the 
+back of the van with little more than a grunt, lifting first the left and 
+then the right up onto the loading hatch before leaning into them 
+and clambering in alongside them. Once she was up and level 
+with her tits she was able to stand upright, turn sideways and 
+shimmy deeper into the back of the vehicle. </p>
+<p>However she stopped just before she got to the end and stared 
+dubiously at the straps they intended to use to hold her in place. 
+ “You might be able to move them,” Penny had pointed out; “But if 
+we get into an accident and you come flying and crush me you 
+could do me some serious damage.” 
+ “They’re not THAT heavy,” Vickie protested but Jane just rolled 
+her eyes at her and the two women waited whilst the driver began 
+to loop the straps in place. It was surreal, Vickie thought, that her 
+breasts were so large they counted as oversized cargo all on their 
+own! 
+ They were going on a journey to the vault to end this bizarre 
+fever dream once and for all. Jane sat up from with the driver, 
+Penny on the backseat, Vickie trussed up like a turkey on the way 
+to slaughter… </p>
+<p>Jane would meet them there. </p>
+<p>Onwards! </p>
+<p>…To be concluded in ACT VI </p>
+<p>If you enjoyed Vickie’s transformation then other transformation 
+works are available from Sobtac! </p>
+<p>Latest releases: </p>
+<p>The Emissary of Re-Sca-Lar </p>
+<p>20-page pdf comic sequence </p>
+<p>Giantess 
+$1.50 from E-Junkie </p>
+<p>Troubled Waters </p>
+<p>Mike and Elsa’s anniversary was 
+not going to plan… </p>
+<p>28-page pdf comic sequence </p>
+<p>Transgender, Breast Expansion. 
+$1.50 from E-Junkie </p>
+<p>These and more illustrated Sequences are available for Purchase 
+through Deviantart or https://sobtac.e-junkie.com </p>
+</body>
+</html>

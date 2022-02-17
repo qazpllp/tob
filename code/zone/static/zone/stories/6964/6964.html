@@ -1,0 +1,1937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Traps of the Wishes: Part 8</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>When sense returned to Kendra, she rushed to the bathroom. Her shirt was
+in tatters, ripped to shreds. Her tits, though. Her magnificent breasts
+were now in the DD-cup range. Pushing them together presented an
+incredible cleavage. Her nipples were always erect, begging to be played
+with.</p>
+<p>Her groin ached. Her pussy was dripping wet and still hungry for cock. A
+big one. She decided she needed another wish.</p>
+<p>Kendra opened the book and the genie emerged.</p>
+<p>"Somebody had lots of fun."</p>
+<p>"Shut up!" Kendra felt slightly embarrassed. Her previous self would
+never have partook in a threesome, much less a gangbang. But now, it
+didn't bother her how many cocks were in her at once.</p>
+<p>"So, I take it you want to make another wish?"</p>
+<p>"Yes. I want to have total control over my partners regarding anything
+sexual."</p>
+<p>"Oh, now that's a new one. Interesting." The genie snapped her fingers.
+"It is done."</p>
+<p>Just then, someone knocked on her door. "Postman!"</p>
+<p>Kendra grinned.</p>
+<p>\~</p>
+<p>That night, Kendra's doorbell rang. It was Mike.</p>
+<p>"Kendra, are you ok? They said you-" He paused. Stunned at the sight of
+Kendra's new figure. "Y-you're naked..."</p>
+<p>"Is that all that you've noticed?" She smiled with lust, caressing her
+beautiful new breasts. "Come in."</p>
+<p>"Kendra, what happe-" Mike was interrupted by Kendra shoving her tongue
+into his mouth. They kissed passionately, undressing Mike from his
+office clothes.</p>
+<p>At six inches, his penis was small compared to what she had in the
+morning. But that would be a thing of the past.</p>
+<p>She took his cock in her mouth and began blowing him, moving her tongue,
+licking his shaft. Her head bobbed in and out, feeling his cock reach
+the back of her throat.</p>
+<p>She felt it grow, getting thicker and longer. Her head moved faster. Her
+hands fondled her breasts.</p>
+<p>"Oh god, I'm going to come." Kendra sucked his growing cock even harder
+until he shot hot cum down her throat and kept on sucking, making sure
+she got every last drop. He was coming a lot. A lot more than their
+escapade in the washroom. She got more excited, her pussy got even
+wetter.</p>
+<p>When he finally finished, Kendra's mouth was unbelievably stretched. She
+slowly removed the cock from her mouth, enjoying the sensation of the
+member moving through her throat.</p>
+<p>He dick now hung nearly a foot and a half and was as thick as her fist.
+She looked at it with lustful eyes. Her hands still playing with her
+growing tits. It was much stronger than before, growing till they were
+nearly the size of her head.</p>
+<p>"Kendra, what is this? What's going on?" Mike asked, panicked.</p>
+<p>"I made your dick grow and your cum made my boobs grow," she said while
+stroking the monster cock.</p>
+<p>"What?" She shushed him and led him to her bedroom.</p>
+<p>There, she laid down on her bed. "Put it in me." She spread her legs and
+pussy. Mike wasted no time. He poked at her vagina and eased it in.</p>
+<p>"Ohhhhhhhhhhh" Kendra moaned as she felt the huge cock stretch her and
+fill her up. It was even better than the two cocks she had in the
+morning. "Yes! Yes! Right there! FUCK ME! HARDER HARDER! OH GOD YES!
+THIS IS AMAZING!" Mike fucked her harder and faster. Her phenomenal
+breasts jiggling from his motion.</p>
+<p>Kendra came. It was a mind shattering orgasm, even stronger than before,
+she screamed with pleasure, gripping her sheets. But it wasn't enough.</p>
+<p>They did it doggy, cowgirl, reverse cowgirl and who knows what other
+position. Orgasm after orgasm, Kendra was going mad with pleasure and
+lust. Her screams and moans getting louder and louder. Mike just
+wouldn't come. She wouldn't let him. Not until she was satisfied. His
+cock was stretching her wide but she wanted more. And more she had.
+Mike's engorged member penetrating her grew as he thrust into her.</p>
+<p>Kendra's breasts growing constantly with her orgasms, slapping against
+each other as she got fucked by the stud she created.</p>
+<p>Hours later, finally, she let Mike come. He grunted and slammed his dick
+into her as he shot his hot cum. He just kept coming and coming, filling
+her with semen. He pulled his enormous cock out, still shooting jizz all
+over her body, most landing on her tits.</p>
+<p>Mike collapsed beside her, panting for air. "Holy shit, Kendra...that
+was...out of this world..."</p>
+<p>They kissed passionately and went to sleep.</p>
+<p>\~</p>
+<p>Kendra slept in, exhausted from the night of mindblowing sex. Mike had
+already left for work when she woke up. She pushed herself up, feeling
+the immense weight that was not there the night before. She shambled her
+way to the bathroom.</p>
+<p>Her breasts were now hanging to her belly, her back straining to support
+them.</p>
+<p>"Well, I don't think any bra is going to fit me now."</p>
+<p>She opened the book to let the genie out.</p>
+<p>"Wow, you have a lot of stamina! You two were going at it for hours!"</p>
+<p>"Yeah, yeah. I need my last wish."</p>
+<p>"Already? You're fast. Alright then, let's hear it."</p>
+<p>"I wish I can control the size of my assets."</p>
+<p>"Hmmm, I could do that. But I won't."</p>
+<p>"What? Why?"</p>
+<p>"Because, then you wouldn't need to carry those jugs around! That would
+be no fun."</p>
+<p>"It already isn't fun! The sex is mindblowing but it's getting hard to
+move around!" As if to prove her point, Kendra turned and knocked over
+the lamp on her nightstand.</p>
+<p>"And that's fun for me." The genie winked.</p>
+<p>"Ugh...Hey! I thought you wanted girls to make their wish fast? Why
+else would you want a guaranteed wish?"</p>
+<p>"I did. But you are so fascinating, I decided I wanted to see how far
+you'd go." She smiled cheekily. "Tell you what, I'll give you some
+clothes. On the house!"</p>
+<p>Kendra groaned. "Fine..."</p>
+<p>Kendra waddled to her wardrobe and opened it. True enough, there were
+bras and supports fitting her size.</p>
+<p>"They'll grow with you too! Well, the bras anyway. The shirts and blouse
+won't."</p>
+<p>"And that is supposed to make me feel better, how?" Kendra sat down on
+her bed, winded from just a short time standing.</p>
+<p>The genie shrugged. "Hey, you haven't opened your package from
+yesterday. What did you get?"</p>
+<p>"Oh, yea...I forgot about that...I fucked that poor postman senseless,
+it slipped my mind." She giggled. "Gave him one hell of a tip though."</p>
+<p>"I'll say."</p>
+<p>She waddled to the living room where the huge box sat, waiting for her.
+Standing in front of it, she realised she didn't have any scissors or
+knife with her.</p>
+<p>"Hey, it's not a wish or anything but could you get me a knife or
+something from the kitchen? I'd go myself but lugging these huge tits
+around has gotten me really tired."</p>
+<p>"Sure, but don't make a habit of it. I'm not your servant," she said as
+she floated into the kitchen.</p>
+<p>She came back moments later with a pair of scissors. Kendra cut the box
+open and undid the wrapping. She looked at her order and smiled.</p>
+<p>She was going to have so much fun.</p>
+<p>"Welcome!" An elderly lady behind the counter greeted Kendra as she
+entered the dreary bookstore. Kendra smiled in return.</p>
+<pre><code>She browsed the shelves of books, looking for a title that may pique
+</code></pre>
+<p>her interest but all she could find were the same boring titles that
+most other bookstores had. Kendra sighed. She had hoped this new one
+might have some surprises for her. Alas, she expected to leave
+disappointed.</p>
+<pre><code>"Looking for something, dear?" Kendra almost screamed. The lady had
+</code></pre>
+<p>crept up to her so silently.</p>
+<pre><code>"Oh, uhm, nothing in particular. I was hoping to find something
+</code></pre>
+<p>interesting or new." Kendra gave a weak smile. "Do you have any
+recommendations?"</p>
+<pre><code>"Ah, of course. I think I have just the thing for you. Follow me,"
+</code></pre>
+<p>the little old lady said. Kendra followed her to the counter where she
+was told to wait. The lady entered the backroom and returned moments
+later with a thick leather bound book in hand. "Now, this may not be new
+but it is interesting."</p>
+<pre><code>Kendra ran her hands over the soft leather. There was something
+</code></pre>
+<p>alluring about the dark brown skin, almost as if it was calling out to
+her. "What is it about?" she asked.</p>
+<pre><code>The lady gave a soft chuckle. "I don't want to ruin the surprise.
+</code></pre>
+<p>Trust me, you will enjoy it," the lady said as she ran her eyes up and
+down Kendra's slim body.</p>
+<pre><code>"Hmm\...alright. I'll take it. How much will it be?" She paid for
+</code></pre>
+<p>the book and left the store.</p>
+<p>\~</p>
+<p>Back at her apartment, Kendra plopped down on her bed with her new book.
+She undid the belt loop keeping it closed and opened the cover.</p>
+<pre><code>Light poured out of the pages. It was like someone had turned on a
+</code></pre>
+<p>flash light in front of her eyes. Kendra flung the book to the foot of
+the bed and covered her eyes.</p>
+<pre><code>When vision returned to her, she saw a plume of smoke coming out
+</code></pre>
+<p>from the book and above the smoke sat a woman, filing her nails. She had
+red hot hair, full lips and a body that made Kendra felt extremely
+inadequate, then she realised the woman was naked. Kendra snapped her
+head away, her cheeks flushed and embarrassed.</p>
+<pre><code>"So, you're the new girl, huh."
+
+"N-new girl?" Kendra asked, still not looking at her.
+
+"You don't know what I'm talking about, do you," the woman spoke.
+</code></pre>
+<p>"Ugh, fine. I'm your genie now. Before you ask, no, you may not wish for
+more genies. And no, you may not wish for more wishes. Three wishes,
+that's it."</p>
+<pre><code>"I must be going crazy. My new book is talking to me."
+
+"Great, you're one of those. Here's I'll show you." The woman
+</code></pre>
+<p>snapped her fingers and a bowl appeared in her hand. "Believe me now?"
+She handed the bowl to Kendra. It was filled with a milky white liquid.</p>
+<pre><code>Kendra looked at the contents of the bowl and to the woman, doing
+</code></pre>
+<p>her best to avoid looking at her body. "Go on, drink it. It's on the
+house."</p>
+<pre><code>She brought the bowl to her lips and tipped the drink into her
+</code></pre>
+<p>mouth. It had a familiar taste and texture but Kendra could not remember
+what it reminded her of. It tasted good so she did not pay it much mind.
+She heard the genie giggle.</p>
+<pre><code>"W-what are you laughing about?"
+
+The genie stifled her laugh. "Nothing. Anyway, now do you believe
+</code></pre>
+<p>me?"</p>
+<pre><code>"I guess. So I have three wishes?"
+
+"Yes. You don't have to make them now, there's no hurry."
+
+Kendra thought about what she wanted. There was so many things she
+</code></pre>
+<p>could do with three wishes, so many problems she could solve. "I wish to
+have a billion dollars!"</p>
+<pre><code>"Yeah, no. I can't do that, sorry."
+
+"What do you mean you can't do that?"
+
+"I should have specified. I'm a special kind of genie. An erotic
+</code></pre>
+<p>genie."</p>
+<pre><code>"Erotic genie? So you can only grant wishes related to se\..." It
+</code></pre>
+<p>clicked. "That was cum! You made me drink cum!"</p>
+<pre><code>The genie burst out in laughter. "Took you long enough! I was
+</code></pre>
+<p>wondering how long you'd go before you realised it. Let me tell you,
+some girls took a long time before figuring it out."</p>
+<pre><code>Kendra thought that she should feel disgusted but somehow, it didn't
+</code></pre>
+<p>make her retch. It just came as a surprise.</p>
+<pre><code>"So yeah, I can only grant wishes related to sex. And like I said,
+</code></pre>
+<p>you don't have to make your wish now, you can take your time. That drink
+you just had -" she pointed to the spilt bowl on Kendra's bed. "-that's
+on the house. Let me know what you think!" She winked at Kendra and
+disappeared.</p>
+<pre><code>"Hey, wait!" She was gone. Kendra tried closing and opening the book
+</code></pre>
+<p>again but the genie didn't come out, no matter how many times she tried.
+She set the book on her nightstand.</p>
+<pre><code>Kendra picked up the bowl and took a tissue to clean up the cum on
+</code></pre>
+<p>her sheets. Before she wiped it off, however, an urge swelled up in her.
+She wanted more of it. She shook her head to drive that thought away.
+But as she wiped it, the smell coming from it caused the urge to return
+in full force.</p>
+<pre><code>She wiped some off with her finger and licked it. Kendra didn't
+</code></pre>
+<p>remember it tasting this good. It was really good. She wanted more. She
+began licking her sheets clean of cum and when that was done, she moved
+on to the bowl.</p>
+<pre><code>Her urge satisfied, she laid back on her bed. Something stirred
+</code></pre>
+<p>within her, another urge rising. Her hands found their way down between
+her legs. Her jeans were wet. Kendra removed her pants and started
+running her fingers over her pussy, stroking it.</p>
+<pre><code>It felt incredible, it was bliss. Kendra continued stroking herself,
+</code></pre>
+<p>faster and faster. Her free hand found itself on her small B-cups,
+squeezing and fondling them. She then poked her fingers inside herself.
+She wanted to scream. It was pleasure like she had never felt and she
+had not come yet.</p>
+<pre><code>Her fingers pumped in and out, feeding the pleasure demon inside
+</code></pre>
+<p>that demanded more. Kendra obliged, stroking faster and faster. She felt
+her orgasm building. She was almost there. She kept up the momentum,
+feeling the pleasure, feeling the ecstacy.</p>
+<pre><code>Until finally, it hit her. Her body convulsed in the waves of
+</code></pre>
+<p>pleasure as she moaned uncontrollably, squeezing her breasts.</p>
+<pre><code>"Oh my god. That was incredible." She pushed herself up, panting,
+</code></pre>
+<p>and saw the mess she had made on her bed. "Well, time to clean up."</p>
+<p>\~</p>
+<pre><code>The next morning, Kendra went about her morning routine, getting
+</code></pre>
+<p>ready for work. She put on her bra and found it tight.</p>
+<pre><code>"That's odd. It must've shrunk in the wash." She shrugged it off.
+
+In the office, she went about her duties as per normal, except she
+</code></pre>
+<p>was horny. Very horny. Hornier than she had felt in ever. She tried to
+put it out of her mind and buried herself with work but everything she
+did or thought led straight back to sex.</p>
+<pre><code>At lunchtime, Kendra slipped into the ladies. She locked herself in
+</code></pre>
+<p>one of the stalls and serviced herself. Remembering the mess she made
+the day before, she stripped herself nude and began working.</p>
+<pre><code>Her fingers ran over her lips like before in a furious motion and
+</code></pre>
+<p>eventually slipped inside.</p>
+<pre><code>"Oh god\..." she moaned.
+
+Her fingers were moving fast but it wasn't enough. She needed more.
+</code></pre>
+<p>Kendra pushed all her fingers and and stroked herself, her other hand
+played with her boobs, squeezing her nipples.</p>
+<pre><code>"Fuck, it's so good\..."
+
+Her clit, her pussy, her breasts, her nipples. All felt so much
+</code></pre>
+<p>pleasure. She was so sensitive.</p>
+<pre><code>She felt an orgasm building and intensified her hands going in and
+</code></pre>
+<p>out. It was as good as yesterday. The electrifying pleasure, building
+and building. And it happened.</p>
+<pre><code>She wanted to keep herself quiet but it quickly became impossible.
+</code></pre>
+<p>The waves of orgasm hitting her. She spasmed uncontrollably, moaning and
+gasping for air.</p>
+<pre><code>"Hello? Are you ok?" A voice asked, shaking Kendra back into
+</code></pre>
+<p>reality.</p>
+<pre><code>"Uh, yeah!" she replied, rushing out of the stall, naked.
+
+It was Mike.
+
+He averted his eyes when he saw her. "Oh, Kendra! Uhh, y-you're
+</code></pre>
+<p>naked..."</p>
+<pre><code>She looked down and quickly covered herself and ran back into the
+</code></pre>
+<p>stall. <em>Oh god. What do I do?</em> She knew what she wanted to do. It was
+wrong but she still wanted to do it.</p>
+<pre><code>"Hey, Mike? Can you come in and give me a hand?" Kendra asked.
+
+"S-sure. What do you need?" Kendra opened the door and reveal her
+</code></pre>
+<p>body to Mike.</p>
+<pre><code>"You."
+
+She grabbed his tie and pulled him in for a kiss. Her hands worked
+</code></pre>
+<p>furiously to unbuckle his belt. She reached into his pants and pulled
+his cock out.</p>
+<pre><code>"Put it in. Now." She turned around and pressed her ass against him,
+</code></pre>
+<p>rubbing his penis until it slipped inside her. "Oh, yes."</p>
+<pre><code>Mike grabbed her ass and began pumping into her. "Oh fuck- Yes- Fuck
+</code></pre>
+<p>me harder-"</p>
+<pre><code>It was pure ecstacy for Kendra. Finally, she had the real thing. She
+</code></pre>
+<p>was going mad with lust. She grabbed both her boobs and massaged them
+while Mike was going in and out of her. "Yes- So good- Fuck me- Harder-
+Harder- Just like that-"</p>
+<pre><code>Mike put his hands on her breast and played with them. Her nipples
+</code></pre>
+<p>were hard and sensitive. His every touch brought her more pleasure and
+closer to another orgasm.</p>
+<pre><code>"Faster- Harder- Yes! Yes! Oh my god! I'm going to come!" Kendra
+</code></pre>
+<p>moaned. Her fingers found themselves playing with her clit.</p>
+<pre><code>"I'm going to come, too," Mike groaned.
+
+Kendra stopped him and pulled herself away.
+
+"Sit." Mike did as he was told.
+
+She mounted his cock and began to ride him. She didn't know she
+</code></pre>
+<p>could move her hips that fast before. Not that she tried. She then
+buried his face in her small breasts, rubbing them against his face as
+she rode him.</p>
+<pre><code>"Oh god! Oh God! Oh GOD!" The orgasm crashed through her. More
+</code></pre>
+<p>intense than when she did herself. She could not stop spasming and
+moaning. It felt like it would go on forever and she did not care if it
+did.</p>
+<p>\~</p>
+<pre><code>Kendra threw her things on her bedroom floor and yanked open the
+</code></pre>
+<p>book. The smoke emerged from it, along with the genie.</p>
+<pre><code>"What did you do to me?" she yelled.
+
+The genie grinned. "I told you, I'm an erotic genie. The things I do
+</code></pre>
+<p>are for better sex. Are you going to tell me you didn't enjoy yourself?
+You were quite loud last night."</p>
+<pre><code>"Y-yeah, I did\...It was unlike anything I've felt befo- Don't
+</code></pre>
+<p>change the subject! What did you do to me?"</p>
+<pre><code>"Sheesh\...tough crowd. Well, did you notice anything different?
+</code></pre>
+<p>Aside from the increased sex drive." Her shit eating grin still on her
+face.</p>
+<pre><code>"I mean\...my bra has been feeling a little ti-" Kendra stopped
+</code></pre>
+<p>herself and grabbed her boobs. They were bigger. Not by much but bigger.
+"My tits!"</p>
+<pre><code>"There we go! So the jizz I had you drink yesterday is quite
+</code></pre>
+<p>special. It makes you crave sex and you will enjoy it much more than
+before. It also has an added bonus of increasing your assets the more
+enjoy it." She winked while fondling her ample breasts.</p>
+<pre><code>"Wait\...so you're saying every time I come, my boobs will grow?"
+
+"Yep! Added bonus if you receive seeds."
+
+"Cum in my vagina will make me grow as well?"\
+"Not necessarily your vagina. As long as it touches you."
+
+Kendra did not know what to make of the new information. On one
+</code></pre>
+<p>hand, the sex was good. Very good. Incredibly good. But on the other,
+she was horny all the time and it was becoming too distracting. She
+already didn't know how she was going to go to work again tomorrow.</p>
+<pre><code>"Is there any way to reverse that?"
+
+"Sure! It'll take one wish."
+
+"Wait, what? You did this to me!"
+
+"I know! And it's a guaranteed girls will use one wish to undo
+</code></pre>
+<p>that!"</p>
+<pre><code>"You're a bitch, you know that?"
+
+"I've been told. So, is that your wish?"
+
+Kendra did not know if it was what she wanted or if it was the magic
+</code></pre>
+<p>cum speaking. "No. I have a better idea."</p>
+<p>"My dear, you've been given an Inheritance." the old lady placed her
+hands on Kendra's butt and gave a squeeze. Kendra yelped again.</p>
+<p>"In-inheritance? What do you mean? Am I going to become a genie trapped
+in a book?"</p>
+<p>She laughed. "No, oh definitely not, my dear. Nothing like that. The
+genie simply liked you enough to give you her powers. It doesn't happen
+often. But it does happen. Very few are able to gain a genie's favour.
+Most usually end up with what is now known as a monkey's paw. When they
+offend the genie."</p>
+<p>"Wait...what?"</p>
+<p>"Make a wish."</p>
+<p>Kendra's mind raced. She had the powers of a genie now? She could grant
+wishes? Make a wish...Kendra did not want to take too big a risk.
+Something simple. </p>
+<p>"Any wish?" The lady nodded. "Okay...I wish...for a strawberry
+milkshake." And just like that, with no fanfare or swirling air, a tall
+glass of milkshake appeared on the cashier countertop.</p>
+<p>Kendra was speechless. She could make wishes come true!</p>
+<p>"Use your powers wisely, young lady."</p>
+<p>"Is...Is there a limit?"</p>
+<p>"To how many wishes you can make? Not at all."</p>
+<p>"Hey uhh, Kendra?" Mike shuffled behind a stack of booked that covered
+him up to his stomach.</p>
+<p>"Mike! Oh God! I'm sorry, I forgot you were here."</p>
+<p>"Could you maybe get me some clothes? It's really cold in here and I
+don't feel comfortable standing in my bathrobe with..." He trailed off
+but Kendra knew what he meant.</p>
+<p>"Gotcha. I wish Mike was wearing normal clothes." <em>And that he is no
+longer having a hard on.</em></p>
+<p>Again, there was no fanfare. Just one moment with Mike in his bathrobe
+and the next, he was in a button up shirt and jeans. He walked away from
+the books and there was a visible bulge at his crotch.</p>
+<p>"Thank you! Wow, this is comfortable!"</p>
+<p>"You're welcome!" Kendra turned back to the lady. "What limits are there
+to my powers? What can I not do?"</p>
+<p>"Well, it wouldn't be fun if I told you everything, would it? I'll get
+you started, you can't mess with time. No wishing for history to
+change." She smiled sweetly.</p>
+<p>"Of course. Why am I not surprised..." Kendra sighed. "So how did you
+come across the genie?"</p>
+<p>"A story for another day. Now why don't you go ahead and enjoy
+yourselves with your new found powers? I'll keep the book since you
+won't need it anymore." She took the book to the back room and ushered
+Kendra and Mike out.</p>
+<p>They stood still, Kendra's mind raced. She now had the powers of a
+genie! She could co- Mike was staring at her. </p>
+<p>"Yes?"</p>
+<p>"Okay. First of all. WHAT?"</p>
+<p>"What do you mean?"</p>
+<p>"How are you so calm?" Kendra felt eyes on them, if strangers didn't
+notice her before, they definitely did now. She kind of liked it. <em>I
+wish people cannot resist noticing me when they see me.</em></p>
+<p>"Listen, if you've been through the day I have, you would be. Shall we
+go back to my place?" She walked towards Mike's car and opened the door,
+leaving him stammering and scrambling. </p>
+<p><em>I wish I could control the size of my assets.</em> Kendra shrunk her assets
+down to a more manageable size. The sensation was odd but pleasurable,
+leaving her nipples erect when they were done. She was still large but
+now she didn't need to lean the seat back or squeeze into the car. They
+both got in the car and drove to her apartment.</p>
+<p>Her shirt remained the same size, hanging off her shoulders, hiding her
+still enviable chest. With her smaller size, Kendra removed her unneeded
+back brace. <em>I wish my clothes fit me tight.</em></p>
+<p>In an instant, fabric hugged her new curves snug, leaving nothing for
+the imagination. Kendra grabbed her breasts and moaned. They were more
+sensitive than before. It's as if the sensitivity from when she was huge
+got concentrated in her smaller size.</p>
+<p>Mike drove to her place in record time. She could have sworn he ran a
+red light but she was too busy fondling herself. It simply felt too
+good. </p>
+<p>As they made their way to her apartment, Kendra couldn't help but notice
+how hard Mike was. It must be so uncomfortable for him. She grinned
+hungrily. </p>
+<p>Larry wasn't at his post. Shame. She would've loved to see his
+reaction. </p>
+<p>Once they set foot in her apartment, Kendra planted her tongue in
+Mike's. They removed their clothes in a hurry, leaving a mess at her
+door. </p>
+<p>He carried her and lowered her on his dick. Kendra moaned as he entered
+her. He felt good but she wanted more. He grew like he did before, still
+balls deep in her. She felt his entire length throughout her body. </p>
+<p>Mike walked to her bedroom with Kendra still on him, bouncing her up and
+down. He laid her on her back, thrusting hard and fast. Kendra was lost
+in ecstasy. She wanted it to last as long as possible, making sure that
+Mike could not come until she was satisfied. </p>
+<p>Kendra made her boobs grow slightly with each bounce, relishing in the
+pleasure of getting fucked silly by a monster dick and her sensitive
+growing breasts. She came easily.</p>
+<p>Again.</p>
+<p>And again.</p>
+<p>And again.</p>
+<p>"When you come, come on me and in me," she gasped. She had made sure
+that he would come lots. He grunted an affirmation and continued
+pounding her.</p>
+<p>They had gone through all the positions imaginable, fucking on her bed,
+her table, against the wall, on the floor, on the chair, in the kitchen.
+There wasn't an inch in her apartment where they didn't fuck at. </p>
+<p>Kendra lost count of how many times she came. She was simply lost in the
+waves of bliss crashing through her. Finally, in a moment of
+consciousness, she made the decision to let Mike come.</p>
+<p>And come he did.</p>
+<p>He thrust deep in her, letting a whole load out before pulling out.
+Kendra came again just from that. Mike had to take several steps back
+before his head popped free of her gaping pussy. Thick hot ropes of cum
+landed on Kendra, whose eyes were rolled back and mouth was wide open.
+She was absolutely covered in cum, from her hair to her face, down to
+her massive tits, which grew to be bigger than earlier that day. </p>
+<p>She must have looked like she was bukakked by a hundred guys. But no, it
+all came from Mike. Kendra passed out once her last orgasm subsided, her
+breasts still swelling from all the cum.</p>
+<p>\~</p>
+<p>When she came to, Kendra found Mike slumped over on the floor, dozing.
+Her pussy felt thoroughly spent and stretched. Dried cum covered every
+inch of her body and her bed. Mike's penis was now longer and thicker
+than his legs, even when soft. His balls were the size of grapefruits. </p>
+<p>Her whole body was sore. But it was well worth it. Sex had never been
+that good. She stood up to stretch and almost fell over. She forgot
+about her new size. She gave her boobs a squeeze and felt a jolt of
+pleasure. </p>
+<p>"Mmmm...It feels so good. I could shrink them but..." <em>I wish my back
+didn't hurt and I always have balance, no matter how big my breasts
+are.</em> She instantly felt balance return to her and her back did not hurt
+carrying her mammoth mammaries that were each larger than the rest of
+her entire body.</p>
+<p>"Well, time to clean up and make dinner. I wish my place and I were
+clean." And in a blink, the mess was gone. The bed was made with clean
+sheets like before. Kendra waddled to her kitchen, surveying her
+apartment as she went. There was no sign of their crazy sexcapade. </p>
+<p>Trying to cook was a challenge. Even though her apron that looked more
+like a small picnic mat could cover her, Kendra could not physically
+reach the stove. So she shrunk her breasts to the size of cantaloupes.
+The process made her come, causing her legs to buckle as she convulsed. </p>
+<p>"Holy...That was...Wow..." Kendra gasped between breaths as she
+fondled her breasts. "Mmmmm...Feels so good." She was wet just playing
+with her boobs. Sense returned to Kendra and she forced herself off the
+kitchen floor to get started on dinner. She opened the fridge and the
+blast of cold air hit her naked body, sending shivers through her and
+raising her nipples to attention.</p>
+<p>"Shit, I forgot about the apron." She almost came just from the apron
+brushing up against her nipples. Kendra considered wishing her boobs to
+be less sensitive but decided to see how far she could push herself. </p>
+<p>Dinner turned out bad. Simple movements brushed her bare breasts against
+her apron, sending her into fits of orgasm, distracting her from the
+sizzling steaks. Still, it looked somewhat edible. <em>They are
+edible...right?</em> Kendra stared at the pathetic pieces of charred meats.
+She threw her apron aside, exasperated. <em>Ugh. I wish for two of the best
+steak dinners.</em> Two plates of steak appeared on the kitchen counter.
+Both had a nice thick juicy looking cut of meat with a side of creamy
+mashed potato and caramelized onions. It smelled incredible. </p>
+<p>Kendra's stomach growled. The last time she ate anything that wasn't cum
+was almost two days ago. No wonder she was starving. She set up the
+dinner table and went to wake Mike up. </p>
+<p>"Hey, Mike. Wake up." She shook her ex-colleague. He stirred slightly.
+"I made dinner. Hope you like steak."</p>
+<p>"Five more minutes," he mumbled then shifted to a fetal position. Kendra
+placed a cover over Mike and left the room. </p>
+<p>The steak was wonderfully tender and juicy, melt in your mouth goodness.
+It satisfied her other hunger. As good as sex was, she still needed to
+eat. Or at least wanted to enjoy the finer things in life. </p>
+<p><em>I wonder how it works. Bah. Probably doesn't matter. I can do what I
+want and if someone suffers for it, I can fix it in a heartbeat,
+probably.</em></p>
+<p>She polished her plate off, leaving Mike's untouched. <em>I wish...hmmm
+seems like a hassle to keep saying I wish every time I want to conjure
+something. Oh! I know! I wish I could snap my fingers to make my wishes
+come true! Now to test it.</em></p>
+<p>She snapped her fingers to conjure up a glass of wine. Nothing.
+Realising she didn't know how to snap her fingers. Kendra sighed. <em>I
+wish I knew how to snap my fingers.</em></p>
+<p>That did it. A nice crisp snap and a glass of red wine appeared before
+her. It was fragrant and sweet. Kendra did not know wines but she did
+know the wine she drank was good. </p>
+<p>She snapped her fingers again, wishing to be the smartest, most
+intelligent person. Nothing happened. She did not feel particularly
+smarter. Another snap, wishing to have the cure for cancer. Nothing. No
+magic formula appeared nor did she gain any new knowledge in that
+regard. Another snap, wanting to know how her powers worked. Again,
+Nothing. <em>I guess those things are off limi--</em></p>
+<p>"Hey," Mike greeted, wrapped in a blanket. He was definitely smittened.
+Kendra had her legs crossed, wine glass in one hand and the other under
+her ample bosom. </p>
+<p>Kendra smiled seductively. "Hey you. Had a good sleep?"</p>
+<p>"Like a baby. That smells amazing." He sat across her. </p>
+<p>"It tastes even better. Wine?"</p>
+<p>"Don't mind if I do."</p>
+<p>She snapped another glass into existence. "Enjoy your meal. I'm going to
+take a shower." She ran a finger across his back and left him to his own
+devices. That should get him going.</p>
+<p>The water was cold. Of course. Her water heater broke. Not anymore. A
+snap and the water ran at a nice warm temperature, relaxing her tight
+muscles. Kendra thought about Mike and what their relationship was going
+to be. She did like him but there was something about him that just
+didn't attract her. He was a good lay but as someone to spend the rest
+of her life with? Kendra did not see that future. Kendra would have to
+make sure he was clear on that. She did not want to lead him on.</p>
+<p>She also did not hear the bathroom door open.</p>
+<p>Kendra wore one of the back braces the genie conjured up and nothing
+else. It helped alleviate some of the weight on her back, allowing her
+to move about without much strain. The size of her bust made setting up
+her new toy more challenging that it should be. The genie floated by
+her, watching her fumble around.</p>
+<p>"Do you have a name?" Kendra asked absentmindedly.</p>
+<p>"I did, at one point but I've forgotten. You're the first one in a long
+time to ask." She went silent.</p>
+<p>"Why do you only grant sex wishes anyway?"</p>
+<p>"Because I like to? I could grant normal wishes like most other genies
+but I prefer to be more restrictive. Plus, I get to watch you have fun."</p>
+<p>"Don't you get bored? Like, you're watching me get all the action but
+you're not getting any?" Kendra fiddled to fit the parts of her new toy.</p>
+<p>"Sometimes..." The genie looked as if she was deep in thought.</p>
+<p>They returned to silence while Kendra assembled her toy.</p>
+<p>"Ginny," the genie said.</p>
+<p>"What?"</p>
+<p>"Call me Ginny. G-I-N-N-Y."</p>
+<p>"Really?" Kendra scoffed lightly. "That's creative."</p>
+<p>"Oh, you want creative?" Ginny said. "I'll show you creative." She
+snapped her fingers.</p>
+<p>Kendra yelped. She was floating mid-air, her tits hanging down freely.
+Her legs spread apart by an unknown force. The same force that held her
+hands outstretched to her side. She could not move her body, only her
+head. She looked up to see Ginny's face right in front. They locked
+eyes. Kendra's heart beat fast. Fear at what was going to happen. The
+fear brought with it some excitement and lust.</p>
+<p>Ginny took Kendra's hands and placed them on her breasts. Compared to
+Kendra now, Ginny was much smaller, even though her breasts were the
+same size as when they first met. Ginny then brought her crotch to the
+floating girl's face.</p>
+<p>Kendra knew what Ginny wanted and gave it her. She buried her face and
+licked. Down at her own crotch, she felt the something licking her. She
+lifted her face from Ginny and craned her neck back, there was nothing
+and the licking stopped when she did. Something whipped her head back to
+Ginny's lips. Kendra felt something hold her head down. A harness tied
+her head to the genie's crotch. She resumed eating Ginny out while
+playing with her godly tits, feeling herself getting eaten out by, well,
+herself.</p>
+<p>Ginny moaned and moaned, driving Kendra to go even harder. The genie's
+breast was getting more and more difficult to grasp. They were growing!
+As they did, Kendra felt her own breasts being fondled and getting
+tighter. She felt something else enter lower lips. It wasn't her tongue.
+It was something big.</p>
+<p>Ginny had assembled her toy and floated it to her dripping wet sex,
+pushing it into her and turned it on. The dildo fixed to the toy was
+thicker than her fist, filling her up. The sensation was out of the
+world. She could feel herself getting fucked hard by the machine and her
+tongue working furiously. They were separate but the same.</p>
+<p>It was incredible. Kendra felt the orgasm building, her tits were not
+getting bigger but they felt tighter and fuller. She moaned into Ginny's
+moist pussy. The orgasm just kept building. Something was wrong, getting
+fucked and stimulated like she was, she should have come ages ago but
+she hadn't.</p>
+<p>It just kept building and building, driving her mad with lust as her
+pussy was licked by her own tongue and violated by the massive dildo
+that stretched her wide.</p>
+<p>Kendra felt Ginny's hands on the back of her head, pushing her deeper
+between the magical being's legs. Ginny tasted good. Very good. So sweet
+and delicious. It drove her insane. She needed more.</p>
+<p>As if Ginny read her mind, Kendra felt the machine thrust harder and
+faster, the dildo growing inside her, vibrating. Then, something else
+entered her. This time from her backdoor. Another dildo forced itself
+into her asshole and pumped as hard and fast as the one in her pussy.
+They violated both her holes in a constant, alternating rhythm.</p>
+<p>Her tits were getting even tighter. She felt the pressure building even
+in the ecstasy of her own orgasm building and Ginny's cries of pleasure.</p>
+<p>Finally, she came. They both did. Kendra screamed into Ginny, relishing
+the intense pleasure that surged through her entire being. The pressure
+in her huge breasts kept building as they grew, however. Her hands
+squeezed Ginny's tits. Fluid sprayed out from her erect nipples and she
+felt her own mammaries do the same, covering the room with milk. Even
+with the pressure relieved, Kendra felt her breasts grow tighter and
+hang lower.</p>
+<p>Her whole body convulsed mid-air, shaking without control, her eyes
+rolled back, her mind lost all rational thought, lost in the waves of
+pleasure cresting within. Seconds, minutes, maybe even hours passed,
+Kendra did not know how long. Her mind and body was numb and exhausted.</p>
+<p>Kendra felt her body shift up right, her legs still floating above
+ground, her breasts reaching her hips. Ginny's hands gave her tight ass
+a squeeze, eliciting a moan from Kendra. The hands moved around to her
+crotch, then to her breasts, then a pinch on her nipples. Ginny cupped
+her face and pulled her in for a kiss. Her half open eyes shot open. A
+warmth spread through her. It was not lust. It was comforting and
+warming. The tiredness evaporated. Energy coursed through her.</p>
+<p>Ginny pulled apart from their kiss. Kendra noticed for the first time
+how red the genie's eyes were. Something was different, however. Ginny's
+red hair lost their lustre and her skin looked dull.</p>
+<p>"Thank you." Ginny smiled. "Now, I need to rest." And she was gone, the
+book that laid open on the floor closed. Kendra landed on her feet. She
+picked up Ginny's book and opened it, nothing. She shrugged and tossed
+the book on her bed.</p>
+<p>Her fuck machine laid on its side, and a second one that she did not
+order sitting beside. Ginny must have conjured it. Kendra bent down to
+pick it up. She misjudged her new balance and fell over.</p>
+<p>"God...these are such a hassle..." She hauled one breast aside to give
+herself some room to detach the dildo, slick with her juices. It was
+larger than she remembered it looking, almost as thick as her thigh and
+longer than her forearm.</p>
+<p>The room smelled of sex, milk, and sweat. Kendra looked around and
+sighed. "This is going to be a bitch to clean up."</p>
+<p>Kendra waddled to the bathroom. She looked at the mirror and admired her
+new figure. Her eyes moved from her enormous breasts up to her face and
+her hazel brown eyes. She remembered how alluring Ginny's eyes were. The
+redness that could seduce any man or woman. She quietly wished to have
+eyes like that.</p>
+<p>Bathing proved to be a challenge. With her tits now in an absurd size of
+beach balls, Kendra was less fitting in the shower, more squeezing into
+it. Her breasts pushed against the glass and wall, making it difficult
+to reach the shower knob and soap. Still, she managed.</p>
+<p>She ran her hands over her tits, lathering them up, feeling the soapy
+water run through her deep canyon of a cleavage. It was tantalising.</p>
+<p>Kendra got out of the shower and dried herself. Her towel no longer
+wrapped around her whole body with her new mammaries so she just toss it
+in the basket once she was dry, entering her bedroom naked. The weight
+of her unsupported tits strained her back.</p>
+<p>"Ugh, so heavy. I should hit the gym or my back is going to break."</p>
+<p>She looked around her bedroom looking for Ginny's book and noticed
+something odd.</p>
+<p>The smell of sweat, sex, and milk was gone. Her bed was made with fresh
+sheets. Her toy(s) sat on her study desk, neatly packed. There was no
+sign of the debauchery that took place before her shower.</p>
+<p>"Huh...guess Ginny must have taken care of it while I was in the
+shower." Kendra picked up Ginny's book and opened it to summon her. But
+nothing. "Hmm...she said she was tired...Do genies even get tired?"</p>
+<p>A curiosity sparked within Kendra. She wanted to know more about Ginny
+and how she came to be. And she knew just the place to find answers.</p>
+<p>What Ginny said was right, her bras and supports did grow to match her
+new size. It looked like she stuffed two over inflated beach balls into
+her bra, except they were her tits. Clasping on the bra, she felt the
+weight lift somewhat.</p>
+<p>Her wardrobe were filled with clothes that would've fit her just right a
+few hours ago. But now, they were a size or two too small. She would
+have to ask Ginny for more clothes. Browsing through, she noticed all
+the shirts had buttons. Kendra picked out a pencil skirt and a white
+button-up shirt.</p>
+<p>The skirt was easy enough, given nothing much had changed down below. It
+was a tight fit that showcased her butt. But the shirt was a challenge.
+The buttons at the peak of her chest would not reach. Kendra fiddled
+with the bra straps to tighten them, squishing her breasts against her
+body. Finally, she was able to button the shirt up, except the top few
+buttons, leaving an impressive view of her glorious cleavage.</p>
+<p>The tightness of the bra and shirt forced her to take shallow breaths,
+fearing that the buttons may not hold on if she took a deep one.</p>
+<p>Kendra packed the book in her handbag and left the apartment. Larry was
+the security guard on duty. He was always courteous and warm. She toyed
+with the idea of having some fun with him at some point in time. She
+greeted him on her way out and could have sworn his eyes popped out of
+their sockets.</p>
+<p>She got into her car. Although it was more like squeezing. Her breasts
+pressed against the steering wheel, even after she pushed the driver
+seat as far back as it would go. Driving is out of question. She decided
+to call a cab instead. As she got out of her car, someone called her
+name.</p>
+<p>It was Mike. And there was a huge bulge at his crotch.</p>
+<p>Kendra screamed when a pair of hands groped her from behind. Mike then
+kissed her neck as he massaged her breasts, turning fear into moans of
+pleasure.</p>
+<p>"You're lucky I'm in the mood."</p>
+<p>"Aren't you always?" Mike asked, grinding against her butt.</p>
+<p>"Cheeky." Kendra reached back and stroked his monster cock. "Let me help
+you with this. Your equipment isn't very wieldy in here." It shrunk to
+what could barely be called normal. Pornstars would probably sell a
+kidney to pack something of his size. Mike was soon hard and ready to 
+go.</p>
+<p>Kendra snapped her fingers twice and Mike entered her gently.</p>
+<p>They went slow and gentle, a stark contrast from the rough and rowdy
+they've been having. It was almost sensual. Kendra felt an orgasm
+building but could not crest over the edge. Considering how sensitive
+her boobs were and how turned on she was, it would have been weird that
+she hadn't come. But her wish made sure she didn't until ten minutes
+later, as would Mike.</p>
+<p>Kendra rode the edge and was desperate to reach the peak. As the time
+limit she placed on them came close, they started moving faster and
+faster. And finally, they came. They trembled and grunted and moaned as
+Mike blew his load in Kendra. </p>
+<p>Mike fell back, pulling Kendra down with him, still balls deep in her.
+Her boobs grew slightly, in size and sensitivity. They shared a kiss and
+stayed that way while they recovered, letting the shower run warm water
+over them.</p>
+<p>They eventually cleaned up properly and got dressed. Kendra wore a lacy
+bralette under a tank top and a skirt that was long enough to just cover
+her butt with no panties. Her breasts could spill out at any moment.
+Mike wore the shirt and pants Kendra conjured for him but the pants
+seemed to have shrunk to accentuate his bulge and butt even more.</p>
+<p>"Alright, Mike. It has been fun but we need to have a serious talk."</p>
+<p>"Sure. What's on your mind?" he said with a sweet smile.</p>
+<p>"I don't know how you feel but to me, this," she gestured between them,
+"is nothing special to me. I don't want to give you any wrong ideas that
+there might be something more."</p>
+<p>Mike's smile flinched slightly but he kept it up. He was definitely
+disappointed. "So I'm just a...fuck buddy?"</p>
+<p>"Yes. Our relationship is purely sexual, no romance or emotion. Are you
+cool with that?"</p>
+<p>He took a deep breath and stretched back. "Well, I have to say I'm
+disappointed. I was hoping that there <em>was</em> something. But I understand.
+I'm cool."</p>
+<p>"Good. I'm glad." Kendra sipped the exquisite wine, smiling. </p>
+<p>"What are you going to do now? You are pretty much God."</p>
+<p>"Not quite. I tried a few wishes earlier and they didn't work. I wished
+myself to be smarter or to have the cure for cancer and nothing
+happened. And I can't wish myself knowledge on how my powers work."</p>
+<p>"Interesting. Maybe it's limited to how specific the wish is?"</p>
+<p>"Maybe. Or maybe I can't make sweeping changes."</p>
+<p>"Good theory." Mike drank more wine. The glasses seemed to never run dry
+of the delicious wine. Not that she minded. "What about money?"</p>
+<p>"Of course. Why didn't I think of that?" She snapped her fingers and
+went to check her bank account on her laptop. As she navigated the
+browser, she noticed Mike shifting and staring at her. "Yes?"</p>
+<p>"Oh, uh, sorry. I didn't mean to stare." His face was almost as red as
+the wine they drank. "I can't help but watch you play with yourself."</p>
+<p>"What?" Kendra looked down at her chest and found herself fondling with
+her left breast. "Oh, I didn't even notice. It feels so good, though."
+She smiled and moaned, teasing Mike.</p>
+<p>"Anyway, holy crap. It totally worked! Look!" She gestured for Mike to
+come over to her, instead of shifting the laptop to him. She wanted to
+see his hard on.</p>
+<p>"Whoa. Kendra, you must have more cash than the next ten richest people
+alive! Not even Jeff Bezos would have that much."</p>
+<p>"Right? I just wished for a cool five hundred billion. And it's just
+there! No deposits made. Just \$72 one moment and billions the next!"</p>
+<p>"What are you going to do with that amount of money?"</p>
+<p>"I'm definitely going to buy a nice big house in the middle of nowhere,
+with a nice view."</p>
+<p>"I have some pretty hefty student loans that could use some help."</p>
+<p>Snap. "Not anymore!"</p>
+<p>"Wow, really?"</p>
+<p>"Call to check! Although, you might want to wait a few more hours. It's
+almost 5a.m."</p>
+<p>"Holy shit...Thank you! How can I ever repay you?"</p>
+<p>Kendra rubbed his crotch seductively. "Just keep this available for me
+whenever I want it," she said with a wink.</p>
+<p>Mike squirmed slightly. "I feel like a hooker."</p>
+<p>"You don't like it?" She pouted.</p>
+<p>"No, no, I do! I just..."</p>
+<p>"Just what?" Kendra asked in an innocent voice.</p>
+<p>"Nothing."</p>
+<p>"Good boy. Now, for your payment." She undid his pants and freed his
+impressive package, taking it whole in her mouth. It reached back down
+her throat but she did not gag. She ran her tongue up and down his
+shaft, her head bobbing back and forth. It didn't take long before
+Mike's balls churned and shot ropes of hot cum down her throat. Mike
+held her head down as she kept her lips sealed around his cock, sucking
+out every last drop, leaving none to waste. </p>
+<p>Her chest tingled, signalling their growth. She fondled and massaged
+herself as she bathed in the waves of pleasure crashing through her.
+When Mike went soft and the growth stopped, she popped his dick out,
+making sure to give his tip a lick just before letting it go.</p>
+<p>"Fuck me..." Mike panted. </p>
+<p>"What do you think I've been doing?" Kendra winked.</p>
+<p>"Touché."</p>
+<p>\~</p>
+<p>Over the next few days, Mike went back to work as per normal. Kendra
+shrunk his cock down to his original size and turned off his libido as
+sex was all he could think off, making it hard to work. While he's at
+work in the day, Kendra browsed the web for land to build her dream
+house. Wishing for one did not work as it seemed she needed to know the
+location. She also found out that she could simply teleport to that
+location once she knew it. So she would sometimes hop out to the land
+listed for a private viewing.</p>
+<p>At night, she would give Mike his libido back, turning him into a crazed
+sex beast with all the pent up horniness throughout the day, which
+suited Kendra just fine. They would end up having sex for hours on end.
+Coming again and again, leaving Kendra soaked and filled with cum in all
+her holes. Her neighbours lodged several complaints about the noise they
+were making but it only turned Kendra on to think that other people
+could hear her screams of pleasure. Then it was routine clean up, slow
+sensual shower sex, then dinner, then a quickie before sleeping.</p>
+<p>Having so much sex meant increased chances of pregnancy. And there was.
+More than one pregnancy scare, infact. After one too many scares, Kendra
+made it so she no longer had eggs and that she no longer had periods.
+The second part was particularly great as she always had terrible
+cramps.</p>
+<p>It went on for about two weeks before Kendra found a plot of land that
+she fell in love with immediately. It was by a lake with a mountain as
+the backdrop. Trees surrounding the place, giving it privacy. It was
+gorgeous.</p>
+<p>She bought the land without negotiating the price down even though the
+agent advised her to. With the land hers, she hired the best architect
+to design her new home, fitting in the latest and greatest without
+regard for price, just the best quality. From then, it was simply a
+matter of waiting a few months till her house was ready.</p>
+<p>Kendra thought about wishing it to be instant but decided that it was
+too risky. Too many things that could go wrong since she did not know
+the specifics of everything that goes into building a house. Plus, she
+wanted to live life semi-normally before she dived into her new life.</p>
+<p>\~</p>
+<p>"Kendra, I'm home!" Mike officially moved in after a month. He had not
+returned to his apartment since that day at the bookstore except to
+collect some of his belongings. He could have asked Kendra for
+replacement but she knew there was no replacing some things. </p>
+<p>"In the bedroom!" she yelled, her eyes never leaving her laptop.</p>
+<p>Mike entered and dropped his bag. "How was your day?"</p>
+<p>"It was great! I spoke to met some investors and I  think there's a good
+chance my foundation will be a success! Yours?" she said, still typing
+away. She may have the powers of a lesser God but having things too easy
+felt a little boring her Kendra. She needed a little challenge and
+normalcy to feel alive.</p>
+<p>"That's awesome! I'm glad. Kathy is up my ass again. She's still holding
+that time I failed to send her the documents when I called in sick over
+me." He removed his shirt and stretched.</p>
+<p>"Aww. I'm sorry." She closed her laptop and set it aside. "Let me make
+it up to you. It is my fault, after all."</p>
+<p>"You can make it up to me by helping me with this." Mike dropped his
+pants to reveal his massive hard on.</p>
+<p>Kendra licked her lips and smiled. "Gladly."</p>
+<p>She licked his tip and stroked his shaft, slowly taking in more of his
+length, bobbing her head back and forth. She swallowed, her throat
+contracting on his length, eliciting a grunt from Mike. With her hands
+free, Kendra worked on her boobs, moaning and coming as she blew him.
+Soon, Mike blew his load down her throat. She made sure to suck every
+drop of cum. </p>
+<p>Her boobs tingled and gurgled. They stretched the tight t-shirt she had
+on. The tightness hurt a little but it only served to turn Kendra on.
+Her breasts grew to the size of small watermelons. The shirt was
+stretched taut with no more give. </p>
+<p>Kendra continued to suck on Mike's soft penis, bobbing her head until he
+got rock hard again. As soon as that happened, she popped him out and
+laid on her back to receive him in her  dripping wet pussy. Mike pushed
+in in one smooth stroke, making her come immediately. Her tits tingled
+again and grew. The shirt gave and ripped around the seams and middle,
+showing an ample cleavage.</p>
+<p>Something felt off for Kendra. She felt good but for some reason, she
+didn't feel in it. For the first time in a while, she felt
+almost...bored. She wasn't thinking about Mike's growing penis
+violating her impossibly stretched pussy or her increasingly sensitive
+bosom. Her mind drifted to her work at her foundation. Maybe she was
+getting bored of Mike or he wasn't enough for her anymore.</p>
+<p>They finished their fuck for the night that left Kendra with giant bean
+bag sized tits and went about their routine. Maybe it was the routine
+that was getting stale. Dinner was delicious but the shower sex was
+disappointing. She came lots, as usual but it just didn't feel exciting.
+She was definitely bored. </p>
+<p>Mike was visibly disappointed when Kendra declined the quickie before
+bed but she needed the clear mind to think. She even dropped the
+sensitivity in her boobs. She thought about the events that led her to
+where she was. Perhaps she was just bored of Mike. Ginny was no longer
+with her so the next most exciting thing that happened since was the
+gangbang. Kendra rested her laptop on her bean bag boobs and listed an
+ad. She also sent the three guys from before a message. </p>
+<p>One way or another, Kendra was going to regain that drive.</p>
+<p>\~</p>
+<p>The next day, Kendra's K Foundation was officially open for business to
+help the less fortunate. With her unlimited funding, she did not bother
+with the usual stringent checks. As long as the case officer thought
+help was needed, it was given. But the foundation was not the only thing
+that was open for business.</p>
+<p>Kendra wore another tight t-shirt over her shrunken C-cups and nothing
+else. She was dripping just anticipating what's to come. She laid on the
+couch and played with herself, careful to not come before her guests
+arrived. Her doorbell rang.</p>
+<p>"It's open!" she called out in a sing-song manner. The door opened and
+ten guys entered. She continued playing with herself while they gathered
+in front of her. "Strip. All the way."</p>
+<p>Kendra licked her fingers and snapped. She was determined to pleasure
+herself and she wasn't about to let stamina get in the way. They were
+going to fuck her and blow up her tits until she was satisfied.</p>
+<p>"Leave the cash on the table and follow me." She led them to her bedroom
+and laid on her bed. "Only one rule: I want a dick in me at all times.
+No stopping until I say so. Got it?"</p>
+<p>Foot-long from the first time walked up to her, flipped her on her belly
+and pulled her ass up to his crotch. "You are going to regret saying
+that. We are going to break you, slut." He shoved his cock in in one
+stroke. Kendra gasped. The other guys whooped and crowded around her.</p>
+<p>She had a cock in both hands and one stuffing her mouth. She had almost
+no freedom of movement, her body was theirs to use as they pleased. They
+violated her thoroughly. Her mouth, pussy, ass. Everything. Nothing
+about her body was sacred. As she came, her cute C-cups grew, stretching
+out the shirt to the limits. Eventually, someone came in her. Kendra was
+too lost in ecstasy to know where, just that they did. Her tits
+ballooned and shredded the shirt. </p>
+<p>Somewhere along the way, they moved her to her living room and fucked
+her on her coffee table. While one guy fucked her face, another fucked
+her tits. Two others stuffed her asshole. They came in her, on her and
+around her. They moved her again, fucking her along the way. Kendra no
+longer had any rational thought, just cock, cum and growing tits.</p>
+<p>They eventually returned to the bedroom once her tits grew larger than
+her body and she became too heavy to carry around while inside her. They
+followed her rule. There wasn't a moment where there wasn't at least one
+cock inside her or in her hands. She had become a wanton slut that only
+cared about satisfying her primal needs.</p>
+<p>\~</p>
+<p>When Kendra awoke, it was morning and there was a cock still fucking her
+mouth, ass and pussy. Her cum covered tits spilled over her king-sized
+bed. It wasn't just her tits. Her entire body was covered in cum, some
+still fresh. Her wish worked a little too well. </p>
+<p>She stopped the guys with a snap and sent them home. Her jaw was sore
+and her pussy and asshole were thoroughly stretched. Her entire body
+ached from the countless orgasms she had throughout the night. Mike was
+asleep naked in the corner. Of course, he wasn't affected by the wish. </p>
+<p>Kendra shrunk her tits down to D-cups and took a hot shower. Mike had
+just woken up when she was done.</p>
+<p>"Morning! Why don't you go wash up and I'll make breakfast?"</p>
+<p>"Yeah, I'll do that." Mike was definitely hurt. </p>
+<p>Breakfast was a spread of pancakes and fruit. Kendra craved for some
+heavy carbs. Mike came out of the shower dry and naked. He sat down and
+ate without a word.</p>
+<p>Kendra sighed. "Look, Mike, I know you're upset about the guys."</p>
+<p>"I don't think upset begins to cover it, Kendra."</p>
+<p>"What do you want me to say? I told you that nothing is going to happen
+between us. It never had and never will!"</p>
+<p>"Even after all this time? Nothing?"</p>
+<p>"It's impossible between us."</p>
+<p>"Why? Tell me what I can do to make it possible! I'll do it!"</p>
+<p>"You can't. It's not something that you do or can do. I just don't see
+you that way."</p>
+<p>Mike's shoulders dropped and he buried his face in his hands.</p>
+<p>"Look, I'm sorry. If you want to take this to the next level, I'm the
+wrong girl and you should go." Kendra snapped her fingers to get dressed
+She felt bad for Mike but there really was nothing to be done. "If you
+come back tonight, I'll take it that you accept that and will not push
+the matter any further." And she left her apartment.</p>
+<p>\~</p>
+<p>Mike came back that day. And the day after, and every day after that. He
+never brought it up again or showed his dismay when he walked in on
+Kendra stuffed with cock. </p>
+<p>Months later, Kendra's lakeside mansion was complete and they moved it.
+A nice private road through the forest led to her doorstep. She admired
+the breathtaking serene lake with a glass of wine in her hand. Her H-cup
+bust threatened to spill out of her tube top.</p>
+<p>Her phone buzzed. </p>
+<p><em>Mike: About half the attendees are here. We should be arriving on
+schedule.</em></p>
+<p><em>Kendra: Lovely.</em></p>
+<p>Of course, what new house could be complete without a housewarming
+party. But before the party began, Kendra needed to make sure of
+something. Right on cue, her doorbell rang.</p>
+<p>Kendra called in sick the next day and spent the better part of the day
+pleasuring herself. True to the genie's words, her breasts swelled each
+time she came. It got more and more sensitive the larger they grew, her
+nipples were always erect and begging to be played with.</p>
+<p>She wanted to feel them grow. She put on her tightest t-shirt, her now
+perky C-cups pushed against the fabric but it was still comfortable.
+Kendra slipped her fingers inside and got to work.</p>
+<p>It was electrifying, she couldn't stop herself. In and out, faster and
+faster. "Oh yes- I feel so good- Ahhh-" Kendra groped and squeezed her
+boobs, playing with her nipples.</p>
+<p>She felt the orgasm building and her hand moved greater intensity. "Oh
+my god! Yes! Yes!" She cried out as the climax hit her, sending waves of
+pleasure across her body.</p>
+<p>Her hand on her breast, she felt it fill out her hand and shirt. The
+sensation of her skin stretching and her breast growing, building up to
+another orgasm. She stroked herself more and more until eventually her
+entire fist slipped inside. She had never been able to take something so
+big before but she didn't care. It felt good. That's all that matters.</p>
+<p>Kendra fisted herself senseless. She was screaming from the intense
+pleasure that was flooding her, her body spasming uncontrollably.</p>
+<p>Finally satiated, she fell asleep.</p>
+<p>\~</p>
+<p>When she woke, Kendra went to the bathroom. She studied her new figure
+in the mirror. The t-shirt was straining to contain her new tits,
+showing just a little cleavage. The tightness turned her on, her nipples
+were visibly erect through the thin white fabric.</p>
+<p>She smiled. She felt incredibly sexy, something she hadn't thought about
+in her life.</p>
+<p>A light bulb lit up in her head. She sent in her resignation email, went
+online shopping and ad sites.</p>
+<p>After dinner, she played with herself again, feeling the t-shirt stretch
+and strain to hold her growing bust. After she was done, Kendra checked
+her email to find responses to her ad. She smiled and went to sleep,
+anticipating the next day.</p>
+<p>\~</p>
+<p>The next morning, she made herself a breakfast of bacon and eggs with a
+glass of milk. She opened the book to release the genie.</p>
+<p>"Alright. I want to make a wish."</p>
+<p>"And what will it be?"</p>
+<p>"I want to be able to take dicks of any size, no matter how big, no
+matter how many."</p>
+<p>"That's an interesting one. Do I need to ask which hole?"</p>
+<p>Kendra gave the genie a look.</p>
+<p>"Point taken. Your wish shall be my command." The genie snapped her
+fingers. Kendra expected to feel something, a tingle, an itch. Nothing.</p>
+<p>"Are you sure it worked?"</p>
+<p>"Why don't you find out?"</p>
+<p>"Oh, I intend to." Right on cue, her doorbell rang. Kendra opened the
+door to find three huge muscular guys waiting. She smiled. She would
+definitely find out. One way or another.</p>
+<p>"Payment?" She asked. They each handed her a wad of cash and entered one
+by one.</p>
+<p>She had them all strip in her living room. Kendra liked what she saw.
+Mike was good but compared to these guys, his was average at best. They
+were all well hung, the largest one was nearly a foot.</p>
+<p>Kendra licked her lips hungrily. It was time to get to work.</p>
+<p>She laid one of them down on her coffee table and mounted his ten
+incher, reverse cowgirl style.</p>
+<p>"Oh...lord..." she moaned as she felt it fill her up. She looked at
+the one with the foot long cock. "Put your magnificent dick in me." He
+obliged. "Oh Jesus!" She screamed out as she felt her pussy stretch with
+two huge cocks stuffed inside her. She laid down on the guy on the
+table. The last guy had his eleven inch hard and ready to work. Kendra
+opened her mouth wide and he shoved it in her throat.</p>
+<p>They all started pumping their dicks into her furiously. Kendra moaned
+and moaned as her holes were filled and serviced. "Oh god- fuck yes-
+harder- harder!" her voice muffled by the cock stroking her throat. Her
+hands busied themselves with fondling her breasts and pinching her
+nipples.</p>
+<p>She came faster than ever, just minutes into their session. It was pure
+ecstacy. The sensation just kept coming and coming. The guys were far
+from done. They kept up the pace and pumped harder.</p>
+<p>Eventually, another orgasm hit her, harder than the first. "Oh my god!
+Yes! YES! I"M COMING! FUCK ME HARDER!" They complied with her muffled
+screams. The waves of pleasure spread throughout her body. Her chest was
+feeling very tight as her breast grew faster than before, stretching the
+fabric to their limits.</p>
+<p>She felt the guy she was giving a deepthroat to slam his balls against
+her face and cum shoot down her throat. She just kept sucking, working
+her tongue on his shaft, squeezing every drop of semen out. Her throat
+felt amazing, almost as if it was her vagina.</p>
+<p>He pulled his dick out and laid back on the couch. "Phew, that was the
+best blowjob I've had."</p>
+<p>Kendra didn't care about that. She grabbed and squeezed her boobs,
+feeling the skin stretch in her hands, feeling the tightness of the
+shirt straining to contain her tits.</p>
+<p>She felt another orgasm build as she got her pussy pumped by two dicks
+at once and the amazing feeling in her throat she had not felt before.
+Her tits were so sensitive, her nipples pushed against the shirt.</p>
+<p>"Fuck! Fuck! Fuck! FUCK! YES! RIGHT THERE! HARDER! FUCK ME HARDER!" Her
+screams muffled as she came again. Her pussy tightened on the two dicks
+inside them, bringing the two guys to an orgasm as well. She felt their
+hot cum fill her insides as they groaned.</p>
+<p>Her breast surged out, ripping holes in the shirt as it could no longer
+contain her growing tits.</p>
+<p>"Jesus lady, you got some magic cans or what?" The guy standing up
+asked. She didn't bother to answer. She just fondled her tits, feeling
+them grow. They were getting so sensitive, she could orgasm just from
+playing with them. And she did.</p>
+<p>"Shit! Oh! Oh! OHHHH!" She moaned, the two dicks still inside her.</p>
+<p>The three guys helped themselves to refreshments while Kendra rested on
+the coffee table, playing with her boobs, eyes closed and smiling. In
+minutes, Kendra felt cocks enter her again.</p>
+<p>Kendra was lost in lust and ecstasy being used as a fuck toy by the
+three hulking men, letting them fuck her in whatever position they could
+contort her in. They went on for hours and hours until day became night.</p>
+<p>"Damn, slut. You're the best fuck I've had," one of the guys said. "You
+can hit me up any time."</p>
+<p>The three guys dressed up and left, leaving Kendra sweaty and moaning on
+her coffee table, playing with her new boobs, still dazed from the day
+of debauchery, cum covering her body and dripping out of her pussy.</p>
+<p>Mike stood naked in his spartan bedroom, on the phone waiting for the
+call to get through.</p>
+<p>"Hey Kathy? Yeah, it's Mike. I'm gonna need to take the day off. I'm
+sorry, I know we have lots to do, especially since Kendra resigned.
+Yeah, I caught a bug or something. Don't want to spread it to you guys.
+Yep. I'll send you the documents. So sorry." He tossed his phone aside
+and sat on his bed.</p>
+<p>It wasn't entirely a lie. He did catch a bug, kind of. </p>
+<p>The night before was a blur but Kendra left him a little something to
+remember by. Maybe more than a little something. His dick was longer
+soft now than it was hard the night before. </p>
+<p>Kendra was attractive before. Nice long legs and a tight ass. But holy
+hell. He did not expect her to be so insatiable. After he heard she had
+quit after their romp, he thought it might have something to do with him
+so he paid her a visit to talk about it. They ended up having the best
+sex he ever had. And thinking about it was getting him going. Before
+long, he was fully erect. </p>
+<p>He could no longer wrap his hands around his full girth. Somehow, he
+retained his balance even with his obscenely huge penis. So long that
+his hands could not reach the tip. </p>
+<p>He stroked his engorged member, thinking about the night spent with the
+sex goddess. Her impossibly large breasts that came out of nowhere were
+firm and felt natural. She took his entire girth without trouble even
+though it was physically impossible.</p>
+<p>His balls churned and he came. Hard. Ropes of jizz shot out, splattered
+all over his desk and everything on it. When his orgasm subsided, he
+caught his breath and realised the mess he created.</p>
+<p>"Shit...should have done this in the bath..." </p>
+<p>Mike looked at the time on his phone. <em>4:43pm.</em> He had been jerking off
+for nearly the entire day and yet it felt like it had only been minu-</p>
+<p><em>Oh fuck. I need to send Kathy the documents.</em></p>
+<p>But Mike had a pretty sticky situation. He came all over his desk. His
+laptop was on his desk. And now it's covered in his jizz.</p>
+<p>He sighed and dialled Kathy's number. "Hey Kathy, I'm so sorry. I was
+going to send you the thing but my computer's acting up. Yeah, sorry to
+trouble you. I'll make it up to you another time. Thank you. I'll see
+you back in the office."</p>
+<p>That was that. Now to clean up the mess. It did not take him as long as
+he thought it would, considering his third leg. His laptop was probably
+beyond repair, though.</p>
+<p>He laid on his bed thinking about what to do next. Perhaps he should see
+a doctor. But how would he explain it? "My co-worker whose breasts grew
+to the size of beach balls gave me a blowjob and now my penis hangs
+lower than my knees." </p>
+<p>No. At best, he would be laughed out of the hospital. At worst, they
+would both be locked up and experimented upon. That\'s probably not the
+best plan. He should talk to Kendra. And this time, try to not to have
+sex. At least not before talking to her about his predicament.</p>
+<p>Mike drove to Kendra's with some difficulty, although wearing a robe
+instead of pants helped a bit. He was still a light breeze away from a
+hard on, however.</p>
+<p>When he arrived, Kendra was somewhat struggling to get out of her small
+sedan. Her boobs seemed to have gotten bigger again. Not that he could
+tell. She was already enormous when he left this morning. Her shirt
+looked stretched to the limits, showing a generous cleavage.</p>
+<p>"Kendra!"</p>
+<p>He closed the distance between them. She turned to face Mike. There was
+something different about her. Besides her chest. She was almost
+glowing. Her hair shone even under the cloudy day. Was she always a
+brunette?</p>
+<p>"Hey, Mike! What...are you wearing?"</p>
+<p>"A bathrobe. Pants don't really work for me anymore," he said, gesturing
+to his crotch, a bulge still visible even through the loose fabric.</p>
+<p>"Oh...right." She blushed.</p>
+<p>"You, uh...you need some help?" Mike thought he would have more trouble
+keeping his eyes off of her boobs but for some reason, he had way more
+trouble taking it off her alluring red eyes. Was she wearing contacts?
+They were captivating.</p>
+<p>"I...I do, actually. Can you give me a ride?"</p>
+<p>"Sure. Hop in my car." That was easier said than done.</p>
+<p>Even after shifting the passenger seat all the way back, they still had
+to lean the seat back for Kendra to fit after squeezing in the car.
+There were a lot of touching and groping. Mike was glad that he didn't
+get hard or it would have been a while before he could drive.</p>
+<p>"So, where are we going?"</p>
+<p>"A bookstore down at Jeffersons and 34th."</p>
+<p>"Alright then." He drove off without saying another word. Awkward
+silence hung between them.</p>
+<p>"So--" they said at the same time.</p>
+<p>"You go ahead," Mike offered.</p>
+<p>"So, were you looking for me?"</p>
+<p>"Yeah. I wanted to talk to you about...well..."</p>
+<p>"Oh, right. Sorry about that. It must have been quite a hassle for you
+to be hung like that."</p>
+<p>"I'll say."</p>
+<p>Kendra sighed. "Okay. Promise you won't laugh at me."</p>
+<p>"Uhm...okay?"</p>
+<p>"I bought a book and it came with a genie that only gave sex related
+wishes. It made me drink magic cum and now my boobs grow every time I
+come or touch jizz. Oh and I can take any size." She placed heavy
+emphasis on 'any size', running her hand up and down his thigh. Mike
+tried his damnest not to get hard. "And...I can control anything sexual
+of others."</p>
+<p>As soon as she said that, Mike felt his extra large dick shrink. He
+parted the robes to see that Kendra still left him with a generous size.
+She grabbed and stroked him. He was glad they were stopped at a red
+light as he could have came any time.</p>
+<p>"Well...you're not giving me a lot of room to not believe you. Wow.
+Thank you?"</p>
+<p>"You're welcome. Oh, you can pull up right there. The bookstore's
+there."</p>
+<p>Mike parked in front of the store Kendra pointed out. "You said you can
+control anything sexual of others. Not yourself? Walking with a dick
+almost the size of my leg is already very inconvenient. I can't imagine
+it's easy for you with...uhm..."</p>
+<p>"Tits this big?" Kendra giggled.</p>
+<p>"Y-yeah."</p>
+<p>"That's why I'm here. The genie wouldn't let me make that wish."</p>
+<p>Getting out of the car was slightly easier than getting in. Kendra took
+pleasure in moaning everytime his hands grazed her breasts and making
+him blush.</p>
+<p>The bookstore was musty and dimly lit, and seemed to stretch further
+back than one would think possible. But given what had happened the past
+couple days, it was probably not out of this world. Or maybe it was.</p>
+<p>"Hello, dear. Back so soon?" A small elderly lady came to greet them.</p>
+<p>"Yes. I have some questions about the book I bought. And about Ginny."
+Kendra fumbled with her bag to retrieve the book, her boobs in the way.</p>
+<p>"Ginny? You gave her a name? That's interesting!" Her wrinkled face lit
+up.</p>
+<p>"Yep. And I can't seem to call her out."</p>
+<p>"What was the last thing you did with her?"</p>
+<p>"Uhm..." Even under the dim light, Mike could see that Kendra was beet
+red. "We...pleasured each other." The mental image of that was
+definitely a turn on. He crept behind a pile of books to hide his boner
+that his bathrobe was doing little to cover.</p>
+<p>"Oh my, is that so? Come here, dear." The old lady gestured for Kendra
+to lean towards her. She stared into her eyes intently. "And how did it
+go?"</p>
+<p>"It was..." Kendra cleared her throat. "It was amazing."</p>
+<p>"Good. Good. You say she hasn't come out ever since?"</p>
+<p>"Not that I've seen. I think she came out while I was in the shower to
+clean up."</p>
+<p>"Oh? Tell me. What colour were your eyes?"</p>
+<p>"Brown?"</p>
+<p>The lady handed her a mirror. Kendra took it, puzzled. "Take a look,"
+she said with a smile.</p>
+<p>Kendra yelped. "But how? My eyes aren't red!"</p>
+<p>"My dear, you've been given an Inheritance."</p>
+<p>It had been six years since graduating from college and six years since
+Natalie last saw Kendra. Nat usually had to initiate the conversation or
+she would not hear from Kendra for a year so it was a surprise to her
+from her low-key introverted roommate.</p>
+<p>Kendra had invited her to her new place for a housewarming get together,
+just the two of them. She even arranged for a car to pick her up. It
+made Nat a little jealous, if not curious, of how well she was doing.
+Not willing to be out done, Nat made sure to dress for the occasion.
+Even if she wasn't doing as well, she was damn sure going to appear as
+if she was.</p>
+<p>Her tailored strapless blue dress was designed to flaunt her slim
+figure, luscious DDs and shapely ass. Her strawberry blonde hair was
+done up in a neat bun, held together by a butterfly hair pin. A pair of
+six inch stilettos that accentuated her curves finished her look. Nat
+was a bombshell.</p>
+<p>The car ride was smooth, if a little long. There was champagne and
+grapes for her. The driver was pleasant but quiet. Kendra must have
+struck gold or something. The drive brought her deep into the woods
+through a road she never knew existed straight to a beautiful mansion of
+white concrete and glass.</p>
+<p>The driver drove off once Natalie got to the door and pressed the
+doorbell.</p>
+<p>Natalie's jaws almost hit the ground when the door opened. Kendra's
+chest was huge, bigger than her head. It put her DDs to shame. They were
+one jump away from escaping Kendra's cherry red tube top. But besides
+her ample chest, it was her eyes that truly captivated Natalie. They
+were an indescribable shade of red. It was almost a turn on. She was
+sure she would be if she swung that way.</p>
+<p>"Kendra?"</p>
+<p>"Nat! I'm so glad you made it. Come in!" She gestured into the house.
+"Welcome to my new place. I hope the ride wasn't too bad."</p>
+<p>"The ride was wonderful. Thank you." Natalie ventured into the enormous
+house, her thoughts consumed by how big Kendra was. "Kendra, holy fuck.
+What the hell happened to you? Are those real?"</p>
+<p>"100%!" Kendra squeezed her breast and winked. "Want a feel?"</p>
+<p>"N-no, it's okay, I believe you. It's just a little hard to believe that
+I was the big one in college and now I'm the flat one."</p>
+<p>"Oh, don't be shy." Kendra placed Natalie's hands on her and rubbed. She
+let out a moan, making Natalie blush. "They feel amazing, don't they? I
+guess I'm just a late bloomer!"</p>
+<p>Natalie pulled back her hand, embarrassed. They did feel great. So soft,
+yet firm. She wanted to play with them more but she pushed that thought
+out of her mind and changed the subject.</p>
+<p>"So what are you doing now? You must be raking in the dough to afford
+such a beautiful place."</p>
+<p>"Oh, I'm in between jobs now. I got this from an inheritance! Turns out
+I had an uncle who was stupid rich and had no children. When the cheque
+came in, I knew I had to go all out on my new home. No more shoebox
+apartments for this gal."</p>
+<p>"Is it too late to call myself your sister separated by birth?"</p>
+<p>"Funny. Come on, I'll give you a tour." </p>
+<p>Kendra really went all out. Exquisite artwork by artists whose names Nat
+couldn't dream of pronouncing, an olympic size swimming pool, a giant
+hot tub and a sprawling garden. She had so many guest rooms they could
+fit their college cohort with rooms to spare. Each one furnished with a
+walk-in wardrobe, a bathroom bigger than Nat's bedroom and a king-sized
+bed. There were definitely parts of the house that Kendra did not show
+and it definitely cost a fortune. Nat wondered just how much Kendra's
+inheritance was. The tour went on for nearly an hour and they were still
+going until Kendra led her to a door.</p>
+<p>"I need to use the bathroom, why don't you wait for me inside? I'll
+bring you a glass of wine."</p>
+<p>"Sure." </p>
+<p>Kendra reached for a hug, squishing her massive chest into Natalie, and
+left her to her own devices. Nat entered the room and nearly had a heart
+attack.</p>
+<p>Racks upon racks of dildos of all shapes and sizes. Butt plugs, anal
+beads, vibrators. There were all sorts of sex toys and lube. "What the
+fuck happened to you, Kendra? Were you hiding your sexual deviant all
+this while?"</p>
+<p>A part of Nat wanted to leave the room. But Kendra did say to wait for
+her inside so she must have wanted Nat to see it. Nat tried to think
+about something else but everywhere she looked was something sexual.
+Slowly, Nat picked up a small vibrator to study it. A warmth developed
+in her crotch. </p>
+<p>"Hmm, Kendra's been gone for a while. Then again, it is a big house and
+the kitchen is pretty far." Nat looked around as if to check that she
+was alone. "Since she's willing to show me her sex room..."</p>
+<p>The warmth had developed into an aching need. Nat turned on the vibrator
+and placed it over her clit. "Mmmm...So good..." She then stuffed a
+larger vibrator into her pussy and browsed Kendra's collection, adding a
+small butt plug along the way. An orgasm crashed into her while she was
+studying a ribbed dildo the size of a large soda bottle and her legs
+gave way.</p>
+<p>"Holy crap...I needed that."</p>
+<p>Natalie picked herself up and removed the vibrator and butt plug,
+replacing the latter with a bigger one. Her dress felt a little tight
+but she chalked it up to her catching her breath. There was a sybian
+plugged to the wall outlet with a huge dildo attached. Not as big as the
+ribbed one from earlier but bigger than most guys Nat had been with,
+certainly thicker. She bit her lips and went for it.</p>
+<p>She lathered the dildo with copious amounts of lube. She wasn't taking
+any chances, no matter how wet she was. She then hiked up her dress and
+slid the dildo in slowly, letting it stretch her until she had stuffed
+the whole length in. She could see the defined outline of the dildo. "Oh
+fuck..."</p>
+<p>With the control in hand, Nat turned it on slowly. A slight vibration
+rubbed her clit while the dildo rotated inside her, sending waves of
+pleasure through her. She turned it up until it reached a comfortable
+speed and intensity.</p>
+<p>"Ooh...God...Ohh...OHHH!" </p>
+<p>Natalie came, squirting all over the sybian, her juices running down her
+thighs. She turned the intensity down while she recovered and turned it
+back up. She rode through orgasms after orgasms until her legs turned
+jelly. Through the pleasure, there was an aching pain in her chest.
+Natalie grabbed her breasts to massage them. "Oh God, what the fuck?"</p>
+<p>She must be dreaming. Her boobs were bigger. Her beautiful dress was
+tailored to fit her with little allowance and now her chest was
+stretching it. Her heart raced. She scrambled off the sybian and tried
+to run but her legs gave way. Her breasts continued to grow, stretching
+the thin fabric to its absolute limits. </p>
+<p>Fear ripped through Natalie. What was she going to do? What was
+happening to her? Why was it happening to her? Did Kendra have something
+to do with this? She gathered her strength and got on her feet, using
+the wall for support. She tried to pull her dress back down but the
+fabric would not give. It wasn't just her breasts. Her ass grew as well,
+as did her thighs. </p>
+<p>Natalie ran as fast as she could but her stiletto heel snapped, sending
+her falling forwards. Her already strained dress ripped as her growing
+chest smushed against the marble tiles. Her breasts spilled out for the
+world to see through the ruined silk.</p>
+<p>She scrambled out the room, trying to hold the shreds of silk up.</p>
+<p>"Hey, Nat! Need something?" Kendra asked, offering a glass of wine.</p>
+<p>"Oh, uh. Nothing, really. I was looking for you but I forgot what it
+was." Natalie took a sip of the wine. "Wow, this is delicious!"</p>
+<p>"Right? I'll give you a bottle later."</p>
+<p>"You're the best."</p>
+<p>"Sorry I took so long. Did you like what was inside?"</p>
+<p>"Girl, you can tell me it's a porn set in there and I would believe
+you."</p>
+<p>Kendra giggled. "Feel free to help yourself, keep anything you like."</p>
+<p>"Oh, I intend to." Natalie winked. </p>
+<p>They continued the tour around the house that was more like a campus but
+Nat could not take her mind off Kendra's chest. She was either seeing
+things or her ex-roommate's chest was bigger than when she arrived. She
+decided that her eyes were playing tricks on her and ignored it. By the
+end of it, Kendra handed Nat the bottle of wine along with some gourmet
+cheeses.</p>
+<p>A car was waiting for Natalie outside. The driver looked stunned when he
+saw them at the door. As she got on board, she couldn't help but notice
+a slight bulge at his crotch. <em>It must be rare for him to see two
+incredibly sexy ladies.</em> Natalie smiled to herself.</p>
+<p>The car brought Nat through the same road she came by. There was still
+champagne and fruits, which she helped herself to. She shifted in her
+seat to feel the butt plug. "Maybe I'll drop in on Kendra more."</p>
+<p>As the car drove through the forest, a convoy of buses drove past them.</p>
+</body>
+</html>

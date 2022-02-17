@@ -1,0 +1,2738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Pop Sensation - Chapter One</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p><img alt="" src="media/image1.jpeg" />{width="8.49375in" height="3.7555555555555555in"}</p>
+<p><strong>Oh hi there!</strong></p>
+<p>I see you\'ve discovered this new little document bundled with my zip
+downloads. Well due to certain avenues not having places for profiles,
+interactive descriptions, or hyperlinks, and not wanting to make double
+copies of my stories for those that do, this here is just a little one
+pager with a few important Madam Materia links. And maybe some FAQ at a
+later date.</p>
+<p>Anywhore, if you wanna keep up to date with my works, see about
+supporting my craft with a sub or commission, or just in general chat,
+then the following links are your best friend.</p>
+<p><strong>Twitter:</strong> <a href="https://twitter.com/MadamMateria">\@MadamMateria</a></p>
+<p><strong>Discord:</strong> <a href="https://discord.gg/svqa8Z2">The Menagerie Lobby</a></p>
+<p><strong>Reddit AMA:</strong> <a href="https://www.reddit.com/r/overflowingbra/comments/azte2c/ask_the_author_madam_materia/">For public
+questions</a></p>
+<p><strong>Patreon:</strong> <a href="https://www.patreon.com/MadamMateria">Madam Materia</a></p>
+<p><strong>Commissions:</strong> <a href="http://www.furaffinity.net/commissions/madammateria/">Gasp!
+FurAffinity!</a></p>
+<p><strong>[Pop Sensation - Chapter 1]{.underline}</strong></p>
+<p><strong>[The Liberty Girls]{.underline}</strong></p>
+<p><strong>Warning</strong>: The following is erotic content featuring <em>breast
+expansion, lactation,</em> and other minor fetishes. You know why you're
+here, so don't complain to me if it's not your thing.</p>
+<p><strong>Commission:</strong> The following is a commission for Patreon user
+<em>tahu1809</em>.</p>
+<ul>
+<li><em>Madam Materia</em></li>
+</ul>
+<p>The harsh buzzing of Sam\'s morning alarm blared out, drowning out the
+sounds of conversation, bicycles, and summer cicadas coming from outside
+the window of his single room apartment. It had been a while since he\'d
+needed to use it, having been more or less coasting on his savings for
+the past few months since he\'d moved to the land of the rising sun.
+Like Phil\'s soil up on the windowsill however, they were drying up,
+which necessitated a job.</p>
+<p>Forcing open his hazel eyes, Sam looked through his auburn bangs to the
+clock on his bedside table. Seven a.m., plenty of time to make sure
+things were tended to and get to the train on time. With a tired groan
+he rose up, stretching his arms up over his head and accidentally
+knocking the framed poster hanging above his bed.</p>
+<p>"Whoops," he quickly turned to catch and straighten the twenty-four by
+thirty-six of "The Return of the King". "Sorry there Aragorn."</p>
+<p>Crisis averted, he pulled off his blankets, tossing his legs off the
+bed, and got to his feet. The summer sun, shining through his window,
+tickled his bare chest as he started his morning rounds. "How you
+feeling today Phil?" he asked the small potted cactus, soaking in the
+light. "Thirsty?"</p>
+<p>He dipped his pinky into the dirt about his prickly friend, careful not
+to disturb it too much. "Yup, hold on, I\'ll get you a drink."</p>
+<p>With a half dozen steps he crossed the whole of his little apartment, to
+the small kitchenette where he kept the watering can by the sink.
+Setting it to fill, the auburn-headed American went for the fridge.
+Sparse would be putting it generously. There was a half-carton of milk,
+a nearly empty jar of apple jam, a couple of eggs, tub of margarine for
+cooking, a pair of pre-made sushi bentos, and a flan pudding he\'d
+picked up last time the supermarket had a sale. His pantry wasn't much
+better, with a mostly eaten loaf of bread, rice, vegetable oil, a bunch
+of junky snacks, and of course, the staple of any Japanese,
+poverty-skirting diet, cheap ramen.</p>
+<p>"Toast it is," Sam mused to himself, pulling out his jam and getting a
+slice of bread loaded into the toaster.</p>
+<p>While that was cooking, he drew up the filled water pitcher and started
+making his rounds. "Morning Sue," he greeted the ivy plant hanging above
+the sink while he watered it. He gave her a quick inspection, spotting a
+few dead leaves on some of her lower vines. "Still reaching for Martin I
+see. I don't think you\'re getting enough light for that," the boy
+teased, plucking the withered bits and crumpling them in his palm before
+sprinkling them into her pot. "You need a trim. When I get home," he
+promised before moving on to the ficus in the corner.</p>
+<p>"Still teasing her Marty?" he tutted, bending low and pouring directly
+into the entwined plant\'s roots. "What am I going to do with you?"</p>
+<p>With a small laugh, the auburn-headed man picked up the spray bottle he
+kept near his largest plant, giving Martin\'s leaves a good misting to
+go with the watering. "Wait till she figures out how high maintenance
+you are. I think you could make it work though," he offered with a kind
+smile.</p>
+<p>Lastly, of course, the cute little cactus watching over it all from the
+window sill. "No worries, I didn't forget you Phil," he assured the
+oldest plant in his care, brought all the way from home when he moved.
+He only gave it a little, always careful not to overwater the more
+arid-acclimatized flower. "Oh, looks like you\'ve got a bud. Gonna bloom
+this season, are we?" he was gentle with his touch, mindful of Phil\'s
+needles, obviously, but also not wanting to damage the delicate
+developing flower.</p>
+<p>It was an excellent sign, proof he was taking good care of his plants,
+even with the limited space. "Let's hope it's good luck," he smiled and
+finished up tending to things in time for his toast to pop.</p>
+<p>"There's my meal," he joked, rushing back across to catch it before it
+got too cold.</p>
+<p>A quick spread of jam and it was immediately in his mouth, flopping up
+and down as he continued around the small apartment. He needed to get
+dressed in time to make his train ride, and he needed to make sure he
+made a good impression. Not easy for a foreigner in Japan, but on top of
+it, he hadn't gotten this opportunity on his own; it was a favor from a
+"friend" that owed him, Tobiyashi. So, he had to bring his "A" game.</p>
+<p>Chewing back two big bites, he started pulling on the dress pants to his
+suit. Thankfully it still fit well, even if he needed to, one-handedly,
+tighten his belt an extra notch. Not as bad as it seemed, he could
+afford to lose a few pounds yet from his pudgy frame. It was nice not to
+struggle with the buttons over his belly, as he awkwardly finished his
+meal with a few laps of his sticky fingers.</p>
+<p>A trip back to the sink, to properly wash his hands, and next was his
+tie. "'Round, round, under, away, and pull," he ran through aloud,
+tightening the sharp Windsor at his collar and finishing up by slipping
+into his jacket.</p>
+<p>He cleaned up well, making sure everything was straight on his bulky
+frame. "Alright, Phil, watch over the place!" he joked, slipping his
+shoes on as he left out the door.</p>
+<p>Checking his phone showed he still had good time yet to get to the
+station. "Ohayou Ramses-san!" his neighbor called as she swept the
+walkway of their building.</p>
+<p>Like a switch in his brain went off, Sam swapped his thinking between
+English and Japanese. "Good morning Sato-san," he replied in the native
+tongue without missing a beat.</p>
+<p>Miss Sato gave him a smile. "You are dressed up today, somewhere
+important to go?" the older woman inquired, pushing a line of dust over
+the balcony edge.</p>
+<p>"Yes. I have my first day of a new job today," he flashed an excited
+smile back to her.</p>
+<p>"That is good to hear Ramses-san," she congratulated him with her
+pleasant tone. "I was beginning to worry about you."</p>
+<p>He gave a short laugh. "Thank you, Sato-san, your concern humbles me,"
+he gave her a short, polite bow. "I must get going though, it would be
+terrible if I missed my train on the first day."</p>
+<p>"Good luck," she waved the boy off as he dashed down the stairs.</p>
+<p>It wasn't a horribly long walk to the station, though being in full suit
+under the summer sun did make it a pinch uncomfortable. Every now and
+again, a cyclist would pass him by, giving him a small breeze that would
+air out his jacket and cool the light sweat forming beneath his woody
+bangs. By and far however, it was sweltering under the hot rays.</p>
+<p>He was thankful for the shelter, standing in the shade on the train
+platform amidst a group of locals he towered over. The American hovered
+around the six-foot mark, leaving him a good half a head taller,
+minimum, from most people around him. Not great, considering his pale
+complexion, and the red-tinted brown locks covering his head, already
+made him stand out. Loading onto the train, he drew a number of ireful
+looks from people who clearly felt he didn't belong, if their muttering
+was any indication. There wasn't much for it though. It was part of what
+he\'d signed on for coming here in the first place.</p>
+<p>Ever since elementary school, Sam had always been good with language.
+His parents got him into a school that taught Spanish, and it had
+honestly been one of his favorite classes. Taking just a few steps into
+a different culture had left an impression, a desire to immerse himself
+in it, and it helped he had the right kind of mind that could shift into
+thinking in a different language without any difficulty. When he entered
+high school, he doubled down into cultural studies, first with French,
+easily finding similarities with the last language he\'d learned, then
+with German, which surprised him with parallels to English.</p>
+<p>The more he learned the more it inspired his wanderlust, the desire to
+see these other countries he was getting snippets of. By the time he was
+planning his career path, he was looking into jobs with the state
+department, hoping to travel the world. Unfortunately, fresh out of
+school, there was no way he was hitting the credentials necessary for
+government work. So, a backup and some general college were in order.</p>
+<p>It was through college that Sam met Tobiyashi, or Tobi as he preferred;
+an exchange student from Japan. The two bonded pretty well, with Sam
+helping the foreigner with a good amount of his English work, and Tobi
+introducing him to some foreign anime, inspiring him to take on learning
+Japanese as a challenge. Unlike his previous languages, there weren't
+any parallels he could lean on, but he did have a native speaker to
+point out mistakes, and more subbed movies and shows than he could shake
+a stick at. He even started being able to pick out differences between
+the subtitles and what was actually being said by characters, which led
+to a small job, translating and subbing new imports for one of the local
+video stores.</p>
+<p>A job that he enjoyed greatly, shifting his life path, to wanting to be
+an interpreter, or maybe an English teacher. Both were in pretty high
+demand out east, and with Tobi getting ready to head back home, there
+was an opportunity to sate that deep-seated want to travel, while
+getting his foot in the door. Regrettably it didn't quite work out to
+expectations.</p>
+<p>His parents had given him a bit of a nest egg, which with his subbing
+money, and the remainder of his college grant, gave him a pretty good
+savings net to fall back on. His ongoing friendship with Tobi however,
+turned out to be the biggest strain on those finances. Every couple of
+days, his only real connection in the country would come knocking for a
+few thousand yen here and there for "emergencies". Sam didn't mind too
+much in the beginning, he had a few job prospects out, with some private
+and cram schools. When the only major experience on your resume was some
+low-key anime translation though, well... things fell through. And when
+they did, the American finally had to put his foot down on his friend\'s
+mooching.</p>
+<p>It had become a bit of a sore spot between them, but Sam didn't really
+have a choice. The debt between them was up to six digits, at least two
+months of rent, and without income...</p>
+<p>At least Tobi seemed to be aware of his troubles, lining up this job
+opportunity with a friend of his family's; in exchange for shaving off
+some of the debt, of course. Sam could handle the selfish aspects
+though, if this all worked out. Gazing out the train window, into the
+tall buildings of the city, he mentally prepared himself. The details of
+everything had been vague, little more than the company name, and the
+name of who\'d be overseeing the project.</p>
+<p>Kanaszuchi Kane, of Happy Light. As the train ground to a halt, letting
+him out to walk the rest of the way to the warehouse studio address
+he\'d been given, that name kept in his mind. This first impression was
+going to be everything; his life here in the country depended on it.</p>
+<p>Standing in front of a grey, featureless building, Sam couldn't help
+double checking his phone. Everything he could find online about them
+seemed to suggest they were a big company; they had their name behind
+dozens of different j-pop groups from over the past few years. He
+expected some sort of sign, or at least some branding, but no, this was
+it. This was the right place.</p>
+<p>"Tobi, what are you getting me into?" he muttered to himself, his
+confidence wavering.</p>
+<p>Pushing his way through the door, at least the inside looked more on the
+up and up. It was spacious enough for a light echo, if it weren't filled
+with collapsed equipment, what looked like bleachers, and the rigging
+for a curtain. The majority of the free space was taken up by a stage,
+with five of the most beautiful women he\'d ever laid his eyes on; even
+if they were dressed in awkward, stylized suits. They were busily going
+over notes, a curvy strawberry blonde in a sharp blue jacket guiding the
+discussion and giving directions.</p>
+<p>Before the boy could take in anymore though, there was a thick fingered
+hand on his chest. "Can I help you, yankee?" a gruff voice pressed.</p>
+<p>His hazel eyes followed the sound, to a stocky man squeezed into a
+garish white suit. A pair of expensive shades obscured his eyes, but the
+crease in his brow lent to the intimidation of the tree armed thug. The
+man only came up to Sam\'s nose, and yet the auburn-haired American
+didn't doubt the man would bend him in half.</p>
+<p>"Um," he stammered softly, still internally cursing his "friend". "I'm
+Ramses, Samuel. I'm looking for Kanaszuchi Kane, about a job?"</p>
+<p>"Kanaszuchi-sama," the man "corrected", taking his arm off the boy to
+slick back his greased hair. "So, what did Kudo-kun tell you about what
+we do here?"</p>
+<p>It was so odd to hear Tobi referred to by his last name. Sam couldn't
+let that trip him up though; first impression. Hopefully his sweating
+wasn't too obvious. "I performed some independent research,
+Kanaszuchi-san," the harsh scowl he got from the man had him reeling,
+quick to correct the mistake. "Kanaszuchi-sama. Happy Light is a media
+organisation, with a particular interest in creating and managing pop
+idol groups," after his fumble, that was the easy, and safe, answer.
+Especially with the girls on stage, a few of whom had shifted their
+attention from their reading to the goings on.</p>
+<p>Scoffing, and taking a moment to straighten the collar of his shirt, the
+man got straight to business. "Here's what you need to know. Number one,
+no touching the talent," he stated it firm, and clear. Even shooting a
+glare through his glasses, initially into the taller man\'s chest before
+adjusting, to drive that point home. "You touch the merchandise, and
+they're going to have trouble finding you afterwards."</p>
+<p>He was having enough trouble with finding a job, he wasn't about to mess
+this one up. "Yes, Kanaszuchi-sama," Sam gave a small bow of the head to
+show he understood.</p>
+<p>There was no indication he even cared for the American\'s understanding;
+the thuggish man just went on with his introduction to the place. "These
+here are the \'Liberty Girls\'," at their mention the strawberry blonde
+turned, giving Sam a look that almost screamed she was undressing him
+with her eyes, only to quickly shift into a dagger-sharp glare. "Girls,
+come here," the boss ordered with a small gesture of his hand.</p>
+<p>The five lowered their scripts, sauntering over in a cacophony of
+clicking heels. The lot were even more stunning from the front,
+possessing curves Sam would have thought inhuman, or fake, if they
+weren't bouncing in the tight confines of their stage costumes. "Girls,
+this is your new historical consultant, Ramses Samuel."</p>
+<p>Historical consultant? One among the girl's, her costume a white shirt,
+little more than a long-sleeved crop top really, under an open vest,
+gave a thankfully bow that had her dark brown hair pouring over her
+shoulders. "A pleasure to meet you Samuel-san," she offered with dulcet
+toned words.</p>
+<p>Before he could reply, Kanaszuchi was moving on. "Alright, foreigner," a
+deliberate show of disrespect, as the muscular man tapped Sam on the
+chest. "This is Sasa-"</p>
+<p>"We can introduce ourselves, Kanaszuchi-san," the blonde of the group
+cut in, stepping up on her shapely legs.</p>
+<p>Behind his shades it was clear the man was silently leering, and
+grinding his teeth to hold back any rebuttal. The blonde took the reins,
+marching right into Sam\'s space and jabbing two fingers into the center
+of his chest. "Suzuki Sakura," she declared, though all the taller man
+could pay attention to was the smell of bleach coming from her hair.
+"I'm the leader of this group, so let me put this in a language you\'ll
+understand."</p>
+<p>She swapped to English, throwing Sam off for a brief second as he had to
+work and translate his own first language. "We do not need some yankee
+around, ogling us and telling us how to do our job."</p>
+<p>The vested girl gave a small mumble, back in Japanese that had the
+auburn consultant performing a quick translation again. "We kind of do.
+We\'re swimming in historical inaccuracies."</p>
+<p>The comment seemed to go ignored. Their "leader's" little outburst had
+everyone more or less doing their own thing; distancing themselves from
+what was happening. The tallest among them was idly browsing her phone
+with a single finger. There was a redhead done in twin-tails, arms
+crossed across her bust stubbornly, as if refusing to admit the action
+was difficult with her pert and perky breasts. And the last among them,
+hiding behind a pair of bifocals, was idly sliding her finger in and out
+from between her lips. It had to be the difference between their
+heights, seeing as the girl was under five foot, but it seemed like she
+was staring at Sam\'s groin.</p>
+<p>What could he say? This girl, Sakura, was adamant, glaring up at him as
+he fumbled for some idea of what to say. He was still trying to wrap his
+head around the job title.</p>
+<p>"Cool it Suzuki-san," Kanaszuchi came to his rescue. "He's here to cover
+the company's ass. So, whether you like it or not, you\'ll deal with
+it."</p>
+<p>The blonde went flush, giving the American one last look up and down
+that before backing off and straightening her skirt. "She's the 'George
+Washington' of the ensemble," their manager filled in the bits the
+hot-headed girl had failed to in her short spiel, clearly having a bit
+of trouble with western naming schemes, "and handles the stage direction
+and choreography."</p>
+<p>Questions just kept piling on. At the very least the girl's odd ensemble
+was explained. The tailed coat, the gold buttoned skirt, and the curls
+done into the sides of her long, light hair. Knowing what she was
+supposed to be, the "sexy George Washington" was more obvious; though,
+still very much bizarre.</p>
+<p>"Next up," not wishing for another interruption the shaded man gave a
+nod towards the tall woman, still browsing through her phone.</p>
+<p>"Hm?" she lifted her head, as if only noticing now that they were in the
+middle of something. "Oh, you can go ahead Kanaszuchi-kun," she waved
+her slender fingers at him, and went back to whatever it was she was
+doing with her phone.</p>
+<p>He didn\'t seem to care for how casually she addressed him, but, biting
+his tongue, he pressed on. "This is Sasaki Asumi. Sasaki-san is the
+Liberty Girls\' lead singer, and their 'Thomas Jefferson'."</p>
+<p>At five and a half feet, Asumi was the tallest of the girls, blue-black
+hair hanging down almost to her mid-thigh, and cut in a fine square of
+bangs that framed her beautiful features. There was air of superiority
+to her, though not in the way Sakura tried, with chest pounding and
+shouting; it was just her seeming disinterest in everything going on. As
+the lead singer, her \'Jefferson\' costume was the most extravagant.
+With layering in the sleeves that looked like white flowers blooming
+from the cuffs of her dark jacket, and a mid-length ruffled dress skirt,
+just open enough to show off some of her stocking-clad legs. It had to
+be cumbersome to wear, as every few seconds you would catch her fingers
+idly wandering to brush the fabric of her skirt off her thigh, or tug at
+her collar and expose a bit more of her impressive chest.</p>
+<p>From the tallest to the shortest, the boss moved on. "Short stack" was
+the most accurate way you could describe the girl at first glance. Even
+with three layers working, a brown jacket, a scandalous vest, and the
+same type of modified crop-top as the more polite-speaking member of the
+group, she was clearly the most generously chested among the buxom
+girls. She was showing off a dark line of cleavage her costume did well
+to highlight, formed by breasts easily the size of her head. You were
+left to wonder if at some point the girl had been overweight, but her
+costume cinched into a sinuously small waist that made it hard to
+imagine she could have been.</p>
+<p>As Kanaszuchi gestured to her, the girl just hid behind her bifocals,
+finger still in her mouth down to the second knuckle, and shook her
+head. The man needed no further prompting, happy to at least not have
+any back talk this time. "Watanabe Meiku. She's our 'Benjamin
+Franklin\'."</p>
+<p>So that made three founding fathers. Sam was picking up on the pattern,
+and the reason for a "historical consultant".</p>
+<p>He expected a bit more about Meiku, but no. Taking a moment to fix his
+shades, the muscular man just moved on from the quiet girl, and didn't
+need to do more than look the redhead\'s way before she took her cue.
+"Takahashi Kazuko," she announced, stepping up to an imaginary rhythm
+that had her twintails dancing, and her poorly restrained chest moving
+in her top. "I\'m our group\'s rapper, so they've got me portraying
+'Alexander Hamilton\'. Because the executives at Happy Light are a bunch
+of trend-chasing idiots."</p>
+<p>You could tell the girl was full of energy, constantly moving as she
+spoke, and sending her costume into motion. It was made to move, with
+long coat tails that followed the flow of her hair, and blended nicely
+with an open front skirt. Her shirt rode high, showing off a soft, but
+tight core that showed she liked to take care of herself; even if the
+swell of her bust said otherwise, with how it was putting a strain on
+her buttons.</p>
+<p>"They're also taking far too many creative liberties," the last girl was
+still mumbling unhappily. With the rest of the girls introduced though,
+attention finally dropped on her, and left them actually listening.</p>
+<p>Kanaszuchi gave a small cough to ensure he had her attention. "Once
+again, that's what he\'s for," he gestured to Sam.</p>
+<p>The girl blushed softly, darting a glance his way before taking a moment
+to re-compose herself. "My apologies Samuel-san," she gave him a small
+bow. "I am Kimura Keiko. I'm more of a dancer in the group than a
+singer, and they have me in the role of 'Paul Revere\'," the way she
+said it held a note of contempt.</p>
+<p>And really, Sam didn't blame her. He\'d been trying to piece the Liberty
+Girls together from the initial introduction. Washington, Jefferson, and
+Franklin were the big three, pretty much anyone knew them. Hamilton
+broke that, but was still a founding father, and dumb execs or not, at
+least people would know of him from the Broadway show. Revere though?
+Sam was an American, and it took him a solid minute to even remember who
+that was. Would any Japanese person even have an inkling?</p>
+<p>"So that's the girls," adjusting his sleeves, the stone-faced manager
+started for the door. "I'll be back to pick them up tonight, with your
+contract."</p>
+<p>Whoa, contract? The boy barely knew the details of the job, and
+Kanaszuchi was talking like he\'d accepted. "I thought-" was all he got
+out of his mouth before the tight suited man was gone, leaving him alone
+with the Liberty Girls.</p>
+<p>Well, he was here, and, everything considered, he wasn't in a position
+to be turning down a job. Sam took a moment to look around the room,
+hunting for anything that may have been left for him to use as
+reference, or at least familiarize himself a bit more with the project.
+Such was not his luck however.</p>
+<p>"I know what you're up to, pervert," the "leader" Sakura broke the
+temporary silence, drawing his hazel eyes her way. "You were probably
+looking around just now to find the blind spot for the cameras, waiting
+for your moment to have your way with me. Filthy degenerate."</p>
+<p>She covered her body as she spoke, or rather "covered". One arm curled
+under her bust, highlighting just how impressive and full it really was,
+while her legs were defensively crossed in such a way as to show off her
+hips. She had the kind of body you\'d see on a pornstar; mature in just
+the right ways.</p>
+<p>And it had Sam reeling from her accusation. "W-what?" he stammered,
+scrambling for some kind of defense that wouldn't make matters worse.</p>
+<p>"Don't try to deny it. I've seen you staring, groping me with your eyes,
+since you came in."</p>
+<p>He was now, not groping, but there was a reason! She was doing nothing
+but drawing attention to herself, giving a fake shudder that let her
+shoulders shimmy and leave her breasts rolling over her planted arm.
+They were certainly impressive, not as crazy as Meiku\'s, but even one
+of his large hands would have trouble handling one of them without soft
+boob slipping over the edges of his palm.</p>
+<p>"Samuel-san has been a perfect gentleman since he came in here, Sakura,"
+Keiko cut off any further slander sitting on the tip of the blonde's
+tongue. "I don't know what's gotten into you lately."</p>
+<p>"I know what's gotten into her," the redheaded Kazuko stepped in. "Just
+because you need a railing Sakura, doesn't mean you can go taking it out
+on Samuel-san."</p>
+<p>The call out changed the flow of the accusations, the blonde suddenly on
+the back foot. "I-I do not-" she stuttered defensively.</p>
+<p>The shorter, twintailed girl wasn't done with her yet though. "Oh
+please, we\'ve been hearing you all week in the showers Sakura. My dorm
+is next to yours, so I\'ve had a front row seat, listening to your
+moaning and screaming all night."</p>
+<p>Red tinted the girl's cheeks. "I have not-" she continued futilely,
+turning to the other girls for aid. "Asumi, help me?"</p>
+<p>Hearing her name, the elegant woman briefly looked up from her phone,
+only to give a careless shrug and return to what she was doing.</p>
+<p>"Meiku," Sakura jumped to the last member of the group with her plea,
+though it quickly turned into a demand, "you\'ve been watching this
+deviant all along, tell them he\'s been perving on me!"</p>
+<p>If anything, it was the opposite, as the buxom girl looked up from her
+seeming fixation on Sam\'s crotch to their leader. "Um," she pulled the
+finger from between her plush lips, dragging out a small string of drool
+in the process.</p>
+<p>"Don't let her bully you Meiku," the energetic redhead defended
+fiercely. "Only I can boss you around, and only for sweets."</p>
+<p>"Um," Meiku just repeated, looking almost vacant behind her glasses;
+like she was in deep thought about the situation. Her eyes though just
+wandered, looking over Sam once more, as her spit slicked finger started
+back for her mouth.</p>
+<p>This was not how Keiko had expected things to go, watching two of her
+squabbling group mates trying to pull everyone into their argument. It
+honestly wasn't what Sam was expecting from a first day either, not that
+he even expected this to be his first day. Hopefully he\'d given Martin
+enough water.</p>
+<p>"How about, we all just sit down for our first history lesson?" the
+vested girl suggested, her hands raised up cautiously between the two.
+"Samuel-san is just here for his job after all, let's let him do it, and
+we can make judgments from there?"</p>
+<p>The man among them couldn't deny that stung a bit. For Keiko to go from
+defending him as a gentleman, to a statement like that. He couldn't
+really blame her all things considered, he was a translator that was
+somehow supposed to be a historical consultant, something he had a
+rudimentary ninth grade knowledge of at best. "Yes, lets," he agreed,
+trying to take some control of the situation in spite of everything.</p>
+<p>There was a long table with snacks and water, probably for the girls
+during breaks, but more importantly there were folding chairs set up.
+The auburn-headed American walked over, the small gaggle of Japanese
+girls following along, and plopped himself into a chair. The Liberty
+Girls followed suit, taking their seats and arranging them into a small
+circle around him before settling down, each in their own way.</p>
+<p>For the first time, since she stepped down from the stage, Asumi put her
+phone away, sitting straight, hands in her lap, and giving her full
+attention. Kazuko flipped her chair around, straddling the back and
+leaning over it; without regard for her bust once more, as the soft
+little handful orbs pushed up towards her chin. Clearly Sakura wasn't
+quite over her opinion, dropping herself hard in her seat, arms
+stubbornly crossed and, again, highlighting her impressive chest for
+him.</p>
+<p>The other two settled in, and Sam jumped to his first stalling tactic.
+Figuring out how to admit he, as their "historical consultant", couldn't
+piece together their theme. "So, I\'ve been mulling it over for a bit,
+and I can't quite pinpoint the exact um... subject matter of the Liberty
+Girls."</p>
+<p>Keiko visibly rolled her eyes, letting out an annoyed sigh. "I knew this
+would happen," she muttered, the complaint falling on deaf ears. "I told
+them, there are a dozen better figures than Paul Revere. I could have
+played the obvious villain, Benedict Arnold, but no. They wanted to get
+that dumb throwaway line in."</p>
+<p>Ignoring the grumbling, Sakura turned a small leer his way. "It's the
+revolutionary war, idiot. I thought you were a yankee?" she called him
+out.</p>
+<p>He wanted to come back with some snide remark about how racist that was
+to assume just because he was American that he should know. The only
+problem was as a "consultant" he probably should have been able to
+figure it out. Revere\'s biggest claim to fame was his midnight ride to
+warn "the British are coming!" As Keiko said, just a throwaway line, but
+one that a real historical expert would have picked up on.</p>
+<p>That she knew that much though gave him a little hope. "You seem pretty
+knowledgeable Kimura-san," Sam complimented the vested girl. She seemed
+surprised, pausing in the middle of a stretch to look at him as he
+continued. "Maybe you could share what you know with everyone, so that
+I\'m not retreading things unnecessarily?"</p>
+<p>Everyone turned their attention to her, causing the tone-bodied girl\'s
+cheeks to go pink. "Oh um..." she straightened in her seat, taking a
+moment to adjust her skirt over her fine, dancer\'s legs. "I'd be happy
+to Samuel-san."</p>
+<p>She set about a lecture, starting with the basics, though occasionally
+taking small tangents to elaborate on smaller details that even had him
+learning something. It was telling though, that from the very beginning
+Sakura had taken out her stage directions and was idly scribbling down
+notes. He\'d figured a lot of this would have been stuff they knew
+already when they picked the theming, but even Asumi was listening
+intently, trying to hang on to each bit of information her lead dancer
+was telling her.</p>
+<p>Kazuko on the other hand, couldn't look more bored, leaning heavily
+against her chair and trying to find literally anything more exciting to
+do. She patted at her legs, shuffled her feet, hell Sam even though she
+may have been grinding against her seat at one point, before the
+scraping of the legs interrupted Keiko's talking. "Sorry, keep going,"
+the redhead apologized, struggling to keep her disinterest from her
+delivery.</p>
+<p>Rude as that was though, the man among them still preferred it to what
+Meiku was doing. Without the height difference from standing, there
+wasn't any denying that she was staring at his junk, sucking away on her
+finger. She wasn't the only one either. Every time there was a short
+lull in the lesson, Sam would catch the blonde leering at him, her gaze
+slowly drifting down his body to rest right where her bespectacled
+bandmate\'s was. Maybe Kazuko was right, and she was just sexually
+frustrated?</p>
+<p>Either way, there was nothing he could do about it. He wasn't about to
+test and find out what Kanaszuchi meant about "having trouble finding
+him" if he touched any of them. So, crossing his legs, the auburn-haired
+man turned his full focus to Keiko, not wanting to tempt that Sakura
+might add "he was openly trying to tempt me, the pervert" to her
+complaints.</p>
+<p>A half hour of history later Sam definitely knew two things. First, the
+Paul Revere portrayer really knew her stuff. Which played into the
+second, he was really going to need to do his research if he was going
+to bring anything to this job. She probably would have gone on another
+hour if she'd been allowed, but their leader cut things off cleanly.</p>
+<p>"Alright, that's enough learning for today, we\'ve got to get to
+practicing. This is our last week before our debut," Sakura reminded
+them.</p>
+<p>For all their previous animosity, Kazuko was the first to agree.
+"Finally," she let out, pushing up to her feet.</p>
+<p>With everyone dispersing back to the stage the American got up with a
+small stretch. If that was his job for the day, that wasn't so bad. He
+could head home and get a head start on research for tomorrow. The girls
+seemed busy, going over their directions and starting to set up again,
+so as much as a polite goodbye would have been nice, he figured just
+slipping out would be best. He was wrong.</p>
+<p>"Where do you think you\'re going?" he heard Sakura\'s spiteful voice
+call out from behind him.</p>
+<p>Stopping in his tracks the tall man looked over his shoulder to her,
+catching the icy glare the woman gave as she stood firm, hands on her
+curvaceous hips. "Um, home Suzuki-san?" he answered, trying to keep his
+tone away from anything she could take offense to. "If the lesson is
+done for the day, I figure I\'m not needed."</p>
+<p>"Uh, no yankee," the blonde was quick to scold him. "You're our
+consultant Samuel-san, which means you need to stay and watch the whole
+practice to make sure we\'re not making any big mistakes in our
+portrayal."</p>
+<p>"So, pretty much all of it," Keiko mumbled to herself, idly
+straightening her skirt; the biggest offender to their historical
+accuracy.</p>
+<p>Whether the Washington portrayer was playing him, looking for another
+chance to back him into a corner, he couldn't tell. Kanaszuchi had also
+said he\'d be returning after the practice, with his contract. Part of
+Sam had just assumed it would be for tomorrow; have today to see if he
+liked the job, then if he came back tomorrow, they would work it out.</p>
+<p>"My apologies," he replied with a polite bow. It made enough sense for
+him to go along. Returning to the snack table and taking his seat back,
+he let himself get closer; sitting next to the water but not daring to
+take any yet.</p>
+<p>Asumi took her place at the only mic stand, doing a few small vocal
+warmups as the others got into place on the lower part of the stage.
+Sakura tested their mics, clipping them above each of the girl\'s busts,
+as high as it could fit on their jackets; or in Keiko's case, on her
+vest. After a quick sound test, that came out modestly over the PA, they
+were ready to go.</p>
+<p>For as unique as their theme was, there was no doubt great talent behind
+it. The minute their lead singer opened her mouth it was like listening
+to an angel. Her voice was more beautiful than any instrument, hitting
+every note with perfect pitch that sent a shiver down his spine. No
+wonder she was so aloof, with such a voice she could probably have
+struck it on her own as a solo act.</p>
+<p>There was a theatrical nature to their production, with Keiko off to the
+side waiting for her cue. One could imagine with the lights, and the
+proper stage setting, this would really be quite something. Even as is
+though, Sam was stunned. The three girls currently sharing the stage
+sung backup, proving without a doubt they could hold their own next to a
+diva like their lead. Every now and again, Kazuko would step up with a
+rap rebuttal to something the tall singer belted, commanding the stage
+with the energy of her dance moves and the power of her voice. The role
+as a lead singer Jefferson's foil really suited her.</p>
+<p>Then things kicked up for the second act, with Revere\'s midnight ride.
+It was... out of place. A lot of Kazuko and Asumi\'s back and forth was
+about the Declaration of Independence, which Jefferson drafted, so that
+made enough sense. It was over a year after the midnight ride though,
+which really threw off the production. To someone who knew the facts
+anyway, most of their audience probably wouldn't be any the wiser.</p>
+<p>Finally on stage, the athletically built Keiko demanded attention. The
+way her body moved, her toned legs carrying her on high energy dance
+steps across the stage. She flowed, her less flashy costume, compared to
+the others anyway, really letting her body do most of the work. With the
+bounce of her firm bust, the outlines of her thighs against her skirt.</p>
+<p>Despite all of Sakura's accusations earlier, the boy was acutely aware
+that, now, he was staring; admiring the grace with which the lead dancer
+carried herself. He quickly pulled himself from it, turning away with a
+light flush of embarrassment in his cheeks. It was natural of course, I
+mean, they were some of the most gorgeous girls he\'d laid eyes on.
+She'd been the one sticking up for him though, what would she think if
+she caught him? Or worse, the blonde caught him.</p>
+<p>The buxom general Washington stepped up, taking her small turn in the
+spotlight as she danced in tandem with Keiko and took a temporary lead
+on vocals. Soon enough Kazuko and Meiku joined them, which added another
+little tick of historical inaccuracy. Franklin was a diplomat, not a
+military man like the other three she was side by side with.</p>
+<p>Honestly, the geeky boy wouldn't normally care about such a thing, but
+Asumi was still up on the raised part of the practice stage as
+Jefferson, and he was supposed to be their historical consultant. Come
+to think of it, the more he watched, the more he kind of realized the
+extremely-busted character was just kind of tacked on. Meiku didn't play
+any major parts, for either of the mismatched events they were
+portraying in their high energy pop routine. She was just kind of
+background, and Sam couldn't help feeling a little bit sorry for her.</p>
+<p>Their rehearsal wrapped up in a flashy sequence, declaring their
+freedom, and themselves as the Liberty Girls, then immediately Sakura
+dropped into coaching mode. "Okay, that sounded pretty good. Kazuko, you
+were a little off mark during the dance routine."</p>
+<p>The redhead stuck out her tongue in reply. "I wasn't the one singing
+over everyone, Sakura," she countered.</p>
+<p>"I'll give it a listen and see, I have to make a quick bathroom run
+anyway," Keiko offered in her role as mediator.</p>
+<p>Shouldn't they have someone already listening for things like sound
+levels and mixing though? Looking around, the boy didn't see anyone
+else. There wasn't even a separate room where tech staff could be
+listening in, the place was like an open gymnasium with only a supply
+closet and a bathroom; as far as he could see anyway. With their
+success, he\'d have figured Happy Light could afford it easily, and it
+wasn't like the Liberty Girls were B-rate talents, they sang like
+seasoned performers.</p>
+<p>It struck him as odd. Maybe he was mistaking reality with what you saw
+in movies, or television; or hell, maybe it was a cultural difference?
+Either way, it didn't feel right.</p>
+<p>"So, how was it Samuel-san?" Kazuko\'s voice surprised him, breaking his
+train of thought.</p>
+<p>She was right in front of him, busy cracking the cap on a water bottle
+and seemingly paying him little heed. From this closeness he could see
+the beads of sweat on her body, giving her the sheen of a workout that
+honestly didn't look bad on the short girl's body. "Um... fine?"</p>
+<p>The slow, sensual movement of her throat as she drank was the only sound
+between them for a small moment. "You sound hoarse Samuel-san. Take a
+drink, and answer again," the redhead handed him a fresh bottle from the
+table, pressing it into his chest in the process and giving him a pat on
+the shoulder.</p>
+<p>He obliged. As the cool refreshment passed over his lips the
+auburn-headed man realized just how parched he really was just
+<em>watching</em> them work. He\'d polished off half the bottle without
+pausing, letting out a relieved sigh when he finally stopped for breath.
+"Thank you, Takahashi-san," he gave her a small bow.</p>
+<p>"Don't mention it," she took another sip of her own. "The table\'s for
+employees, so feel free to partake. Don't starve yourself," she turned
+her dark eyes to him, at this closeness their rich chocolate colour was
+more visible, and watched him take a couple of edamame to snack on. "So,
+how is our routine? Any major changes you\'d recommend Samuel-san?"</p>
+<p>It was glorious to have some veggies, even if they were just a bar
+snack, so he took a moment to savour and finish chewing before replying.
+"There are some timeline issues, which Kimura-san covered in today's
+lecture, but otherwise I enjoyed it."</p>
+<p>Kazuko nodded, tapping her chin in thought, her other arm stubbornly
+crossed over her bust. He could tell from her face, she may have been
+regretting her ignorance during the lesson.</p>
+<p>"Why so concerned Takahashi-san? You didn't seem particularly interested
+in the history aspects," the boy inquired, munching on another bean.</p>
+<p>"I\'m the lyricist. If there's a problem with the songs, it's my job to
+fix it; ensure that everything matches the rhythm, and sounds good," the
+pigtailed redhead explained.</p>
+<p>Another job Sam had expected someone else to be in charge of. Were they
+all just that multitalented that they were doing this garage band style?
+"Well, you\'ve got that down Takahashi-san. The songs are amazing, and
+your performance of them on stage was honestly breathtaking."</p>
+<p>A smile creased her painted lips. "Thanks Samuel-san," she offered,
+bumping him with her elbow playfully. "So, what needs fixing? I can
+probably have it sorted out, and it\'ll be in the routine by tomorrow!"
+the girl declared proudly.</p>
+<p>He explained the discrepancies, the idol hanging off the words and
+advice this time. It reminded him of something he learned in school:
+there were different kinds of learners. Kazuko just wasn't someone who
+absorbed from lectures, she was a direct problem solver. A girl who
+learned by doing.</p>
+<p>It was nice, a small reminder of what he wanted to do in a career. Maybe
+this job could work out?</p>
+<p>Keiko eventually returned from her restroom trip, fixing her skirt with
+a soft tint in her cheeks. That was Kazuko's cue to return to work, the
+girl giving her teacher a soft bow before skipping back to the group.
+From his seat, Sam could even hear her expressing his concerns to the
+group, bringing a smile to their history buff\'s face that she flashed
+his way.</p>
+<p>The girls ran through their routine again, unchanged, as obviously
+adjustments would take a little time yet. Honestly, it was just some
+rearranging of scenes, so it wasn't bad to get practice in for the dance
+numbers and lyrics they had. Whether Sakura's mic was turned down, or
+she was singing a little more softly, he wasn't exactly sure, but she
+had taken the advice given. They were a good team under it all.</p>
+<p>They didn't really engage with him much the rest of the day. There was a
+break for lunch, where the blonde was still giving him the occasional
+side eye, and Meiku was still blankly ogling him while sucking on her
+finger. Other than though, it was quiet for him until Kanaszuchi got
+back.</p>
+<p>The burly man pushed his way into the warehouse, straightening the
+lapels of his garish white suit as he did. There wasn't much fanfare,
+Sam sitting at the table, nibbling on one of the last onigiri, as the
+girls were huddled up on stage with their notes. "Girls," he called for
+their attention.</p>
+<p>They turned at once, and Sam couldn't help a small, pitted feeling in
+his gut at the look Sakura gave him before hopping up to go to her boss.
+"Kanaszuchi-san," she put on an offended whine, her arms once more doing
+their false modesty routine, framing her bust as she spoke.
+"Kanaszuchi-san, the pervert-"</p>
+<p>Raising his thick fingered hand, he cut her off. Even with those
+sunglasses hiding a good chunk of his face, you could see he wasn't in
+the mood to put up with the blonde's shit. He gestured the others over,
+and, grim in attitude, asked simply, "So, how was the yankee?"</p>
+<p>To Sakura's annoyance, he continued to cut off her attempts to
+interject, insisting the other girls speak first. Kazuko was first to
+answer with a lax shrug. "Samuel-san was alright. Took a while to
+adjust, but he\'s a good addition. Helped put with a few
+clarifications."</p>
+<p>"Samuel-san was a perfect gentleman," Keiko was next to add, knowing
+where their leader was trying to go with this nonsense.</p>
+<p>Asumi shared the sentiment with a nod, having returned to her phone, and
+Meiku was able to pull her gaze from the American long enough to give
+their boss enough of a look to communicate her agreement. With that
+round of universal acclaim, Kanaszuchi turned to Sakura, adjusting his
+sleeves before speaking. "What were you going to say then Suzuki-san?"</p>
+<p>She was in a corner, without a way out. So, with a pout, turning her
+head to shoot another of her mixed glares at Sam, she surrendered.
+"Samuel-san was fine," the girl muttered stubbornly, awkwardly shifting
+her legs.</p>
+<p>The sense of relief that washed over the auburn-haired boy was probably
+only matched by the grin of satisfaction of the thuggish man\'s lips. He
+faked a cough, returning to his stern expression, and pulling an
+envelope from inside his jacket as he waltzed across the room to where
+the boy was sitting. "Your contract, Ramses Samuel," he slipped it onto
+the table, along with a pen.</p>
+<p>Sam opened it up, pulling out the folded bit of paper and getting a peek
+of what else was inside. His eyes went wide, as the crisp edges of some
+high denomination bills crested the edge of the paper container. Four
+zeroes, it was a ten-thousand-yen bill, and from the feeling of it there
+was more than the one inside, maybe ten if he had to guess?</p>
+<p>"A sign on bonus," the boss explained, with an obvious note of cockiness
+in his voice. "It's about what you\'ll be making each week Samuel-san."</p>
+<p>Each week? He couldn't help himself, pouring out the envelope into his
+hand. He could barely believe it, one hundred thousand between his
+fingers. He could cover his rent for two months with this, and still
+have some leftover for a nice dinner and a full fridge. And this was
+weekly?</p>
+<p>Ever scrutinising, the American opened the contract. It was right there,
+in black in white, a hundred thousand a week to be a happy Happy Light
+employee. Far from his dream job, but for that kind of pay, he could
+coast comfortably until he found what he was really after.</p>
+<p>Kanaszuchi pushed the pen across the table, within the boy\'s reach and
+breaking him from his mild stupor. "Well, Ramses Samuel?" the man
+suggestively pressed him.</p>
+<p>Without any more thought, Sam took up the pen, scribbling down the
+Japanese approximation of his signature onto the corner of the page. His
+new boss reached once more into his suit jacket, pulling out a stamp no
+bigger than a tube of lipstick, and marking Happy Light\'s seal overtop
+their new historical consultant\'s name. It was all official.</p>
+<p>"Good choice yankee," the shaded man took the contract, leaving Sam with
+just the envelope and his bonus. He then fished out a set of keys and
+tossed them onto the table in front of him. "You'll be opening the
+rehearsal space from now on; be sure to arrive early so the girls aren't
+waiting for you to start their practice."</p>
+<p>It was his job to open? That was fair, considering what he was getting
+paid, and what he\'d actually done for the day. "Of course,
+Kanaszuchi-sama," he replied, putting the money back into the envelope,
+and slipping the keys into his pocket.</p>
+<p>"We\'re understood then," he gave a wave to the others. "Alright girls,
+time to get back to the dorms."</p>
+<p>There wasn't any argument, the Liberty Girls falling into line. "It's
+going to be so good getting out of this costume," Kazuko breathed a sigh
+of relief.</p>
+<p>Mentioning costumes had the girls idly picking at their work clothes. Of
+note their lead singer was idly running a hand up her hip, and along the
+dipping curve of her waist. Keiko in contrast ended up patting her skirt
+and immediately flushing pink in her cheeks.</p>
+<p>"Um, I need to go to the bathroom before we go!" she exclaimed, hopping
+off on with heavy clicks of her heels towards the restroom.</p>
+<p>Odd, but there were other things to think about. Sam pulled out his
+phone, pulling up the schedules for the train. "Am I free to head home
+Kanaszuchi-sama?" he made sure to ask, after this morning's earlier
+blunder.</p>
+<p>The man gave him an uninterested wave. "Just make sure you're on time
+tomorrow Samuel-san."</p>
+<p>He intended to be. The boy tucked his bonus under his arm, giving the
+girls a half-hearted wave goodbye on his way out. He had to hurry,
+because if he managed to catch the next train then he\'d be able to make
+a trip to the supermarket before he got home.</p>
+<p>Laden with groceries, Sam made his way up the stairs to his apartment.
+The sun was getting low in the sky, casting warm hues of orange across
+the balcony where Miss Sato was idly watching. "Ramses-san," she greeted
+him with a warm, aged smile. "I have never seen you carrying so much,
+your first day went well then?"</p>
+<p>"It had its bumps Sato-san," the boy replied, giving her a smile of his
+own. No amount of money could really outweigh the stress Sakura had put
+him through with her antics. "But yes, I got the job, and a bonus for a
+good first day."</p>
+<p>"Wonderful to hear. Perhaps now you will put some weight back on those
+skinny bones," she teased him with a chuckle.</p>
+<p>He laughed along with her. "I am quite sure I don't count as skinny
+Sato-san," the American replied, giving his belly a pat as he fished for
+his keys. Not an easy task juggling a half dozen grocery bags.</p>
+<p>"You are a tall boy," she pointed out, playfully holding her arm up, and
+barely reaching his six-foot height with her petite stature. "Tall boys
+should be bigger Ramses-san."</p>
+<p>"I'll do my best Sato-san," he promised, finally getting his door open.
+"Have a good night Sato-san," he offered with a small, awkward, bow;
+propping his door with one foot, and trying not to lose his shopping.</p>
+<p>The older woman came over, holding the door for him. "Have a good night
+Ramses-san."</p>
+<p>He was thankful for the help, getting everything inside and slipping his
+shoes off as the door closed behind him. Just like it was stepping out,
+hearing Miss Sato talk to him, a quick look at the comfort of his home
+and the switch in his head swapped back to English. And with it, the
+high of payday wore off.</p>
+<p>With a tired sigh the auburn-haired boy hauled everything to the
+counter, spotting Sue hanging over the sink. "Sorry I\'m late," he
+apologized, starting to get the more urgent produce into the fridge:
+fresh milk; eggs; a few sushi lunches. "I had to deal with an...
+interesting individual," one he realized he would have to deal with
+tomorrow, and if she was the first to arrive; with just him there?</p>
+<p>Nothing to do but hope for the best. He had a contract, and obligations
+to the company; not to get into the part where he seriously needed the
+job. Dealing with Sakura was just the cost, and as he rolled a fresh jar
+of mixed fruit jam and a box of Pocky out of his shopping bags, he
+decided it was worth it.</p>
+<p>It only took a couple minutes to put everything away. Regardless of his
+newfound finances, he was still weary. Who knew how long this gig would
+last? He hadn't spotted any sort of end date on his contract; they could
+drop him at the end of the week after the girl's debut. So, beyond what
+he spent to fill the fridge, everything had gone directly into the bank
+to shore up his safety net. Well, everything but enough for some snacks.</p>
+<p>With a smile Sam collected his Pocky and a bag of chips, bringing them
+over to the bed and hauling out his laptop. A pre-opened tab had his
+current anime fascination ready to go, as he pulled up another and got
+to work with some research. If he was going to be good at this job, he
+at least needed to be able to bring something new to the table tomorrow.</p>
+<p>When Sam woke to his alarm the next morning, a part of him wondered if
+maybe the whole of yesterday had been a dream. There weren\'t a bunch of
+buxom, beautiful singers in an American Revolution themed pop group. He
+didn't have a job, working as a historical consultant for a big music
+company. His burly thug boss hadn't threatened him, and given him an
+envelope full of money for taking said job. It honestly seemed absurd
+the more he thought about it, but he pushed himself out of bed and saw
+the bright packaging of his snack splurge still in his wastebasket; and
+the warehouse keys on his nightstand.</p>
+<p>Nope, it was real.</p>
+<p>Shutting off his alarm, he gave Sue and Marty a good watering, and
+popped in some toast while working on packing a bento. He didn't want to
+be just gorging on the girl's snack table after all, and some real food
+would be just what the doctor ordered. He was finished up just in time
+for the toaster to pop, and jammed up his slice with the new spread
+he\'d picked up. There was no describing how good fresh flavours were in
+his mouth after just staying above water for so long. He almost lost
+track of the time, and had to rush out the door to catch the early
+train.</p>
+<p>Miss Sato caught him running, cleaning the balcony as usual. "Have a
+good day Ramses-san!" she called to him with a wave. The tall boy waved
+back, nearly tripping in his rush to get to the station, and getting a
+small laugh from the elderly woman.</p>
+<p>With time to spare Sam finished his breakfast waiting for the train,
+checking for crumbs on his shirt when it finally rolled in. It was a
+typical ride, even a half hour earlier. A little more breathing room,
+but there were still the comments and the sidelong glances. They poured
+off downtown, and on long, jogging steps he rushed to get the warehouse
+stage open.</p>
+<p>The place certainly had a different aura about it without the girls or
+Kanaszuchi there. There was none of the discussion over notes, no
+muttering from Sakura, none of the clicks from Asumi's phone. All he
+could hear was the dull dropping of his shoes against the hard floor,
+echoing back to him.</p>
+<p>Nothing to do but wait. He made his way over to the snack table,
+currently barren, with the chairs folded up and resting against the
+wall. Was he supposed to set them up? It couldn't hurt, so setting down
+his lunchbox he pried himself open a chair. In time to be interrupted by
+a knock on the door.</p>
+<p>One of the girls? They gave a second knock, not bothering to check and
+see the door was unlocked. If nothing else, Sam came to the conclusion
+it wouldn't be Sakura; the blonde wouldn't have hesitated to burst in on
+him.</p>
+<p>Crossing the warehouse, he opened the door for whoever it was, and was
+greeted by a small team of individuals. They wore simple uniforms and
+aprons, marked with the Happy Light logo over their chest. "Catering,"
+the woman at their head stated, pointing back to the cart they were
+escorting. "Kanaszuchi-san said to expect someone new."</p>
+<p>"That would be me," the American nodded, backing away to let them
+through. That answered one question. They filtered in, immediately
+getting to work setting things up with professionalism, even avoiding
+moving his bento out of the way.</p>
+<p>As he was about to close the door, another person arrived. Asumi stepped
+through the portal, already slowly tapping her way through her phone.
+"Morning Sasaki-san," the boy offered kindly.</p>
+<p>It took her a moment to pull her attention away from her phone. "Oh,"
+she seemed almost surprised to be being addressed. "Good morning
+Samuel-kun," she replied politely, before returning to her phone.</p>
+<p>That was about what he expected, he couldn't lie. He couldn't be that
+much younger than her though, could he? With catering busily preparing
+things, it was basically just the two of them there. It couldn't hurt to
+keep talking, get to know the siren-like singer a bit better. "You spend
+a lot of time on your phone Sasaki-san," he noted as politely as he
+could manage, in the hopes of not offending her. "Chatting with fans?"</p>
+<p>Once more she paused before answering. "Um, no," the elegant woman
+replied, almost embarrassingly, as she lowered her phone and adjusted a
+stray strand of her long dark hair.</p>
+<p>He hadn't meant to be rude, or make her uncomfortable. "I'm sorry
+Sasaki-san, I just assumed. You've got such a beautiful voice I couldn't
+imagine you not having fans from high school or something."</p>
+<p>"I doubt I would still have fans from back then," Asumi told him, trying
+to get back to her phone.</p>
+<p>That surprised him. "It can't have been that long ago," Sam reasoned. "I
+mean, you must still connect with your friends on Facebook or something.
+Right Sasaki-san?"</p>
+<p>The question just seemed to bother her more, the lithe girl turning away
+from him, shutting him out before she spoke. "Face book. That is the one
+for sharing your life, yes?"</p>
+<p>It was his turn to pause. Facebook was almost synonymous with the
+internet in some places, it was hard to believe someone didn't know
+about it. "Um, yeah I suppose that's as good a description as any for
+it," he mused. "It's a social media platform."</p>
+<p>"Is it like the instant telegram one?" the dark-haired girl asked.</p>
+<p>Telegram? It was such an outdated word it took him a minute to register
+in his brain what she was asking. "You mean Instagram?"</p>
+<p>"Yes," she confirmed, holding out her phone to him. "The company would
+like me to take \'selfies\' to post to that one. Keiko has helped me
+with taking the pictures, but I cannot find them."</p>
+<p>That was it? She was just looking for pictures? "Okay Sasaki-san," the
+teacher in him from yesterday shone through, "show me what you're doing,
+let\'s see if I can't help."</p>
+<p>If he knew the mess he was getting into, he might not have offered.
+There was a full minute of the curvy girl standing next to him, one
+finger on the screen, browsing around in search of something. All
+without saying a word. She would get into her app list, pause, her dark
+eyes scanning the screen, only to not find whatever it was she was
+looking for and eventually round back to her home screen to start over.
+She passed Instagram at least four different times, cluing him in to the
+fact she really didn't know what she was doing.</p>
+<p>"Here," he reached in, stopping her cycling and tapping the app. He
+wasn't sure why he expected anything other than the login screen that
+greeted them. "We'll have to log in to post anything Sasaki-san."</p>
+<p>Gingerly she tapped the box, awkwardly typing in the information with a
+single finger. They were answered with a glorious red "incorrect
+password" notice when she finished, causing her to turn to him. "It did
+not work," she pointed out the obvious, leaning on him for guidance.</p>
+<p>Once again, he was simply stunned. "Sasaki-san, do you <em>have</em> an
+Instagram account?"</p>
+<p>She only responded with a blank stare, one that let him see the hints of
+blue hidden in those deep irises. Thankfully they were saved from the
+awkwardness by another of the Liberty Girls bursting through the door.</p>
+<p>Unlike Asumi, who\'d arrived already done up in her Jefferson costume,
+Kazuko hopped in on her toes, looking like a completely different woman.
+The girl's bright red hair was pulled back in a tight ponytail, out of
+her face, keeping it from hiding any of what she had on display.</p>
+<p>"Morning Asumi, Samuel-san," she greeted, adjusting a heavy-looking bag
+over her shoulder. A pair of white workout shorts tightly hugged her
+shapely rear, while a matching sports bra was so stretched over her
+chest that he could make out the hard outlines of her nipples. It
+struggled to keep her in up top, soft, squishy flesh pouring out over
+the sides and neck of the ill-fitting garment.</p>
+<p>Considering all he'd seen yesterday, Sam couldn't tell if she was just
+stubborn, or in denial about how big she was. Either way, it couldn't
+have been comfortable. Or maybe it was very comfortable? Seeing how
+rigidly her little nubs were tenting the almost sheer fabric.</p>
+<p>The taller of the two women gave a small chuckle, wearing one of the
+first smiles Sam had seen on her lips. "I should have guessed you would
+convince them to let you run the way here Kazuko," she shook her head,
+making her shining black hair dance around her. "I hope you weren\'t too
+much of a pest."</p>
+<p>"Guilty," the redhead playfully stuck out her tongue in response. Her
+breaths slightly laboured, soft red tinting her cheeks, and the healthy
+sheen of sweat from her run, left her positively glowing.</p>
+<p>Despite it all however, the energetic girl was rocking her hips back and
+forth on, setting her curvy body in motion and her ruby ponytail flowing
+in waves. "My driver still followed me the whole way here," she shook
+her head with a laugh and opened up her bag, fetching a water bottle and
+tossing a small towel over her shoulder.</p>
+<p>"Oh, Samuel-san!" she dug back into the main pocket, coming out with a
+small stack of sheets, "I made some changes to the script based on what
+you said yesterday. Think you could check them over?"</p>
+<p>It took him a moment before he could respond, needing to pull out of his
+stupor at the girl's getup. "Sure Takahashi-san," it was his job after
+all, as their historical consultant. Plus it got him out of potentially
+having to try and run Asumi through password recovery.</p>
+<p>"Cool," she grinned widely, giving him a pat on the arm. "Let me know if
+there's any problems before I share the revision with the other girls,"
+and with that she skipped past them, making her way to a nice open spot
+of the practice space for some post workout stretches.</p>
+<p>The dark-haired lead singer didn't seem to mind too much, wandering her
+way over to the stage and resuming her attempts to figure out her phone.
+The caterers were finishing up, opening up the table once more. A quick
+scan and Sam spotted his little lunch, tucked out of the way, in the
+corner of the table, by the staff. A perfect spot to sit down and look
+things over. Just a cursory glance of Kazuko's changes as he sat down
+showed the girl had taken what they\'d discussed to heart, and he
+couldn't help a small swell of pride at that.</p>
+<p>While he was going over the script, the next member of the group
+arrived, Sam only catching her entering from the corner of his eye. The
+over-buxom Meiku wandered in, carrying with her a small bento, not
+dissimilar to the boy\'s own. Behind her glasses she wore a light smile,
+far from the vacant finger sucking of yesterday, and immediately her
+dark eyes set to searching for Kazuko.</p>
+<p>The two caught each other, and the redheaded runner broke into a wide
+grin, bouncing on her toes with eager excitement. From where he was
+sitting, he couldn't quite hear what they were saying, but through their
+body language he was able to piece together a little narrative.</p>
+<p>The shortest of the girls greeted her friend, and was met with a tight
+hug. Kazuko's hands wandered, cupping the girl's fat bottom, though the
+real show was their breasts docking. Not even her costume's dual vest
+and coat could stop Meiku's over-large tits pushing up towards both
+their faces. After a few seconds however, the runner shot up, rubbing
+the back of her head in what he assumed to be an apology. Considering
+the sweat he could still see, glistening on the sun kissed skin of her
+abs and neck, he had a pretty good idea for what.</p>
+<p>Whatever the reason for the apology however, Meiku didn't seem to mind.
+After a few words, she opened up her little bento, and any awkwardness
+the affectionate redhead had was immediately replaced by a look of
+childlike wonder that filled her face. Her fingers dipped into the
+offering, coming out with a beautifully decorated confectionery,
+possibly a cupcake? It was hard to tell from this distance, especially
+as she brought it to her mouth for a big bite.</p>
+<p>If what Asumi had said was true, about the girls needing to take selfies
+for posting, then right here was the perfect, million hits, shot. Kazuko
+lit up with pure, innocent bliss; a small smattering of icing, probably
+buttercream, spotting her lower lip as she savoured the dessert. It was
+adorable, the girl undoubtedly speaking praise between chews, as she
+wallowed in delight of her treat.</p>
+<p>With another little hug, and a pat on the bottom, they parted, the
+redhead filling her mouth with the rest of her dessert while Meiku
+started her way towards the table. The moment her dark eyes caught sight
+of him, one hand slowly lifted from her little bento, and her index
+finger was lewdly slipped between her lips up to the second
+knuckle. Just like yesterday, she was back to unabashedly staring at him
+from behind her spectacles, looking him up and down, fixing on him and
+his crotch as she approached.</p>
+<p>Maybe he could pull her back? Kazuko and Asumi both had ways to crack
+through the surface, maybe he could manage the same with Meiku? "Good
+morning Watanabe-san," he greeted her with a wave as she placed her box
+of desserts on the table, still staring at him. "Did you make those
+yourself?"</p>
+<p>His address gave her pause, but it had the intended effect. Slowly her
+finger popped from her mouth, and she spoke. "Um, yes."</p>
+<p>"Do you enjoy baking Watanabe-san? Those looked really good," Sam
+complimented, to keep his momentum going.</p>
+<p>That got a smile on her plump lips. "Yes. Very much," she answered more
+confidently than before. "I made them for Kazuko, you will have to ask
+her if you can have one Samuel-san."</p>
+<p>"I just might," he replied, still vividly remembering the look on the
+redhead's face when she took that first bite; as well as something
+she\'d mentioned yesterday. "So, Takahashi-san has a bit of a sweet
+tooth then?"</p>
+<p>The change in her was visible. "Yes," the girl replied, her smile
+dimming, and her tone becoming once more distant, as she\'d resumed
+ogling him. Her spit-slicked digit went back between her lips, lightly
+dragging across her thick kissers.</p>
+<p>He\'d lost her, but at least he knew how he might be able to get her to
+open up more in the future. It wasn't much, but it was progress.</p>
+<p>"I'm so sorry Samuel-san!" the boy was startled by a sudden new voice
+beside him. He\'d been so focused on talking with Meiku, he hadn't
+noticed Keiko come in. The vested girl was now bowing low, her long,
+dark brown hair having poured over her shoulders, and was creating a
+perfect little window to where her breasts were squished together in
+their attempts to pour out of her top.</p>
+<p>With pink in his cheeks, Sam pulled his hazel gaze up from the sight.
+"What are you sorry about Kimura-san?" for the life of him, he couldn't
+think of anything the girl had done to warrant needing to apologize.</p>
+<p>She rose up, the swell of her luscious handful rolling back into their
+place within her shirt. "Yesterday, the things I said," she answered,
+her own eyes drifting away from him awkwardly. "You didn't deserve to be
+treated like that Samuel-san; you were a perfect gentleman. I should
+have stood up for you firmly, instead of playing the middle ground."</p>
+<p>That was it? "It's not your fault," he replied. "I was honestly fretting
+all night about dealing with Suzuki-san today. I can only imagine what
+it was like going home with her after all that."</p>
+<p>"She calmed down once we got back to the dorms," the athletically built
+girl explained. "I think Kazuko's right, Sakura's just frustrated in...
+that way," she trailed off with a shy blush.</p>
+<p>"Hard to believe, considering her looks," it slipped out from his thin
+lips before he\'d even had the time to think about the implications.
+Immediately his face went red, as he struggled to backpedal. "N-not that
+you aren't all absolutely gorgeous," that wasn't any better,
+contributing towards digging his own grave. "I-I just... It's difficult
+to imagine her having any trouble finding a boyfriend. Or girlfriend,"
+he quickly added, trying to avoid another potential pitfall.</p>
+<p>All the while, Keiko was giggling under her breath. "It's more a matter
+of lack of opportunity than anything else," she explained.</p>
+<p>There was a small chance to save himself, something he remembered
+hearing about through the grapevine. "Is Happy Light really that strict
+about it?"</p>
+<p>Once he mentioned their company, she collected herself, clearly looking
+contemplative of something before she finally spoke up. "It's
+complicated. They don't want any major issues or leaks that could affect
+our debut this weekend, so we\'ve been pretty much limited to the Happy
+Light compound," she answered as clinically as she could manage.</p>
+<p>"That's an understatement," Kazuko interrupted, stepping in to fetch
+another treat from Meiku's little box. "You're the first guy they\'ve
+let be around us for more than ten minutes Samuel-san. Well, who wasn't
+Kanaszuchi-san or some hired security goon anyway."</p>
+<p>That was difficult to take at face value, but from the awkward silence
+that fell over Keiko, the girl idly rubbing at her arm, it was probably
+true. "That sounds horrible," was all the tall boy could really say.</p>
+<p>The redhead just gave a shrug. "It's just part of the job we signed up
+for," she stated flatly. "If you can't handle it, you can always leave,"
+and with that, bit into her second cupcake with a delightful little
+smile before slipping away with her bag to change.</p>
+<p>A harsh way of looking at it, but it made sense. Everyone who ever
+talked about the music business always said it was cutthroat. No matter
+how exceptional the girls were, there were probably others waiting on
+their heels to take their place. Hell, with the number of groups they
+had under their belts, Happy Light probably had a few already lined up
+themselves.</p>
+<p>"It's not as bad as it sounds," the history buff defended. "Once we
+finish with the debut on Sunday, things will lighten up."</p>
+<p>Any further conversation was cut off as the front door flew open,
+slamming into the wall and filling the hollow space with a bang that
+drew everyone's attention. Sakura stood there in the doorway, positively
+aglow and wearing a grin on her painted lips that Sam could only
+describe as "flirty". It made his heart sink, terrified of what kind of
+ideas were buzzing around in her head to have her so confident.</p>
+<p>"Morning girls," there was a lilting giggle in the blonde's voice, and
+an excited bounce to her step that set her body moving. "Morning
+Samuel-san."</p>
+<p>"Morning Suzuki-san," the plain boy offered back nervously as she
+continued her approach. He had nowhere to run, in his seat with his copy
+of their script to go over.</p>
+<p>Thankfully, Keiko was there to defend him. "You\'re chipper this
+morning," she pointed out, making sure to put herself between the buxom
+troublemaker and the American.</p>
+<p>Sakura just smiled. "I know," she replied simply. "I don't know what it
+was, but last night, while I was masturbating, it was just like," she
+made a lewd little pop sound with her full lips, before returning to her
+flirty smile, "and all the tension just... melted away." she sighed
+blissfully, raising her arms over her head in a lazy, and provocative,
+stretch.</p>
+<p>A shocked silence fell over the room, those present not entirely sure
+they\'d seriously heard the girl openly talking about jilling off;
+especially after the huge fuss she'd made yesterday over accusations of
+it. Both Keiko and Sam had gone red in the face, Asumi was looking up
+from her phone, neutral in expression save for how wide her eyes were,
+processing what was said, and Meiku seemed to have buried her finger
+deeper into her mouth while she listened. There was no correction
+though, no "gotcha" moment where the strawberry blonde let them off the
+hook for the joke. She just continued on like she\'d stated something as
+simple as the weather.</p>
+<p>With clicks of her heels that exuded a seductive control, she walked
+right past her bandmates, plopping herself down in Sam\'s lap and laying
+one arm over his shoulders. He was suddenly trapped, cut off from the
+other girls with his heart hammering anxiously in his chest. All her
+antagonistic ploys from yesterday, and Kanaszuchi\'s threat about
+"touching the talent" were at the forefront of his mind. Hadn't she said
+something about there being cameras? He could feel the colour draining
+from his face, but he was simply too dazed to react in any meaningful
+way.</p>
+<p>And then she spoke to him. "I'm sorry for how I acted yesterday
+Samuel-san," her voice was a sultry whisper, cutting through the blaring
+sound of his own heartbeat. Her free hand touched his neck, trailing
+over his exposed skin and down his chest. "I was just a little pent up,
+taking it out on you. Can you forgive me Samuel-san?"</p>
+<p>She was getting closer, that smell of bleach less invasive than
+yesterday, but there were bigger things demanding his attention. Her
+heaving breasts were spilling over the edges of her jacket, pouring
+through the opening of her neckline towards him as she continued to lean
+closer. The fact he noticed, that his eyes were wandering to focus on
+anything that wasn't her, only seemed to egg her on.</p>
+<p>"He forgives you!" suddenly the blonde was being pulled off of him,
+yanked by the collar by a freshly costumed Kazuko.</p>
+<p>Her arms slid off him, one leg brushing along his own until she was
+forced to her feet. "I don't know, I think I could give a little more
+apology," she suggested, lacking yesterday's subtlety as she openly
+gazed at his cock and licked her lips.</p>
+<p>Dammit he was hard. After contact like that, there was no helping an
+autonomic response, leaving him to just cross his legs and turn away
+with a flush of embarrassment. Not to mention, fear of what would happen
+if Kanaszuchi found out about this little incident.</p>
+<p>"We have practice to get to," the redhead reminded their leader, turning
+her attention to Sam. "Do the revisions look okay Samuel-san?"</p>
+<p>Right, the script. "They look good Takahashi-san," he said, slightly
+stilted as he offered it back to her.</p>
+<p>She gave a nod that set her fresh twintails moving. "Alright, I made a
+few changes everyone," she offered, handing out fresh copies for the
+other girls.</p>
+<p>Keiko was certainly pleased, looking over the revisions as everyone
+gathered for their pre-practice prep. Soon they were in their little
+huddle circle, as he\'d seen them yesterday. "Alright, we should have
+this down in a few hours," Sakura told them optimistically, before
+shooting a lustful smile the American\'s way. "Then maybe we can have a
+little fun?"</p>
+<p>He had no intention of finding out what she meant.</p>
+<p>Sam was lucky the new routine order had the girls busy for the rest of
+the day, what with the way Sakura kept undressing him with her eyes
+throughout rehearsal. He wasn't the only one to notice the blatant
+ogling either; so to prevent a situation leaving the thirsty blonde
+alone with him, Kazuko stayed late. The two stayed until catering
+returned for their trays, and when they couldn't wait any longer a pouty
+Sakura and her redheaded bandmate headed out with a polite wave, and a
+"See you tomorrow Samuel-san."</p>
+<p>Somehow, this new version of the lead girl left him even more restless
+through the night. Had he known how the rest of the week was about to
+unfold, he might have not slept at all. The opening Wednesday went about
+the same, he arrived with his lunch, let catering in, and the girls
+filtered in one at a time; thankfully someone was looking out for him,
+since Sakura arrived alongside Asumi, giving him someone to corroborate
+any shenanigans the blonde might try to pull.</p>
+<p>For as much as he was catching her lustful gazes though, it wasn't him
+that got the brunt of it. Once everyone was ready, and after a brief
+history lesson, they got to practice and all chaos broke loose.</p>
+<p>Keiko came in on her cue, stepping up and being met halfway by the lusty
+troublemaker. She was off her mark, openly crossing with the Reeves
+portrayer and grinding herself against her leg. The brown-haired history
+buff tried to keep her composure, perhaps hoping it was just a misstep,
+but no. As she continued forward in her dance Sakura followed, leaning
+in and rubbing her barely contained breasts up the girl's lower back.</p>
+<p>It was enough to interrupt the scene, the background music still going
+as concern was raised. "What the hell Sakura?" Keiko cussed her out,
+flush in the cheeks. "I\'m the dance lead for this part, why are you all
+over me?"</p>
+<p>"I made some changes to the choreography," the more buxom woman answered
+with a sultry purr, stepping closer and pressing their bodies together.
+"Figured to make the show a little more eye-catching. Don't you like it
+Keiko?" she put a tempting whine to her ask, making sure her poorly
+constrained tits were tweaking against the shorter girl's nipples.</p>
+<p>Kazuko was quick to jump in. "You're making choreography changes when we
+have four days left until the premier?" she practically shouted,
+stomping her dance heels up the stage.</p>
+<p>Unfortunately, the bouncy brunette lacked the same fire. She was red in
+the face, gaze darting up and down between the blonde's eyes, staring
+through her with that same lustful expression she kept shooting Sam\'s
+way, and the hefty chest squishing up against her. "Um, I-" she
+stammered nervously, her thighs pressing together. "Bathroom!"</p>
+<p>And with that she shoved the larger girl aside and darted full tilt to
+the restroom. There was a short silence, where you could hear nothing
+but Sakura's flirty giggle before the other girls descended on her.</p>
+<p>"That was cruel, Sakura," Asumi stated firmly, one arm curled under her
+bust.</p>
+<p>Sam had yet to see Kazuko go quiet, but she dropped to a barely audible
+whisper to address what happened. "Yeah. You know how Keiko gets. Why
+would you agitate her like that?"</p>
+<p>"Oh, calm down," the provocative blonde simply dismissed them, "it was
+just a little fun."</p>
+<p>A little fun? Even the boy, over in his seat at the table, unaware of
+entirely what was going on, knew whatever had just happened was a bit
+much. A girl didn't rush off to privacy like that for nothing, and when
+Keiko finally returned to them a few minutes later, there was redness to
+her cheeks that made him think perhaps she\'d been crying.</p>
+<p>The argument went on until Sakura conceded to keep the current
+choreography, though she was still rubbing up against her co-stars
+whenever the opportunity arose. The whole ordeal resulted in a wasted
+day for all of them, with tensions that ran high for the rest of the
+week. That wasn't the only growing problem though.</p>
+<p>It wasn't until Thursday that Sam started to take notice; with how often
+the blonde was flaunting herself to him it was inevitable. Her
+Washington costume had never been modest, or subtle, but she was
+spilling out of it. Those pornstar quality breasts were now stuffed into
+her top, at first mistakable for wearing a push up bra with that deep
+line of cleavage. Closer examination however, the way they freely
+bounced, disproved that theory; she was braless.</p>
+<p>By Friday her soft boobs were pushing through the neckline of her
+jacket, and there wasn't any further ignoring it. The girls didn't even
+get into practice, hell, Kazuko hadn't even changed out of her workout
+clothes yet, when the altercation started.</p>
+<p>Her buxom tits were bouncing their way around the room, threatening to
+pop out of her outfit with each step and drawing everyone's eyes.
+"Sakura, use some body glue, or get your costume let out a bit tonight.
+We don't need you slipping out on stage at the debut," the redheaded
+member of the group chastised, trying to keep her annoyance with the
+girl this past week out of her tone.</p>
+<p>A smile spread across her leader\'s lips. "You're one to talk Kazuko,"
+she was quick to counter, waltzing over on her heels to tower over the
+shorter girl. Her actions were deliberate, leaning down so they were at
+an even eye level, and forcing perspective down her tight cleavage. "I
+mean, just look at this," she reached a delicate hand up, grabbing one
+of her bandmate's tightly compressed boobs in her hand and squeezing,
+causing more of the athletic girl's soft titflesh to further spill out
+of her bra, "still forcing yourself into an old school running uniform."</p>
+<p>The girl's cheeks went red as her hair, and she violently slapped the
+blonde's hand away from her. "Fuck you!" she cussed, adding a shove that
+sent her harasser back a step.</p>
+<p>Sakura was unfazed, meeting the feisty girl with a grin that showed she
+wasn't above the escalation. Sam was left to look around, waiting for
+Keiko to step in and intervene, but she still seemed to be apprehensive
+about everything that happened Wednesday. Asumi had looked up from her
+phone, though didn't seem in any rush to get involved with the feuding
+pair, and Meiku had retreated to her usual fair of sucking on her finger
+vigorously as she nervously watched things unfold.</p>
+<p>"All you have to say? It's almost like you\'re doing it on purpose," the
+instigator continued to poke, before the boy got up and put himself
+between the two.</p>
+<p>He was careful, putting a hand on each of their shoulders and separating
+them. "Hey, that's enough you two. It's been a long, stressful week, so
+how about we all calm down, and you girls get one more practice in
+before the weekend?"</p>
+<p>The delivery was stern, and even, leaving no room for argument or
+rebuttal. There was a lot the tall, auburn-haired man could tolerate,
+but, like with Tobi and his financial situation, when the foot came down
+it came down hard. He refused to budge, even as Kazuko glared through
+him, and Sakura was subtly sliding herself under his hand with a flirty
+smirk.</p>
+<p>It was a three-way game of chicken, but eventually the wound-up redhead
+relented without another word. Picking up her bag, she stormed off to
+the bathroom to go get changed; the way she held her pack to her chest,
+her chin rested on it in an attempt to hide her face, it was obvious she
+was upset. And yet, her "leader" didn't seem to care.</p>
+<p>"Oh, Samuel-san, so you can be a little forceful," she purred, still
+slowly shimmying to get his fingers closer and closer to the opening of
+her costume, and her exposed chest.</p>
+<p>With the conflict averted he removed his hand from her, to her pouty
+dismay. "I would just like to have a calm day, and then go home and
+enjoy my weekend Suzuki-san."</p>
+<p>He didn't stay for her reply, walking away from her and towards his
+seat. She made a fuss, but the other girls had his back. They were just
+as exhausted, just as stressed from the week, with their debut right
+around the corner; there wasn't patience for the rowdy blonde's
+nonsense.</p>
+<p>The group managed to make it through a troubled practice. After all the
+stumbles this week had brought, fixing historical problems, dealing with
+Sakura, it had come together. They were obviously still nervous, but
+they seemed ready for the stage this weekend. Per usual he had to wait
+for them to leave so he could lock up, and the blonde hovered as long as
+she was able before her driver arrived. It left just him and Kazuko at
+the end of the day, who to his surprise approached him.</p>
+<p>"Hey, Samuel-san," her voice wasn't as rugged as usual, making her seem
+almost vulnerable.</p>
+<p>It took him a second to reply. "What is it Takahashi-san?" he asked,
+setting down his little half-packed bento kit.</p>
+<p>She crossed her arms over her chest, that same stubborn, and now somehow
+defensive, pose she was prone to. "I wanted to say thank you. For
+helping out with our routine, and," she paused, tightening her grip on
+herself, "for stepping in today."</p>
+<p>The boy gave her a smile, happy to have just that small bit of
+appreciation from her. "Most of it was just doing my job," he explained,
+rubbing the back of his red-brown hair nervously. "And the extra, well,
+you\'ve stood up for me enough times Takahashi-san; it's only fair I\'d
+do the same."</p>
+<p>Her lips curled into a smile, and she loosened up, giving him a little
+punch in the arm. "You don't deserve Sakura harassing you Samuel-san,
+you're too pure," she teased him.</p>
+<p>It didn't exactly feel like a compliment, but he knew it was just the
+redhead's normal bluntness at work. Considering what he knew about the
+girls\' situation, he also sympathized with his harasser to a degree.
+"Things will be better after the debut. You\'ll all have a little more
+freedom when things lighten up."</p>
+<p>"We've got to get through the debut first," she reminded him, shuffling
+on her feet.</p>
+<p>"Hey, you're going to do amazing," he reassured her. "I've watched you
+all week, and you\'ll knock \'em dead this Sunday Takahashi-san," he
+wasn't sure how well the idiom translated, but he meant it. They were
+the best idol group he\'d ever heard, no matter how weird their theming
+was.</p>
+<p>His words must have carried the honesty in his statement, because
+Kazuko's face broke into that same pure, innocent smile he saw when she
+ate Meiku's desserts. Then she caught him by surprise, hopping forward
+and wrapping her arms around him in a hug.</p>
+<p>The boy\'s arms flew out reflexively, still petrified of Kanaszuchi's
+threats, as the foot-shorter girl rested her head on his chest. He was
+so accustomed to Sakura's lewd advances he wasn't sure how to react to
+such an innocent one. "Thank you, Samuel-san," she offered in a dulcet
+whisper.</p>
+<p>Slowly he managed to relax, letting his hands fall down to rest on her
+back; as appropriately as he could manage with the girl in her workout
+clothes. "Hey, I mean it. You girls are fantastic."</p>
+<p>With her fiery personality rekindled she broke off, patting him on the
+arm. "Alright, enough buttering me up," she scoffed at him playfully.
+"I'll tell you how it all went on Monday Samuel-san."</p>
+<p>"I look forward to it Takahashi-san," he replied with a smile, watching
+her skip away to jog back to the dorms for the night.</p>
+<p>That little praise lasted him through the train ride home, the American
+smiling as he brushed off the usual comments of the evening about his
+appearance. Sam was in such a high mood he\'d almost forgotten to check
+his bank account, to see if he\'d been paid. Squished among the evening
+bodies of the other passengers in the car, he fished out his phone, and
+with some careful thumb work opened up his banking app.</p>
+<p>His joyous smile widened into a grin, seeing all those fresh zeroes in
+his account. He thought about doing a grocery run, but he was still
+coasting fine from Monday's trip. The cautious part of him wanted to
+save, increase his safety net further, and he would definitely do that
+with some of it. Riding off the high of such a good day though, there
+was only one proper thing to do. After all, it\'d been some time since
+he was able to splurge on himself.</p>
+<p>"Evening Phil," the man walked into his apartment with a couple of
+colourful bags, "Sue and Marty behave while I was at work today?"</p>
+<p>Walking past the sink he checked on the hanging ivy, testing her soil
+and looking for any dead leaves. "Seems like she's pretty thirsty," he
+joked to himself, setting the watering can to fill and tossing his new
+acquisitions on the bed; a handful of crisp, still in plastic, manga
+novels, and a new game he\'d been putting off picking up since it
+dropped.</p>
+<p>It felt good to finally be able to afford it without putting himself too
+much into worry. Hell, it was amazing to be able to have such luxuries
+at all. He wasn't even sure where he was going to put all the new books
+he\'d bought. Maybe he\'d need to get himself a bookshelf next?</p>
+<p>Something he had plenty of time to think about. After a long week of
+work, he had two whole days all to himself and, as he scooped up the
+full can and tended to Sue, he knew he was going to enjoy them.</p>
+<p>That wasn't to say a part of him wasn't disappointed. He\'d seen the
+girls' routine countless times now using just the practice stage
+equipment, a part of him wished to see it finally all put together; with
+the lights, the proper sound mixing, and all the extra little bells and
+whistles as they finally got to perform for an audience. Happy Light
+hadn't given him a ticket to the show or anything, but that didn't stop
+him maybe getting one himself.</p>
+<p>The ivy watered, he set his pitcher aside, pulling out his phone and
+doing a quick search for the Liberty Girls' performance. To his dismay
+he found the venue they\'d been booked at, but there weren't any tickets
+available; just a notice saying the organizers were giving them away
+privately. Thinking on it, no one had said the debut was a public thing,
+and with their unusual concept it made some sense their first show would
+be for investors and other high-profile individuals.</p>
+<p>Disappointing, but it wasn't a total loss. It seemed likely the
+performance was going to go online at some point next week, and he had
+no doubt, if he asked, that a proud Kazuko would point him towards it.
+Maybe they could all go over it on Monday? For historical checking of
+course.</p>
+<p>Tonight though, tonight was for him. Heading to the fridge he pulled out
+a prepackaged sushi box, too eager to get into his new presents to waste
+time with cooking, hopped onto his bed, and cracked open the first
+volume of his new manga series.</p>
+<p>In spite of a late night, Sam woke up bright and early at his usual
+leaving time; surrounded by his new books, and laptop open to an
+instance of his new game. He couldn't remember when he\'d passed out,
+but from the aches in his body, and the tiredness in his eyes, he hadn't
+gotten a full night's sleep. And yet he was awake, and he knew he wasn't
+about to get back to sleep.</p>
+<p>Sitting up, he stretched off the stiffness, taking care not to knock his
+poster in his grogginess. It was strange. The boy knew it was his day
+off, and yet he found himself feeling the desire to go to work. He\'d
+have just written it off as habit, but no; he was disappointed he wasn't
+going to the warehouse. Was he coming to enjoy his job? Or maybe after
+getting to know them for a week, he\'d started to view the girls as
+friends?</p>
+<p>Whatever the reason, he was up, and he had the day, so it was time for a
+decent breakfast. He greeted the cactus on his windowsill, giving his
+soil a quick check, and made his way to his small kitchenette. "What to
+make?" he mused.</p>
+<p>It was second nature to want to just toss in some toast, but he fought
+it; somewhat. He still pulled out two slices of bread, setting them
+aside as he whisked up some eggs and milk into a light custard for some
+French toast. The sweet smells soon wafted through his little home, and
+with a small square of butter and a dollop of strawberry jam, he had a
+pretty little breakfast. Just a shame he didn't have any maple syrup to
+make it perfect.</p>
+<p>Something he\'d have to possibly pick up on the next shopping trip, a
+thought that felt foreign to him. Things like real syrup had felt like a
+luxury for so long it was weird just to be considering it. Regardless,
+he had a warm breakfast to eat; one too sticky even without that caramel
+coloured nectar to eat on the bed, so he picked a nice spot on the floor
+to dig in.</p>
+<p>He knew he wasn't as good as Meiku, but still, the moment his homemade
+meal touched his tongue it was a small taste of heaven. No need to rush,
+he could just enjoy the fruits of his labour. Maybe he could try and
+find the time to make this on a weekday, and bring it to share with the
+short stack baker and the redheaded sweets enthusiast? Such ideas
+however, just had him wishing that he was there with them. Hopefully
+they were enjoying their day off before the show.</p>
+<p>With his meal done, Sam was left in the position of not knowing what to
+do with himself. There was his manga, still scattered over the bed, but
+the idea of burning a day on them just didn't feel fulfilling. Plus
+he\'d probably get through them all and have nothing for later. Best to
+spread them out and properly enjoy them.</p>
+<p>Wandering around his small place he gave Sue and Marty soil checks,
+touching up the ficus with a few little sprays of water, and made sure
+his dishes were clean and put away. Then the boy went for the quick
+shower he\'d skipped out on the prior night. Since he hadn't really been
+home, there really wasn't much to do. Maybe he could help out Miss Sato?</p>
+<p>Slipping into something semi-presentable the American stepped out into
+the world, listening for the sound of the little old lady doing her
+rounds. As usual, she found him first. "Up early Ramses-san?" she called
+out from the ground level, a long spouted can in her hands as she
+watered the shrubbery around the building. "Were you called into work?"</p>
+<p>"No Sato-san," he replied with a small smile. "Did you need any help
+around the apartments?"</p>
+<p>The elderly woman chuckled. "These old bones would certainly appreciate
+it Ramses-san," she replied, waiting for him to come down and handing
+over the can.</p>
+<p>He put his green thumb to work, checking on the small trees scattered
+around the building, all the while the pleasant Miss Sato followed him
+along. "Thank you, Ramses-san. You have quite a gift for this," she
+complimented as he plucked dry leaves, crumpling them into the dirt to
+recycle the nutrients.</p>
+<p>"It's just a hobby Sato-san," the boy replied, snapping off a dead twig
+and collecting it under his arm for the trash later.</p>
+<p>She gave a coy little smile. "Do you treat your job with the same
+diligence as your hobbies Ramses-san?" she asked in obvious tease.</p>
+<p>That got him thinking back to his work, back to the girls and the pride
+he felt when he managed to break through teaching each of them. "Yes,"
+he replied warmly.</p>
+<p>"To speak with such light in your voice Ramses-san, you must enjoy this
+new job of yours."</p>
+<p>The more he thought of it, the more his mind was wandering to them. To
+Kazuko's fiery attitude, Sakura's shenanigans, but mostly he kept
+drifting to conversations he and Keiko had been having. It had become
+almost a game between them. Whenever they had a minute, not combatting
+altercations or practicing, he would try to bring her a new history fact
+he managed to find. Time and time again she was able to call out where
+he\'d found his information, even occasionally able to point out a book
+or source that corrected the details.</p>
+<p>At this point, he had to assume she knew he wasn't any sort of
+professional consultant. Hell, he had to wonder why they needed him at
+all when she was such an expert. The way Kanaszuchi had put it on his
+first day, that he was just there to "cover the company's ass", appeared
+like the most likely reason. Keiko didn't seem to mind either way
+though. If anything she seemed happy to have someone around the other
+girls listened to about the historical aspects.</p>
+<p>And the kindly woman was right, he did enjoy it. "Yes, I believe I do
+Sato-san," he admitted.</p>
+<p>"I think there may be more to it," she continued to call him out,
+pointing to his cheeks.</p>
+<p>He was blushing. He\'d barely even noticed the heat in his cheeks what
+with the warm sun beating down on them. Quickly he turned away,
+flustered and fishing for an excuse. "I-it's nothing like that
+Sato-san!"</p>
+<p>The old woman just gave a chuckle. "I am sure," she let him off the
+hook. "Would you like to come have some lunch Ramses-san? You have
+worked quite hard this afternoon."</p>
+<p>"Oh, you don't have to Sato-san, I was happy to help."</p>
+<p>It was a series of cultural nuances. He had offered her a favor, helping
+with the plants and the grounds, thus she needed to repay him with a
+gift; the longer she didn't, the greater the gift owed. And it wasn't
+like he didn't want lunch with her, to the contrary, spending his
+afternoon meal with someone to talk to sounded lovely. It was still a
+gift however, which meant it was also customary for him to politely
+refuse first, three times, before accepting. Not to mention it was an
+invitation to her home, which meant he would be expected to bring his
+own gift.</p>
+<p>So much social dancing. As any American will tell you: when you want
+something, refusing three times takes an eternity. He made it through
+though.</p>
+<p>"If you continue to work this hard without eating properly, you are
+going to get skinnier Ramses-san," she warned with her fourth offer,
+ever the concerned mother type.</p>
+<p>He gave a small laugh. "Alright Sato-san, I would certainly enjoy the
+company for lunch today. Just let me slip into my apartment to freshen
+up," and put together an appropriate gift to visit her home with of
+course.</p>
+<p>Eventually the weekend came to an end, and Monday rolled around with
+bright sunshine and the sound of his alarm. Back to the routine: the
+goodbyes to his plants, the hasty toast breakfast, the rush to the train
+station to get to work. And the woody-haired boy couldn't be more
+excited. Despite searching the prior night he couldn't find anything
+about the Liberty Girls' show, so he was eager to hear about it from
+them first hand.</p>
+<p>He was surprised to see a car parked out front of the warehouse when he
+arrived. Sam\'s first thought was it was probably Kanaszuchi, an idea
+that made his heart sink a bit. What if he was there to lay him off? But
+as he walked up closer, the boy was relieved to see Keiko sitting by the
+door; for a moment at least.</p>
+<p>The dancer\'s expression was dour, her legs pulled up to her chest,
+inadvertently giving him a bit of a look up her skirt. "Kimura-san," he
+piped up with a blush, letting her know he was there as he tried to keep
+his gaze up.</p>
+<p>Her brown eyes shot up to him. "Samuel-san," she replied, then, as if
+suddenly realizing her position, shot up to her feet flustered,
+straightening her costume's skirt. "I-I didn't see you arrive."</p>
+<p>"I only just did," he replied, running his fingers through his bangs,
+feeling the sweat on his forehead. "You're here early Kimura-san, is
+everything alright?"</p>
+<p>That sad expression returned to her face, and she let out a heavy sigh.
+"Not... not really," she admitted, rubbing nervously at her arm.</p>
+<p>A laundry list of things ran through his head, none of them particularly
+good, but without more to go on he could only guess. "What happened?"</p>
+<p>She looked over to the car, to where a stocky looking driver was peeking
+out at her. "I\'ll tell you when we get inside Samuel-san," she offered,
+stepping aside to let him at the door.</p>
+<p>He wasn't about to argue. Unlocking the door, he let them in, hearing
+the car start off as soon as she was safely inside. "Happy Light still
+keeping a tight watch?" he didn't want to make too many assumptions, but
+that one was the lightest considering the circumstances.</p>
+<p>"Yes," Keiko answered curtly, crossing her arms under her bust. "The
+debut... it was a complete disaster," her gaze drifted away, her voice
+on the verge of cracking from just how upset she was.</p>
+<p>Sam could hardly believe it. "How? You all practiced so hard."</p>
+<p>Once more she sighed, turning back to face him; though her eyes didn't
+make it up past his chest. "We never even got on stage yesterday," she
+explained. "We were all set up, ready to go, and then..." the girl had
+to pause, taking a breath to collect herself. "And then Sakura's costume
+broke. Her jacket buttons, and her shirt just," lacking words she cupped
+her breasts, miming them pouring out through the low-cut neckline of her
+own top and inadvertently making a show of her cleavage he couldn't help
+but be drawn to.</p>
+<p>Tearing his stare away he jumped in. "Takahashi-san was worried about
+that," he noted matter of factly to keep the story on track.</p>
+<p>"It wasn't just a slip Samuel-san, the buttons literally burst off and
+flung across the stage," she continued to mime the actions. "There was
+no salvaging it. Kazuko was pissed, they got into a tussle, and the show
+had to be called off."</p>
+<p>That was practically the worst-case scenario. There wasn't any
+recovering a first impression, and with a cancellation not only the day
+of, but hours if not minutes before they were supposed to go live...
+"So, what happens now Kimura-san?" he asked, fearing for them both.</p>
+<p>Her disappointed expression became mixed. "We all expected that was it,
+but Happy Light is giving us another chance," she told him, re-crossing
+her arms under her bountiful bust. "They haven't told us when they're
+rescheduling the debut, they obviously can't until Sakura's costume can
+be repaired and resized, so we\'re just kind of in limbo without her
+until then."</p>
+<p>"That sucks," was all the auburn-haired boy could really muster, as he
+tried to keep his worries down for her sake. He could only imagine how
+rough it was for her and the others.</p>
+<p>Keiko just nodded, her dark brown hair pouring over her shoulders.
+"Yes."</p>
+<p>A knock on the door interrupted them, signalling the arrival of the
+catering team. At least that was a good sign. If Happy Light were still
+splurging on the caterers there was hope yet he and the girls were
+fairly safe.</p>
+<p>In spite of the staff being hard at work, an awkward silence fell over
+the rehearsal space. Keiko was deep in thought, probably trying to
+figure out what they were going to do today, and taking the occasional
+bathroom trip while she waited for the rest of the band to arrive. He
+didn't want to keep bothering her with it, so just retreated to a seat
+at the edge of the table, sitting on his history fact to hopefully cheer
+her up later.</p>
+<p>Eventually Meiku slipped in, as the catering staff were on the way out.
+She was tight in her posture, shoulders arched in to make herself as
+small as possible and a look of obvious distress on her luscious
+features. Things that only got worse when she noticed Kazuko had yet to
+arrive. She stood lost, a bundle of nerves as she hugged her little
+bento of desserts into her overstuffed chest. Her dark eyes hadn't even
+found Sam, but she was already popping a finger between her lips and
+sucking on it.</p>
+<p>He couldn't think of anything to do. There was still such a gap between
+him and the short stack member of the group that he had no idea how to
+approach her and keep her open enough to talk. He could try to ask about
+the dessert today, but it seemed wiser to wait for Kazuko and hope she
+might be able to ground the poor girl.</p>
+<p>Once more silence settled in like an oppressive fog, keeping them all
+separated. It made time feel thick, each second dragging on with the
+span of several. All of them were desperate for a distraction from
+reality.</p>
+<p>"That moron," Kazuko's voice boomed even louder than the door she kicked
+open hard enough to slam it into the wall. "She couldn't just listen for
+once in her damned life, shit! I need another lap."</p>
+<p>The redhead was already drenched in sweat, the white of her running gear
+soaked enough to be almost sheer. As she turned in her frustration
+however, she was met by Asumi, towering over her by almost a head and
+stopping her with a hand. "No more running," she stated firmly, "you
+will hurt yourself Kazuko. You cannot help to fix this mess if you are
+stuck in a hospital bed with Sakura."</p>
+<p>Sakura was in hospital? Nobody other than Sam seemed surprised by that
+fact, leading him to wonder why Keiko hadn't shared that part with him.
+Had the "tussle" between the rapper and her leader been that severe?
+Regardless of the reason, knowing that little fact it was obvious why
+tensions were so high among them.</p>
+<p>Despite gritting her teeth, Kazuko was paused by the lead singer\'s
+statements, straightening herself and letting out an annoyed grumble.
+She was right, and the runner wasn't about to argue with that. "Alright
+Asumi," she nobly accepted her fault, "I'll go get changed, and we'll...
+figure out what to do today."</p>
+<p>She hoisted her bag, stepping off towards the bathroom to dress. It was
+hard not to stare at the only bit of major movement in the room, though
+the American did his best to resist. He could see the pink of her areola
+through her skin tight, sweat stained top, and didn't really want to be
+accused of noticing such a detail on her ill-confined chest.</p>
+<p>Thankfully it was easier to keep his eyes on Asumi. She wasn't on her
+phone, one arm instead curled under her own impressive bosom, while the
+other held her chin in thought. It was almost like a new side of her
+and, thankfully, Sam was much better at approaching her than he was the
+curvier Meiku.</p>
+<p>"So, Suzuki-san\'s in the hospital Sasaki-san?" he asked the graceful
+woman, rising to meet her.</p>
+<p>The dark-haired woman paused, acknowledging his question and mulling it
+over. "It is a complicated matter Samuel-kun," she told him, not meeting
+eye contact. "Did Kanaszuchi-kun not inform you about it?"</p>
+<p>He shook his head in reply, sending his reddish bangs waving out of
+place. "No, I haven't spoken to Kanaszuchi-sa-" he had to catch himself,
+on the off chance somehow it got back to his boss he\'d used the wrong
+honorific, "Kanaszuchi-sama, since I met him last week."</p>
+<p>She raised one of her delicate brows at that. "Well Samuel-kun, it is a
+bit of a long story. If there is time, I will explain it," she offered.</p>
+<p>The hazel-eyed boy looked around, to the other members bubbled off in
+their own issues, Kazuko still getting dressed. With all that sweat
+it\'d take her a good while to dry off and get into costume. "There's
+time now," he wished he had a little more leverage, but he was only
+their historical consultant. "If something's happened to Suzuki-san, I
+should know. I\'m a part of this project, even if only a little one."</p>
+<p>Asumi once more paused, drinking in what he had to say. Or perhaps
+stalling, it was difficult to tell. Faster than expected however, Kazuko
+emerged in her Hamilton getup, bouncing on her toes and ready to go.
+"Alright, let\'s figure out what we're doing today," she rallied the
+girls, pulling all of their attention.</p>
+<p>The dark-haired singer gave him an apologetic look. "Apologies
+Samuel-kun, I will tell you when we break for lunch," she promised with
+a small bow, and moved to join her bandmates.</p>
+<p>Together the four settled into discussion. Without their leader they
+were a tad disorganized, but, considering her behaviour the week prior,
+they were more or less prepared. Kazuko took a headstrong approach,
+suggesting they should go through their parts of the routine until their
+Washington was back and ready to join them. Something, it turned out,
+they wouldn't be waiting for long.</p>
+<p>As they were getting ready for their first run through the door to the
+warehouse was unceremoniously cast open. It was hard to recognize who
+was standing there, the bright light making their blonde locks glare as
+they cascaded down her back. Once she stepped in, a sultry sway to her
+hips, strappy heels clicking against the floor, and the whole of her
+hyper voluptuous body set into fluid bouncing motion, her identity was
+clear.</p>
+<p>"Sakura," Keiko was the one among the girls to pipe up, an obvious note
+of concern in her voice.</p>
+<p>She wasn't in costume, instead garbed in a dress that dangerously
+skirted the line between club wear and lingerie. Not that Sam was an
+expert on this sort of thing, but it was the type of dress he imagined
+one wore when they were looking to get some; with little regard for
+modesty.</p>
+<p>The fabric was so thin there was no mistaking the full shape and shade
+of the blonde's nipples through it. She wasn't wearing a bra, and it
+wasn't too far of a stretch as to why. She was huge. Whatever growth
+spurt had been hitting her last week hadn't slowed in the boy\'s
+absence. Sakura\'s prior perky melons were now whorish monsters,
+dominating her chest and lithe frame. They were each large as her head,
+at minimum on par with Meiku's monumental tits, and they swayed
+hypnotically as she moved.</p>
+<p>While the most attention grabbing of the star\'s changes they were far
+from the only ones. Her prior plump lips looked bee stung, painted a
+shimmering pink and thick as the boy\'s fingers. The flowing little
+number was leaving nothing to the imagination, hugged tightly over her
+wide hips and cut high enough you could see the fresh thickness of her
+thighs. Most unusual and striking though were her eyes. He hadn't
+noticed until she turned that undressing gaze his way, but her normally
+dark eyes had taken on a pinkish hue. From his experience with cons, his
+first thought was colour contacts, but they were reacting far too
+naturally to the light for that to be the case.</p>
+<p>"Hey girls," the hyper-sexualized blonde waved to her bandmates. "What
+do you think of the dress? Cute huh?" she gave a spin that raised her
+skirt enough to give a peek at her lack of panties, and sent her boobs
+bouncing when she came to a stop.</p>
+<p>They seemed stunned at the statement, the fiery redhead of course being
+the one to finally speak out for them. "The dress? You\'re supposed to
+be in bed, waiting for tests," she hissed.</p>
+<p>Asumi's gaze was on the girl's bare arms, her pristine, unblemished
+skin. "You did not even stay for bloodwork Sakura," she pointed out with
+calm authority. "Kazuko is right, you should not be here."</p>
+<p>The leader just waved their concerns off. "Look, I\'m fine," she stepped
+up onto the stage with them, repeating her behaviour from the prior week
+by walking close to the other girls and rubbing against them as she
+passed.</p>
+<p>"You like my dress Meiku," she kneeled down to her bandmate,
+simultaneously giving her a down shirt view of her hefty cleavage while
+pointing her plush ass out towards Sam. "I can tell. I wonder what
+you\'d do for a dress like this? It would look pretty cute on you after
+all. Would you suck a cock? I\'d bet you wouldn't even hesitate to suck
+a cock for a dress like this."</p>
+<p>Every time it seemed like the blonde reached the extent of offense, she
+managed to take another step further that left her bandmates reeling to
+recover and respond. The meek finger sucker was clearly overwhelmed,
+only managing to let out a whimper around the digit stuffing her lips.</p>
+<p>After last Friday's confrontation, Kazuko wasn't about to waste a second
+in stepping in. The redhead threw herself between the harasser and her
+target, shielding her friend behind her. "What the fuck Sakura?"</p>
+<p>Keiko wasn't sitting down either, after the temptress had pulled similar
+with her. "That was wildly out of line," she added, contributing to the
+barrier. Even Asumi joined in, making a three-woman wall between the two
+curviest members of the group.</p>
+<p>"Oh, lighten up, it was just teasing," Sakura responded laxly, rising
+back up straight with a bounce. "You should all be glad I\'m here, fully
+clothed, and ready for the stage."</p>
+<p>"I would be happier had you stayed with the physician Sakura," the lead
+singer shut that statement down.</p>
+<p>Their lead dancer had her own opinions. "That outfit isn't stage ready;
+you look like you could fall out of it any moment," she chastised before
+dropping to a mumble, "not to mention it isn't period accurate for our
+performance."</p>
+<p>After sitting on the sidelines through the altercation Sam rose,
+stepping up on stage to add to the defense. "Suzuki-san, I don't know
+what happened at the debut, but everyone has been concerned."</p>
+<p>She gave a giggle, flashing her pink hued eyes at him. "Awe, you were
+worried about me Samuel-san?" she teased him, turning her hyper sexed
+body to face him.</p>
+<p>He flushed at the sight of her, of her huge tits jutting towards him,
+their nipples hard and pointing accusingly. "I think it would be better
+if you went back to the doctor Suzuki-san; at least until your costume
+is repaired."</p>
+<p>"They're just making adjustments," the woman purred, stepping in closer
+and pressing her body to him. "Until then, I\'ve got the okay to
+practice in casual wear."</p>
+<p>Asumi gave a leer, one of her hands idly running over the small exposed
+section of her waist her costume offered. "I would hardly consider
+whatever that is to be \'casual wear\'," she pointed out.</p>
+<p>The accusation only seemed to encourage the blonde, a grin spreading on
+her painted lips. "Jealous that you don't get to wear something showier
+on the stage Asumi?" she taunted, turning to the dark-haired woman.</p>
+<p>There was always generally a barrier between the graceful lead singer
+and the provocateur, so Sam had yet to see anything really get under her
+skin. With just a simple question however, she seemed to have. Asumi was
+pink in the cheeks, awkwardly looking away as her hand tightened over
+her bare midriff. Was she actually jealous of it?</p>
+<p>"Maybe you could see about the costume department making a few
+adjustments later?" Sakura continued to agitate her for another moment
+before bouncing to attention. "Right now though, I am late, so it looks
+like we\'ll have to skip the history lessons and get right back to
+practice. Once my costume is done they\'ll be putting us back on stage,
+so let's not waste any more time."</p>
+<p>No matter how much they wanted to protest, there really wasn't anything
+more they could say. So, after a brief pause, the group followed their
+leader\'s orders and got to practicing.</p>
+<p>It was just as bad as the prior week, with Sakura blatantly rubbing up
+against her co-stars and making a show of it all morning. At least once
+the hyper-buxom girl slipped in her strappy heels, falling into Keiko
+during their routine and forcing a small break so the brunette could
+visit the bathroom. She also obviously tossed a grope at Meiku that made
+the short girl freeze and threw off the whole run.</p>
+<p>Lunch break couldn't come fast enough, giving everyone a moment of
+repose. Despite Asumi's promise, Sam figured he wasn't about to hear
+about whatever Sakura was supposed to have been hospitalized for. Nor
+was he about to press the matter as the lot of them stepped off the
+stage.</p>
+<p>Immediately the blonde made for the refreshment table, grabbing two
+onigiri in her slender fingers and taking them to her mouth for a huge
+bite. It was frankly unnerving to watch. She wolfed both back in
+seconds, leaving Sam sitting and stunned with his little homemade bento.</p>
+<p>Once they were down her throat her eyes turned to him, and she snatched
+the chopsticks right out of his hand to steal herself a bite of his
+lunch; the largest piece of the chicken he\'d prepared the night before,
+along with a good ball of his stick rice. "Hey!" the boy protested,
+reaching for his utensils only to be met by the thief shoving her tits
+in his face.</p>
+<p>"You really are a good cook Samuel-san," she purred, as he removed
+himself from her cleavage with a full-face blush. "You should share
+more."</p>
+<p>He couldn't respond, still flustered over her bold actions. She returned
+his chopsticks, dots of her pink lipstick now marring their wooden
+surface, and popped back a couple edamame before turning to her
+bandmates. "Got to freshen up girls," she offered a grin with an obvious
+level of mischief to it. "Be back in a sec."</p>
+<p>The lot watched nervously as she sauntered into the restroom, an air of
+tension once more settling around them and trapping them in a hush. They
+exchanged some looks, silently wondering amongst themselves what should
+be done, and after a few moments Keiko spoke up.</p>
+<p>"I think we should talk about \'The Injection'," she told the other
+girls, instantly drawing their attention. From his place on the
+sidelines, Sam couldn't help noticing the inflection when she said the
+word, a name more than a generalized noun; and his interest didn't go
+unnoticed.</p>
+<p>The meek Meiku pulled her finger from her mouth. "W-what about
+Samuel-san, won\'t he hear?" she whispered, the fact he could make that
+out proving her point.</p>
+<p>The tallest among them turned over her shoulder, her long dark locks
+flowing over her back and outlining her form. "I am not sure now is the
+best time," she advised her bandmates.</p>
+<p>"I'm on the verge of a breakdown, with everything that's been happening
+to Sakura," Keiko's voice quivered as she spoke; more than just nerves,
+a legitimate terror was gripping her.</p>
+<p>The twintailed Kazuko raised her hands, punching into her palm in a
+classic hero pose. "If Samuel-san says anything, I\'ll break his jaw,"
+she threatened. There was real weight to it too, causing the boy to
+fight down a flinch that would have revealed he was eavesdropping.</p>
+<p>That seemed to settle the matter for them, as Keiko let out a sigh.
+"Sakura literally grew out of her costume, and she's been like a
+completely different person. The nurses told us to keep an eye out for
+weird personality shifts when we were first given \'The Injection\', but
+we're supposed to have been <em>way</em> done developing by now."</p>
+<p>There was an awkward moment where they shared concerned looks, before
+the redhead chimed in. "She's not the only one. Meiku hasn't been able
+to stop teasing her lips for over a week now," something the girl was in
+the middle of doing, her index finger buried to the knuckle between her
+plump kissers.</p>
+<p>She quickly withdrew it, flushing self-consciously and hiding her hands
+in her armpits to stop herself from the lewd action. "W-we all started
+feeling stuff after \'The Injection\'," she defended, Sam catching the
+fact she was once more staring at him from the corner of his eye. "They
+said it was normal!"</p>
+<p>"It's been getting worse though, hasn't it?" their lead dancer asked,
+her legs awkwardly fidgeting and rubbing her thighs together as she
+shifted in stance.</p>
+<p>Asumi gestured out to their historical consultant, repeating her prior
+stance. "Is now <em>truly</em> the best time?" there was a level of urgency in
+her words, going further than potentially protecting their privacy.</p>
+<p>Her plea went ignored as the short stack carried on. "I can't stop
+thinking about..." she paused, going redder in the cheeks as she
+struggled to even get the word out.</p>
+<p>"Fucking?" Kazuko filled in for her, causing the buxom girl to tighten
+up with a small squeak before her finger found its way back into her
+mouth. "Yeah, that's what I thought," the runner\'s tone was pure
+disappointment, as she watched her poor friend quiver with barely
+restrained arousal.</p>
+<p>He wished he were a part of this, able to voice the dozens of questions
+buzzing around in his head. What the hell was "The Injection" they were
+talking about? Personality shifts, developing, all this about sex...
+There was so much he was out of the loop with, and unable to ask.</p>
+<p>It had him so distracted he barely noticed Sakura come up behind him,
+pressing her breasts against the back of his head as she reached over
+him to nab his chopsticks once more. "You seem tense Samuel-san. I could
+help you with that," she told him, voice laced with raspy seduction as
+she stole another bite of his lunch for herself.</p>
+<p>There was no mistaking the obvious smell of sex emanating off her,
+filling in an idea of what she'd been doing in the bathroom in his head.
+It had an odd sweetness to it, and left him momentarily paralyzed as he
+tried to process everything that was going on.</p>
+<p>"No, you won't," Kazuko came to his aid, peeling the top-heavy blonde
+off of him, much to her dismay. "You came here to practice, so let's
+practice."</p>
+<p>Sam's curiosity failed to fade over the rest of the day. That collection
+of characters, "The Injection", floating about his subconscious as he
+took the train ride home. The sounds barely meant anything anymore, they
+were just a broken-down piece of the whole puzzle as he tried to guess
+what hiragana, katakana, or kanji made up the name to research. It was
+so consuming the boy didn't even greet his plants on his way through the
+door.</p>
+<p>He immediately went for his laptop, minimizing his usual leisure and his
+history facts for Keiko and opening up a fresh page in Japanese. He
+tried every combination of the spelling that he could, time and time
+again coming up with nothing. Adding "Happy Light" to the equation
+brought the same. He even made the attempt of just trying to search the
+symptoms the girls had described. Nothing, nothing, nothing. Such a
+thing as they were discussing just didn't exist.</p>
+<p>Was it some sort of shorthand, a nickname for something else? The only
+ones who knew, who he could ask, were the Liberty Girls, and they didn't
+seem willing to tell him. Maybe he could go to Kanaszuchi? Though
+Kazuko's warning, not to mention the stocky man\'s own penchant for
+threats, didn't make that a particularly promising option. Especially if
+it was something secret he wasn't supposed to know about.</p>
+<p>Perhaps it was better to just try to forget it, and not put his job or
+his safety at risk? A quick look at the clock told him he\'d already
+lost an hour down this rabbit hole, and the grumbling in his tummy told
+him he needed to eat; especially after Sakura had stolen the better half
+of his lunch. It wasn't easy, but he was able to settle his mind enough
+to cook up a little something, with leftovers for his bento lunch
+tomorrow, and ensure Phil, Sue, and Marty were properly watered. Then he
+drifted off into a troubled sleep.</p>
+<p>The next day at the rehearsal stage wasn't any better. To the contrary
+it was continuing signs of escalation. Sakura had her refitted costume,
+though it was easy to see the thing was tight around her chest. She also
+decided to introduce a change to the choreography, unlike the last time
+presenting this one to them during discussion.</p>
+<p>There was obvious trepidation from the other girls, though none of them
+were ready to jump up and argue. They were still reeling from the
+weekend\'s events. Not to mention, as far as Sam knew, they still didn't
+have a rescheduled date for the failed debut. There really wasn't much
+to do other than go along.</p>
+<p>Watching it was something else. The hyper-sexed blonde was all over
+them, performing moves that had her grinding up against them, groping
+them brazenly, or up in their faces to dock her massive tits on their
+own. The rehearsal needed to be stopped more than once. Kazuko was
+breaking into a shouting match over half the suggested moves being
+impossible or outright inappropriate. Whenever a move involving Keiko
+got too touchy, whether it was the blonde performing it or another girl
+just following their choreographer's directions, she would rush off to
+the bathroom halting any further progress. Even Asumi, normally away
+from all of it, was down with the rest in the new choreography going
+red-faced from having her costume ruffled, or a hand tracing over any
+exposed bit of skin her costume showed. Not to bring up that every
+altercation had Meiku reduced to whimpering finger sucking until one of
+the other girls could snap her out of it.</p>
+<p>It was a mess, and it was a wonder why they were even putting up with it
+this much. Was it to do with her hospital trip? The girls\' overall
+demeanor had dropped since Sakura's "return", so it was definitely
+probable. Despite his efforts none of them wanted to talk about it when
+Sam brought it up during the lunch break; even when Sakura was
+distractedly stuffing her face with anything she could get her hands on.
+Could it have to do with that thing, "The Injection"?</p>
+<p>No, he needed to stop thinking about it. He hadn't found his answers and
+the girls had made it quite clear they weren't going to tell him. The
+best he could do was sit, watch, and intervene himself if things got too
+out of hand. Something bound to happen at this rate.</p>
+<p>The girls were quieter when they started to filter in on Wednesday,
+leaving some hope that maybe yesterday\'s problems had been sorted out
+back at their dorms. Regardless, Sam was still petrified of being alone
+with the provocative blonde, so was thankful when most of the other
+girls arrived first. Still in her slightly small workout clothes, Kazuko
+was frustratingly doing her stretches, while Meiku was voraciously
+sucking on her finger; not wishing to interrupt her friend when she was
+in a mood. Keiko was just sitting on her own, in silent contemplation
+while they all waited for the last two members of the group to arrive.</p>
+<p>It wasn't too long later that, with her usual cocky grandeur, Sakura
+made her entrance; tailed closely by the much more sophisticated Asumi.
+And what followed would set the tone for the day.</p>
+<p>"Alright, everyone is here, so where were you Sakura?" the dark-haired
+woman questioned her sternly, crossing her arms under her pert bust to
+show she wasn't going to allow the girl any chances to continue dodging
+her inquiry.</p>
+<p>The extra-buxom Washington wasn't about to either, teasing her curls as
+she waited for the room\'s attention to fall fully on her. "You wouldn't
+believe me anyway," she taunted, a grin on her painted lips. "The studio
+had me give a lap dance to a foreign investor last night."</p>
+<p>Her straight faced, positively bragging delivery didn't leave room for
+doubt. Once more she'd managed to, with only a statement, strike the lot
+of them with shocked disbelief. Most affected was Kazuko, who was
+clearly racking her brain on the matter from how distant her look was.</p>
+<p>Keiko could tell what was on the athletic redhead's mind, putting voice
+to her friend's thoughts. "That's impossible, right? We\'re not allowed
+to leave the compound."</p>
+<p>There was a short pause before Kazuko got out an answer. "Sakura's room
+has been uncharacteristically quite the past few nights."</p>
+<p>With Asumi's insinuation that was a good amount of evidence to support
+the outrageous claim, and all the implications behind it. As they all
+stewed on it however, the blonde just let out a miscreant giggle.
+"Amazing, you should see the looks on your faces," she goaded them,
+implying the whole thing was some sort of joke to her.</p>
+<p>If it was a prank though she wasn't done, sauntering away from the
+dumbfounded singer and over to the only rival to her curves in the room.
+"Wonder what you would do if they asked you to do something like that
+Meiku?" she teased, kneeling down to meet her eyes, huge bust resting on
+the shorter girl's shelf of cleavage. "You'd probably jump at the chance
+just to have the musky smell of a man right there. You\'d probably end
+up sucking his dick between those fat lips of yours, you seem the type."</p>
+<p>This made the second time this week Sakura had singled her out, using
+some of the same accusations, and just like the prior time the
+bespectacled girl was left quivering nervously. In seconds Kazuko was
+beside her, shoving the bully from her repeat victim. "That's enough
+Sakura!"</p>
+<p>"Oh, get off your high horse Kazuko, you know we\'re all thinking about
+it in some way or another," the blonde smirked, not even bothering to
+fix her top after her little stunt.</p>
+<p>"The rest of us aren't trying to start shit," the runner hissed back
+through clenched teeth.</p>
+<p>The buxom troublemaker closed their distance, engulfing the smaller
+woman's tightly confined breasts with her own monsters. "It's just a
+little playful ribbing. Maybe you\'re just envious Kazuko?"</p>
+<p>The redhead didn't back down. "You've got nothing worth being envious
+of, <em>cow</em>."</p>
+<p>Sam got to his feet, ready to jump in as he watched the heat rising
+between the two. Before he could however, Keiko was stepping up to be
+the mediator. "Both of you, stop it!" she did her best to physically
+separate them, only really managing to get Kazuko stumbling back a few
+steps. "We were all in this together, sisters."</p>
+<p>"You're right Keiko," Sakura agreed, "and I\'m just trying to help my
+sisters loosen up a bit," she wagged a finger at the rapper of the
+group, chuckling behind a small grin. "It's not good to be so wound up
+after all."</p>
+<p>More provocation, but the fiery runner kept her cool. "If we ask for
+help, then give it," she spat, picking up her bag and heading to the
+bathroom to change.</p>
+<p>Crisis averted for now, the consultant returned to his seat. The
+voluptuous instigator backed off, and soon enough they got into another
+bothersome practice. None of it though would compare to what was about
+to unfold.</p>
+<p>Thursday rolled in, making Sam realize just how exhausting this week had
+been. His first week had been bad, sure, but there had been those
+moments of light that made it all worthwhile. He wasn't even the target
+of Sakura's harassment, not to the same degree anyway, and yet it was
+taxing to constantly be on that tense edge, waiting for it to all boil
+over. At least the day started good.</p>
+<p>It seemed like most of the choreography issues had been worked out. They
+had rolled back to something closer to their original routine, whether
+from the girls working it out or from studio interference the boy
+couldn't be sure, though the thick figured blonde was still bumping into
+her stage mates. To a degree it was deliberate, as usual, but the
+clumsiness of some of her moves hinted that she wasn't aware of just how
+big she was. Something her straining buttons supported.</p>
+<p>The top of her outfit was stretching to its limit. When she'd come in
+this morning, approaching Sam in order to snag some food overtop him, he
+was almost certain he\'d heard the poor garment creaking, struggling to
+keep her in. He could clearly see the holes for her jacket buttons,
+pulled so wide he was left to wonder how she even got into it in the
+first place; and could only imagine the issues her skimpy shirt was
+having beneath the hardier article.</p>
+<p>What could he say though? The last time Kazuko had brought up the girl's
+ill fitting costume it was a whole ordeal, and he could see from her
+current expression, and the way she was covering her own modest bust,
+she saw it now, but wasn't about to get into that fight again. He didn't
+want to imagine what the blonde might say or do if he brought it up.
+<em>"Oh Samuel-san, staring at my chest? Naughty pervert."</em></p>
+<p>Not something the boy wanted to get into. So, like the rest, he just let
+it lie until it became too much for any of them to ignore.</p>
+<p>They were going through their rehearsal, singing their parts, when a
+loud pop sounded over their intercom-boosted voices, followed by the
+clattering of a handful of small hand plastic bits. Sakura's buttons had
+burst, letting the full glory of her enormous tits bounce out into the
+cool air; pink, puffy nipples so big Sam could have palmed them hard and
+on display.</p>
+<p>He watched as her pink-tinted eyes gazed down. She didn't stop, or cover
+herself like one would expect. No, instead she let out a giggle and went
+on with her dance steps as if nothing had changed, pendulous breasts
+swaying and pulling her around with each step. As the other girls
+realized what happened they all froze, leaving the blonde bouncing about
+on her own to the background music until she noticed she was the only
+one still going.</p>
+<p>"What's the problem girls?" she asked with a wry smirk on her face,
+arching her back to push her bare chest out and show she knew exactly
+what was wrong.</p>
+<p>Meiku was in her place in the back, flush from the neck up, and was the
+first to speak up. "Your um... Sakura," she pointed a finger to the
+girl\'s bust, while another was nervously approaching her mouth.</p>
+<p>"What about them Meiku?" the provocative leader replied, reaching her
+hand up and taking her oversized melons in her hands. They couldn't even
+begin to contain them, but that didn't stop the blonde from showing off,
+kneading huge handfuls of the doughy flesh that was flowing over her
+forearms there was so much of it.</p>
+<p>"You're exposing yourself Sakura!" Keiko chipped in from the sidelines,
+though "exposing" didn't properly describe the indecent display the
+woman was putting on. "Do you have <em>any</em> self respect left? What if that
+were to-"</p>
+<p>"No one was talking to you," the top-heavy temptress spat over her
+shoulder with a glare, as she sauntered across the stage to the anxious
+short stack.</p>
+<p>Like yesterday the leader knelt down, resting her tits on the shorter
+girl's as she let out a meek whimper. Those pale orbs were up in her
+face, making her cheeks go redder, and forcing that finger to bury
+itself between her lips.</p>
+<p>She wasn't the only one bothered either, Sakura's breaths were coming
+out hot and heavy, her wry smirk becoming a malice grin across her plush
+lips. "I'll bet you're jealous Meiku. Having the biggest rack in the
+group was your only bragging right, but now look how we compare!" she
+teased, pressing her huge chest further into the girl to show off the
+difference.</p>
+<p>With nothing holding them back, it was obvious. The blonde was huge,
+dwarfing her bandmate by a number of sizes that weren't there only a few
+days ago. Meiku obviously looked, her eyes drifting downward to the
+mammaries dominating her field of view, and letting out a high whine
+around her digit.</p>
+<p>"Maybe you\'re hiding just how big those tits of yours are?" the
+instigator went on, reaching up and wrapping her hand over the front of
+the bespectacled girl\'s costume. "How about we do a more proper
+comparison?"</p>
+<p>Kazuko rushed in, grabbing the over-buxom woman by the back of the
+collar to pull her away. "Get away from her!"</p>
+<p>Immediately Sakura's hand came up, catching the redhead across the cheek
+with a slap that echoed in the open room. There was a second of pause
+while the girl tried to process what had just happened, but then the
+fury in Kazuko's eyes was unmistakable. She took hold of her attacker by
+the hair, her other hand poised for a strike of her own.</p>
+<p>Sam jumped to his feet, rushing the stage to try and separate them.
+Meanwhile Keiko took the more protective route and stepped in to try and
+pull poor Meiku out of the situation. Sakura refused to release her grip
+of the short stack\'s costume, forcing the intervening pair to have to
+pry the trio apart. The boy\'s height and size gave him an advantage
+over the squabbling pair, but that did nothing for the Franklin costume.</p>
+<p>As he pulled the scrapping girls away there was a loud tearing, leaving
+Keiko falling on her firm rear, with Meiku landing in her lap. The poor
+girl was scarlet, the front of her top ruined to reveal her own heavy
+breasts; plump cinnamon nipples, puckered excitedly from everything
+going on, topping each jiggly sphere. The girl just looked down, letting
+out a high-pitched whimper as her free hand struggled to figure out
+where to go.</p>
+<p>"Shit, it\'ll be alright Meiku!" the lead dancer tried to console her,
+reaching around to grab the frayed edges of the vest and struggling to
+have it meet over the girl's squishy mounds.</p>
+<p>Getting Sakura off her initial prey had only served to give her a second
+hand to go at Kazuko with. The two of them were shouting expletives, the
+topless inciter making attacks at the running girl's costume, while
+weakly trying to defend slaps and claws at her exposed assets. She
+managed a grip on one of those ruby pigtails, evening the playing field
+of their hair pulling and swerving them around the stage.</p>
+<p>Sam got a hand on each of them, though attempting to get them apart was
+like putting himself between two scrapping dogs. "Enough you two!" he
+tried to reach out to them, hoping maybe this could be sorted without
+further violence.</p>
+<p>He may as well have been screaming into a hurricane. The feud between
+them had been growing for two weeks, almost as fast as the blonde was.
+There wasn't going to be any stopping it without full intervention. For
+as much as he wanted to remain neutral he knew there was a far better
+chance of coming out of this on Kazuko's side, so put his full effort
+into trying to restrain the hyper-curved menace.</p>
+<p>The nerdy American was about as far from a fighter as one could get, but
+he had the advantage of raw size. With the redhead's seeming experience,
+after realizing he was helping and cooling off from her initial anger,
+they were able to subdue the girl, each taking an arm to hold behind her
+back. Once they had her she let out a provocative moan, turning over her
+shoulder to Sam with those otherworldly eyes.</p>
+<p>"Finally decided to manhandle me Samuel-san," she purred, that sweet
+scent of arousal coming off her once more in waves.</p>
+<p>He wasn't about to humor her with a response. Keeping firm he tried to
+figure out what they were going to do with her. Behind him Meiku was
+breathing heavily, squirming with one hand rubbing at her inner thigh
+while Keiko continued to try and salvage her modesty. It was no good,
+the more petite brunette\'s slender hands sinking into pliant boob as
+she struggled to tie a knot with the remnants of the top.</p>
+<p>Her wrists continued to tweak the girl's nipples, unable to properly see
+exactly what she was doing with the wriggling girl in her lap. Slowly
+the short stack's little vocalizations around her finger started to
+intensify, growing in volume until she let out a lewd moan. Everyone
+turned to her, her face going red as she squeezed her eyes shut, jammed
+her hand in between her legs, and with one final scream of ecstasy she
+came.</p>
+<p>It was unlike anything any of them had ever seen. Those already huge
+breasts seem to swell with firmness, just before they erupted with high
+pressure milk that sprayed across the stage. The quarreling trio were
+right in the line of fire, a warm blast coating Sakura's back while the
+two holding her were both soaked from head to toe by the sweet liquid.</p>
+<p>In the silence that followed, the forgotten member of the group could be
+heard. Asumi was ahead of the rest of them, on the phone and calling for
+help. Whether it was the police, an ambulance for whatever just happened
+to Meiku, or some division of Happy Light, he couldn't tell. The only
+thing on his mind was the flavour touching his tongue from the milk
+dripping down his face and over his lips. It was one of the most
+delicious things he\'d ever tasted.</p>
+<p>It took a few minutes for anyone to arrive, and when they did it seemed
+to be Happy Light\'s private doctors, along with a few thuggish members
+of their security team. Meiku and Sakura were immediately taken out, and
+the rest of them were brought back to the business\' main building on
+their compound. Sam had never been, but it was almost like its own
+little sub community. He watched as Asumi and Keiko were taken to a
+large complex, likely where they lived. Apparently they had deemed
+Kazuko potentially injured in her scuffle, because she was led to some
+sort of medical facility instead.</p>
+<p>Which just left him, guided by a couple of stocky lads into the offices.
+He was led to an HR department rep who proceeded to ask him questions
+about the incident. The historical consultant gave as much detail as he
+could remember, leaving out his lingering thoughts on the girl's milk,
+then he was told to take Friday off as administrative leave, and that he
+would receive a call once the matter had been sorted out.</p>
+<p>Once more that fear for his job, his security, was with him. He was
+paid, but it was hard to bring himself to go on a shopping trip not
+knowing what was going to happen, not only to him, but to the girls. He
+tried to get rest, distract himself with his plants, his manga, but it
+only came to him sparsely. It was the longest three-day weekend of his
+life, and he was pretty certain he\'d probably lost a couple pounds from
+the stress.</p>
+<p>Monday morning the call came in, and regardless of the news it would
+bring at least it brought some relief. "Ramses Samuel," he answered,
+trying to keep his anxiety from being too obvious.</p>
+<p>"It\'s Kanaszuchi Kane," his boss' thuggish voice came through. "I'd
+like you to meet me at the Happy Light compound, I\'m sending a car to
+pick you up."</p>
+<p>A chauffeur? The boy wasn't about to complain. If anything the fact they
+were shelling out for a private ride was a good sign. "Thank you,
+Kanaszuchi-sama," he replied with a nod, only to have the line dropped
+after.</p>
+<p>It wasn't a long wait, though it surprised him to see the company car
+accompanied by a large moving truck. "What's that for?" he ended up
+asking his driver, only to receive a curt "Not important," as he was
+escorted into his vehicle.</p>
+<p>They left without the truck, leaving Sam to wonder more along the quiet
+drive to the compound. It took a few minutes, and he expected like last
+time to be going to the offices. Instead however, he was driven to the
+front of the medical facility.</p>
+<p>Before he could ask if this was correct, his door was opened and he was
+being led inside by another couple of Happy Light\'s hired muscles. It
+was a very clean place, nice sterile walls and floors, a welcome desk
+run by a rather cute pair of receptionists. All the trappings of a
+proper hospital, at least on the surface. If this was where Kanaszuchi
+wanted to meet him, he wasn't in a place to argue; though it did give
+him a case of nervous butterflies. What if it was here because Sakura
+had fabricated some sort of assault charge over his restraining her?</p>
+<p>They didn't seem to be going to a visiting area, so that fear was
+slightly quelled. It was a droo in the bucket next to his other
+anxieties though, as he was guided down to the exam rooms. The first one
+on the left was opened for him, and he was let in to where the
+white-suited Kanaszuchi was patiently waiting for him.</p>
+<p>"Kanaszuchi-sama," he gave a deep bow to the man, already hearing his
+heart thumping hard in his chest.</p>
+<p>His thuggish boss didn't seem to care, gesturing to an empty chair at
+the side of the room. "Sit," he ordered simply, his tone low and
+difficult to read.</p>
+<p>Sam didn't hesitate, hurrying over and planting his butt. It was then he
+noticed the nurse in the room with them, clad in her uniform smocks
+bearing the Happy Light logo loud and proud. She was dipping into a
+case, carefully retrieving from it a large syringe filled full with a
+shimmering purple-pink fluid and carefully capped for safety. He felt
+the urge to ask what it was, but, deep down in his gut, the boy was sure
+he already knew.</p>
+<p>"So, yankee," the man\'s stern face twisted into a wicked grin that gave
+him every bit the look of a traditional oni, "have you ever thought
+about a career in show business?"</p>
+</body>
+</html>

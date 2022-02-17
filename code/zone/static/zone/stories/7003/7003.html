@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>A Stormy Surprise</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>A night at the beach was a nice break from the usual experiments that
+Milan would subject me to. Having my body inflated to it\'s limits
+certainly felt good, but it was exhausting to have it done every few
+days to push my limits further. The sound of the water crashing against
+the shoreline fills my ears. I watch as dark clouds crowd the midnight
+sky. A cold breeze caresses my long pointed ears and I\'m reminded that
+it can be quite chilly this time of year. With one swift motion I pull
+my kitty hood up loosely about my short white hair. The long sleeves and
+my blue and white striped stockings keep me nice and warm, though my
+little kitty bikini bottom does little.</p>
+<p>I do feel a bit chilly so I scoot closer to the bonfire just a couple of
+feet away. Warmth washes over me and I sigh contentedly. "Ahhh...what a
+wonderful evening." I breathe deep and take in the smell of saltwater.
+Out across the water I gaze just sitting and watching as my mind mulls
+over things. "It\'s just missing...something. Can\'t quite put my
+finger on it." A few more thoughts pass my mind as I wrap my arms around
+my legs and rock side to side. A nearby crab skitters past me. I ponder
+his thoughts, but am interrupted by a light drizzle that starts to
+patter on my hood. <em>I was wondering when it would rain. This isn\'t
+heavy enough to go inside though.</em></p>
+<p>I look up into the rain and watch as it comes down, little droplets
+pattering on my cheeks. For a little while I sit and smile, happy for
+the nice little break. But then I feel it. It starts as a barely
+noticeable warmth on my face that quickly spreads throughout my body. I
+ignore it until I can feel my cheeks starting to burn with heat. "This
+is strange..." I feel myself instinctively take in a deep breath. Then
+another. "Hah...hah...oh my...feeling quite warm. Perhaps I should
+scooch away from the fire." I do so, but still I keep warming up. The
+heat in my chest growing nice and toasty. It isn\'t long before the
+pressure starts to build.</p>
+<p>"Haahhnn..." I gasp softly and look down to spot my chest beginning to
+rise. "Wha?!" Both of my hands reach up and grope. "Th...they\'re
+growing?! But Milan isn\'t anywhere near me. I\'d be able to hear that
+insidious laughter I just know it!" My denial didn\'t help as I started
+to feel my panties starting to tighten around my hips. My normally thin
+and modest figure had begun to plump. Worse still, the drizzle had
+started to pick up.</p>
+<p>I quickly tried to stand, but the feeling of water starting to soak my
+clothes caused pulses to begin pounding my body. I staggered as my boobs
+went from a handful to more than two hands could hold all the while
+gasping at each little pulse. "Ah...ah...ah...ahhhhnnnn..." I
+swallowed deep and then fell forward onto my hands as my butt, hips and
+thighs took the moment to inflate rapidly. The feeling was astounding
+and I could barely contain myself as I struggled to my feet once more.
+The small hut nearby was only a couple of yards, but it looked like
+miles.</p>
+<p>I started to run, the stretching sound of my expanding body piercing the
+rain. I could sense the feeling of magic pushing outward against my
+curvature. It forced my figure into more and more of an hourglass shape
+making me wobble as I ran. Or rather jogged, unable to move any faster
+with my rapidly growing breasts bouncing up and down. <em>Milan did this!
+Somehow it had to be her!</em> My mind was buzzing with lust filled thoughts
+and I just wanted to embrace the rain and let myself swell up as much as
+I could. I wanted to, but more so I wanted to deny that cruel woman her
+little experiment. So I pushed through the overwhelming arousal and up
+towards the hut.</p>
+<p>Just a few feet to go. Perhaps sensing this, the rain chose this moment
+to suddenly transform into a downpour. My soaked clothing weighed me
+down, but the feeling of my body suddenly surging bigger caused me to
+stumble down onto my knees once more. My tits bounced and ballooned
+until my top started to rip. "Nnggghhhh...feels...so good..." If I
+had a mirror I know there would be hearts in my eyes. My tongue jumped
+out of my mouth accompanying hot breaths. My cheeks burned with
+excitement and I couldn\'t help but start to whine pleasure.
+"Haaaahhnnn...haaaahhnnn...oooooh..." Both my hands cannot help
+themselves. They get a good grip on my breasts and squeeze. "Aaaaahhh!"
+I gasp loudly.</p>
+<p>My whole body keeps swelling into more and more of an hourglass shape.
+Flesh bulges around the sides of my panties and the edges of my
+stockings. I can barely think with my mind so filled with desire.
+Somehow I manage to bring myself back from the edge and lift myself to
+my feet. My swollen tits are so heavy and jiggly, but I still manage the
+last few feet. I step in from the rain and almost immediately spot my
+lapis haired ruler. "Milan!...huff...huff." I can\'t fully control
+myself, struggling to remain standing let alone forcing a miffed
+expression.</p>
+<p><img alt="" src="Pictures/100002010000096000000BB83D430C4F.png" />{width="6.6925in"
+height="8.3654in"}</p>
+<p>She sits in a rather comfortable chair custom made for a woman of her
+size. Her legs are crossed and she has a rather sinister looking smile
+on her lips. "Corae. Ahahahaha..." She lets out a seductive laugh in
+her usual deep womanly voice and then sips from a wine glass.</p>
+<p>"Y...you did s...something to me!" I struggle to get the words out, my
+body still inflating, but starting to slow.</p>
+<p>"I just wanted to see if I could...trigger it with something." Oh how
+she smiled at me. That cocky smirk on her plump lips. "I like rain." She
+paused to sip once more. "Do you?"</p>
+<p>I wanted to enjoy my body slowly growing, but how could I not try to be
+mad at her? "C...can\'t I go a w...week without being blown up?" My
+legs quivered like my lips and words.</p>
+<p>"Your mouth says one thing, but your mind says another."</p>
+<p>"R...reading my mind is cheating!"</p>
+<p>"You exude desire. No mind reading necessary" She stands. I watch as the
+woman towers above me at more than twice my size. I shrink back as she
+steps forward, struggling to maintain my displeasure. Her dark outfit
+flows about her making me uneasy. "Stop this senseless defiance."</p>
+<p>"It\'s not fair for you to just...inflate me w...whenever! It\'s not
+fair that you c...can\'t be inflated at all!" My thoughts jumped to the
+idea of it. Seeing this giant of a woman expanding like an hourglass
+would no doubt arouse me. An impossibility surely, but still it would
+bring me immense joy.</p>
+<p>"Only in your dreams." She grinned. I felt my face heat up with
+embarrassment realizing she knew. "You want this Corae. Admit it or
+I\'ll disable the spell on you and leave."</p>
+<p>"Huh?" I look up at her with great surprise. "Y...you\'ll just leave me
+be if I ask?" I look down at my melon sized breasts. I grab them and
+squeeze softly. "Ahn..." A soft moan escapes my lips. My mind wanders
+to the moments before I began to swell up. "Just something missing..."
+My cheeks had to be a deep cherry red as I looked back up to Milan.
+"O...ok...you\'re right."</p>
+<p>She clapped her hands together and smiled wildly. "Oh goodie! I was
+afraid you\'d decline being experimented on!" She giggled as magic began
+to form in both of her hands. She toyed with it until it glowed a bright
+blue.</p>
+<p>"W...what?!" I put both my hands up and waved them. "N...no! I didn\'t
+say th-" I started to object, but she took advantage of my sluggishness
+to begin pumping me full of magic. The sudden surge of magic through my
+body took me off guard, my tits ballooning outward. I felt, and heard,
+my nipples pop up from pressure quite pleasantly. <strong>Pop </strong>went the first
+and then <strong>pop</strong> went the second. "Ahh...haahhnn...nnnngggghhh..." I
+whimpered softly as my butt doubled in size. My hips became waspish and
+my thighs strained against my stockings. I gasped loudly as my tits
+burst forth from their housing and bounced several times. "Oh gods! This
+feeling is so incredible!" I threw my head back in revelry, the hood
+slipping off along with the rest of my top.</p>
+<p><img alt="" src="Pictures/100000000000077C00000C107E17AEF2.jpg" />{width="5.2165in"
+height="8.4071in"}</p>
+<p>"Hehehehehe!" Milan giggled insidiously and sent another more powerful
+wave of energy through me. My endowments struggled to make way for all
+the magic filling me, the sound of them stretching larger and larger
+only turning me on more. I began to lose myself in the wonderful feeling
+of the tightening knot between my thighs and the subtle ache of my
+swollen breasts. My fingertips delicately wrapped themselves around my
+erect nipple and began to play. Euphoria flooded my mind and I couldn\'t
+help but cry out loudly.</p>
+<p>"Yes! More! Ah...ah...ahhhhhnnnn...more please more!" I was rewarded
+with another surge. This one with enough oomph to cause my knees to jerk
+together. Tides of pleasure rushed through me. I struggled to stay
+standing. Another intense gush of euphoria shot through me sending a
+shiver up my whole figure. I couldn\'t help myself and both hands began
+to pull at my soft, sensitive nipples.</p>
+<p>I was so busy indulging myself that I didn\'t notice Milan behind me
+until she prodded my blimping butt. A mixture of thrill and unease
+became my focus. She took this moment to reach both hands down to my
+ears and begin to play with them. My ears stiffened instantly and my
+whole body locked up. A few gentle little strokes had me holding my
+breath. She pulled on them with great care, slid her thumb along them
+and then toyed with the tips. Soft little whimpers escaped between my
+lips. "Hhhh...hhhh...hhhh..." My mind couldn\'t focus on anything
+else but her fingers.</p>
+<p>Then finally she forced immense amounts of magic straight through the
+tips of my ears. The sensation was incredible and I couldn\'t help my
+sounds of joyous ecstasy. "Ah ah ah AH AAHHHNN AHHHHHNNNN!" The magic
+went down through me and straight into my curvature. My breasts expanded
+rapidly until they were each big enough for my entire body to rest on.
+My ass matched them and I fell forward onto them. They kept growing and
+I kept pulling at my nipples as they puffed up with my tits.</p>
+<p>My mind became blank as I finally felt my limits being reached, the
+magic being forced into me causing all of me to feel tight. The
+stretching sound became stressed like balloons being rubbed together. My
+endowments started to become taut and the pressure within built to
+almost unbearable levels. I felt ready to burst when finally she stopped
+forcing magic into me. I gasped repeatedly, struggling to catch my
+breath. "Huff...huff...huff..." I suddenly felt exhausted, but very
+satisfied. My breasts made great pillows to which I happily used. The
+giant above me loomed and I could hear the sounds of writing. "S...so
+m...mean." I barely managed the words.</p>
+<p>"Getting even bigger Corae. Maybe I should just teach you how to inflate
+yourself."</p>
+<p>She leaned in nice and close, both of her hands wrapped around my
+nipples and began to play. "Ahhhnnn...haaahnnn..." Soft little tired
+whimpers were all I could manage. My ears drooped to match my tired
+state.</p>
+<p>Pleased with my size, Milan stood back up, but not before giving me a
+few more ear rubs and a gentle pat on my head. "Then again I\'d miss out
+on all that fun you have."</p>
+</body>
+</html>

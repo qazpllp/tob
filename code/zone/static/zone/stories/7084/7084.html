@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Haunted H-Cups</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>Haunted H-Cups </p>
+<p>©Jana Valker 2021 </p>
+<p>For info and commissions: </p>
+<p>janavalker@gmail.com </p>
+<pre><code> Sam was a girl like many others; she would stay like that for a few more
+</code></pre>
+<p>hours. </p>
+<p>She smiled taking in the panorama. First day of camping with her best </p>
+<p>friend – high school was over and they had their entire lives in front of 
+them. A small satisfied sigh escaped her lips as she contemplated the 
+beautiful valley leading all the way from the tired backs of the mountains 
+to the hills to the sea. Many girls like her must lay in the sun, cooking 
+their skin raw while they waited for a long night of partying and booze, 
+but this was nothing like Sam (short for Samantha, as her mother never 
+had the best taste with names). </p>
+<p>“Can you please turn it down with the happiness?” Lisa asked behind </p>
+<p>her. “Leave some for the rest of us, will you?” </p>
+<p>“Oh, I thought you wanted to come as well, but sorry for putting you in </p>
+<p>a box and spiriting you away in a decent place for once,” she jokingly 
+retorted.  </p>
+<p>Lisa scoffed, crouched and took another picture of the surrounding </p>
+<p>woodlands. They had set up camp in a secluded spot Sam had visited with 
+one of her boyfriends two years prior and now staying there with Lisa was 
+a way to paint over the bittersweet memories.  </p>
+<p>The summer night promised to be clear and warm. Her eyes moved to </p>
+<p>the small telescope she and Lisa mounted right in the middle of the </p>
+<p>clearing, together with their barbecue and their tent. It was going to be 
+a great night! The best ever. </p>
+<p>“I wouldn’t mind some more company next time, though,” Lisa said, </p>
+<p>standing up. “This place is supposed to be haunted, you know?” </p>
+<p>“Haunted? That’s ridiculous.” 
+“Yes, I have heard about  an accident taking place here a few years 
+ago,” she pointed at the cliffs around them, the road flowing over their 
+profile like a discarded snakeskin. “A car fell out of the road and 
+tumbled down through the trees. The girl died but the man survived for 
+some reason.” </p>
+<p>“Hmmm…” Sam felt a tiny bit of apprehension creep up her spine but </p>
+<p>when she looked at the tree line she saw nothing that pointed at a car 
+rolling down the hillside. If it did, some of the trees would be bent or 
+broken. Maybe it was just an urban legend meant to scare people off. 
+“What’s this, are you getting ready to tell me ghost stories all night?” </p>
+<p>“Maybe if that helped you get off your ass, for once…” 
+“Hey, I keep in shape! I do a lot of jogging!” 
+“You ought to go to the gym a lot more. Keep in shape!” 
+“Excuse me, I am not blessed like you are,” she said pointing at her </p>
+<p>“Oh, you are always obsessed with the size of your breasts, grow </p>
+<p>tits.  </p>
+<p>up…” </p>
+<p>But it was true that compared to Lisa, Sam was a bit of a ugly </p>
+<p>ducking. Her redhead friend was a bit of a stunner with her full C-cups 
+breasts, spilling out of her pink tank top, her trim waist and flaring hips, 
+her long legs barely covered by her jeans shorts. Lisa was a knockout, 
+especially when she took the time to draw out her deep hazel eyes with 
+a bit of smoky mascara. When the two of them took a walk, Sam was 
+like an afterthought to the dozens of boys (and men!) who turned their 
+head to look at her friend.  </p>
+<p>Compared to her, she did not look like anything remarkable. She was 
+comfortable in her trousers and checkered shirt, but she had to admit 
+that her wavy blonde hair might use a bit of trimming, as could her 
+eyebrows. Lisa always complimented her olive eyes, but she never got 
+the time or interest to draw them out with a bit of makeup, nor did she 
+take care of her thin lips.  </p>
+<p>Also, she was a bit pudgy here and there – the results of not setting a 
+foot in a gym since she used to be a kid. Lisa had the luck of sporting her 
+comparably large rack together with a trim figure.<br />
+They were a bit like the sun and the moon, hm… 
+“Oh well…” Sam said, mostly to herself, “time to have some fun and </p>
+<p>stop thinking about it.” </p>
+<p>“Sure thing. You get the meat ready and I start the fire?” 
+“Aye aye Captain!” Sam agreed. 
+The rest of the afternoon and evening proceeded without incident, 
+except when Sam tripped and threw an entire plate of sausages onto the 
+grass, but thankfully they just put them back on the barbecue for a bit 
+and in the end it was no big deal. </p>
+<p>The two friends kept chatting about their future between a bite and the </p>
+<p>next. Lisa would probably skin college and try to find a job at once, while 
+Sam really wanted to get into university, maybe math or even 
+astronomy… she really liked to look up at the night sky and maybe 
+studying it would be a good compliment to her interests. </p>
+<p>“Gotta be hard, but you can do it,” Lisa said when she shared her idea. 
+“Thanks… I… I think I will.” 
+So encouraged, the two friends started to get ready for the big event, a 
+night of start shooting. They pointed the telescope and their cameras up 
+and began to take pic after pic. Sam smiled looking at Lisa – her friend 
+was much more of a party girl than she was, but she still shared genuine 
+interests with her. If she went to college, she would miss her a great 
+deal… </p>
+<p>Still, it wouldn’t be bad to get a little mor up top in the following years. </p>
+<p>They said girls did not stop growing in the chest until they were in their 
+mid-twenties, so maybe she could still get a bit of leverage from that…? </p>
+<p>She sighed. It was probably just wishful thinking. 
+Then she turned her head up to take shoots at the moon. It was mostly 
+covered by the tree line though, so she moved a little bit to the left, then 
+a little more and before she had realized it, when she finally found a good 
+spot she had left the camp behind.  </p>
+<p>“Crap,” she said putting the camera down, “I hope I can find Lisa again.”  </p>
+<p>She was a bit scared of the night, though it was still very bright for 
+being in the middle of the woods and it was a safe summer night. She 
+stumbled through the bushes, cursing softly at her absent mind.  </p>
+<p>Then her shin hit something hard. 
+“Ow…” she hissed, nursing her offended leg. It did not look like a root </p>
+<p>or a tree trunk. Too hard. She took out her phone and it cast a cone of 
+light over the carcass of an old car. Between the moss and the rust one 
+could still see the glimpse of white paint, the skeletal remains of the 
+turning wheel and old cables sticking out like spilled intestines.  </p>
+<p>Lisa’s words came back to her. These woods were supposed to be 
+haunted… and only the guy had survived the accident. Would she find a 
+ghostly visage looking at her at any moment? </p>
+<p>“Spooky as fuck,” she said walking away from the car. 
+Gee, thanks. 
+She froze.<br />
+It was a faint voice that spoke to her. It seemed to come close to her </p>
+<p>ear, but the echoes dropped off in the distance.  </p>
+<p>“W-Who’s there? If it’s some kind of joke I’m armed!” 
+In the sense she had all her limbs but hey, it might scare off the </p>
+<p>people trying to prank her.  </p>
+<p>smokier, almost seductive. </p>
+<p>It wasn’t Lisa’s voice though. Not by a long shot. It was lower and </p>
+<p>Calm down cutie. I’m just curious about getting a visitor, that’s all. 
+Again that voice. She had to run away, it would have been the best 
+thing to do but… she was rooted in place, unable to move. Something 
+about the voice kept her stiff like a log.  </p>
+<p>Hey, do you have a lighter? I didn’t enjoy a cigarette in a lifetime! 
+The voice let out a hollow laughter. Slowly, from the passenger seat 
+of the car appeared a translucent shape, rising through the car. First a 
+long mane of wavy hair, then two bright eyes and a pouty, thick-lipped 
+mouth, curled in a sneer. The rest followed: the apparition – a girl – 
+sported a thin tank top strained by her heavy, spherical breasts. A pair 
+of big silicone implants as large as her head put those stitches to the 
+breaking point. The top clearly showcased her abs and thick hips, 
+coated by a very thin pencil skirt. She looked like a hooker, and the 
+cheap kind at that. </p>
+<p>Not the kind of apparition Sam wanted anything to do, in this life or the </p>
+<p>next.  </p>
+<p>Her camera slipped off her fingers and fell on the ground, forgotten. 
+Her eyes roamed the surface of her bust, sticking out like a pair of </p>
+<p>wrecking balls. When the ghost leaned forward her arms brushed against 
+those huge orbs, making them jiggle a bit, but only a bit, as if the 
+phantom silicone inside them kept them stiff and heavy and inflated even 
+in the afterlife.  </p>
+<p>“S-sorry, I don’t smoke,” Sam replied takin a step back. The ghost </p>
+<p>quirked a perfectly-made eyebrow. </p>
+<p>How can you not? Like, I really used to have an oral fixation, you know. 
+If it wasn’t a cig I would really need something else to put in my mouth… a 
+big cock or two… that was what caused me to end up like this, you know… </p>
+<p>“Really?” 
+Yes! Unbelievable… you’d think some guys would pay attention to the 
+road even when you are blowing them off… heh I take it as a compliment. 
+I used to be great at sucking cock! A waste, really. </p>
+<p>“I’m sure. Uh…” Sam’s eyes trailed once again towards her boobs. They </p>
+<p>were just so… out there, even for a ghost. To think someone would get 
+implants like that was ridiculous. They really seemed bothersome and 
+silly.  </p>
+<p>Looking at the merchandise? 
+The girl stretched, displaying her prized orbs filling her top to capacity. 
+Best investment I ever did. I’m sure you are all jealous and shit, not </p>
+<p>worry I get that a lot. </p>
+<p>Sam’s mind went back to her thoughts about Lisa’s chest and her own </p>
+<p>tiny mosquito bites… but she refused to back down.  </p>
+<p>“I’m not!” 
+Yeah sure. Flattie. 
+“At least I don’t have those… those ridiculous fake tits!” 
+The ghost’s face darkened. She didn’t stop giving off that milky light, </p>
+<p>but the stiff curve of her mouth showed she was really pissed off. </p>
+<p>These babies were bought and paid for and if it wasn’t for that prick </p>
+<p>falling off the cliff I would have had a great career on stage, flattie! </p>
+<p>“W-Well…” it was quite stupid arguing with a ghost, especially over the 
+size of her boobs, but her words hurt and she crossed her arms over her </p>
+<p>chest, as if to cover it from the insults coming from the phantom 
+stripper. “When I will be a famous scientist nobody will care about the 
+size of my tits. It’s the size of the brain that matters anyway!” She 
+retorted with one of her favorite comebacks, though one she did not 
+really believe.  </p>
+<p>The ghost floated through the car. Her oversized rack wobbled 
+slightly with each step – now that she stood outside she revealed the 
+high heels she wore when she died, which, together with her longer 
+legs, made her stand a good head taller than Sam.  </p>
+<p>I did not plan on doing anything to you, but you’re insulting my girls… 
+and also look at you, young and supple. All thing considered this might 
+be my lucky day. </p>
+<p>“What do you… mean… whoa!” Sam yowled as the phantom passed </p>
+<p>right through her – she felt a momentary sensation of freezing and 
+when she tried to bolt away from the ghost and her ridiculous store-
+bought boobs she found that she couldn’t. </p>
+<p>She was frozen in place and not by fear now. 
+Slowly the specter reappeared behind her. It pressed its body against 
+her back and for the first time she felt pressure… those two huge boobs 
+pushing behind her.  </p>
+<p>Yes, I think you will do just fine my dear. 
+“Just fine for whaaaaa-!” She screamed as the ghost pushed right into </p>
+<p>her body. It was such an odd feeling, like being pushed under a jet of 
+freezing water, the spirit was entering her flesh, it was… possessing her.  </p>
+<p>But she wouldn’t go down without a fight. 
+“Get out of here! Leave me alone you stupid… boobs!” 
+Sam gathered her mental strength and tried to push her away. She 
+did not want this and she wouldn’t let her life go to waste just so this 
+ghost could enjoy a cock or two. She had her own dreams and hopes to 
+fulfil, not her cup size to inflate.  </p>
+<p>Smart, aren’t we? Then how about this, you cheeky brat! 
+“What… are… you…” she groaned as the cold feeling crept up from 
+her neck to her brain. Then it slowly warmed up until it felt like her skull 
+was filling up sticky cotton candy, pushing all her thoughts away and 
+leaving only a floaty, warm sensation behind, like the ghost was slowly 
+massaging her brain, kneading it into a pliant pile of happy goo.  </p>
+<p>Shivers of pleasure ran through her body, distracting her from the </p>
+<p>mental assault. </p>
+<p>Her nipples stiffened and invisible fingers rose to brush against them.<br />
+“Aaahh…” 
+Good girl. Time to set your priorities straight. I saw how you looked at 
+my big boobs before. And look here… there’s this friend of yours… Lisa? 
+Nice rack, for a natural gal. </p>
+<p>“Nooo… nooo… get out of my… head…”<br />
+Are you sure? What if I do this? 
+The cotton candy expanded. Inside her brain and pushing against her 
+skull… warm and relaxing… so soft and alluring. For the first time in her 
+life Sam knew how it felt to just float away with the feelings of her body 
+and leaving all worries behind. And as she had never experienced such 
+bliss before, she had no defenses against it… against the ghost kneading 
+her thoughts into the malleable pile of goof they were quickly turning 
+into, giving them the shape she desired, making her soon-to-be new body 
+a little more… homely. A little more compatible with the stripper’s values. 
+And as the cotton candy inside her brain sucked up all of her thoughts, 
+dreams and ambitions, Sam felt emptier and emptier, her mind reduced 
+to a floating mess of scattered memories, most of them sounding farther 
+and farther from the bliss that was quickly spreading through her body. 
+She felt like being slowly submerged in a huge jar of warm honey, 
+covering her body in pleasant bliss. A dark spot appeared over her 
+trousers where her pussy was rapidly becoming wetter than it had ever 
+been in her life. </p>
+<p>Too much stuff here. What’s this, astronomy? Yuck, so boring! Into the </p>
+<p>trash it goes! </p>
+<p>Sam felt a little jolt of pleasure as more and more of her memories and 
+dreams were destroyed by the ghost’s hand. Her passion for math and stars 
+sniffed out like the light of a candle, together with her high intellect which 
+was rapidly plummeting.  </p>
+<p>That’s  better.  Now,  let’s  do  something  about  your  fashion  sense..  first </p>
+<p>things first, these flat boobs will not do. You just can’t compete. </p>
+<p>“I can’t… compete…” obediently repeated Sam, by now completely lost 
+in the haze. Her eyes turned glassy under the faint light of the ghost, still 
+pressing against her body, and now inside her for about half. </p>
+<p>Right.  After  all,  you  have  always  wanted  big  boobs,  right?  I  know  I </p>
+<p>always did! </p>
+<p>“I… uh…” Some scattered parts of her old mind tried to fight back for 
+control. Yes, she had been jealous of Lisa… but… to become like that… 
+like that skank… she didn’t… </p>
+<p>You have always wanted big boobs. Repeat. 
+“I have always wanted big boobs,” Sam whispered.<br />
+Again. 
+“I have always wanted big boobs.” Now with a hint of heartfelt desire. 
+Like you mean it! 
+“I have… always… wanted big boobs,” she sighed, her hands roaming 
+over  her  flat  chest.  What  a  disappointment!  She  remembered  now, 
+looking down at her breasts and wishing for them to grow. She had only 
+put up with Lisa so far because she wanted to take a good look at her tits 
+and imagine having such a big rack. </p>
+<p>That’s better… but you aren’t after any saggy natural boobs, are you? 
+What you want is these! A nice big pair of silicone tits! Guaranteed to 
+attract the most looks… and the biggest cocks! </p>
+<p>That was such an alien thought to Sam that it took a bit to worm inside 
+her brain and root into place. But when it did, the girl licked her lips in 
+eagerness. </p>
+<p>“Yes… big… fake tits. I have always wanted… needed…” 
+Exactly. So how about we go have some fun, you and I? 
+“Yes… please…” Sam agreed, though she did not really know what she </p>
+<p>was agreeing to. Not that it would soon matter anyway. </p>
+<p>The ghost began to slide completely inside her, pushing its ectoplasmic 
+essence inside Sam’s nubile body. The young girl cooed and groaned as 
+the ghost did its damn best to try and fit in, but there was just too much 
+slutty essence to snug comfortably inside her skin. </p>
+<p>Something had to give. 
+And as her pussy gushed and the dark spot on her pants spread all over 
+her crotch and her nipples hardened like diamonds and her eyes rolled 
+back in her head, something began to give indeed. </p>
+<p>“T-Tits…” she moaned, roaming her fingers all over her chest. She felt 
+it. A pinch of heat, focused on her nipples and then slowly spreading all 
+over  her  chest,  growing  and  intensified  ass  if  something  was  being </p>
+<p>pushed into her tits from behind… and then with a pop her breasts began 
+to slowly inflate.  </p>
+<p>Just a bit at first, with new fat conjured by the malevolent will of that 
+slutty spirit. Then a cool pinch as something inorganic took form under her 
+skin – svelte implants rapidly filling with excited ectoplasm.  </p>
+<p>“Ohhhh!” She yowled as they inflated bit by bit with ach breath. They 
+grew  to  the  size  of  apples  when  they  started  to  strain  her  bra  –  quickly 
+spilling over her meagre B cups and ripping through the flimsy material, her 
+tits quickly running down the alphabet as her conjured implants grew in 
+size and importance.  </p>
+<p>Sam tilted her back as they grew heavier and heavier  – her shirt burst 
+with creamy skin and one by one buttons popped out into the night, each 
+of them greeting a new cup size added to her bustline. D! DD! E!  </p>
+<p>F! 
+When she reached a G-cup all that remained of her shirt was a tattered 
+remain, her bra just a memory and her new and perfected boobs wobbled 
+softly in the night air, perfectly round and spherical, as to let no doubt over 
+their ghostly – and previously manmade – origin.  </p>
+<p>Almost there… it’s so tight here, even with all that empty space in your </p>
+<p>head! </p>
+<p>The ghost stripper huffed and puffed trying to fit inside her but there was 
+just really too much slutty specter to fit in so Sam’s body had to respond in 
+other ways. </p>
+<p>First things first, her tits added one more cup size, rounding to be almost 
+as  big  as  her  head,  softly  brushing  against  each  other  and  against  her 
+forearms, protruding out of her chest like a pair of wrecking balls.  </p>
+<p>Then her lips began to pucker up  – not outrageously, but she lost her 
+natural cupid bow into a smooth shape that spoke of fillers, until both her 
+upper and lower lip were as thick as her thumb. </p>
+<p>Her nose also slimmed into an elegant, doll-like shape that highlighted 
+her  widening  eyes.  Whatever  sharpness  might  remain  behind  them 
+evaporated,  leaving  her  with  bright  green,  innocent  eyes  that  quickly 
+darkened  into  a  lust-filled,  triumphant  gaze.  Mascara  appeared  around 
+them, highlighting her newly-found sultriness. </p>
+<p>Then  the  changes  spread  down  her  body.  Sam’s  waist  shrunk  and 
+whatever pudginess she might have previously had migrated to her hips, </p>
+<p>while her belly sucked in, showing a faint line of abs, just to highlight how 
+much her straining tits came from an implant and not from her real flesh, 
+living or ghost as it might be. </p>
+<p>Her butt firmed up, giving her a nice rounded profile, then it filled even 
+more, turning rounder and wider, showing that Sam’s tits were not able 
+to hold all that need for slutty fakeness and something else had to carry 
+it. She was left with a spherical bubble butt that while it could not really 
+balance out her overbearing chest, nevertheless it looked nice enough 
+to give her figure a bit more steadiness.  </p>
+<p>Then the changes spread to her legs as they stretched, leaving her with 
+long, luscious legs. As a last touch, her toes and fingernails grew, coated 
+with a garish red color. </p>
+<p>And finally, Sam grinned and passed her studded tongue over her bee-</p>
+<p>stung lips, savoring her rebirth.  </p>
+<p>“In fact, you know what? Sam is kind of a boring name.” She said with 
+her new sultry, throaty voice, snapped her fingers. “Sin is a much better 
+one. Sounds good as a stage name. I love it!” </p>
+<p>The newly-christened Sin roamed her hands all over her body.<br />
+“Oooh, lovely. These are so firm! A little smaller than they used to be, 
+but at least some of it went where it matters…” her hands went down to 
+knead her firm enhanced buttocks. “Nice. I never thought about this back 
+then… can’t wait to shake this booty all over the club!” </p>
+<p>Then a memory surfaced. It belonged to Sam of old, but Sin had a much </p>
+<p>better use for it. </p>
+<p>“But what of little old Lisa… the poor girl will be shocked to see me…” 
+Then the grin widened. 
+“I might just have the right thing for her…” </p>
+<hr />
+<p>She found her still sitting around the campfire. Lisa was looking up at 
+the night sky and turned to  look at  her when Sin came back from her 
+little life-changing trip. </p>
+<p>“Sam? Took your sweet ti-iiiiih!” She shrieked seeing her enhanced, and 
+much improved shape. “You’re half-naked! What happened to you? Your 
+boobs are huge! And your lips… and your ass… are you really Sam?” </p>
+<p>“Of course it’s me,” she replied on a slow prowl that carried her closer 
+and closer to her previous best friend in the world. And now… “But I answer 
+to a different name now… Sam is just so boring. Not to mention Samantha. 
+Yuck!” She pretended to gag as she pushed her inflated chest against Lisa’s 
+much smaller and natural boobs, squashing them without mercy. </p>
+<p>“Sam… what are you talking about? We must bring you to a hospital… </p>
+<p>are you on drugs?” </p>
+<p>“No  drug  can  ever  feel  as  good  as  these,”  she  replied  grabbing  Lisa’s 
+hands and pushing them against her fake tits. “See? Grope them all you 
+like, you have earned a little touch after all!” </p>
+<p>“These are… implants? So firm! Sam, what happened…?” 
+“I told you it’s Sin! I’m not this Sam girl anymore.” 
+“No  this  cannot  be…  whoever  you  are,  give  me  back  my  friend!”  She 
+withdrew  her  hands  and  caught  her  shoulders  in  a  vice,  freezing  her  in 
+place. “Now you are going to bring me back to Sam, and youuuuhhhm…” 
+Lisa’s eyes went wide and then took on a glass-like sheen as Sin grinned.  </p>
+<p>“Poor girl. I gave you a chance to help me willingly but I guess we have 
+to  do  a  little  bit  of…  cleaning  upstairs.  Move  a  few  things  around…”  Sin 
+whispered. Lisa couldn’t see them but thin strands of ectoplasmic power 
+extended from behind Sin and pushed deep through Lisa’s ears and into 
+her soft, pliant brain. It was a trick Sin would have not been able to do ten 
+years prior, but being left alone in that stupid forest for so long had given 
+her many a chance to improve her abilities. </p>
+<p>“Hhhhnnhmgrblr…”  Lisa  groaned,  unable  to  form  any  intelligible 
+thoughts. Her hands dropped to her sides and she stood there with a thin 
+line of drool falling down her mouth while Sin prodded the insides of her 
+mind.  </p>
+<p>“There’s  really  too  much  stuff  here…  oh  you  wanted  to  go  to  trade 
+school… beauty school even? Well girl for a natural you are talented, I must 
+give you that. But you’re not nearly hot enough nor horny enough to enjoy 
+my company, so how about…” An evil grin spread on her puffed-up lips as 
+the ectoplasm tentacles raised to the call, kneading Lisa’s brain into a more 
+useful form, shifting her thoughts and memories.  </p>
+<p>“That’s right… we are going to make sure you are too excited to think 
+so we’re going to make you bisexual… not a lesbian because I still want 
+you to enjoy sucking cocks, but surely now you will be unable to resist 
+any pretty girl!” </p>
+<p>Lisa blushed as her sexual preferences were changed irreversibly. The 
+part of her mind that could still perceive a knockout such as Sin standing 
+right in front of her picked it up and her nipples stood out at attention 
+right away. A dark patch appeared over her shorts as her pussy followed.<br />
+“And just to make sure, let’s also make it so you can’t resist a nice pair 
+of fake tits like mine… let’s push that fetish up to eleven!” Sin cackled 
+madly. Lisa’s eyes rolled back as her proprieties were further changed 
+and  warped.  All  she  could  think  about  now  was  the  fact  she  had  just 
+touched the best fake titties in her entire life, and the most plastic girl 
+she had ever seen was standing at arm’s reach and she was such a silly 
+girl thinking about Sam when that pair of perfect boobs was just sooo 
+enticingly close… </p>
+<p>“Heh. I thought you would put up a bit more of a fight. I suppose you’ve 
+always been a bit of dyke… you skank!” Sin snickered, withdrawing her 
+tentacles.  Lisa  stumbled  back,  steadied  herself  and  her  eyes  focused 
+again, training immediately on Sin’s boobs. For good measure she made 
+sure to lean back a bit, just to show them off to the best of her ability. 
+“Tits…” was all that came out of Lisa’s modified mind. “Big fake tits!” 
+“That’s right… the best tits for a stripper like me!” Sin replied, swatting 
+away Lisa’s eager fingers. “But if you want to touch them again you will 
+have to do a few things for me. Understood?” </p>
+<p>A glimpse of old Lisa seemed to flicker on for a moment, to fight, to 
+remember her friendship with Sam and refuse to be bent like that out of 
+the sheer maliciousness of this spirit.  </p>
+<p>Then Sin slapped her pneumatic chest, which wobbled only slightly and </p>
+<p>she creamed her panties. </p>
+<p>you all you want!” </p>
+<p>“Yes! Yes please let me touch them! Please I will do anything! I will call </p>
+<p>“Good girl,” Sin replied. “Get our stuff into the car. We’re going back </p>
+<p>to the beach, I really need some drinks and some studs to fuck!” </p>
+<p>“Yes yes yes whatever you want I will do it at once!”  </p>
+<p>“That’s  right…”  Sin  grinned,  getting  off  Lisa’s  eagerness.  She  quickly 
+gathered their things, snuffed out the  fire and put it all in the car, while 
+Sin sat on the driver’s seat, slowly playing with her nipples and enjoying 
+the sight of her new pet. </p>
+<p>When Lisa finished, she stood in front of her, panting and sweating. 
+“I did it! I did it all… can I touch them?” 
+“I suppose you’ve earned a little fun…” Sin replied, oh-so-slowly leaning 
+back. Lisa couldn’t hold it back anymore and she launched herself at her 
+former best friend, groping her too-large boobs. She could barely cup one 
+of  them  with  both  her  hands  and  she  kneaded  and  groped  them  with 
+abandon,  sucking  on  her  nipples  and  licking  and  just  getting  off  on  her 
+implanted love of implanted boobs.  </p>
+<p>Sin snickered and got off more on her eagerness and craving than the 
+feeling of her hands and her tongue. She needed something bigger inside 
+her.  </p>
+<p>Still… 
+“Come  here,”  she  said,  pushing  Lisa’s  head  towards  her  pussy.  The 
+brainwashed girl moaned in disappointment for a bit when she had to let 
+go  of  her  boobs,  but  quickly  found  her  rhythm  and  Sin  enjoyed  the 
+moment. She got better tongue-lashing in her previous life but Lisa more 
+than  made  up  for  her  lack  of  experience  with  her  enthusiasm.  As  for 
+experience… by the time she was finished with her, she’d got plenty of it. 
+When Lisa began to moan her name while she pressed her tongue deep </p>
+<p>inside her, Lisa came, her first orgasm of her new life. The first of many. </p>
+<p>They lay there like that for a bit, enjoying the moment their new lives </p>
+<p>were just about to begin… lives of debauchery, fun and a lot of fucking! </p>
+<p>A few moments later, when Lisa had finished cleaning both of them up, 
+Sin drove their car downhill, cackling madly at each car they met, showing 
+them the finger if they dared to complain about her crazy driving.  </p>
+<p>“Hahaha! That’s life! I can’t wait to go back to the beach! Studs, drinks </p>
+<p>and a lot of fucking! That’s what life has in store for me…!” </p>
+<p>“Boobs…” Lisa whispered from the passenger seat, her left hand roaming </p>
+<p>Sin’s underboob.  </p>
+<p>She turned to glance at her former best friend. Maybe she had been a 
+little too harsh with her brainwashing. The girl was a drooling moron now, 
+obsessed with tits in a way she doubted even the nerdiest of nerds was.  </p>
+<p>Oh well. She would make for a useful pet. Her love for her boobs would 
+keep her close and it was always useful to have one more pair of hands.<br />
+“Woo-hooo! I’m back, bitches!” She pushed her palm hard on the car </p>
+<p>horn and proceeded to drive downhill, towards her new life.  </p>
+<h3></h3>
+<p>Thanks for reading! This story was a commission and it was my first time writing a story 
+with  breast  implants  as  the  expansion  medium,  together  with  possession.  I  hope  you 
+enjoyed it! </p>
+<p>If you want to get your very own commission write at janavalker@gmail.com! </p>
+<p>Or if you want more than 10,000 words of hot, forbidden, breast expansion action, you 
+can take a look at the book below! It’s  currently on sale and it helps support  my free 
+writing!  </p>
+<p>Thanks for reading! </p>
+<p>Jana Valker </p>
+</body>
+</html>

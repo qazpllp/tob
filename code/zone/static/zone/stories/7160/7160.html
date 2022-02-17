@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Upper Management</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>Author’s Note: If you are under 18 turn back now! This is NOT for you. </p>
+<p>This is my first story, please let me know what you think! There may be a part 2, or more other things 
+coming. Who knows! Feel free to follow me on deviantart at a-spooky-ghost, which coincidentally is also 
+the best place to contact me. </p>
+<p>Upper Management [GTS/BE/AE] </p>
+<p>All her life Cora had been happy with how she looked. At 5'4" she knew there were taller women 
+out there but didn't let it bother her. She took great pride in her athletic body, her perky B-cup 
+breasts and firm derriere. The 25-year old woman was blessed with naturally lustrous auburn hair 
+which she typically wore in a ponytail. In point of fact Cora was frequently the object of envy 
+ever since puberty. </p>
+<p>All of that changed the day that Cora was promoted. Sure, it was exciting to be able to say she 
+was the VP of marketing at a big bank. The bank paid for her to relocate and she would even be 
+provided with her own private office. Almost all of her new coworkers and employees were kind 
+as they were capable. </p>
+<p>Except for Vanessa, a woman which Cora soon discovered had been up for the same promotion 
+and had been passed over. Upon first meeting Vanessa, Cora stayed professional but felt 
+somewhat envious. Vanessa stood at 5'10", boasted a more pronounced yet visibly firm ass 
+which her shimmering black hair was nearly long enough to touch. On days when Vanessa wore 
+short-sleeved shirts it was clear she was in good shape, too. </p>
+<p>What began pushing Cora over the edge was Vanessa's immense chest. Cora guessed Vanessa 
+was somewhere in the DD-cup range, possibly even E-cup. Whether it was implants, some 
+strange diet, the world's best push-up bra or voodoo Cora didn't know. On Vanessa's tall-yet-slim 
+figure her tits looked just enormous. </p>
+<p>Cora theorized that Vanessa caught her staring one day which is what set her off. All she had 
+done was ask Vanessa to re-send an email. </p>
+<p>"Sure thing, little lady," Vanessa had wryly replied. </p>
+<p>"Th-thanks!" Cora stuttered. </p>
+<p>Cora had hesitated just long enough that it was clear she took it personally. From each day 
+onward the teasing became worse. Vanessa would wear some combination of high heels, tight 
+skirts and/or revealing tops. The ensemble was just enough that Cora couldn't catch her on 
+violating the dress code policy. Still, it caused Cora to spend hours each day seething in her 
+office. </p>
+<p>Vanessa decided to push it over the edge by barging into Cora's office one day. She was wearing 
+a white blouse with a lacy black bra that was clearly visible beneath the shirt. The blouse was 
+clearly a size or two too small as the buttons were bulging trying to keep her contained. </p>
+<p>"Hey, kiddo, my reports for the day are all done," Vanessa said with a grin. Both women knew 
+the effect that Vanessa's words were having. </p>
+<p>"You don't need to print them Vanessa, you can email them, but while you're here we need to 
+talk about—" Cora was cut off. Vanessa had leaned over to place a stack of folders and papers on 
+Cora's desk as she spoke. That moment, three buttons popped off of Vanessa's blouse revealing a 
+canyon of milky white cleavage. The display left Cora utterly speechless. </p>
+<p>"Oh, goodness!" Vanessa gasped as she immediately covered herself with both arms, "sorry 
+about that! Guess the girls aren't done growing!" </p>
+<p>Cora's face and ears ran hot and red. She was both angry yet aroused at the ongoing show. </p>
+<p>"U-uh, yeah," Cora chuckled nervously, "well, take whatever time you need to change. Thank 
+you for the reports, that'll be all!" </p>
+<p>Cora was speaking at nearly mach speed, looking down and away from Vanessa's face. She 
+couldn't have noticed that Vanessa was grinning ear to ear, eagerly drinking in Cora's 
+embarrassment. By the time Cora looked back up Vanessa was wordlessly hurrying out of her 
+office. It took Cora an hour to cool down which she spent isolated, in her office, with the blinds 
+shut. </p>
+<p>At the end of that fateful day, as Cora took her leave of the office she spotted Vanessa seemingly 
+unpacking boxes in her car. Confident she wouldn't be spotted, Cora kept back and kept watch of 
+her underling out of sheer curiosity. Vanessa appeared to be withdrawing and examining </p>
+<p>different tops from a box in her car and putting them back. It was evident at some point she had 
+changed into a fitting top, too. </p>
+<p>Cora peeled her eyes off of Vanessa and looked back at the clothing items. Even from a distance 
+it soon became clear that Vanessa was excitedly going through a number of increasingly smaller 
+tops, tighter and more inappropriate than even the blouse she'd burst out of earlier. Again, Cora's 
+face went beet red as a realization dawned on her: it had been an act. </p>
+<p>Fury consumed Cora as she stormed away and into her own vehicle. She was determined to have 
+revenge for the way Vanessa had manipulated and bullied her. Upon arriving home Cora wasted 
+no time looking for a solution. Her first thought was the internet: from bust-enhancing pills to 
+beauty creams to surgeries did she search. All such results she could either tell were scams or 
+were revealed to be such with a cursory follow-up search. </p>
+<p>It was early in the morning, deep into the night that Cora found her solution on the Tor network. 
+The item she found seemed sketchy and a likely prank but it was cheap and somehow promised 
+free same-day shipping. Cora gave herself the following day off in anticipation. </p>
+<p>After what felt like an eternity the package arrived which Cora giddily opened. The large box 
+contained only one object: a portable voice recorder. The listing online stated that it would grant 
+any wish but was old and would only last for one more recording. When Cora picked the device 
+up it had clearly seen better days. It appeared battered, stained and even burned on some sides. 
+The tape within seemed good as new but, notably, Cora could see no seams on the device that 
+would allow the tape within to be accessed. </p>
+<p>With the recorder in her hand, Cora lifted it up but hesitated before pressing the 'record' button. 
+One more use, she thought, meant she needed to make the recording count. She let out an 
+anxious sigh and hit record. </p>
+<p>"I wish that every time Vanessa teases me about my size that I will grow. Taller, bustier, more 
+beautiful—just more, more than her. Nobody will notice that I have changed..." </p>
+<p>Cora paused briefly to consider the clause she had started. Knowing it was too late to go back 
+she thought quickly. She wanted to get that feeling that Vanessa had caused her the other day. </p>
+<p>"Except for me, and Vanessa. I want her to be the only other person that notices...oh, and I don't 
+have to pay taxes anymore," she added with a smirk. Why not go for broke, Cora thought. </p>
+<p>Upon pressing stop the device sputtered and sparked. For a moment she felt like she could hear 
+innumerable voices speaking from within the device. The shock caused her to drop the recorder. 
+As it hit the floor the recorded sparked again and ignited. Cora let out a shriek and ran from the 
+dining room to the kitchen to fetch water for the fire. Once she'd returned, however, she was 
+greeted by a piled of ashes rather than a flame. </p>
+<p>Curiosity got the better of Cora but she knew there was no way to notice until she went back to 
+work. Difficult and agonizing as it was she let the day pass without further incident. Upon 
+waking the next morning, however, Cora was as excited as she had ever been. Entering the 
+office, she thought about how best to find out if wishes can come true or if she'd been tricked. </p>
+<p>It was when Cora went to the break room for coffee that she heard Vanessa standing outside 
+talking to somebody that she found her opportunity. Vanessa was wearing a pantsuit that seemed 
+to fit but something looked off. Her waist was pinched in somewhat, her bust sitting higher in her 
+blouse. Cora's breathing quickened when she realized that Vanessa was wearing a corset under 
+her suit. The thought drove her mad with both arousal and rage. </p>
+<p>"Have you talked to Cora recently?" Vanessa asked, talking to a male coworker whose name 
+Cora had trouble remembering. Steve, or Brent, maybe, she mused. Cora dismissed the thought 
+when the conversation picked back up. </p>
+<p>"No, I think she might be sick? I know she took yesterday off," said Steve-or-Brent. </p>
+<p>"Damn," Vanessa clicked her tongue, "the office just isn't the same without princess shorty." </p>
+<p>Just as Cora felt her face turn red she felt something else. At first it felt like she was stretching, 
+but she was standing still. Gradually, she saw the floor drop away as inch after inch poured into 
+her legs. The feeling nearly elicited a moan from her lips as she felt her clothing constrict on her 
+body. Her shoes became too small, her socks slipped down on her swelling feet, her pants 
+became too tight as her thighs and buttocks gained an inch or two themselves. </p>
+<p>Cora's brown eyes began tingling as they lightened a shade, her hair became that much more 
+lustrous and her voice became softer. Finally, what Cora had been waiting for: her breasts shifted 
+in her top. Out of habit she had worn a bra that day which she could feel shift alongside her 
+chest. </p>
+<p>Cora looked down and once again had to stop herself from making noise. In slow, gradual spurts 
+her breasts began to pump outward. Their growth seemed to gain in speed until Cora was 
+watching her formally smaller, pert breasts push into her bra and blouse. She felt her bust 
+rubbing against underwire and fabric as the expansion continued. To her dismay, her growth 
+slowed to an eventual stop. </p>
+<p>Fortunately nobody else had entered the room. Cora realized she was panting and sweating, and 
+she had no idea how much time had passed. With a deep breath, she shook herself off and 
+examined her body. She knew her body very well and was confident she had at least grown to 
+5'6". Both hands wandered up to her chest which she gingerly cupped. She estimated that she 
+may have grown to a C-cup, maybe a little larger. A shiver ran through her body, causing her to 
+quell a sudden physical need. The memory of Vanessa's smooth, pale breasts breaking free of her 
+blouse flashed in her mind. </p>
+<p>A low moan escaped Cora's lips which brought her back to reality. She looked around and 
+immediately thought to get herself a cup of cold water rather than coffee. Furtively, Cora 
+examined the area around the break room and realized that at some point Vanessa and Steve-or-
+Brent had left. </p>
+<p>Cora couldn't shake the cascading feeling of her body growing and thought better than to stay out 
+in the open. She hurried back to her office, offering cordial nods and greetings to anybody that 
+tried to stop and talk to her on the way. It didn't escape her that nobody gave her odd looks or did 
+a double-take at her appearance. There were some she was now taller than, and others she had 
+caught up to that acted as though nothing had changed. She couldn't shake the smile from her 
+face. </p>
+<p>Once inside the office, Cora shut her blinds, locked her door and placed her phone on 'do not 
+disturb.' Cora began to unbutton her blouse to examine all of the changes. As she did, she heard a 
+knock at the door. Personal fascination and arousal clashed with professional responsibility. A 
+minute later, she was dressed and unlocking the door. To her excitement it was none other than 
+Vanessa on the other side. </p>
+<p>"Hey boss," Vanessa said to Cora's dismay, "just checking in to make sure you're okay, I was 
+talking to—" </p>
+<p>Vanessa suddenly stopped mid-sentence. It was clear to Cora that the raven-haired woman was 
+making direct eye-contact with her newly-enlarged bust. Cora commanded every last bit of her 
+willpower not to smile or laugh. As Vanessa's shocked face looked back at Cora she realized the 
+VP's head wasn't as far down as she used to be. </p>
+<p>A moment later Vanessa had collected herself as though she'd figured something out. She turned 
+and shut the door, shimmying her chest and swaying her hips as she did so. </p>
+<p>"So, you bought a push-up," Vanessa finally said. </p>
+<p>"I don't know what you mean, and that's a little unprofessional, don't you think?" Cora feigned 
+ignorance. </p>
+<p>Much as Cora found herself fixated on how Vanessa would look wearing the corset and nothing 
+else, she was more interested in pushing her bully over the edge. She shifted her weight, causing 
+her shirt and bra to audibly shift in containing her new assets. </p>
+<p>"I get it, people like you need the edge," Vanessa teased. </p>
+<p>Cora set her jaw but quickly found her path to victory. </p>
+<p>"What ever do you mean, Vanessa? What am I like?" Cora asked. </p>
+<p>Vanessa put her hands on her hips and took a step forward. The smile had melted from her face 
+and had become a grimacing sneer. </p>
+<p>"A tiny, mousy girl with stubby legs and a flat chest," Vanessa said through clenched teeth. </p>
+<p>Cora's eyes closed as she felt that familiar stretching feeling wash over her. When Vanessa had 
+only teased her in an offhand remark to a colleague she had grown considerably. This time she'd 
+devoted much more effort. Cora couldn't contain her excitement for the results. </p>
+<p>As before, Cora's legs began to grow first. Bit by bit she felt her feet taking more real estate in 
+her shoes as the world began to fall away. Vanessa let out a sharp gasp as she followed Cora's 
+face up and up and up. Cora felt her body stretching out of her clothing, punctuated by the sound 
+of tearing fabric. Her feet had torn out of her socks and her legs had turned her pants into capris. </p>
+<p>Rather than slow down Cora's increasing height seemed to speed up, possibly spurned by 
+Vanessa's choice to spend so much time and energy triggering the wish. Cora's hips began to 
+burst her pants at the seams as her ass bubbled out and perked up, retaining its firmness. Just as 
+her shoes began painfully compacting her growing feet, Cora heard the sound of bursting leather 
+and felt the air on her feet—she'd grown out of her shoes. </p>
+<p>With a wicked smile on her face, Cora looked up at Vanessa at first, then directly in the eye. The 
+look of terror and confusion on Vanessa's face nearly doubled the pleasurable feeling radiating 
+throughout her overheated body. By the time her head stopped rising Cora realized that she had 
+to look down, even a little bit, to make eye contact with Vanessa. </p>
+<p>In watching the display Vanessa's face, too, had turned beet red. Though not as much as Cora she 
+was panting as well. Her mouth had gone dry and she seemed to be reaching out with her right 
+hand as if to touch her growing manager. </p>
+<p>"That's not even the best part," Cora said breathlessly. </p>
+<p>Cora's eyes lightened another shade, now more a dull gold than brown. Her hair somehow broke 
+free of the tie binding it into a ponytail. If she was lacking luster before Cora's hair now 
+gloriously reflected any light. It grew long enough to drape itself around her breasts, which were 
+heaving as though in anticipation of their incoming increase. </p>
+<p>Cora's lips plumped, her teeth whitened and her skin was fully cleansed of any possible blemish. 
+The years of workouts that had made her body athletic seemed to magnify. Cora's previously fit 
+form began to become somewhat more muscular. While still supple and soft, she gained 
+definition and volume in her musculature. Her torso shifted until she had a visible six-pack, her 
+pectoral muscles pushed her breasts upward and her arms and legs gained slight muscular 
+definition and mass. </p>
+<p>A flawless, radiant smile spread across Cora's face as she lifted her hands to her breasts. Still 
+confined in a bra, her tits began their gradual, jiggling journey outward. Cora grabbed her shirt 
+and with her newfound strength tore the garment to shreds with one yank. Still, her burgeoning 
+breasts were confined in a plain beige bra. Each passing second caused more titflesh to bulge 
+over her cups. </p>
+<p>As Cora's breasts began to overwhelm her poor bra she let out a moan. She felt her breasts 
+overwhelm the bra entirely, pushing it up and over until they were revealed in all their naked 
+glory. Pert and perky pink nipples capped her breasts which Cora couldn't help but massage. The </p>
+<p>motion and increased muscle on her torso caused her bra to snap and fall to the floor with the 
+remainder of her clothing. </p>
+<p>Cora felt her breasts pulse larger and larger in her hands. As her growth came to a halt it was 
+clear her tits were just a little too large for her hands. Still, she massaged herself and let out 
+another moan. Having watched the display, Vanessa let out a shriek which brought Cora back to 
+the present. </p>
+<p>Cora was panting, sweating and stark naked. In her haze, she guesstimated she stood at around 
+6'2" and her breasts had stopped somewhere in the F-cup range. Still smiling, Cora planted her 
+right hand on her hip and cocked it to the side. </p>
+<p>"How's that for mousy?" </p>
+</body>
+</html>

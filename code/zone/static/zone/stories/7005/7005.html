@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Big Girls Problems</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>Author : Wokod</p>
+<p>Warning : I'm not a native English speaker, so sorry for the mistakes, and feel free to correct anything! And of course, have fun!</p>
+<p>Note : Comments? Opinions? Questions? ! I'm available, just tag or send a message to u/wokod. If you want to start a topic about a specific story, you can! Just don't forget to tag me when you do on the appropriate reddit, like r/overflowingbra or r/expansivewriters.</p>
+<p>And since I can't answer to the comments/ratings on the main website, once again, thanks again for them all! Your comments, both positive and negative, help me a lot to improve :) (or so I hope :o ). Now, I hope you'll enjoy this story!</p>
+<hr />
+<p>Big girls problems</p>
+<p>"So... everything in this shop is magic?" Polly asked.</p>
+<p>The clerk behind the counter nodded. A quick demonstration of  a shrinking gun on Polly's sister, Viviane, just made things clear. Yes, his HellMart shop was really selling magic items. Viviane was still patting herself and looking around nervously, making sure she was back to her 5'9 perspective instead of the 1' tall she was a few seconds ago.</p>
+<p>"Polly, we should leave!" whispered Viviane, still terrified by what just happened to her.</p>
+<p>"Shhhh, Vivi!" Polly answered, annoyed "Stop being a brat! This is exactly what I need!"</p>
+<p>Polly frowned at her younger sister. Even if Polly was 19 years old and Viviane 18, the two of them were still often childish, bickering a lot more than they should. Their parents often despaired about it. But thankfully, most of the time, things were fine. Like today, when the two of them decided to go shopping together. Summer was here, and they needed new swimsuits. And since they were both 5'9, thin and sporting perky D cups inherited from their mother, they often bought clothes together so they could share them. This way, they managed to buy expensive things they couldn't have afforded individually. But of course, sometimes, it led to more bickering, as both of them wanted to wear the same dress, the same night...</p>
+<p>"What do you need?" the bald clerk behind the HellMart counter asked.</p>
+<p>"Your shrink ray. Can it shrink a specific body part?" Polly asked.</p>
+<p>"Not this one... what are you thinking about?" </p>
+<p>"I like running and climbing and..." </p>
+<p>Polly gestured at her generous chest.</p>
+<p>"They often get in the way. So if I could just shrink them for sports instead of wearing a painful minimizer bra, I'd do way better in the college team..."</p>
+<p>"Polly... don't!" Viviane whispered again "Let's go, come on!"</p>
+<p>"Shhhh I said! So, sir, is there a shrinking ray able to do this?"</p>
+<p>The man tilted his head with interest, left his counter, whistling, to go in an aisle and returned with what looked like a tiny, cute, transparent bottle. Polly frowned. This didn't look like a shrink ray at all.</p>
+<p>"What's that?" Polly asked, a little disappointed.</p>
+<p>"That's a trap bottle." the clerk explained "It can trap anything you desire. Want to get rid of your boobs for one hour? You just think about it while blowing in the bottle, and poof, here you are, one less cup size, two, three, or as flat as a plank, ready to run as long as you want! And when you want them back, you just swallow what's in the bottle, and poof again! You're back to normal!"</p>
+<p>"Is that better than a shrink ray?" Polly scratched her chin, unsure.</p>
+<p>"Do you really want to find out what happens when you mess up while firing at yourself with a shrink ray?"</p>
+<p>"Uh... actually, no." Polly admitted.</p>
+<p>"Good. I like to think about the safety of my customers." smiled the bald man.</p>
+<p>Polly gave a quick look at Viviane meaning "See? Told you, it's fine!". Meanwhile, the clerk was going on.</p>
+<p>"Plus, this bottle is infused with one of our specialties here, reality altering magic. Meaning no one will even blink if you walk out of the house with a flat chest, and big bonus, all your clothes with adapt to you. To everyone but the person using the bottle and anyone witnessing it, it'd be like you were always this way."</p>
+<p>"NO WAY!" Polly exclaimed "Okay! How much?"</p>
+<p>A little lesson about how "How much?" was meaningless in a shop selling wish granting items, and the clerk waved them goodbye, Polly unable to believe how lucky she was. Viviane, on the other hand, was relieved to be out of this weird shop. </p>
+<p>She didn't like shrinking.</p>
+<hr />
+<p>"Okay... let's test this!" Polly exclaimed.</p>
+<p>Back in her bedroom, she wanted to try this weird bottle. But Viviane had insisted to stay and see what would happen. She might bicker a lot with her big sister, she was still worried about her. Especially when Polly exclaimed "Here we go, sports without the bounces!" and blew in the strange bottle. </p>
+<p>Sparkles flew from her mouth, and simply floated in the bottle. And the more she was blowing, the more her breasts were shrinking. Polly tried not to laugh in joy as she looked down, while Viviane covered her mouth in shock. Within seconds, Polly was as flat as a board, and a lot of tiny sparkles were floating in the tiny bottle. She closed the bottle with the tiny cap on it. And looked at the sparkles dancing inside it. This was pure magic. And...</p>
+<p>These, were her breasts.</p>
+<p>She looked down to see not only she was flat, but her shirt shrank too! And on a picture framed on her wall where Polly was smiling with a few friends from college, she now looked like she never grew any breasts to speak of! To Polly, who complained for years about the "big girls problems", this was perfect! </p>
+<p>"It worked..." muttered Viviane.</p>
+<p>"Of course Vivi! Just like the shrink ray in the shop, duh!" Polly mocked "Now, I'm going to run without these awful things on my chest! I feel so... light!"</p>
+<p>Polly putted the bottle in a pocket and too happy to care, just ran out of the bedroom, feeling lighter than she did in years. She grabbed her sports clothes, changed in the middle of the living room too much in a hurry to worry about anyone watching, and left. Viviane just looked through the window at her now flat big sister leaving the house, running faster than ever.</p>
+<p>She looked delighted.</p>
+<hr />
+<p>"I broke my own record!" Polly exclaimed once back home, covered in sweat.</p>
+<p>"Great." Viviane answered with a slightly annoyed tone while browsing internet on her phone, comfortably sitting down in the garden "Good for you."</p>
+<p>"Vivi, I know you're jealous because you chickened out in the shop and didn't dare asking for something. But come on, I need you for a couple tests, and then, don't worry, I'll share!"</p>
+<p>"Unlike you, I don't want my boobs any smaller, thanks." Viviane said coldly.</p>
+<p>"Your choice." Polly shrugged.</p>
+<p>"And your boyfriend's choice." Viviane smirked "Did you go to Dan's house to see if he was still the boyfriend of "Flat Polly"?"</p>
+<p>"No, and I don't want to find out. I love him, he loves me, but I also love running without bouncing and climbing while seeing my feet. That's all I need to know. Now, come on, let's test this more! Vivi! Vivi, answer me! VIVI, stop being such a BRAT!"</p>
+<p>Viviane sighed. And followed her big sister, the only way for her to stop annoying her until she got what she wanted from her. The two of them returned to Polly's bedroom, where Polly took the tiny bottle out of her pocket. She looked at the tiny sparkles in... </p>
+<p>And opened the bottle to drink the magical content. </p>
+<p>As she did, Polly's breasts started to inflate. The two girls looked as Polly's chest ballooned out like she was having an instant puberty, her flat chest turning into two tiny breasts quickly covered by a tiny brassiere, then into two pointy B cups covered by a thing worth the name of bra, then two nice C cups, slowly getting rounder as they grew bigger, the bra enlarging along, and then, eventually, the bra changed size again, and Polly again wore D cup, round, nicely heavy breasts, stretching her shirt sexily, just like Viviane's.</p>
+<p>"And it worked!" Polly exclaimed "Curvy when I need to, flat when it's sports time!"</p>
+<p>"Good for you. Now, can I leave or do I need to watch some more boob magic?" </p>
+<p>"You can leave." Polly said after thinking for a couple seconds. </p>
+<p>Viviane shrugged and left. She closed her stupid sister's door behind her. And thought she heard the popping sound of Polly opening the bottle again. But after only a few steps, she heard Polly opening the door. </p>
+<p>"Vivi?" Polly asked with a mischievous grin.</p>
+<p>"WHAT?!" the younger girl angrily answered.</p>
+<p>"May I borrow one of your bras?"</p>
+<p>Viviane turned to look at her older sister. Despite Polly being one year older than she was, the blonde girl was as flat as a board. She never grew any breast, while Viviane, even if she was the youngest one, grew a generous pair of beautiful D cups from her mother's side. Polly often rubbed it when Viviane was reminding her she was the big sister, saying "Hard to tell!" while hefting her big breasts. Almost each time, it was the start of them yelling at each other. It was a sensitive topic. So why was Polly bringing it now?</p>
+<p>"You know you don't need bras, sis. What for? To put melons in them? My bras aren't toys, you'd know it if you needed some!" Viviane grinned.</p>
+<p>"Nice answer. So that how you'd be in a reality where I was flat."</p>
+<p>"What are you..." Viviane thought for a second "Wait, did you use the bottle?"</p>
+<p>"Just checking if you were affected too if you weren't there to see me using it!" giggled Polly.</p>
+<p>"Hey! Don't mess with my memories! Polly, you bitch!"</p>
+<p>Polly just closed the door immediately, locked it while Viviane was banging on it, and when she unlocked it again, Polly sported D cups and a big smile.</p>
+<p>"What's funny is you can't tell if this..." she rubbed her boobs "Is my normal or not, right?"</p>
+<p>Viviane walked away, grumbling. While Polly laughed. This bottle was amazing!</p>
+<hr />
+<p>Polly spent the following days having quite a lot of fun indeed. At first, she only used the bottle to shrink her chest when she wanted to run, or go climbing at the local climbing wall. She'd then grow back whenever she'd be home. And especially whenever she was about to call her boyfriend Dan, or to see him. She knew the big, handsome student liked her chest, but she didn't want to find out what their relationship would be if she was flat. She could easily know the truth but... no. It was her choice.</p>
+<p>But then the attractive blonde girl started to enjoy the feeling of freedom of having a flat chest. And after a few days, she liked to shrink her boobs before going to bed, just to sleep any way she wanted. And grew them back when she woke up. </p>
+<p>Then, as days, became weeks, Polly started spending entire days flat. As long as she wasn't about to be with Dan, it was like spending a day home with an old shirt : just comfort. Of course, since Viviane wasn't always there to see her use the bottle, most of the time, she didn't even know her big sister wasn't supposed to be flat. And when they started bickering and Viviane would rub about how she was bigger than her flat, "big" sister, Polly would take the bottle, stand right in front of her, and drink it just for her little sister to shut up while staring at her big sister growing, and growing, until she was as big as Viviane.</p>
+<p>"Oops, looks like you've nothing on me!" Polly mocked "And also, you're such an asshole when you think you're bigger than I am!"</p>
+<p>"Hey, you're the one messing with my memories!" Viviane angrily answered.</p>
+<p>But to Polly, it was never getting old. Actually, she ended up using the bottle on a daily basis. And not just for her breasts. She needed to work on something and had kinky thoughts distracting her? She'd put her sex drive in the bottle, and then, everything was easier until she swallowed the magic sparkles. On her period? No problem: she wished to trap it in the bottle, reality changed like she had a sickness making her unable to have her period, and she'd recover it one week later magically. She also spent one day at 5'0 tall, leaving 9'' of height trapped in the bottle, but didn't like it in the end. The craziest she went was letting 20 I.Q points in the bottle for one evening to literally "leave her brain at the door" before watching a stupid movie on her laptop. The movie indeed felt  better, but wow, when she recovered all her intellect, she felt so dumb for enjoying such a piece of garbage!</p>
+<p>But still... this bottle was now a full part of her daily life. </p>
+<p>And she loved it.</p>
+<hr />
+<p>"One of these days, I'm going to tell mom and dad you're shrinking the boobs they gave you!"</p>
+<p>Leaning against Polly's door, Viviane was staring at her sister dressed in sports clothes, blowing sparkles inside the magic bottle while her breasts were once again shrinking down to nothing.</p>
+<p>"You wouldn't dare and no one would believe you anyway, brat!" winked Polly.</p>
+<p>"Shut up Polly..." grumbled Viviane.</p>
+<p>"You know I'm right Vivi! Now, if you don't mind, tonight there's the Saturday night run downtown, my college club will be there, and I think I can be in the top 10!"</p>
+<p>"Yes, but when reality will change back, you'll..." Viviane started.</p>
+<p>"You don't know a single thing about it! I tested this already: whenever I change back, I checked, my times are still the same. People just remember me as being quite fast for a busty girl!"</p>
+<p>Polly giggled, enjoying how easy her life was now, and patting her sister's head, left with hopes of maybe even reaching the top 5 tonight. Life was smiling to her, so why not?</p>
+<p>Viviane just looked at her leaving. If anything, this bottle made her big sister even more annoying. At first, Polly had been cautious, worried about the magic turning against her, but now, Viviane could tell Polly was just abusing it to make her life easier whenever she needed. But Viviane didn't care. Tonight, she had other things to think about. There was a big party at a friend's house, and Will would be there. Viviane had quite a crush on the guy: he was a good guitar player, a nice singer, a funny boy, and okay, he was also damn cute. So tonight, Viviane, wanted to look good.</p>
+<p>So she needed her blue dress. A nice, beautiful one she bought with Polly, and hanging in Polly's closet. As Viviane went to pick it up, she discovered...</p>
+<p>The dress had shrunk. She couldn't fit in! The thing was waaay too tight in the chest area. Actually... the dress was made for a flat girl! Crap! In the original reality, they bought this dress together. But in this new one, for some reason, the reality altering magic decided this dress belonged more to Polly than Viviane, and shrunk it just like if Polly had been the one to buy it alone! It was so unfair!</p>
+<p>Viviane immediately texted Polly.</p>
+<p>Polly, come back right now! I need the blue dress tonight, and your stupid magic shrank it! Now I can't fit in! I paid half of it and you know it ! You have to come back here and drink your stupid bottle so the dress fits us both again!</p>
+<p>Viviane waited less than a minute, furious, before she got an answer.</p>
+<p>Too bad Vivi :p Not my pb tonight. Pick something else in your own stuff :p</p>
+<p>"Bitch!" Viviane exclaimed as she read the text message "That's stealing! I paid half of this dress! And you know it, Polly!"  she said out loud, alone in her sister's bedroom. "Then if you steal my things, I can steal yours!" she angrily added.</p>
+<p>Viviane went to the closet again, but this time, to pick an elegant pair of high heel shoes. Polly got them for her birthday last year. And at least, their feet were still the same size! Sure, Viviane knew Polly would kill her for touching her favorite shoes, but tonight, Viviane didn't care. And maybe she also wanted revenge for what Polly did, shrinking the dress she wanted. And if everything went right, she'd be back home before Polly.</p>
+<p>Viviane looked at herself in the mirror. The shoes looked amazing on her, and with the high heels, she was a nice 5'11! But the dress she had on was nowhere as nice as the blue one. She wasn't going to attract Will's stare with this. </p>
+<p>Her eyes suddenly noticed something shining. </p>
+<p>Polly's purse. It was still on her nightstand, and inside it, something was shining. Of course she didn't take her purse with her for a run, using her watch to pay for the after-run drinks she shared with her friends each time. Viviane knew too well what was inside the purse. She carefully took out the tiny bottle full of sparkles floating inside of it.</p>
+<p>"Actually, I think I could borrow this too, dear big sister..." Viviane grinned.</p>
+<p>She opened the bottle, and in one gulp, swallowed all its content.</p>
+<p>Lights flickered in the house, while a long moan was heard, coming from Polly's room...</p>
+<hr />
+<p>Polly walked home with pride. She managed to reach 7th place tonight! This was the best she ever did. She then spent a good part of the night celebrating with a few friends, and now, what she needed was some sleep. </p>
+<p>But as she opened her bedroom door and turned on the lights, she couldn't miss it.</p>
+<p>Someone came here. And searched through her things. Polly rushed to her purse on the nightstand, and immediately checked for the bottle inside. </p>
+<p>That's when she heard someone else walking in her bedroom.</p>
+<p>"Polly?!" Viviane exclaimed as she walked in "You're back already?!"</p>
+<p>Polly turned and faced her little sister... </p>
+<p>Sporting a huge, round, heavy pair of H cups. Huge boobs twice as big as Viviane's normal size, stretching Viviane's tank top in ways no girl her age should. Polly looked at her from head to toes, then her face went from shock to anger.</p>
+<p>"YOU!" Polly exclaimed "YOU HAD NO RIGHT TO TAKE THESE, YOU THIEF!"</p>
+<p>"Okay, calm down!" Viviane stuttered "I was about to give them back okay? You didn't need them tonight... and I never intended to do this in the first place, I just did it out of anger, and I came here to give them back, I swear!"</p>
+<p>"Vivi I don't CARE!"</p>
+<p>"Shhh, you'll wake up mom and dad!" warned Viviane.</p>
+<p>"Like I care! You give them back and you give them back now!"</p>
+<p>"Sure, sure..." Viviane mumbled "Just give me the..."</p>
+<p>"These are MY shoes and I NEVER allowed you to take them!"</p>
+<p>Viviane froze. </p>
+<p>"What?" she blinked.</p>
+<p>"You know these are my favorite high heels! Take them off right now!"</p>
+<p>"The shoes." Viviane repeated with a confused look "Okay. Sure. Have them."</p>
+<p>Viviane took them off immediately then stood back with a weird look, like she expected Polly to ask something else. Polly just shook her head.</p>
+<p>"Out of my room now!" Polly angrily ordered.</p>
+<p>"If that's what you want..." Viviane eventually smiled in a strange way.</p>
+<p>"Yes, I want you out, Vivi, I'm tired and I wanna sleep, is that so hard to understand?"</p>
+<p>"No. Sure thing. Good night then!"</p>
+<p>Viviane chuckled as she left the bedroom. Weird, thought Polly. She then made sure her precious trap bottle was still in her purse, even if she didn't use it tonight, and went to bed, still proud of her 7th place.</p>
+<hr />
+<p>The following days, Polly was a littled tired of Viviane's attitude. </p>
+<p>The girl was boasting about the size of her boobs even more than usual. Polly should have been used to it, as it happened often since Viviane started to grow years ago. Polly inherited from her dad's side, and was a flat as a plank. She never grew even one millimeter of breast flesh. While Viviane probably took from their mom's side, who was a D cup, and not only reached the D, but they outgrew it at such a young age she got used to be "the bustiest chick in the room" everywhere she went. So, of course, Viviane being the brat she was, often made fun of her big sister being flat while she had tremendous H cups making the boys crazy for her.</p>
+<p>Such a childish attitude. But, sure, these days, for some reason, Viviane was really boasting a lot about the size of her chest. And it was getting on Polly's nerves. Why did her little sister have to grow so big?</p>
+<p>Polly stopped thinking about it when someone rang at the family house door. Since their parents weren't back from work yet, Polly opened the door, and here was a tall, handsome boy smiling down at her. </p>
+<p>"Dan." Polly rolled her eyes and turned her back at him to call "VIVI! Your boyfriend is here!"</p>
+<p>She heard the footsteps of her little sister leaving her bedroom and soon, the super busty brunette was bouncing her way to the door with a surprised look.</p>
+<p>"Dan?" she blinked.</p>
+<p>"Hey girl, why didn't you call me these last days?" the older boy asked "Is there something between you and this Will guy? I heard from friends you were pretty flirty the other night at a party with him." </p>
+<p>"Uh.... was I?" Viviane asked.</p>
+<p>"Someone hasn't been really fair with her boyfriend?" Polly grinned, too happy to add fuel to the fire.</p>
+<p>"My boyfriend..." Viviane eventually smiled "Sure. Polly, are you going to leave my big, handsome boyfriend at the door, or are you letting him in? I'm going to show him how "flirty" I can be." she grinned.</p>
+<p>Dan pushed Polly out of her way like she was barely there and walked for the top heavy 18 years old smiling at him. He grabbed her by the hips and she rubbed herself against him before she went for a long, deep, noisy kiss. Polly watched it all and mumbled "Gross..." </p>
+<p>But when Dan's hands started going right for Viviane's way too generous bust...</p>
+<p>"Okay you two, get a room!" Polly exclaimed.</p>
+<p>"Mmmm sure, what about mine?" Viviane smiled between two kisses.</p>
+<p>"Vivi! No!" Polly told her.</p>
+<p>"Mmmm sorry that's a little too late now..." winked Viviane at her sister "Give us 30 minutes, it should be enough to show Dan how much I like him."</p>
+<p>Polly's protestations didn't change her little sister's mind, nor Dan's. She was sure this moron was there just for her stupid, big boobs. The two lovers locked themselves in Viviane's bedroom, and for the next thirty minutes, Polly had to listen to music loud enough to not hear all the moans and grunts coming from her little sister's bedroom.</p>
+<p>"You'll pay for this!" warned Polly once Dan was gone.</p>
+<p>"Yeah, whatever flatty..." grinned Viviane.</p>
+<p>"Don't underestimate me, Vivi!" </p>
+<hr />
+<p>Days passed, and Polly was using the trap bottle less and less. </p>
+<p>The excitement from the first weeks was gone, and she was starting to think she should have picked something else in HellMart. Sure, this was still very useful to take rid temporarily of her period, or just like she wanted, of her tiredness right before a race, so she could run for hours easily, then drink back all of the bottle right before going to sleep. That way, she had seriously increased her skills in running and climbing. Another Saturday night, and she reached 3rd place at the night run. Sure, maybe it was cheating a little... but it was just delaying her tiredness, not really erasing it, so... </p>
+<p>But on a Friday night, she found a new, exciting way to use it. And a good way to take revenge on Vivi's attitude these past weeks, constantly boasting about being the "big" sister. That night, their parents were gone, and Polly, as the real big sister, was in charge of Viviane. But of course, ten minutes after their parents were gone, Viviane came to Polly.</p>
+<p>"Polly, could you drive me to Dan's place please?" Viviane asked as nicely as she could.</p>
+<p>"Can't he pick you up? He's 20 and has a car!" Polly frowned "And you're not supposed to leave!"</p>
+<p>"His car broke... so come on! You have a car, Polly! Just drive me there and we'll say nothing to mom and dad, please!" she pouted.</p>
+<p>"No way, not after being as annoying as you've been these past weeks!" triumphed Polly "I'm not driving you anywhere. My car, my rules. Sorry, Dave isn't going to touch these fat boobs of yours tonight!"</p>
+<p>Polly laughed. Viviane looked genuinely annoyed. She got her. The curvy 18 years old looked at the old Ford outside. The one Polly bought to go to college. Polly's car wasn't going to move tonight, obviously</p>
+<p>"You'll drive me there." Viviane suddenly said, smiling "Or... I'll tell mom and dad you bought weed the other day."</p>
+<p>"You would't DARE!" Polly exclaimed.</p>
+<p>"Actually, I do." pouted Viviane.</p>
+<p>"Then I'll tell them you had sex with Dan under their roof!" Polly countered.</p>
+<p>"Then I'll tell them what really happened to dad's car the night when..." </p>
+<p>"Then I'll tell them about..."</p>
+<p>The two girls threatened each other for at least five minutes, before Polly, annoyed, decided to stop this.</p>
+<p>"Okay, enough with the blackmail. So I'm only your big sister when you need me? Too bad Vivi, because then..."</p>
+<p>Polly grabbed the tiny bottle she had in her pocket, and with a grin, blew in it. Sparkles flew out of her mouth, and the world started growing bigger and bigger around her. And Viviane's shocked expression was priceless.</p>
+<p>"NO!" Viviane exclaimed.</p>
+<p>Polly was getting younger. And younger. Losing inches in height as the 19 years old returned to 18... 17... 16... </p>
+<p>And only stopped when Polly was back to 15 years old. She now stood 5'5. And had a mischievous grin on her lips.</p>
+<p>"Oops." she mocked Viviane "Looks like I'm too young to drive!"</p>
+<p>Viviane stared at her in shock, before she looked outside. The old Ford had vanished. Polly had no car anymore.</p>
+<p>"You little bitch!" Viviane exclaimed.</p>
+<p>"Sorry "big" sister, looks like you can't leave. You're supposed to stay home and keep an eye on your little sister! Poor Vivi! How it is  to be the "big sister" now? Wasn't it what you wanted?"</p>
+<p>"I'm gonna tell mom and dad about..." started Viviane.</p>
+<p>"About what? All the things I never did because I'm too young now? Oops! Sorry Vivi, I think I won! Now YOU can order pizzas!"</p>
+<p>Polly giggled. Viviane was furious. But couldn't do a thing about it. And she eventually had to accept her defeat, and used her own cash to order pizzas for her annoying "little" sister and herself. Polly savored her victory. And decided to spent the night home watching a movie while eating pizzas.</p>
+<p>"You'll have to grow back eventually..." grumbled Viviane next to her on the couch.</p>
+<p>"Sure Vivi... but not tonight!" Polly giggled "Don't count on it!"</p>
+<p>"Then I'll tell..." Viviane tried again.</p>
+<p>"Then I'll turn back 15 years old again, and dodge the trouble, again!"</p>
+<p>"You annyoing little brat!" Viviane said, angrily pushing her sister away from her on the couch.</p>
+<p>"Hey! Your hands are all greasy from the pizzas!" Polly pouted "You moron! You touched my hair! Well done, Vivi! Pause the movie, I need to clean myself!"</p>
+<p>Polly grumbled. Viviane was a sore loser. She was sure she did it on purpose. Polly went to the bathroom, took off her clothes, and went right in the shower, mumbling about how Viviane was so annoying. As the hot water poured on her, the bathroom slowly filled with steam, and Polly had shampoo in her eyes when... she heard the bathroom door.</p>
+<p>The lock broke years ago and their dad never repaired it. But everyone was used not to come in when you could hear the shower. Polly tried to rub her eyes, but it only made things worse. Was there someone in the mist out there?</p>
+<p>"Vivi?" Polly called.</p>
+<p>No one answered. </p>
+<p>But the lights... the lights flickered for a few seconds. And she thought she heard something. But with the shower sound, it was hard to tell. Polly quickly finished showering, dressed up, and left the bathroom.</p>
+<p>And in the living room was her big sister Viviane.</p>
+<p>At 5'11, the 22 years old girl was not only tall, but also curvy in an insane way. At 15 years old, Polly was as flat as a board, but her big sister stretched her top with huge J cups, round and proud, close to the size of her own head. Polly couldn't hope to grow as big as her sister. Because when Viviane was 15 she already needed DD cups. By 18, she was a H cup like in "Huge". And then, her breasts went like "Hey, what about growing even bigger?" and within four years, reached their current, tremendous J cup size. The joke around was that Viviane took all the boobs available in the family, and there was nothing left when Polly was born. Polly hated it. Everyone always compared her to her big sister!</p>
+<p>"A problem?" Viviane asked with a large smile.</p>
+<p>"No." mumbled Polly "Did you come in the bathroom earlier?" she asked.</p>
+<p>"Of course not! Why would I like to see a flat, puny brat like you showering?"</p>
+<p>"Shuddup!" exclaimed Polly in a high-pitched voice "I know you want my super magic bottle!"</p>
+<p>She pulled her tongue out at her big sister, and showed her the currently empty magic bottle. Polly used it to cheat at school. She would read a lesson before an exam, just once, blow everything she just read in the bottle, and then, drank it quietly right before the exam so it was like she just read the whole stuff ten minutes ago. Her grades increased! And yeah, she used it to get better at running in the high school team. She would put her tiredness in it before the race and just drink it back after.</p>
+<p>"No, you can keep it." grinned Viviane.</p>
+<p>"You're jealous! Jea-lous! Jea-lous!" the annoying young Polly sang.</p>
+<p>"No, and guess what? I'll even make you a favor.Tonight, you can stay home alone, I won't tell mom and dad. Keep the pizzas, watch any movie you want. While I'll take MY car and go pay a visit to Dan."</p>
+<p>"Dan's stupid..." Polly rolled her eyes "But okay! I'll be home alone, yes!"</p>
+<p>Vivane smiled strangely, and left, getting in the old Ford she bought when she started college years ago. On one hand, Polly was glad to have the house aaaall for herself at just 15! But on the other hand... she watched Viviane leaving, her huge breasts almost rubbing the wheel of her car. She was sooo big. </p>
+<p>Polly patted her flat chest.</p>
+<p>And she only felt more jealousy for her big sister.</p>
+<hr />
+<p>"Polly, would you like to be older?" Viviane asked her sister.</p>
+<p>"What?" Polly frowned while taking her breakfast.</p>
+<p>It was Saturday morning. Viviane returned home right before their parents were back. She still smelled of sex with Dan. Polly knew it. But she didn't say a thing. She liked too much having the house all for herself.</p>
+<p>"I don't know." shrugged Viviane "If there was a way for us to be closer in age, would you like it?"</p>
+<p>"Like I'd want to be closer to you!" Polly answered, annoyed "Nah, I like my life and friends, I don't wanna be aaaaanywhere like you!" she liked.</p>
+<p>"Okay then. Enjoy being 15." Viviane mysteriously smiled.</p>
+<p>But Polly's eyes went for the huge tits resting on the breakfast table while Viviane was eating her cereals. Yes, she stared. But actually, it was quite normal since she grew up flat next to such a huge sister, right? How could she not feel envy?</p>
+<hr />
+<p>Days went on. </p>
+<p>Polly was dealing with the life of a high schooler. And a very flat one. She knew she should be used to it, but every single day, someone would make a joke about how flat she was, or mention how ridiculous was the difference in size between her sister and her. And high school was a cruel place, so the jokes never stopped.</p>
+<p>And at home, Viviane was constantly rubbing it. Boasting about being the "biiig" sister. And Polly the "sooo little" one.</p>
+<p>Days turned into weeks </p>
+<p>And eventually, one morning, when Polly slipped on a huge J cup bra she could use as a tiny hat, right on the bathroom floor, she shouted :</p>
+<p>"ENOUGH!"</p>
+<p>She found a magic shop. Got a magic bottle. And she was using it to do her homework? This was ridiculous. It was a Saturday morning, and Viviane had left to spend the day with Dan. Polly, furious, just told her parents she needed something at the mall. She took her cute pink purse, and the "snotty brat" as Viviane called her went right to the bus stop, and then, to the mall indeed.</p>
+<p>She grinned as she saw the HellMart shop. Like the previous time, no one seemed to notice it. She walked through the automatic doors, and found the same clerk than the last time snoring behind his counter. She coughed, and he woke up, surprised.</p>
+<p>"What? Uh... welcome to HellMart! What can..."</p>
+<p>Polly stomped to the counter, and dropped the magic bottle on it. </p>
+<p>"Yes? Is there a problem with this product? If you ask me, I'd say it works." the clek smiled down at her in a strange way.</p>
+<p>"It works, but I want BETTER. I wanna trade it against something else!" Polly ordered with her bratty attitude.</p>
+<p>"And what would you need?" the clerk still smiled.</p>
+<p>She grabbed a picture in her purse. A picture of herself at the beach with Viviane, last year. She was as flat as it was possible, while Viviane had a huge bikini top still unable to countain her amazing chest properly.</p>
+<p>"This is my big sister, remember? She was with me the last time." Polly poked at the picture.</p>
+<p>"Yes... just like I remember her." chuckled the clerk "So... ?"</p>
+<p>"I want big boobies. So big I'd be bigger than her."</p>
+<p>The clerk nodded.</p>
+<p>"So... growth pills?" he titled his head, grabbing a pack of pills under its counter.</p>
+<p>"No, I want them big, but I want them now, not in three years!" Polly exclaimed.</p>
+<p>"Calm down... ah, the impatience of the youth." the clerk grinned "Follow me."</p>
+<p>Polly followed him in an aisle, where he pointed at piles of boxes with pictures of typical magic lamps printed over them. </p>
+<p>"I have these lamps. You wish to have big boobs and poof, instantly you..."</p>
+<p>"NO!" Polly tightened her fists "I want BETTER than this! I don't want just instant big boobs! I want the reality change stuff, so my stupid sister remember me growing like huuuuuge boobies and can't know what hit her!"</p>
+<p>The clerk crossed his arms.</p>
+<p>"My, then if it's what you want..." he led her to another aisle and picked a weird wand on a shelf. Looking like a tiny branch "This is one of my simplest and yet, most powerful items. The Wand. It will do the trick as it alters reality. Point it at anything or anyone, describe what you want, and poof, it'll be like it had always been the way you..."</p>
+<p>"PERFECT!" Polly exclaimed, grabbing it from the bald man's hands "This will do!"</p>
+<p>She laughed like she could already taste her revenge, and ran out of the shop. </p>
+<p>Not even noticing it disappearing behind her.</p>
+<hr />
+<p>Polly didn't even wait to be home. She was in a hurry to use this new, magic wand, and come home with a very, very different body. She ran behind the mall in a desert alley full of trash containers. And made sure twice no one was around. And once she was sure...</p>
+<p>"Let's see who's going to laugh now, big sis'!" the teenager said.</p>
+<p>She pointed the wand at her chest.</p>
+<p>"I grew big boobs!" she simply said.</p>
+<p>POOF!</p>
+<hr />
+<p>Viviane was kissing Dan, the two of them sitting in the grass next to a tiny lake. Dan's family had a cabin there, and Dan offered Viviane to spend a romantic weekend there. Of course, by romantic he meant "lot of sex", but Viviane wasn't going to complain. </p>
+<p>Sure, at first, she had regrets about stealing a few years and her breasts right from her sister, but Polly was better as a brat. And Viviane better as the big sister - or so she thought - and at least, she wasn't lying to herself about why Dan dated her. And why should she feel bad about it? Wasn't Polly the one who wanted to be flat to begin with? Didn't she toyed with Viviane's memory when she used the bottle? And Viviane even asked her if she'd like to be older, but this stubborn teenage girl prefered to pretend she liked being a high schooler, so Polly kind of deserved it.</p>
+<p>Dan's hand, as usual, slowly went to find the curve of the bottom of Viviane's right breast. Sure, he was crazy for these, and had good reasons to. In there were Viviane's original D cups, plus Polly's D cups, and two more cup sizes she grew when she made herself older. Her J cups bra were huge, but damn, boys were crazy for these.</p>
+<p>"Ouch!" complained Viviane suddenly.</p>
+<p>"What's wrong?" Dan suddenly stopped "Did I pinch you?"</p>
+<p>"No... my bra did!" Viviane said.</p>
+<p>Why? This bra was a perfect fit this morning! 32K. The sum of her D cups, the two cup sizes she grew when she made herself older, and of course, Polly's big E cups. She had grown big boobs before she decided to use this stupid bottle. Good thing she didn't know where her big boobs went. But at least, on Viviane's chest, they were put to good use.</p>
+<p>"That was nothing." Viviane eventually winked at Dan "Let's resume, where were we..."</p>
+<hr />
+<p>"Nothing?" Polly asked out loud, annoyed. "Just this stupid "poof" sound?!"</p>
+<p>Nothing changed indeed. She was still as flat as ever. And it only annoyed her more.</p>
+<p>"What's wrong? Come on, do your magic stuff!" she gestured the wand at her chest. Maybe she hadn't been precise enough? "Okay, my boobies started growing years ago and became like, huge!"</p>
+<p>POOF!</p>
+<hr />
+<p>Viviane groaned. For some reason, Dan's hands on her tits felt even better than usual. The boy was going crazy for them, and she was still dressed up. Dan's hands felt so tiny... it would have been totally different with her original D cups. Stealing Polly's huge G cups had been a little crazy, but hey, Polly was the one to complain constantly about having grown huge all these years. She had been the first to grow in her class, and the last to stop growing. She didn't like being the bustiest girl everywhere she went, and especially, having to stop running.</p>
+<p>So... served her well. Viviane kissed Dan again, as his hands started going for the clasps of her 32M bra. Sure... even Viviane's head was smaller than these two heavy boulders!</p>
+<hr />
+<p>"Why is it not working?!" angrily exclaimed Polly. The teenager was definitely furious. Did she trade her magic bottle for some fake magic wand making weird sounds? No way! The guy told her it was magic, and the last time, it was, so why would he give her a piece of crap? Maybe it just needed some time to warm up? Polly hit the wand a couple times.</p>
+<p>"Come on, do your job!"</p>
+<p>She then pointed the wand at her chest again.</p>
+<p>"Okay, I grew an enormous pair of tits over the past few years, super sexy tits you can't miss, making my sister soooo jealous of how big I was!"</p>
+<p>POOF!</p>
+<hr />
+<p>Vivane was now topless in the grass, Dan kissing her huge breasts. It felt so good... and then, it became even better.</p>
+<p>"Whatever you're doing, ooooh, don't stoooop!" moaned Viviane.</p>
+<p>The boy's head disappeared between her tits and he only answered with ridiculous, muffled sounds. Yes... yes, her huge tits were even bigger than HIS head! And Dan wasn't small by any mean! It felt so good to have giant boobs... Viviane had spent years looking at Polly's enormous tits. She shouldn't have been jealous, Viviane had proud D cups, but the J cups monsters Polly sported? How could she even complain about these? They were the sexiest thing! Viviane had developed a slight obsession for tits just because of how massive her sister had grown!</p>
+<p>So the day she realized she could steal them...</p>
+<p>And now, here she was, with these giant P cup tits, way larger than her head, flattening on her chest because of how their weight was pulled down by gravity, and Dan's head between them. How could Polly complain about this, seriously?! Viviane savored it. A lot.</p>
+<hr />
+<p>"I'm soooo jealous!" Polly admitted out loud.</p>
+<p>For years, since she had to look at Viviane growing these massives tits, she had been incredibly jealous. Even without Viviane's nasty comments, there was something about these giant boulders... she wanted them so bad! It was like they were made to make her jealous.</p>
+<p>So why wasn't this wand working?! </p>
+<p>She decided to give it a last try.</p>
+<p>"My TITS" she started so angry she barely thought about it "grew like TEN CUP SIZES a year EVERY YEAR since my PUBERTY started and NEVER STOPPED since!"</p>
+<p>"Is that detailed enough, you stupid wand?!" she exclaimed.</p>
+<p>POOF!</p>
+<hr />
+<p>Viviane screamed.</p>
+<p>Whatever Dan was doing between her tits, it was too good. She moaned. Grunted. Begged for more, eyes closed. She had the weird impression she could hear loud stretching sound, like inflating balloons around her, but couldn't get where it was coming from. She was too aroused.</p>
+<p>She came.</p>
+<p>And looked down to feel Dan, struggling to get out of her cleavage. As she had grown so big a whole man could fit between her enormous, gigantic tits. </p>
+<p>She never understood what was her problem. She knew Polly was way too big. The poor girl was growing ten cup sizes a year since her puberty started. Within two years, walking was hard for her. By 15, she could barely get out of her bed. And at 19... Polly was just a girl attached to two boobs almost as big as she was, and so heavy she needed a cart to move. She was home-schooled. And her only dream was to be able to run again. It was during one of her few trips outside the house, as she was moving with her cart, with Viviane's help, that they found HellMart. And her dream came true.</p>
+<p>But for Viviane, it was even better. As she had always been jealous of her sister's gigantic tits. They were somehow perfect despite their size. And sexy and... Viviane loved how everyone had to take care of her sister because of how huge she was. She wanted to trade places. To be the enormous one. </p>
+<p>And she succeeded.</p>
+<p>Sure, she hadn't thought about the fact a few more years would add a few dozens cup sizes to the mix. Viviane now lived in the house garage, her tits occupying most of it. But Dave was still her boyfriend, and using a truck and a crane, he often brought her to dates outside. Like, right now, next to the lake, near the isolated cabin. He had used the crane to gently drop down Viviane on the grass. And the girl attached to the giant boulders of flesh couldn't even touch the ground with her feet. While Dan had dived between her tits, and was now doing... whatever he was doing down there.</p>
+<p>Dan's head eventually popped out of her cleavage, covered in sweat.</p>
+<p>"Did you say something, Vivi?"</p>
+<p>"No... I was just enjoying!" the girl giggled.</p>
+<hr />
+<p>Polly screamed in anger. Again, it didn't work. </p>
+<p>She was never going to equal her monstrous sister. Why didn't this work? She didn't know. And actually, she was so angry she didn't care anymore. A quick look through the mall windows and she saw HellMart had vanished. Yeah, this stupid clerk pranked her. Sure, he sold magic items, but obviously, not this time. His sense of humor was also something out of this world. She'd never understand why he did that.</p>
+<p>"DAMN YOU!" she shouted as loud as she could, as the angry, frustrated teen she was.</p>
+<p>"A problem, miss?" someone asked.</p>
+<p>A delivery man was looking at her with curious eyes. Along with a second guy, the two of them were pushing a cart with on it, a bra so gigantic each cup was higher than the two men. Polly recognized one of Viviane's custom bras. She didn't really need support since her tits touched the ground, but whenever she wanted to move around, people didn't want to see giant nipples piercing through equally giant shirts. So the bras were needed anyway.</p>
+<p>"No..." Polly sighed with jealousy "Guys, you're going to my place. This belongs to my sister. Care to give me a ride?"</p>
+<p>"Only two seats in front of our van, Miss." the delivery man shrugged "But if you can fit behind..."</p>
+<p>Polly followed them to their van. The bra they carried was so huge it filled all the back of it so the only way for Polly to fit was... to get inside one of the giant cups. One of her sister's giant cups. And before the delivery men closed the van back doors...</p>
+<p>She threw the wand outside, right in a nearby trashcan.</p>
+<p>"What a piece of garbage." she angrily muttered. Looked like she was doomed to live in a world where she'd never be able to have a pair like her sister's. She'd be flat forever. She tried to see the pros: at least, she could run, and climb...</p>
+<p>"Who cares about running and climbing when you can have big tits?" she sighed.</p>
+<p>Only a moron would trade one for the other.</p>
+<p>THE END.</p>
+</body>
+</html>

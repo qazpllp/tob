@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>The Domes of Callantha, chapter 5</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>E. N. Dowd </p>
+<p>The Domes of Callantha </p>
+<p>37 </p>
+<p>THE DOMES OF CALLANTHA </p>
+<p>A Breast Expansion Fantasy 
+by E. N. Dowd </p>
+<p>This story contains descriptions of nudity, body modification, sexual acts, 
+and ridiculously large breasts. Don’t say you weren’t warned. </p>
+<p>Comments? Compliments? Complaints? Email the author at: storiesbyendowd@gmail.com </p>
+<p>Chapter 5 
+THE SEARCH </p>
+<p>Yet again, Clay woke up alone. He wished that just once, he could sleep with a 
+woman and not have her sneak out without waking him. Grumbling to the walls of his 
+empty hut, he rolled out of bed, put his clothes on, and stomped out to find Tani. Or Ivy. 
+Or Nella. Someone, at any rate, that he could ask just what the hell was going on. 
+Otherwise, he swore, the next girl was going to end up tied to the bed till morning, and 
+she was going to talk before he let her go. </p>
+<p>There was no trace of Tani, either in the high street up along the ridge or in the low 
+street by the waterfront. He tried the Rusty Anchor, which was just opening up for the 
+day. Ivy hadn’t started work yet, but the owner told him Nella was upstairs in her room, 
+sleeping in. </p>
+<p>“Do you mind if I wake her?” Clay asked. 
+He grinned. “Suit yourself. If she feels like killing someone, at least it won’t be me.” 
+“Oh, thanks.” 
+The village whore’s door was bolted from the inside. Either she was still sound asleep 
+or she wasn’t interested in answering a polite knock. In the end, Clay had to pound on the 
+door and holler before the tired-looking redhead pulled back the bolt and let him in. Nella 
+was wearing a fuzzy red nightgown, a shade darker than her hair. She did, in fact, look 
+angry enough to kill someone, but when she saw who it was, her face instantly brightened. 
+“Oh, it’s you, Clay! Come in, darling, come in. Make yourself comfortable. Cup of tea?” </p>
+<p>“What? Uh, no, thanks. I—” 
+“You didn’t come to collect on our little bet, did you? I’m afraid I’m a bit short just </p>
+<p>E. N. Dowd </p>
+<p>The Domes of Callantha </p>
+<p>38 </p>
+<p>now.” Nella smiled wickedly. “Of course, if you want to take it out in trade—” </p>
+<p>“No, thanks,” Clay said again. “I was wondering—” 
+“I bet you were,” she purred. “The answer is yes. Any time you want. For you, no </p>
+<p>charge.” </p>
+<p>“That’s not what I mean,” he insisted. “I’m trying to find Tani.” 
+Nella looked surprised. “But darling, whatever for? There’s so much more of me. 
+Isn’t this better than that skinny little waif?” She untied the sash of her nightgown and let 
+it fall to the floor. Her naked body was just the way he had left it, firm, youthful, 
+absolutely stuffed with curves. He found himself staring helplessly at the ripe globes 
+jutting proudly from her chest. Creamy, flawless skin, firm, youthful flesh: not a trace of 
+sag, just the natural teardrop shape breasts that size were bound to have. It seemed that he 
+had outdone himself. Maybe Tani wasn’t so important after all— </p>
+<p>While he struggled to banish that thought from his mind, the redhead pressed her 
+advantage. “Tell me something, stud,” she said in a husky voice, putting her arms around 
+his neck and pressing her erect nipples against his chest. “Does a girl only get one chance, 
+or can you do… more?” 
+“Come again?” 
+“That’s just what I mean. If I do cum again, can you give my girls another little 
+boost? I mean, I love them, I’m crazy about what you’ve done with them, but now that 
+I’ve tried them on for a while, I think they could be just a little bigger. Don’t you agree?” 
+She reached down to fondle his crotch through his trousers. “Oh, I think you do.” </p>
+<p>Clay agreed so hard it was beginning to hurt, but he made one last effort to stay on </p>
+<p>topic. “Look, can you help me find Tani or not?” </p>
+<p>“As a matter of fact, I saw her early this morning, just before I went to bed. Poor </p>
+<p>thing, she can’t handle being around so much big…” </p>
+<p>Nella pushed her tits hard against Clay’s body, bumping him a step back toward the </p>
+<p>bed. </p>
+<p>“Soft…” Bump, another step. 
+“Beautiful…” Bump. 
+“Voluptuous…” Bump. He was right up against the foot of the bed now. 
+“Womanhood.” One last push, and he fell back on the thick feather mattress with 
+Nella’s naked body on top of him. Her ripe melons were grinding into his torso, so much 
+bigger and firmer than before, but tiny compared with what he had given Tani last night. </p>
+<p>“Wait,” he said suddenly. “What do you mean, ‘poor thing’?” 
+Nella rolled off him and sat up, giving him a very odd look. “You know exactly what 
+I mean. She looks like a cross between a thirteen-year-old boy and a skinned rabbit. She 
+certainly has nothing to compete with these.” The redhead mashed her tits together and 
+laughed throatily. “I guess she finally couldn’t take it anymore, because when I saw her, 
+she was on her way out of town.” </p>
+<p>E. N. Dowd </p>
+<p>The Domes of Callantha </p>
+<p>39 </p>
+<p>Clay sat bolt upright. “What! Which way? Did she say where she was going?” 
+“Down, boy!” Nella licked her full red lips and gave him a smoldering stare. “I can </p>
+<p>tell you where she went… maybe.” 
+“What do you mean, maybe?” 
+“And you can give my titties a little more help… maybe.” 
+“Oh.” Clay felt his cock swelling even more as the red-haired whore started to slide </p>
+<p>his trousers down his hips. He let himself fall back on the bed. 
+“So how about it?” she purred. “Fair trade? Tales for tits?” 
+“Ohhh,” Clay gasped as his giant member sprang free. It didn’t seem like he was </p>
+<p>going to have much choice. </p>
+<p>“Then you can start making me bigger… and riper… and rounder….” 
+“Oh!” A thrill of pleasure spiked through Clay’s body as Nella lowered herself onto </p>
+<p>his raging erection. Her tight, well-muscled pussy clamped down hard, milking every 
+inch of his shaft, her whole body bobbing like a piston, hips gyrating as she ground 
+herself against him. She leaned forward, using one arm for support while the other hand 
+groped and caressed her wildly bouncing tits. </p>
+<p>“Come on, magic man,” she panted, pushing her breasts closer to his face. “Grow me 
+some more. Make me as big and full and heavy as you want. As big as that foreign bitch, 
+I know you were staring at her, I know that’s what you like. Make me bigger, oh yes, and 
+bigger, yes, big big big….” </p>
+<p>His hands flailed, trying to grab her shimmying melons, but he could only manage to </p>
+<p>brush them with his fingertips. It was enough. Sparks of power jumped like invisible 
+lightning from his fingers to her swelling bust, priming her with magic. And when he 
+came, it felt like a flood of jism shooting straight from his cock through her body and into 
+her huge, pulsing mammaries – filling her up with hot white fluid, as if she were lactating 
+in reverse. With every pounding heartbeat she swelled bigger and bigger still, clutching at 
+her own expanding curves with greedy fingers, till her whole body clenched and 
+shuddered with the cataclysm of her climax. Then she let out a long, slow moan like a 
+balloon losing its air, and her body slumped forward onto his. </p>
+<p>She passed out with his penis still inside her, her new breasts mashed against his chest. </p>
+<p>The massive globes were still proud and firm, still had that teardrop shape without any 
+actual droop, though they were twice as heavy as before. At a guess, Clay thought, they 
+were nearly as big as gallon jugs—say, six or seven pounds of luscious boob flesh apiece. 
+The full weight of her torso resting on them was barely enough to squash them slightly 
+out of their natural shape, forcing an extra inch or two of light pink skin to bulge out on 
+all sides. They covered the full width of his chest, never mind hers. Her head had flopped 
+forward to nestle between the twin pillows of her cleavage, with a smile of sheer bliss on 
+her lips. </p>
+<p>“Wake up, Nella,” he said, shaking her gently. “Come on, this isn’t funny. Tell me </p>
+<p>E. N. Dowd </p>
+<p>The Domes of Callantha </p>
+<p>40 </p>
+<p>where to find Tani.” </p>
+<p>Nothing seemed to rouse the redhead until he simply rolled over on top of her, pulling 
+out his detumescent member with a loud wet plop. That, at least, got her attention. “Hey,” 
+she said weakly, “I wasn’t done yet.” </p>
+<p>“You’re done for now,” he said firmly. “Tell me where Tani is.” 
+“You’re no fun,” she pouted. “All right, if you insist, I’ll take you to her.” 
+“Take me? Oh, no. You’re going to tell me, and I’m going alone. I need to move if </p>
+<p>I’m going to catch her.” </p>
+<p>“Mmm,” Nella objected. “All these years I’ve waited for someone like you, and you 
+think I’m just going to let you go? I’m coming with you, silly. I haven’t finished with my 
+magic man yet.” And from that position she would not be budged. </p>
+<p>For an exasperating hour, Clay sat on the bed trying to be patient, or paced up and 
+down trying to keep his impatience quiet. Why did it always take a woman so long to get 
+ready for anything? Tani must be miles away by now. Did Nella have to rummage 
+through her wardrobe for absolutely every stitch of clothing she owned? He began to feel 
+like they would never leave. </p>
+<p>In fact, the delay was not entirely Nella’s fault. If her first time with Clay made it 
+hard for her to fit in her clothes, the second time made it impossible. Try as she might, 
+she simply couldn’t stuff her enormous new boobs into any of her dresses, and none of 
+her coats or blouses would close across the bust. She almost managed it with a pretty 
+little turquoise frock—not the most practical thing for traveling, but she thought it would 
+do in a pinch. By heroic efforts, tugging at seams and loosening straps, she could just 
+squeeze one breast far enough in to cover the nipple and most of the areola. But as soon 
+as she tried to cram the other one in, the first popped out again. </p>
+<p>By this time the floor was covered in discarded dresses and tossed-aside fripperies, 
+and Nella was left with a stark and embarrassing realization. She literally had nothing to 
+wear. As much as she liked the idea of flaunting her new body, wearing nothing just 
+wasn’t an option. </p>
+<p>She sighed. There was only one chance left, and she didn’t think much of it. “Clay, </p>
+<p>darling? Magic man? Do you think you can do me a teensy little favor?” </p>
+<p>“What now?” Clay snapped. 
+She gave him an apologetic little simper. “Sneak downstairs to the cloakroom and see </p>
+<p>if anybody left a coat behind?” </p>
+<p>Grumbling to himself, Clay went. He returned with a fat man’s gray woolen cloak, a 
+braided rope belt, and a few other odds and ends in a sack. The cloak was roomy enough 
+for a pup tent, and scratchy besides, but Nella found that if she belted it tight at the 
+midriff and wore a silk slip underneath, it was just endurable. She eyed herself critically 
+in the mirror. “How do I look?” </p>
+<p>E. N. Dowd </p>
+<p>The Domes of Callantha </p>
+<p>41 </p>
+<p>“Fine,” Clay grunted. 
+“I do not. You’re just saying that to be nice.” 
+“All right, you look like a raincloud with boobs.” 
+Nella smiled in spite of herself, and favored him with a pirouette and a curtsy. “Why, </p>
+<p>thank you, magic man!” she giggled. </p>
+<p>Clay glanced at her bare feet. “You’ve got a decent pair of boots, I hope?” 
+“Of course.” 
+“Put them on and let’s go.” 
+“But I haven’t had breakfast yet.” 
+“Here.” Clay pulled a loaf of bread and a hunk of smelly yellow cheese out of his </p>
+<p>sack of odds and ends. “We’ll eat on the run.” </p>
+<p>“I haven’t done my hair.” 
+“The wind will undo it anyway.” 
+“I haven’t done my face.” 
+“Fix it later. I can make it look any way you want.” 
+“I haven’t—” 
+Clay threw his hands up in frustration. “Look, are you coming or not? Tani isn’t 
+going to wait up for us. If you’d rather stay here, just tell me which way she went and I’ll 
+leave.” </p>
+<p>“But—” 
+“Alone.” 
+“But—” 
+“Now.” 
+Nella gave herself five whole seconds to seethe in silence. “All right,” she said </p>
+<p>through gritted teeth. “Now. But don’t say I didn’t warn you.” </p>
+<p>“Warn me about what?” 
+“Nothing,” she admitted. “I just felt like saying something stubborn.” </p>
+<p>They went west along the road, the same way Countess Elira had gone. Clay set a 
+brisk pace, but Nella began to have trouble keeping up. A cool sea breeze helped them 
+stay fresh at first, but then the road turned inland through a stretch of thick woods and the 
+wind died down. By midday she was drenched with sweat, obviously limping, and he had 
+to let her call a halt. “Take off your boots,” he said, trying to keep his concern out of his 
+voice. </p>
+<p>“I’ll be fine,” she lied. 
+“Sit,” he ordered, pointing at a fallen log beside the road. She obeyed, and he knelt in </p>
+<p>front of her to unlace her boots. Her feet, unused to long hikes, were swollen and 
+beginning to blister. </p>
+<p>“All right, we can’t have this. Let me try to fix it.” Clay ran his hands over Nella’s </p>
+<p>E. N. Dowd </p>
+<p>The Domes of Callantha </p>
+<p>42 </p>
+<p>delicate feet, wiping away the damage, letting just enough power trickle through his 
+fingers to toughen her soles and soothe her aching tendons. “There. Temporary, but it 
+will do for now.” </p>
+<p>By way of thanks, she gave him a teasing look. “Why not make it permanent?” 
+“To do that,” he said gruffly, “I’d have to fuck you again.” 
+“Why not?” Her lips pursed in a coquettish smile. “I bet there’s a lovely place for it </p>
+<p>back there in the trees.” </p>
+<p>Clay looked like he was about to say a very firm “no,” but he seemed to change his </p>
+<p>mind. “All right. But first pay me the five laurels you owe me.” </p>
+<p>Nella’s smile changed to an angry gape. “Oh! You—thing! You know I didn’t bring </p>
+<p>any money with me.” </p>
+<p>“That’s right,” he answered. “I guess you’ll just have to wait, then. Come on, move. </p>
+<p>We still have a lot of miles to catch up.” </p>
+<p>That afternoon they passed through two more villages, one with a guesthouse, the 
+second with a proper inn at a fork in the road. They stopped at the inn just long enough to 
+describe Tani to the nosiest-looking locals and ask if she had happened to pass that way. 
+Nobody had seen her, but as the innkeeper frankly admitted: “If she’s as plain as you say, 
+I might not notice if you stripped her naked and put her in my bed.” </p>
+<p>“What about Countess Elira?” Nella asked. “Black hair, bitchy, a whole herd of </p>
+<p>servants?” </p>
+<p>to illustrate. </p>
+<p>best chambermaid.” </p>
+<p>“Tits like prize pumpkins?” The man held his rough hands a foot in front of his chest </p>
+<p>“That’s the one,” Clay said. 
+“Sure, everyone noticed her. Came in yesterday, left this morning. Carried off my </p>
+<p>“That sounds like her,” Nella agreed. “Which way did she go?” 
+“Right fork.” The innkeeper indicated the road with a jerk of his head. “Took her own </p>
+<p>sweet time leaving, too. Does she owe you money or something?” </p>
+<p>“Or something. Thanks, you’re a dear.” Nella pressed her ripe bosom against the </p>
+<p>man’s chest and gave him a resounding kiss on the cheek. </p>
+<p>“You’re in a friendly mood,” Clay said as they left the inn, walking side by side down </p>
+<p>the right fork of the road. </p>
+<p>“It’s cheaper than leaving a tip,” she explained. “Works better, too.” 
+“I can imagine. So why are we chasing the countess now?” 
+“Because Tani is chasing her too, I’ll bet my last laurel on it. Or would if you hadn’t 
+rushed me this morning and made me leave my purse behind. You can’t make a girl pack 
+up and leave town without the necessities of life, even if you are a magic man. It just isn’t 
+done.” </p>
+<p>E. N. Dowd </p>
+<p>The Domes of Callantha </p>
+<p>43 </p>
+<p>“Never mind that,” Clay interrupted. “What makes you think Tani is going after the </p>
+<p>countess?” </p>
+<p>“Because I saw her face when she was leaving. She looked like she was ready to 
+murder somebody because the titty fairy handed out goodies to everyone but her, and she 
+didn’t care if she got caught, either. She wants that woman’s magic.” Nella gave Clay a 
+shrewd sidelong look. “So why are you going after Tani?” </p>
+<p>“Because I’m the titty fairy,” he said dryly. 
+“So why didn’t you give her some goodies before she left?” 
+“I did.” 
+The shrewd look turned blank. “You what?” 
+Clay suppressed a sigh. “You really want to know? She came to me yesterday to do </p>
+<p>her body like I did yours. She asked me for tits that would make you look like a boy.” </p>
+<p>Nella gaped angrily. “She didn’t!” 
+“She did, so I did. I made her so huge she could barely walk. But she fucked off in the </p>
+<p>night without waking me—and without the tits, it sounds like. Are you sure she looked 
+the same as usual when you saw her today?” </p>
+<p>“Flat as a board and twice as hard, I swear.” Nella took a longing glance over her </p>
+<p>shoulder at the village inn. “Do we have to keep going? My feet are killing me.” </p>
+<p>“You heard the man. The countess left Broken Arm what, three days ago? Three days </p>
+<p>to make the distance we’ve covered in one. If we press on, we can catch her tonight.” </p>
+<p>“Clay, I really don’t care. I want a nice soft bed and a hot bath.” 
+“Well, I do care.” 
+“Why?” 
+“Because the person who gave me this power did it for a reason. I think that reason 
+has something to do with Tani’s curse. If I can find out why my magic doesn’t work on 
+her—why it goes away—maybe I can figure out what I’m supposed to be doing with it.” 
+He smiled ruefully. “I mean, nobody just hands out magic powers because it’s fun to give 
+girls bigger boobs.” </p>
+<p>Nella laughed. “What a shame! It would make the world a happier place. All right, </p>
+<p>I’ll keep going for a little while. But if we don’t find the countess before dark, I’m 
+stopping. Deal?” </p>
+<p>“Deal,” Clay said reluctantly. </p>
+<p>A couple of hours later, the road left the woods behind to strike out across the bare 
+northern plains. A glorious red sunset spread across the horizon ahead of them. “Can we 
+stop now?” Nella whined. “If we wait any longer, it’ll be too dark to find a place.”  </p>
+<p>“Oh, very well. That looks like a good spot over there.”<br />
+He pointed at a stretch of meadow sheltered by a low ridge, not far from the road. It 
+was a clear warm night and they did not need much shelter, and the tall grass gave them </p>
+<p>E. N. Dowd </p>
+<p>The Domes of Callantha </p>
+<p>44 </p>
+<p>all the privacy they could want. Clay repeated his work on the redhead’s feet, then 
+reshaped her calves to give her the muscles of a woman who was used to walking all day. 
+He followed that with a bout of sex just long enough to seal the changes and make them 
+permanent. They lay together, naked in the tall grass, Nella resting her head on Clay’s 
+shoulder and basking in the afterglow. 
+“Titties?” she asked him coyly. 
+“Goddess!” he said angrily, pulling away. “Can’t you be satisfied?” 
+“Hmm, satisfied,” she said in a teasing tone. “Such a boring word. It’s almost as bad </p>
+<p>as enough. I prefer words like more and bigger and again.” </p>
+<p>“But you’re already huge. Aren’t they getting hard to carry?” 
+“You know, I thought they would, but so far they’re just fine. Maybe it’s because you 
+did such a good job on the rest of me.” Nella cupped one billowing breast in both hands, 
+jiggled it experimentally. “Tell me, Clay. Do you think my boobs are as big as Mama 
+Hogg’s? She always complains about backaches.” </p>
+<p>“I don’t go around measuring women’s busts,” Clay said stiffly. 
+“Only with your eyes,” she teased. “Don’t think I haven’t noticed. You’ve been an </p>
+<p>expert boob-watcher ever since your voice changed.” </p>
+<p>“Guilty as charged,” he admitted. “And maybe you’re not quite as big as Mama 
+Hogg—but you wear it better. Anyhow, I don’t believe it’s her boobs that make her back 
+hurt. It’s all that extra belly she’s carrying.” </p>
+<p>“Then I shouldn’t get backaches either if you make mine the same size,” Nella 
+retorted with unassailable logic. “Maybe even a little bigger, since I don’t have to worry 
+about my belly—thanks to you. I always kind of dreamed about being the biggest girl in 
+town.” </p>
+<p>“I’m sure that will bring in plenty of business,” he said coldly, eyeing her already </p>
+<p>impressive rack. </p>
+<p>She rolled away from him and sat up, arms folded over her breasts. “You! Just 
+because I’m a whore, you think all I care about is money. Did it ever occur to you that I 
+might want this for me?” </p>
+<p>“What? I—” 
+“Listen to me, magic man. I already make as much money as I want, and I’ve got 
+plenty stowed away where nobody will find it. I could retire right now if I wanted. But I 
+like men, and I like fucking, and I’m very good at it and don’t intend to stop.” </p>
+<p>“Then why—” 
+“Why do I charge for it? I love fucking; I don’t particularly love fucking sailors. </p>
+<p>That’s the trouble with living in a tiny place like Broken Arm, everybody knows 
+everybody and they all know what I do. So the only offers I get are from sailors, 
+fishermen, or young boys too shy to ask an ordinary girl. They’re all like you, they never 
+think I might want a man just for my own pleasure sometimes. Nobody just asks me for </p>
+<p>E. N. Dowd </p>
+<p>The Domes of Callantha </p>
+<p>45 </p>
+<p>sex, they all have cash in their hand. If I ask them, they want to know what’s the catch, 
+and when there isn’t any catch, they get scared and run. I get lonely, Clay, can you 
+believe that?” </p>
+<p>Nella’s eyes were brimming with unshed tears. She clawed them away, cursing to 
+herself. “There I go again, talking about my troubles and nobody wants to listen. Things 
+go so much better when I just act happy. I guess it’s a little late for that now.” 
+Clay scratched his chin pensively. “So what kind of men do you like?” 
+“The likable kind,” she answered evasively. The silence that followed was more than </p>
+<p>she felt comfortable with, so she went on: “I don’t like smelly men, or stupid men, or 
+little shrimpy men with no muscle, or men with nothing but muscles. I like nice hair and 
+good teeth, and good manners, which you don’t often find in a place like Broken Arm, 
+and good conversation.” </p>
+<p>“It’s true, you do like to talk,” Clay grinned. 
+Nella giggled in spite of herself. “Noticed that, did you? I’m good at listening too, 
+believe it or not. I’ve heard more sailors tell me their sorrows— Never mind. What do 
+you like, Clay?” </p>
+<p>His grin turned sheepish. “The obvious, I’m afraid. Pretty faces, nice bodies. I always </p>
+<p>had this fantasy about having the girl with the biggest tits in town.” </p>
+<p>“You don’t mean Mama Hogg!” 
+He shrugged. “I wasn’t thinking of her exactly, but why not? I don’t mind that she’s 
+fat. Her face isn’t bad to look at, and frankly, I’d overlook a lot of flaws for those udders 
+of hers.” </p>
+<p>“So why don’t you?” 
+“Her husband would kill me.” 
+“Oh, pooh! Captain Hogg isn’t a violent man.” 
+“No,” Clay said seriously, “but he’s a rich one. He owns that big schooner and four 
+little trawlers, and if I piss him off and lose his business, I won’t be able to keep myself 
+alive.” </p>
+<p>“Not by mending nets,” Nella agreed. “Maybe we can find you a new trade.” 
+“I don’t think ‘clay-shaper’ is exactly a trade,” he said ruefully. “I mean, asking 
+women to let me fuck them so I can give them their dream bodies? It’s ridiculous. Look 
+how much trouble I had with you.” </p>
+<p>“That’s because you didn’t bring along any samples.” Nella mashed her ripe breasts 
+together, creating a canyon of cleavage that started right at her collarbone. “I bet every 
+girl who saw that Callanthan bitch would kill for a pair like these.” </p>
+<p>“Well….” 
+“Just let me do the sales pitch.” She grabbed her tits from underneath, hefted each one </p>
+<p>in turn as if she were going to juggle them. “Gather round, ladies, you know what all the 
+boys are staring at! Ripe melons for sale, and I don’t mean the kind that grow on a vine. </p>
+<p>E. N. Dowd </p>
+<p>The Domes of Callantha </p>
+<p>46 </p>
+<p>Pure girl flesh, all natural and all you. Check the weight of these babies, yet they stand up 
+firm and proud. They look amazing, and feel twice as good as they look.” </p>
+<p>Almost unconsciously, Nella had begun playing with her nipples, then running her 
+hands around and around the curves of her burgeoning breasts. In between heavy breaths, 
+she paused to lick her lips sensuously. “Ladies, there is nothing more erotic for you or 
+your lover than a pair of big… round… bouncy… juicy jugs. They know it in Callantha, 
+and you know it in your heart. Don’t be satisfied with what nature gave you. You can 
+have so much more. You can be more sensuous… softer… sexier… the woman every 
+man wants and every other woman wants to be.” </p>
+<p>Her self-control was fraying by the second. Already her right hand was buried in her 
+crotch, while her left shoved the massive burden of her boobs as high as they would go. 
+She was trying to bury her face in her own billowing breast flesh, gasping in horny 
+frustration because she wasn’t quite big enough to manage it. “So big… so sexy… feel so 
+good you’ll want to come back for even more. Oh, Goddess, more,” she moaned. “Please, 
+Clay, I need it so bad. Give me mo-o-ore!” </p>
+<p>That was all either one of them could take. Clay lunged at Nella so hard they both fell, </p>
+<p>their bodies rolling over and over in the tall grass, greedy arms groping, limbs 
+intertwining. They came to a stop with Clay on top, Nella’s legs spread wide to welcome 
+his achingly hard shaft. </p>
+<p>Just as he was about to plunge in, a woman’s voice yelled for help, so close by that it </p>
+<p>seemed to be right on top of them. They sprang apart, hearts hammering, hands 
+scrambling in a totally inadequate attempt to cover themselves. Clay rolled and came up 
+in a half crouch, craning his neck to see over the grass. A busty girl with flaxen hair was 
+staring right in his direction, less than twenty feet away.  </p>
+<p>She screamed in terror. He screamed in surprise. Nella, still lying in the grass, 
+screamed because everyone else was doing it. When all three stopped for breath, Clay 
+took a moment to master his whirling thoughts. The girl’s scanty clothes were muddy and 
+torn, her bare limbs scratched and bruised. Tired, hurt, and terrified, she had completely 
+lost the attitude of cocky superiority that she had flaunted at their first meeting, but it 
+only took a moment for him to recognize her face. </p>
+<p>“Bryony?” he shouted in disbelief. 
+“They’ve taken my mistress,” Countess Elira’s servant girl whimpered. “Help me.” </p>
+</body>
+</html>

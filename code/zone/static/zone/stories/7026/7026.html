@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Yuris Antiques 4: Magnetic Manaism</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p><strong>Yuri's Antiques: Dreams Really Do Come True\
+#4</strong></p>
+<p>By: Specter09</p>
+<p><strong>Disclaimer:</strong> This is a work of fiction with adult themes. If you are
+under the age of 18 or it is illegal for you to view this in your place
+of residence, please turn away and find something else to do. This work
+is strictly fantasy and does not reflect the author's real life values.</p>
+<p>If you are still here, please continue reading and enjoy!</p>
+<p>Lindsey eyed the curious looking fixture before daring to touch it. It
+looked ancient, yet robust at the same time, as if time had never truly
+weakened it. The dreamcatcher was the traditional round shape with an
+intricate weaving of webbing. In some positions, it held one pattern, in
+others another, and in other positions still, it had no pattern at all.
+The three strings dangled helplessly from the bottom of the circle --
+each with their own distinct pattern, almost as if the very thing had
+been combined from various Native American tribes. She had been having
+nightmares lately, so perhaps this could help.</p>
+<p>"Ahh, the Dreamcatcher of Gogyeng Sowuhti, or the Spider Grandmother as
+others have called her," a soft, yet stern Russian accented voice broke
+Henry from his concentration.</p>
+<p>"I'm sorry, who?"</p>
+<p>"Yuri."</p>
+<p>"What?"</p>
+<p>"You asked who, and I am he."</p>
+<p>"No, no, I mean who is Gogwing Sowthui?" Lindsey asked, trying to
+navigate the awkward waters she had found herself in. Even at twenty
+eight, she still had yet to learn to navigate the finer points of social
+interaction.</p>
+<p>"Gogyeng Sowuhti," the man corrected, "Who she was depends on which
+story you choose to hear and believe. As for me, I'm a fan of the Hopi
+tradition -- she was once a woman who sought to protect children. She'd
+weave ornate webs that would catch all the evil and vile in the world
+and protect them while they slept. Eventually, her followers made these
+out of her own silk, she would be able to protect them from anywhere."</p>
+<p>"Uhh, fascinating," Lindsey blanked, trying to figure out where to steer
+the conversation after such a tale.</p>
+<p>"This is an original, from around 1400. In some of my separate research,
+I believe it may be much older and that the Hopi were originally a group
+from Cahokia that moved west and settled in Arizona, but that's just
+me."</p>
+<p>"Cool," Lindsey responded, unsure of why the man had bothered to present
+him with so much unnecessary information about such a simple item, "So I
+suppose it is not for sale then?"</p>
+<p>"Of course it is for sale! Everything in my store is! I wouldn't put it
+out unless it was for sale!"</p>
+<p>"Okay, sorry, I just thought with the story and the research and
+everything that you wouldn't want to part with it."</p>
+<p>"No, it clearly called to you or else we wouldn't be chatting over it
+right now," Yuri smiled, "I will say this though, there is a reason the
+Spider Grandmother called to you -- perhaps she senses something is
+troubling you."</p>
+<p>"No, pretty sure I'm good," Lindsey smiled, trying to sound confident in
+her life. She really didn't feel like telling this old man her entire
+life story and her near constant nightmares of the moment.</p>
+<p>"Well, regardless, in some other research of mine, I have found that the
+Spider Grandmother does like to help people and will 'catch' their
+deepest desires in her web and help them realize who they were always
+meant to be."</p>
+<p>"That's cool," Lindsey casually replied, "So, how much?"</p>
+<p>"Ahh, for this old thing?" Yuri paused, eyeing the dreamcatcher with a
+critical eye, "Ten dollars."</p>
+<p>"Ten?"</p>
+<p>"Ten."</p>
+<p>"Okay, I can do that," Lindsey smiled as she walked with the old man up
+to the register to check out. She had never known that this place had
+existed. It was a menagerie of trinkets and items, some of which he had
+never seen before. She'd have to make a point to come back at some point
+in the future.</p>
+<p>Lindsey excitedly entered her bare apartment -- she had what one could
+best describe as minimalist poor. Her living room was a high end TV and
+gaming console with a sole armchair facing it. The dining room was
+nothing more than a card table and some foldable chairs. The kitchen?
+One long counter with a shallow sink and terrible oven that couldn't
+heat properly, a low wattage microwave, and a fridge that probably
+existed from the 90's by the looks of it. Various comic mugs hung by her
+coffee put.</p>
+<p>The sobering reality that was her apartment quickly absorbed any
+enthusiasm she had about her dreamcatcher. This was why she had no
+money. She had bills to pay -- student loans, car payments, and the
+like. Yet, she consistently spent money on stupid things. Her job was
+decent enough -- writing code for a web design company, but she never
+really grew up. All her money went into gaming and gaming wasn't exactly
+a skill that would draw in any kind of companionship. Afterall, she had
+long since given up being a famous streamer. It didn't matter how
+skilled she was -- they donors only wanted hot girls and that was not
+her.</p>
+<p>Lindsey wasn't an unattractive person, nor was she an overly attractive
+person. She was squarely in the middle of the attractiveness meter.
+She'd probably have a boyfriend by this point in her life if she had
+better social skills to chat up people at the bar, or was just slightly
+more attractive to get actual tinder matches with people that weren't
+atrocious. Her hair was a raven black, which she loved, but it made her
+pale white tone all the more haunting. She had no real curves either her
+stomach was a little chunky from all the food and video games. She was
+sure this wouldn't really matter, but she had no butt to speak of and
+her breasts were tiny A-cups at 28. She was eternally stuck with the
+body of a fifteen year old who would never truly complete puberty.</p>
+<p>The lack of companionship, the poor management of money, and the lack of
+friends and family in this dead city were haunting specters that would
+routinely prey on her quiet thoughts while waiting for a dinner to cook
+in the microwave or while brushing her teeth at night. Perhaps this
+existential dread was what was fueling the stress leading to his
+nightmares?</p>
+<p>The nightmares.</p>
+<p>Not only were her waking moments overwhelmed with thoughts of regret,
+but she couldn't even garner a moment of respite in her sleep. They were
+always different, but constantly felt the same. It was always set in a
+video game that she recognized. The landscapes were always bursting with
+a plethora of pristine colors. For a time, all was well, she enjoyed the
+moment. She'd ponder life by a river or at a peak, or simply lay in a
+field and bask in the warmth of the sun. There would be friends and
+parties, it was always pleasant. But at some point she'd leave.
+Sometimes it'd be to get changed before sleeping with a character she
+had a crush on or to go to the bathroom. Regardless, when she'd return,
+there was no one there. An inky blackness would creep and crawl like
+tendrils, consuming the super bloom of greyed colors like a black hole
+consuming stars. She'd always run, but the tendrils would always catch
+up and she'd fall into an infinite blackness before waking with a start.
+Nearly every night, sometimes multiple times a night.</p>
+<p>She'd long since given up trying to diagnosis and psychoanalyze her
+dreams. She chalked it up to existential dread mixed with a dose of
+nihilism and called it a day. No treatments had helped either. The
+melatonin gave her sleep paralysis which was something she dared not
+live again and the other treatments just made it harder to break from
+the dream. Those were the nights she'd fall for what would feel like
+hours, just screaming until hoarse in the throat.</p>
+<p>Please work. You're my only hope of getting real rest. With that,
+Lindsey carefully handled the dream catcher and fixed it atop her
+headboard. Hopefully it would be the guardian that she needed.</p>
+<p>The digital clock on her nightstand blinked elven twenty three --
+perhaps she should really consider trying to go to bed sooner instead of
+playing video games all night. Lindsey entertained the thought for a
+moment, but quickly shrugged it off -- that kid needed put in his place,
+telling her she belonged in a kitchen. Yet, her satisfaction quickly
+subsided when she realized that she had spent at least two hours beating
+a kid senseless in an online video game where she would never actually
+meet him real life. Maybe this was why her life was the way it was?</p>
+<p>Regardless, she changed into some baggy shorts and t shirt and crawled
+into bed, hoping that her purchase would produce something resembling an
+improvement to her restless nights. The blankets were heavy, the air
+cool, and her body exhausted and hopefully ready for whatever awaited
+her on the other side.</p>
+<p>Lindsey awoke with a start -- yet she was unable to move. A quick turn
+of the head revealed that she was stretched out, caught in a web. She
+struggled, but her resistance was met with nothing more than bouncing on
+the web, as if she were stuck lying on a trampoline. Whatever breasts
+she did have bounced ever so slightly as she realized that she was most
+likely naked. She could feel a cool breeze on her legs.</p>
+<p>"What the fuck?" she asked herself aloud. This was a new kind of dream.
+Was there even a point in struggling? Was this some kind of bizarre
+sleep paralysis that she had to deal with?</p>
+<p>As she was pondering her next move, she bounced again. However, she had
+done nothing this time to trigger a response from the web. Fuck.</p>
+<p>Lindsey frantically darted her eye all around, North, South, East, West,
+North, South, East, West, again and again. Yet there was nothing.
+Another jolt would hit to her right. Nothing. Then to her left. Again
+nothing. Beneath her. And once again, nothing. A final jolt above her
+head. She cautiously brought her eyes up, trying to peer above her
+forehead.</p>
+<p>Lindsey screamed and thrashed.</p>
+<p>A woman's face met hers, yet it was monstrous as much as it was human.
+Onyx hair flowed in chunked frays from her scalp with streaks of grey
+running like the flotsam in rapids. Her tone was oaken -- clearly of
+Native American ancestry. Her eyes were the most startling. Two large
+eyes, the same as any humans peered at her, black as the night sky,
+horrifyingly demonic looking. Other, smaller eyes, three around each
+large one, each like small and as dark and piercing as obsidian. Her
+mouth was human, but showed two large fangs where the canines would be.
+Just as startling as her eyes however, were her jaws. They were
+protrude, like the fangs on an actually spider. Her expression quickly
+changed from curious to shocked and jumped back when Lindsey screamed.</p>
+<p>"Always with the screaming," she sighed as she jumped out of Lindsey's
+eyesight.</p>
+<p>Lindsey quickly felt what she could only assume was silk hit her skin
+and pin her down. Soon, her thrashing as totally bound, she could only
+bounce up and down. That action alone was already making her nauseous
+and exhausted so she began to slow. But her screams didn't.</p>
+<p>The being before her had the torso of any woman. Heavy breasts capped
+with walnut sized and colored nipples sagged from her chest, showing her
+age. She boasted two average looking arms from her shoulders. Her
+abdomen was taut and youthful still in appearance, but that was where
+the norms ended. The rest of her was a horrifying body of a spider. Dark
+mahogany and black coloration that had a glossy sheen to hit. The
+additional six appendages were adorned with white hairs standing on end.
+Lindsey could see where her web shot from -- her screams only
+intensified until the spinnerets on her spider abdomen took aim at her
+face and shot a quick web sealing her mouth.</p>
+<p>"I apologize for that dear," the spider woman said standing over an
+entombed Lindsey, "But it's hard for us to talk when you're screaming
+and thrashing, you understand don't you?"</p>
+<p>Lindsey cocked her eyes, wary of this creature. She could feel that her
+raven hair was matted around her face. She wasn't sure what to do. This
+thing could be toying with her before killing her, but if it was a
+dream, it was nothing to worry about right? She nodded her agreeance to
+the spider woman.</p>
+<p>"Excellent," she cooed, "Now, I would like to talk with you and not to
+you. I can remove the web on your mouth if you promise not to scream.
+Deal?"</p>
+<p>Lindsey nodded. She didn't really have a choice. She could listen to
+dream spider or talk with it. Talking seemed like a more acceptable
+option given that it would make the dream time go faster.</p>
+<p>"Splendid," the spider woman smiled. With a quick swell of one of her
+spider legs, the silk covering was gone and Lindsey could mover her
+mouth once more.</p>
+<p>"Who are you?" Lindsey asked, not wanting to waste any time for the
+spider to start doing any kind of weird dream psychoanalysis on her.</p>
+<p>"You don't know?" she sighed, "Gogyeng Sowuhti, the Spider Grandmother?"</p>
+<p>"Wait, you're real?" Lindsey asked astonished.</p>
+<p>"Of course I'm real!" she stated, offended by such a thought, "But, you
+can call me Yeng."</p>
+<p>"Okay Yeng," Lindsey said with trepidation, "You don't look like a
+grandmother. And, and why am I here?"</p>
+<p>"So first child," Yeng said posturing herself up away from Lindsey, as
+if to show off her human side, "I like to take care of my looks. Second,
+you're here because I want to help you. I saw what you're working with
+out there in the real world. I can offer you something better."</p>
+<p>"Really?" Lindsey laughed, "How?"</p>
+<p>"Well, you're yearning for companionship, purpose, acceptance, success,
+all things that humans of all stripes desire in some degree. I can offer
+you a way to a better, more ideal life."</p>
+<p>"And how so?"</p>
+<p>"You saw the talismans on my dreamcatcher right?" she said coolly, "I
+provide all who get caught in my web three options of a life that I
+think they want based on what I see in their dreams and nightmares. You
+live through all three options -- the hare, the osprey, and the
+squirrel. Afterwards, you come back and choose a life you want. Of
+course, you can reject them and go back to normal, but almost no one
+does that."</p>
+<p>"And how do you know that I'll like what you have for me?" Lindsey asked
+suspicious of anything a dream spider might tell her, "How do I know
+that this isn't all projection from my subconscious?"</p>
+<p>"I mean it could be, or you can at least enjoy the ride and find," Yeng
+said casually, "It doesn't matter to me. I eat your bad dreams, so I'm
+quite satisfied. You should have nothing buy good dreams for a while.
+But while I eat your fears, I learn what you most want. At least take it
+for a spin. I mean, like you said, maybe its all a really weird dream
+and nothing changes, but you have a good dream for a change. Or maybe
+its all real and you can leave here with more satisfaction out of life.
+What do you really have to lose?"</p>
+<p>"Alright, fair," Lindsey conceded. She might was well get a good dream
+out of this, "What do I do?"</p>
+<p>"Well you have three paths before, Hare, Osprey, Squirrel, which would
+you like first?"</p>
+<p>"Don't I get a description before choosing?"</p>
+<p>"No, that takes the fun out of it. Choose."</p>
+<p>"Fine. The Hare I guess," Lindsey conceded, "Now what?"</p>
+<p>"Just close your eyes, you'll go to sleep and wake up to what your life
+will be like if you choose the path of the hare." Yeng said, "You will
+recognize that the reality isn't your own, but you will have all the
+knowledge you need to fit in.</p>
+<p>"Sounds good I guess. Here goes nothing," Lindsey joked before closing
+her eyes.</p>
+<p>Light warmed her face as she slowly stirred from her slumber. Despite
+dealing with a bizarre dream spider woman, she felt surprisingly well
+rested. Lindsey yawned, stretching out her arms and rolling over in the
+sheets of her bed when she struck someone with her hand. Her eyes shot
+wide. She didn't go to be with anyone last night.</p>
+<p>"Oh good morning babe," spoke a masculine voice under the lump.</p>
+<p>The lump rustled and rolled over, revealing a handsome face that was
+foreign, yet familiar. He was chiseled with dark hair. Short on the
+sides with some extra on top that he could style. His stubble was black
+and gave him a more rugged appearance while his hazel eyes were warm and
+inviting. His smile soothed immediately her troubled spirit. He was
+utterly gorgeous. Someone she could only hope to have in her dreams.</p>
+<p>"Good morning," she reflexively smiled and cooed. While she didn't know
+this man, she still knew him. Slowly, like a puzzle, the pieces started
+to fit together. This was her husband Mark. It was strange. Her body
+reacted to his appearance as one madly in love would do, but mentally,
+he still seemed a stranger.</p>
+<p>"How'd you sleep?" he asked, smiling into her eyes.</p>
+<p>"Some weird dreams, but surprisingly well," she replied, still smiling.
+This wasn't that bad of a reality after all. She was married to a
+handsome man, they seemed happy together too.</p>
+<p>"That's great," he responded and readjusted. Almost instinctually,
+Lindsey looked down the bed and was met with the massive mound poking up
+where she could only suspect his dick was. Her curiosity was piqued.</p>
+<p>Path of the Hare -- Domicile Housewife</p>
+<p>Path of the Osprey -- Fit, busty girl, amateur pornstar</p>
+<p>Path of the Squirrel -- Bimbo, pornstar</p>
+</body>
+</html>

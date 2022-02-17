@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Deck of Changes: Las Vegas</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>Deck of Changes: Las Vegas </p>
+<p>By Nightshade </p>
+<p>Author’s Note: </p>
+<p>are used to.  </p>
+<p>This story is a writeup of a playtest session of a transformation based card game I am working </p>
+<p>on, so the narrative and the style of the transformations might be a bit more random than you </p>
+<p>Obviously contains adult fetish material and sexual situations, proceed at your own risk. </p>
+<p>All characters are over the age of consent. </p>
+<p>Be aware that the game sometimes uses antiquated language that may not be politically correct. </p>
+<p>Please  leave  feedback,  and  if  you  liked  it  enough  to  want  more,  or  have  a  suggestion  for  who </p>
+<p>should draw from the deck next, please let me know! </p>
+<p>Thanks for reading! </p>
+<p>This wasn’t my first time in  Las Vegas, but it was my first time alone in Vegas. In the </p>
+<p>past, I had always gone with friends or family for a wedding, or a birthday, or a bachelor party; </p>
+<p>this time I was there for more professional reasons. I would be finishing grad school in a couple </p>
+<p>months,  and  this  weekend  there  was  going  to  be  a  conference  with  a  lot of  recruiters,  and  our </p>
+<p>school had strongly suggested that going would be good for our future careers. </p>
+<p>I  decided  to  arrive  a  day  early  so  that  I  could  enjoy  the  city,  but  I  was  a  little  nervous </p>
+<p>about  being  here  on  my  own.  My  flight  had  landed;  I  had  checked  into  my  room,  and  I  was </p>
+<p>wandering around the second floor of the Luxor when I bumped into Celina. </p>
+<p>Celina and I were in the same class; we weren’t  friends, but we knew each other fairly </p>
+<p>well,  having  taken  numerous  courses  together  and  even  been  part  of  the  same  study  group  or </p>
+<p>partnered  up  for  a  lab  project  on  occasion.  She  was  also  cute.  She  wasn’t  gorgeous  by  most </p>
+<p>standards, but she was exactly my type. </p>
+<p>She  was  in  her early thirties with  pale and lightly  freckled skin,  dark eyes, and straight </p>
+<p>black hair. Her features were pretty and somewhat unique; she was obviously biracial, but it was </p>
+<p>impossible to tell from her looks whether she was part Asian, Hispanic, Native American, Pacific </p>
+<p>Islander, or perhaps all of them at once. </p>
+<p>She was short, needing to stand on her toes to reach five feet, and with a curvy figure. I </p>
+<p>wouldn’t quite call her chubby, but she was close to it. She had large, pill shaped breasts, which I </p>
+<p>estimated were probably a healthy D cup; although they seemed even bigger on her short frame. </p>
+<p>She had a slight potbelly, which stuck out nearly as far as her breasts, with broad hips, chubby </p>
+<p>thighs, and a cute bubble butt which she was embarrassed about but which I knew the other girls </p>
+<p>envied. </p>
+<p>casual ponytail. </p>
+<p>She  never  dressed  to  show  off  her  figure,  and  even  in  Vegas  that  trend  continued.  She </p>
+<p>was currently wearing modest boots, faux leather pants, and a dark blue t-shirt with the logo of </p>
+<p>some  band  I  didn’t  recognize  stretched  tight  across  her  bosom.  No  jewelry,  and  if  she  was </p>
+<p>wearing any makeup it was subtle enough that I couldn’t tell. Her dark hair was pulled back in a </p>
+<p>Now, I know what you are thinking. No, she wasn’t my ex or my secret crush or anything </p>
+<p>like that. We were both single, and she was nice enough, didn’t seem crazy and was more than </p>
+<p>smart  enough  to  have  a  conversation  with,  but  I  had  never  shown  any  romantic  inclination </p>
+<p>towards her. Mostly it was that I was still broken up over my last relationship, but also because I </p>
+<p>was just plain shy around women and didn’t want to make our classes weird.  </p>
+<p>So I had never asked her out. In hindsight I probably should have. It certainly would have </p>
+<p>made the small talk on the casino floor less awkward. </p>
+<p>Celina was, obviously, there for the same reason I was. Still, it was extremely lucky that </p>
+<p>we had run into one another. At least, that is what I thought at the time; now I am not so sure. </p>
+<p>She had never been in a real casino before, and was looking to forward to giving it a try, but was </p>
+<p>also anxious. I told her that I was an expert at Blackjack, a bit of an exaggeration, and offered to </p>
+<p>teach her how to play. She looked pensive for a moment, but then agreed.  </p>
+<p>I offered to buy her a drink, but was then informed that they were free. Oops. </p>
+<p>We then went looking for a table. I made sure to let Celina lead the way, mostly so that I </p>
+<p>could see what those leather pants were doing for her behind. </p>
+<p>It wasn’t easy. The casino was packed, and it seemed that the only blackjack tables which </p>
+<p>had open seats were those with a twenty dollar minimum bet or more. We weren’t wealthy, few </p>
+<p>grad-students  are, and  I  was  hoping to  find a five or ten dollar table so that we could  actually </p>
+<p>play  for  a  bit  before  running  out  of  money.  But  it  wasn’t  happening;  I  was  starting  to  get </p>
+<p>frustrated and afraid that Celina was just going to tell me to forget the whole idea. </p>
+<p>Then,  I  looked  through  a  glass  pane  into  a  side  room;  dimly  lit  and  with  a  large  card </p>
+<p>table in the center. It looked like a high rollers room, or maybe a baccarat table, but it had the </p>
+<p>standard six deck auto-shuffler set up and the outlines of  cards printed upon the felt.  I stepped </p>
+<p>inside, and Celina followed. </p>
+<p>The dealer was a middle aged woman with lots of curly red hair spilling down her back. </p>
+<p>Her  uniform  didn’t  match  any  of  the  others,  it  was  a  frilly  dress  that  almost  seemed  like </p>
+<p>something out of the old west, but I didn’t really think anything of it at the time. I asked her what </p>
+<p>the table minimum was, and she told me that there was none. </p>
+<p>Celina and I sat down next to one another, neither really knowing what to say. The dealer </p>
+<p>pulled out a single deck of cards and began to shuffle by hand, and I realized what was going on. </p>
+<p>This was one of those “old timey” side games made to take advantage of people who think they </p>
+<p>can count cards, where they only use one deck but also don’t pay out extra on blackjack and let </p>
+<p>the dealer hit on a soft seventeen. </p>
+<p>We pulled out our wallets, and I considered covering for Celina, but I thought that might </p>
+<p>be coming on too strong.  The dealer looked at them and said: </p>
+<p>“First hand is free, as long as you agree to keep what you win. That ok?” </p>
+<p>Celina looked at me apprehensively, and honestly I was just as baffled as she was, but I </p>
+<p>didn’t  let  it  show,  and  I  decided  to  simply  push  on  ahead,  heedless  of  the  consequences.  I </p>
+<p>nodded, and told Celina to just say yes, which she trustingly did. </p>
+<p>Having agreed, the dealer asked which of us wanted to play first. I pointed to Celina and </p>
+<p>said “Ladies first,” in a voice that I hoped was smooth rather than creepy. </p>
+<p>“But, I don’t know what to do…” She asked. </p>
+<p>“Don’t worry, it’s simple, and I’ll help.” </p>
+<p>The dealer pulled the top card from the deck. It was larger than most playing cards, and </p>
+<p>well worn, with an unfamiliar design on its back. </p>
+<p>The  front  was  like  no  card  I  had  ever  seen;  it  vaguely  resembled  a  tarot  card,  but  not </p>
+<p>quite. The design was like an eighteenth century woodcut, depicting an image of a woman sitting </p>
+<p>in  a dark room, her back to  a seaside window, looking anxiously at  a man sleeping in  the bed </p>
+<p>before her and the long knife which lay on the nightstand. The Blade, it read. </p>
+<p>I had no idea what this meant. This obviously wasn’t Blackjack, and I didn’t know what </p>
+<p>it was. I was steeling myself to admit as much, to apologize to the dealer and call the whole thing </p>
+<p>off, when I was distracted by a curious clicking sound coming from the table to my left. </p>
+<p>I saw Celina eagerly tapping at the leather band around the table with bright red nails that </p>
+<p>must have been several inches long. They were obviously fake, and I was amazed that I hadn’t </p>
+<p>noticed them yet, but I just chalked it up to nerves and my usual oblivious nature. </p>
+<p>“Woah,” I said. </p>
+<p>“What?” Celina asked, impatiently. </p>
+<p>“Nothing, I just noticed your nails.” </p>
+<p>“Yeah.” </p>
+<p>“Oh, you like them?” She asked as she held them up to the light for me to see. </p>
+<p>“Thanks. They took me years to grow, but I think it was worth it.” </p>
+<p>I  nodded.  I  was  pretty  sure  she  was  teasing  me,  but  I  played  along.  There’s  no  way  I </p>
+<p>wouldn’t  have  noticed  those  talons  at  some  point  in  the  last  three  years,  and  they  would  have </p>
+<p>made  lab-work  awfully  difficult  for  her.  Hell,  just  putting  on  a  rubber  glove  would  be  all  but </p>
+<p>impossible. </p>
+<p>As I was pondering this, the dealer had grown impatient and handed Celina the next card. </p>
+<p>This one depicted a Viking shield maiden, perhaps a Valkyrie, wearing stereotypical opera garb </p>
+<p>and offering a large stein of foaming ale to the viewer. It was titled The Horns of Heidrun. </p>
+<p>I still no idea what it meant or how the game was going. The dealer seemed not to notice, </p>
+<p>and again I was distracted, this time by Celina trying to subtly adjust her clothes. I looked down </p>
+<p>and saw a pair of prominent nipples pressing into the fabric of her shirt; so erect that they seemed </p>
+<p>almost the size of campfire marshmallows. I realized that this must be the first time I had seen </p>
+<p>her without a bra, and  gave a silent  thank  you to  whoever had decided to spend the electricity </p>
+<p>required to keep the casino at sixty-five degrees despite it being April in Nevada. </p>
+<p>The  dealer  waited  for  Celina  to  meet  her  eyes,  and  then  dealt  the  next  card.  It  was </p>
+<p>labelled The Sailors and showed a man on the deck of an old fashioned clipper ship, staring in </p>
+<p>horror at something just out of sight in the waves below. Celina squirmed slightly in her seat, but </p>
+<p>didn’t say anything. </p>
+<p>The next  card showed a group of birds with  the heads and breasts of beautiful women, </p>
+<p>perched atop a cliff face and staring down with hungry eyes as an ancient trireme hurtled towards </p>
+<p>the jagged rocks below. The Siren. </p>
+<p>noncommittally. </p>
+<p>“This  game  is  weird,”  Celina  said,  in  a  high  pitched  voice.  “Yeah,  it  is,”  I  said </p>
+<p>“Am I ahead?” She asked, continuing her falsetto. </p>
+<p>“Looks like,” I responded. </p>
+<p>“So, what do I do?” She continued in her forced baby-doll voice.  </p>
+<p>“Just, tell the dealer when you don’t want any more cards.” </p>
+<p>“That’s easy!” Celina squeaked. </p>
+<p>“Told you.” </p>
+<p>“But,  you’ll  tell  me  when,  right?”  She  asked,  her  voice  never  lowering  to  its  normal </p>
+<p>register.  I don’t know why she was trying to  sound like bimbo, but  I hoped it was her way of </p>
+<p>flirting, and I rather liked it. </p>
+<p>I  looked  her  in  the  eyes  and  nodded,  stealing  another  peek  at  her  straining  nipples  as  I </p>
+<p>did. </p>
+<p>elongated nails. </p>
+<p>labelled Ambrosia. </p>
+<p>“More?” the dealer asked. Celina squeaked an affirmative and tapped the table with her </p>
+<p>The  dealer  flipped  her  card,  which  showed  a  golden  chalice  full  of  blood  red  wine </p>
+<p>Nothing happened for a moment, but then I noticed two dark circles beginning to form on </p>
+<p>the front of Celina’s shirt. They continued to spread; the dark stains moving downward over the </p>
+<p>curve of her stomach, until it was impossible not to see what was happening. I tried not to stare, </p>
+<p>but I just couldn’t help myself. She of course noticed me looking, and immediately followed my </p>
+<p>gaze to the milk leaking down the front of her shirt.  </p>
+<p>“Oh my god, I’m so sorry,” she said, her voice so high pitched it bordered on painful. She </p>
+<p>pulled the sodden fabric away from her chest, and then did her best to squeeze the moisture from </p>
+<p>it, smoothed it out, and then gasped  at the sensation when it once again stuck to her rock-hard </p>
+<p>nipples. </p>
+<p>Her cheeks turned bright red, and she continued in a slightly more normal tone “Sorry. I </p>
+<p>normally pump my breasts before I leave the house, but today with the trip and all I just forgot. </p>
+<p>I’m so embarrassed.” </p>
+<p>“It’s  ok,”  I  stuttered,  pretty  embarrassed  myself,  “I  didn’t  even  know  you  were </p>
+<p>expecting,” I said, trying to hide the note of disappointment in my voice. </p>
+<p>“Oh, I’m not,” Celina chirped, “the doctors gave me some pills after I hurt my back a few </p>
+<p>years ago, and one of the side effects was lactation.” </p>
+<p>That was weird, but I remembered hearing about similar things in my physiology class. </p>
+<p>Rare,  but  not  unheard  of,  and  I  remembered  Celina  having  to  leave  class  in  the  past  for </p>
+<p>chiropractic  appointments;  so  it  all  made  sense.  Not  a  lot  of  sense,  and  even  then  I  knew </p>
+<p>something weird was going on, but I was nervous and trying to act confident, and so I was in full </p>
+<p>rationalization mode. There was no rationalizing what happened next. </p>
+<p>The dealer ignored Celina, quietly and professionally, wiped a few drops of milk from the </p>
+<p>table  and  moved  the  cards  away  protectively,  then,  once  she  had  our  attention,  waved  away </p>
+<p>Celina’s  apology  and  added  another  card  to  the  pile.  It  showed  ancient  ruins,  with  a  bottom-</p>
+<p>heavy Greek vase sitting on a pedestal, a number of long white feathers resting about its base. </p>
+<p>The Amphora. </p>
+<p>What  happened  next  was  impossible  to  miss;  indeed  I  will  remember  it  vividly  for  the </p>
+<p>rest of my life. Celina adjusted her clothes again, and then rose to her feet, bouncing slightly as </p>
+<p>she pulled her pants up. There was a sharp crack; which a second later I realized came from her </p>
+<p>pelvis, and I watched her hips surge outward between one blink and the next, each seeming to be </p>
+<p>suddenly wider by the width of her palm. </p>
+<p>As I tried to understand what I was seeing, Celina’s butt began to expand before my eyes. </p>
+<p>Slowly  but  surely,  her  cheeks  grew  both  larger  and  rounder,  like  underinflated  volleyballs </p>
+<p>hooked up to a bicycle pump. Celina didn’t really seem to notice, aside from plucking at what </p>
+<p>must have been a serious wedgie.  </p>
+<p>Her  rear  grew  larger  and  shapelier,  her  already  prodigious  booty  soon  surpassing </p>
+<p>anything you would see in the mainstream media and reaching the size you would typically only </p>
+<p>find on augmented Instagram models, but from the way it jiggled as she bounced I could tell that </p>
+<p>it was all natural. Or, at least, all flesh, nothing about this was natural. </p>
+<p>Finally  the  growth  stopped,  leaving  the  diminutive  brunette  looking  like  someone  had </p>
+<p>stuffed  a  pair  of  squat  pumpkins  down  the  back  of  her  pants  when  she  wasn’t  looking.  She </p>
+<p>seemed to finally get comfortable; her pants must have somehow changed to accommodate her </p>
+<p>new curves, and sat back down. Awkwardly at first, as if she wasn’t used to  the sensation, but </p>
+<p>she soon seemed to get comfortable, although she appeared to be resting several inches higher in </p>
+<p>the chair than before. </p>
+<p>going on here. </p>
+<p>Celina might be comfortable, but I wasn’t. As soon as the shock, and arousal, faded from </p>
+<p>the front of my mind, I started to stand, and barked at the dealer, demanding to know what was </p>
+<p>“Calm down,” she commanded, and I acquiesced. I settled in my chair, and asked what </p>
+<p>was happening; feeling suddenly very protective of the woman sitting next to me. </p>
+<p>“Don’t you like what is happening?” She asked. </p>
+<p>I stuttered. </p>
+<p>“Do you want to stop?” </p>
+<p>“Are you ok?” </p>
+<p>I didn’t, I really didn’t. But I knew it wasn’t right. So I turned to Celina. </p>
+<p>“Yeah. Do I have enough cards?” She asked in her high voice </p>
+<p>“Are you feeling ok about what’s happening?” </p>
+<p>“The game? Its fine,” she responded giggling slightly as if going along with a joke she </p>
+<p>didn’t understand. </p>
+<p>“To keep going,” I clarified. </p>
+<p>“Yes,” she said, starting to get a little irritated. It was dawning on me that she was totally </p>
+<p>oblivious to what was happening to her, but I wanted to see what came next. </p>
+<p>“Continue,” I told the dealer as I shook my head in resignation. </p>
+<p>The next card was called The Matron and it showed a voluptuous woman surrounded by </p>
+<p>young  children,  many  of  whom  sat  cradled  on  her  lap  or  rested  their  head  on  her  prodigious </p>
+<p>chest. </p>
+<p>The reaction was immediate and familiar. Celina’s breasts swelled, slowly and subtlety, </p>
+<p>in time with her breathing so that they rose with her chest as she inhaled but declined to fall with </p>
+<p>it as she exhaled. They kept their shape, growing both longer and broader as she filled  out. As </p>
+<p>her bosom slid down her torso, her shirt was pulled up, exposing the swell of her belly and the </p>
+<p>indentation of her navel.  </p>
+<p>escaped her lips nonetheless. </p>
+<p>She bit her lip and moaned at the sensation of the moist cotton being dragged against her </p>
+<p>sensitive nipples; she was obviously trying to keep quiet, but a high pitched whine of pleasure </p>
+<p>When the growth had finished, her tits had more than doubled in size. Each resembled a </p>
+<p>football, resting upon her belly and proudly extending a good four inches beyond it. </p>
+<p>Her nipples had grown slightly, but not quite so much as the rest of her breasts, leaving </p>
+<p>her monstrous teats looking almost proportional to the well stacked chest upon which they rode. </p>
+<p>Both the dealer and I stared at her, smiling softly at her obvious pleasure. Celina’s eyes </p>
+<p>fluttered closed, and after a moment I gently nudged her shoulder and told her we were waiting. </p>
+<p>“Sorry,” she squeaked. “Hit me!” </p>
+<p>The next card showed a wizened philosopher, perhaps Socrates himself, teaching a group </p>
+<p>of bright young pupils in the town square; while a beautiful young girl ignored him, staring at her </p>
+<p>reflection  in  a  nearby  pond  and  daydreaming.  The  Empty  Book  was  written  upon  the  card, </p>
+<p>although no book was visible on its face. </p>
+<p>Again, nothing seemed to happen at first, although I started to suspect what it did as the </p>
+<p>game went on. In hindsight, it seems that this card turned Celina into an airhead. A stereotypical </p>
+<p>dumb blonde trapped in a brunette’s body. She wasn’t stupid, not exactly, but she didn’t act like </p>
+<p>a prospective PhD in biochemistry either. Mostly it was just a short attention span that made her </p>
+<p>forgetful and easily distracted, and a habit of saying the first thing that came to her mind without </p>
+<p>thinking it through. I found it adorable, if sometimes irritating, but I am getting ahead of myself. </p>
+<p>Anyway, the next card to be dealt was  Homogeny,  and it depicted a group of identical </p>
+<p>young  women,  all  fashionable  dressed,  with  long  blonde  hair,  slender  figures,  and  flawless </p>
+<p>features; like human Barbie dolls on a shelf. </p>
+<p>The changes which this brought about in Celina were  subtle, but the end result was  the </p>
+<p>most drastic  yet.  Her face slowly resulted itself, growing more slender  and taking on a perfect </p>
+<p>oval  shape.  Her  nose  shrank  slightly  and  the  tip  rounded,  her  eyes  took  on  an  exaggerated </p>
+<p>almond shape that further obscured her ethnic background. Her eyebrows grew thinner, while her </p>
+<p>lashes lengthened. Her complexion cleared, the small blemishes across her cheeks and forehead </p>
+<p>disappeared, as did the slight scarring left over from teenage acne. </p>
+<p>The  most  drastic  change  was  her  mouth;  her  already  feminine  lips  filled  out  until  they </p>
+<p>were  extremely  full  and  shapely,  the  top  and  bottom  lips  each  perfectly  proportioned  to </p>
+<p>complement the other. </p>
+<p>All in all, Celina’s face was now the ideal of perfect feminine beauty.   </p>
+<p>“Nice!” I said out loud. </p>
+<p>“Did I do good?” Celina asked, smiling up at me as I nodded. </p>
+<p>She  took  another  card,  which  showed  a  veiled  woman  standing  in  the  cemetery  by </p>
+<p>moonlight, her face obscured by shadows. The Mourner. </p>
+<p>Suddenly,  Celina’s  expression  darkened  and  her  face  took  on  an  edgy  look  as  makeup </p>
+<p>was smeared across her features with an invisible brush. Heavy eyeliner, thick mascara, dark red </p>
+<p>lipstick, and a pallid foundation that left her with skin like living ivory. </p>
+<p>Her clothes slowly morphed; her blue t-shirt darkened to black and the logo of the band </p>
+<p>into  her  t-shirt  changed  into  that  of  a  different  group,  something  edgier  that  I  had  also  never </p>
+<p>heard of. Her neckline dropped lower and lower, and her sleeves shrank, turning her shirt  first </p>
+<p>into a tank top and then into some sort of lacy black  bodice which simultaneously cinched her </p>
+<p>waist  and  thrust  her  tits  up  and  outward,  presenting  a  long  inviting  line  of  pale  cleavage  that </p>
+<p>jiggled with every breath. </p>
+<p>Likewise,  Celina’s  pants  shrank,  inching  their  way  up  her  legs  and  showing  more  and </p>
+<p>more of her thick thighs with every second, until they finally they were little more than a leather </p>
+<p>thong; so tight you could clearly see the outline of her pubic mound when she parted her legs. I </p>
+<p>had little doubt that they left her ass almost completely exposed, and the view from behind when </p>
+<p>she stood up would be undoubtably breathtaking.  </p>
+<p>It didn’t last long though; black fishnet stocking materialized on her bare legs, and soon </p>
+<p>they were joined by a short frilly skirt, which flared outwards and was wrapped in gauzy black </p>
+<p>lace. </p>
+<p>Finally,  her  sensible  shoes  changed  into  a  pair  of  heavy  leather  boots,  with  platform </p>
+<p>soles, six inch spiked heels, and shiny silver buckles running almost all the way up to her knees.  </p>
+<p>Her new look was amazing, a style that I would come to learn was called “Gothic Lolita”, </p>
+<p>and I thought it was sexy as hell, but it didn’t really fit with the Celina I knew. It certainly would </p>
+<p>have made her stand out in the lab, like a real life Abby Sciuto. </p>
+<p>“Keep going!” I urged her. </p>
+<p>Celina didn’t have a clue what was going on, but she picked up on the fact that she was </p>
+<p>doing good and smiled enthusiastically, hitting the table. </p>
+<p>The next card showed a man slaving away at an easel,  a naked woman standing before </p>
+<p>him with a look of abject boredom on her face. It was, not surprisingly, called The Artist. </p>
+<p>Nothing happened at first, then Celina gave a small startled gasp. </p>
+<p>“What’s the matter?” I asked” </p>
+<p>“I can be such a ditz sometimes,” she squealed in annoyance as she dug through her purse </p>
+<p>and pulled out an expensive looking phone in a glittery case, “ I can’t believe I forgot to check in </p>
+<p>with  my  followers!” She straightened her hair, pursed her lips, held  out  her phone, and took a </p>
+<p>half dozen selfies. Then she selected the best one, and uploaded it to her Instagram before typing </p>
+<p>an  accompanying  caption,  quite  a  feat  given  her  nails,  which  said  “In  Vegas!  More  later! </p>
+<p>Kisses!” </p>
+<p>She  then  proceeded  to  open  her  Twitter,  Facebook,  Onlyfans,  and  several  other  apps  I </p>
+<p>had never heard of before the dealer cleared her throat. Celina didn’t hear her, so I leaned over </p>
+<p>and asked her if she could do that later. We had a game to get back to. </p>
+<p>“Huh?” She sighed. Then she looked up from her phone, took in her surroundings, and </p>
+<p>remembered where she was. </p>
+<p>“Oh. Sorry. Next card?” </p>
+<p>It  was  a  picture  of  a  pale  woman  with  blazing  green  eyes,  who  looked  not  all  that </p>
+<p>different from Celina. “Envy;” the dealer intoned flatly, “the next card’s value is doubled.” </p>
+<p>Said  card  showed  a  lonely  tower  in  an  isolated  forest.  A  saddled  horse  grazed  at  the </p>
+<p>tower’s base, but nobody else was around. The Prisoner. </p>
+<p>Suddenly, Celina’s hair began to grow rapidly, bursting out of the plain ponytail that tried </p>
+<p>to  hold  it  back.  It  became  thick  and  lustrous,  her  silky  black  locks  sliding  down  across  her </p>
+<p>shoulders and over the back of her chair, descended past her waist, and didn’t stop until it was </p>
+<p>pooling  on  the  floor  behind  her;  I  imagined  that  it  was  now  as  long  as  she  was  tall.  It  was </p>
+<p>gorgeous. </p>
+<p>“Keep going?” She asked. </p>
+<p>“Of course!”  </p>
+<p>corks. </p>
+<p>The  dealer  turned  over  another  card  and  laid  it  before  Celina.  It  depicted  a  sprawling </p>
+<p>marketplace, tables loaded down with vibrantly colored produce, although most of the fruit was </p>
+<p>strange and of a species unknown to me. The Market. </p>
+<p>Celina’s  breasts  began  to  expand  again,  although  not  nearly  so  dramatically  this  time. </p>
+<p>Instead,  they  rode  higher  on  her  chest,  sticking  out  further  and  expanding,  taking  on  a </p>
+<p>pronounced melon shape. When they were finished, each of the grad student’s breasts was nearly </p>
+<p>as large as hear head, and to me they looked quite a bit like those that had once belonged to the </p>
+<p>legendary Pandora Peaks. Her thick nipples stood out clearly, roughly the size and shape of wine </p>
+<p>Celina saw me looking at her lustfully, and asked if that was good. </p>
+<p>“Very good,” I responded, to which she smiled and let out an exaggerated “Yay!” as she </p>
+<p>playfully  drummed  upon  her  new  cleavage  with  the  palms  of  her  hands,  which  started  her </p>
+<p>bouncing again. </p>
+<p>The dealer took the motion as her cue to draw another card. This one showed a girl in a </p>
+<p>school  uniform  being  followed  by  a  group  as  strange  old  men,  lust  obvious  in  their  eyes.  The </p>
+<p>letters written upon it spelled out The Maiden. </p>
+<p>The effect on Celina was subtle, and it was hard to put my finger on any one change. As </p>
+<p>best  as  I  could  tell,  her  face  grew  more  delicate,  and  the  small  wrinkles  around  her  eyes  and </p>
+<p>mouth faded away. Her cheeks became slightly fuller, and the freckles upon them and across the </p>
+<p>bridge of her nose and forehead grew more prominent even as those on her shoulders and chest </p>
+<p>faded  somewhat.  Her  breasts  grew  visibly  firmer  and  higher,  while  all  across  her  body  skin </p>
+<p>tightened and flesh grew toned.  </p>
+<p>When the process was finished, she looked dramatically younger, like she was a teenager </p>
+<p>again. And, like a teenager, she had better things to do. </p>
+<p>“Are we almost done? This game’s boring.” She said in an exaggerated singsong voice. </p>
+<p>“Almost.” </p>
+<p>surface. </p>
+<p>amount.” </p>
+<p>Celina sighed and checked her phone, as she absent mindedly tapped on the table’s felt </p>
+<p>The next card depicted a man walking through the desert, straining under the weight of a </p>
+<p>bulging  sack  of  coins.  “Greed,”  the  dealer  said.  “The  next  card  is  worth  ten  times  the  normal </p>
+<p>That got her attention again, and Celina and I both watched intently as the next card was </p>
+<p>dealt. It was called Cupid’s Arrow, and the illustration was of a young man kneeling at the feet of </p>
+<p>an indifferent woman, suicidal desperation filling his eyes. </p>
+<p>Suddenly, Celina was clutching my arm, her long nails digging painfully into flesh. She </p>
+<p>looked  up  at  me,  her  eyes  large  and  shinning,  and  then  she  moved  closer,  pressing  her  body </p>
+<p>against mine. She placed my hand over her engorged nipples and sighed as I reflexively grasped </p>
+<p>it, then leaned close, resting her forehead against my shoulder while gently running her lips over </p>
+<p>my bicep and leaving a trail of shallow butterfly kisses in her wake. </p>
+<p>I  awkwardly  moved  my  right  hand  over  to  her  and  timidly  ran  my  fingers  thought  her </p>
+<p>luxurious mane of midnight hair. </p>
+<p>The dealer didn’t wait for Celina to look up, and instead dealt the final card unbidden. It </p>
+<p>depicted a scene out of the Iliad, with a golden apple being presented to the fairest of the Greek </p>
+<p>goddesses. It read only The Apple. </p>
+<p>The dealer looked me in the eyes and told me that it looks like I won. </p>
+<p>“I didn’t realize I was playing.” </p>
+<p>She shrugged indifferently, and gestured toward Celina. </p>
+<p>“Choose her prize.” </p>
+<p>A  whirlwind  of  ideas  blew  through  my  head.  I  could  turn  her  back  to  normal.  I  could </p>
+<p>make her the prettiest girl in the world. I could give her true love. I could give her perfect health. </p>
+<p>I could make her smart again, maybe even smarter than before. I could make her rich. All good </p>
+<p>ideas, but instead, I decided to go for bust. </p>
+<p>“I want Celina to have the biggest boobs in the world which, despite their size, never sag </p>
+<p>The  dealer  nodded,  and  a  moment  later  Celina’s  breasts  began  to  expand,  until  my  lap </p>
+<p>was completely filled with soft, quivering, slightly freckled flesh. She moaned in pleasure, and </p>
+<p>rubbed against me, and for a moment I thought Celina was going to mount me right there, when </p>
+<p>or hurt her back.” </p>
+<p>the dealer interrupted. </p>
+<p>“Games over.”  </p>
+<p>Once again,  I felt compelled to  obey.  I helped Celina to  her feet,  not  an easy task with </p>
+<p>breasts  that  had  to  weigh  close  to  fifty  pounds  each,  and  she  tottered  toward  the  door;  still </p>
+<p>lacking the muscle memory to walk in such high heels, especially with her new center of gravity. </p>
+<p>She steadied herself by clinging tightly to me for balance. </p>
+<p>Celina and I walked back out onto the main casino floor, her cleavage preceding her by a </p>
+<p>good  two  feet.  Her  breasts  were  now  roughly  the  size  and  shape  of  large  picnic  watermelons, </p>
+<p>each capped with an areola like a poker chip and with thick nipples like ripe strawberries. </p>
+<p>Her top had again expanded to accommodate her new figure, but it was all but impossible </p>
+<p>to support such a chest; flesh spilled out on all sides, and the thin straps which ran from the hem </p>
+<p>up to her shoulders was held taut, resting several inches above her flesh like the chains used to </p>
+<p>raise a drawbridge. </p>
+<p>to make my move. </p>
+<p>Each step set her boobs jiggling, and made my heart flutter. I decided now was the time </p>
+<p>“So, I was thinking, you want to get dinner and maybe catch a show? Then afterwards, I </p>
+<p>was thinking, if you brought your swimsuit, you could come up and we could try out the hot tub, </p>
+<p>supposedly they have saunas in every room here.” </p>
+<p>“I  have  a  better  idea,”  Celina  said  in  her  girlish  voice,  and  then  she  did  her  best  to </p>
+<p>whisper in my ear, although she was still a good six inches too short. “Why don’t we go up to </p>
+<p>your room now, and then you can fuck me in the ass.” </p>
+<p>I  was  stunned  by  the  forwardness  of  her  offer,  and  I  glanced  around  nervously,  as  if </p>
+<p>afraid to be too eager. I looked at the glass behind us, and saw only an empty room, the dealer </p>
+<p>and her strange deck were gone. Oddly enough, the only thing I could think about was whether </p>
+<p>or not I should have tipped her. </p>
+<p>distinct memories of Celina. </p>
+<p>Suddenly,  I was  hit with  an odd sensation;  I  realized  I had two very  different and very </p>
+<p>In one, she was a cute, if not quite gorgeous, girl whom I had gone to school with for the </p>
+<p>past three years and always found an excuse not to ask out on a date, until a chance meeting in </p>
+<p>Las Vegas led to the crazy adventure you just read. </p>
+<p>In the other one, I had never seen her before today. I had come to the Luxor alone, and as </p>
+<p>I wandered around looking for something to do, I had seen a crowd gathering around one of the </p>
+<p>side rooms. At the center was a young multiracial girl in goth attire, sexy as all hell and showing </p>
+<p>about a mile of cleavage. As far as I could tell, she was some sort of Instagram model doing a </p>
+<p>meet and greet, and as I conspicuously moved around the crowd trying to get a better look at her, </p>
+<p>our eyes locked and she waved me over. </p>
+<p>I nervously walked up, and she motioned for me to come around to her side of the table </p>
+<p>and sit next to her. I obliged. She immediately grasped my hand under the table, and told me that </p>
+<p>her name was Salina, with a S and a heart above the i. I was my usual self, nervous and tongue </p>
+<p>tied around strangers, but she did enough talking for both of us, her high-pitched voice cutting </p>
+<p>through the murmur of the crowd. As the afternoon went on, she moved closer and closer to me, </p>
+<p>and paid less and less attention to the adoring fans who came seeking her autograph or a picture </p>
+<p>with  her.  By  the  end,  she  was  actually  sitting  in  my  lap,  resting  her  head  on  my  shoulder  and </p>
+<p>staring daggers at any woman who so much looked in my direction. </p>
+<p>After  the  event,  she  clung  to  me,  refusing  to  let  me  out  of  her  reach,  and  walked </p>
+<p>alongside me. We got some odds looks, a guy in his thirties with a girl who appeared to be about </p>
+<p>half his age, but this was Vegas, where such things were not out of the ordinary. </p>
+<p>As  we  discussed  our  plans  for  the  evening,  my  memories  again  converged,  with  the </p>
+<p>previous reality seeming hazy, like a well remembered dream.  </p>
+<p>Just then, Salina looked me in the eye and in a girlish voice said “I just had a crazy idea.” </p>
+<p>“Huh?” I asked. </p>
+<p>“Well, seeing as we are already in Las Vegas, why don’t we get married? That way we </p>
+<p>can be together forever, until we are both dead.” </p>
+<p>I was taken aback. Then, for the second time that day, I found myself in a situation where </p>
+<p>I  had  no  idea  what  I  was  about  to  get  into,  but  still  decided  to  push  on  heedless  of  the </p>
+<p>consequences. </p>
+<p>The Blade: </p>
+<p>Subject’s nails grow long and colorful. </p>
+<p>The Horns of Heidrun:  Subject’s nipples grow longer and become extremely sensitive. </p>
+<p>The Sailors: </p>
+<p>Subject gains an anal sex fetish. </p>
+<p>The Siren: </p>
+<p>Subject’s voice becomes exceptionally youthful and high pitched. </p>
+<p>Ambrosia: </p>
+<p>Subject begins to lactate profusely. </p>
+<p>The Amphora:   </p>
+<p>Subject’s butt double in size and becomes significantly shapelier. </p>
+<p>The Empty Book: </p>
+<p>Subject’s personality is changed to bimbo. </p>
+<p>The Matron: </p>
+<p>Subject’s breasts double in size. </p>
+<p>Homogeny: </p>
+<p>One of the subject’s features changes to match their society’s ideal of beauty. </p>
+<p>The Mourner: </p>
+<p>Subject’s style is changed to goth. </p>
+<p>The Artist: </p>
+<p>Subject’s profession is changed to pinup model. </p>
+<p>Envy: </p>
+<p>The next card’s effects occur with double the usual intensity. </p>
+<p>The Prisoner: </p>
+<p>Subject’s hair doubles in length. </p>
+<p>The Market: </p>
+<p>Subject’s breasts take on an exaggerated melon shape. </p>
+<p>The Maiden: </p>
+<p>Subject’s age is regressed to their late teens. </p>
+<p>Greed:   </p>
+<p>The effect of the next card is extreme. </p>
+<p>Cupid’s Arrow:   </p>
+<p>Subject becomes romantically infatuated with their opponent or partner. </p>
+<p>The Apple: </p>
+<p>Choose any one change for your opponent or partner. </p>
+<p>Cards Used: </p>
+</body>
+</html>

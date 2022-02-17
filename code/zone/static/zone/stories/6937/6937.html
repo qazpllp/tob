@@ -1,0 +1,2977 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Cry Over Spilled Milk</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>Faye and Jessica's Apartment</p>
+<p>Jessica</p>
+<p>Unwound, bare to an apartment that still felt too new and too cozy,
+Jessica heaved into her frustration with a blasting sigh.</p>
+<p>Her nappy, tight curls seemed all the tighter to her --- everything felt
+like piano wire being tuned by some sick psychopath. She threw her head
+into her couch. "Fuck," she swore, barely audible. When the word didn't
+avail her of her angst, she repeated it louder, with enough resentment
+to make the walls in her living room form goosebumps. "FUCK!"</p>
+<p>"What? You're home?"</p>
+<p>Jessica did <em>not</em> want any company, even if that company was one who was
+contractually obligated to stay with her as a fellow tenant.</p>
+<p>"Yes, I'm home," Jessica opened her green eyes toward the bedroom door
+to her right.</p>
+<p>The nightstand light was on, a sign of life despite the previous
+stillness, and accompanying the revelation that Jessica was not alone, a
+foxy broad slinked onto the linoleum floor. The woman, seven years more
+experienced, entitled beyond what should be legal, and jobless to boot,
+was still in the loose pink tee that Jessica had left her in.
+Accompanying it were a pair of fuzzy pajama bottoms which were cute that
+morning, insight blurred by exhaustion, brain fog, and a latent anxiety
+about lateness for work, but infuriating now that Faye was still in them
+a whole workday later.</p>
+<p>"Why?" Jessica instigated, a stack of chips on her shoulder tall enough
+to scratch the ceiling. "Is there a problem with me being here, in the
+place I rent? I certainly hope not."</p>
+<p>"Rough day at work, huh?" Faye came around and sat on the cream loveseat
+perpendicular to the couch Jessica was at. Her steps were all on her
+toes as if walking on water, and when she sat, there was a gentleness to
+it.</p>
+<p>"Of course. Everyday is rough when you hate your job. But even <em>my</em>
+shitty job would be tolerable if I didn't have to pull double shifts
+every day. . ." Jessica's aggression was angled square at Faye's lithe,
+vulnerable neck. "Rent is due. Where is your half? Hmm?"</p>
+<p>Faye knowingly closed her blue eyes, shook her head, and folded her
+hands; painted nails over recently lotioned skin. "Baby, I told you I'd
+be able to help you with rent this month and I meant it. You sound like
+you don't believe me."</p>
+<p>"I don't."</p>
+<p>"Ouch. Okay, well I'll have you know that I already sent the landlord my
+share and she's already sent a text verifying she received it." Faye
+fished a phone from the strap of her bra. She took her sweet time too,
+rolling her delicate fingers over her skin from one cup to the next,
+playing up her show till she caught Jessica fighting her urge to stare.
+Forty uncomfortable seconds later, she said, "Ahh, there it is. It
+warmed up to body temperature so I couldn't feel where it'd shifted to-.
+. ."</p>
+<p>"Forget it," Jessica mumbled.</p>
+<p>"You. . . don't want to see the text? I've really got it, I swear. I'll
+be just a minute turning my phone on-. . ."</p>
+<p>"I'm fucking done with your game, Faye. I'm on to it. I've already
+talked to the landlord and I know how much you <em>didn't</em> give her. You're
+making a fool of yourself trying to keep up this lie." Jessica's
+rage-fueled her voice cranked uncontrollably louder. "You didn't give
+her anything because you don't <em>have</em> anything --- because you tell me
+you're going to get a job to help pay bills while you work on your
+failing business. Instead, you sit on your ass all day and your business
+is <em>still</em> failing! You've had four months of free ass living." Jessica
+jumped from her seat, body cocked like a weapon, tongue poised with
+threats. "And it's time you either pay the hell up or get the hell out."</p>
+<p>"Jessy? Sweety, calm down!" Faye was on her feet too. Her voice
+trembling with fear. "Listen, I know you're pissed but we won't fix this
+if we can't be adults about it."</p>
+<p>"Pay. Up. That's how we fix it!"</p>
+<p>"I will. Tonight." Faye presented herself a virgin to the beast in
+Jessica, even if she was anything but. She made herself small, clutching
+at Jessica's chest as she came forward, twitching with the fear of god.
+Jessica was immediately suspicious. "Come on, sit down. I have some good
+news for you if you'll listen."</p>
+<p>"Bitch, I told you to stop!" Jessica took the feather-light hands on her
+blue polo and threw them away, distancing herself. "I'm not letting you
+freeload anymore --- I don't give a fuck how cute you think you are."</p>
+<p>"Jessica! I'm not freeloading," Faye said, even though her styled hair
+made for a clear indication that her rent money was going to cosmetics
+instead of the lease. "Listen! I just got this massive hit on my website
+--- my biggest order yet. Once I fill it, I'll have enough for rent and
+more. Much more!"</p>
+<p>"How much?" Jessica's teeth were grinding together, eyes sharp enough to
+cut.</p>
+<p>"Thirty-five hundred. It's more than enough for rent. And, I was
+actually thinking, since you've been so supportive of my dream, we could
+let you pick us out some mountain bikes and we could take a weekend in
+the mountains. You've wanted that forever, haven't you?"</p>
+<p>Jessica was not convinced. Faye had 'big orders' before that promised
+thousands of bucks in a week's time and all of them fell through. Either
+she couldn't fill the order, or they weren't willing to wait. It had
+Jessica suspicious of whether or not the orders had been real in the
+first place as Faye was not above bending the truth --- to the point of
+snapping --- to spare her an extra week of wrath.</p>
+<p>The two lived at odds but things hadn't always been so antagonistic.
+Faye actually had a corporate job a little over a year before. She was
+clean cut, primed for promotion, and trustworthy enough to lure a
+newly-moved-out Jessica into splitting a housing bill to make things
+affordable. Fifteen months after that decision, though, Faye began to
+chase the entrepreneurial spirit and sacrificed everything to get her
+brainchild business off the ground. The burden of bills fell exclusively
+on Jessica who had trusted Faye like a fool, but now that she had the
+greatest monetary stake in their shared apartment, Jessica started to
+believe that Faye needed to contribute more than pixie dust and promises
+about the future success of her new business.</p>
+<p>"There's no way you fill that order --- even if it exists, which I don't
+think it does."</p>
+<p>Jessica believed her words. Still, work made her weary and her feelings
+ached for a break. It disgusted her that she had hope, but she found it
+glittering naively at the bottom of her murky lake of a heart.</p>
+<p>Then silence came, which Jessica couldn't deal well with. Faye was
+watching her, reading her expressions like a gypsy reading a palm ---
+placing the burden of words on the aggressor. It was working. Jessica
+felt her need to speak in the awkwardness and her incompetence at
+standing up for herself made her near certain that she'd not said what
+she meant. Already, by this one shift in conversational tempo, she felt
+herself on the defensive.</p>
+<p>She kept her fire from going out and hefted heavy hands on her hips.
+"Hear me? There's no order. Now pay up."</p>
+<p>"Oh no? He gave me a grand in advance as an act of good faith. This is
+no chump of a business partner. He's the real deal. He knows that he's
+not just buying my product --- he's buying me!" After being shooed away,
+Faye came in close again. When Jessica didn't immediately thrust her
+across the room again, she made a scene of really holding each of
+Jessica's features in her gaze. "Now, I'm not saying I can do this
+alone. I'm going to need some capable hands to help me manage
+everything. I <em>could</em> hire a few helpers, but if we really wanted to
+make the best decision for <em>us</em>, it would be smarter to handle it
+ourselves."</p>
+<p>Jessica snarled. She didn't shy away from Faye whose knees were bumping
+into hers, whose recent shower scent roared obnoxiously in the narrow
+gap between their faces, but she did tilt her head away when Faye meant
+to taste her. "Three and a half grand is a huge order. You'll never fill
+it. It's impossible," Jessica declared, indignation already abating.</p>
+<p>The logistics were just wrong. Jessica knew she shouldn't believe even
+if there was a universe in which Faye had an order that wasn't so
+ludicrously huge because Faye was not against betraying trust to buy
+herself time. Unfortunately, Jessica's logic was in constant conflict
+with the co-pilot of her behavior: raw, unadulterated sexual passion. It
+was hard having the war between wanting to kick Faye out of the
+apartment and onto her useless ass while never being able to get said
+ass out of her waking mind.</p>
+<p>"I already explained to him that it would have to be shipped in batches
+over a few weeks. And --- at least, this is what I figure --- with <em>you</em>
+helping me," Faye shot heart-shaped arrows with her unnaturally
+iridescent irises. "I'll have extra motivation to make this work. Plus,
+once I get to the production size to accommodate this order, I'll have
+the scale to take on even more. This deal can only benefit us. I'm
+thinking we are debt free in six months --- you could quit your job
+since you hate it so much."</p>
+<p>Faye's fingers found something to play with in the collar of Jessica's
+work top. One slender, purposeful finger ran sprints toward the 'V' and
+bumped suggestively against the button there that barred Jessica's
+generous chest as well as her sense of relaxation.</p>
+<p>Faye continued. "We buy our own place in a year, we start a family
+together, and we're damned wealthy before we're thirty five. We can live
+independently --- nobody can ever tell us what to do or what's right.
+The only responsibility we'll have is to ourselves."</p>
+<p>If anyone could articulate Jessica's desires so adequately, it was Faye.
+She played her vision for the future like a concert clarinetist playing
+a solo, the sight of which sent Jessica on her own personal journey
+through the willow trees on her own ranch, to the Italian style home on
+one-hundred acres. Jessica badly wanted a kitchen where she could
+improve her culinary skill; passions for cooking were currently stunted
+by diner work. She was too tired when she got home to cook, meaning that
+she'd technically sacrificed her dream of being a chef to Faye. Was it
+now possible that Faye was giving it back?</p>
+<p>The house would have a bathroom that didn't require a plumber to visit
+every few weeks, a patio to be sat on, a corgi and a border collie, a
+vegetable garden. . . And finally, a bedroom where a voluptuous,
+amour-minded, artfully nude Faye was reclined with a martini glass.</p>
+<p>Wistful desire reflected plainly in Jessica's eyes as Faye described it
+all; exactly as she'd dreamed, not a detail spared. Without a roommate,
+Jessica could earn enough on her own to save and make it happen. But
+without a roommate, Faye would not be waiting naked and curvy for her
+and a crown jewel of her fantasy would be missing.</p>
+<p>It wasn't easy, but the darker diner worker couldn't resist any longer.
+She just couldn't keep fighting --- even if the road rage she exhibited
+driving home proved she had a great deal of ire about the home she was
+driving to. "One thousand in advance?" Jessica's defined chin went low.
+She held Faye's gaze.</p>
+<p>"Yup. It's amazing, isn't it?"</p>
+<p>"Why didn't you spend it on rent?"</p>
+<p>"I wanted to show you first --- mostly because I want us to spend it
+together," Faye had worked her way through two of Jessica's button,
+flaying open her shirt to where her skin was a lighter tone, less
+colored by the sun. There, a natural swell of chest was directed up and
+out by a bra that had been purchased to increase tip revenue, but also
+served to delight a celebratory woman like Faye. "As far as I'm
+concerned, I owe it to you because I'd be utterly lost without your
+support. You get the first fruits; use it however you like."</p>
+<p>"I'll just use it on. . ."</p>
+<p>"Rent? I know, baby, I know. But <em>after</em> that. . .?"</p>
+<p>Jessica shrugged, despite knowing a million things that needed fixing,
+renovating, replacing, and renewing.</p>
+<p>Overwhelmed, she focused on Faye who exhibited an emotion that made her
+heart flip. It wasn't cruel; just superior and triumphant. Casual
+dominance, Jessica thought, the cocky kind that shows she thinks she can
+get away with anything. It made the shower scent sour a bit to see it,
+but Jessica's heart was already open; her rebellion already stymied. She
+signed into their shared dream together, choosing to believe it because
+it was easy and she didn't have to argue or fight while completely
+drained to make it happen.</p>
+<p>Faye, detecting little to no opposition, fueled by the satisfaction of
+taming her girlfriend's temper, depressed her hand into Jessica's jeans
+over the hips till her partner's knees gave and she, willingly, <em>very
+willingly</em>, took a seat at the couch. Looking down on her, Faye's lips
+played upward as her blonde hair was shaken out. "I could make a few
+recommendations." Her words were a slow massage. Hands went to her own
+clothing, working the top around a bit in a strip tease. She pulled it
+down, crumpled it in her hands, grunted as if any fabric covering her
+body were a sin and a curse. All the while Faye's chest was the center
+of everything due to its attractive, oversized quality; plenteous even
+on a woman with a frame that was full of life and volume.</p>
+<p>"We go north to Midtown, spend the weekend away, enjoying the
+late-autumn nights. We have an exclusive, romantic dinner with seafood
+and all the wine we can drink. Then, once it gets too chilly to be out,
+we retire to a suite at a not-to-ritzy hotel and we do. . . well, we do
+what we do best," Faye giggled, the bottom hem of her top suspending the
+weight of her enormous bosom from below. "And I don't intend on letting
+you leave bed till you've fully satisfied me. You'll take off from work
+so that won't be an excuse --- and I'll raise hell to make it happen,
+too; whatever I have to do to get unedited time with you."</p>
+<p>Jessica crossed her legs, then her arms, and chuckled. "Don't be too
+hard on them. Stuffy's still pays the bills."</p>
+<p>Faye, incapable of letting Jessica's defense last, stopped jiggling her
+tits for two seconds and snatched Jessica's hands from her elbows where
+they were loosely wrapped. Their fingers intertwined, cotton white and
+premium leather, as Faye lowered herself, just as gently as she had on
+the loveseat, into Jessica's lap. She didn't come full on and she didn't
+straddle. She elected a perpendicular approach that allowed her to lace
+herself around Jessica's neck like the fine jewellery she believed
+herself to be. Her legs reached all the way to the end and over the
+couch side.</p>
+<p>When Jessica didn't immediately reach, Faye snatched her roommate's
+caramel hand and placed it under her pink shirt directly over her navel.
+With a brief pause accounting for some degree of apprehension, Jessica
+began to move that hand in circles which Faye rewarded with a sigh and a
+laborious blink that highlighted her long lashes.</p>
+<p>"As far as I'm concerned, anything that keeps us away from this," she
+gestured to their current arrangement, clearly also bringing attention
+to where it was bound to lead. "Needs to be rid from our lives at our
+earliest convenience."</p>
+<p>Jessica swallowed a lump in her throat. Her buttons were all undone, but
+she couldn't help but feel a heat building behind her breasts. It became
+uncomfortable to be clothed. Still, she grappled one last time with the
+logistics of her situation. "Faye," the taste of her lover's name felt
+exotic as it only seemed to be useful in moments of intense anger or
+orgasm. "How much are you going to need me to help you?"</p>
+<p>"You work hard, so not every waking hour, obviously. When you're home
+and on the weekends when you can. I'll be on a really strict schedule
+and my diet will definitely need some cleaning up."</p>
+<p>"What kind of schedule?"</p>
+<p>Faye looked to fall in love all over again once Jessica showed interest
+in her and the intimate details of her daily work. "Every four hours or
+so. It'll be hectic, babe, I tell ya." Huge, succulent lips planted a
+lingering kiss on Jessica's cheek, fully extending Faye's body to reach.
+"My sleep will suffer for sure, but it's the only way to both up
+production and meet the demand."</p>
+<p>"How. . . can I help?" Jessica, for the first time in the night, looked
+directly and exclusively at Faye out of sheer reverence and admiration.</p>
+<p>With that, all of the contention, the threats, and the swears were gone.
+One look at her situation, and Jessica knew she'd accepted defeat. When
+she was young, she never would have settled on losing, but maturing a
+bit bought wisdom. Surrender that was tactical was okay. Still, while
+heating up for some awesome after-work sex with her woman, Jessica
+couldn't help but feel she lost a lot with Faye. Happy future wife,
+happy life. Maybe that rule applied. But she felt uncomfortable
+suppressing her resentment for the upteenth time in their relationship.</p>
+<p><em>Just make love with her</em>, Jessica told herself, <em>lose yourself in this
+gorgeous, ambitious woman of yours and stay positive.</em></p>
+<p>Meanwhile, doubt pervaded her. Faye seemed to know she'd won. She could
+ask for whatever she wanted and she would get it; could do as she
+pleased and not be judged. The threat of being kicked out was
+extinguished as it had been six other times in recent memory and no
+recourse would be taken because Jessica lost her fire when she needed it
+most.</p>
+<p>The liberation freed Faye's spirit and this freedom was nothing new for
+her. She'd been gaining freedoms, earning favors, winning at life, for
+as long as she\'d drawn breath. A people person, a rapport builder, a
+seductress, the lead saleswoman --- all aliases Faye could stake her
+very life on.</p>
+<p>Was it alright to just let that be? Jessica questioned that more with
+each passing day.</p>
+<p>__________</p>
+<p>That night, Faye showed Jessica exactly how she could 'help'.</p>
+<p>"Isn't this just sex?" Jessica whispered.</p>
+<p>Below her, between her plump thighs, golden hair reflected moonlight.
+"Sex helps, Jessy," Faye winked. "Or maybe it doesn\'t. Are you
+seriously going to ask me to stop?"</p>
+<p>Finger pads felt like ghost pleasure on her outer lips. One
+investigative press released a flow of built up pleasure.</p>
+<p>"I'm usually so composed. Then I see how wet you are and I lose myself
+completely." Faye licked her lips so they glistened with equitable
+moisture to Jessica's leaking snatch.</p>
+<p>"Then do it," Jessica said on an inhale.</p>
+<p>"I was going to hold out; let you suffer some."</p>
+<p>"Please." Thighs spread even wider. A tentative hand extended to touch
+Faye, grasping for whatever was necessary to initiate this oral
+stimulation. "I've suffered enough lately. Just be my escape right now."</p>
+<p>"Very well."</p>
+<p>Faye moved as slow as shadows being shifted in moonlight. When Jessica
+felt lips at her warm femininity she quaked at the fresh and familiar
+pleasure. Her body rolled back and then into it. She let her mind drift
+and lived exclusive in her body, not even an inch beneath her own skin.
+Everything felt so good, she could barely identify what was being done.
+Velvety softness bumped her outsides, a cunning serpent hooked her
+insides. Nails played on the sensitive skin of her inner thighs and a
+nose scrunched on her hooded pleasure peak.</p>
+<p>It couldn't have been ten minutes till she came the first time. Her
+friendly stars danced over her vision and she felt tension flushing away
+from her.</p>
+<p>The next thing she knew, Faye was coming onto the bed to join her. From
+nose to chin, her model face dripped with fresh girl cum --- Jessica's
+own, which was simply too sexy a feeling to describe. Having a woman
+wear her marking with pride and confidence stole Jessica's very breath.</p>
+<p>They made out some more, the newness of orgasm flavoring this comfort
+zone in white heat. The grinding of parts together and emblazoned
+foreplay seemed nearly to lead to yet another blatant sexual act.
+Imagine the surprise when Faye slowed the tempo.</p>
+<p>Then, with endorphins peaked, with emotional connectedness in its apex
+form she manufactured a case from beneath their bed and revealed a set
+of bottles as its contents.</p>
+<p>With initial apprehensions gone, Jessica was introduced formally to
+Faye's method.</p>
+<p>In passing, by nature of their varied sexual play, Jessica had
+encountered Faye's namestake. She'd even been a quality assurance
+advisor unknowingly in the past. But now, the context was different;
+money was to be made.</p>
+<p>Faye's premium product was her breast milk. And it was high time Jessica
+be in the know about her lover's business.</p>
+<p>When it was first presented, the idea was outlandish. Faye defended the
+idea with studies, research, and hundreds of online testimonials. No,
+she didn't have to be pregnant. Yes, people would pay money for it. Yes,
+people would pay a <em>lot</em> of money for it. And, finally, yes, it would
+make her tits bigger. Precisely because it was too foreign a topic,
+Jessica avoided it and only ran across Faye's progress coincidentally
+when she just so happened to have Faye's nipple between her lips. Faye's
+enormous pillowy breasts were already the leading attraction to her
+theme park of a body and Jessica considered herself damned lucky to be
+sleeping with a woman that had so much to offer. She just. . . didn't
+expect breast milk to be a thing.</p>
+<p>Who could <em>ever</em> expect it?</p>
+<p>"Just do what you're always thinking about doing anyway," Faye said.</p>
+<p>Their position changed. Jessica's back was to the headboard. Faye's back
+was to the tan girl's chest. From some plastic tub beneath their bed, an
+array of twelve ounce bottles had been produced. Glass, expensive
+looking, and wide-rimmed with golden lids.</p>
+<p>"I'm currently thinking of how your every move sends your skin across my
+nipples," Jessica mumbled. "And how distracting it is to learn how to
+milk anything with my own boobs wanting attention."</p>
+<p>"You know the expression: you milk my boobs and I'll pinch your nipples
+till their so raw you can't even wear clothes tomorrow."</p>
+<p>Jessica moaned, disarmed at the thought.</p>
+<p>"Usually, you warm them up," Faye pulled her blonde hair to the side so
+Jessica could look over her shoulder. "Except we did a good job of that
+earlier. So now you take an underhanded grip and gently apply pressure
+with your thumb, rolling toward the nipple."</p>
+<p>Being a little shorter, it was hard for the curly-haired girl to see.
+The blonde rolled to the right, putting Jessica's face beside her
+shoulder as she kissed her caramel cheek. "Better?"</p>
+<p>Jess nodded. "Are you sure you trust me to do this?"</p>
+<p>"You're the only person in the world I trust to do this. . ."</p>
+<p>A light hand guided a softer one to Faye's right breast. It felt full
+and taut and so alive; energetic almost. Faye was known to lie about
+things, but her exceptionally superior tits were everything Jessica knew
+them to be. At least that could be trusted.</p>
+<p>Faye's free hand held the bottle as the shorter lover concentrated a
+little too hard on trying to be perfect. The blonde's 34F cup tits were
+too big to be handled in one girl's palm, but Jessica did her best to
+follow instructions.</p>
+<p>First stroke. Nothing was produced other than a nagging sexual itch.
+Second stroke made Faye purr and nibble at the younger girl's ear lobe.
+The third squeeze was rougher, pinching the smooth, pink areola till
+four visible lines ejected out and filled the bottle nearly a quarter of
+the way.</p>
+<p>"They're so full. I thought they might pop for you," Faye teased.</p>
+<p>"Fuck it --- babe, I need it again."</p>
+<p>The blonde giggled. Jessica's sex drive was immense! The bottle went to
+the nightstand while the two love birds found heaven in their sheets
+once more. Youthful, beautiful curves battered each other. They spread
+love with each touch ending with a switch in position to sixty-nine.
+Each were talented enough to get the other off, or perhaps just
+compatible as any couple might hope to be.</p>
+<p>Once they both stopped spasming, Faye surfaced beside Jessica to cuddle.</p>
+<p>"Sorry," Jess whispered.</p>
+<p>"I needed it too." Faye panted, clearly satisfied. "Worse than I thought
+I did. So don't apologize. I like that you push me sexually."</p>
+<p>Jess felt amazing hearing that. She always considered herself weird for
+being a girl with such a huge libido. If she wasn't working or otherwise
+busy, chances were she was thinking about who she could bone.</p>
+<p>"I don't know, I've had people complain," Jessica curled into Faye's
+hair.</p>
+<p>"Are you fishing for a compliment? It sounds like you want me to stroke
+your pussy and tell you it's okay to like having marathon sex."</p>
+<p>Jess smiled. "Would you?"</p>
+<p>"If we can fill two bottles --- which isn't much, by the way --- I'll
+tell you how much I've enjoyed sex since we've started dating. Promise.
+I might even write you a book on it."</p>
+<p>The frizzy-haired partner groaned like a kid waking up for school on a
+Monday. "Deal."</p>
+<p>Then, after some labored adjusting, the two resumed a relaxed milking
+position. Jessica began again, the slippery art of manipulating another
+person's body to some strange new end. It was kinda like masturbating
+but she had to trust Faye completely to tell her if she was doing things
+right.</p>
+<p>By the relief after having milked twenty-four ounces, Jessica knew that
+would be her main problem: trusting Faye. They nipped and kneaded and
+smooched the night away till all of Jessica's tank was empty and fell
+asleep in each other's arms. The very last thought in the brown girl's
+mind was her girlfriend's habit of lying and how the untouched sanctuary
+of carnal pleasures was being infiltrated by the practice of milking.</p>
+<p>_____</p>
+<p>Faye and Jessica's Apartment.</p>
+<p>Two Weeks Later</p>
+<p>Faye</p>
+<p>Jessica was falling into a habit.</p>
+<p>Faye had navigated all of her girlfriend's other barriers with relative
+ease. Anger was easily dispensed with as was stress from work. Faye
+couldn't have imagined sex to be the major stumbling block to overcome.</p>
+<p>But it was. The caramel-toned girl would come in and do the bare minimal
+amount of milking each night and rush to have sex. It was clearly a hang
+up in the plan. Faye was never going to get as big as she needed as
+quickly as she needed by milking minimal quantities once per day. There
+had to be a solution.</p>
+<p>It was one such night. The couple had done about thirty-six ounces and
+were asleep together in bed. Except, Faye couldn't sleep --- wouldn't,
+so long as this issue persisted. She cupped her boobies in a curled
+position. They had grown, sure, but not much. A cup size or two. Not
+nearly enough. Over an hour ago, they'd been milked and were already
+near half full again; the production was there but not strong enough to
+actual make her grow.</p>
+<p>Why wasn't Jessica into milking her? There was no excitement in her
+hands anymore. The process was mechanical for the both of them, as
+pleasant as having her tit slammed in a car door. Faye felt a scowl on
+her face, rolling her palms along her prodigious swells. It didn't
+matter how much she flirted or moaned or encouraged. Jessica went near
+unresponsive while they milked; the human equivalent to a milk pump.</p>
+<p>Faye felt like the victim.</p>
+<p>Jessica had no excuse to be so useless, no reason to act dead with a
+girlfriend as amazing as Faye knew she was. It made Faye's imagination
+stir for a solution that would enliven Jessica before she became nothing
+more than a cold set of hands. So, as she felt her tits filling with
+milk, bigger and bigger beneath the sheets, she devised a plan.</p>
+<p>See, in all her experience, Faye knew how people worked. Occasionally, a
+plan could be worked out by talking. More often, people did what they
+were compelled to do; compelled by a person who knows what's best. She
+considered herself just that type: the person who always knew best.
+Jessica rarely saw her plan for what it was. Her girlfriend always
+accused her of lying, fibbing, or playing games. Poor Jessy just
+couldn't see.</p>
+<p>The blonde crafted a new method and waited for several hours; skipping
+her midnight milking. She told herself she could wait and resolved to
+muscle through how her body revved up at midnight. Her tits had adapted
+to a four hour milking schedule which was good. It just wasn't good when
+she didn't milk every four hours. The lactating woman squirmed for
+hours. Just beneath her skin, milk flooded her milk ducts. Grander she
+grew, pale white milkers growing bigger and bigger in her hands.</p>
+<p>It was so hard to wait. Faye tweaked her nipples ever so gently and
+still found herself panting in moans, finding no relief. Hours later,
+she was a jittery, near-orgasmic wreck. Her boobs and milk weren't
+stopping. Her hands felt skin stretching beneath them. On her back, two
+hills pushed the gossamer sheets higher into the air. Silently, she
+wished they would just come crashing down --- just be squishy and jiggly
+like normal boobs. But she didn't have normal boobs anymore.</p>
+<p>Four hours was long enough to come to terms with her fright, though. Her
+tits were stuffed with milk and wouldn't stop even when the nervous
+energy branched into pleasure and pain. Her steadied breath was forcing
+them higher and higher. They were too sensitive to touch unless she
+wanted to cum which didn't stop her from playing with fire even a
+little. She had to see if they were really so wide, so tall, and so
+taut.</p>
+<p>At the conclusion of four hours, Faye paused the alarm before it could
+sound. Off came the sheets. With night adjusted eyes, she saw her
+beauties standing proudly below her. "Four hours of agony did me pretty
+well. . ."</p>
+<p>One last palming of her boobs made her vision swim with bliss; a
+startling amount of pain in her pleasure. She was bigger than ever
+before. Exciting, since now she knew she only needed skip a milking to
+reach her new size. But not right away. Those four hours had been their
+own unique edge game of hell and she wasn't sure she wanted to think
+about putting off satisfaction for a while. Her puppies were too big and
+gorgeous to be ignored. A finger tested a new ridge, a vein rising
+briefly to the surface near her right nipple. Talk about overfilled.
+Based only on size, she put herself a few cup sizes larger; at least J
+cup range. But the mass wasn't right at all. They were too dense,
+dragging her chest downward like a backpack worn on her front.</p>
+<p>"God, I'm too sensitive," Faye said, realizing that too much excess
+movement was all it would take for her to start a water war with heavy
+cream.</p>
+<p>Then, she turned her attentions to her sleeping lover. With deftness she
+straddled Jessica's waist and beheld the upward facing, open-mouthed
+breathing. It was so dopey and cute without an inkling of awareness.
+Jessica was cute when she was fully herself. Faye wished she would act
+that way during the milkings.</p>
+<p>"She will after this."</p>
+<p>Careful not to fall, she lowered each hand to each side of the brown
+girl's pillow. The blond's tits were huge and dangled low. A centimeter
+lower and her pap would have swiped the tip of a nose. Once her weighty
+chest stopped swaying, she stilled her rushing heart to have full
+control of how her milk-laden booby descended. For a flash, she went
+over her plan a final time. Then she felt her hormones raging and her
+body being dragged toward the dry, empty mouth.</p>
+<p>Thank goodness Jessica slept like a rock --- from working double shifts
+and going on bike rides and fucking for several hours a night. Any other
+person might have been awakened instantly as the larger woman's prime
+ass spread over her stomach, or how a stifled moan filled the room, or
+how instantaneously milk was let down from a pent up breast into the
+open mouth. Jessica hardly flinched.</p>
+<p>Meanwhile, Faye had never felt so alive! At first, she was taken aback
+by the awkwardness of a different mouth being on her leaking mammary.
+But she kept tempo admirably. The biggest, most sensitive version of her
+breasts were finally being tended to in her girlfriend's mouth.</p>
+<p>In went her erect, pink nipple. Then went the flesh behind it, then the
+flesh behind that. A high density traffic jam occurred as she stuffed
+herself into Jessica's open maw. Then, her flesh spread outward to
+Jessica's chin, cheeks, and nose. Before Faye made it as far down as she
+wanted, she was already smothering Jessica with a single tit!</p>
+<p>"Oh-ho, my. . .," Faye swooned. All her skin sparked, shooting pleasure
+like lasers through her veins, bending bliss in the direction of her
+breast. It felt amazing in Jessica's mouth, so wet and warm, and her
+nipple twitched with life just before it laced the back of Jessica's
+throat with a backed up parcel of lady cream. The unexpectedly heavy
+dose sent Faye swimming, so she surrendered to the feel of releasing her
+overcharged batteries into a worthy, vacant source.</p>
+<p>Like a storm, not five seconds later, Jessica heaved thick coughs that
+spangled dots of Faye's morning milk on the front of the very tits that
+had produced it. She bucked herself, tossing and turning, but Faye was
+the larger woman in height and size. All Jessica's thrashing, choking,
+and yelling did was make a bigger mess of already messy sheets.</p>
+<p>"Morning, sweetums," Faye felt her composure had already slipped from
+its usual place. It was hard to do anything but moan when her left titty
+was dribbling two milking's worth of milk.</p>
+<p>"Wh-what the f-fuck! Th-the hell were yo-. . ." Jessica broke to clear
+her throat violently. "I feel like d-death!"</p>
+<p>"Oh come now. . ."</p>
+<p>"I almost drowned in. . . i-in. . ." Jessica smacked her lips, realizing
+what she was tasting. Two fingers went to her lips. "You're crazy."</p>
+<p>"Maybe, but you <em>liked</em> it. You started suckling a little before you
+woke up," Faye said, weaving in seeds of her will. Jessica hadn't really
+sucked so much as she tried to inhale a normal breath which was
+interrupted by several ounces of yummy milk. Complimentary to Faye's
+plan, though, Jessica never had to know that.</p>
+<p>By the look Jessica made, Faye knew her words had effect.</p>
+<p>"Get off," Jessica grumbled.</p>
+<p>"I'm trying to, but you won't suck my titties-. . ."</p>
+<p>"You know what I mean."</p>
+<p>"Of course, but me knowing is what makes this so fun," Faye giggled.
+Having all the power in her position, her fingers started squeezing at
+her waist and began to ascend up the terrific mountains that had grown
+over the course of a few hours. "Do you see? They look so full right
+now. I'm fucking enormous."</p>
+<p>"I see," Jessica tried not to look interested. Faye was dominating her
+field of view, though, so there was nothing to look at <em>but</em> her groping
+herself. "They do look a bit. . . full."</p>
+<p>"Just 'a bit'?" Faye frowned with adorable duck lips. "Cause I think
+they're about to pop. Ugh, I feel so stupid for sleeping through that
+alarm," the blond lied without skipping a beat.</p>
+<p>"Slept through. . . wait, what time is it?"</p>
+<p>"Four. I slept through the last one on accident, hehe," Faye made
+emphasis of how full her breasts were with milk by depressing their tops
+with each finger individually. Her skin bounced back forcefully, all
+comfortable squishiness gone from them. "Guess I was more tired than I
+thought. You <em>really</em> let me have it last night, though. 'Not sure if I
+should blame you or thank you."</p>
+<p>Jessica was too easy. A few compliments and her annoyance was blown
+away, as routine as dusting a bookshelf or wiping a dirty window clean.
+"Damn. . . we just missed that one milking?" she asked with a smirk.</p>
+<p>Faye felt like a goddess. Jessica was obviously mad with lust, eyes
+sticking to her stuffed gourds. "Yup, just one. My production is kicking
+up so we can't afford to miss too many in a row. Otherwise, there's no
+telling how <em>huge</em> I'll get."</p>
+<p>"You're already huge. . ." Jessica's hands found purchase on her blonde
+partner's thighs.</p>
+<p>"And you love it."</p>
+<p>Jessica shrugged in surrender. "I'm a simple woman. . ."</p>
+<p>Faye laughed to flatter. She scooted herself back a space or so to allow
+Jessica to rise at her middle. Face to face, they soaked each other in.
+Jessica had to take extra time to soak since there was noticeably more
+mass to account for. As if including another sensor would improve her
+examination, her hands rose like twins in the direction of Faye's
+nipples.</p>
+<p>Faye panicked. If she let Jessica touch her, she'd cum immediately. She
+couldn't afford to lose control yet.</p>
+<p>The older girl caught tan hands mid flight. Her tits remained ungroped,
+but they shook violently from the jerk reaction which made them both
+leak profusely, dribbling down Faye's soft, lithe body.</p>
+<p>"I was thinking," Faye bit her cheek to remain composed. "O-one milking
+isn't so bad, you know? Like, I only gained like three cup sizes? Maybe
+four. . . the point is," she laced fingers with Jessica. "I don't want
+us getting in a habit of it. If we aren't consistent, we're delaying my
+growth and our money. So, we need to do something to make sure we never
+forget this lesson."</p>
+<p>"What did you have in mind?"</p>
+<p>Faye beheld her love, her partner, her passion. Jessica had a body to be
+proud of; naturally slim with a wealth of boobage of her own. She was
+naturally caramel colored all around and her nipples were the color of
+saltwater taffy. There were few things as wonderful in the world as
+looking at Jessica and knowing that she'd do her everything to please
+and satisfy. Faye felt this surge of power making eye contact with the
+emeralds of Jessica's eyes, power that she couldn't help but wield in a
+boob-related fashion.</p>
+<p>"Well, you were pretty good at nursing. You were asleep and all, but you
+seemed to know what you were doing."</p>
+<p>Jessica recoiled slightly. "I don't know, Faye. Shouldn't we just do
+things like always? This seems like a waste."</p>
+<p>'Like always'? Faye scoffed internally. Jessica's enthusiasm about doing
+things 'like always' was downright foul. Literally anything was better
+than 'like always'.</p>
+<p>"It's not waste, it's investment. If you drain me when I'm at this
+size," Faye wobbled her torso to and fro, knowing how it eroded her iron
+will but also knowing the immense, hypnotic influence huge, sexy tits
+had on a sex drive like Jessica's. "I'll grow to meet the next demand
+even faster. Milking by hand is too slow. We need a new way to milk
+quickly."</p>
+<p>"But Faye. . ."</p>
+<p>"You suck my titties all the time, so there's nothing to worry about,"
+it felt stupid having to remind Jessica of what she knew she loved.
+"This time, there will just be a reward for both of us. Come on, you
+can't tell me my milk didn't taste great."</p>
+<p>Jessica scrunched her face. "How would you know how good you taste?"</p>
+<p>What? Did Jessica not think her girlfriend hadn't sampled herself? How
+silly! Of course she had. What other way is there to really understand
+her product?</p>
+<p>Faye could have responded with all of that, but it only won her one
+batte. Instead, she dipped into Jessica's space and slowly began to make
+out with her, ambitious to win the whole war. Their lips crashed
+intentionally, swapping moisture and moans, perfectly matched like lock
+and key. The further Faye leaned into it, the closer her immense
+whoppers got to Jessica's body. In time, they eclipsed Jessica's own
+proud breasts like they were nothing. Even with Jessica's double D's,
+Faye's milk-laden mammaries overtook the opposing pair as thoroughly as
+they might a girl with no rack at all. What could Jessica's chest
+possibly do to contest a pair twice as large and brimming with yummy
+nectar?</p>
+<p>Faye waited for Jessica to breathe. Then she said, "I taste something
+sweet on your lips, and it tastes <em>amazing</em>. You can't possibly tell me
+you don't like it."</p>
+<p>"Sweets are just. . ." Jessica tried abbreviating her hesitation with a
+ravenous kiss.</p>
+<p>Faye retreated flirtatiously, encouraging the bushy haired babe in front
+of her to pursue. "I know you have a sweet tooth, so that's not why
+you're hesitating. Could it be that you're scared? You think I'm too
+much for ya? That has to be it. You don't think you can finish me off.
+Not that I blame you," Faye rolled her chest up and out, walloping
+Jessica's chest like airbags. She wasn't prepared for the pleasure of
+going breast to breast so raw, so fast.</p>
+<p>"Baby!" the caramel girl's care leaped like lightning. Her arms roped
+around Faye's waist so she didn't go tumbling backward onto the bed.</p>
+<p>"<em>Whoa</em>," the blond whispered at the pleasure, the shock, and the rush
+of power. Her chest felt <em>alive</em>. She hated to look so vulnerable before
+Jessica so she composed herself quickly. What the hell was that all
+about, though? A moment of weakness followed by a feeling of. . . what
+was it? She wanted to sit taller with her chest out, to have people
+react to her body, to be admired. Suddenly, having hands around her
+didn't feel like a vulnerability.</p>
+<p>Faye levelled her gaze into the troubled eyes of her lover. "I'm
+alright. You just need to drink my milk. I don't know how I know it'll
+work, it just will." There was an allure about Jessica's full mouth and
+soft lips. Jessica touched them with the thumbs of both hands, using her
+other eight fingers to stroke her cheeks. "I thought my bad ass,
+sexually voracious girlfriend would be up to the challenge. Unless I
+somehow expected too much. . ."</p>
+<p>The younger girl's sigh was the cherry on top. Faye was absolutely
+forthright with her coaxing and she loved it. Flexing, displaying her
+authority, commanding attention with her delightful body and bending
+wills with her games. She felt positively twisted in all the right ways.</p>
+<p>"Okay. . . alright," Jessica's eyes were green glints between the slits
+of her eyes.</p>
+<p>The darker partner pushed her chin out, seeking an inspirational kiss.
+Faye, unsurprised but satisfied that her teasing bore fruit, savored a
+slow sixty seconds of heaven against Jasmine's plump mouth. When time
+elapsed, she pulled back again which prompted Jessica to chase, sticking
+her neck out even further on Faye's behalf. There, they kissed again,
+both giggling at the game they were playing.</p>
+<p>Enough kiss and move and Faye found herself laying back to create more
+space. She rolled backward onto her hips, propping herself up on her
+arms. When Jessica tumbled on top of her, searching for more mouth
+pleasure, her body was buffered by Faye's ridiculously swollen knockers.
+It was as if they were a third and fourth partner in the foreplay, a
+pair that demanded increasingly high maintenance, needing to be exalted
+for their very existence.</p>
+<p>"Mmm, your nipples are so hard right now," Faye mewled. "They feel so
+good against me." Then, she threw a hand behind Jessica and pulled her
+closer.</p>
+<p>"F-fucking huge," Jessica replied, unable to keep her eagerness from her
+expression. "And hard and wet."</p>
+<p>"How big? Tell me how giant you think they are."</p>
+<p>"The biggest I've ever seen --- ever felt, too."</p>
+<p>"Admit it, they're so warm against you, aren't they? I can almost wrap
+you up between them." Faye momentarily imagined being able to actually
+hide a person between her tits. It spurred her flaming heart anew, and
+she tucked the image away as a goal for the future while she pulled
+Jessica's heart strings. "Mmm, I need something between them. . ."</p>
+<p>Jessica took the hint. She used her kiss to work Faye onto her back
+entirely, ministered devoutly to her mouth with her lips and tongue,
+then played with a southerly course. Gasping at the taste of jawline,
+she found a vein throbbing with a quickened pulse in Faye's neck. It led
+her to collarbones, then disappeared as the fullness of Faye's breast
+came into view.</p>
+<p>"Enough t-teasing," Faye urged. Her right hand clawed into the cloud of
+all-natural hair and pulled it fast to her sternum, digging Jessica's
+nose in the extra padding. "Hehe, they're even bigger than your head!
+Bet it feels nice down there, right? Soft and warm between my jugs?" The
+pleasure rode over the pain then, making the tease all the easier even
+if her nipples lobbed strands of milk point blank at the younger lover.</p>
+<p>Jessica mumbled, doubling her kissing speed. On the outside, Faye's
+breasts were bright and stretched to the point of seeming frail. Even
+so, Jessica was guided to test their resilience and did so with
+ebullience. Growling, she bit. Swooning, she licked and puffed hot
+breath wherever her mouth roamed. Faye directed her, but also stifled
+her efforts by closing her arms together and completely incapacitating
+Jessica with the pile up of tit flesh she created.</p>
+<p>After a few minutes of this, she made a point to rock her lover back and
+forth, turning away from unhinged debauchery and bringing about more of
+a matronly feel. "You hear that? The ocean? I bet you do, cause I can
+feel them sloshing around." From peak to root, each milk-teeming giant
+had white trickling lines as breast milk was forced up and out during
+their play. The curtain let in muted morning light that made each
+droplet of cream glow is it soaked Faye's skin and the sheets
+surrounding them.</p>
+<p>"They actually are. That\'s crazy," Jessica turned her chin up to
+answer. She spoke from the depths of Faye's cleavage. "I've never heard
+of a girl with <em>this</em> much milk. How much do babies drink?"</p>
+<p>"It's about supply and demand. Mothers don't get as big as me because
+their bodies think they need enough for a child or two. But this week,
+my body has had to adapt to this crazy milking schedule of ours; not to
+mention the months that I've been inducing on my own before this order.
+If it was up to babies, I'd still be small. But thanks to <em>us</em>, well. .
+."</p>
+<p>Faye wiggled her eyebrows suggestively.</p>
+<p>". . . you could feed a whole hospital full."</p>
+<p>"Or one very thirsty girlfriend."</p>
+<p>"Jeez, these are just unbelievable," Jessica tilted her head,
+worshipping Faye's endowments with a sheet of kisses.</p>
+<p>"You still scared? You shouldn't be. I know you'll have no problem
+bottoming me out," Faye tilted her head, looking down, eyes glowing with
+sky-colored care. "It's just a milkshake."</p>
+<p>The bed springs sounded off as Jessica rose to pushup position, hovering
+over Faye's body like a hummingbird. "'Just a milkshake'. . ."</p>
+<p>"Love you, babe."</p>
+<p>Jessica lowered slowly, electing the breast that she'd rejected wildly
+when she awoke. "Love you too." Her lips were just out of range when
+Faye tilted herself and her nipple closed the distance.</p>
+<p>The couple connected. Milk began to flow. Faye could tell from the
+expression that the woman above her was muscling through for the first
+few swallows. It was a mental barrier she was breaking through. With a
+few pets and words of encouragement, the swallowing process went all the
+smoother.</p>
+<p>Moods shifted, adopting a relaxed vibe. The sounds of sucking and
+swallowing became meditative. Tension left both their bodies and they
+could spend sweet, quiet moments together. Faye didn't like how her boob
+started to lose size immediately but she did like how giddy and joyful
+Jessy was as she slurped up enough cream to pudge out her cheeks. That
+was all it took to be reminded of how much she loved this girl --- all
+she wanted was to fix the world to make Jessy happy.</p>
+<p>Again, she was right: some people took a little manipulation but once
+they understood the vision, they would come onboard.</p>
+<p>Jessica finished off the first breast and caught her breath before
+jumping to the next. Faye noticed she was absolutely glowing. No stress,
+nothing on her mind, as peaceful as she was when sleeping.</p>
+<p>"You doing okay, sweet girl?" Faye asked.</p>
+<p>"Jaw's a bit sore. I think I'm mostly full, too. But I'll see what I can
+get from the next one."</p>
+<p>"I was actually going to let you tap out if you wanted."</p>
+<p>Jessica recoiled. "Seriously? But your boobies are all lopsided.
+Definitely not sexy."</p>
+<p>"Beg your pardon? Most girls have uneven breasts. It's a natural look!"</p>
+<p>"You're right. Sorry."</p>
+<p>Faye kept losing her fingers in Jessica's twisty mane of black tresses,
+massaging her skalp. "That's right. You better apologize. Ungrateful
+little girly."</p>
+<p>The younger girl's pink tongue showed.</p>
+<p>"Let's find a better position so you don't strain your jaw and let you
+do what damage you can for an hour. You've gotta get to work soon. It's
+already six."</p>
+<p>Submissive to her leader, Jessica sat up. The two adopted a classic for
+breastfeeding with the lactating girl seated casually and the nursing
+girl in her lap. They each stroked each other, finding fresh love in new
+practices.</p>
+<p>"You're my beautiful girl," Faye's words were warm mist in the chill of
+morning. "I'll do whatever I can to protect you and make you happy."</p>
+<p>"I love you," Jessica pledged between swallows. "I'll support you and
+never leave you."</p>
+<p>Maybe they were sweet nothings brought on by the hormones of
+breastfeeding. Maybe just an exploration of this new step in their
+relationship.</p>
+<p>But as Faye kissed Jessica goodbye when she departed for the diner, the
+blond believed the words she'd said. All her life she'd used every tool
+at her disposal to get what she wanted. Her charm, her kindness, her
+clever mind, her sex appeal: all weapons in her arsonal.</p>
+<p>Armed with a new confidence, unexplained but very real, she went
+straight to work figuring up the best way to make the shared dream
+between her and her beautiful girl come true. The words she spoke hadn't
+only been romantic lover's poetry. They were a creed, one she would sign
+her name under; a blood pact.</p>
+<p>Or, in her case, a milk pact.</p>
+<p>_____</p>
+<p>City Bus</p>
+<p>Two Weeks Later</p>
+<p>"Ahh," the poof of afro rose followed by a satisfied face.</p>
+<p>"Finished just in time for our stop," Faye took a hand towel and wiped
+off her right breast before holstering it back into her tank top and
+covering it with a maroon lightweight athletic jacket.</p>
+<p>"Sorry I couldn't get it all done before we got out bed this morning."</p>
+<p>Jessica's hand extended for the cotton towel. She was going to use it to
+wipe her lips. Instead, Faye leaned down and gave a tongue-led kiss to
+clean her lover's sweetened mouth of any milky residue.</p>
+<p>"I've gotten huge. Even nursing takes a while now."</p>
+<p>"Somebody's proud of her big boobies," Jessica rolled her eyes,
+flustered by the public kiss. People were gathering their things and the
+bustle helped keep the spit swap private, but the caramel-skinned girl
+knew that her partner wouldn't have been wary even if they happened to
+have an audience.</p>
+<p>"Hey, if you've got it. . ." Faye stood and stretched till her fingers
+touched the bus ceiling.</p>
+<p>Jessy made sure her hair was in place as her emerald eyes prowled the
+titties she'd just finished milking. The blond's whole body was on
+display from profile. The most dominating bow from her centerline were
+her delicious, jiggly jugs. Even empty of contents, they maintained heft
+and mass. Plus, they had to be sticking out a foot in front of Faye's
+person. The pair rewarded attentive eyes, as they moved freely without a
+bra and bulged attractively from the scooping neck of the tank top.</p>
+<p>Her cup size was unknown. That was part of the reason for their trip to
+the mall; the more interesting part. They both knew the taller girl had
+grown. The fun would be in figuring out how much. Though, even without a
+concrete number, Jessica understood her girlfriend to be several
+measurements larger. Just to think, on that first night when she'd
+rocketed home in a tizzy, she and Faye were comparable in size with the
+blond edging out a bit.</p>
+<p>Faye's hand extended to her partner. Jessica took it with a dainty wrist
+and kept her eyes on how Faye's tits moved. Dry as a bone, the taller
+girl was more than double Jessica's own size and now edged out her head
+for volume.</p>
+<p>They held hands departing the bus and stayed connected entering the Town
+Walk. Cars weren't allowed to drive the streets that connected store to
+restaurant, restaurant to movie theater, and theater to yet another
+store. Saturdays had the streets teeming with walkers taking photos by
+the fountain and weaving through kiosks and palm trees. It was an active
+day and summer's heat at last started to wane into autumn breeze.</p>
+<p>Shopping had always been fun growing up, so Jessica was happy that it
+was fun with Faye as well. Before breastfeeding, they never spent much
+time out together. Sex was the only item on the menu. Now that adult
+nursing had brought them close, they could joke and flirt openly as they
+looked through whatever caught their eyes, noncommittal to each new
+glimmer.</p>
+<p>In a trinket shop called Ad-Tastic, they browsed every item seen in
+obtrusive banner ads on webpages. Faye found a ukulele and strummed it a
+few times.</p>
+<p>"You play?" Jessica pointed.</p>
+<p>"I wish. I hear it's easy. I'd like to learn."</p>
+<p>Jessica reached for the cheap wooden piece, mounted it in the pit of her
+arm and gave a test strum. In under a minute, she had the instrument
+tuned and was plucking out a reggae tune. The thrill lighting in Faye's
+eyes made her feel ten feet tall.</p>
+<p>"You siren! You went all this time without telling me you we're
+musically talented?"</p>
+<p>Faye didn't give her a chance to reply though. She slithered behind the
+shorter girl's back and held her from behind. They started to gyrate
+together, dancing in the aisle. Huge, soft tits made the exposed back of
+Jessica's neck heat up. Occasionally, porcelain orbs brushed her ears
+and she could do nothing but dream of being surrounded in their velvet
+softness. It was odd that Faye was tall enough to reach her ears, but
+such worries were so superfluous compared to her rising lust.</p>
+<p>"Faye. You know how easy I am to get hot. . ." Jessica turned up her
+chin and whispered.</p>
+<p>But instead of retreating, this reaction only got her squeezed tighter.
+"Hey, I'm just dancing to the music. If you want me to stop, then stop
+serenading me."</p>
+<p>It was the whimsical teasing that always made her feel okay, so the
+ukulele player went on. All along, breasts pressed into her shoulders,
+entrapping the back of her head. She tried to lean forward to lessen the
+contact and fend off a moan, but Faye came behind her even tighter so
+she couldn't escape.</p>
+<p>"Shit," the younger girl hissed an octave too high.</p>
+<p>"Are you thinking about sucking them right now?"</p>
+<p>"Yes."</p>
+<p>The response earned prowling hands that started to move promiscuously
+under her cute cyan date blouse. Footsteps rang clear on the next aisle
+over. Jessica went scrambling to the side, reggae going mute, but the
+taller girl caught her and didn't let go. Even without the music, her
+hands were tempting.</p>
+<p>"In our new house one day," Faye leaned down but spoke clearly in her
+frantic girlfriend's ear. "I want us to have a music room. I want hours
+of lessons from you every day, and I'll pay you in all the milk you can
+drink. How does that sound?"</p>
+<p>Jessica's eyes darted to both ends of the aisle, praying that she
+wouldn't find a child, or a nun, or her parents watching as she a woman
+began to undress her. Fear didn't kill lust. What it did do was dampen
+the roaring fire just barely so that she could say what needed saying to
+keep from fucking in a public shop.</p>
+<p>"Great. Mhmm, sounds good," she rushed out.</p>
+<p>"That wasn't convincing."</p>
+<p>"I want a music room in our future house. I want to teach you how to
+play all sorts of instruments, to share my love of music with my love of
+you." Jessica's hand gently lighted on the fairer one which was climbing
+up her abs toward a bra.</p>
+<p>"What else? Don't miss the best part."</p>
+<p>For a brief time, it felt like she was acting without agency, like her
+lust was being played against her. The Faye she knew was capable of such
+a thing and it needed to be pointed out --- when it was inappropriate,
+especially. But in the moment? Jessica summed her feelings and decided
+to play along. How far could she really get by taking a logical argument
+where she was? Not half an hour earlier, she was drinking milk from the
+source in the backseat of a city bus. What ethical grounds did she
+really have?</p>
+<p>"I want to be rewarded with your sweet, thick milk. I want it all for
+me, to have it replace my meals some days. It's all I think about ---
+they're growing against my head right now and all I can think of is how
+badly I need it."</p>
+<p>The shuffle of feet made the white space around Jessica's emerald eyes
+show. "Need what? A house with a music room? I can help with that."</p>
+<p>The drama of being exposed in front of a complete stranger would have
+made a weaker women faint. Fortunately, Jessica had built up a tolerance
+for stress so she remained conscious even if all her composure left her.
+She couldn't believe she missed him, had let herself be so distracted.
+All her upbringing, she feared her overactive sex drive would be found
+out and that she'd be labelled a slut for it. It didn't help that she
+was had C cups by age ten and double D's in adulthood despite being
+vigilant about her diet.</p>
+<p>Now a piece of that fear returned. She shrank to match her middle school
+disposition, curling behind the more 'grown up' Faye to handle the
+public interaction. While doing so, she was certain that Faye was taller
+or broader or both. Her hips and ass were showstoppers in her jeans, and
+neither of them had ever been so close to the younger girl's eyeline.</p>
+<p>The guy's name was Marcus. He worked as a realtor and wanted to make a
+deal on a new housing development popping up in the next town over.
+Jessica noticed Faye's couth in public situations, beaming confidence
+and weaselling her will into the conversation. By the time it was over,
+the tall, busty blond was the person of value, dangling her 'yes' over
+the guy's head.</p>
+<p>"I'll have to check with my boss but we can definitely talk more,"
+Marcus said as he dismissed himself. He tipped his head toward Jessica
+then at Faye and extended his card.</p>
+<p>The blond took it, slipping the cardstock overtly between her milky
+white udders. Before his boner could embarrass him any further, he
+walked off.</p>
+<p>Was that what I'm like, Jessica wondered. She felt that way all the
+time; Faye pulled the strings and got what she wanted. In the end,
+Jessica obeyed and was horny as hell. Marcus's submission and begging
+was so weak-looking. If there was anything she didn't like, it was the
+idea of her looking in any way weak.</p>
+<p>"Babe, you alright?" Faye asked.</p>
+<p>They'd been walking down the strip silently having purchased nothing
+from Ad-Tastic.</p>
+<p>"Fine."</p>
+<p>"That's how I know you aren't. Care to talk about it?"</p>
+<p>"Nah, I'm too much in my own head. Don't worry about it."</p>
+<p>"Wanna have a little drink to calm down?"</p>
+<p>"Do I. . . wait, what?"</p>
+<p>The buxom blond stopped her partner in front of a bistro restaurant. She
+gestured to her breasts and opened her jacket at the lapel. Since they
+were presented exactly at her eye level, emerald eyes never left the
+creamy white landscape before her. "It's been about an hour so they've
+grown some. You could drink what's there. It's probably quite a bit."
+Shoulders started to shimmy, causing the colossal milkers to sway
+abundantly. "I want you to drink when you want. Don't feel like you
+can't ask just because I'm on this 'every four hour' thing."</p>
+<p>Jessica's body jerked against her will. She knew she wanted a drink. The
+groping and dancing from earlier made it clear to her how badly she
+longed for a drink and a quickie. Plus, she was so used to just taking
+Faye when she wanted. They touched each other liberally now that they'd
+bonded and always wore next to nothing in the apartment for easy access.
+All that worked against them now.</p>
+<p>Not 'them', Jessy noted. Just her. Faye had a resilient confidence to
+command social situations. It suddenly felt very unfair, like she'd been
+manipulated by going out as a couple even though she'd agreed to it
+initially.</p>
+<p>She thought on her toes, needing to buy time. "If I drink whenever I
+want, when will you produce enough to meet your quota? Aren't you
+sending your shipments in to fill your order?"</p>
+<p>Faye's demeanor took on a grayer shade. "Of course I am. Why? Are you
+under the impression that I haven't been?"</p>
+<p>"We just haven't talked about it in a while. Why? Are you offended that
+I care about your business?"</p>
+<p>Jessica watched her blond bombshell girlfriend change colors several
+times before arriving at her same, candid swagger. A few people had
+lingered when they saw the two talking on the street, watching one curvy
+lady of color interact with an ivory hourglass babe showing the world
+her straining top.</p>
+<p>"Sorry, I was a little defensive there. It's so sweet that you care
+about my business," Faye took a hug, full frontal, even though her
+emerald eyed girlfriend would have preferred to keep some space. "I only
+got a little upset because it sounded like you thought I couldn't make
+enough milk to fill my order and to satisfy you. You do know how massive
+I am, right?"</p>
+<p>Everyone on Town Walk knew. Men and women alike looked on. Jessy felt
+hot under the collar; both pissed at herself for feeling her solid
+defense crumbling to nothing and, foolishly, jealous of other eyes
+fawning over her busty girlfriend.</p>
+<p>"Don't you?" Blue eyes looked down, clear as the sky, as a hand cupped
+Jessica's angel hair and pulled her deeper.</p>
+<p>There was nothing to do but smell Faye's vanilla scented skin, to feel
+the bulging skin rise and fall with her breaths, and to imagine them
+rising and falling because of milk; milk that wouldn't stop making her
+bigger and bigger.</p>
+<p>"I do. . ." the smaller girl feared the consequence for letting it slide
+again, but she did so anyway. The time just wasn't right.</p>
+<p>"How big?"</p>
+<p>"The biggest tits on this whole street. Biggest in the town. If they
+aren't biggest in the world, then they're definitely the milkiest,"
+Jessica admitted. "And I can't stop thinking about a drink. But this
+time, I'll pass. Shouldn't we be finding you a wardrobe?"</p>
+<p>A gripping pause followed. Would Faye release her or would she press the
+issue? If she were alone in some alley with a woman as sexually engaging
+as Faye, Jessy knew she'd do anything to get herself off. The only thing
+keeping her from doing so in that very moment were the eyes of
+strangers. She didn't want to look loose but she knew in her heart the
+way her sexual appetite was hollowing her out.</p>
+<p>At last, she was released. A gasp inflated her lungs --- at some point
+she'd started holding her breath.</p>
+<p>To her relief, the older of the two dismissed the topic of milking for a
+later time and they both made their way down Town Walk. Store by store,
+the fun of shopping resumed. Though the looming situation of their date
+came to the forefront barely an hour later.</p>
+<p>Jessica watched her woman model a outfit after revealing outfit. Each
+time, more chest was on display. Plus, Faye had a knack for playing
+innocent so when her bikini failed and let her chubby nipples out to
+play, she didn't bother to take notice despite Jessica's visceral
+reaction.</p>
+<p>It was in one of several lingerie shops that the younger girl lost
+herself. The blond delayed bra shopping to the very end so she could buy
+for her full size. Wouldn't you know the beach store designed for petite
+girls with barely-there tits didn't carry in a natural M cup.</p>
+<p>"I didn't know they came that big. I'm sorry --- man, I must look so
+clueless," Faye shook her head, a hand daintily atop her gargantuan
+boobage.</p>
+<p>The attendant met Jessica's eyes when they both heard the distinct sound
+of fabric tearing. They couldn't yet see but both knew if the titan of a
+woman was any bigger, she'd lose all semblance of decency.</p>
+<p>Faye seemed to know this and forwarded the decision to Jessica's
+discretion. They both witnessed the swelling and growing over three
+hours. Bigger she grew, showing more flesh and deeper cleavage. From
+outfit to outfit, each one looked smaller on her than the last. Each
+time, the gorgeous blue-eyed blond made a bigger fuss of how nothing fit
+her globes. Steadily, they pressed farther forward, surpassing the size
+of both their heads and beyond. Milk weight made them sag to her belly
+button, without which they would no doubt suspend effortlessly in the
+air like her nipples were hung with invisible wire like some magic
+trick.</p>
+<p>Between shops they held hands through the increasingly dense crowd. When
+they needed squeezing through a tight bunch of people, Faye pulled
+Jessica into her favorite snack and dearly beloved items of lust. Less
+the marshmallow feel and more resistance each and every time. It was one
+thing to watch her grow while at home. In public, with clothes ---
+barely --- on, there wasn't a break from it. Jessica was constantly
+being reminded. There was only one thing that could be done; but a
+single solution within the curly haired girl's power.</p>
+<p>"You aren't clueless, baby. We knew they wouldn't have your size to
+begin with, right?" Jessica worked her only option in as convincing a
+way as possible. "But now we <em>know</em> your size thanks to all the help.
+Thank you, Donna. I'll definitely buy a bra from you next time I'm
+shopping for one. C'mon, babe."</p>
+<p>Then the smaller girl led her living milk station away to the nearest
+family bathroom. With little ceremony, she unshouldered Faye's useless
+sport jacket and uncupped the tank top-turned-tube top.</p>
+<p>Faye said something that Jessica couldn't bother processing. The minute
+it was free, she stuffed her face with nipple and areola and boob flesh
+and greedily drank. Her body's reaction was like she'd gone days without
+water only to be blessed with rain. Thick brew spewed hot and heavy at
+her throat in overwhelming quantity. She almost cried --- it was that
+good. She'd missed it <em>that</em> much.</p>
+<p>"You'll have a tummy ache if you drink too fast." Faye's back was to the
+wall. She didn't seem to care so much about warning her partner.</p>
+<p>Jessica let her blouse be unbuttoned. She let long fingers on pleasant
+hands squeeze her exposed tits through her bra. All she cared about was
+drinking, so she did so. The sounds her throat made were loud and told
+the story of how much milk was actually being drained. No longer were
+ounces or even cups a good measure. One breast seemed to harbor an
+impossible liter of milk --- more for every minute over the appointed
+four hour milking time. And some sick, enamored part of the emerald-eyed
+beauty took great satisfaction in being the jealous benefactor of all of
+it.</p>
+<p>The crowds could look and lust, but Jessica got to stuff her face and
+gorge herself.</p>
+<p>Watching boobs return to marshmallow pillow globes was always an
+interesting experience. Jessica beheld her lover returning to an
+accepting softness as she drank. Her swallows smoothed to a rhythm,
+losing the voracity of waiting four hours without her precious milk.
+Before one could get too small and lopsided, she switched to the other,
+working her jaw wider to accept and clenching when she wanted to squeeze
+out a river.</p>
+<p>"You're so good to me, Jessy. Your tongue and lips feel so good on my
+nipples," Faye reminded while keeping sweetness; this wasn't their first
+time, yet it felt so new.</p>
+<p>Jessica's eyes fluttered closed. A grin came to her face. Sure, she'd
+been manipulated again but milk was her reward for it --- all that she
+could drink. Then her already busty girlfriend would have another two
+liters to chug. And another two after that. Such a size seemed too much
+for her at the start. Her body adjusted, though, and could handle such
+quantities with little effort now. In fact, it tingled with warmth and
+feel-good hormones abounded.</p>
+<p>Almost forty-five minutes later, the couple emerged to a disgruntled
+woman with an occupied stroller.</p>
+<p>"You two do know I've been waiting almost an hour right? That bathroom's
+got the only decent cleaning station in all of Town Walk and-. . ."</p>
+<p>"Sorry, ma'am," Faye held up a hand. "My girlfriend was feeling really
+sick and the women's bathroom was occupied at the time."</p>
+<p>The woman's face went from disdain to admiration in an instant. There
+was familiarity as her eyes bounced from Jessica's eyes to her stomach.
+The caramel-toned girl thought she might have done something wrong.
+Like, maybe the woman was applauding two hot girls getting all sexy in
+the bathroom together which would, in turn, make her the woman she
+feared being.</p>
+<p>Instead, the lady walked beside her stroller. She ignored the premise of
+personal space and went straight for Jessica's belly. "You're showing so
+much! Gah, I'd do anything to be pregnant again --- not anything, but
+you get my point. I loved how alive I felt and how closely connected I
+was with my partner." Looking from Faye to Jessica and without removing
+her hand from the orb of a belly, she blinked a few times. "Girlfriends?
+Oh, yes. You two are together! Wow, I'm so sorry. Congratulations! How
+far along are you?"</p>
+<p>Just coming down from her sexual peak, the younger girl's mind felt
+sluggish.</p>
+<p>The blond answered in her place. "If you could believe it, just a little
+over a month!"</p>
+<p>The woman gasped. "No!"</p>
+<p>"Yes!"</p>
+<p>"What?!"</p>
+<p>"I know!"</p>
+<p>Then they squealed together. It hurt Jessica's ears. She was recently
+fingered and fed; it was time for a nap. She could barely force herself
+to smile.</p>
+<p>"You're super pregnant, hon!"</p>
+<p>Faye held her lovingly. "She was very trim before; so fit with a tiny
+waist. She wanted to be healthy for the baby. We were kinda worried when
+she started showing so much, but the doctor says everything looks good."</p>
+<p>The stranger gave Jessica's shoulder a squeeze. "The sickness will pass,
+hon. After that, it'll be smooth sailing --- best time of my life,
+that's for sure. And you two are the cutest together, gah! So happy for
+you!"</p>
+<p>Jessica managed a "thanks," then she tucked herself under Faye.</p>
+<p>The older one got the signal. "Looks like momma's gotten all the walking
+she needs today. We're gonna head back home now! Oh, but if you don't
+mind --- and I know, this is forward as heck, but --- if we could maybe
+exchange socials? As much as we research, it's always comforting to have
+a friend that's farther along in the baby raising process."</p>
+<p>The lady looked like she'd been elected Miss America. As she and Faye
+exchanged info, all Jessica could pay attention to was how both women
+were probably lactating. The size difference of two women apparently
+doing the same thing was mindblowing. Grace --- that was her name, by
+the way --- wasn't petite but was slim and had amazing mom boobs. Big,
+springy, perky, and clearly full. There was every reason to suspect that
+she needed the time alone to breastfeed her son, with her bra busting F
+or G cups.</p>
+<p>But Faye was on another level. Faye was like varsity captain of the
+lactation team and Grace wasn't even up to competitive form yet.
+Clearly, the relationship based on a lie was for future leverage,
+Jessica thought, but Faye made lying look a little too easy.</p>
+<p>Even with her dopamine at record high levels, the emerald-eyed girl
+couldn't help but feel like she was a baby toward Faye. In a way, it was
+good --- being coddled, given attention and adored. Being strolled
+around at another woman's discretion, manipulated, and becoming an
+accomplice to lies? Less so.</p>
+<p>_____</p>
+<p>Moving Day</p>
+<p>Two Months Later</p>
+<p>Faye wished her lover away to work her final shift at her job. In a few
+hours, Faye would drive their car to the diner to pick her up and they'd
+both head off to the home they'd just purchased. The look on her
+green-eyed girlfriend's face was utter romance when she left. For nearly
+three months Jessy had been nursing from Faye's breasts and it showed in
+how she looked at the blond.</p>
+<p>"Like I'm her everything," Faye spoke when she was alone.</p>
+<p>And maybe something else too. Jessica would go silent at times, as if
+mulling over something heavy, then snap to attention when her name was
+called. She was having trouble adapting to their life which was changing
+at a dizzying rate. Understandable. And, more importantly, it was
+greater evidence that Faye was right all along.</p>
+<p>Thinking of Jessica always made her happy. Faye used the buzz of
+happiness to tide her over. She wanted only good vibes today as it
+marked an important step for the couple: their first day in their new
+home, their first night of going full time into Faye's natural breast
+milk manufacturing business, and their first day engaged to be married.</p>
+<p>Fetching the remaining champagne from the kitchen and reclining on the
+sofa, the blond massaged her full, weighty chest and remembered the
+moment. An abundance of curly black hair framed her gorgeous face,
+frozen for countable seconds in awe. The ring was almost too small for
+her finger. Then it cleared her second knuckle and landed snuggly into
+place and they kissed and held each other for a second eternity. Romance
+filled the night with a full course meal catered in, balloons, sexy
+music, candles, lingerie, alcoholics a'plenty, and milk, milk, and more
+milk.</p>
+<p>"Mmm, what a night." Just thinking about it made her grow. Yes, she knew
+good times made the milk flow faster. In the two months, her body had
+transformed yet again.</p>
+<p>Her knee hooked over the couch since at full height, she stood at
+six-foot-four. Only a fraction of her hips could fit on the piece of
+furniture, and her hair was so lush and long it ran like a liquid down
+to the floor. The changes were so incremental and the older woman was so
+busy with her 'business' that she didn't really notice till her new
+garments stopped fitting. A lingering look in the mirror a mere week
+prior forced her to pay closer attention to her new physical adornments.</p>
+<p>She thought she should be bothered by them, but she wasn't. She
+suspected Jessica might be curious but her lover's cares were so often
+trivial. Her new body only reflected an inner confidence. All her life
+she knew herself to be a head above everyone with a body that wouldn't
+quit and milk that could provide cars and homes and financial
+independence. Now, she looked the part. It was just a manifestation of
+her new reality. Nothing to be too bothered over. Certainly nothing to
+negatively affect her business or engagement.</p>
+<p>Thinking about Jessica got her hot. Faye made the couch scrunch and
+squeak as she hefted her burdens and dropped them, playing with her
+generous amounts of feminine mass. All the milk had added softness to
+Jessica's edges. Her hips were wider, middle less defined, and her butt
+was quickly becoming a favorite of Faye's. And the extra calories
+weren't just distributed from the abs down. The green-eyed girl
+bolstered a pair of huge, squishy bozongas.</p>
+<p>"Fuck yes, that's my sexy wife," Faye threw back her head, brushing her
+hands over her exposed tits. They were M cups naturally now without the
+aid of milk. Though, at her current constant production, it was rare
+that she ever be truly empty. "Made so thick and curvy by all my milk."</p>
+<p>She pictured Jessy filling out her collared top and diner apron earlier
+and felt her tits lurching in size quickly as a result. Just about any
+thought of Jess made her milky. Her boobies had learned who was most
+receptive to them.</p>
+<p>Disregarding time, decency, or modesty, the six-foot-four hourglass
+bombshell imagined her sugar-addict of a lover and enjoyed herself
+expanding.</p>
+<p>Her M cups grew bigger, inflating with a wash of fluid that was near
+audible. In moments, they were making progress. Her nipples were gaining
+in length, poking through the rounded bulb of areola. She watched her
+pink nubs turn to blazing spears with further progressing volume chased
+them outward and away from Faye's body.</p>
+<p>She adjusted to standard sitting position with a leg up on the coffee
+table. Her sweeping turned to fisting and she lost her arms in her
+abundance. Her skin hadn't lost its sensitive feel. She moaned when she
+touched herself --- areas that multiplied the larger she grew, the more
+milk she produced.</p>
+<p>"I need to fill you up, Jessy. Don't stop. Drink me all down. I need to
+see you when you've swallowed all of me," Faye groaned with power and
+desire.</p>
+<p>Her body reacted. Her breasts pressed further forward. They began to
+sink with milk weight, pulling their owner into her own lap, straining
+her shoulders. The delight was more than the discomfort and she
+continued.</p>
+<p>She squeezed and squished herself. With each go, she pushed out the
+elasticity. Her boobs grew thicker and denser like dough but were all
+the more fun to play with. Especially when she felt herself reaching
+four cup sizes larger, then six, then eight. With her size, she could
+only really grasp growth in leaps and bounds or in physical markers.</p>
+<p>Her tits spilled over in her lap at a certain size. Before long she had
+to stand or go recline on her bed before they took her to the floor.
+Getting to her feet, a surge of growth struck her swift and hard. Even
+with her practiced grace and size, the flurry of milk surging threw her
+off of her forward balance. Her fat, round bottom poked out to try to
+counter the sudden shift but it was too late.</p>
+<p>She struck the floor with a slam. Before it, though, she struck the
+coffee table. Her body was so large and breasts so heavy that the wooden
+stage was cracked and bent in the middle.</p>
+<p>It filled the blond with exhilleration.</p>
+<p>"Well, we're moving today. No need to bring old relics like you," she
+cursed the table. She gave her tits a pat and she swore she heard a
+deep, ominous gurgle of liquid being churned.</p>
+<p>With the strength of her new body, she was able to find footing and rise
+from the ground. The size of her titanic tits were too grand to see the
+damage, but if she shifted them to the left she could look to her right
+and see the flattened center with perfect curves on the two ends. It
+must have been made cheaply, she thought, since it moulded around her
+boobs instead of snapping like real wood.</p>
+<p>"The new house has real wooden tables and chairs and floors. No room for
+fake stuff," she wiggled her nose, and her ass, and her tits.</p>
+<p>She felt her perfect skin brushing against her thighs while standing
+tall and revelled at the view of her giants extending more than two feet
+in front of her. Rapture took her when she took the time to give her
+body the attention it deserved. Magnetic hands clung to whatever section
+of her plump, taut flesh they could reach knowing fully that she would
+have to do some gymnastics to milk herself at this size.</p>
+<p>This was what happened when she let herself go --- unhinged growth. In
+these few months the blue-eyed woman had learned her triggers and
+figured out her mental blocks. Within reason, she could milk on command.
+Secretly, in the meditative depths of herself, she willed her production
+to slow.</p>
+<p>"Our precious girl isn't here. No need to continue."</p>
+<p>It was a chant, a mantra, a prayer --- the prayer to the goddess she
+considered herself. And it was answered when she felt the the tremors
+slow and her blood pressure dropping. Her breathing no longer needed
+regulation and her skin stopped vibrating with such sharpened desire to
+breastfeed. Her nipples were the length of her hand and would never stop
+being hard, but they lost girth and general suckability. Her bulging,
+shiny areola lightened a shade as well.</p>
+<p>The tide stopped rising.</p>
+<p>"This should be enough for a few weeks."</p>
+<p>At that, she gave herself about a dozen more loving squeezes and trotted
+to the bedroom. It would take the remainder of Jessica's shift to milk
+herself back to a size capable of fitting into a car.</p>
+<p>_____</p>
+<p>Sally's Diner</p>
+<p>Jessica</p>
+<p>The last shift is always the shortest.</p>
+<p>Jessica mopped her hands clean with a rag she kept in her apron and
+checked the time. The smell of grease, the broken cookware, and the
+shady but lovable staff. Even if waitressing was the worst job she'd
+ever had, there were parts of it to miss.</p>
+<p>One such part was sitting at an empty booth by the door, flagging her
+over. Jessica fixed up her stylish blazer and loose cotton top, sure
+that her new push up bra accomplished its namesake without looking too
+whorish. The thing was already tight on her and she'd bought it at a
+premium in an F cup --- an F cup push up bra was already pretty slutty,
+when she thought about it. But it was the only thing that made her feel
+secure and supported; the lesser of two evils. Either she shows a bit
+more cleavage, which could be buttoned up --- the current blazer didn't
+button as it had grown too small anyway --- or she bounces endlessly
+drawing even greater attention to her generous bosom.</p>
+<p>"Don't worry about it, you look great," Sally said as the emerald-eyed
+girl neared. "And it's your last day. I can hardly get onto you for
+anything."</p>
+<p>Jessica figured the same. Most of her worries were from the past when
+the weight first started coming on. Not only was it too late to worry
+about her push up bra, it was a non-issue for the new future that was
+unfolding at that very moment..</p>
+<p>"I didn't clock out."</p>
+<p>"Let it run. Consider it severance pay." Sally paused for Jessica to
+take a seat, then continued. "Wow, I can't believe it. You're finally
+done after all this time." Ms.Hightower shook her head, sipping on a cup
+of joe she'd just prepared.</p>
+<p>"Me neither. It's been a whirlwind of a month; two actually."</p>
+<p>Sally was a middle-aged woman, nothing remarkable about her features or
+form. All her praise was closely linked to the diner she'd opened
+herself when she was seventeen. It was a classic looking sort of place,
+record players used as decorations and the fender from an old car
+Jessica never recognized was mounted to the bar. Dalmation tile floors
+made the numerous misprinted road signs on the walls pop in their
+metallic reds and yellows.</p>
+<p>"And you're positive? You don't want me to keep a place for you here
+just in case?"</p>
+<p>"I do wonder at times."</p>
+<p>"Say the word, sweety. You're my right hand around here; I don't shy
+away from admitting that. I'd turn this world upside down to keep you
+here."</p>
+<p>The girl with a whole new life ahead of her lost some of her perfect
+posture and leaned into the table. The weight of her chest --- the
+weight of <em>something</em> --- came to the forefront. "Can I ask you
+something?"</p>
+<p>"Sure."</p>
+<p>"It's a touchy thing but here goes: I'm not sure I want to leave. I told
+you about the house and the new job and about Faye. Something just
+doesn't feel right about it."</p>
+<p>"You just nervous? This is a big step."</p>
+<p>Jessica's heart sped up so she rest a hand at the center of her chest to
+calm it. Most of what she felt were her huge breasts, which annoyed and
+reminded her of the pleasures of a fuller body. "I'm nervous too. But
+it's something else. Makes me angry --- angrier than I've been in a
+while. I don't know why I'm pissed to be handed such great things."</p>
+<p>"Are you jealous?"</p>
+<p>"That Faye's steadily improving her life? Getting richer and hotter and
+better networked? Heck yea, I'm jealous."</p>
+<p>"What do you mean 'her' life? You girls are sharing this life, aren't
+you?"</p>
+<p>The tan girls paused everything --- breathing included. Had she meant to
+segment herself away from Faye then? "Right. It's our life," she
+corrected. "I guess it isn't jealousy?"</p>
+<p>Sally had a frown that could wrinkle a dead man. She'd run off customers
+with it when they got too touchy over the female employees and cracked
+lazy ass workers into shape. It both frightened and inspired Jessica; if
+only her emerald eyes could hold such danger and experience.</p>
+<p>"You and me are alike. We're prideful women --- bet you thought I was
+going to say beautiful," Sally winked.</p>
+<p>Jessy cracked a grin. Ms. Hightower was self-aware enough to know her
+best days were radiant but also that they were behind her.</p>
+<p>"But yes, pride. Listen here, I opened this diner myself and it's my
+baby. There's a fulfillment that comes with working for everything you
+have. When me and my ex-husband were together, he was the type that
+bought everything for me. And guess what? I was miserable. For a few
+months it was great. Then, I got bored --- and rebellious afterward."</p>
+<p>"That's. . . exactly where I am, I think."</p>
+<p>"Of course it is! I know this sort of stuff." Sally slurped her coffee,
+managing snark within the most mundane of tasks. "And my guess is, you
+haven't talked about these feelings with the one person who needs to
+hear about them."</p>
+<p>Jessica remembered all the times she almost spoke up and chose sex or
+milk instead. "Educated guess? Cause you're spot on."</p>
+<p>Sally shrugged. "The sex must be great."</p>
+<p>If Jessy's cheeks could show her blushing. . . "Did you just say?
+Wh-what is going on? How did-. . . Ms.Hightower."</p>
+<p>"How many mornings have you come in here with eyes twinkling, wagglin'
+your hips like a newborn puppy? Nobody likes diner work that much ---
+especially not me. Only a few things I know that make a woman do that."</p>
+<p>"A woman. . ."</p>
+<p>"That's what you are," Sally spoke lightly. She forgave her favorite
+employee for taking so long to understand. "And it's what you better
+start acting like. Live your damned truth. Say you don't want handouts
+if you don't want 'em."</p>
+<p>Jessica balled up her fists. "I will. Next time I see her."</p>
+<p>Sally reached across the table and linked hands with Jessica
+supportively. "And never forget I'm <em>so</em> proud of you. For this and
+everything --- really, Jessy, I am. Happy for you and your fianceé."</p>
+<p>Jessica chuckled, pride showing through a goofy grin. "Thank you so much
+for understanding. Though, I'm not sure what I want is to stay here if
+that's the case. I do love to cook but like you said, diner work takes
+it out of me."</p>
+<p>"Then beat it," Sally stuck out her tongue. "And we'll make do here
+without you. We always do."</p>
+<p>The bell above the door tingled. "Welcome to Sally's," Sally called.</p>
+<p>Faye shouted back. "I-I was looking for Jessica?"</p>
+<p>"I'm here," Jessica turned, one hand still squeezing Sally's.</p>
+<p>In came Faye, behaving demure and light. Her blonde ribbons of hair,
+once average length, now brushed the back of her calves. As she came
+around, the room's energy felt like it bent over backwards to
+accommodate her. Like a proper piece of art or a skilled photograph, all
+lines in the tile led to Faye, as did the lines of the eyes in the room.
+A waitress wiping off the bar froze solid like Faye was an icy queen. A
+chef on his grill did a triple take, reacting opposite to his co-worker
+as he broke into a sweat.</p>
+<p>"Hello, wifey," Faye sauntered over and planted a kiss on Jessica's
+cheek in no uncertain terms. The kiss was like a brand, marking
+territory before a wedding could ever hope to. "Hello, Ms. Sally. Sorry
+if I'm interrupting."</p>
+<p>"H-hey," Sally began, struggling to stay cordial, fumbling with her
+words. She seemed to realize she was still holding Jessica's hand and
+reeled her appendage back, wishing not to offend. "Faye, right? We, umm,
+we met before. . ."</p>
+<p>"I was Jessica's character reference when she did her interview. We met
+over coffee," Faye reminded her.</p>
+<p>For a woman who had spent more than half her life in customer service,
+Sally was doing a terrible job of veiling her bodily stresses. Faye
+seemed to eat it all up, though, indulging how her body changed a room
+and the people inside. The youngest of the three watched with unease.
+Even Sally wasn't prepared for Faye's beauty. She probably remembered
+the Faye she had coffee with and wasn't expecting a tower with the
+curves of ten combined women.</p>
+<p>"Right," Sally said, then cleared her throat.</p>
+<p>Then came a silence, stillness brought about by the shifting gravity. A
+smile slithered onto Faye's face because she knew it was her body
+causing the social disturbance. Soaking it in, delaying respite of her
+charms as long as possible, Faye said, "I didn't want to rush or
+anything, babe. Just letting you know I'm here and that I got a call
+from the HOA for us to pick up our keys."</p>
+<p>Nobody said a word. They all just stared for a few more seconds, Jessica
+included, as if trying to make sense of the ascended female before them.
+Faye rolled her eyes. "Yes, I'm stacked. Yes, they're real. Maybe, if
+you're nice, I'll let you <em>touch</em> them," she winked in Sally's
+direction.</p>
+<p>The needle found the record again.</p>
+<p>"Oh! O-oh my god, was I starring?! I'm SO sorry, I-I just. . ."</p>
+<p>Faye waved off Sally's apology. Jessica wondered how she was supposed to
+best this beast of a woman if Sally herself was losing brain cells
+trying to calculate how so much sex appeal could be crammed into one
+human being.</p>
+<p>Faye's turtleneck sweater struggled --- not that there was a garment in
+the world that could do anything more than struggle --- to stand against
+her forces. Even breathing looked like a battle being waged, one that
+her outfit was losing on every major front. If anything, it looked as if
+her moonish boobs were devouring her clothing, scarlet red stretching
+absurdly. There wasn't a loose wrinkle in sight on the
+double-extra-large top, but lines of fabric creaked like rubber bands at
+the weaker areas. The middle seam, which was supposed to be hidden by
+her arm, was a jagged zag of indecision demonstrating the tug-of-war
+going on between her shelf of mighty, feminine meat ignoring gravity and
+the handiwork of the tailor who crafted the autumn garb.</p>
+<p>Jessica couldn't help but feel a certain pity for everyone affected. She
+wished Faye hadn't just waltzed in unannounced and simultaneously knew
+her future wife wasn't capable of doing anything but making a scene of
+herself. She also wished her co-workers --- and boss for fuck's sake ---
+weren't drooling over her betrothed. The feelings were so complex. It
+was the type of situation that had torn the younger girl's inhibitions
+away and made her submit to a drink and a fuck, responsibility be
+damned.</p>
+<p>And Faye was looking extra delicious in the tight little sweater of
+hers. It was Jessica's first time seeing the thing. It highlighted her
+bulging set of areola and wide nipples perfectly. And, of course, her
+pale blimps were fucking huge! They'd grown over the car ride for
+certain. There was plenty of milk to be had.</p>
+<p>To have such a fountain available whenever she wanted --- for life to
+have such an easy button. . .</p>
+<p>Jessica shook herself to clarity when she felt the hunger bray
+powerfully through her.</p>
+<p>"It's not every day people see a chest like mine," Faye relished even
+mentioning that the extra weight she carried around was hers. A proud
+hand lighted the top of her right breast, then roamed to her outer edges
+overtly. "It doesn't help that I'm not wearing a bra, either."</p>
+<p>"No, no it's, uh, my bad," Sally tried looking at the table, then the
+window, then her employees but found no safe place for her gaze to rest.
+"I was just letting Jessica know I'd miss her and to call me if she ever
+needed anything."</p>
+<p>"You're sweet," Faye stepped up, placing a hand on Sally's shoulder,
+tilting herself down so her titties rang like church bells. "Thanks for
+being so good to her. She's the most important woman in the world to me,
+so if you ever need <em>anything</em> from me," Faye's breast slumped heavy
+against Sally's shoulder. "Consider me in your debt."</p>
+<p>Jessica jumped from her seat, and grabbed Faye by the upper arm. Her
+expression was bristling like grease on a hot frying pan. "I'll be sure
+to come back and visit. I'll miss you, Sally."</p>
+<p>Sally bore a similar sentiment. She and Jessica exchanged a hug that was
+evidence of their positive work relationship. When Sally beheld Faye,
+though, her neck and face blushed rapidly. She considered something in
+her mind, unintentionally glancing at Faye's tits despite every effort
+to avoid doing just that, and extended her hand as a peace offering.</p>
+<p>Faye took the handshake mercifully.</p>
+<p>_____</p>
+<p>Highway 3269</p>
+<p>Faye</p>
+<p>After brief goodbyes to the opening shift workers, the newly engaged
+couple ventured up the highway.</p>
+<p>Jessica seemed to be mulling over something in her head, which Faye paid
+minimal attention to till the silence was broke with, "You were, uh,
+really popular with Sally."</p>
+<p>"You noticed? Ugh, she was <em>really</em> eyeing me up," Faye feigned
+repugnance. In actuality, she was considering a threesome, one an
+ordinary woman like Sally would appreciate for the rest of her life.
+"Like, doesn't she have a boyfriend or girlfriend or something?"</p>
+<p>"Divorced. Her husband was in the military and met a girl while
+deployed. He was already having a kid with the mistress when he told
+Sally the truth."</p>
+<p>Faye downloaded the sob story, thinking of a way to make use of it.
+"Poor thing. I kinda feel bad now, for thinking of her as some pervert."
+Except Sally did give those vibes. She, like many women, probably had
+repressed longing and sexual need. It would take a little time but if
+she could scratch Sally's itch, she might return the favor by buying a
+few gallons of milk to be used in new dishes. Other food service places
+were already using Faye's yummy, all natural product to great success.
+Sally's would be a more personal, intimate partnership.</p>
+<p>Jessica rolled her eyes, a dangerous act going seventy on a highway.
+"Nah, she's pretty vanilla. Just sort of lonely."</p>
+<p>Faye planted a seed. "Once we get settled in, we should have her over
+for dinner. Since she clearly sees you as part of her extended family;
+she's always been so good to you."</p>
+<p>"Aww, babe," Jessica squeezed her fianceé's thigh. "That would be so
+fun. You're so smart to think like that." They shared a cheesy, cutesy
+couple moment before Jessica swapped topics to what she must have been
+concerned about from the beginning. "But I get why she was at a loss for
+words. You've been producing much faster lately."</p>
+<p>Faye couldn't just come out and say it, but when Jessica acknowledged
+her milk factories she felt jubilant to discuss them. "Scared I'll
+outgrow the passenger seat?"</p>
+<p>"A little. I look at the road for a few seconds and look back and you're
+already bigger. You must be, I don't know, perpetually growing?"</p>
+<p>"So?"</p>
+<p>Jessica's hand on Faye's thigh formed new intentions. It didn't have to
+travel far to Faye's chest as it slept like a monster in her lap. A tan
+hand found purchase on the space just below Faye's nipple and
+immediately started groping.</p>
+<p>"You're obsessed," Faye teased, clearing hair away from her face. "It's
+cute. You used to be afraid to drink it. Now, it's all you seem to think
+about."</p>
+<p>Jessica jerked the wheel. She had to correct because her beautiful boob
+gazing had her drifting into the slow lane. Fortunately, nobody was
+around to endanger and Jessica was allowed to resume breast-focused
+activities. "You're addictive, babe," she said bluntly. "It's creepy ---
+all this stuff happening that <em>isn't</em> just lactation. Your skin is even
+clearer, your hair grew <em>feet</em> in <em>weeks</em>. I know I've been freaking all
+the way out about it, and I know you're going to tell me to ignore it
+but. . ."</p>
+<p>"But?"</p>
+<p>"It's like you're transforming. . . into something not quite like
+yourself. And that's not all. I've got issues with other stuff too."</p>
+<p>"Issues, huh?"</p>
+<p>"We're engaged so I think it's fair to be really honest. I-I've been
+thinking about how you're becoming more beautiful every day and
+succeeding and living your dream. It's great and all --- hell, you made
+a down payment on a house in three months! But I've been feeling kinda,
+I don't know, upset --- not just the house, but everything."</p>
+<p>Faye interrupted with action. Her sweater made popping noises as seams
+snapped all around her. She was bunching it up, trying to maneuver the
+red outfit over her immense melons. "You're jealous and I adore it."</p>
+<p>"Maybe I am." The driver paused to swallow a lump in her throat as her
+sixth sense alerted her to the presence of very milkable titties. "But
+it's more than that. I have my own dreams and I don't feel like I've
+done anything to make them come true. I get worried that all I've done
+is taken a hand out."</p>
+<p>"We never would have gotten this far without your effort, Jess. Not the
+first deal, nor the next deal, or the one after that. And here we are,
+official suppliers, with hundreds of thousands in contracts that we can
+fulfill because of <em>your</em> help," Faye got the sweater up to the equator
+of her titties. At that point, her lengthy nipples caught attractively
+but Jessica could still feel the naked flesh of her lover's swollen
+mountains. "You working is anything but a handout. It's love. I like it.
+It's <em>sexy</em>. If there's anybody I want to love me, own me, and work with
+me, it's you."</p>
+<p>"Faye. You aren't getting it."</p>
+<p>"I think I do and it's nothing to worry about." Faye unsheathed only her
+left nipple, the one closest to its admirer. It almost glowed with
+warmth, alive, permanently awake like a tower atop her hilly, pink
+areola. "We did this together and we prosper together. Our dreams are
+both coming true, so relax."</p>
+<p>When the curly haired girl soothed into her seat, it gave Faye a
+tremendous high. She was seraphic, magical, and otherworldly. She had
+high expectations of herself, all of which were given physicality in her
+huge tits, wide hips, sexy ass, and lasting confidence. She suspected
+herself to be <em>better</em> than others so, when confronted with these
+superhuman experiences --- magic milk production, clearer skin,
+lengthening hair, and more than a foot of height in three months --- it
+only populated her open case with evidence. The universe itself, it
+seemed, was baptising her into a newness of being. Nature had selected
+her for better --- for superiority.</p>
+<p>Wanting her lover to affirm her, the blond took a hand from the steering
+wheel and directed it to her semi-erect nipple. The grip quaked, nerves
+getting to her. "God it's so huge," Jessica whispered with a begging
+intonation.</p>
+<p>"I wonder if milk will ruin the interior," Faye mentioned on a whim.</p>
+<p>Clearly, Faye underestimated her new influential powers had, or maybe
+the emotional intensity of her partner. Before she knew it, they were
+whipping down the off ramp at an exit and screaming into the parking lot
+of a brown building. Upon closer inspection, the place of business was a
+bank whose name indicated that they were in a town at least two hours
+away from their actual destination.</p>
+<p>Jessica dove from the driver's seat, out of the car, and circled around
+to Faye's side. She ripped the door away. Her knees crashed to the
+ground. Her lip squeezed painfully between white teeth, arms angled
+toward her thighs so her tits surged forward in her thin, white top. "I
+have something to talk about after this. Promise me we can talk once I'm
+done," the curly haired girl frowned looking ready for another feeding.</p>
+<p>Faye looked around. A few patrons leaving the bank had heard the
+squealing car tires, seen the horrendous parking job, and were probably
+wondering why some black girl was seated obediently on the asphalt next
+to her vehicle. Perhaps car trouble, they thought. Something might have
+sprung a leak. If only they could know how accurate that guess was about
+to be.</p>
+<p>Back of her fingers caressing Jessica's cheeks, Faye turned
+perpendicular to the passenger seat. Her legs forced Jessica away till
+they cleared, then invited her back when they spread. One shapely,
+monstrous jug was so large it balanced partly on Faye's thigh as the
+rest of its weight dangled for the taking. Her sweater still cloaked her
+right breast, acting as a sling sufficient enough to contain only one of
+Faye's planets.</p>
+<p>"Sure we can talk. You're my precious girl. I always have time to talk
+to you. But first a question: is this supposed to count as a milking?
+Because I'm not due for one for another three hours."</p>
+<p>The sides of Jessica's eyes drew inward. "God, you're this big and we
+still have three hours to wait? You'll be as big as the car if we wait
+that long. Look," she cupped both her hands to Jessica's exposed skin,
+positioning one diminutive paw on each side of Faye's divinely feminine
+glory. "You're still producing --- I can <em>see</em> you getting bigger and
+bigger. Mmm, you're insane. Your body is just. . . there is no way you
+should make me feel this good just looking at you."</p>
+<p>Faye felt herself swelling, glutting, stuffing. Where she usually
+conducted herself with lightness, now, her existence was weighty and
+substantial. Lower and lower her tit sank, pulling at her shoulders and
+neck, angled toward the ground. In a few feet, her plump pap would
+contact the ground. At her rate of growth, it would only be a matter of
+minutes.</p>
+<p>"See? You're speeding up --- how are you speeding up?"</p>
+<p>"When you touch them they speed up. My body can tell you're close by,"
+Faye leaned further forward, putting more weight and flesh into
+Jessica's palms. "This is what my body was made to do."</p>
+<p>"To meet demand. . ." Jessica started to sway. Her arms arched inward.
+Faye's swinging boulder was guided like a wrecking ball to Jessica's
+cheek where it burned with sensual fire. "Damn, there's so much in
+there."</p>
+<p>"You can take it," Faye stroked Jessica's puffy curls romantically. "You
+can't still be full from breakfast this morning."</p>
+<p>Milk shifted about in Faye's blimp of a tit, gurgling loudly. A mind of
+their own, Faye sensed instinctively that her load was far too much for
+Jessica, but kept the fact to herself, using it to bolster her own
+already-elevated self image.</p>
+<p>"I am but who cares? I want more right now." Jessica answered wantonly.
+Turning her cheek, she skipped worship by kissing and drew her tongue
+across Faye's burgeoning boob in complex patterns. "If I don't drink you
+now, you won't fit back in the car. Fuck, you're already like three cup
+sizes bigger. I <em>just</em> parked the car. You must <em>really</em> want to feed
+me."</p>
+<p>Wrong. Faye wanted to <em>stuff</em> her. "Latch on. I'll show you how bad I
+want to feed you."</p>
+<p>Coaxed on by a spirit of mystery and lust, the caramel girl ducked under
+Faye's dangling treat. Her neck angled upward and her face took the
+weight of all of Faye's girlish flesh. Nipple angled, bulging lewdly at
+her cheek, Jessica's teeth came down snuggly. They had connected. They
+were one.</p>
+<p>Faye's voice hitched. Perception narrowed to a dyed, rosy version,
+allowing only for the space directly in front of her and ignoring the
+world which felt so insignificant in comparison. Even for a nascent
+goddess, which is exactly what Faye believed herself to be, she was a
+slave to the ebbs and flows of her carnal nature, still bound by her
+body's wish to dominate her mind with a cocktail of hormones too potent
+for a typical girl. They took her to the cliff. She raised her eyes over
+it and, wasting not a moment, her cravings sent her tumbling over.</p>
+<p>Creamy volleys lobbed a flash flood. Jessica's cheeks bulged with the
+plume of sugary brew. A single tear collected at the edge of her eye.
+She blinked it away. Her throat opened, still weary and worn from the
+thickness from Faye's pent up morning load but understanding of its new
+fate. All of Jessica was understandingly submissive. Parts of her
+willingness varied, like her stomach which signalled at her angrily when
+she gulped up the first few ounces. 'I'm already full', her stomach made
+warning signals as steamy piles of cream heaped themselves inside. Faye
+imagined Jessica's lungs were protesting too, burning as oxygen was
+starved to them, shrivelling for no reason other than to make room for
+even more of Faye's copious fluid.</p>
+<p>But the first swallow was always the hardest; the most abusive. Each one
+following was easier as she opened herself fully to accept what Faye had
+collected over time. This really was Jessica's work, Faye thought. Had
+she only accepted it sooner, maybe things would have been smoother and
+she never would have had to endure the momentary anguish she'd felt that
+one fateful night. Why be angry? Why fuss? It didn't serve her at all.
+Life was easier when she accepted that her place in the world was beside
+Faye, providing for her, supporting her, and, at times, worshipping her
+busty, lustful body.</p>
+<p>Faye resigned to watch her body shift and change. A venue of wonder,
+virile and alive with energy, her nipple stretched as viscous milk was
+forced out. Her rate felt slower than usual, not nearly the explosive
+force she would experience every morning, but the excitement still came
+in the steadiness. How long could she keep going at that speed? Hours,
+maybe, or days. Faye truly felt she could do so, she could spend <em>days</em>
+milking herself. Her production was that ferocious; her body
+incomparable in its relentless creation of sweet, sweet milk.</p>
+<p>Even with Jessica drinking, her tautness remained. Having nowhere else
+to go, her milk caused her breast to bulge to grander sizes. Domination
+was embodied in Faye. Her tits no longer sought to feed or cure hunger,
+but to stretch the person attached. Her milk <em>invaded</em> Jessica's body
+and claimed it --- no inch was left untouched.</p>
+<p>"Jessy! You can suck harder than that, can't you? C'mon, harder!
+<em>Harder!</em>" Faye teased.</p>
+<p>Her partner opened wide and clamped down on her bulgy, smooth areola.
+The pressure was pleasant on her nerves there, making Faye moan. She
+heard Jessica growling and gargling. The act had rewarded her with even
+more milk flow, a blast that formed rivers at the sides of her mouth
+that fell to her top. Tits that had seen their own growth over the
+course of a month clung to Jessica's clothing. Each new drip revealed a
+new area, like raindrops in a pond forming ripples that collide.</p>
+<p>Jessica whimpered as Faye's fingers went to her breasts, teasing the
+nipples that were adamantly hard. "Something tells me," Faye looked
+Jessica in the eye, noting how cute she looked with milk-stuffed cheeks.
+"If you keep drinking me, you'll start producing milk yourself. Wouldn't
+it be amazing if we <em>both</em> were lactating? You've already gone up two
+cup sizes. You must be close to making <em>something</em>, right?"</p>
+<p>A woman and a child presumed to be her son jumped into their car about
+ten feet away. The boy looked with intrigue till his mother tossed him
+into the car like luggage and sped away. Faye giggled, continuing on,
+noting a pleasure she got from making people uncomfortable. "Mmm, they
+feel so <em>tight</em>. Are you getting bigger like me? I bet you are. It would
+be so <em>sexy</em> seeing you spray some milk while you drink all of mine."</p>
+<p>The request was now in the air. Like all the others, it one day would
+come true.</p>
+<p>Faye's blend washed over her nurser's tongue and punched out her throat.
+Creamy, rich smells were in the air like an expensive lotion or perfume
+and Jessica looked to be dreaming of having her own scent one day.
+Finally, most vividly, she squeezed the sides of Faye's boob, fathoming
+the impossibility that she was still growing, and wished the same for
+herself.</p>
+<p>"Mmmmn, that's so amazing, babe! Keep sucking, don't stop!" Faye said
+huskily. Her hand on Jessica's left nipple was encouragement, though for
+whom wasn't clear. Her right jug, the one balanced on her thigh, had
+finally grown too unstable and slumped down, crashing into her left one
+like a wrecking ball. Its size was great enough to send Faye tumbled out
+of the car, onto the ground tits first. She yelped as she landed, but
+not from pain since her chest made an amazing cushion.</p>
+<p>Beneath her writhed Jessica, though, who had no doubt taken the more
+significant fall.</p>
+<p>"Shit! Babe, you okay?" Faye rocked herself. Her body was awkward at
+this size, and heavier than it appeared. She found the leverage she
+needed in a few seconds and she rose to check on her fiancée. "Jessica?"</p>
+<p>Jessica gasped. Once her head was exposed, she blinked her eyes open.
+After taking in what had happened herself, an accepting aura toured her
+features. "Being crushed by your tits. . . is the best thing that has
+ever happened to me."</p>
+<p>"What the hell! I was actually worried about you!" Faye's reaction was
+to feel like the victim, despite her own body being the cause of this
+incident.</p>
+<p>"I know, I know. Sorry to worry my goddess fiancée," Jessica raised her
+eyebrows.</p>
+<p>The girls repositioned. Faye sat on her knees off to Jessica's right,
+hands resting atop her bosom. One of her twins was spilling over her lap
+and the other leaned happily atop Jessica's thigh and hip. There seemed
+to be nowhere for them to go with their size and their insistence in
+jiggling made things sexy, for better or worse.</p>
+<p>"Gosh, we're gonna be <em>so</em> late getting to the house," Faye pointed out.</p>
+<p>Jessica, undeterred by the accident, sat up and squeezed Faye's sweater
+covered breast. "If we don't milk you, you won't be able to fit through
+the door. As far as I can tell," she seemed distracted by how jiggly and
+fun Faye's titty was to touch and slosh about. "Our only option is to,
+well, continue."</p>
+<p>"I think some of my milk lost its way and ended up in your brain."</p>
+<p>"I'm not surprised. It gets <em>everywhere</em>."</p>
+<p>Faye's left tit was still leaking, sprinkling the ground with a fan of
+milk from her nipple. Her enormous buoy of a breast expanded in all
+directions, eclipsing her thick, luscious thighs with ease, swelling
+onto the parking lot completely exposed.</p>
+<p>"It's like they want everyone to know they're the biggest," Jessica
+commented. "The biggest, fullest tits in the whole world."</p>
+<p>Faye nodded voiceless, watching herself grow and grow, an unstoppable
+force of female sexuality.</p>
+<p>"I'd like to get started again, if you'd be so kind as to unpin me
+completely."</p>
+<p>"I don't know," Faye said, sadistically. "I kinda like feeling you
+struggle under me. . ."</p>
+<p>"<em>Later,</em> babe," Jessica answered, foreshadowing what was sure to come
+the moment they had the privacy of a bedroom.</p>
+<p>Though, if they were willing to nurse gallons of breast milk parked in
+front of a bank, was it such a stretch to take the next logical step?
+Perhaps, but who could tell where an hour's worth of milking would lead
+them?</p>
+<p>_____</p>
+<p>Move In Day, Later</p>
+<p>Faye</p>
+<p>"If you two lovely ladies need anything else, be sure to give me a call.
+My card's in the kitchen next to the welcome basket."</p>
+<p>"Thanks so much," Jessica blanketed her body over Faye, clearly
+exhausted. Even without the edge of attentiveness, she was putting forth
+the effort to be polite.</p>
+<p>"I'll be contacting you all throughout the week just to be sure
+everything is to your liking. Really, if there's anything at all, never
+hesitate. My goal is to be the friend that actually shows up on moving
+day, alright?"</p>
+<p>"We've got a few things that may need some moving. . ." Faye insinuated
+her breasts further into the conversation, hoisting them higher than
+they already were. When Marcus unabashedly gawked, Faye knew he'd gotten
+the point. "But not tonight. It's late and it was a long ride over."</p>
+<p>Marcus, the guy from the mall who was building homes in the next town
+over. Faye had actually contacted him again and sweet talked him into a
+steal of a home: two floors, four bedrooms, three full baths, and more
+square footage than any couple could make full use of. One bedroom would
+serve as the music room. Another, preferably the one with walk-in bath,
+would be the blond's 'office'. Everything the two needed was there ---
+and more.</p>
+<p>The representative from the HOA was twenty-something with a clean, low
+haircut, and evidently a bust-loving man. He'd talked exclusively to
+Faye's tits and deflated when she clarified that his help wouldn't be
+needed that night. He'd <em>actually</em> thought he was going to get some tail
+--- his magazine perfect smile canted disappointedly to prove it. Move
+in night may not have been the night for such activities, but that
+didn't disqualify other days of the week, the blond thought. She'd done
+all but go down on him to get them the house and he'd grow frustrated if
+she never put out.</p>
+<p>Her whole life was about balancing people to serve her best, so reading
+his expectations came second nature. She had about three weeks to give
+him what she'd been teasing. That was plenty of time. Once things
+settled down, Marcus would think he'd gotten away with the better deal.
+And better yet, he'd be in her corner for when she sought to make future
+changes to the home.</p>
+<p>Faye made sure he was certain of this with an abbreviated shimmy that
+rolled over her full hips and into her tits which tossed like ships on a
+stormy sea.</p>
+<p>Marus swallowed hard. Faye wished it was a mouthful of her addictive
+milk making his adam's apple sink. "Pleasure seeing you two again.
+C-congratulations." He backed his way out the door, then turned on the
+porch and hopped down the stairs.</p>
+<p>Jessica made a move to the door, but Faye stopped her. Watching him
+leave, making sure the last of this thoughts were of the impossibly sexy
+couple that had moved into the neighborhood, was a point of leverage
+Faye would not let pass.</p>
+<p>"He's cute," Faye said, eyes glowing as headlights brightened their
+doorway. "And so helpful."</p>
+<p>Jessica snarled, turning closer to Faye. "Too scrawny for me. For you as
+well, right?"</p>
+<p>Hand on a journey, Faye's fingers traced the outline of Jessica's
+stomach. The bulge there was brand new. It objected to her previously
+tidy middle, denying the very notion that Jessica had ever had a flat
+stomach. She was clearly sexier with a pregnant belly, one roiling with
+a whirlpool of Faye's milk. Any message of the contrary was a lie, as
+far as Faye could tell. "You're right," she finally admitted after she'd
+had her fill of pinching Jessica's smooth, round milk ball. "I like my
+partners full-bodied; one way or another."</p>
+<p>Jealous Jessica dissipated. All that was left was a cuddlesome, sleepy
+future wife. "That makes us perfect together, 'cause curves are
+mandatory on my sexual partners."</p>
+<p>"Are my curves to your liking?"</p>
+<p>"Hmm," Jessica scooped Faye's tit up in her hand. It was too heavy to
+truly lift, so she jostled it about some so Faye's cleavage line
+slithered in the button-down top. "You know, they might be a little
+small. We'll wait an hour or so and then they'll be better."</p>
+<p>"You greedy little thing!" Faye teased, pulling Jessica in by her ass
+and pressing their lips together.</p>
+<p>After having milked for an hour outside the bank, a security guard
+stopped getting off to their display and asked them to vacate the
+premises. Disturbing the peace, or something. Whatever law they were
+violating by putting on the lesbian love display of the century, they
+weren't charged or fined and were on their way in a few minutes. Faye
+made sure to get the officer's name, making friends like she always did
+when she met a person that could do her a 'favor' in a pinch.</p>
+<p>It took all day to get to their new home, to have a tour, to fill out
+paperwork, and to be left alone. The sun had been set for almost an
+hour, day yielding to night at just the right time for Faye and
+Jessica's liking.</p>
+<p>They swapped each other's love and attention with their waltzing
+tongues, bodies roaming over what they had each made of each other. The
+two surfaced for air nearly five minutes later, realizing that they
+could have continued making out for hours and hours in the very spot
+that Marcus had left them. What drew them apart at the mouth but not at
+their sensually chained bodies was an even deeper yearning.</p>
+<p>"It's that time again," Faye whispered, flipping her blonde hair as her
+front teeth raked lines down Jessica's neck.</p>
+<p>The blonde's full expectation was another good time --- their first good
+time in this new space that would, day by day, feel more like home. She
+was surprised to find her smaller partner frozen. The body beneath her
+lips did react, except a stiffness made for an awkward taste to what was
+supposed to be a dream come true.</p>
+<p>"Something the matter?" Faye pulled up slowly.</p>
+<p>Those green eyes were closed; brow furrowed. "I meant to talk to you.
+You promised you'd hear me out."</p>
+<p>"I did. It just seems like a weird time for this." Faye couldn't even
+hold Jessica straight on without smothering her to death in her
+nearly-full tits. She spoke sweetly to the shorter girl, left arm around
+her shoulder in a side hug. "You do see that I'm full and we're alone in
+our new home, right? Don't you want to try out the bed? Or the couch or
+the table or the stairs? I'd like to try you out everywhere."</p>
+<p>Faye smirked, watching the her wife-to-be fight with herculean might the
+simplicity of fucking themselves to a lust-drunken stupor then nursing
+till morning.</p>
+<p>"No. This needs to be said. It should have been said before but I-I let
+my physical needs get in the way."</p>
+<p>"Alright then. Let's hear it."</p>
+<p>Faye listened half-heartedly. She mostly focused on removing the
+clothing that was gripping her body like a second skin. Jessica sat on
+their new, fluffy white couch --- unwilling audience to the strip tease
+of the century.</p>
+<p>"Going back to before, I do think I'm jealous of you." Jessica's thighs
+were thicker and much more attractive when they squeezed tight to both
+hold back and excite her lower lips. "Your body for sure. I think you're
+the most beautiful woman alive. But also your success --- your self-made
+success. Your a career woman with dreams and ambition."</p>
+<p>"And I told you, so are you! This is our dream come true."</p>
+<p>Jessica shrank a little at that. "Actually, Faye, I don't think it is."</p>
+<p>Faye chortled. "Baby girl, of course it is! The nice home, the fully
+furnished kitchen, the music room. We can shop for dogs tomorrow if you
+want. We'll do it from bed while we drink alcohol and enjoy our full,
+luscious bodies."</p>
+<p>Jessica had a wave of anticipation roll over her so strong it looked to
+nearly knocked her over. "Oh god," the moan came without permission.</p>
+<p>"Exactly. Now come here," Faye spread out her arms. She fully
+anticipated another win, another success. Jessica could finally see
+things her way now that they were literally living their dream right?
+Great house, great jobs, great sex, great life.</p>
+<p>But Jessica didn't moved. It looked like she was shackled to the couch
+--- the only way she wouldn't have submitted.</p>
+<p>"I-I'm not finished. Faye, there's a lot about this I don't like. I
+always saw myself marrying you, but I imagined it being a partnership;
+you give a little, I give a little, we both make a little work for both
+of us. I imagined myself stronger and more successful than I am --- and
+no, not a strong lactation specialist, or whatever. Strong, like
+self-secure. I wanted my future to reflect all the hard work I'd done to
+make it my future."</p>
+<p>Faye squinted, seeing that Jessica found a voice somewhere that gave her
+strength to defy her hyper-sexual nature. "And this isn't it? I thought
+this was your dream."</p>
+<p>"It's the dream you handed me. Working a job you created in a home you
+paid for with a body you acquired. Yes, baby, this is everything I want
+--- I'm surrounded by everything I want! I'm just not satisfied. I'll
+never be the way things are going because I'll always have a little
+voice inside that's whispering to me: you're nothing special, you just
+<em>married</em> special."</p>
+<p>"You're being really insecure right now." Faye didn't realize how much
+hurt was in her voice till it was already in the air. "Who cares which
+one of us succeeds? Being together means reaching the mountain top
+together. Here we are, Jessy!" Faye gestured with her open palms at the
+space around them --- so much space, almost too much. "It isn't about
+who was special. We're here together now. Doesn't that matter more?"</p>
+<p>Jessica stood. It almost looked like she'd given up her little speech.
+"It might. But that's not what I feel. I feel like that baby in Grace's
+stroller on our date night. It's nice being treated like I'm everything,
+but it's only cute if it's a baby being coddled. I'm a woman for fuck's
+sake! My heart won't let me be strolled around like I have been."
+Jessica came forward, emboldened by this rebellious spirit, approaching
+the colossal woman Faye was with the audacity to speak toe to toe with
+entitlement. "Please understand, Faye. I've quit my job, lost my figure,
+betrayed my conscience by watching you get away with so much. But I have
+nothing to show for my own sacrifices --- no reward for taking the easy
+way out. We fuck like champions together, but I don't feel like a
+champion of life when we're done. Does that make sense."</p>
+<p>"No."</p>
+<p>The blond grabbed Jessica by her shoulders, a little too rough. "Faye,
+h-hey! What're you-. . ."</p>
+<p>"How do you think it makes me feel when you say that? After all I did
+--- I sacrificed too! For you. See this?" Faye's hand lifted Jessica's,
+indicating the sizable white diamond contrasting her caramel skin.
+"That's what this ring means: sacrifice. I sacrifice so I can make you
+happy. If you tell me you aren't happy with me literally making your
+dreams a reality then. . ."</p>
+<p>"I think you convinced yourself that this was what I wanted." Jessica
+hung her head. "And I was too scared or complacent or <em>something</em>. I
+never stopped you. I thought I'd be a fool to. You're perfect and I
+should be gracious to have you. But this just isn't right and it's time
+I admit it --- before I end up lifeless and bitter and I push you away
+like Ms. Hightower did."</p>
+<p>Faye blinked slowly, a thought behind her blue eyes. "So Sally's the one
+who put you up to this."</p>
+<p>The younger girl seemed to catch her words. She talked through the
+point. "So what I want is for you to let me do some things on my own. I
+just need an area in life where I can feel like I'm genuinely making a
+difference. What do you think?"</p>
+<p>"I think a middle-aged woman lost her best worker and used whatever she
+could to make her feel guilty about leaving."</p>
+<p>"Faye! Don't even go there. Sally's Diner paid the bills before you had
+your first contract. That woman and her restaurant is the reason we're
+here today."</p>
+<p>"And she'd like to take the credit by keeping you there. That's what she
+wants --- I bet she said that 'nobody would ever replace you'. Some worn
+out old phrase like that. She's brainwashed you. Sally's a lonely old
+woman without any kids of her own. Yea, and she thinks of you like a
+daughter that I'm stealing away."</p>
+<p>Jessica, after being quiet long enough to hear where Faye was going,
+tore away from the statuesque blond with tits swinging nearly two feet
+in front. "Faye, that isn't Ms. Hightower. If anything, that sounds like
+something you would do."</p>
+<p>Faye snarled. "Wow. Really? You actually have to be brainwashed. That
+lady is selfish and she thinks she can steal away my precious girl for
+herself-"</p>
+<p>"I'm nobody's 'girl'. I'm a woman."</p>
+<p>"You're <em>my</em> woman." Faye reached out to grab Jessica.</p>
+<p>Jessica tore away again. "Not if you're going to keep treating me like a
+baby. I can take care of myself."</p>
+<p>"Why won't you let me take care of you? What's so wrong with that? I
+know you're strong, it's why I want to marry you."</p>
+<p>"Maybe I need to prove that to myself before I'm ready to get married."</p>
+<p>Faye lost something with those words. It was like the world she'd set up
+for success was slipping away beneath some black horizon. She'd been in
+control in every corner of her life. Was she about to lose the final,
+most important piece of it? "So we're done then?"</p>
+<p>Jessica seemed to just realize where the argument had escalated. Faye
+watched, hoping for some crack in this ignorant wall her love had
+erected between them; a chink in the armor, a vulnerability. There was
+only one.</p>
+<p>"I need a break," Jessica whispered.</p>
+<p>"Then take it with me."</p>
+<p>Faye lunged in. She was clumsy and mad with a kiss. She forced Jessica
+to grope her breasts, exchanging her warmth in an attempt to win over
+that last prevailing part of the Jessy she loved. For a few awkward
+seconds there was nothing. Then, motion. Following came a moan. Then
+emerald eyes glittered with carnal satisfaction and Faye knew she'd
+reached that sexual haven where she could do no wrong.</p>
+<p>"C'mon," Faye spoke through their kiss. She hefted her precious girl
+into her arms and took her into the darkness of the second floor.</p>
+<p>Once there she found the bedroom and nearly tripped carrying them both
+inside. They clung to each other and fell into the king sized bed. A
+patio outside could be seen through a sliding glass door. Without
+curtains, the moon bore witness to her daughters mixing their love and
+passions into a steamy, feminine concoction like they'd never done
+before. Tan flesh became one endlessly with fevered pink. They both
+delivered and received outstanding oral followed by a lustful grinding
+fit in a dance so spontaneous yet so very familiar. They made a mess of
+their new room, didn't stop till the pillows and the sheets were theirs.
+The television, the dresser, the rug, the windows, the bookshelf, the
+nightstand, the open closet door, and the bathroom. The sex was the type
+that made any surroundings feel like home sweet home.</p>
+<p>"I'm thirsty," Jessica wheezed.</p>
+<p>"Here I come."</p>
+<p>Faye come to the head of the bed and laid on her side. She pulled the
+livewire that was Jessy close so they could face one another. A massive
+tower of titty was stacked up before her, but the younger girl didn't
+wink once out of apprehension.</p>
+<p>"There. You can start when you like," Faye said, holding the space where
+waist abated to hip. As she spoke her invitation, she felt her nipples
+stretching longer. "See? They're ready just for you. They only do that
+when you're here."</p>
+<p>"I'm always honored," Jessica said.</p>
+<p>When there was a pause, Faye spoke up. "Something the matter?"</p>
+<p>"No. Everything's just fine." Her voice seemed distant.</p>
+<p>Laying down, Faye's body took up a third of the bed, then her tits the
+second third, so sounding distant was a matter of space for sure. But,
+in the heat of love, the blond elected to leave the wistful tone alone.</p>
+<p>She knew she was right when she felt Jessica latch on. Lips sank in
+tight and her nipple sat heavy along the length of a hot, wet tongue.
+Her built up supply let down in a quantity that would have made a normal
+girl choke. Jessy was well equipped for such quantities, though. She
+could chug gallons of heavy cream without being fazed.</p>
+<p>Faye felt momentary back up in her fiancée's throat. Then it passed and
+sweet, heavy glugging adopted a rhythm. Not a drop went to waste. Her
+breast unloaded, liters at a time it seemed, to her full satisfaction.
+No sooner, her hormones drowned her brain and the edges of her vision
+swam. She closed her aqua eyes and instinctively held Jessica even
+closer.</p>
+<p>She'd won. Again, as she expected, she'd won. Her life was in her hands
+again. Just as she suspected, her partner just didn't fully understand
+what was at stake and, once they started snacking on milk and pussy, it
+changed Jessy's tune. There they lay, life partners, nursing and bonding
+as sweetly as they did three months prior. It stood to reason that now,
+with Z cups --- only speculation, as she'd been unable to measure
+herself --- that the nursing could go on for longer, as could the
+bonding and the love.</p>
+<p>Unaware of how tired she'd become from marathon sex with tons of excess
+milk weight, Faye submitted to rest. The final thought on her mind was
+how amazing her tits were, that no matter what obstacle she'd
+encountered she'd used her body like a swiss army knife in fixing
+everything.</p>
+<p>When she awoke, it was due to her tits aching beside her. Several
+milkings had to have been missed. When the goddess sought for her mate,
+she only found more bed beside her. In a hazy lumber, she came upright
+and her mammoth boobage slammed the freezing hardwood floor. In the
+corner of her eye, barely even there, was a folded piece of paper and a
+gorgeous diamond ring.</p>
+<p>_____</p>
+<p>Jessy's Bistro</p>
+<p>One Year Later</p>
+<p>Jessica</p>
+<p>"Thank you so much for this. She eats a lot more than her brother does.
+I could maybe make enough for her if he wasn't so picky about using a
+sippy cup."</p>
+<p>Grace sat in comfy iron chair with blue cushioning at a stonetop round
+table. In the top, broken ceramic pieces were set to resemble a view.
+This one was of a cabin with a chimney. Grace didn't seem to care much
+for scenery. The new mom was bouncing a healthy toddler over her
+shoulder. He was making a single-toned song that seemed to be for his
+very own entertainment.</p>
+<p>Jessica was sitting across from them. In her arms was Grace's newest
+daughter, Lily. The baby girl was blinking in and out of a morning nap,
+head tilted wearily against the tanned woman.</p>
+<p>"It's the least I could do. It's not like I have a kid of my own. All my
+milk goes to waste without you taking a few ounces."</p>
+<p>"Still, my nipples are in your debt. Seriously." Grace winked.</p>
+<p>Jessica, for reasons she barely understood, felt herself going hot under
+the collar. "Can I get you something to go? Maybe something for their
+father?"</p>
+<p>"He's off on one of his binges again. Hasn't been home in a few weeks."</p>
+<p>"You poor thing."</p>
+<p>"Pfft! I'll make it. I was on my own when I met you for the first time,
+remember? Same deal. The only thing I regret is having the kids grow up
+without two stable parents." Grace held Jessica's gaze for a bit.
+"You're the most stable thing in their lives to be honest. Lily's
+basically being fed by your breast milk."</p>
+<p>"I hope she doesn't get any ideas. I'm just her godmother, not the real
+thing." Jessica held the child, dreaming of the strong young woman
+little Lily would be if she kept drinking so much milk.</p>
+<p>"Wouldn't be the worst thing for her to think. You're a better parent
+than their father. I certainly like you better." Grace shrugged the
+shoulder with her one year old on it. "Getting kinda tired of dick
+anyway."</p>
+<p>Jessica opened her mouth in giddy shock. "You didn't just say that in
+front of your kids. You're crazy!"</p>
+<p>"Dick is their father! Wow, someone's brain is in the gutter this
+morning."</p>
+<p>Jessica raised an eyebrow. An older version of herself would have felt
+bad about that. Now, she had her own bistro, her own friends, and an
+honest way of living. She was living her truth. "Sure is. But it ain't
+sunshine and rainbows. Trust me."</p>
+<p>"I don't." Grace rose, shifting her son onto her hip. "I'll have to
+schedule a trip sometime. Maybe after I drop these two off at my
+mother's place. You'll have to be understanding, I haven't been intimate
+with a girl since college."</p>
+<p>Jessica rose as well. "Aren't you still technically in college?"</p>
+<p>"Night school. Now, give me Lily. You have a store to open!"</p>
+<p>Jessica did just that and helped Grace make the transfer of kids to from
+public space to five-star safety rated SUV. The emerald-eyed woman
+handed a cooler last which was filled with the morning's pumped breast
+milk and waved goodbye. Briefly she looked across the street and saw
+Sally sweeping off the sidewalk about a block down. The middle-aged
+woman tilted her head in a nod which filled Jessica with everything she
+needed to turn and swagger boldly into her own eatery.</p>
+<p>It wasn't much yet. Her menu was small but flexible. Her sit in dining
+was limited with only enough seating for about sixteen. She'd got the
+place mainly because of the alley-side patio which was secluded and cool
+for those wanting to sit outside. One day, she'd have a band playing
+live out there. For the time being, she could only play her favorite
+tunes softly over the speakers; ukulele music by a local artist.</p>
+<p>She felt true satisfaction at her simple, lovely, honest life.</p>
+<p>It hadn't been easy. Leaving Faye was the hardest thing she'd ever done
+--- in every sense. She was still conflicted as she walked away. Really,
+she more so wobbled as her belly was so full of milk it basically
+constituted another human being by size. The cab she heralded several
+miles from the house kept insisting she go to a hospital, but he'd
+reluctantly dropped her off at Sally's.</p>
+<p>She explained what happened and Sally who, though bewildered, was
+understanding. She lived in with the middle-aged worker for a few days,
+digesting what was the biggest belly she'd ever seen. Then, Jessica went
+about righting every wrong committed by Faye. She apologized to their
+old landlord for late rent, to Marcus who sold a house at a tremendous
+loss because he thought he might fuck a goddess, to the attendant at the
+lingerie shop for putting her through so much trouble just to not buy a
+single bra.</p>
+<p>And she apologized to Grace, admitting she wasn't pregnant and how she
+felt guilt for going along with the lie. Grace, of all the people, was
+the most forgiving.</p>
+<p>As it turned out, honesty was the remedy. The Landlord forgave back
+rent, Marcus found the property that became Jessy's Bistro, Sally taught
+Jessica how to run an eatery, and Grace became an invaluable friend ---
+and maybe more? Even the breast milk, which started when she finished
+digesting a dozen gallons of Faye's thick cream, had a purpose now. It
+was so perfect how simple life became; not easy, but simple.</p>
+<p>And lovely, and honest.</p>
+<p>Jessy had the whole bistro open and ready for business at seven sharp.
+Her handmade pastries were on display and fresh coffee in five different
+varieties were ready to be poured. She adjusted her boobs just right and
+felt no guilt of looking sluttish. That had been part of an insecurity
+that was disappearing too --- that she was just a sex craved, lust
+dominated nymph. Now, sex had its proper role in her life --- a vibrant
+and active role. And her J cup breasts not only helped her find new
+partners but gave her the chance to be little Lily's wet nurse.</p>
+<p>The bell above the door tingled. "Morning! Welcome to Jessy's Bistro!"
+First customer of the day.</p>
+<p>"Hey," came a familiar voice.</p>
+<p>Jessica stopped daydreaming about Grace's full, milky breasts and
+trademark mommy hips to take notice of the figure in the door. Six-six,
+tits too big to fit through the door, and hair so long it dusted the
+floor even when in a ponytail?</p>
+<p>"Faye?"</p>
+<p>It was. Faye had come to find her.</p>
+<p>The talk was a lengthy one frequently interrupted by the regulars who
+came in to start their days at Jessy's. Most knew nothing of Faye and
+skittered away with their food and drink out of the intimidation of so
+much woman, which was well and good as it left the two alone.</p>
+<p>"I'm proud. You're doing so well for yourself," Faye said at one point.</p>
+<p>"Thank you."</p>
+<p>"I didn't know you were this ambitious. You could very well open up a
+chain of bistros one day."</p>
+<p>"I'll start with just this one."</p>
+<p>"You've had a busy morning. I bet sales are very good."</p>
+<p>"Why are you here, Faye?" Jessica turned to the titan. "I left you that
+note for a reason. I told you I need space. We're done. I have a date
+today and everything."</p>
+<p>"Grace? Yea, she told me you two were getting flirty," Faye talked to
+her sandals. "That you lactate now and feed her daughter, that she
+thinks your cute and a good influence, that you're an amazing woman.
+Yes, yes, I've heard it all. When I get worried about you, the only way
+I can check up on you is through her."</p>
+<p>"Back to manipulating people, then?"</p>
+<p>"No! No." Faye steadied herself, finding a peace in some kernel of
+thought. "No, I talk to Grace because I wanted to make amends first. She
+just happens to be friendly and open enough to talk to me about you."</p>
+<p>"Look, I need to get back to work. Faye, I-"</p>
+<p>"Hear me out. It'll be quick." Faye came to the counter like she might
+leap over it.</p>
+<p>Jessica stood still and beheld her almost-wife. "Okay."</p>
+<p>"I'm not here to try to win you back. I clearly messed up, I can take
+the blame. I deserved to have you leave me that night because I wasn't
+being attentive to your needs. You deserve that in partner." Faye
+squinted her eyes before the moisture in them showed. "But I do care for
+you. And I've stayed away as long as I could stand to. Not as a wife,
+but as a <em>friend</em> --- Jessy, I just want to be part of your life again."</p>
+<p>How the hell did the tables turn like this? Jessica had never seen Faye
+beg for anything. She'd always been able to get whatever she wanted.
+Then, Jessica realized that the one thing Faye really wanted was
+something that couldn't be taken. It could only be given, and this new
+version of Faye seemed repentant enough to at least be trusted with it
+provisionally.</p>
+<p>It took courage, but Jessica nodded her head and flattened her frizzy
+curls. "On the condition that I meet the real you, I'd like to start
+over as friends." The smaller girl watched her ex-fianceé bow into the
+counter in tears. Her immense breasts spread and almost overtook the
+cash register. An empty tip jar nearly met its demise before Jessica
+nabbed it out of thin air.</p>
+<p>"Thank you. Thank you. Thank you." Came weepy, sincere cries. Faye's
+blue eyes leaked, eyes that matched the colors in Jessy's Bistro
+exactly. "I won't ruin this. I won't. Thank you."</p>
+<p>Jessica came forward and held Faye as best she could. Despite how much
+there was of her new friend, she couldn't help but feel like the bigger
+person.</p>
+<p>_____</p>
+<p>Bad End</p>
+<p>Faye</p>
+<p>They swapped each other's love and attention with their waltzing
+tongues, bodies roaming over what they had each made of each other. The
+two surfaced for air nearly five minutes later, realizing that they
+could have continued making out for hours and hours in the very spot
+that Marcus had left them. What drew them apart at the mouth but not at
+their sensually chained bodies was an even deeper yearning.</p>
+<p>"It's that time again," Faye whispered, flipping her blonde hair as her
+front teeth raked lines down Jessica's neck. "You have enough space in
+you for more?"</p>
+<p>"Thank god," Jessica swooned. "I'm already famished. I hoped the milking
+at the bank was just an appetizer."</p>
+<p>Jessica's mention of 'appetizers', brought even more tension to a beaten
+and bloodied battle between a goddess' tits and mankind's best efforts
+at concealing them. Faye's chest lengthened, filling the space below her
+ribs, casting a shadow over her belly button. Her top looked like
+children's clothes on her, hanging on by two buttons and riding up to
+resemble swimwear. Her hip-to-bust ratio was too outlandish for
+imagination yet too perfect to exist in reality. Faye almost believed
+she was on the cusp of something new and inexplicable.</p>
+<p>"<em>Fuck</em>, you little glutton," Faye's eyes glinted with lust.</p>
+<p>Jessica raised an eyebrow, challenging the force of nature before her.
+"I see they like it when I talk about how much I need them to make more
+and more. It's like all they know how to do is make you bigger and
+bigger. . ."</p>
+<p>"You talk a big game for a girl with one load already in the oven."</p>
+<p>"I don't think you get it yet," Jessica shoved as much of herself
+between Faye's whoppers. Her face and shoulders vanished. Her breasts
+were pressed flat against the grander, sexier force. Despite her
+efforts, Faye's milk production kept her breasts firm and taut. There
+was a little give, but not much. No matter how she wanted to use them as
+pillows, Faye's chest had already made the transition to milk factories.
+Play time was over. "I want every drop. At first I thought I was jealous
+because your buyers got all the milk. I thought 'if I could just have my
+share, then I'd feel better about her shipping gallons away'. But that
+wasn't true. I don't just want 'my share'. It isn't enough. Neither is
+splitting it fifty-fifty. I want <em>all</em> your milk --- full loads again
+and again."</p>
+<p>Faye smirked at her fiance making wedding vows between her tits. Her
+goal had finally come fully to fruition. Her dream for the future had
+materialized. The dream of her own breast milk business booming with
+growth as well as her dream of being her own boss. Finally, Jessica's
+piece of the puzzle fell into place. The girl who had wanted to avoid
+breast milk in the beginning, the one with cold, lifeless zombie hands
+during her first milking, was now enslaved to the power of Faye's
+colossal boobies.</p>
+<p>A strain could be heard, then a pop. Another button failed.</p>
+<p>"Won't you fill me up? For real. Not just a percentage. Whatever you
+were going to ship off tomorrow, I want it. Now."</p>
+<p>"You want it now, baby?" Faye's succubus arose from within her. "I'll
+have to lie about why it's late."</p>
+<p>"Do whatever you have to do. Nobody could stay angry at you, Faye.
+You're just too. . . you're just. . ." Jessica, upon thinking of the
+perfect word to describe her immaculate partner, moaned as loudly as she
+could and buried her face till all that remained was a tuft of black
+hair sticking up from Faye's valley.</p>
+<p>"F-fuck!" Faye howled, enduring the wildfire burning anywhere her tits
+were touched. Each were already nearing truck tires for size and
+pressing even further. "Come here. Give me those sexy lips of yours."</p>
+<p>Jessica didn't delay. Up she popped, jaw slack, tongue out. Obedient to
+a fault, she lowered onto a single knee as if she was the one proposing
+instead of Faye. Her receptacle open and clear for occupancy, Faye
+couldn't help but proceed to claim the territory she'd been eyeing. Her
+right nipple was as long as a hand from heel to finger tip and was
+bulged beautifully from excitement. Its semi-flexible nature let it bend
+as the weight of the tit behind it squished the member against Jessica's
+face. It throbbed with power, the nozzle behind which a lake was waiting
+to be drained.</p>
+<p>"Mmm, yes," Jessica's angled face curled up and into Faye's heavy tit.
+The milk vat continued swelling alarmingly fast, pushing the breast
+lower and lower toward the mouth that would house it for the foreseeable
+evening. "That big, sexy nipple. Mmm, it smells so sweet."</p>
+<p>"Gosh, you're so freaky. I love it," Faye floated her tit meat upward
+then let it fall and slap against Jessica's face. Without a good deal of
+support, the widening mass could have crushed the tan-skinned girl
+beneath it. Having command of such a power was what inspired Faye's
+fervidity. The longer she let her nipple bend and flex against Jessica's
+soft cheeks and pouty lips, the more arousing domination she had access
+to. "Go on, beg. Tell me what you want. Don't stop til you get it."</p>
+<p>"Faye\~ Please, Faye. You have the biggest, sexiest, most undeniable
+boobs ever. I'd do anything," she paused, french kissing Faye's nozzle.
+"<em>Anything</em> to have your milk in me. Fill me up, Faye. Don't stop till
+your empty. Lactate till you can't anymore --- all of it, stuffing my
+tight, little tummy."</p>
+<p>"Shiiiit," Faye was losing it.</p>
+<p>Her top was like silly string being pulled asunder. One stubborn button
+was holding firm, but her chest was several inches further away already.
+The ocean could be heard in her breast, churning angrily for release. At
+the edge of her body's exaggerated eaves, a gooey dollop of milk built
+till it was too heavy, the size of a fist, and splashed against
+Jessica's forehead.</p>
+<p>"Yes! More of that --- of your hot, yummy milk." A layer of opacity
+spread across the black girl's face and body. It slicked her hair so
+that it was wet and heavy. Her clothes darkened and stuck to her skin.
+Out of Faye's sight, some of her viscous milk even reached the floor
+where it tumbled and became the start of a smooth, conditioner-thick
+pool. "Give me permission, Faye. Stick your raging nipple down my throat
+and I promise a single drop won't go to waste. Please! Let me suck your
+amazing, milk machin-. . . MMPH!"</p>
+<p><em>BLLLLGRRRPT!</em></p>
+<p>"Ahh, right there! That's the perfect spot," Faye threw her head back.
+Her fingers combed her hair as she felt her body releasing.</p>
+<p>The first mass of her raunchy essence abused Jessica's throat. The wad
+that started off the flow of milk was backed up and extra rich, forcing
+Jessica's body to contort obtusely around it. Beyond that point, there
+was no break at all. Faye's chest turned out another bulky load, then
+another, producing a stream of connected pockets of milk. With her
+nipple so long and bulging around her milk flow, the scene resembled an
+injection of all-natural body stuffing more so than a breastfeeding
+session. Still, dwelling in these obscene extremes was a reminder to
+Faye at how superior she and her body was.</p>
+<p>A minute later, Faye found a brief respite between her throes. "You feel
+wonderful, babe. Work your sexy lips and tongue some more. I think you
+might be taking more than ever before."</p>
+<p><em>BLLLGRRPT! BLLLGRRPT!</em></p>
+<p>To spite the suggestion that her breasts could ever be conquered, off
+went the final button. It pinged off the far wall. The sleeves of the
+shirt fell slack on Faye's shoulders. The final remnants of the
+tenacious top were a mess of scattered gray strips on the floor.</p>
+<p>"Whoops, nevermind," Faye grinned evilly. "Guess you'd better drink
+<em>faster</em>."</p>
+<p>As they grew, her tits pushed away from her body even more. Jessica was
+forced to roll to keep pace with a nipple that was moving inches away.
+She went from being on a knee to sitting cross-legged. The milk-obsessed
+girl felt her bloating tummy punch forward. Her lap became a holster for
+her chocolate covered cream puff that started out as a mostly
+disguisable bump and progressed to some overfed boulder.</p>
+<p><em>BLLLLGRRRPT!</em></p>
+<p>The siren song of milk distending a throat and piling up in a big, sexy
+tummy echoed through the room.</p>
+<p>Jessica moaned with every spare breath. She was as accepting as could be
+--- even encouraging with her steamy actions. Even if she was barely in
+control enough to comply, her tongue did struggle around the girth of
+Faye's nipple. Her pillowy gates were stretched round the ambrosia
+delivery system too, keeping her promise of never spilling a drop. Any
+other girl would have backed up already, but sheer determination with
+some experience with milk bloat gave Jessica the skill to keep the
+milking as sexy and functional as possible.</p>
+<p>Faye acknowledge Jessica's efforts. But, inside, she knew they weren't
+enough. Her feet were planted, but Jessy was getting farther away. About
+five minutes into the milking, her breasts had not stopped growing. At a
+staggering speed, they pushed Jessica onto her butt, then onto her back.
+Soon, the waterbed breast was a dominating top to the brown girl's
+submissive bottom. Inside, milk swirled like a washing machine.</p>
+<p>"You're still lagging, sweety. If you think they'll stop just because
+your tummy is so huge and soft, you'd better think again," Faye teased.</p>
+<p>Breasts like Faye's were too much for anyone, though. Faye knew her
+body. It was more than supply and demand at that point. Her stuffed,
+flooding mammaries had no intention of providing just enough to please
+Jessica because no amount of nectar would be enough to feed someone so
+irredeemably addicted. A battle of wills was at play between woman and
+nature. Jessica believed she could never be filled, and Faye's chest
+operated under the assumption that they could prove her wrong. Her tits
+had done just that at every possible junction.</p>
+<p>So Faye leaned into her chest, one ear to the mixing sound of her
+production and the other open to the romanticized sound of a girl
+avoiding drowning as she clogged her body.</p>
+<p>The contest of force stretched into the night. The brand new leather
+couch in the living room was pressed up against the wall by the force of
+Faye's untouched left breast. It climbed on the furniture like some
+entitled beast and claimed the entirety of the space with its raw heft.
+Then a glass end table joined it showing how Faye's mammoth rack could
+rearrange furniture. She hadn't considered it that way before, but in a
+way Faye's tits were members of the household. They couldn't be ignored,
+were always being attended to, and suffocated any space foolish enough
+to not treat them as the centerpiece.</p>
+<p>Rolling her fingers in wide circles, the cares of anything other than
+her expansive forms was lost to Faye. At last perception, she assumed
+Jessica was still sucking away, but from some other room where her tits
+had travelled without her full knowledge.</p>
+<p>Just as a doorway was utterly stuffed by her wall of pink areola, Faye
+curled into her own cleavage. Making the threshold of a door collapse
+was just enough to push her into orgasm, and such an orgasm ---brought
+on by an areola as wide as her body --- was plenty to wear her out,
+sending her to sleep.</p>
+<p>The next day, Faye blinked herself awake to a commotion of sorts. A few
+voices swam in the fog of her perception, but her body was still heavy
+and her memory hadn't fully booted up.</p>
+<p>It took the voice of her life partner to be an anchor that pulled her
+back to the realm of light and the living.</p>
+<p>"Hey, baby. Rise and shine," Jessica sang sweetly. "I've got a surprise
+for you."</p>
+<p>When Faye didn't wake up right away, a smooch gave her the willingness
+to open her eyes and see what gift she was about to receive.</p>
+<p>"Oh, hi sexy," Faye flirted, seeing nothing but Jessica's attractive
+features as she stirred. "How'd you sleep?"</p>
+<p>"Like a baby, in more ways than one. Your nipple in my mouth is how I
+want to sleep every night from now on."</p>
+<p>That's when Faye recalled her final memories. She went to erect herself,
+but couldn't move her legs. It occurred to her that she was laying down,
+turned on her side.</p>
+<p>"Whoops! Sorry, did you want to get up?" Jessica noticed the blond's
+struggle. "Here, I'll get out of your way."</p>
+<p>A grunt bent Jessica's expression. To Faye, it looked like her brown
+beloved was in the gym, suspending some dumbell to build up muscle.
+Then, her legs became free which directed her attention to exactly what
+had been holding them in place. A chocolate monument clumped itself in a
+new orientation and swung madly with its liquid weight when it was
+settled. Attached to it was Jessica, whose smile was broad at Faye's
+look of disbelief.</p>
+<p>"Believe it or not, I've actually shrunk. You finished lactating earlier
+than I thought you would," Jessica commented.</p>
+<p>Faye's arms supported her torso. She watched Jessica's belly surge high
+into the air. It must have been nine feet high --- and the girl was
+reclined on her back! The flanks of her delicious, lady curve stretched
+even further to the east and west of her peak. It was under one of these
+flanks that Faye had felt warm and secure as she slept.</p>
+<p>Connecting the dots, Faye looked at her chest. They sloshed about, still
+jiggling from her sitting up. Their size, though, was far too modest to
+be the same tits that left Jessica a tower of tummy.</p>
+<p>"You drank so much that you actually shrank me?"</p>
+<p>"Surprised?" Jessica mewled.</p>
+<p>"In love," Faye replied.</p>
+<p>The blond sashayed her hips as she inspected the space. Floor to ceiling
+in half the room was just tan tummy. The floor was sticky in places
+where some sweet titty brew had dried. Following the lines, it had to be
+cream fresh from the brown girl's breasts, which were equal in size and
+shape to Faye's own. They both occupied the realm of H cup, both now
+prominent milkers as well.</p>
+<p>"I'm as big as you now," Jessica sing-songed, nearly delirious with her
+record breaking body.</p>
+<p>"They say lovers start to look alike after a while," Faye said, coming
+to kneel beside Jessica's immobile frame. "I wonder if you'll get taller
+and thicker all over like I did."</p>
+<p>"I hope so," the younger girl said wistfully. "I had something to tell
+you, but I forgot what it was."</p>
+<p>"Must not have been that important."</p>
+<p>Jessica's arms rose and pulled Faye down. "Guess not."</p>
+<p>The two remained there, indulging with their infinite curves. When Faye
+felt her chest inflating, Jessica drank without fear of her changing
+body or size. Likewise, Faye drained her partner and felt her tits surge
+with growth from the hefty, creamy snack. Their cyclical breastfeeding
+spiralled further and further, broken into sessions by sleep brought on
+by fatigue. Faye could think of no better way to live; the two were
+fully self-sufficient.</p>
+<p>Jessica's tummy took nearly a week's time to reduce in size. In due
+scale, she grew to meet Faye's towering six-foot-six and surpassed the
+fairer woman in hip and butt size. The younger lover was eager at that
+point to become a regular producer in the blond's breast milk business
+allowing for even greater volumes of production and varied qualities and
+tastes. Together, their love, bond, and sizes grew till they were no
+longer mistakable for their previous selves. They lived out the rest of
+their days together, goddesses, subsisting on little more than sex,
+love, and heavy cream.</p>
+<p>Besides those three, they harbored only one additional ambition: finding
+other girls to addict to their milk.</p>
+<p>"You know who I was thinking?"</p>
+<p>"Who babe?" Faye pulled away from lapping Jessica's immense, footlong
+nipple.</p>
+<p>"That mother from Town Walk? Grace, I think her name was. We should get
+her." Jessica finished her sentence with a smirk as she went back to
+sucking Faye's own thick, milky pap in a breastfeeding sideways
+sixty-nine.</p>
+<p>"I love how you think, my precious girl."</p>
+</body>
+</html>

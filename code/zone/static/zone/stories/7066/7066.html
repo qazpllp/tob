@@ -1,0 +1,1592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Human Clay</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>Human Clay </p>
+<p>by Hiker Angel </p>
+<p>Audio </p>
+<p>A professionally acted narration of this story by the staggeringly talented Kylie Rutzen is now 
+available for purchase on Gumroad. </p>
+<p>https://gum.co/HumanClay </p>
+<p>The face that looked back at Jenny Clay in the mirror wasn’t the face she wanted to see. Its 
+problem? It was hers. That face was full of her insecurities; it was full of her timidity; it was full of 
+her plainness; it was full of her doubts. She wasn’t smart enough; she wasn’t successful 
+enough; she wasn’t desirable enough; she wasn’t… enough. </p>
+<p>Jenny tore her gaze away from the mirror to get ready for work. Whether she enjoyed her life or 
+not, she had to go to work. It put a roof over her head and food on the table, and that was not to 
+be taken for granted. </p>
+<p>It wasn’t that she was ungrateful for her life. Her life was fine by most standards. She was not 
+particularly successful, but she was able to make ends meet in one of the world’s best places to 
+live. She had no romantic life, but she had friends. </p>
+<p>It’s just that there was a part of her that wanted… more. She always tried to ignore that part. All 
+it did was send her on a trip down melancholy lane. </p>
+<hr />
+<p>He didn’t intend to do it, but the overwhelming 
+presence.
+​</p>
+<p>When Jenny arrived at work, Anthony awaited at her desk. As she approached, she began to 
+feel intimidated, as she always did around the man. Part of it was his height, well over six feet. 
+She barely came up his chest! Another part of it was his intelligence. The man was brilliant, 
+having built his company to two hundred employees from nothing over the past ten years. But 
+the largest part of it was simply his 
+charisma he radiated always made Jenny feel small and insignificant. </p>
+<p>“Good morning, Anthony! What can I help you with?” </p>
+<p>“Morning, Jenny! I’ve got a small prospective client that I’d like you to go see first thing. They’re 
+on a tight timeline, and they need pro forma financials for the bank in the next couple of days. 
+Our producers don’t have time to squeeze them in today, but since you’re between projects, I 
+was hoping you’d be willing to—” </p>
+<p>“Of course!” Jenny cut him off, then paused, a blush beginning to color her cheeks. Why hadn’t 
+she at least let the man finish his sentence? If she kept acting like an over-eager intern, 
+everyone at the company would keep thinking of her as a barely-out-of-school kid rather than 
+the smart, competent business professional as she wanted them to view her. </p>
+<p>“Wow! I guess I chose the right woman for the job!” Anthony said, grinning, amused at Jenny’s 
+unexpected enthusiasm. He handed her a slip of paper. “Here’s the address. Thanks for doing 
+this for me, Jenny!” </p>
+<p>Jenny nodded, still embarrassed by her own outburst. She hadn’t meant to be so overly 
+enthusiastic, but this was the first time Anthony had given her an assignment directly. Not only </p>
+<p>​
+that, but she had a chance to onboard a whole new client. Small or not, this was a real 
+opportunity to show what she could do to Anthony directly. It was exciting… and a little 
+terrifying! </p>
+<p>Jenny mapped the address on her phone and headed out. </p>
+<p>The place was in a strange part of town that she’d never even known of, let alone visited before. 
+She found a place to park her barely functional Honda Civic, then began on foot in the direction 
+that her phone guided her. She entered a narrow alley, per the directions on the map. Jenny felt 
+a bit claustrophobic between the rising walls of the old brick buildings. She walked to the end of 
+the alley, then made a right. At the end of the next corridor, she made a left. Then another right. </p>
+<p>This was like walking through a maze! Her hands began to tremble as nervousness washed 
+over her, reflecting her growing discomfort at the oddity of it. Three more turns had her so deep 
+into the strangely narrow brick corridors that she wasn’t sure whether she could find the way 
+back out! </p>
+<p>Her heart began to beat faster as her fear continued to rise. Was there really a business back in 
+here? What was this address had Anthony really given her? Some sort of prank? That wasn’t 
+really Anthony’s style. Maybe he had just made a mistake? </p>
+<p>As she pondered turning back, Jenny noticed something glowing red at the end of this length of 
+alleyway. </p>
+<p>What was that? </p>
+<p>She walked toward it. When she finally reached it, she looked down. Red light filled her vision, 
+seeming to engulf her. </p>
+<p>Suddenly, she was sitting in a conference room, a suited man sitting across from her. Jenny, in 
+a daze, blinked several times. The strange man reached out and touched her shoulder. </p>
+<p>“Miss Clay, are you alright? You seemed to zone out there for a minute,” he asked, eyebrows 
+bunched in concern. </p>
+<p>“What? Where am… what’s going on?” Jenny asked, eyes darting around the room. How had 
+she gotten here? The last thing she remembered was that red light in the alley! </p>
+<p>“We were just discussing what the bank is looking for on their debt service ratios,” the man said, 
+brows furrowing in concern at Jenny’s sudden disorientation. “Why don’t you take a moment? 
+You seem a bit… out of sorts. I could use a second to check in with my team, anyway.” </p>
+<p>Jenny rose unsteadily to her feet and walked to the bathroom. She looked at herself in the 
+mirror. Same old Jenny. Straightening the jacket on her pantsuit, she redid the top button of her 
+blouse. What was happening? She had heard of people experiencing lost time, but it had never 
+happened to her. And right in the middle of her workday? It was more than a little disconcerting! </p>
+<p>She didn’t remember arriving at the client site. She had no memory of the start of their meeting. 
+Uncertain how she would get through this, she stared into her eyes in the mirror, taking a deep 
+breath. She knew her job, she thought, exhaling. She would be able to get through this once 
+she reviewed the spreadsheets the man had provided. </p>
+<p>The man. She didn’t even know her client’s name! He had a security badge, though. She simply 
+needed to read his name from it. She could get through this. Would get through this. She still 
+had the opportunity to impress Anthony, as long as she didn’t “lose time” again! Resolving 
+herself to make a doctor’s appointment when this meeting was over, Jenny splashed cold water 
+on her face, then walked back out to the conference room. </p>
+<p>With a few minutes to review the numbers before Mr. 
+Person-whose-name-she-really-needed-to-figure-out-very-quicky-upon-his-return came back, 
+Jenny planned to take advantage. By the time he sat down again, she felt she had at least a 
+basic grasp of what was needed. Thank God! </p>
+<p>His company badge was dangling from the lanyard around his neck, but as she attempted to 
+read it, the stupid thing shifted behind the laptop in front of him. Leaning to the side, she 
+attempted to get a look at it, but it remained just out of view. She really needed to find out his 
+name! </p>
+<p>Thinking quickly, Jenny dropped her pen to the floor next to the conference room table, rose 
+from her chair, then bent down to get it. As she rose, pen in hand, she glanced up and read his 
+name tag. </p>
+<p>Jim Smith. </p>
+<p>Sheesh! She could have taken a guess and managed to get that one right. Talk about a generic 
+name! As she raised her eyes from his badge to his face, she noticed his eyes focused on her 
+body. That was new. Most men never gave her small, unspectacular form a second glance. </p>
+<p>It wasn’t that she was ugly. She was just… plain. Light brown hair, a nondescript face, brown 
+eyes, and a curveless, slender 5’0” body combined to make her absolutely average. Well, 
+maybe below average on the height. She sometimes joked with friends that she should have 
+been a secret agent because she was completely invisible in a crowd. </p>
+<p>She watched male eyes follow her prettier friends all the time. But not her. Never her. </p>
+<p>So it was noticeable that Jim’s eyes were on her body. What was he so interested in? Had she 
+spilled coffee on her blouse or something? Probably. That would be par for the course today. Of 
+course, with her missing memory, a coffee spill seemed trivial in comparison. At this point, as 
+long as she made it through this client visit and made it home, she would be satisfied. </p>
+<p>Jenny rose, smoothed out her skirt, and sat down in her chair, crossing her bare legs before 
+beginning, once again, to walk through the rest of the information she needed to develop her 
+projections for Jim. </p>
+<p>Wait! Bare calves?! She was wearing a pantsuit, wasn’t she? </p>
+<p>She glanced down and saw a knee-length pencil skirt that left an inch or two of high uncovered 
+over her knee. Not only that, but her calf was far less sticklike than normal. It had a bit of 
+smooth, well-toned muscle, as it had in school when she had run cross country. Unfortunately, 
+when she had gone off to college, she had given it up and lost the little muscle tone she had 
+previously developed. </p>
+<p>Was she simply misremembering what she had worn today? She was beginning to worry that 
+there might be more to this brain situation than just losing the memory of arriving at her client’s 
+office today. </p>
+<p>“Excuse me,” she said, her voice shaking slightly, then hurried back to the restroom again. </p>
+<p>She looked in the mirror again. The reflection that looked back was her was slightly different this 
+time. It was difficult to make out exactly what had changed, but her face looked just slightly 
+better. Was it her eyes? They were brighter than normal, weren’t they? Her mouth? Were her 
+lips darker pink? She couldn’t quite tell, but they might be. The most noticeable change was her 
+suit, with its relatively conservative skirt rather than pants. </p>
+<p>She might have chalked it up to simply a memory glitch, except that she didn’t even own a skirt 
+suit. She always went with pant suits… didn’t she? It wasn’t as if she had legs worth showing 
+off, anyway. Now, of course, her legs were looking a little better now for some reason. Not 
+much, but a little. Maybe they 
+ worth showing off. 
+were
+​</p>
+<p>Jenny shook her head in confusion. She definitely needed to make that doctor appointment. 
+Something was up, and she needed to know what. </p>
+<p>She wrapped up with the client, successfully gaining his signature on her company’s 
+engagement letter by the end of the appointment. Anthony would be pleased with that, at least. </p>
+<p>Upon her return to the office, she walked through the aisle of cubicles, striding up to Anthony’s 
+office with more confidence than she felt, considering her strange memory loss. She knocked on 
+his door, and he opened it for her, raising an eyebrow challengingly. </p>
+<p>​
+<br />
+“Great news, Anthony! I got the work! It will take me a couple of days to work up the information 
+that he needs for the bank, but I should be able to have it done by Friday when he needs it.” 
+Jenny found herself smiling as she announced the news. </p>
+<p>“Great work, Jenny!” he replied, his eyes falling to her chest. </p>
+<p>Jenny pulled out the engagement letter and handed it to him, her smile now beatific. She had 
+done it! She had nailed her first solo client appointment! She had even managed to conquer the 
+whole missing time situation, her new client none the wiser. </p>
+<p>Excited as well as pleased with herself—and Anthony’s reaction—she went back to her cubicle 
+to work on the balance sheet projections, Anthony’s eyes following her as she went. </p>
+<hr />
+<p>Either she was taller or he was shorter! 
+taller?
+​</p>
+<p>It was taking Jenny longer than normal to work up the P&amp;L framework for the client’s new 
+venture, but she was progressing. Frustrated at her own pace, she leaned back in her chair, 
+rubbing the back of her neck with one hand. She began to notice two strangely large swells 
+under her blouse when she saw Anthony making his way over to her. She rose from her desk to 
+greet him, nervously launching into an explanation of the nature of the new client’s needs. As 
+she was explaining, she noticed that she didn’t have to look up as much as she normally did to 
+meet his gaze. </p>
+<p>Was he hunched over? No. Was she wearing heels? She looked down. No. But that could only 
+mean… </p>
+<p>Was she </p>
+<p>She looked down at her computer screen. It did seem further away than normal. She was 
+growing taller. </p>
+<p>She glanced back up to Anthony’s face, catching his eyes quickly darting from her chest to her 
+eyes. Had he been checking her out? The second guy today? She couldn’t even remember the 
+last time a guy had ogled her body, and today it had happened not just once, but twice! </p>
+<p>She finished her explanation to Anthony and noticed his eyes flicking below her neck again. 
+What the hell? She knew that he had a bit of a reputation as a lady’s man, as his recent divorce 
+from a third trophy wife could attest, but she had never experienced anything like this with him 
+before. </p>
+<p>She suddenly felt very uncomfortable. Excusing herself with a curt apology, she rushed to the 
+restroom. She was doing that often today! </p>
+<p>​
+<br />
+After using the facilities, approached the mirror, surveying her appearance once again. She 
+started with the body part that she knew had changed before—her legs. Her skirt was shorter by 
+a couple of inches, rising several inches now above the knee. Her mind jumped back to the 
+moment she realized she was taller. Eyeing the hem of the material, she realized that it wasn’t 
+that her skirt was shorter, it was that her legs were longer! Her increased height must be coming 
+from her legs! She twisted her hips to examine them. As she did, however, she noticed that her 
+skirt was awfully tight. Were her hips wider too? </p>
+<p>She shifted her gaze back to her legs. They were definitely more toned, her calves taking on a 
+nicer, more feminine shape, aided by her two-inch heels. </p>
+<p>HEELS?! She hadn’t been wearing heels this morning. She always wore low-heeled pumps to 
+work! </p>
+<p>What else had changed? Her gaze rose the length of her body. She thought her waist looked a 
+bit trimmer. She also noticed a bit of cleavage that her tiny breasts had never as her modestly 
+cut blouse hugged her apple-sized breasts. </p>
+<p>Hadn’t she been wearing a neck-high blouse this morning? Yes! She remembered buttoning the 
+top button at the client’s site this morning! Her clothes had changed again! They weren’t exactly 
+revealing, but they were certainly more so than they had been this morning! </p>
+<p>Her eyes widened as they found a face that could probably be considered cute. Her 
+cheekbones were slightly more prominent, her lips slightly fuller. </p>
+<p>The changes weren’t massive, but there was no longer any doubt. She was transforming, 
+becoming better looking by the hour. If this kept up, she was going to need new clothes by the 
+end of the day! She didn’t entirely mind the nature of the changes, but they were still 
+concerning. This kind of thing just didn’t happen! </p>
+<p>She had already made her doctor’s appointment for Friday morning. Maybe that would give her 
+some answers. In the meantime, she would get back to work. She was behind schedule 
+anyway, since her mind didn’t seem to be functioning as well as normal today—probably some 
+residual effect of her missing memory, she supposed. </p>
+<hr />
+<p>Anthony visited her a half dozen more times throughout the day, but Jenny remained glued to 
+her desk, doing her best to concentrate. Today, concentration wasn’t coming easily to her, 
+however. She was struggling with these financials far more than she should. What was wrong 
+with her?! And on top of that, with each of his visits, she noticed Anthony’s gaze becoming 
+progressively more lecherous. </p>
+<p>As the rest of the staff began to leave, Jenny remained, trying to make sense of numbers and 
+forecasts that had seemed so easy to understand earlier in the day. </p>
+<p>Anthony stopped by her desk and gave her a cocky wink. </p>
+<p>“Don’t work too hard now, Jenny. All work and no play makes Jenny a dull girl…” </p>
+<p>He walked out, giving her his best used-car-salesman smile as he walked by. Yes, Anthony was 
+definitely becoming flirtier with her. Sighing, she filed the information about her boss’ behavior 
+away then returned to her work, determined to finish by the end of the day. </p>
+<p>An hour later, Jenny threw down her pen in frustration. She wasn’t making any progress with 
+these stupid projections! Tensing her jaw, she decided to simply go home and get back to it 
+tomorrow with a fresh mind. </p>
+<p>When she arrived at home, slipping out of her stylish suit, she caught her reflection in the 
+bedroom mirror and gasped in shock. </p>
+<p>Her hair was much lighter, more of a dark blonde than a light brown now. That, however, was 
+the least of its changes. It was shiny and thick, at least six inches longer, descending in lush 
+waves to her upper back. Her eyes seemed wider, more almond-shaped. Whereas they had 
+been a dull brown before, they were more of a dark blue now, the color making their 
+appearance more striking than she was accustomed to. Her nose looked smaller, her 
+cheekbones higher and sculpted with greater prominence than before. Her lips were 
+substantially fuller. Touching them with a slender finger, she ran it along their plump surface, 
+noting their softness as she continued to be transfixed by her reflected image. </p>
+<p>Wow! She had been cute the last time she had looked into the mirror at work. Now, she was 
+downright pretty, bordering on </p>
+<p>Jenny had never bothered to wear a bra before when wearing a suit, her tiny bee stings easily 
+hidden under the jacket. She was going to have to change that now, she thought, as she stared 
+at the full spherical swells in front of her. They had to be in the neighborhood of B-cups. </p>
+<p>Her stomach had always been reasonably slim but now seemed firmer than usual. Her core 
+muscles were not really visible, but as she ran her hand under her ribcage, she could feel them 
+tightening beneath her skin. </p>
+<p>She had noticed her expanded hips earlier, but they seemed even more dynamic now, 
+especially in comparison with her firmer, tighter waist. She twisted to the side to see a nicely 
+formed butt rounding outward from her lower back. She couldn’t suppress a giggle as her eyes </p>
+<p>beautiful! </p>
+<p>​
+ She looked much more fit 
+amazing!
+​</p>
+<p>traced slim, smooth legs, which looked as if they had gained another couple of inches over the 
+course of the day. </p>
+<p>As a complete package, it was pretty impressive—especially for Jenny, who was used to seeing 
+an average-at-best body in the mirror every day. This was 
+and far prettier. The sight of herself like this made her feel far sexier than she had ever felt in 
+her life. </p>
+<p>She actually considered going out to the bar that night. She might actually be able to pick up 
+guys with this new body of hers! But she eventually decided against it. Instead, she opted for 
+her favorite romantic comedy—the one with the strong-jawed actor that always made her drool. 
+As she fell asleep that night, she dreamt of seducing the actor from the movie. In her sexy 
+dream, the handsome man was unable to take his eyes off her lush, irresistible curves. </p>
+<p>When she awoke the next morning, Jenny stared at her naked body after her shower, again 
+marveling at its shape. She did, however, feel a nagging bit of disappointment at the fact that 
+she hadn’t changed at all overnight. Maybe the changes were finished? If they were, she could 
+hardly complain! She was better looking now than she’d ever dreamed possible the previous 
+morning. </p>
+<p>With her fitter, taller body, she decided to put her gym membership—the one she hadn’t used in 
+over a year—to use. Sporting a body that was worth the effort, she wanted to keep it in shape. 
+She packed her shorts and a t-shirt into a duffle bag and resolved to go to the gym after work 
+that day. </p>
+<p>The moment that she arrived at work, Anthony glided over to her desk, staring lecherously at 
+the bulges in her tight, turtleneck sweater. Jenny had worn a pair of too-short slacks, mostly 
+because she only owned two dresses and one skirt—the one that her pants had transformed 
+into yesterday. Besides, it was cold outside. And this was more along the lines of her normal 
+clothing choices. As desirable as she was feeling this morning, she was still a professional, and 
+she would dress like one. </p>
+<p>Jenny smiled at him, and he smiled back. This time, she noticed that her gaze was nearly level 
+with his chin as she stood tall before him. </p>
+<p>“Everything still going well with the Smith pro forma?” he asked with a smirk. </p>
+<p>“Yes, Anthony. I was a little tired yesterday, but I’m feeling energized today, and I’m hoping to 
+get the rest of it wrapped up before I leave.” </p>
+<p>“Great! Let me know if you need anything…” </p>
+<p>​
+Jenny sat down at her computer and began to arrange the information into organized pivot 
+tables, when she began to notice furtive glances by the men in the cubicles around her. </p>
+<p>Wow! It was amazing the attention that blonder hair, bluer eyes, and a couple of inches in the 
+right places could garner! </p>
+<hr />
+<p>That afternoon, Jenny scowled, digging her fingers into her hair as she realized that she had 
+done her projections completely wrong. The numbers seemed to swirl in front of her, confusing 
+her more and more as the day progressed. This had all seemed so easy at the client site 
+yesterday. Why was she struggling so much with this assignment?! </p>
+<p>She decided to take a break and come back to it in a few minutes with fresh eyes. As she rose 
+from her desk and turned, she nearly ran into Anthony. Her eyes were level with his lower lip 
+now. She swallowed hard as she realized what that meant. She was growing taller! It was 
+happening again! She felt the sudden urge to check herself in the bathroom mirror. Judging by 
+the hungry look in Anthony’s eyes, her increased height likely didn’t encompass the full extent of 
+her changes. </p>
+<p>“Sorry, I didn’t see you there, Anthony! I don’t normally fail to catch a guy as good looking as 
+you coming this close to me, but I guess I did this time…” What was 
+ If she didn’t know 
+that?
+​
+better, she would have thought she was flirting... with her </p>
+<p>He seemed as taken aback by the forward comment as she was. </p>
+<p>“Yes, um, well… I was just checking in. That’s all…” he said, stumbling over his words. </p>
+<p>Had she seriously just caused a guy to become 
+powerful Anthony? She suppressed a giggle of delight, biting her fleshy lower lip with a 
+coquettish smile. </p>
+<p>“Okay. I’ll give you an update in a bit. But now I’ve got to go use the little girl’s room.” Jenny 
+winked at him. </p>
+<p>As soon as she finished the statement, she questioned herself. 
+she? Five years old? And she had winked. Flirtatiously. At Anthony. What on earth was 
+happening to her?! </p>
+<p>She hurried to the bathroom, shoving the swinging door in a rush before sliding to a stop before 
+the mirror. </p>
+<p>Oh, God! </p>
+<p>Plain little Jenny had flustered big, 
+flustered?
+​</p>
+<p>What was 
+Little girl’s room?
+​</p>
+<p>boss! </p>
+<p>​
+​
+​
+​
+<br />
+Somehow she had gone from pretty, gliding right past beautiful on her way to gorgeous. Her 
+hair was a perfect golden blonde now. She pulled a strand of it in front of her eyes. It was as 
+thick as a string and practically radiated healthy vibrance. She shook her hair out, and its 
+voluminous waves rippled in glimmering waves to mid-back. As she did so, her stunned lips 
+curled into a sly smile. The image in the mirror looked like something out of a shampoo 
+commercial! </p>
+<p>Her complexion looked flawless, all of the typical blemishes and moles having vanished, leaving 
+only tanned, glowing skin in its place. Her eyes looked larger, a lighter, more brilliant shade of 
+blue. Her lips had filled out even more. Testing to see what she had looked like to Anthony, she 
+gave her reflection a languid wink, then bit her lip playfully with vividly white teeth. Good Lord, 
+she was sexy! </p>
+<p>The effect was inviting, flirty, even sultry. She had never had a face that could mesmerize, a 
+look that could smolder. </p>
+<p>Now she did. </p>
+<p>Her thin, silk blouse was cut daringly low, showing off large, voluptuous breasts. So much for 
+the turtleneck she’d been wearing earlier?! She eyed the luscious flesh critically. She must be 
+beyond a C-cup now. Pressing a hand to her stomach to feel its firm ridges, she pulled her top 
+taut to see just how proudly the dramatic swells of her breasts protruded. Her slim arms looked 
+toned to perfection as she lowered her hands to hips under her tight skirt. </p>
+<p>Her hips flared outward into provocative curves, pulling her tight skirt to mid-thigh. From there, 
+her legs tapered inward, down seemingly endless, eye-catching contours. </p>
+<p>The rest of her body was every bit as gorgeous as her face! </p>
+<p>This was unbelievable! How was it happening? Did this have something to do with that red light 
+in the maze-like corridors yesterday? If it did, then why was she only improving during the day, 
+and not at night? </p>
+<p>She pondered, her thoughts coming slowly as if moving through water rather than air. But 
+something nagged at her. Anthony had been at her desk a lot lately. And he had been the one 
+that sent her to that weird alley where she had seen that light and lost time, hadn’t he? Was 
+Anthony’s recent interest in her merely a coincidence or did he have something to do with her 
+changes? She had to find out! </p>
+<p>Jenny walked back to her cubicle, glancing around the office as she went. With her long legs 
+and supple hips, her walk became more of a saunter, drawing every male eye in the room. After </p>
+<p>seeing her new self in the mirror, she supposed she shouldn’t be surprised. She was 
+captivatingly beautiful, after all. </p>
+<p>She sat down at her computer, ready to fix her mistakes and finish these pro formas. But the 
+spreadsheet was a complete blur. She blinked a few times and refocused, but the intimidating 
+mass of financial data looked no less daunting. She tried to type in a few formulas, but it only 
+seemed to make things worse. Errors began to pop up throughout her spreadsheet. Had she 
+made another mistake? Why couldn’t she see it? She rubbed her eyes with perfectly manicured 
+fingers. Perfectly manicured? She never bothered with things like… </p>
+<p>...then she realized that her nails must be changing along with her clothes and her body! Weird. </p>
+<p>After another hour of staring at the screen and trying to make sense of things, she finally gave 
+up. It was no use; it was like her intelligence was draining away even as her body improved. </p>
+<p>Wait! WHAT?!!! Her intelligence was being drained away as her body improved. That was it! </p>
+<p>Holy shit! She was becoming stupid and gorgeous, like some sort of bimbo! Was it worth trading 
+intelligence for beauty? As much as she loved her new looks, that answer had to be no. Losing 
+her intelligence was losing a part of her true self. No amount of beauty could make up for that. </p>
+<p>It was almost like she was becoming one of Anthony’s dumb-as-a-brick trophy wives. </p>
+<p>She considered, her thoughts grinding along sluggishly. 
+was going on here?! Jenny had met the man’s most recent ex at last year’s Christmas party, 
+and the woman had been as jaw-droppingly gorgeous as she was mind-numbingly dumb. Was 
+he making her like that too? Had they started out as she had, before Anthony changed them 
+somehow? She needed to know. She needed to get him alone, get him to talk, to tell her what 
+was going on. Maybe she could still put a stop to whatever was doing this to her? </p>
+<p>She checked email for the next two hours to close out her workday, struggling for the final half 
+hour just to remember how to attach a document to an email! She needed to get to the bottom 
+of this quickly, or there wouldn’t be much of a mind left to save… if she could even manage 
+enough mental capacity to save herself at this point! </p>
+<p>As her coworkers packed up and left, Anthony stopped by her desk again. </p>
+<p>“So did you get those projections wrapped up?” </p>
+<p>“Not quite. I was having some trouble with them,” she confessed. “But I’ll get them wrapped up 
+tomorrow. I was wondering, though, if you had any plans for the evening. I was just thinking how 
+you owe me for bringing in that new client. Buy me a drink?” </p>
+<p>What if that were exactly what 
+Almost? 
+​</p>
+<p>​
+really </p>
+<p>Her 
+Hottie? 
+​</p>
+<p>with her?! 
+wrong
+​</p>
+<p>Lord! Her brain was, like, really going bye-bye. 
+boss?! 
+​</p>
+<p>Jenny realized why she was being so flirty with Anthony. She was attracted to him. Like, 
+attracted to him. She sighed, gazing at him dreamily. </p>
+<p>“Absolutely! I would like nothing more,” he said with a wolfish grin. </p>
+<p>As he left, she shook her head of the unwanted feelings. What was </p>
+<p>As they arrived at the restaurant, Jenny realized that she was wearing a curve-hugging black 
+cocktail dress. As she sat down on the barstool, the revealing outfit rose scandalously high on 
+her shapely thighs. The “old” her would have pulled down at the hem, but the new her didn’t 
+seem to care. She shrugged away the fleeting, wispy thoughts, choosing instead to drift her 
+long, slender fingers along Anthony’s delicious arm. </p>
+<p>Anthony placed a warm hand on her bare knee as he gazed intently into her luminous eyes. His 
+touch was electric, and Jenny felt a surge of arousal ripple through her, leaving her radiant flesh 
+in goosebumps. Why was she concerned about him again? This man was a total hottie. </p>
+<p>Hottie? </p>
+<p>“What would you like to drink?” he asked. </p>
+<p>“Um, I don’t know. Why don’t you order for me?” she said with a giggle. </p>
+<p>He ordered something or other. Jenny couldn’t be bothered with the details of exactly what it 
+was, but she gulped it down immediately regardless. </p>
+<p>“Easy there, Jenny!” he said. “We’ve got business to discuss…” </p>
+<p>Jenny stared at him dreamily with a half-lidded gaze, fluttering her long, thick eyelashes. Wait! 
+This wasn’t supposed to be how this went! She was supposed to be outsmarting him or 
+something. There was something she was supposed to be figuring out. He was dangerous 
+somehow! Her perfectly sculpted brows furrowed as she attempted to concentrate, but it was no 
+use. Even when thoughts seemed to come, they fluttered away like butterflies. </p>
+<p>If she couldn’t trick him into revealing anything, then she needed to get out of here. Fast! She 
+did remember that he was making her stupider somehow. She tried to think of an excuse. A few 
+ideas seemed within her grasp, but they quickly slipped away. Finally, she thought of 
+something, managing to hang onto it long enough to say the words out loud. </p>
+<p>“Sorry, Anthony. I remembered something. I need to walk my dog!” With that, she slipped off the 
+stool and ran out of the bar. </p>
+<p>​
+​
+​
+​
+As she left, she heard him mumble. “Strange. None of the others resisted this long. I’ll give her a 
+break for the night, but tomorrow...” </p>
+<p>The words seemed important. But for the life of her, she didn’t know why. </p>
+<hr />
+<p>wished she could lean forward to kiss them. 
+she 
+​</p>
+<p>pretty now,” Jenny said aloud. It was an understatement, of course, 
+really 
+​</p>
+<p>It took her nearly two hours to return home, as she became lost several times on the drive. 
+When she finally arrived at her place, she was exhausted. She slipped out of her slinky dress 
+and walked toward the bathroom to shower before bed, but her movement came to a halt when 
+she caught a glimpse of her reflection in the mirror. </p>
+<p>“I’m like really, really, 
+but her Anthony-addled mind could come up with no more appropriate words. </p>
+<p>In truth, she was absolutely breathtaking, a vision of exquisite beauty. If she wasn’t the most 
+beautiful woman in the world, she had to be close. </p>
+<p>Her hair was so luxuriant, its silken tresses rolling over her shoulder in platinum waves, that it 
+seemed to glow with iridescent glimmers in the moonlight. Her face was hypnotic, huge, 
+luminescent azure eyes sparkling in mesmerizing delight. Her cheekbones, lofty and regal, 
+seemed to cement her status as royalty, by beauty if not by blood. Her lips were so lush, their 
+color so seductive, that even </p>
+<p>Her breasts leapt forward from her slender body in proud swells, a size or two larger than they 
+had been even this afternoon. She would need to shop for something custom the next time she 
+looked for lingerie. Her stomach was perfect, sleek and feminine and at the same time athletic, 
+her abs etched into barely visible plates. A defined groove ran from the underside of her bra to 
+the upper line of her skimpy panties down its center. Her hips flared voluptuously, their sensual 
+curves only surpassed by the magnificent curvature of her gorgeous ass, revealed in glorious 
+profile to Jenny’s astonished eyes. </p>
+<p>Her legs were smooth, sinuous masterpieces of luscious feminine muscle, long enough, now, to 
+make a supermodel green with envy. Jenny giggled and put a delicate finger to those supremely 
+kissable ruby lips. Maybe this level of beauty was worth losing her mind for, after all. </p>
+<p>Hardly concerned about trivial things like a few dozen points of IQ, she bounced lightly on the 
+balls of her feet to the bathroom and showered, finding herself re-energized by the 
+self-exhibition of her body. She pleasured herself that night to thoughts of Anthony, the only 
+thing that she could picture clearly in her mind’s eye. </p>
+<p>Jenny awoke the next morning to a ding from her phone. It was a reminder. Fumbling with the 
+device, she couldn’t figure out how to unlock it. Its facial recognition no longer worked after her </p>
+<p>​
+​
+changes, and she couldn’t recall the passcode. Thankfully, the reminder displayed even on the 
+lock screen. It was a doctor’s appointment. The one she had scheduled yesterday! </p>
+<p>She pulled a t-shirt on, with some difficulty, over the prodigious bulges of her breasts, their 
+dynamic profile pulling at the bottom hem of the shirt to leave a tantalizing sliver of svelte midriff 
+visible underneath. With nothing else to fit the length of her interminable legs or the lushly 
+rounded swells of her ultra-firm hips and butt, she pulled on some stretchy yoga pants. They 
+were distended to near-transparency by her awe-inspiring form, but she managed to tug them 
+high enough on her tiny waist to meet decency’s demands. </p>
+<p>She couldn’t remember the way to the doctor’s office, and the maps app remained locked within 
+her phone. Thankfully, however, when she accidentally pressed the reminder, it automatically 
+brought up the map. The pictures and arrows confused her, but when the little voice that came 
+on told her where to go, she managed to get there with only a few dozen wrong turns. </p>
+<p>When she arrived at the front desk, she found herself unable to complete the forms, but when 
+she handed her wallet and the form to the receptionist, the woman filled everything in for her 
+with a roll of her eyes and an exasperated sigh. She returned the paperwork for a signature, 
+giving Jenny a meaningful look of half jealousy, half contempt as she did so. Jenny signed the 
+form, pleased that she had remembered how to spell her name, and waited until she was led 
+into an examination room. </p>
+<p>A male doctor entered a moment later, his eyes widening in a shock before his lips parted in 
+hunger as he reacted to the enthralling beauty before him. He lost himself in the mesmerizing 
+depths of her ocean blue irises for a moment before startling out of his trance at Jenny’s simple 
+greeting. </p>
+<p>“Hello, doctor,” Jenny said. “How are you?” </p>
+<p>“Um, great! Yeah… Hi, I’m Matthew. Er, Dr. Carver. And you?” he replied, obviously flustered. </p>
+<p>“I am Jenny. I am good,” she said, smiling with satisfaction at her eloquence. </p>
+<p>As he touched her wrist to take her pulse, Jenny heard a thought that seemed to be coming 
+from 
+hadn’t touched her for more than a split second. </p>
+<p>She would be the perfect goddess, super-intelligent, super-powerful, super-seductive… </p>
+<p>As he released her wrist, his thoughts abruptly vanished from her mind. </p>
+<p>mind. Funny, she didn’t remember that happening with Anthony. Of course, he 
+her
+​</p>
+<p>in 
+him
+​</p>
+<p>​
+​
+That was funny. Why would he think all of those things about her? She shrugged it off. It was 
+difficult to be too concerned about anything these days. Worrying thoughts would float away into 
+a distant haze, just as all of the others did. </p>
+<p>He asked her a variety of questions, and she answered to the best of her ability. Her mind 
+seemed to be clearing up a bit. She could even think a complete thought from start to finish 
+without having it drift away from her, as they had last night and earlier this morning. </p>
+<p>“So tell me about this red light again?” the doctor asked, unsure whether to believe her story. </p>
+<p>“It was red, and it was bright. I think it made me pretty because my boss wanted me to be 
+pretty,” she said. Wow! So many words! And she hadn’t even made a mistake while speaking 
+them all! </p>
+<p>“So you saw a light? And you think that a light made you pretty because your boss wanted you 
+to be pretty?” Matthew said suspiciously. He looked around, as if wondering whether someone 
+was going to appear around the corner to inform him that this was some sort of prank. </p>
+<p>Jenny frowned. Geez. Was this guy going to just keep repeating what she said? Maybe he was 
+dumber than she was! </p>
+<p>“Yes. He made me pretty and dumb because he wanted me to be that way,” Jenny said. “He 
+likes bimbos.” </p>
+<p>Good lord
+, thought Matthew. 
+​
+into the gorgeous but dull-witted woman he saw before him? 
+He would have chalked it up to 
+​
+some sort of hallucination or delusion—and he still suspected maybe it was—except for her 
+phenomenal beauty. He had never seen a woman so perfectly formed. Her flawless skin, her 
+dramatically sexy curves. She was almost unnaturally perfect, so close to his own ideal for 
+beauty, his own perfect woman. </p>
+<p>That was where the similarity in ideals ended, however. Whereas her boss apparently wanted 
+her to be exceptionally dimwitted, his ideal woman would be as intelligent and powerful as she 
+was sexy. God, if this girl could only be like that… </p>
+<p>Jenny cocked her head to the side as she watched the doctor, Matthew, consider something. </p>
+<p>“Is everything alright?” she asked, eyes wide in innocent concern. </p>
+<p>“What?! Oh yes, fine,” Matthew mumbled in reply. </p>
+<p>He was cute, Jenny decided. She liked him. She could think better around him. Was she 
+connected to the doctor now? To his desires? She had been growing less and less intelligent </p>
+<p>Could her statement be true? Had this man somehow changed her </p>
+<p>​
+desires? </p>
+<p>the last couple of days, as her beauty had burgeoned. Now, however, in the half hour she had 
+spent with Matthew, she was feeling more like her normal self. Well, normal, except far more 
+gorgeous. She still felt aroused, as she had been perpetually since her evening with Anthony at 
+the bar. </p>
+<p>Matthew touched her hand lightly, giving her a sincere look. Jenny felt her nipples harden, a hint 
+of moisture beginning to slick her inner thighs. Why was she so easily aroused these days? 
+Matthew was good-looking. And he had to be smart; he was a doctor! And he seemed decent. 
+And kind... </p>
+<p>“I’m going to order some tests. In a few minutes, the nurse will be by to draw a blood sample, 
+and I’m going to have you come back tomorrow for a couple other exams.” </p>
+<p>Jenny could tell Matthew was speaking, but what she heard were his thoughts again. Unless, 
+maybe that weren’t his thoughts, but his </p>
+<p>If she could only continue to improve today, tonight. I would love to see her back here tomorrow 
+as intelligent and powerful as she is beautiful… </p>
+<p>He removed his hand again and the desires again disappeared from Jenny’s mind. </p>
+<p>Jenny was lost in thought as the nurse entered and took a blood sample. She wouldn’t mind 
+Matthew’s desire coming true. To be as smart and strong as she was attractive? She would be 
+absolutely </p>
+<p>When the nurse finished, Jenny left the building and considered what to do next. If she went 
+back to work, she might reconnect with Anthony. The thought sent a shiver of fear down her 
+spine. She did NOT want to lose the modicum of intelligence that she had regained in her time 
+with the doctor. She needed to avoid Anthony at all costs! </p>
+<p>She looked at the passenger side of her car and saw her gym bag still sitting there from 
+yesterday. Maybe she could go to the gym instead? She wouldn’t mind testing out this new 
+body of hers. It would be better than sitting around at the house all hot and bothered. </p>
+<p>As she walked up to the reception desk at the gym, she realized that she had forgotten her ID, 
+not that it would likely serve as identification any longer. There was little resemblance between 
+her appearance now and that of a few days ago. She almost turned around to go back home, 
+but then thought back to Matthew’s thoughts. Something about “super-seductive” had been in 
+there. Of course, so had “goddess.” She giggled at the thought. What was 
+Secretly, she was pleased at the idea, however.  </p>
+<p>Grinning, she decided to try her hand at the seduction thing. It wouldn’t be difficult to think 
+seductive thoughts around the man at the front desk of her gym, she decided as she parked the </p>
+<p>Like some sort of superwoman. 
+AMAZING!
+​</p>
+<p>all about? 
+that
+​</p>
+<p>​
+​
+​
+car. Striding confidently inside the establishment, eyeing the tasty biceps of the muscled gym rat 
+sitting at the front desk, she read his nametag. Shortly thereafter, she turned her spellbinding 
+eyes to his. </p>
+<p>“Hello there… Mitch!” she leaned over his desk to read his name tag, watching his eyes drop to 
+her cavernous cleavage. “I have a little confession to make…” </p>
+<p>She leaned in even further and whispered into his ear. “…I forgot my gym card.” </p>
+<p>He didn’t seem to notice her words, but he sure noticed her spectacular breasts! </p>
+<p>“Uh, yeah...” he said absently. </p>
+<p>Jenny wasn’t quite sure what he meant by that response, but the dribble of drool that was about 
+to escape his lips made her fairly certain that she could do whatever she wanted at this point, 
+and he would be okay with it. She straightened and walked back to the locker room as if nothing 
+were wrong. He didn’t say anything—probably because he was too busy watching her perfect 
+ass swaying its way into the facility. </p>
+<p>Jenny barely managed to get her tight workout clothes over her body. Her breasts didn’t seem 
+to be shrinking at all. Matthew must like them this way. She did, however, notice that her arms, 
+legs, back, and stomach had gained more definition. Matthew had wanted her to be more 
+powerful, hadn’t he? Apparently that included strength? It must! These muscles of hers were 
+small and feminine, but she could almost feel the power flowing within their tensed fibers. He 
+must want her to be 
+had only been a little over an hour since he had first touched her! </p>
+<p>She wasn’t particularly familiar with the weight machines at the gym, but she wanted to start 
+there today. She wanted to understand just what Matthew had had in mind. She was so lucky to 
+have bumped into him! If it weren’t for him, she would probably be able to think of nothing but 
+sex with Anthony right now… which was almost certainly what he had in mind when he sent her 
+to the odd red light. Now, however, her mind seemed almost completely back to normal. 
+Amazing progress, considering how little time had passed since she met Matthew. At this rate, 
+her mind was going to be absolutely incredible by the time he saw her tomorrow, just as he’d 
+desired! </p>
+<p>She sat down at the tricep machine in the corner by the mirrored walls. Setting the weight to 
+about a third of the maximum, she settled into the seat. That was a lot of weight for a girl, right? 
+She watched her triceps rise to prominence as the weights flew to the top of the machine with 
+an unexpected clank. </p>
+<p>Okay, so that was too easy. She set the weight all the way to the max for the next try. With the 
+weight maxed out, she could feel some resistance, but still, it was nothing to her. She stopped </p>
+<p>strong if she were already feeling this way after such a short time. It 
+really
+​</p>
+<p>​
+ like powerful women. Did she want to stay with him and become that 
+really
+​</p>
+<p>after about forty reps. This just wasn’t challenging. The last rep had felt even lighter, more 
+effortless than the first! Her strength was growing absurdly quickly, noticeable even during the 
+thirty-or-so seconds of this exercise alone! At this rate, she might be juggling cars by tomorrow! </p>
+<p>Matthew must 
+strong? A smile slowly grew over her gorgeous lips. Hell, yeah, she did! This was great! She 
+said another silent prayer of thanks for her good fortune in running into Matthew. </p>
+<p>A big bodybuilder-type finished at one of the bench-pressing stations, leaving three 45-lb. plates 
+on each side of the bar. Jenny lay down at the station and pushed the weight upward. It went up 
+without much trouble at all. She set it back down, found two more plates for each side and put 
+them on. She lay down again and pushed the weight upward. She completed twenty reps. The 
+initial repetitions were difficult, forcing her to strain to extend the bar upward. But the exercise 
+became progressively easier, the final rep once again feeling far easier than the first! She 
+placed two 
+ plates on each side, nearly filling up the room on each side of the bar. The 
+more
+​
+metal bar groaned as she pushed the weight upward. Similar to before, the first couple were 
+difficult, and she could hardly complete them. By the third rep, it was feeling more comfortable. 
+By the final rep, it felt like nothing at all. </p>
+<p>As she sat up on the bench and looked at the stack of weights on her bar, she giggled at the 
+absurdity of what she had just done. Lifting this amount of weight was 
+the bench and decided that there was no reason to continue lifting weights. Whatever else she 
+did in here was going to be too easy. As she walked away from the machine, she couldn’t help 
+but notice the bulging eyes of the guys in the vicinity, who had all stopped their workouts to 
+watch this sexy blonde double their best lifts. She couldn’t hide her satisfied smirk. </p>
+<p>Eat your hearts out, boys! My unbelievably gorgeous body is so much stronger than yours will 
+she thought. 
+ever be. And my body is just getting started… 
+​</p>
+<p>Goddess, indeed! She could really get used to this! </p>
+<p>Jenny decided to see if her fitness was keeping up with her strength, so she hopped onto an 
+elliptical machine. She maxed out the incline and the resistance, then started. It was a 
+cakewalk. Maybe if she pulled harder with her arms, it would be more challenging? Tugging at it 
+with a significant portion of her strength, she felt a small thump as she accidentally pulled the 
+metal arm off the machine. </p>
+<p>She gave a furtive glance around the area. It didn’t seem that anyone had noticed her little 
+accident in the mostly empty cardio area, so she quickly set the arm of the machine down, 
+propping it against the rest of the machine. Nervously, she slipped quietly into the locker room, 
+then burst into another giggle. </p>
+<p>She rose from 
+staggering!
+​</p>
+<p>​
+​
+​
+ be possible. There was no question now. She 
+must
+​</p>
+<p>She had just taken apart a steel, professional-grade fitness machine as if it 
+incredible!
+​</p>
+<p>This was 
+had been made of flimsy plastic. She must be the strongest woman in the world already! </p>
+<p>Showering quickly, she changed back into her revealing top and sexy skirt. Wait! Hadn’t she 
+been wearing a t-shirt earlier? </p>
+<p>Not anymore. </p>
+<p>Now the garment that adorned her upper body was a halter top now, putting her deeply carved 
+abs and massive but firm breasts on jaw-dropping display. She looked even better than before! 
+Was that even possible? </p>
+<p>Looking in the mirror, she decided that it 
+was easily the world’s most beautiful woman—and not by a small margin. Apparently, Matthew’s 
+taste in women ran similar to Anthony’s when it came to looks. They both seemed to want her to 
+be unbelievably, insanely hot. Smiling at her reflection, she certainly didn’t have a problem with 
+that! </p>
+<p>She left the gym, amused as the receptionist’s gaze remained glued to her as she slinked from 
+locker room to entrance, then went home. She wouldn’t go back to work because she was 
+determined to continue avoiding… </p>
+<p>Anthony! </p>
+<p>The man was standing right outside her apartment door! He must have come here to wait for 
+her when she didn’t show up at work! While Jenny gaped at him in surprise, he closed the 
+distance between them, his hand flashing out to grab her arm. </p>
+<p>Feeling a breathtakingly powerful surge of desire for her boss, Jenny realized that with his 
+touch, she had just reconnected with him. Panicking, she fought the growing urge to kiss him 
+and shoved him away instead. He practically flew across the hallway, crashing into the opposing 
+cinderblock wall. He slumped to the ground, head lolling as he lost consciousness. </p>
+<p>Oops! </p>
+<p>She hadn’t meant to shove him that hard! She should have known better after her workout at 
+the gym, but she had been surprised, not thinking. The thought reminded her that thinking itself 
+was going to become much more difficult soon if she didn’t connect with someone who didn’t 
+want some sort of bimbo as a girlfriend. She turned to leave but didn’t actually take a step 
+forward. She turned back toward Anthony, feeling her heart leap with desire as she did. </p>
+<p>What if he were really hurt? Or worse! What if he were bleeding internally or something? She 
+didn’t want to be with Anthony, but she didn’t want to kill the poor guy either! She walked over to </p>
+<p>​
+​
+him and hefted him over her shoulder, shivering with arousal as she felt so much of his body 
+rubbing against her. God, how she wanted him! The man must seriously have a thing about 
+being desired. She fought off the feelings long enough to carry him to her car, dumping him in 
+the back seat. </p>
+<p>The receptionist at the hospital gazed at her with widening eyes as Jenny walked in, carrying 
+the large man in her arms. </p>
+<p>“This man needs some urgent attention,” Jenny said. </p>
+<p>“Uh, yes, of course,” the woman nodded urgently, her expression betraying her awe at Jenny’s 
+prodigious strength. But she quickly gathered herself, launching into action with the practiced 
+ease of a medical professional. “Please bring him over to the stretcher to the side here.” </p>
+<p>Jenny set Anthony down on the stretcher as two white-clad men ran over and wheeled him 
+away. Once Anthony was rolling toward medical attention, Jenny decided to track down 
+Matthew. She needed him to touch her if she wanted to put a halt to her intelligence loss before 
+it became crippling. She looked him up in the directory, then followed the map to the clinic area. </p>
+<p>She found his office, but he wasn’t there. The adjacent door over, however, was ajar. Jenny 
+approached it, wondering whether she could get this other doctor to point her in Matthew’s 
+direction. </p>
+<p>Jenny strode confidently into the man’s office, clad in yoga shorts and a bikini top that put her 
+full breasts, sculpted abs, and toned arms on jaw-dropping display. Bikini top? Shorts? 
+Whatever. At this point, she was becoming accustomed to her clothes becoming more revealing 
+throughout the day. That seemed to come along with connecting to Anthony’s desires. At least 
+she had the body for it now! With a bemused smile, she wondered if she would suddenly 
+become naked at some point if she remained connected to him. Now
+interesting situations… </p>
+<p>The doctor clenched a pen between his teeth as he pored over a patient’s x-ray results. When 
+he looked up, the pen dropped from his opening mouth to clatter to the floor. The most beautiful 
+girl he had ever seen—magazines and movies included—had just waltzed into his office. And in 
+a bikini top and skimpy shorts! The man would have been incredulous if he hadn’t been so busy 
+ogling her. </p>
+<p>Jenny plopped down in the seat across from him, bit her luscious lower lip and widened her 
+gorgeous blue eyes, flaring her long lashes innocently. </p>
+<p>“Excuse me, sir, but I really need your help. I need to find Dr. Carver, but he’s not in his office 
+next door. Would you happen to know where he is?” </p>
+<p>could make for some 
+ that 
+​</p>
+<p>​
+Oh, God! </p>
+<p>“I, um... what?” the doctor replied, his brain still too busy tracing Jenny’s curvaceous profile to 
+properly comprehend her words. “Oh, yeah! He actually just went to grab some lunch, but he 
+usually eats in his office. He should be back any time now.” </p>
+<p>“Thank you so much,” Jenny replied, rising from her seat, giving him a good view of her 
+breathtakingly sexy body. He deserved a little reward for helping her, she thought before 
+scolding herself for thinking like that. This was Anthony’s influence. Had to be. </p>
+<p>Unfortunately, even as she chided herself for her overly suggestive behavior, she found herself 
+walking around the desk to give the surprised doctor a shiver-inducing hug. Maybe his desires 
+would set her on the right track again. She wasn’t sure what his desires were, but they couldn’t 
+be any worse than Anthony’s, right? </p>
+<p>She felt a sudden urge to dress in black leather and buy a whip. </p>
+<p>Shocked by the thought, she quickly released the hug and gave him a quick, faltering smile. As 
+she walked away, she paused, struck by a sudden question in her whirring mind: how hard she 
+would need to spank him before… </p>
+<p>No! Shit! </p>
+<p>She definitely needed to find Matthew. NOW! She hustled out of the office as quickly as she 
+could. </p>
+<p>As she entered the hallway, she saw Matthew’s office door closing. She hurried to it, slipping 
+her foot in the opening before it latched closed. She nudged it back open with her toes. </p>
+<p>Matthew whirled, gaping at her in surprise. </p>
+<p>“Jenny! W-what are you…?” he stammered, looking her lush figure up and down with wonder in 
+his glowing eyes. </p>
+<p>Jenny strode up to him and cut off his question with a passionate kiss, loosening the reins 
+ever-so-slightly on the hormones raging inside her from the combination of three men’s sexual 
+fantasies. </p>
+<p>Thankfully, with the touch, she felt the desire for whips and chains fade and, now that she 
+recognized the sensation, felt her mind and body begin their improvement once again. She 
+smiled in the middle of her kiss, feeling joy at the prospect of what this man wanted her to 
+become as his secret desires invaded her consciousness. Matthew’s lunch clattered to the floor, 
+and Jenny felt his arms wrap around her toned back. His fingers began to roam the bare flesh of 
+her back as their tongues swirled into each other. </p>
+<p>​
+In her hyper-aroused state, back in the relative safety of Matthew and his goddess fantasies, 
+Jenny began to lose herself in passion, kissing him harder, more urgently, pressing her amazing 
+breasts into his sculpted chest. She squeezed him into her, enjoying the feel of his body against 
+hers. </p>
+<p>She felt his breath whoosh into her mouth and heard a faint pop in his back. Dazzling eyes 
+widening in shock, she relaxed her arms at once! </p>
+<p>Oops! </p>
+<p>She really needed to remember the whole super-strength thing! She broke their kiss, brows 
+knitting together in worry. </p>
+<p>“Oh my God, Matthew, I’m so sorry! Are you alright?” </p>
+<p>The brilliant smile that formed on his breathless lips was answer enough, but Matthew felt the 
+need to add. “Wow! That was… that was… 
+ better than a visit to the chiropractor!” 
+WAY
+​</p>
+<p>Jenny smiled back, leaning in to pick up where they had left off, but Matthew stopped her. “Why 
+don’t you hold on there, miss. I mean, it’s not that I don’t appreciate beautiful women walking 
+into my office to kiss me, but…” </p>
+<p>His eyes twinkled with humor as he spoke, but shortly thereafter his brows furrowed, his gaze 
+leaving hers to focus on something behind her. Jenny felt a hand on her shoulder. She caught 
+Anthony’s face out of the corner of her eye, and hers widened again in response as she finished 
+turning. </p>
+<p>What the hell? How was </p>
+<p>Reeling with the now familiar feelings of gooey attraction toward Anthony, Jenny stepped 
+backward. </p>
+<p>Anthony’s fist rocketed past her face into Matthew’s. Matthew stumbled backward from the blow, 
+sprawling to his back on the floor. Anthony grabbed Jenny’s arm and pulled, clearly intending to 
+haul her out of here. Apparently, he hadn’t recognized the nature of Matthew’s fantasies from 
+their earlier encounter. </p>
+<p>Jenny prepared to send him flying again, but… she couldn’t. He was just so stunningly sexy. 
+Her hormones, having built to still higher levels from her impromptu make-out session with 
+Matthew were now too strong for her to resist. Anthony was a living sex god, after all. She 
+needed to have him inside her. She used her strength to pull him toward her, her lips crashing 
+into his as a volcano of desire for the man erupted within her. </p>
+<p>here?! 
+he
+​</p>
+<p>​
+​
+He was so cute! Play struggling and all… </p>
+<p>she thought. 
+Good, he was enjoying himself,
+​</p>
+<p>Anthony didn’t resist. She wasn’t surprised. With her new looks, she hadn’t really experienced 
+much resistance from men in the last day or so, the previous moment with Matthew excepted. 
+One look at her perfect profile, and, well, they were pretty much putty in her hands. Her feelings 
+of desire and arousal from Anthony mixed with her desire to be powerful and seductive from 
+Matthew, and she moaned in pleasure… </p>
+<p>Jenny tried to keep her grip on Anthony light, but he was just so fucking irresistible. Her hands 
+began to crush him against the swells of her perfect body. </p>
+<p>He groaned, and she smiled inwardly. </p>
+<p>He began to push against her. </p>
+<p>As an audible crackle and several loud pops rang out, he finally managed to pull his lips away 
+from hers, immediately launching into an agonized scream. </p>
+<p>The sound finally roused Jenny from her desire-addled state, and she released the large man, 
+who dropped to the floor whimpering. Matthew walked up from behind her and gave him a swift 
+kick in the jaw. </p>
+<p>He went still. </p>
+<p>“Matthew!” she cried, leaping onto the sexy doctor to plaster his scowling face with kisses. </p>
+<p>“Geez, Jenny!” he said, doing his best to resist her powerful grip. “Believe me, I want this as 
+much as you do, but we’ve got to deal with your boss here first. Then we can go home, and, you 
+know…” His voice trailed off, and he swallowed. His lips trembled with effort, as if he were 
+struggling internally. </p>
+<p>“Okay,” Jenny agreed reluctantly, pouting. With the multitude of desires flowing into her today, 
+she was beyond turned on. She had made her decision, however. She wanted Matthew. She 
+wanted to be the person he wanted her to be, his sexy, powerful, genius superwoman. So she 
+would respect his wishes. For now. </p>
+<p>Sighing as she did her best to suppress the swirling storm of hormones that raged within, she 
+hopped onto Matthew’s desk, crossing her impossibly shapely legs and bit her pillowy lip. Soon, 
+she would show Matthew just how real his impossible fantasies had become. </p>
+<p>Matthew made a call, and a few moments later, three bulky men came to haul Anthony back to 
+the emergency room in restraints. Jenny couldn’t resist some mischievous smiles and 
+long-lashed winks at the men, giggling when she saw their reactions. Idly, she wondered what 
+other 
+reactions she might get out of them if she... 
+​</p>
+<p>​
+​
+just yet. Maybe later. Maybe when Matthew wasn’t around to keep 
+that 
+​</p>
+<p>Jenny caught Matthew’s stern look out of the corner of her and returned an innocent “who, me?” 
+look along with a dazzling smile. </p>
+<p>Okay, she wouldn’t try 
+her in line. She smiled slyly, swinging her gorgeous legs from her perch atop the desk. </p>
+<p>After another hour of answering police questions about Anthony and his altercation with her and 
+Matthew, Jenny was practically quivering with the anticipation of the moment she could get her 
+doctor alone. </p>
+<p>When the police left, they ran to his car and drove to his house. Jenny nipped playfully at 
+Matthew’s earlobe once or twice on the way. He brushed her away with a wicked smile each 
+time, forcing her to stew in her seat with faux displeasure. </p>
+<p>The moment the door to his home closed, Jenny was all over him, careful not to hurt him, 
+focusing instead on how to use her intimate knowledge of his deepest desires to take him to 
+heights of pleasure he had never before experienced. Three times. Four, actually, if she 
+counted that thing she did with her tongue… It was so hard to keep track of these things when 
+they lasted an entire, rapturous night. </p>
+<hr />
+<p>As Matthew slept on the ravaged bed, completely spent from their night’s activities, Jenny arose 
+in the soft glow of morning sunlight, more energized than ever. She glanced in the mirror as she 
+walked toward the living room, gasping as she saw herself now. </p>
+<p>Her body was über-perfection—beyond even its previous magnificence of the evening before. If 
+her body were any indication, she truly was becoming a goddess. She gave the mirror a 
+suggestive wink with the boldest, longest eyelashes imaginable, then turned her head with a 
+swish of an incredible mane of sumptuous platinum, now cascading all the way to the succulent 
+swells of her achingly sexy ass. </p>
+<p>On her way to the living room, she connected her still-ascending mind to the cells in her perfect 
+body, using her far-beyond-genius level IQ to connect her neurons directly with the cells of her 
+body. She could sense the subatomic forces that bound the atoms of her body together and 
+began to tinker with them. What if she tweaked those forces a bit and turned them downward, 
+counteracting the earth’s gravity… </p>
+<p>Her feet rose from the hardwood floor. She smiled beatifically as she floated in the middle of 
+Matthew’s living room, her brilliant mind and incredible body working in tandem to make her the 
+first human being with the power of flight. </p>
+<p>​
+Laughing as she twirled a foot above the floor, Jenny couldn’t wait to show Matthew her new 
+trick! She wondered what she would be capable of by tomorrow. She was sure it would be 
+much, much more. Jenny’s ocean eyes twinkled as her developing power of precognition gave 
+her a vision of what she would become. </p>
+<p>She licked her lips in anticipation. </p>
+<hr />
+<p>When Matthew awoke, he stumbled out of the bed and looked around. 
+Where was Jenny? Had 
+ He walked to the living room and found her at his desk, eyes closed, fingers touching 
+she left?
+​
+the screen of his laptop. </p>
+<p>God, she was beautiful! He wouldn’t have thought it possible, but she looked even more 
+heartbreakingly exquisite than she had last night! </p>
+<p>He glanced down at her hands to see what she was doing with his laptop. On closer 
+examination, it looked as if the keyboard to the laptop had been damaged somehow. It was 
+dented, the keys damaged and sparking. </p>
+<p>He cleared his throat, and Jenny’s brilliantly blue eyes shot open. She ran over and met him 
+with a breathtaking kiss. Her lips were so unbelievably soft, and she tasted so good! He 
+breathed in the dizzying scent of her hair, feeling his knees weaken. </p>
+<p>“Good morning, sleepyhead,” Jenny said with a room-brightening smile as she pulled back from 
+the kiss. Matthew remained frozen in place, enraptured, eyes still closed, lips puckered. </p>
+<p>Jenny’s face was radiant with excitement as she watched him slowly recover from the touch of 
+her enthralling lips. His eyes fluttered open, a dazed expression on his face as he wobbled 
+unsteadily. </p>
+<p>“I’m so sorry that I didn’t even notice you come into the room. I was just so busy interfacing 
+neurally with your computer. I wanted to learn how I could improve the CT scanners at the 
+hospital, so that I could use them to understand how my brain interacts with...” </p>
+<p>Jenny paused as she noticed Matthew staring blankly at her. </p>
+<p>“Sorry… let me back up a little,” she said sheepishly. </p>
+<p>“I, um, got quite a bit smarter overnight and this morning. Stronger too. First, I noticed that my 
+mind had a much stronger connection with my body. I was able to sense individual cells. And 
+when I thought harder about my cellular connections, I began to sense the molecules that 
+composed my cells, then the atoms that made up the molecules...” </p>
+<p>​
+ I’ve always imagined…” he trailed off, speaking in a hushed tone. “You 
+fly?
+​</p>
+<p>Jenny trailed off as she noticed Matthews incredulous look, giving a brief giggle before 
+continuing more slowly. </p>
+<p>“Anyway, after a bit, I determined how to manipulate my atoms and make little adjustments. I 
+was able to tweak the strong nuclear force of my component atoms a little to oppose the earth’s 
+gravity, and voila…” </p>
+<p>Jenny rose from the floor, hovering a few inches off the ground. </p>
+<p>Matthew’s mouth dropped open. </p>
+<p>“You… you can 
+my fantasy come to life!” 
+ are 
+really
+​</p>
+<p>Jenny smiled again and lowered back down to the floor. </p>
+<p>“Well, that’s actually not the only trick I’ve managed to learn this morning,” she said demurely. “I 
+accidently broke the keyboard on your laptop. I’m not used to my new strength you see, and I 
+typed a little too fast and hard, and, well…” </p>
+<p>“...I’m so sorry,” she finished with an apologetic shrug of her toned shoulders. </p>
+<p>“But it got me wondering if there was a better way to interact with electronics, so I created a 
+haptic connection with the laptop through its touchscreen and read the electron pulses within it 
+through my fingertips. It’s really a much more efficient way to surf the web. I was able to read at 
+essentially the same speed as the computer and learn multiple things at once. That’s when I 
+started to work on the improved CT scanner idea, so that I could learn exactly which 
+physiological changes were occurring in my brain that were enabling me to do that.” </p>
+<p>Jenny barely paused to take a breath, now gushing information faster than Matthew could 
+process it. </p>
+<p>“I think that my brain is becoming faster, though, because it’s beginning to seem like it takes 
+forever for the computer to complete each processing cycle, so I can get the next bit of 
+information, even when I use all of its processing cores simultaneously…” </p>
+<p>Finally, she noticed that she’d left Matthew behind once again. </p>
+<p>“I’m rambling aren’t I? I am! I am sooo sorry!” Jenny’s cheeks flushed. “I guess I’m just a little 
+excited at my new abilities, but I’ll stop now.” </p>
+<p>Jenny paused to look at Matthew expectantly. </p>
+<p>​
+​
+ goddess! 
+His
+​</p>
+<p>have solved pi to a few million decimal places… and maybe world hunger while I was at 
+might
+​</p>
+<p>“Wow! Just... wow! I think you lost me at the whole flying thing,” he said, looking as if he had 
+seen a ghost. A very pretty ghost. Who had just levitated. And rattled off words at an 
+incomprehensible clip. </p>
+<p>“Could you, um, show that to me one more time?” </p>
+<p>Jenny rose from the ground, heels first, then toes. She floated over to him and pressed her lips 
+into him again, this time following them with the rest of her body. Her arms wrapped gently 
+around him. She remained two inches off the ground, bringing herself even with his 6’2” height. </p>
+<p>Matthew was breathless—and incredibly aroused—by the time her floating kiss ended. Jenny 
+really was becoming a goddess. </p>
+<p>“I think that I’ve isolated the effect of the particular type of IR radiation that caused me to take on 
+the characteristics found in the brainwaves of the people I’ve been touching since I encountered 
+the red light as well,” Jenny said, her words flowing immediately upon breaking the kiss as if 
+they had been bottled up for ages, waiting to emerge. </p>
+<p>“I 
+it too,” said Jenny with a sly smile. </p>
+<p>“Joking!” she laughed as Matthew’s eyes went wide in amazement. </p>
+<p>“Kinda…” she added with a flirtatious wink. </p>
+<p>Matthew was having all sorts of trouble keeping up with Jenny’s flurry of words, especially on 
+the heels of another mind-blowing kiss! He tore his gaze away from those gorgeous, pillowy lips 
+to look down at Jenny’s impossibly perfect breasts. </p>
+<p>That had been a mistake. Now, his eyes busily drinking in the outrageously sexy curves in front 
+of him, he was struggling to think at all! </p>
+<p>“…so I’m reasonably certain that I can cut off my connection to the desires of others at any 
+moment. I just don’t think I want to just yet, because becoming the hyper-intelligent, sexy, 
+powerful goddess that you want me to be is just so much gosh darn fun!” Jenny finished with 
+another smile that made the sun look dim by comparison. </p>
+<p>Had she been talking this whole time?
+ Matthew wondered. 
+​</p>
+<p>Jenny cocked her head as she watched Matthew’s thinking face and paused again for him to 
+catch up. Magnificent eyes calculating, she reached out and touched her fingers to his temple. 
+Matthew heard her voice in his mind. </p>
+<p>​
+​
+ 
+“Can you hear me?” </p>
+<p>“Oh, my God! Yes!!! I can!!!” Matthew thought back. </p>
+<p>“Sweet! This is so cool!” she replied in his thoughts. “I wonder…” </p>
+<p>Jenny pulled her fingertips away from his head. </p>
+<p>“Can you hear me now?” came her voice in his mind again. </p>
+<p>“I can! You can communicate telepathically without even touching me now?” Matthew breathed 
+in an awed voice. </p>
+<p>“Yes, I figured out how to do it during the time that we were talking before. This is great! It’s a 
+much faster way to communicate. Speaking is so clunky and cumbersome, right? Let’s just do 
+this from now on…” </p>
+<p>Attempting to wrap his mind around how quickly Jenny’s abilities were progressing, it was 
+almost like the rate of her improvement was… </p>
+<p>“…exponential, I know. It’s just that with my improved mind, I’m able to think several thoughts at 
+once… Make that a dozen… Or probably a hundred now… you get the gist,” came Jenny’s 
+thought-voice. </p>
+<p>Jenny’s face scrunched again as Matthew reached out to steady himself on a nearby chair. Her 
+clothes shimmered and became a tight, spandex bodysuit, showing every swell and valley of 
+her beyond-stunning body. </p>
+<p>“How did you…?” </p>
+<p>“You know how I was telling you before about my ability to sense my cells? You know, back a 
+few million nanoseconds ago? Well, I just managed to connect with the molecules of the fabric 
+surrounding my body and made a few changes. I just wanted to change into something more 
+appropriate for the cultural conditioning of the average person when I stop the car accident 
+that’s about to happen in the street outside your house. People tend to think of superwomen in 
+tight spandex clothes because of what they’ve seen in the movies, you know.” </p>
+<p>Matthew gaped. “The car accident that’s about to happen? Superwoman?” </p>
+<p>“Yeah,” she said with another sexy wink. </p>
+<p>Those cars would have collided, if… </p>
+<p>A second later, she moved so fast that she looked like a blur! The door to the house was open 
+and swinging. Where had she…? She had said something about a car accident on the street 
+down below! He ran over to the window just in time to see Jenny standing in the street in her 
+devastatingly sexy, skintight outfit. She held both arms out before her, waiting. A car hurtled 
+down the street, slamming into her outstretched hands. She bent her elbows to cushion the 
+impact, then grabbed the car’s bumper with a single hand before flying upward, raising the car 
+with her with apparent ease. </p>
+<p>Another car, coming from the opposite direction, sped under the floating woman as she 
+smoothed out its crinkled hood with her free hand. </p>
+<p>Matthew gasped in shock yet again this morning. </p>
+<p>“…if I hadn’t done what I did just then? You’re exactly right! Luckily, I was able to prevent any 
+harm from coming to these passengers. There is a very high probability that there would have 
+been at least one fatality otherwise,” came Jenny’s voice in Matthew’s mind again, even as she 
+lowered the car to the ground outside. </p>
+<p>God, she was amazing! </p>
+<p>“I kinda am, aren’t I! And I have </p>
+<p>Suddenly the car was on the ground outside, and Jenny was wrapping her arms around him 
+again, moving toward him for another kiss. </p>
+<p>The door to the house shut on its own. </p>
+<p>“The question that you’re beginning to form in your mind right now is whether I have the power 
+of telekinesis now.” Jenny thought-spoke into his mind with a smile. “The answer is yes…” 
+Matthew felt her amusement radiating through his brain. </p>
+<p>My God!
+ Matthew thought. 
+​</p>
+<p>Matthew began to sense desire radiating from her mind into his, and he inhaled sharply as 
+Jenny’s achingly sexy, ultra-powerful body melted into his. </p>
+<p>“Goddess,” Jenny corrected telepathically before Matthew lost himself in an all-consuming world 
+of pleasure. He exhaled in wonder as her touch, her scent, her taste, and her mind enveloped 
+him in absolute ecstasy. </p>
+<p>to thank for it!” her voice echoed in his mind. 
+you
+​</p>
+<p>​
+​
+Find my other free stories at: 
+Hikerangel.com </p>
+<p>My published books at: 
+Amazon.com/author/hikerangel </p>
+<p>And my audio stories at: 
+Superpoweredaudio.com </p>
+</body>
+</html>

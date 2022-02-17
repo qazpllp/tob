@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Ashley's Envy</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>Ashley’s Envy 
+by Hiker Angel </p>
+<p>That bitch, Clare, had started her day off poorly. Clare, the assistant to the CEO, had only 
+gotten her role for her looks. At least, that was the word around the office. </p>
+<p>That may well have been how most of the office assistant pool had come by their jobs. Every 
+woman there ranged from cute to gorgeous and dressed to show it off. Half of them could barely 
+type, so Ashley was fairly certain that skills hadn’t earned them their jobs. That left the temps, 
+like her, to shoulder the workload.  </p>
+<p>As Clare looked down on Ashley from her nearly six-foot height, leggy and beautiful, she 
+scolded, "You clearly need to work faster. I gave you that memo to type up an hour ago!"  </p>
+<p>"But you gave me 37 other memos to type up too! How am I supposed to get all of that done in 
+an hour?!?" Ashley replied in disbelief.  </p>
+<p>"Excuses, excuses... I'm afraid this time I'm going to need to give you a formal reprimand," said 
+Clare, gazing at her well-manicured nails.  </p>
+<p>As Clare gave Ashley one more condescending look down her aquiline nose, Ashley felt 
+overcome with envy of the taller woman's height. If Ashley were taller, this insipid assistant at 
+least wouldn't be able to look down on her as she issued her ridiculous reprimands. Ashley 
+shivered as a slight chill ran through her, crossing her arms over her meager chest. </p>
+<p>As Ashley shrank back into her chair, the unpleasant interaction at an end, as the sexy assistant 
+sauntered away to confront her next victim. She turned back toward her monitor when she 
+caught another of the assistants, Alexandra, strutting around the office, her full DDs leading the 
+way, drawing the attention of every man in the room as she strode confidently by. Ashley 
+wished that she could command that kind of attention, secretly envious of Alexandra’s assets. 
+, she thought. 
+There was that chill again! They really needed to turn down the air conditioning
+​</p>
+<p>At lunch, Ashley noticed that she didn't have to get a chair to reach the last inch up to the 
+cabinet with the condiments over the sink in the office break room. Had she grown taller?  </p>
+<p>Ashley had always wanted to be a proper knockout like her mother, but it had never seemed 
+meant to be. Eighteen-year-old girls didn’t typically have sudden growth spurts of that 
+magnitude as puberty wound down, but maybe her growth wasn’t over after all! Maybe she was 
+one of the rare girls that continued to grow into her twenties. She hoped it was true. Today’s 
+realization of her increasing height gave her hope that it would be the case...  </p>
+<p>As she finished her lunch, Ashley fidgeted. Her bra felt uncomfortable. She walked into the 
+women's room and unbuttoned her blouse. She pulled the cups of the bra away from her </p>
+<p>Was her chest </p>
+<p>breasts to see red marks where they had pressed into the sensitive flesh. She let the bra snap 
+back to her breasts, cringing as the sudden, slapping movement stung her nipples.  </p>
+<p>Ashley went back to work for the afternoon, her chest growing more and more uncomfortable as 
+the day went on. Her A-cup bra felt tighter and tighter as each hour passed, digging into her 
+breasts and her back, until she finally succumbed and removed it, stuffing it into her bag. She 
+must be a full B-cup now. She’d go shopping this weekend to pick up a new bra.  </p>
+<hr />
+<p>Eric rose from the couch to welcome his daughter home. As he approached, he noticed that 
+Ashley's tight skirt showed off several inches of her thigh. Her nipples poked out through the 
+fabric of her blouse as well, making it clear that she wasn’t wearing a bra. 
+ he wondered. Shaking off the thought, his visage grew stern.<br />
+bigger?
+​</p>
+<p>“Ash, what are you doing? You should be going to work dressing like that! What are you 
+thinking?” he demanded.  </p>
+<p>“Sorry, dad! I can’t help it. I’m going through a growth spurt. My legs are getting longer, so my 
+skirts are looking shorter. I outgrew my bra today too! If you gave me a few bucks, I could get 
+some new clothes…” she trailed off, looking hopeful.  </p>
+<p>“Oh, alright. That’s a heck of a way to con me into giving you some shopping money.” Eric said. 
+“What about the money you’re earning from your job?”  </p>
+<p>“That’s for school and books… and stuff,” said Ashley, biting her lower lip. Would he go for it?  </p>
+<p>Eric relented, reached into his wallet, and handed Ashley $300 for clothes—plus another $100 
+after she gave him her best puppy-dog eyes.  </p>
+<p>Ashley quickly ascended the stairs before she couldn't hide her smile any longer, pleased that 
+her quick thinking had resulted in a father-funded shopping spree.  </p>
+<hr />
+<p>Drifting off to sleep, Ashley thought about her second encounter with Clare that day. When 
+Clare’s face had been an inch from hers while chewing Ashley out for the single typo on the 
+Phillips brief, she had wished that her face was twice as beautiful as Clare’s. Since her 
+professional skills never seemed to shut Clare up, maybe that would put her in her place. If 
+nothing else, it had seemed to cool down Ashley’s burning cheeks. </p>
+<p>The next morning, Ashley awoke feeling wonderful. As she bounded to the mirror, her face lit up 
+with excitement! </p>
+<p>​
+If only I had wider hips like </p>
+<p>And maybe some sexier abs </p>
+<p>“Holy wow! I am HOT!” she said aloud, eyes searching along her beautiful reflection.  </p>
+<p>Her face, while probably not quite fit to grace a magazine cover, was significantly prettier. Her 
+eyes seemed larger and brighter, teeth whiter, lips fuller.  </p>
+<p>Her body, however, had leapt ahead significantly further than it had yesterday. Her breasts were 
+full and firm. Full Cs, probably, she thought. Her waist was the same as before, but it looked 
+small and toned with her large breasts resting above them. Her hips were still narrow, but her 
+legs were longer today, giving her additional inches of height. 
+ she thought, goosebumps running their length.<br />
+Melanie…
+​</p>
+<p>And a cuter butt like Linda,
+ she mused, turning to see her profile. 
+​
+like my friend Tiffany, who’s always at the gym…  </p>
+<p>As she felt coldness in her stomach and derriere, she bounded toward the bathroom to get 
+ready for the day, looking forward to the next round of changes that her second wave of puberty 
+would bring. She might have to look for some clothes that were warmer when she went 
+shopping for items that would fit her curvier profile. </p>
+<p>As Ashley walked toward her desk, she felt the gaze of two of the attorneys follow her. 
+Unaccustomed to the attention, color rushed to her cheeks. She hurried and sat down.  </p>
+<p>If only I had Alexandra’s confidence, she thought. …or Clare’s seductiveness, for that matter. 
+This time, the chill seemed deeper, coming from inside rather than out. Strange. </p>
+<p>Linda, one of the nicest of the administrative assistant pool, sat down next to her, luxurious 
+blonde hair cascading over her shoulders.  </p>
+<p>“Your hair looks really amazing today, Linda.” Ashley said. “I wish mine looked like that. Mine 
+looks so dry and dull, and it’s always a tangled mess when it’s windy outside!”  </p>
+<p>Linda smiled at the compliment, before turning to her work. She was one of the few members of 
+the pool that actually did work. Linda was really intelligent and capable as well as beautiful, 
+taking night classes to become a paralegal after work each night.  </p>
+<p>I wish I had her ambition and intelligence too thought Ashley to herself, finally turning her eyes 
+from Linda’s gorgeous locks to her computer screen.  </p>
+<p>As the day continued, Ashley’s cream-colored sweater pressed further than further out. She had 
+chosen a sweater today in an attempt to hide her braless nipples, her old one even less fit for 
+the task today than it had been yesterday. When she rose to go to the restroom, she noticed 
+additional changes in the mirror.  </p>
+<p>​
+​
+Why </p>
+<p>Her breasts had grown again, by at least a cup size. Maybe two. They had distended her 
+sweater to the point that it left three or four inches of her midriff bare. The sweater was one of 
+those stylish give-a-hint-of-midriff-when-you-move types before. Now it looked like a clubbing 
+outfit!  </p>
+<p>Her abs were starting to show some definition, svelte and sexy. She couldn’t see it yet, but as 
+she ran her fingers along her stomach, she could feel the abdominal muscles under her skin in 
+a way that she never had before.  </p>
+<p>Her hips, their usual narrow selves this morning, had widened by an inch or two. Her butt had 
+rounded out nicely. Her navy-blue skirt was riding to her upper thighs, straining around her to 
+contain her latest round of growth. Her legs had grown another inch and looked more shapely 
+and toned.  </p>
+<p>Ashley smiled at her beautiful reflection, then, after a moment, the smile faded to a frown. 
+was this happening so quickly?
+ she thought. This can’t just be puberty… something else is 
+​
+going on here. She thought a minute longer, unable to puzzle it out, before shrugging her 
+shoulders and leaving the bathroom.  </p>
+<p>Striding back to her desk, she noticed the eyes of three or four of the attorneys watching her 
+from their offices. As her cheeks threatened to flush again, she forced the feeling of 
+embarrassment back down. She would have to start getting used to this if her body was going to 
+keep up this pace of development. She might as well enjoy it. A slight smile tugged at the 
+corners of her lips as she sat down.  </p>
+<hr />
+<p>After work, Ashley joined her friend Tiffany for a workout at the gym.  </p>
+<p>Pulling off her ill-fitting clothes in the locker room, her friend noticed the substantial 
+improvements to her body.  </p>
+<p>“Geez, Ash!” her friend exclaimed. “Your stomach looks almost as toned as mine. I come to the 
+gym and work my butt off every day! I get you in here, like, once a month, and you’re looking 
+like a regular too! I wish I had your genes.”  </p>
+<p>“I wish I had 
+defined abs and lean, striated quads at the other side of the locker room.  </p>
+<p>“That takes more than genes, Ash,” Tiffany replied. “That takes dedication to fitness.”  </p>
+<p>“Well, I wish I had that too,” Ashley replied, feeling another slight chill as she spoke the words.  </p>
+<p>genes,” Ashley said, nodding to the cut, athletic 6’0” woman with bulging, 
+her
+​</p>
+<p>​
+​
+ 
+As they worked out, Ashley looked around the room at the variety of incredible bodies that the 
+regulars had with envy, wishing she had their bodies, their toned, feminine muscles, their firm, 
+sexy shapes.  </p>
+<p>By the end of her workout, her spandex workout clothes were pinching fiercely. Did she need 
+new workout clothes too? This growth spurt was going to cost her a fortune! </p>
+<p>Then, she remembered her father’s money. It was time to get some new clothes!  </p>
+<p>Persuading Tiffany to join her for a quick trip to the mall, they arrived just before it closed. 
+Forced to decide on a single store before closing, Ashley decided to head to Victoria’s Secret.  </p>
+<p>One of her former classmates from high school, Janie, approached them as they entered. She 
+was attractive, a lithely muscled cheerleader, she was one of the more popular girls at school. 
+Her eyes widened in surprise. “Ashley?! Wow... you are looking GOOD.”  </p>
+<p>“Yeah,” said Ashley demurely. “I seem to be having a bit of a growth spurt.”  </p>
+<p>Still covered in a thin sheen of sweat from her workout, her body had gained another pound or 
+two of muscle and curves in the 15-minute drive to the mall. Unbeknownst to her, the speed of 
+her transformation was accelerating rapidly as a result of her profligate envy at the gym.  </p>
+<p>Her bare abs looked carved as if from stone, surpassing Tiffany's in definition by a fair margin 
+now. Her toned arms swelled and curved sinuously, looking fit and sculpted. Her sports bra, 
+stretchy as it was, was taxed to the limit by her burgeoning breasts.  </p>
+<p>She was beginning to look like a fitness model... no, scratch that... she DID look like a fitness 
+model. Maybe a bit sexier, though. </p>
+<p>“Which size do you think I need now, Janie?"  </p>
+<p>"Hmm..." she mused. "Maybe a D cup? Let me get some."  </p>
+<p>Looking at the time, Ashley ran over the Pink section and grabbed everything with the largest 
+chest and thinnest waists she could. Dumping the pile by the cash register, she slapped her 
+father’s plastic on the counter. “Could you toss in a few double D bras as well? Just in case...” 
+she blushed.  </p>
+<p>Giving Janie a sidelong glance, Ashley thought she detected a sparkle of interest in the other 
+girl’s eyes. She filed the information away for later. </p>
+<p>Arriving home, then climbing the stairs to her room, Ashley dumped the bags of clothes on the 
+floor and collapsed into bed. Her body’s quickening changes on top of her workout had 
+exhausted her.  </p>
+<hr />
+<p>The next morning, Ashley awoke with excitement. She couldn’t wait to see what she looked like 
+now.  </p>
+<p>Bounding to her mirror, she gasped her new reflection. She looked like a human Barbie doll. 
+The top of her head shown back from the top edge of the 6’ mirror. Thick, satiny platinum hair 
+fell in waves over her shoulders. Her breasts were huge, her torso muscled and sleek. Her hips, 
+inviting. Her insanely long legs, slender, sexy, and sinuous.  </p>
+<p>“Man, if it feels this good to look like Barbie,” she mused aloud. “I wonder what it would be like 
+to look better than Barbie.” She thought she felt a slight chill run down her body at the thought.  </p>
+<p>As she went through her bags of clothes, she began to realize that her proportions were too 
+outrageously sexy to fit into most of them, even purchased, as they were, with her new curves in 
+mind! </p>
+<p>She eventually decided on a tank top over a stretchy cotton skirt. Dad would have a fit, but she 
+didn’t have many other options.  </p>
+<p>After showering and changing, she decided against using any makeup. Pursing her ruby lips 
+and running a manicured nail along her flawless face, she decided that it would be a shame to 
+cover her naturally beautiful complexion. Long lashes fluttering, she turned her gorgeous face 
+away from the mirror to race down the stairs before her dad could see her.  </p>
+<p>No such luck. Eric took her lush body in, an unfamiliar feeling of appreciation welling at the sight 
+of her lithe curves. Shaking the unwanted feelings away, his expression morphed from shock to 
+disapproval. “What are you WEARING, young lady?”  </p>
+<p>As Ashley searched for the right words to say, Eric’s phone rang. Looking down for a moment, 
+he quickly looked back up. His daughter, however, had taken advantage of the momentary 
+distraction to race out the door.  </p>
+<hr />
+<p>As Ashley sauntered to her desk, all eyes were on her. Every one of the men, and some of the 
+women, watched her, eyes glued to her sensual strides, hips swinging like a runway model's.  </p>
+<p>As she passed the CEO's office, she heard the faint sound of Clare moaning through the door. 
+I 
+wish I had Clare's skills in bed… or out of bed,
+ she thought with a smirk before continuing to her 
+​
+desk.  </p>
+<p>As she started to work, she realized she could think more clearly and work faster. Her brain 
+seemed to be improving just as her body was. As she typed up the response to the plaintiff's 
+motion for George, she noticed that he had made an incorrect case law reference.  </p>
+<p>She strode gracefully to his door, long legs carrying there swiftly, and knocked. As he opened 
+his office door, George leered. Without trying, Ashley's innocent, effortless display of cleavage 
+and coquettishness exuded a sexual magnetism that rippled through him as easily as did her 
+perfume.  </p>
+<p>George ushered her in and closed the door. "Ashley, I was thinking... would you like to come on 
+board full-time, as my personal assistant?"  </p>
+<p>Ashley considered. She hadn't even shown him the incorrect reference she had found yet! She 
+was reasonably certain, however, that work wasn't what he was interested in at the moment. </p>
+<p>She considered. </p>
+<p>He was clearly willing, and she was more than a little tempted to see what this new body of hers 
+could do, somehow feeling a bit of Clare's aggressive sexuality influence her in the moment.  </p>
+<p>She dropped her papers to the floor, wrapped her slender fingers around his tie, just below the 
+knot, and pushed him back onto his desk. Straddling him with a sexy, satin-smooth leg on either 
+side, she hungrily pressed her lips to his, sensing his thrilled shudder as she slipped her tongue 
+into his mouth.  </p>
+<hr />
+<p>Thirty minutes and three George climaxes later, Ashley opened the door to his office, smoothing 
+her wrinkled tank top over her flat stomach. </p>
+<p>Yes, she definitely liked this new body of hers! As she walked through the cubicles of the 
+assistant pool, she wondered what it would be like if every one of her features were twice as 
+beautiful of the best of all of theirs combined. She shivered. </p>
+<p>There was that chill again... maybe her dad was right—she should wear more clothes. A 
+naughty smile crossed her luscious lips. 
+Not with a body built for 
+ she thought. 
+Not likely,
+​
+ The thought seemed more like one of Clare's than her own, but 
+display... and so much more.
+​
+she shrugged off any concern before it could bother her.  </p>
+<p>​
+​
+​
+It was Friday night, and Ashley texted Tiffany as she left work.  </p>
+<p>"Movie?"  </p>
+<p>"Sure. Meet you at the theater?"  </p>
+<p>"K"  </p>
+<p>Tiffany's eyes widened as her friend approached. "This is crazy, Ash! You look like a damn 
+supermodel... maybe better!"  </p>
+<p>"Are you sure you're alright?" she asked.  </p>
+<p>"Of course I am," Ashley replied. "Better than ever." She twirled. "You like?"  </p>
+<p>Tiffany felt a strange sensation and licked her lips. "Umm... yeah." Shaking her head clear, she 
+asked: "So whatcha wanna see?"  </p>
+<p>Ashley didn't hesitate. "Sorority Slasher III"  </p>
+<p>Tiffany rolled her eyes. "You and your crappy horror movies... fine..."  </p>
+<p>As they bought tickets and took their seats, Ashley thought back to her astonishingly easy 
+seduction of George today. The movie started, and as the Slasher chased the latest stable of 
+I wish I were so beautiful, so incredibly sexy, that even a 
+young Hollywood hotties, she thought, 
+monster like that would stop in his tracks with desire, unable to do anything to hurt me.
+ The chill 
+​
+she had been feeling was really strong this time. Did every place have the air conditioning on 
+way too high these days!  </p>
+<p>As they rose to leave the theater, Ashley's bra strap snapped, and her cotton skirt split down the 
+seam.  </p>
+<p>Looking 
+again!"  </p>
+<p>Tiffany stood there, dumbstruck, as Ashley skipped delightedly back into the mall.  </p>
+<hr />
+<p>After several hours and Nordstrom and Lululemon bags in hand, Ashley walked into Victoria's 
+Secret just before closing again.  </p>
+<p>Janie's jaw dropped.  </p>
+<p>on her tall friend, she said "See you later, Tiff. I think I need some new clothes 
+down
+​</p>
+<p>​
+​
+ 
+Ashley was a complete bombshell, pretty much her walking wet dream.  </p>
+<p>Janie approached her, trembling with desire. "D-do you n-need something else?"  </p>
+<p>Ashley, the seductress aspect of her personality growing within her, sensed her prey’s arousal 
+and went in for the kill. She closed the door to the store, turning the lock with a click, then turned 
+her attention to Janie, who was quivering like a doe in a hunter's sights.  </p>
+<p>Ashley strode right up to the girl, pressing her lips to Janie's, letting her huge breasts press into 
+Janie’s smaller ones, forcing her back until Janie's firm butt pressed against the wall in the back 
+of the changing room.  </p>
+<p>Ashley's aggressive display caused a completely awed Janie to arch in pleasure, wetness 
+running along her inner thigh.  </p>
+<p>Ashley broke the kiss and smiled, brilliantly white teeth framed by plush, ruby lips. She went 
+down on Janie, her long, dexterous tongue and perfect technique bringing Janie to orgasm after 
+orgasm.  </p>
+<hr />
+<p>Janie, sitting on the little bench in the changing room, breathing heavily, was so exhausted that 
+she couldn't move.  </p>
+<p>Ashley pulled the largest bras she could find from the drawer labeled "Extra Large: DDD and 
+Up", threw them into her shopping bags and left the store, a spring in her step.  </p>
+<p>Ashley swept into her room with a dancer's grace to find Stephanie, her father's new girlfriend, 
+sitting on her bed waiting for her.  </p>
+<p>"Now, Ashley," Stephanie started in a lecturing tone until her voice failed before the sultry vision, 
+the whirlwind of sexuality stealing the words from her throat.  </p>
+<p>"Yes, Stephanie..." Ashley replied, leveling Stephanie with a smoldering gaze, crystal blue eyes 
+tearing all thought from Stephanie's mind.  </p>
+<p>Ashley twirled in place. Firm, feminine muscles gave feline grace to her movements. "I've been 
+going through soooo many... changes," she said, voice dropping into a husky purr on the last 
+word. "I'm feeling soooo sexy. It's been difficult to... control... myself." Ashley enunciated every 
+word, as Stephanie bit her lower lip.  </p>
+<p>"I mean, men are throwing themselves at me. Women are throwing themselves at me... it's a lot 
+to get used to," Ashley said coquettishly, lips forming a sexy pout.  </p>
+<p>"I don't think anyone can resist me now. And I just keep growing sexier..." Ashley took a step 
+toward Stephanie.  </p>
+<p>"...and sexier...." she took another step, her long, lean leg crossing in front of the other.  </p>
+<p>"...and sexier..." she crossed the rest of the distance between them with another step, towering 
+over Stephanie, who was still sitting on the bed.  </p>
+<p>Ashley dropped to a crouch, her lips less than an inch from Stephanie's. "...and sexier..." Ashley 
+whispered, her voice dripping with lust.  </p>
+<p>Stephanie lurched forward, devouring Ashley's scarlet lips, pressing her breasts into Ashley's 
+and giving a desperate moan of desire.  </p>
+<p>"Oh, God," Stephanie whispered. "You are.... so much... can't help..."  </p>
+<p>Ashley tore Stephanie's clothes apart from the front, showing surprising strength, then gently 
+pressed Stephanie backward onto the bed as her delicate lips trailed kisses down the older 
+woman's chest and stomach, coming to rest on her slit. Ashley's nimble tongue flashed out, and 
+Stephanie exploded into a toe-curling orgasm.  </p>
+<p>As Ashley went to work on Stephanie, the older woman released wail after wail of ecstasy, 
+completely lost in desire.  </p>
+<hr />
+<p>Eric sat downstairs in the living room, waiting for Stephanie to come down and tell him how her 
+little "talk" with Ashley went, when he heard her cry out in... pleasure?  </p>
+<p>He quietly ran up the stairs and cracked open Ashley's door, where he saw a sex goddess 
+pleasuring his girlfriend. His eyes roamed her perfect curves until they spied her face.  </p>
+<p>Ashley? Good Lord!  </p>
+<p>More aroused than he had ever felt, his mind battled his body that wanted more than anything to 
+embrace his ridiculously sumptuous daughter. His mind took control... barely... and he managed 
+to close the door and stagger back down the stairs.  </p>
+<p>Have. To. Leave... Now! 
+he thought to himself as his mind continued to battle his 
+​
+over-stimulated body for control, and he hopped in the car and drove away.  </p>
+<p>Stephanie let out a half-conscious moan as Ashley untangled her from her own silky-smooth 
+body. Ashley rose effortlessly from the bed to the mirror. The top of her head extended beyond 
+the reach of the 6' mirror, but from there downward was nothing less than perfection.  </p>
+<p>Her body had taken the leap from heart-pounding to heart-stopping.  </p>
+<p>Slim ankles swelled to muscled calves, striations appeared in her marble thighs at the slightest 
+movement. Rounded feminine hips slimmed to a svelte, cobbled waist, abs sculpted in 
+impossible relief. Perfect hemispheres of firm flesh stretched outward, succulent and lush.  </p>
+<p>Her face was angelic. Her plush lips, entrancing. The curve of her high cheekbones, both sultry 
+and elegant. Her huge, luminescent blue eyes and extravagant lashes turned a simple wink into 
+a sexual act. High, thin arching eyebrows completed the perfection of her face.  </p>
+<p>Her hair, voluminous and iridescent, flowed with every movement in a spellbinding display.  </p>
+<p>Her beauty was devastating. Absolutely devastating.  </p>
+<p>She giggled.  </p>
+<p>"I am a goddess. A fucking sex goddess," she said in joy, turning slightly from side to side to see 
+her exquisite, sculpted ass.  </p>
+<p>If Michelangelo created an exaggerated sculpture of the hottest fitness model ever merged with 
+the hottest supermodel ever, it might have held a candle to the exquisite perfection of her form.  </p>
+<p>Ashley pulled some yoga pants from her shopping bags and inched them up over her firm, 
+rounded hips, taking care not to tear them as the threads were stretched their limit over her 
+perfect ass before pulling back in when they reached her slender, muscled waist. The top was 
+more of a problem. Pulling it over the swells her prodigious breasts, the material gave way at 
+the seams, not equal to the task of covering her perfect physique. It would be enough, however, 
+she decided. It covered her front, leaving a slight display of luscious side-boob to each side.  </p>
+<p>"Wow!" Ashley said toward the mirror as she admired the radiant display of sexuality that was 
+her new body. "I'd better drive to Tiffany's. If I walk, I'll probably cause a few traffic accidents." 
+She smiled dazzlingly at the thought.  </p>
+<hr />
+<p>The doorbell rang, and Tiffany opened the door. Ashley was speechless. Ashley was a vision of 
+beauty, a work of art.  </p>
+<p>perfection.<br />
+Sigh....
+​</p>
+<p>Firm-yet-feminine sexy muscle flowed throughout her body. Perfection.  </p>
+<p>Luscious, sensual curves swelled in an awesome display of femininity. Perfection.  </p>
+<p>Ashley's absurdly beautiful face smiled a sublime smile, large, expressive, luminous eyes met 
+Tiffany's with a sparkle of amusement. </p>
+<p>Tiffany attempted to speak, but only a squeak came out.  </p>
+<p>"I know, right?" Ashley said in the understatement of the century. "I got a little bit hotter last 
+night."  </p>
+<p>As Ashley hugged her friend in greeting, sensitive breasts pressing into hers, Tiffany couldn't 
+help but feel overwhelmed with desire. Her friend's body was just so firm, so silky, so sexy, so... 
+perfect.  </p>
+<p>Tiffany's lips pressed into Ashley's, causing Ashley's eyes to widen. Ashley hadn't meant to 
+seduce her friend. She was just giving her typical friendly hug. Apparently, she was so sexy that 
+she was seducing people— even straight women—by accident now.  </p>
+<p>She thought about it. There are worse things in the world to have to get used to, she thought.  </p>
+<p>She kissed her friend back, snaking sleek, sinuous arms up Tiffany's back as she walked them 
+both, intertwined, into Tiffany's bedroom.  </p>
+<p>Sliding her flawless, silken skin through Tiffany's arms, Ashley sat down on the bed beside her. 
+Tiffany was half-conscious, still writhing and quivering in the aftermath of twenty or so 
+mind-blowing orgasms. A concerned expression crossed her perfect features, but it could do 
+nothing to reduce her unearthly beauty.  </p>
+<p>As good as all of this feels, this really isn't normal. I've never heard of a growth spurt quite like 
+this. Maybe I should see a doctor, and ask him what's going on? 
+she thought.<br />
+​</p>
+<p>Rummaging through her friend's closet, Ashley pulled a maxi skirt over her deliciously swelling 
+hips, a heavy parka over her prodigious chest, and wound a scarf around her head and face, 
+tucking her mane of champagne silk inside the parka to hide it. Putting on a pair of large 
+sunglasses, she hid her soul-penetrating azure eyes from view as well. Looking in the mirror, 
+she decided that it should get her in to see the doctor without drawing the level of attention (and 
+sex) that her statuesque perfection would otherwise cause.  </p>
+<hr />
+<p>​
+Clare?!?  </p>
+<p>Ashley waited in the waiting room at the doctor's office, taking care to keep herself as covered 
+as possible.  </p>
+<p>Finally, her name was called. The nurse dropped a hospital gown on the bed/table in the center 
+of the room and told her to change into it, the nurse's eyes never leaving the clipboard in her 
+hand. The nurse closed the door.  </p>
+<p>Here goes, Ashley thought, as she unwrapped her otherworldly curves from the confines of the 
+clothes and pulled the hospital gown on. Turning her back to the door, she fumbled at the 
+strings in the back, gown pulled tight against her huge, round breasts. She was trying to ignore 
+the temptress fantasies of seducing a handsome doctor that kept playing through her mind. Why 
+had she envied </p>
+<p>The doctor walked in and looked up from his clipboard. The back of Ashley's gown was still 
+open. </p>
+<p>The doctor's eyes locked to the sight of Ashley's flawless flesh like a tiger's on a gazelle. The 
+hard, feminine muscle of her back rising and falling in perfect artistic contours that did 
+interesting things to his member. The sexy spherical swell of her heart-shaped ass swept down 
+to the endless magnificence of her legs.  </p>
+<p>She turned, her luminous eyes mesmerizing his, the outline of her succulent breasts causing the 
+doctor's now-iron phallus to poke above the top of his pants.  </p>
+<p>Ashley couldn't help herself, seduction coming as naturally to her now as breathing. Widening 
+her eyes in feigned innocence, she approached him, slithered a graceful arm around him, and 
+touched a fingernail lightly to his chest. She began to trace her fingernail around his chest in the 
+shape of a heart. She let the hospital gown drop, exposing the bare majesty of her breasts, and 
+came
+pressed their ripe, fullness into him. "I'm glad you 
+. I need help with my body. It's becoming 
+​
+too sexy for my own good, and I'm starting to do 
+ things with it."<br />
+naughty
+​</p>
+<p>She batted her long, bold eyelashes.  </p>
+<p>He exploded.  </p>
+<hr />
+<p>Moments after the male doctor left the room in quite a state, a female doctor and nurse entered. 
+Twenty minutes later, they were left in a trembling tangle of limbs, Ashley’s overpowering 
+seductiveness having made short work of them both. She covered up and slipped away from 
+the hospital room, knowing that there was nothing these people were going to be able to do to 
+help her.  </p>
+<p>​
+​
+​
+I envy that actor’s daughter. Seeing those abs every time my dad was </p>
+<p>, she thought to herself, admiring the man’s muscled, 
+That Aquaman is something else
+​</p>
+<p>As she passed two children in the hallway, she overheard a little girl giving her younger brother 
+her candy. “Here,” she said. “You had to get a shot. I want you to have it. It will make you feel 
+better.” Her brother beamed in delight.  </p>
+<p>I wish I were that generous,
+ Ashley thought with a shiver. You’d think the hospital would keep 
+​
+the temperature where it should be! There are sick people in here!  </p>
+<p>Ashley exited the hospital to the street. Thinking of the little girl’s generosity led her thoughts to 
+her dad. He had always been there for her, even when he had been overcome with grief when 
+mom died. He was a good man, and he deserved everything she could give him. The 
+seductress in her drifted to ideas about what that might be, but she shook them away.  </p>
+<p>Lost in thought, she nearly walked into the glass wall of a bus stop shelter. As she lurched to a 
+stop just in time, something in the movie poster affixed the wall of the shelter caught her 
+attention. 
+masculine physique. 
+shirtless would have been a nice bit of eye candy growing up!
+ she thought with a naughty smile. 
+​
+Another shiver of cold passed through her, 
+I’m sure Stephanie wouldn’t mind… 
+​
+and—unbeknownst to her—it passed through her father as well. </p>
+<p>she thought. 
+I envy daughters that can give their dad’s exactly what would be best for them,
+​
+Like if I could give Stephanie my gifts so that she could give him the kind of pleasure that I can 
+give a man. 
+A blast of frigid cold crawled along her skin, and, this time, Stephanie’s as well.<br />
+​</p>
+<p>Taking a last look at the poster, Ashley’s thoughts took another mischievous turn. 
+chance to try to seduce someone with control of steel, like Superman.
+ That might be an actual 
+​
+challenge… Arctic cold crashed through her at that moment, and reality seemed to bend 
+momentarily before snapping back into place. Wow! That was weird, Ashley thought. Maybe I 
+need to rest for a bit… it </p>
+<p>She continued walking to her friend Tiffany’s house, considering the generous things she could 
+do for her friend… or maybe </p>
+<hr />
+<p>As Ashley was leaving the hospital, Eric was returning home. He needed to man up and go 
+confront his daughter. He would just have to find the strength to control himself. Something 
+needed to be done. She was his responsibility, and he needed to deal with this. Steeling his 
+resolve, he climbed the stairs to her room.  </p>
+<p>As he entered, he saw Stephanie, still on Ashley’s bed, breathing shallowly in fitful sleep. She 
+spasmed occasionally as her dreaming mind replayed flashes of the assault of pleasure that 
+Eric’s daughter had inflicted upon her.  </p>
+<p>been an eventful day!<br />
+has
+​</p>
+<p>her friend...<br />
+to
+​</p>
+<p>I wish I had a </p>
+<p>​
+​
+​
+​
+​
+ 
+As he surveyed Stephanie’s naked form, Eric gasped. A cold chill went through him. He felt 
+strange, a strong, tingling sensation covering his torso and upper body. Running over to 
+Ashley’s floor-length mirror, he pulled off his shirt to get a look at what was causing the 
+sensation.  </p>
+<p>Rock hard muscle surged up from his arms, chest, and back. Cut, steel abs punched up from 
+his stomach. Shocked, he flexed down. Bricks of power bulged, protruding a good half-inch from 
+his stomach. He tested out his arm. Flexing, striations of defined muscle popped from his arms 
+and chest. He suddenly had the body of a gym god.  </p>
+<p>Behind him, Stephanie suddenly screamed as her back arched in pure, unadulterated ecstasy. 
+Turning, Eric watched in awe.  </p>
+<p>Stephanie’s body erupted in concupiscent development. Her body bucked with lust and carnal 
+pleasure as curves swelled along her profile. Her breasts surged upward in mountainous 
+fashion, eliciting a gulp from Eric. Her abs contracted into sleek ridges of muscle. Her arms 
+lengthened and filled out with shapely feminine muscle as they pushed against the bed to force 
+her bucking hips even higher into the air.  </p>
+<p>Her hips flared out as fiery heat filled the space between them, undulating in an obscene display 
+of eroticism. Her ass tensed into perfect, resplendent hemispheres of juicy flesh, sending an 
+erotogenic shock through Eric’s loins. Her legs bulged with nubile sinew as they grew longer 
+and longer adding inch after inch to her height.  </p>
+<p>Stephanie’s body tensed in one concluding clench, crying out in unbelievable ecstasy. Her back 
+bowed to show her sizzlingly sexy shape to maximum effect. Eric’s enlarged cock screamed 
+skyward, virilized to phenomenal proportions by the lewd display of the nuclear sex bomb before 
+him.  </p>
+<p>As she dropped to the bed with an inviting moan, her epic figure finally relaxing, Stephanie 
+turned her mesmerizing eyes to Eric and scanned his shredded physique. She licked her 
+vermillion lips and let out a soft purr, “Yummm…”  </p>
+<p>Eric leaped onto Stephanie and plunged his massive manhood into her tantalizing depths.  </p>
+<hr />
+<p>Perry came over to Clark’s desk, and he slapped a pile of phone messages onto it. Pressing his 
+index finger onto the stack he said, ”Kent. I need you to get over to 999 Sedgewick St. There’s 
+some kind of sex goddess on the loose, and she was last seen there. That kind of story could 
+sell a lot of papers, Kent, a LOT of papers. You never seem to get tongue-tied around those </p>
+<p>be able to contain her bodacious form and put it on. As she inched it over her 
+might
+​</p>
+<p>beautiful celebrities, so you’re the man for the job. Get me a great story, Kent. A GREAT story. 
+And PICTURES!”  </p>
+<p>Clark gathered up the stack of messages, gathered his trench coat and fedora, and headed to 
+the address in his hand.  </p>
+<hr />
+<p>Ashley, having arrived at her friend Tiffany’s house, searched Tiffany’s closet, her friend still 
+asleep from Ashley’s overwhelming ministrations a few hours ago. She found a stretchy cocktail 
+dress that 
+outrageous curves, she stepped lightly to the mirror.  </p>
+<p>Acres of flawless flesh led to a cavernous valley of cleavage. Perfectly formed hips pulled the 
+fabric up, causing it to look like a micro-mini. The short hemline revealed nearly the entire length 
+of her long, luscious legs.  </p>
+<p>As she admired her showstopping reflection, the doorbell rang. She strode to the door, hips 
+swinging to each side, legs crossing in front of her. This catwalk motion seemed, now, to be her 
+normal gait with her full hips and leggy build.  </p>
+<p>Ashley opened the door.  </p>
+<p>“Hello, miss,” the man at the door said, “My name is Clark Kent, and I was hoping for a brief 
+moment of your time to ask you about….” Clark trailed off, forgetting his rehearsed speech and 
+losing his entire train of thought in the dazzling cobalt eyes that gazed directly into his.  </p>
+<p>“Clark. Kent… Seriously?” Ashley said, expressing her thoughts aloud in with her tantalizing, 
+velvet voice.  </p>
+<p>She examined his thick, black hair, his piercing blue eyes, his broad shoulders. The man’s 
+muscular chest pulled his button-up shirt tight. Bulging biceps strained its sleeves. Maybe it 
+really was… she considered. She had requested this challenge, after all.  </p>
+<p>Remembering her desire to put her enchantress abilities to the test, she kicked her seductive 
+charms into full gear.  </p>
+<p>Interminably long lashes fluttered closed before rising slowly up in a half-lidded gaze, the 
+brilliant blue of her eyes like smoldering embers, wordlessly promising the man in front of her 
+unspeakable pleasures.  </p>
+<p>​
+Shoulders drawing back to push her jaw-dropping expanse of cleavage slightly outward, Ashley 
+watched as Clark’s eyes, originally locked on her own, dropped to her full breasts, their perfect 
+swells securing his ogle with ease.  </p>
+<p>Ashley worked with seductive skill to pull his attention down the rest of her superhumanly 
+sensual body. A slight turn of the hips invited Clark’s eyes into their voluptuous curves, a drop of 
+drool escaping his trembling lips. An ever-so-slight undulation of her torso showed the ridges of 
+unbelievably taut abs through the fabric of her tight dress.  </p>
+<p>Continuing to play the man like an instrument, Ashley slowly rubbed her slim, sinuous legs 
+together in suggestive strokes, riveting Clark’s attention further down her enthralling form.  </p>
+<p>“Come. In.” she invited, her hypnotic voice emphasizing the first word. </p>
+<p>Erotic sparks fired through Clark’s brain, as his superhuman dick pressed his slacks up, up, and 
+away. Spinning on her heel, she swung her rapture-inducing ass from side to side as she 
+walked into the living room. The backless dress gave Clark a marvelous exhibition of flawless 
+flesh before she sat down at the edge of the couch, dress riding dangerously high on her 
+succulent thigh. </p>
+<p>Clark gulped as he fought to exert his super-control over the molten hunger of lust that this 
+young woman’s simmering sexuality had awoken in him. He had never felt anything like it. Even 
+Diana’s ethereal beauty was nothing close to this girl’s raw seductive power. He slowly walked 
+toward her and sat down on the couch beside her.  </p>
+<p>Ashley turned her knees toward Clark and lightly touched delicate fingers to his thigh, holding 
+them there for a bit too long to be merely a friendly gesture. “So what would you like to know, 
+Clark?” she cooed, clicking her long, flexible tongue on the last syllable. “Did you just want to 
+feel me out a bit? Or do you really want to get into my core?” Ashley said with exaggerated 
+innocence, fluttering long lashes in a coquettish display that sent Clark’s thoughts spiraling into 
+libidinous territory.  </p>
+<p>Clark’s rod of steel threatened to tear completely through his overtaxed pants. He could not 
+speak, the remnants of his control fighting the last stand of a losing battle.  </p>
+<p>“I must admit that I have a bit of a… desire… to get to know you too.” Ashley said in a voice 
+dripping with flirtatious suggestion. </p>
+<p>She licked her lips, as she ran a fingernail lightly underneath Clark’s rigid cock to its tip. A tide of 
+desire, of absolute need, rolled through Clark’s very being. This irresistible temptress had utterly 
+destroyed every ounce of his superhuman control, leaving him trembling and pleading to her 
+with needy eyes, unable to speak. He needed to have her. He needed release. He needed her 
+touch. He needed to be inside of her.  </p>
+<p>Ashley smiled a victorious, radiant smile at his unspoken plea. She slid her mouth to his, perfect 
+white teeth biting down on his invulnerable lower lip. She swung her exquisite leg over his far 
+hip as his shaft tore free of its cotton confines. Then, she slid slowly down his immense length. It 
+was time to feel what a submissive Superman could do to her.  </p>
+<p>Clark was feeling things that he could not describe, as this pinnacle of feminine perfection 
+showed him what lay beyond ecstasy. As he touched her depths, Ashley threw her head back 
+and let out a husky moan, silken tresses of platinum tumbling all the way to her lower back. She 
+began to undulate her hips in an opulent display of female dominance over the most powerful 
+man on the planet. </p>
+<p>As she felt the steely hardness of his tensing legs under her smooth thighs, Ashley gasped out 
+a breathy whisper. </p>
+<p>“
+I wish my muscles were as dense and strong as his... “ </p>
+<p>As he filled her, pumping into her, Ashley felt ice suddenly crackle through her veins, chilling her 
+to the core. The perfect hemispheres of her ass rubbed against her silky calves as her hips 
+rolled in time with his lunges. She could feel the muscles inside her grow harder and firmer with 
+the rhythm of her body, strength pouring into them by the second. </p>
+<p>It felt </p>
+<p>A breathy moan rasped out of her full lips, her tongue pushing behind the inside of her teeth as 
+the delicious sensation of power rippled through her being. </p>
+<p>Clark felt her tighten around him, her smaller muscles contracting ever harder with her 
+burgeoning strength. He slipped his hands along her polished thighs, snakes of liquid steel 
+moving within, under the admiring touch of his fingertips. </p>
+<p>Ashley, now lost in surges of her own pleasure, sumptuous body sucking in superhuman 
+strength, couldn’t help but want more. Panting in time with Clark’s ever more urgent thrusts, she 
+whispered. </p>
+<p>“I wish I had </p>
+<p>Her delicate jaw clenched, her lower lip quivering, with a delicious mix of sensations as Clark’s 
+shaft continued to plunge into her and another massive burst of strength and power raged 
+through her impossibly perfect body. </p>
+<p>of his powers. And Supergirl’s as well…” 
+all
+​</p>
+<p>good. 
+sooooo
+​</p>
+<p>​
+​
+​
+As Ashley’s slender, bare thighs gripped Clark’s hips, he began to feel uncomfortable pressure, 
+his unsurpassable strength buckling under the incredible power of the ultrafeminine form that 
+rode him. </p>
+<p>His hands left her thighs, roaming upward to firm, supple hips. He pulled her hips toward him to 
+power into her tightening canal. His vision dimmed with rapture as his climax loomed. </p>
+<p>Ashley’s slender fingers slid over his hands, pressing down on them with increasing force. Pain 
+mixed with pleasure as Clark felt her impossibly strong fingertips applying absurd force on his 
+whitening hands. Ashley’s head rolled back, long eyelashes fluttering closed, moistened lips 
+opening, as thick waves of platinum blond hair swayed behind her, tickling the diamond-hard 
+bulges of her satin calves. </p>
+<p>Unable to take the escalating sensation any longer, Clark’s vision shook. His ears began to ring 
+from his racing heart. His eyes rolled upward and squeezed shut as a tsunami of carnal ecstasy 
+crashed into him. Ashley’s toes curled and lips trembled as her womb erupted into 
+mind-blowing, nuclear quakes. </p>
+<p>Ashley let out a soul-emptying wail as he exploded inside her, shockwaves rattling everything in 
+the room. </p>
+<p>Time seemed to slow as the superhuman lovers quivered in climax, tensed, delirious and not 
+wanting the ultimate moment to end. </p>
+<p>Then it was over. </p>
+<p>Muscles relaxed. Ragged breaths broke the sudden silence, beads of sweat formed on 
+spectacular bodies. </p>
+<p>Clark gulped oxygen as he attempted to get his heart rate until control in an effort to avoid losing 
+He had never experienced anything like it! He’d had sex with Lois 
+Good Lord! 
+consciousness. 
+​
+before they’d broken up, but it hadn’t been 
+This girl had felt even stronger than him! </p>
+<p>Ashley dismounted him, moving with the languid, elegant grace that only a superhuman sex 
+goddess could. She lowered herself next to him on the couch, a bare leg atop his thigh, dainty 
+foot dangling between his legs, panting. </p>
+<p>“Wow, Clark! That was really something! We might have to try that again sometime,” she sighed 
+with a tired but mischievous smile. </p>
+<p>Clark returned a quick smile, not having recovered his powers of speech yet from the 
+experience. She pulled in her splayed leg and curled up against him, flawless cheek resting on </p>
+<p>like this! He’d had to be so careful with her. 
+anything
+​</p>
+<p>​
+​
+his shoulder, then patted him on the shoulder. She closed her eyes, basking in the warmth of 
+his overtaxed body. </p>
+<p>As Clark’s heart calmed down, he shifted slightly to see the beautiful girl curled next to him. 
+Completely spent, he closed his eyes and fell asleep. </p>
+<p>—————————————————————————————————————————— </p>
+<p>If you liked this story, I would encourage you to check out my published work, now available on 
+Amazon at: </p>
+<p>amazon.com/author/hikerangel </p>
+<p>I also have a number of free short stories on my site at: </p>
+<p>hikerangel.com </p>
+</body>
+</html>

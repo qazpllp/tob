@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>The Pink Pill</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>The Pink Pill</p>
+<p>This story is of an erotic nature 18+ only</p>
+<p>One hot summer day at a nightclub</p>
+<p>David could not have felt more uncomfortable. He was 2 hours into his night out with the lads and they had recently entered one of London’s finest nightclubs. David is normally fine in nightclubs, but here he felt out of place. The thing is, David isn’t the most attractive of people, standing at only 5ft 6 inches and having a beer belly he did not fit in here. Surrounding him were what could only be described at some of the most attractive people he had ever seen. The men all ripped bodies and abs clearly on display, huge biceps too. The woman were all equally as attractive if not, more. All tanned bodies with luscious breasts and great juicy asses. Great big pouty lips and large seductive eyes. </p>
+<p>David was dancing with his mates in one corner of the nightclub and he could see that he didn’t belong here, even his friends were attractive, and they fit in so well. He decided to dance for another 10 minutes before finally leaving the club alone to go home and sleep.</p>
+<p>The way home was a long walk back to his apartment in the dark. David being drunk, made this a real challenge and it was half way along the trip until he got stopped by a man walking towards him.</p>
+<p>You there, do you need a pick me up? said the man, pointing at David</p>
+<p>David being drunk and open to pretty much anything replied I sure do, w.. whatya got?</p>
+<p>The man pulls out a bright pink pill</p>
+<p>This pill will give you the power to change your life</p>
+<p>David without hesitation replied How much?</p>
+<p>£100 mate said the man</p>
+<p>David reached into his pocket and pulled out his wallet. I’ve only got £20</p>
+<p>That’ll do replied the man and he passed over the pill for the cash. This pill can change your life in any way you want, you just have to believe in it</p>
+<p>How long will it last? questioned David</p>
+<p>Forever the man said as he began to walk away</p>
+<p>David stood there confused holding a singular pink pill, too drunk to think otherwise David swallowed the pill then just carried on walking home. He soon arrived home and went straight to bed after quickly downing a pint of water in an attempt to stop the incoming hangover.</p>
+<p>The next day</p>
+<p>It was early morning the next day roughly 8.00 am that David woke up. Clearly the water didn’t help, he had the worst hangover that he’s had in a while. He felt really awful both feeling sick and with a great headache. He had forgotten most of last night except one bit that remained. </p>
+<p>The Pill David whispered</p>
+<p>He began trying to recall how he got it. He was really scratching his brain but not much was coming back. Then it clicked. Aha yes, I bought it from a man and he said it could change life in any way I want</p>
+<p>He thought to himself, how does it work? And why was he even entertaining the idea it could work?</p>
+<p>I just have to believe in it he remembered</p>
+<p>So if I believe I don’t have a hangover, it wil before he could finish the sentence he felt it. The headache cleared almost instantly. The sick feeling in his stomach just faded away entirely. David sat there on the edge of his bed in pure shock.</p>
+<p>No fucking way he said feeling totally fine</p>
+<p>Thoughts rushed to his head, what else he could do with it. His mind couldn’t keep up with the ideas he was thinking of. </p>
+<p>Let’s start simple he said. I believe I have £1,000,000 in my bank account. He then thought about it long and hard then began to check his phone. And there it was. He could see in his bank account £1,000,000. His jaw dropped and his eyes lit up. I am god! He began laughing to himself.</p>
+<p>So I can do literally anything? he said before smiling</p>
+<p>He began to think back to last night, all of the attractive people and how he felt inferior to them. That was soon going to change.</p>
+<p>I am 6ft 4 inches tall he said.</p>
+<p>David could feel his entire frame stretching upwards, he noticed that his eye level was rising, growing taller and taller before stopping. The stretching feeling faded into a pleasurable tingly feel all over. His clothes had stretched to try and fit his new body.</p>
+<p>Woah! I’m huge! he said looking down at his body getting used to the new balance.</p>
+<p>I think a little taller though His body stretched upwards for another 2 inches leaving him at 6ft 6 inches.</p>
+<p>Now it’s time for some muscles, I want to be huge</p>
+<p>David began swelling all over. He legs growing in size and strength, his arms becoming like that of great body builders. His pecs began to push outwards stretching his t-shirt even more as his abs also begin to extrude giving him an amazing ripped body. The swelling and growth eventually stopped and what was left was a great big hunk of a man. I feel absolutely amazing. David could feel his boner stretching his underwear slightly. Well that needs to change </p>
+<p>This was the most pleasurable part, the dick began to swell within his underwear. He quickly pulled it out and held it in his hand while it was swelling. He could feel it growing longer and swelling in girth too. It was soon becoming too much to handle with one hand. The growth eventually stopped and he was left with a huge cock about 10 inches long. Even his balls had grown in size. He could extra testosterone pumping around his body. He was fully aroused and ready to release.</p>
+<p>Let’s see if this one works, I believe there’s a hot blond girl in front of me right now that wants to have sex with me. And poof! There right before his eyes was a young attractive blond girl with a very seductive look upon her. Her body was petite, breasts looking about a B-Cup, with a little yet perky butt. </p>
+<p>Hi there she said</p>
+<p>David being the type of introvert he is immediately said She doesn’t want to talk to me, just wants to do all that I command</p>
+<p>She went silent</p>
+<p>Firstly let’s make some changes, how about DD breasts! said David</p>
+<p>The girl felt it. It hit her in waves of pleasure streaming outwards from her nipples. Her breasts began to swell in pulses getting slightly bigger each pulse. They began stretching her shirt, filling out her bra more and more. She looked down to see her chest expanding forward. She could feel the weight of them, now swinging just slightly from her chest. They eventually stopped. The girls face just lit up and then she looked back at David. </p>
+<p>David amazed at what he just witnessed got up from his bend and stood in front of the girl. </p>
+<p>You will undress said David. The girl immediately undressed for David revealing her full body.</p>
+<p>He started to gently lift her breasts up and down feeling their weight, feeling the fleshy orbs that laid on her chest. They felt great, a good size and still real. They perfectly filled his hands as he gently squashed them together to form some cleavage.</p>
+<p>They feel amazing, but I think we should go a little bigger and whilst we’re at it let’s give you a bigger ass. The girl jolted slightly as she began to feel her bum cheeks swell along with her hips that began to widen. Meanwhile her breasts were growing even larger whilst David was still holding them. They were now overflowing David’s hands and had much more weight probably FF cup. When the transformations had finished the girl had a body to die for.</p>
+<p>Finishing touches, let’s give you bigger lips and from now on all you want to do is fuck me said David smiling eagerly. </p>
+<p>The girls seemed to have been released from the spell she was under and then her mind began to be filled with sexual thoughts. Sexual thoughts of David. At the same time David could see her lips swell in size bringing her look to be that of a seductive woman.</p>
+<p>Fuck me she said as she stared into David’s eyes, her pussy dripping and oozing </p>
+<p>Like the animal he is, hyped up on extra testosterone David leapt at the girl grabbing her luscious body feeling her amazing ass all the time kissing passionately. David feeling her huge lips with his, his hands beginning to reach towards the front. He slides his hands down and begins to feel her pussy. His hand is met by a soaking wet pussy just waiting to be fucked. He begins to finger her. She feels immense pleasure shown to David through her facial expressions. The fingering gets harder and deeper. </p>
+<p>Just fuck me right now! she exclaims to David</p>
+<p>He pulls out his finger then proceeds to push his giant cock into her vagina. David struggles to even get the head in. Then he thinks. You need a looser pussy. David then sees the girl’s vagina enlarge and begin to loosen up ready to accept his giant cock. He enters her. Hard and deep into her pussy. The girl yells out in excitement. David thrusts, gaining in immense pleasure every time. Both the girl and David are experiencing pleasure like no other when David has an idea. </p>
+<p>Sex feels 10 times better. It both hit them instantly, it already felt like they had orgasm’d but they hadn’t, that feeling was still growing. David’s hot muscular body was slamming against the girl’s curves both feeling pure bliss. And as they both reached the peak they had a moment when they looked into each other’s eyes and then they came. The feeling could only be described as magical.</p>
+<p>As soon as they started coming things started going grey for David. His vision started decreasing, going blurry before then going dark. Then Black.</p>
+<p>David wakes up some time later</p>
+<p>TBC maybe</p>
+<p>Like this story?, let me know at </p>
+</body>
+</html>

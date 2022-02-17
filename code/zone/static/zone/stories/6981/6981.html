@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Huperion</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>Huperion</p>
+<p>Huperions, Volume 1</p>
+<p>Branded Toe</p>
+<p>Published by BrandedToe, 2020.</p>
+<p>This is a work of fiction. Similarities to real people, places, or events are
+entirely coincidental.</p>
+<p>HUPERION</p>
+<p>First edition. June 19, 2020.</p>
+<p>Copyright © 2020 Branded Toe.</p>
+<p>Written by Branded Toe.</p>
+<p>Check out my new transformation cat-girl romance short story!</p>
+<p>https://books2read.com/b/bWdBlY</p>
+<p>Follow me on twitter https://twitter.com/brandedtoe
+I have a patreon! https://www.patreon.com/Brandedtoe Part 3 of</p>
+<p>Huperion Will be available on my Patreon by Sunday 6-21!</p>
+<p>I had always been jealous of other women. My small chest kept
+my self-confidence low. I funneled all of my problems back to this one
+source. I didn't get the right jobs at the port, I couldn't get a date, and I
+had to fight for everything I had.</p>
+<p>I had fought hard and long for what I had. My small ship was enough
+to bring in bounties and carry cargo. But that was it. I had been running
+a little corvette around the outer rim for a year and was making my
+planned trip to the core worlds. I had to make a sizable purchase on Hep-
+hestus.</p>
+<p>I walked the streets of one of the Burroughs of Tyranny, a spaceport</p>
+<p>on Hephestus. I had to meet Bernie before he got scared and ran.</p>
+<p>"You got the goods?" I asked Bernie.
+"Yeah, you got the money?" I had been scraping and saving every day</p>
+<p>for a year to buy this. I handed it over to him.</p>
+<p>"You just have to have this," Bernie pulled out a crystal the size of a</p>
+<p>banana. "and lick it when you transmat onto your ship."</p>
+<p>"I have to lick it?" I asked.
+"Yeah, you gotta lick it. Otherwise, the DNA won't become scram-
+bled when you transmat. The crystal has the Huperion DNA you re-
+quested, and when you lick the crystal and transmat, the crystal confuses
+your ship's computer, and they get smashed together in interesting ways.
+Don't use it until you are ready." Bernie walked off and took my money
+to spend it on other illegal drugs.</p>
+<p>I was so excited, and I couldn't stop bouncing. I ran to the nearest
+docking area and called my ship. There were a couple of people waiting
+for public transport, and my ship took a few moments to arrive. I slipped
+the crystal into my palm, hidden by my arm. I didn't want to be seen</p>
+<p>1</p>
+<p>2</p>
+<p>BRANDED TOE</p>
+<p>when I got pulled up into my ship. If I got flagged on the way out, I
+would be in jail for a few years, and probably stop my transformation. I
+couldn't have that happen.</p>
+<p>I saw my orange and purple ship pull down into the atmosphere.
+The computer had adapted to my landing techniques and was coming in
+faster and steeper than it should have been. Maybe I should ease up on
+entry from now on. I wanted to lay low, not attract attention to myself
+for a few days. After that, the changes would be permanent.</p>
+<p>I looked at my wrist control like any good pilot would do. I had pro-
+grammed a path for the ship to take. I was carrying a bail jumper back to
+Chronos, and I would be in hyperspace for the three days of my transfor-
+mation. Everything was planned down to the hour.</p>
+<p>I squinted and looked at my controls. I brought the wrist computer
+up to my ear, and subtly licked the crystal hidden under my wrist. I
+didn't know how much saliva the crystal needed. Hopefully, this would
+be enough. I felt the tell-tale lifting into the air that preceded transmat.</p>
+<p>I blinked out from the platform and reappeared in my ship, and the</p>
+<p>crystal had disappeared.</p>
+<p>computer.</p>
+<p>"Error detected in transmat, readjusting perimeters," said my ship's</p>
+<p>There was another flash, and I reappeared in the ship again. This time
+I had a substantial chest plate. My armor had reshaped to accommodate
+my enhanced chest as I had planned.</p>
+<p>I hadn't planned on how sizable they were. I had chosen to cross with
+a Huperion because of their ability to grow their breasts, but they started
+with a flat chest and inflated them when they wanted to attract a mate. I
+had planned on my chest, starting small, and being able to grow at will.
+Now I had two oranges on my chest.</p>
+<p>"Readjusting parameters." the computer said. "transmat in hyper-</p>
+<p>space transit not recommended."</p>
+<p>I tried to say something to stop the computer's processes, but I trans-</p>
+<p>matted in the same spot before I could get anything out.</p>
+<p>HUPERION</p>
+<p>3</p>
+<p>When I reappeared, I could feel my thighs rubbing together. My
+thighs had become thick and meaty in my pants. I turned around and
+saw my ass. Normally my coat was able to hide my lack of a figure and
+render me genderless, but I knew I had a tight ass before. Now I was
+packing enough back there to cause my duster to split at the bottom.</p>
+<p>"Unable to process transmat in hyperspace, applying medical coun-</p>
+<p>termeasures." the computer said.</p>
+<p>"Computer, stop medical countermeasures," I said.
+"Unable to comply, medical emergency."
+A warmth spread through me as the computer tried to repair my
+body. I could feel my suit stretch and attempt to accommodate my ex-
+panding form. My breasts were growing, and each second, my nipples
+were driving me more and more crazy. My body was hot, and my armor
+cool.</p>
+<p>The transformation had turned me on so much, and I lay on the
+floor, shivering. But I had gotten very close to orgasming in my armor.
+Now I paused on the floor in frustration and a tight spacesuit.</p>
+<p>I pulled myself up.
+"Do you have anything else for my computer?"
+"No messages available at this time."
+"Oh, that's good," I said.
+I walked to my room. The changes were more extreme than I had
+planned, but I was going to take advantage of my new body while I could.
+I wanted to see myself.</p>
+<p>I made it to my quarters and started unbuckling my duster. I was
+packed into my chest plate and couldn't wait to get it off. I popped the
+buckles off, and I felt my tits drop out of the cups when I removed it. The
+movement was satisfying in new ways; each breast was flopping down on
+my chest. I looked at myself in the mirror.</p>
+<p>I had breasts, round and firm, each the size of cantaloupes. I pressed
+them together to see what my cleavage would look like. Then I noticed</p>
+<p>4</p>
+<p>BRANDED TOE</p>
+<p>the new additions. Underneath my huge melons were two more sets of
+nipples.</p>
+<p>Bernie had fucked me. Huperions didn't have six nipples; he must</p>
+<p>have put something else into the mix.</p>
+<p>Fuck.
+I tried to jump out of my pants, but my hips had grown too much
+to easily slide them off. I had to flop back onto my bunk to slide them
+over my ass. I lept back up and was through off by my new weight as I
+tried to get to the mirror. I needed to see if there was anything else that
+he changed.</p>
+<p>I didn't have a tail, just a butt. My panties were stretched wide across
+my ass, almost double its previous size. I guess the transmat didn't com-
+pensate with my clothing as much as I hoped. I gripped each cheek,
+but they were big enough that I had problems getting my hands around
+them. I was getting turned on by this exploration.</p>
+<p>I could feel each of my nipples as they stiffened. With three pairs ex-
+posed like this, and getting myself worked up over my new curves, I was
+going to have to spend some alone time in my bunk.</p>
+<p>Then I could feel each breast start to fill. It was like each of my breasts
+contained a bladder that felt like I had to urinate badly. I didn't notice
+the massive set growing, but the changes in the lower breasts were more
+pronounced. Quickly, they were the size of my old breasts and starting to
+drip milk onto my legs.</p>
+<p>"Bernie, what the fuck did you do to me?"
+I didn't want to lose liquids to ruin my ship in hyperspace, but the
+shower was designed to clean and remove moisture. I ran, my breasts
+bouncing and expanding as I went.</p>
+<p>I got into the shower and closed the door.
+"Excess moisture detected, applying negative pressure fields," the</p>
+<p>computer said, a function I wasn't familiar with.</p>
+<p>"Applying what?" I yelped as I felt an energy field on each of my nip-
+ples. Each was very sensitive right now, and I noticed the growth speed</p>
+<p>HUPERION</p>
+<p>5</p>
+<p>up. My breasts were leaking so fast I could hear the dripping against the
+ground.</p>
+<p>"Moisture increasing. Increasing suction in response." the fields
+pulled at my nipples more intensely, each nipple felt like it was being
+suckled by a mouth. I was going to lose my mind in pleasure. I was going
+to finished what I started earlier.</p>
+<p>I reached down to my pussy to find that the lips had swollen as well. I
+must be channeling the Huperion DNA throughout my body, each pulse
+of the fields, causing me to grow all over in response to the pleasure. I
+guess Huperions didn't talk about how great it felt to expand.</p>
+<p>I orgasmed quickly, my body jerking while standing. My lower lips
+had never been that sensitive before. With my eyes closed, I was lost in
+the afterglow of orgasm. I felt relief from my breasts, no longer packed
+with milk. I was ripped from my stupor when I felt my nipples touch the
+cold glass.</p>
+<p>There wasn't much room in the shower. Some other people had com-
+mented on this, saying two people could fit in the tubular cleansing area,
+but they would have to be pretty intimate friends. I felt my nipples touch
+the glass and jerked my eyes open.</p>
+<p>My most massive set of breasts were sitting on two extra pairs that
+were larger than the first set when I had transmatted. I couldn't see any
+of this and had to feel everything out. I didn't know how big my top pair
+was getting, because I couldn't reach around them.</p>
+<p>I tried to stop and think, but there was no time. I felt my ass press in-</p>
+<p>to the shower door. I needed to calm myself down.
+Or I needed to bring my arousal to a finish.
+"Computer, Lock the destination, and send the prisoner to the show-</p>
+<p>er. I think I am stuck."</p>
+</body>
+</html>

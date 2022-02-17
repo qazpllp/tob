@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>An Angel's Flower</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p><strong>[An Angel\'s Flower]{.underline}</strong></p>
+<p><strong>Warning</strong>: The following is erotic content featuring <em>breast
+expansion,</em> and other minor fetishes. You know why you're here, so don't
+complain to me if it's not your thing.</p>
+<p><strong>Credits:</strong> Everwynd and the characters therein are property of
+DeviantArt user <em>Fahzben,</em> and are used with express permission.</p>
+<ul>
+<li><em>Madam Materia</em></li>
+</ul>
+<p>How had she ended up in this situation? It was hard to think, her lithe
+fingers entwined with the buxom beauty Farah's as she and her lover
+dragged the princess Ev'vangel towards their room at the Whispering
+Wind. Little Del's heart was hammering in her chest, threatening to
+burst from the anticipation of sharing a bed with these two women.</p>
+<p>The Scarlet Fox, Lady Julia. A noblewoman, mercenary lord of Bremer, and
+the only human among the trio. She was also the only one with a lick of
+sense. Her wife Farah was hanging lovingly off her arm, grinning wide as
+breasts like ripe autumn pumpkins were spilling out of the sorceress's
+dress, and Del... the poor girl had never been so smitten in her life by
+the pair.</p>
+<p>The women, of course, not that pendulous bust; despite her eyes
+constantly flicking between them, the more mature elf's deep orbs, and
+the lustful curl of her smile. "Don't fall behind, cutie!" Those words
+enraptured the princess, as she was pulled along into a half-embrace
+with her wife.</p>
+<p>"I would never," the young elf promised, her mouth dry, thirsty as she
+gazed upon the sorceress's ruby lips.</p>
+<p>Farah could sense it, giggling playfully, batting her beautiful eyes to
+the enraptured girl. "Hold it in 'til we get to the room," Julia's
+armored hand ran through her wife's woody locks, giving the gentlest
+pull to keep her from molesting her new toy out in the hall; and
+eliciting the high soprano note of the woman's moan.</p>
+<p>The princess had never heard such a melodious sound in her life. The
+tips of her pointed ears were red as her auburn hair, her breath coming
+out in aroused gasps, trying to make words and failing. Was she in love?</p>
+<p>The armored woman of their group peeled away from her partner, the buxom
+elf letting out a disappointed whine, to pull out the room's key and
+open the way for them. They'd discussed the mercenary\'s price while
+down in the bar, so it was no surprise to see the couple had reserved
+the most expensive room for themselves. The lavish expense, even in such
+a karge city as Ganhou, was like silver in a noble's pocket to the
+Scarlet Fox.</p>
+<p>A huge bed lay in the middle of the room, with sheets of fine imported
+satin, and pillows stuffed with the softest feathers that gold could
+afford. A bottle of wine was waiting on the nightstand, the glass and
+the rich, red liquid within reflecting the magical wisps that lit the
+room to look like a starlit sky. And yet, the beauty of the room paled
+to that of the two women staying within it.</p>
+<p>Lady Julia stepped inside, taking her wife's hand to guide her and their
+mate for the night inside. "Now then," the brunette human purred,
+waiting for the door to close behind the third-in Del to take off her
+gauntlets, showing off a thick gold band upon her finger, "how about I
+clear your head darling, and maybe you can see about letting the
+princess off her hook?"</p>
+<p>Hook? Del's mind was a blissful, lust-filled, fog. She barely had the
+wherewithal to kick off her traveling boots as she entered, let alone
+fathom what she might be talking about. An Elven phrase was uttered by
+the Scarlet Fox, barely picked up on Del's sensitive ears, "<em>I will take
+your burdens,</em>" and she lifted her hand to the two of them.</p>
+<p>Farah giggled, her hold on the girl tight, though loosening as the magic
+of Julia's ring was cast. The sorceress's breasts, which had been
+jumping up in size with each spell, each few sweet words the elf had
+spoken, were receding. The auburn girl hadn't even realized she'd been
+leaning on against them until she nearly toppled, only being caught by
+the object of her desire at the last minute and held into her shrinking
+bust.</p>
+<p>"Careful cutie," the graceful elf teased, running her fingers through
+the princess's hair, tickling her sharp ears.</p>
+<p>Across from them, the armored woman gasped. There was an audible creak
+from her armor, her eyes glazing as she looked to the pair in her
+presence. "Farah," she pleaded, bare hands running up the sides of her
+breast plate, "it's tight."</p>
+<p>The sorceress heard her wife's call, laying a tender kiss on Del's
+forehead, oh how the girl wished it had been on her lips, and drifted
+off to help her lover. "Hold on Julia," she cooed, lithe fingers finding
+the pins holding the unrelenting metal in place and slipping them up and
+out.</p>
+<p>The shaped armor practically jumped from the human's body, as she took
+in a relieved breath that swelled her chest full. Their third was in
+awe, transfixed to see all that prolific tit slip out, stretching her
+tunic thin over a chest she could use as a small bed, with nipples fat
+as summer strawberries pushing the fabric taut.</p>
+<p>Freed, the noble gave a hungry grin, taking her partner by the shoulders
+and pushing the slender elf to the bed. "Julia, we've got a guest," the
+caster flashed a grin towards the young elf in their room to remind her
+wife.</p>
+<p>The Scarlet Fox turned, reaching up to fix her messy locks after such a
+release, drinking it the sight of the charmed girl with the same
+unabashed lust her partner had all evening. "Farah's right, you are
+cute, princess," she giggled, reaching one of her strong arms down and
+patting the bed invitingly.</p>
+<p>Del flushed, watching the two women starting to undress as they waited.
+Farah was unlacing her bodice, letting it slip off her body like flowing
+water, and the Lady Julia was busily stripping the last bits of her
+plate like it was setting her on fire. She hardly felt she could hold a
+candle to these two as she slipped her pack off her shoulders, setting
+it, along with her quiver and bow, by the door as she heeded their call
+and sat on the bed, quite clothed.</p>
+<p>Even "reduced", the sorceress was still an epitome of the womanly form.
+Her breasts were still large, plump, and would overflow near any hand
+not a goliath\'s trying to hold them. They turned with her body, to the
+young elf sitting beside her, the pale glow of the pink stone that
+orbited her head reflecting in her eyes. "Not getting intimidated, are
+you cutie?" she asked, scooting her womanly hips closer and resting her
+hands on the girl's shoulders.</p>
+<p>Her touch, the light brush of that thick thigh against her own. The
+princess Ev'vangel held her legs together, letting out a shuddering
+breath as she answered with a nervous, "N-no."</p>
+<p>Fingers found her chin, turning her to face the elven beauty that
+entranced her so. Their eyes met, and her quivering lips parted for a
+hot sigh. Farah knew the tells well, answering the girl's plea by
+leaning in and taking her in an impassioned kiss; her first kiss.</p>
+<p>Electricity ran through Del's body, a startled gasp catching in her
+throat. One of the sorceress's arms held her close, leaning into their
+embrace, as the other began sliding into her traveling tunic, letting
+skin touch skin as those magical fingers caressed her waist. Those lips,
+they were like velvet, the woman's tongue warm as it playfully slipped
+into her mouth, opening the way and inviting the girl to do the same.
+Soon, her tension was melting away, her body surrendering to the moment,
+leaning into the enchantress, steadying herself as their tongues danced
+by letting her hands dare rest upon the more mature elf's skin.</p>
+<p>She'd almost forgotten the woman's wife, until the fighter's calloused
+fingers were on her hips, slipping into her trousers and starting to
+pull them down her legs. "Ah," she had to break the intense moment, as
+her smooth sex was revealed to the air, already wet, ready, letting them
+both know with its sweet scent. "I-I've never loved before."</p>
+<p>The older elf giggled, peeling the tunic off her body to leave her naked
+as the rest of them. "I said the same thing," she teased, sliding behind
+the princess and wrapping her arms around her, hands over the girl's
+petite boobs and playing with them, "Don't worry cutie, Julia will be
+gentle."</p>
+<p>Her tiny nipples were stiffening in the woman's palms, inviting those
+magic-weaving fingers to hone in and toy with them, all the while her
+wife's powerful shoulders came up under her legs. She could feel her
+voice breaking already, escaping her in stuttering gasps as she squirmed
+to the myriad of sensations. Once the Scarlet Fox got between her
+thighs, the game was over. The beautiful human's lips touched down on
+her simmering honeypot, her tongue slid in, parting the walls of her
+virgin sex, and she let out a crying moan that saw her body tense and
+hold tight to the women pleasuring her.</p>
+<p>Fingers curled into the satin sheets; her thighs opened as her calves
+wrapped around the noblewoman's shoulders to lock her in; like
+subconsciously she worried she may leave her sodden box wanting. She had
+fantasized this moment many times, tentatively allowed her fingers to
+dip into her forbidden channel, bringing herself relief from her desire.
+It paled in comparison to the real thing, to another's body entangled
+with her own, filling her with warmth, giving her the unexpected and yet
+so lovingly welcomed.</p>
+<p>And she had two bringing her these gifts. Farah continued to knead her
+chest, the elf's own pressing against her back, letting her feel those
+stiff teats to know she was enjoying this moment just as much. More
+velvet kisses were peppered along her neck, catching the drops of sweat
+rolling off her face. "You're even cuter when you moan," she whispered,
+gently pinching one of her nipples and rolling it between her fingers.</p>
+<p>Del's back arched, pressing herself into the sorceress's touch and
+rewarding her with another soprano moan to fill the room. From between
+her legs, Lady Julia let out a muffled chuckle, buried deep in her
+womanhood to the point her cheeks were slathered with the young elf's
+feminine love as she hit that first, wonderful climax. "Nearly sweet as
+Farah's, princess," she cooed, licking it from her lips as she easily
+pulled out of the leg lock and rest her heavy chest in the girl's lap.</p>
+<p>Her brain was still recovering, white spots on her eyes, and her tongue
+hanging over her bottom lip as she panted to catch her breath. The pair
+weren't calling it a night there though, Farah was already nuzzling into
+the princess's neck to rouse her, to whisper a suggestion to prompt her
+on. "Go ahead," she nodded towards the heaving tits enveloping her
+thighs, "You were looking at them all night when they were on me, give
+them a little 'reciprocation'," she giggled, giving the princess's
+little buds a squeeze.</p>
+<p>The whole of her body was still hot, sensitive, so just that little act
+had her squeak out a pleasured gasp. "S-sure," as the word left her
+mouth, she felt dumb, naïve. What was she waiting for?</p>
+<p>Reaching out her hands landed cleanly on those enormous teats, fat
+nipples pressing into her palms, stiffening as Julia let out a pleasured
+groan. "Gods, it never gets old having these," she purred, leaning
+forward into the girl's touch. "Even with the back strain, they're so
+hot. Maybe you'll grow into your own someday, princess."</p>
+<p>"If she did, we'd have to stop calling her cutie," the sorceress teased,
+her fingers once again finding Del's tender buds. "I mean, just look at
+these cute little nipples!"</p>
+<p>"Imagine them on some nice full tits," the lady added before breaking
+into a moan as the attention had the young elf tightening her grip,
+sinking deep into the soft, sensitive, flesh.</p>
+<p>Farah giggled, that lilting bell laughter hot on the princess's ear. "We
+don't have to imagine it," she reached down, laying her hand over their
+guest's and pressing it deeper into the giving breast beneath.</p>
+<p>The Scarlet Fox's song deepened, a low alto note to complement the
+melodious voices of her elven bedmates. "I just lifted your curse for
+the day, silly elf," she chastised her partner, "don't go making it
+worse again! I'd like to keep something of my faculties about me
+tonight."</p>
+<p>Said silly elf let out a whine, pouting and hugging their third tighter
+to her body. "She'd enjoy it, wouldn't you, cutie?"</p>
+<p>Would she? Those honey-like words in her ear told her yes, being
+beautiful as these two. Before she could answer though, the human was
+pressing forward, crawling up taking her by the shoulder.</p>
+<p>"She'd listen to any suggestion you made right now," she pointed out,
+eyes locked with Del's forest greens as she pinned the girl to the bed,
+leaning down over her, "Besides, it's my turn with her, and I've got
+enough tit for both of us right now."</p>
+<p>Her face came in, their lips connecting, and the princess offered no
+resistance. To the contrary, she reached her arms up, draping them over
+the strong woman's shoulders as she more fervently explored her mouth.</p>
+<p>Farah was right, she was gentle. She wasn't as nubile as her elven
+partner; time had meaning to her body. The slightest cracks to her lips,
+a firmness to her skin, the roughness of her calloused touch. None of it
+though took away from her tenderness. Her touch was a tickle over her
+youthful body, and her tongue was not overpowering her, letting the girl
+explore, to enjoy to her heart's content, at her pace.</p>
+<p>That didn't mean there wasn't guidance. After a few moments, the heat of
+their mingling breaths, the scent of her own sex on the woman's face,
+she was ready again. She opened her legs, and Julia's hand took her own
+from around her neck and brought it down between their thighs.</p>
+<p>"Now, don't tell me you're a princess in bed. With that bow you carry, I
+expect you to be able to give as well as you just got," she stated, and
+led the archer's fingers to her drooling opening.</p>
+<p>Perhaps it was the lustful daze she was in, a spark of confidence, or
+simply pride. Regardless, she gave a response. "I've got talented
+fingers."</p>
+<p>Fingers that had played pickpocket with her father, and wielded tools to
+get into where she didn't belong. Today, they had an invitation, and
+with dextrous grace they dipped into the Scarlet Fox's silken folds.</p>
+<p>Her thumb parted the woman's hood, finding her clit without effort,
+stroking it with her soft pad as her fingers played with her walls as
+effortlessly as her bowstring. For all her skill though, she did not
+exactly know what she was looking for, instead listening like she was
+picking a lock to the subtle sounds the buxom human made.</p>
+<p>And sounds she did make. Her voice shuddered, she moaned, the weight of
+her body pressed further down on the nimble-fingered rogue. "Seems you
+do, little sneak," the fighter complimented, sitting up with a huff to
+give the girl easier access, and issue a challenge. "Let's see how well
+you multitask."</p>
+<p>Back on the back foot, she looked up to the canyon above her with
+confusion, unable to see the woman's face past her bust. She'd see even
+less soon, as the noblewoman scooped her partner up in her arms and
+placed her firmly upon the rogue's face.</p>
+<p>The more mature elf's thighs boxed her in, her pretty, pink sex hovering
+inches in front of her nose, inviting her with its sweet scent,
+sparkling in the dark with how wet and ready it was. "Eat up, cutie!"
+Farah giggled, her voice coming in muffled from their new position.</p>
+<p>"Let's see what you learned while I was down on you," her wife joined in
+before breaking into another alto moan from the girl's fingers working
+her, while her sorceress was clearly putting her full attention into
+those bountiful boobs.</p>
+<p>Del wished she'd paid more attention, but the memories were like a fuzzy
+pink blur of pleasure. Not to mention she was being put on the spot,
+needing to keep working her fingers in the Fox's box. She couldn't bear
+the idea of disappointing Farah though. Clumsy, frankly virgin, she let
+out her tongue, and lapped at the elven flower presented to her.</p>
+<p>She heard it, the beautiful brunette elf's pleasured cry, felt her legs
+quivering by her cheeks. That was good, so the princess repeated,
+simplifying her hand motions in Julia as she savoured this new
+sensation.</p>
+<p>Her tongue pushed in, admiring the sweet taste of her sex, its light
+tang, a spice not unlike cinnamon; unique. Without realizing it her
+button nose had pressed forth, and she could feel the object of her
+desires dripping her love over her cheeks. She was doing well, and just
+that thought had her moaning, her delving muscle vibrating and making
+her lover quiver.</p>
+<p>How long passed with her there, in her plush prison between the
+sorceress's thighs. It could have been minutes, days, and she couldn't
+find care. All that mattered was the delighted sounds of the two women's
+moans, muffled on the way to her ears. Eventually she felt it, first
+from Farah. The sodden sex smothering her face tightened, pulsed with
+the throes of climax, and gifted her a small flood of her liquid love
+for her efforts. It must have driven the elf to work her wife harder,
+because Lady Julia's followed suit, sucking Del's digits in and trying
+to wring them for something they didn't have.</p>
+<p>With a unified sigh, the pair released her, rolling off to lay on either
+side of the hard-working little elf. "Not bad, princess," the human was
+grinning, pushing her sweat-slicked hair back as her massive breasts
+pooled over her torso.</p>
+<p>She could hardly hear it. With the high coming down, the Ev'vangel royal
+was becoming very aware how tired she was, her wrist stiff, her jaw
+sore. She took a deep breath, and collapsed into the comfort of the
+sheets, feeling trance start setting in to let her rest.</p>
+<p>Though not before she heard Farah's giggle. "Sleep well, cutie."</p>
+<p>Morning, or some facsimile of it, came as Del's eyes fluttered open.
+Much of her was sore, albeit in a good way; save for the headache. Her
+mind was trying to tell her something as she sat up, processing the
+prior night, feeling the blanket slide off her naked body.</p>
+<p>Right, Farah and Julia. Thinking on the pair she somehow recognized it:
+Charmed, she'd been charmed the prior night. The very idea of it brought
+a grin to her lips, a giggle escaping from her core. They thought they
+needed to charm her.</p>
+<p>Lingering on that giddy feeling was short lived, as a pillow blindsided
+her and left her yelping as she collapsed back onto the bed.</p>
+<p>"Oh, shit, princess," the Scarlet Fox pulled herself up, her brown hair
+in messy tangles, and her body returned to its normal toned, yet still
+respectably curvy, state. "Sorry, I'm used to early morning giggles
+being Farah."</p>
+<p>The pillow was removed, and she helped the young elf back up to a seat.
+Del was still smiling though, chuckling at the whole thing. "It's
+alright," she offered warmly, a flush in her cheeks.</p>
+<p>Gods, she hadn't felt this good in a long time. How long had it been
+since she had a laugh, felt this joy, this light, within herself? Not
+since her father was still around; the world had just been so heavy
+since his loss. Now, she'd hardly even realized, but she'd avenged him,
+and was halfway to saving her kingdom, all that was left was curing her
+mother. There was plenty she had accomplished, to be proud of, and deep
+down, she knew it would make him happy to see her smiling.</p>
+<p>"The bath is up the hall, you'll probably want one since your kitty cat
+didn't seem keen on the direction the night was headed," the human told
+her, sinking back into the bed. "Sorry about that by the way, Farah's
+curse can get... out of hand after a half-dozen or so spells."</p>
+<p>"It's alright," Del repeated, leaning back down on her elbow, admiring
+the beauty in bed with her, "I'd be lying if I said it wasn't on my mind
+to begin with," she reached a hand out, confidently running her hand
+down the dip of the fighter's waist, towards her shapely rear.</p>
+<p>It was stopped by one of the woman's strong hands, her gaze turning over
+her shoulder, recognizing the look in the girl's eyes all too well.
+"Look, princess, I get this was your first time, but it was also more of
+a one time thing," she hoped to let her down easy. "We get girls in our
+bed, but Farah and I are more of a closed affair in terms of anything
+long term, she'll tell you the same."</p>
+<p>There was no denying, as that brave hand recoiled an inch, and her lips
+tightened to threaten a frown, it hurt. "You're sure?" it escaped her
+before she could even think about it.</p>
+<p>Rolling to face her, the Scarlet Fox kept hold of her hand, uncurling
+the archer's fingers and letting her feel the difference in their
+touches. "You've got that bow, and while from what I've heard you've got
+no issues using it," she ran her calloused fingertips over the point
+where the rogue's fingers pulled the bowstring, pressing into the soft
+skin, "it hasn't left its mark on you. You're still young princess, with
+growing to do," she gave one of those pert little boobs a poke. "You've
+still got yourself to find before you start devoting yourself to
+another, let alone my wife and I."</p>
+<p>She blushed, covering her chest with her hand. Del knew, deep down
+though, that the human was right. They infatuated her, but thinking back
+on her father, the way he would take her mother in his arms and twirl
+her about. This wasn't that, even if last night's charm had made it feel
+like it in the moment. Still...</p>
+<p>"Don't count me out yet," she managed a confident smirk, a flash in her
+green eyes, "I could still surprise you."</p>
+<p>Julia grinned back, chuckling and shaking her head. "You've got a fire
+princess, that's for sure," she teased, rolling back into a comfortable
+position to get back to sleep.</p>
+<p>"And talented fingers," she reminded, the blush visible on the back of
+the mercenary's ears.</p>
+<p>"Gods, you're so much like her. Stay out of trouble, and there might be
+a place for you among our ranks yet," the lord pulled the blanket up
+over her shoulders. "When you're done with your familiar affairs."</p>
+<p>A bright smile, the elf rolled her way out of bed, collecting her things
+for that bath. "How will I find you?"</p>
+<p>The woman gave a dismissive wave. "You'll find your way," she assured,
+"Or else we'll find you. You haven't exactly been hiding anymore, Del
+Ev'vangel."</p>
+<p>Del. After last night, her childhood name didn't feel right; she didn't
+feel like a child anymore. "Delanna," she corrected, hiking her bag and
+quiver over her nude shoulder and turning a look back to last night's
+bedmate. "And I'll look forward to showing you what I've learned then,
+Scarlet Fox."</p>
+<p><img alt="" src="media/image1.jpeg" />{width="8.49375in" height="3.7555555555555555in"}</p>
+<p><strong>Oh hi there!</strong></p>
+<p>I see you\'ve discovered this new little document bundled with my zip
+downloads. Well due to certain avenues not having places for profiles,
+interactive descriptions, or hyperlinks, and not wanting to make double
+copies of my stories for those that do, this here is just a little one
+pager with a few important Madam Materia links. And maybe some FAQ at a
+later date.</p>
+<p>Anywhore, if you wanna keep up to date with my works, see about
+supporting my craft with a sub or commission, or just in general chat,
+then the following links are your best friend.</p>
+<p><strong>Twitter:</strong> <a href="https://twitter.com/MadamMateria">\@MadamMateria</a></p>
+<p><strong>Discord:</strong> <a href="https://discord.gg/svqa8Z2">The Menagerie Lobby</a></p>
+<p><strong>Reddit AMA:</strong> <a href="https://www.reddit.com/r/overflowingbra/comments/azte2c/ask_the_author_madam_materia/">For public
+questions</a></p>
+<p><strong>Patreon:</strong> <a href="https://www.patreon.com/MadamMateria">Madam Materia</a></p>
+<p><strong>Commissions:</strong> <a href="http://www.furaffinity.net/commissions/madammateria/">Gasp!
+FurAffinity!</a></p>
+</body>
+</html>

@@ -1,0 +1,2229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Amie's Charm 2</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>Amie’s Charm 2</p>
+<p>by purplish [email] with art by JessHavok and Boobdollz</p>
+<p>(For adult eyes only: breast expansion, lactation, magic. All characters are 18+)</p>
+<p>Continuing from Amie’s Charm…</p>
+<p>II. The Priestess </p>
+<p>The invitation had arrived on a large sheet of parchment, hand-written in an elaborate script:</p>
+<p>Trainee Lena—</p>
+<p>Your presence is requested at dawn’s ﬁrst light.</p>
+<p>—High Priestess Soﬁa</p>
+<p>It was a rare honor to visit the High Priestess’ private chambers at the Order of Priestesses, </p>
+<p>and any woman in Sweetwater’s capital city would surely thrill for the opportunity. On this particular </p>
+<p>morning, however, Lena was feeling anything but thrilled. </p>
+<p>She found herself pacing, lost in thought, down the familiar hallways of the Order. Her halting </p>
+<p>footsteps carried her near her destination: an archway just outside the High Priestess’ chambers. </p>
+<p>She paused, frowning at the thick yellow curtain that obscured the interior.</p>
+<p>A great pressure was on her shoulders this morning, but she knew it wasn’t her priestess </p>
+<p>battle armor weighing her down. If anything, her armor felt lighter than ever, as it had recently </p>
+<p>suffered great damage and large parts of it were missing entirely.</p>
+<p>She stared down at its tattered remains on her torso. It was once a traditional Sweetwater </p>
+<p>battle plate, forged by the smiths of the Order, and her sacred trust as a priestess trainee. Long </p>
+<p>strips of hardened leather on her muscular arms and back were reinforced with articulating metal </p>
+<p>plates, remaining ﬂexible to allow a wide range of movement in battle, although the metal was now </p>
+<p>bent and misshapen. Her armor was in a sorry state indeed, and she knew she may be risking </p>
+<p>disciplinary action from the Order.</p>
+<p>1</p>
+<p>She had yet to earn the title of Priestess despite having trained for nearly a year, even though </p>
+<p>all the other girls in her class had already sworn their oaths as members of the sisterhood. She </p>
+<p>knew she was just as capable a warrior as any of them; in fact, her proﬁciency with the quarterstaff </p>
+<p>was almost unmatched among her priestess-sisters.</p>
+<p>But the Order was not satisﬁed with her skill in battle alone, and she also did her best to </p>
+<p>embody the courageous spirit and honorable character of an armored priestess. Why, only last </p>
+<p>week she had negotiated an elusive truce between a hamlet and its adjoining Druid’s Grove, and </p>
+<p>just yesterday she had successfully banished a plane-walking djinn, sneaking into its tent and </p>
+<p>stealing its lamp while it was distracted elsewhere.</p>
+<p>These accomplishments had failed to impress the priestesses, to her great dismay. Often it </p>
+<p>seemed as if nothing she could do was ever enough for them. </p>
+<p>No, she was fairly certain she knew why she’d been overlooked by the sisterhood. In fact, she </p>
+<p>had two big reasons.</p>
+<p>Her fellow priestesses all wielded some degree of aroused breast growth in combat, and Lena </p>
+<p>knew her own to be especially pronounced. She knew that her natural ability was enhanced further </p>
+<p>by the enormous size of her breasts, which would extend forward beyond her elbows even when </p>
+<p>she was at rest. She had been training with their burden for years, though, and she had gained a </p>
+<p>subtly muscular tone that allowed her to carry even their sizable mass with ease.</p>
+<p>Like most warriors, she had always faced battle wearing a Sweetwater breast charm, usually </p>
+<p>clasping it around her left nipple. It helped control and direct her arousal, keeping her huge chest </p>
+<p>from growing rampantly out of control, although lately she’d been learning to use this ability to her </p>
+<p>advantage.</p>
+<p>The previous evening, she and several other trainees had happened upon a dispute between </p>
+<p>a pair of female merchants. It was a tense situation that she feared may come to blows. She </p>
+<p>pushed to the front of the gathering crowd, centering herself on her targets, and reached for the </p>
+<p>magical charm clamped around her left nipple. Detaching it, she tucked it inside a small pouch tied </p>
+<p>around her belt. Her huge breasts quivered, shimmying lazily around her waist, her abilities now </p>
+<p>fully unconstrained.</p>
+<p>She felt a pleasurable shuddering within herself, then a growing warmth that signaled the </p>
+<p>onset of her arousal. Her breasts started to swell larger and she heard an almighty creak from her </p>
+<p>2</p>
+<p>reticulating armor as it strained against her growing ﬂesh. Her bosom grew ever larger, its already </p>
+<p>huge size now becoming truly immense as it bounced heavily around her hips.</p>
+<p>She leapt to action, grasping both merchants with her powerful arms and pinning them </p>
+<p>beneath her mighty bosom. Her breasts swelled even larger in these next critical moments as she </p>
+<p>focused her arousal. Their great weight proved to be an effective deterrent, and she held the </p>
+<p>merchants tightly until their anger gave way to their own reluctant arousal. She released them only </p>
+<p>after she felt their chests starting to grow and press against her own.</p>
+<p>Since then, her fellow trainees were treating her with newfound respect. Lena Thunderteats, </p>
+<p>they called her, and she couldn’t help but revel in their envy and begrudging approval. She had </p>
+<p>caught more than a few of them eyeing her, too, and she was certain they’d call upon her skilled </p>
+<p>tongue after they returned to their barracks at the Order. They had indeed, but future adventures </p>
+<p>like this one, she feared, might now be beyond her grasp.</p>
+<p>Unfortunately, her quick thinking had come at a cost: the immense size of her rapidly growing </p>
+<p>breasts had overextended her armor, stretching and distorting the leather. The craftsmanship of </p>
+<p>Sweetwater’s ﬁnest smiths was clearly no match for the might of her surging breasts, and </p>
+<p>numerous metal plates had detached and fallen from her armor, the metal bent and twisted into </p>
+<p>unrecognizable shapes.</p>
+<p>Lena and the other trainees had endured many lectures stressing that the armor of a </p>
+<p>priestess is sacred: it lends her an air of dignity at rest and an aegis of protection in battle. Lena </p>
+<p>knew that the state of her armor would invite scrutiny from the High Priestess, and this morning she </p>
+<p>feared that she might even be risking expulsion from the Order.</p>
+<p>The gentle caress of a cool morning breeze tickled across the front of her huge breasts, her </p>
+<p>nipples fully exposed as they thrust through her misshapen armor. She shuddered involuntarily. Her </p>
+<p>breast charm, as ever dutifully clamped around her thick left nipple, was quietly sparking. Its </p>
+<p>enchantment was ﬁghting a losing battle against the delicious sensations emanating from her </p>
+<p>bosom. </p>
+<p>She reached forward, palms open, bending her arms around the front of her ponderous chest. </p>
+<p>She could feel the heat from her exposed nipples as they throbbed urgently in the cool air, as if </p>
+<p>blissfully unaware of the great shame she felt on her shoulders. She curled her ﬁngers in </p>
+<p>anticipation, reaching ever closer to her throbbing nubs…</p>
+<p>“First time?”</p>
+<p>3</p>
+<p>Lena whirled around, nearly losing her balance as her great bosom swung heavily. </p>
+<p>A tall, muscular woman, clad in thick gold-plated armor nearly from head to toe, was standing </p>
+<p>just outside the archway. This, Lena realized, could only be a member of the High Priestess’ elite </p>
+<p>guard. The armored warrior waited expectantly, regarding her with a bemused expression.</p>
+<p>“I, ah, the High Priestess…” Lena started, trailing off. She had hoped for a brief moment of </p>
+<p>calm to herself, but she was now stammering and ﬂushing red with embarrassment. So </p>
+<p>preoccupied had she been relieving herself, that she had failed to notice this imposing presence </p>
+<p>nearby.</p>
+<p>The gold-plated warrior’s expression softened.</p>
+<p>“You poor thing,” she frowned for a brief moment, then beamed widely. </p>
+<p>“Liquid courage?”</p>
+<p>Lena nodded, feeling grateful. It was an honor to be offered such a gift by an elite warrior, and </p>
+<p>she wouldn’t dare miss this opportunity. Plus, she thought, it might help calm her nerves.</p>
+<p>The golden warrior loosened her articulating plate, unbuckling its leather straps, and slung it </p>
+<p>off her shoulders. She carefully leaned it against the archway then stood upright again, nude from </p>
+<p>the waist up, her beautiful tan skin bathed in the dim candlelight. She grinned and grasped a small </p>
+<p>charm around her right nipple. Unclasping it with a practiced movement, she stored it in a small </p>
+<p>pouch tied around her belt. </p>
+<p>She stood at attention before an astonished Lena. She winked at Lena, then focused, closing </p>
+<p>her eyes and clenching her hands into tight ﬁsts. Her bosom seemed to shudder, her natural </p>
+<p>abilities now fully unconstrained.</p>
+<p>Lena was lost in admiration, her troubles put aside as she cast her eyes over this stunning </p>
+<p>amazon. She gasped in surprise to see the warrior’s modest bosom suddenly surge outwards with </p>
+<p>a great wave of growth, then another, and another still until her glorious tanned breasts were far </p>
+<p>larger than Lena’s own huge pair. </p>
+<p>Lena’s gaze was drawn to the guard’s thick nipples, thrusting gloriously erect outwards from </p>
+<p>her newly enlarged bosom. After a tense moment, a few droplets of opaque white liquid appeared </p>
+<p>at their tips, which then gave way to a powerful milky spray from both thick nipples. Lena felt her </p>
+<p>4</p>
+<p>mouth falling open, stunned at the incredible breasty prowess of the elite warriors in the High </p>
+<p>Priestess’ inner circle.</p>
+<p>The guard beckoned and Lena stumbled forward. She suddenly felt utterly parched, her </p>
+<p>urgent need almost palpable. She approached from the side, her own ponderous bosom thrusting </p>
+<p>forward until she felt it rubbing against the taller woman. She took another half step forward and fell </p>
+<p>to her knees, enveloping the amazon’s ﬁrm abdomen entirely within her huge cleavage. </p>
+<p>This had the fortunate effect of raising the guard’s huge spurting breasts atop her own, a great </p>
+<p>ﬂeshy shelf projecting forward far beyond either of their arm-spans, but fortunately positioning her </p>
+<p>spurting nipples just inches away. Without further ceremony, Lena happily slurped a milky nipple </p>
+<p>into her mouth.</p>
+<p>The taste was simply divine, she thought, as fresh and invigorating as she’d imagined it would </p>
+<p>be. She suckled noisily for long leisurely minutes, drinking and swallowing great mouthfuls of </p>
+<p>delectable milk from one spurting nipple, then the other, and ﬁnally both at once as she stuffed </p>
+<p>them together into her hungry mouth. She felt a calm resolve returning and settling within her, as if </p>
+<p>emanating from the milky essence that she felt warming her from within. </p>
+<p>She reluctantly detached from both leaky nipples, swallowing one ﬁnal milky mouthful and </p>
+<p>pausing to savor the taste. She disentangled herself from the taller woman, whose bemused </p>
+<p>expression had returned, and stood, embracing her to demonstrate her grateful appreciation. She </p>
+<p>grinned as her milky tongue was slurped into the guard’s mouth, who sucked hard and smiled back </p>
+<p>as they shared and swallowed between them the last remnants of her milky bounty.</p>
+<p>Lena reciprocated, thinking it only polite to express her gratitude by gently sucking on the </p>
+<p>amazon’s tongue. They embraced for several quiet minutes, rubbing their lips together and kissing </p>
+<p>languidly. </p>
+<p>courage she was looking for.</p>
+<p>At long last, having felt the swirling storm of her arousal and embracing it, Lena found the </p>
+<p>She turned towards the archway with renewed resolve, but kept the amazon’s milky teats in </p>
+<p>her grasp. She was still idly squeezing them, feeling them spurting great sheets of milk across the </p>
+<p>Order’s stone ﬂoors. </p>
+<p>5</p>
+<p>She knew she couldn’t delay any longer; the time for hesitation had passed. She released the </p>
+<p>amazon’s milky nipples and rose to her feet. The calm further settled in her mind, building now into </p>
+<p>a powerful conﬁdence: it was time to face the High Priestess. </p>
+<p>She held her breath and, brushing the thick curtain aside, stepped through the archway.</p>
+<p>(cid:15911)</p>
+<p>The late afternoon sun cast long shadows through the windows of the Great Library of the </p>
+<p>Scholar’s Guild. Amie had long enjoyed wandering leisurely between the shelves, gazing at the </p>
+<p>leather-bound tomes and their elaborate titles. </p>
+<p>Sometimes one of her thirstier Guild sisters would follow, opening Amie’s robes and gorging </p>
+<p>herself with a long drink from Amie’s spurting nipples, all while they tried to avoid running into any </p>
+<p>of the mistress scholars. Amie was happy to indulge the younger girls and herself at the same time, </p>
+<p>for there was little she enjoyed more than sharing her milk.</p>
+<p>Today, though, her vision seemed strangely dark and blurry, and her mind felt hazy. She also </p>
+<p>sensed her chest burning with unexpressed need, as if she hadn’t been milked even once since the </p>
+<p>previous evening. Her breasts had grown huge, sloshing heavily in her scholar’s robes around her </p>
+<p>waist. </p>
+<p>familiar…</p>
+<p>She raised her eyes to see a robed ﬁgure, its back turned, standing next to her by a large </p>
+<p>bookshelf. An unruly mass of ﬁery red curls emerged from the robe’s hood. She seemed strangely </p>
+<p>The blurriness in her vision faded, and she looked down to see herself holding hands with the </p>
+<p>robed girl. Suddenly her arm was yanked forward, and the ﬁgure turned to reveal the laughing face </p>
+<p>of Sister Katryn, a fellow scholar and one of her dearest friends at the Guild.</p>
+<p>She desperately hoped that Kat would milk her soon, although for the moment she was </p>
+<p>grateful for being led through the stacks. She smiled and settled in close when Kat paused at the </p>
+<p>end of a long shelf. She pressed her swollen breasts into Kat’s, feeling the substantial warmth of </p>
+<p>her friend’s large chest against her own even through the combined fabric of their scholar’s robes.</p>
+<p>6</p>
+<p>A minute later they were sneaking down the stairs. Amie grinned, knowing that the reading </p>
+<p>room in the library’s basement was likely to be vacant around now.</p>
+<p>Kat released Amie’s hand and ran ahead, then around a corner and out of sight. With her </p>
+<p>friend gone, Amie felt the weight of her bosom more acutely than ever, and struggled to remain </p>
+<p>standing as she staggered ahead.</p>
+<p>She stepped through a doorway to ﬁnd Kat reclining nude, resting atop her discarded robe on </p>
+<p>one of the reading room’s couches. She smirked at the younger girl and shed her own robe, tossing </p>
+<p>it aside. She stalked sultrily towards her lover, her milky need forgotten for the moment.</p>
+<p>Kat’s nipples suddenly started leaking their own milk. Amie gasped — how was this possible? </p>
+<p>She recalled that Kat had once touched her magical charm; maybe her lover had absorbed some of </p>
+<p>its power? </p>
+<p>She stepped closer. Kat was beaming, and slowly spread her legs wide with anticipation.</p>
+<p>Amie paused, pressing upwards underneath both of her breasts, thrusting her nipples up </p>
+<p>towards her own mouth. With little effort they gave way to her milk, and she reveled in her own </p>
+<p>delicious essence cascading across her face. </p>
+<p>She sighed; she had always enjoyed the taste. She raised her arms above her head, smiling.</p>
+<p>7</p>
+<p>Amie and Sister Katryn in the library basement</p>
+<p>by JessHavok</p>
+<p>Amie blinked. Suddenly she was sitting next to Kat in the Guild’s dining hall during a busy </p>
+<p>dinnertime. She felt the pressure in her bosom still building, growing more urgent with each passing </p>
+<p>moment, and she hoped they’d ﬁnish eating before she started leaking milk through her robes.</p>
+<p>Kat was grinning, her upper lip coated in a ﬁne sheen of milk. She stared lovingly at Amie, </p>
+<p>then licked slowly along her milky lip, slurping the liquid into her mouth and swallowing luxuriously. </p>
+<p>In her hand was a large wooden cup, which she extended towards Amie with a pleading look in her </p>
+<p>eyes.</p>
+<p>8</p>
+<p>Amie smiled back with a conspiratorial wink, knowing that her lover wanted a reﬁll of hot milk </p>
+<p>directly from the source. Kat’s thirst for her milk was especially pronounced around meal times, and </p>
+<p>most dinners lately would end with Kat’s head in her lap under the table, her friend suckling </p>
+<p>urgently at her dripping nipples. She reached for the cup in Kat’s hand, grateful for the chance to </p>
+<p>ease her milky burden while indulging her lover at the same time.</p>
+<p>A bright yellow light shone through the dining hall windows, casting the entire room in a </p>
+<p>curious golden hue. </p>
+<p>world went silent for Amie. </p>
+<p>furrowed with concentration.</p>
+<p>The bustle of a busy dinnertime faded, the sound receding as if sucked out of the room. The </p>
+<p>She saw Kat’s lips moving, but she couldn’t make out any words. She leaned closer, her brow </p>
+<p>The sound of ﬂowing water came to her ears, ﬁrst as a small trickle but growing into a stream, </p>
+<p>a river, and ﬁnally a great ocean of sound. She tried to speak, but she realized with a start that she </p>
+<p>couldn’t even hear herself. The roar of rushing liquid grew steadily louder in her ears.</p>
+<p>She blinked again and saw Kat’s room in the Guild’s dormitory. The noise had gone and she </p>
+<p>could hear only silence once again.</p>
+<p>She whirled around to ﬁnd herself reclining on Kat’s bed, alone — or so she thought, until she </p>
+<p>felt a gentle tugging at her nipple. Leaning forward over the huge swell of her engorged breast, she </p>
+<p>saw Kat’s ﬁery red curls. Stretching further, she saw Kat’s ruby-colored lips wrapped around her </p>
+<p>thick teat. It felt wonderful, even through the strange haze in Amie’s mind.</p>
+<p>Kat was gently suckling and swallowing her milk. Amie was glad for the intimate attention and </p>
+<p>for Kat’s practiced movements, which so efﬁciently drained her milky burden. She giggled as she </p>
+<p>felt Kat’s hot nipples poking at her inner thighs.</p>
+<p>Kat disengaged from a dripping nipple and leaned back, smiling. She was again mouthing </p>
+<p>words, but the crescendoing sound of rushing water had returned in Amie’s ears, and she could </p>
+<p>hear nothing else. Did Kat hear it as well? </p>
+<p>Amie stared at Kat’s ruby red lips.</p>
+<p>Within you. It was a fragment of an idea, but it was all that Amie could understand. </p>
+<p>9</p>
+<p>A trickle of milk emerged from Kat’s lips, dripping down her chin and falling to the bedsheets. </p>
+<p>It impacted with a curious tinny <em>ping</em>, as if it had struck metal instead of soft fabric. </p>
+<p>Amie felt a rush of adrenaline. It cut through the haze in her mind and displaced the throbbing </p>
+<p>urgency of her milky burden. That strange yellow light, and the sourceless rushing liquid… it all </p>
+<p>seemed somehow familiar. </p>
+<p>Something wasn’t right. What magic was this?</p>
+<p>(cid:15911)</p>
+<p>High Priestess Soﬁa’s chambers were shaped as if cut from a single smooth, grey stone. The </p>
+<p>ﬂoor was gently sloped, angling down from all four corners towards a small drain in the center of </p>
+<p>the room. Lena recognized this to be a common accommodation for the unique abilities of the </p>
+<p>women of Sweetwater, although she had never seen any ﬂoor as ﬁnely constructed as this.</p>
+<p>The room was mostly empty, dimly lit by the ﬂicker of candlelight, and it was a few moments </p>
+<p>before her sight adjusted to the darkness. She blinked rapidly, realizing there was something </p>
+<p>directly in front of her: a generously-sized bed, its four corner posts carved from a dark mahogany </p>
+<p>wood.</p>
+<p>her feel at ease.</p>
+<p>As she stood ﬁdgeting uncertainly, a feminine voice reached her ears from somewhere in the </p>
+<p>darkness. It was melodious and airy, like a fresh spring breeze, with a calming effect that helped </p>
+<p>“Trainee Lena, welcome,” it said, almost singing.</p>
+<p>Lena instinctively stood upright at attention, her exposed nipples thrusting through her armor </p>
+<p>and swaying before her from her sudden movements. She clasped her hands together underneath </p>
+<p>her chest, then nervously unclasped them again, leaving her arms hanging loosely at her sides.</p>
+<p>“Today, Lena, we revel in the compassion of a priestess. Are you prepared?” said the musical </p>
+<p>voice in her ears. </p>
+<p>Lena could feel her heart thumping and the rush of blood in her ears. What kind of test of </p>
+<p>compassion could the High Priestess have in mind?</p>
+<p>10</p>
+<p>“Yes, High Priestess,” she said, looking down at her huge chest thrusting through her tattered </p>
+<p>plate. She was relieved, for the moment, to have avoided any inquiry about her armor. </p>
+<p>She felt a pleasurable crackling around her left nipple. Her breast charm was reverberating </p>
+<p>with energy, helping her stay calm as she tried to focus through her arousal. Her nipples stretched </p>
+<p>achingly erect in the cool morning air, her growth abilities barely restrained.</p>
+<p>“You walk alone on a remote country road,” said the sourceless voice. </p>
+<p>Lena had completed many tours of the Sweetwater countryside with her fellow trainees, and </p>
+<p>this was easy for her to imagine.</p>
+<p>“On the path ahead, a girl approaches you.”</p>
+<p>Lena felt her arousal simmering, and after a long moment, a ﬁgure emerged from the </p>
+<p>darkness. Every trainee knew that the High Priestess was said to be of legendary beauty and </p>
+<p>astonishing grace, but the woman now coming into view was unlike anyone Lena had ever seen. </p>
+<p>Her tan skin was ﬂawless, warmly reﬂecting the dim candlelight. She had long amber hair that </p>
+<p>fell to her waist, with delicate features and a ﬁrm jawline that gave her an effortless beauty. Her </p>
+<p>powerful-looking shoulders atop subtly muscular arms seemed impeccably ﬁrm, while still feminine </p>
+<p>and soft. Her legs were slender and her toenails had been painted a bright yellow color. </p>
+<p>Her most prominent features extended far in front of her and several feet beyond her sides, </p>
+<p>obscuring her torso and hips from Lena’s view. Her breasts were truly colossal, taut and ﬁrm </p>
+<p>despite being far larger even than Lena’s would be after a bout of uncontrolled growth. Lena </p>
+<p>realized with a start that this incredible woman was completely nude.</p>
+<p>She found her gaze drawn towards the turgid pink nipples at the tips of the woman’s breasts, </p>
+<p>each teat throbbing as it strained fully erect, longer even than Lena’s handspan. A few droplets of </p>
+<p>opaque white liquid formed around them. The milky ﬂow increased, and her ears were soon treated </p>
+<p>to a series of quiet splattering noises as Soﬁa’s dripping milk impacted the stone ﬂoor below.</p>
+<p>As astonishing as this goddess was, though, right now she seemed to be embodying </p>
+<p>someone else entirely. Soﬁa’s eyes were wide with youthful wonder and a hint of fright. She would </p>
+<p>have been taller than Lena if she had been standing upright, but her long, slender legs were bent </p>
+<p>as she took small, halting footsteps towards Lena. She bit her lip, frowning uncertainly.</p>
+<p>11</p>
+<p>This could be none other than High Priestess Soﬁa herself. But in Lena’s eyes, Soﬁa’s overall </p>
+<p>affectation gave the impression of a young woman, one who seemed confused and perhaps even </p>
+<p>apprehensive. </p>
+<p>to face Lena.</p>
+<p>Soﬁa paced delicately until she had centered herself between the bedposts. She extended </p>
+<p>her arms forward, resting her hands on the great spheres of her enormous nude bosom, and turned </p>
+<p>“Miss? Are you a priestess of Sweetwater? Can you help me?” she said in a small, timid </p>
+<p>voice, entirely unlike the melodious tones that had ﬁlled the air only moments earlier.</p>
+<p>Lena stared at her. This was not at all what she had been expecting. She opened her mouth </p>
+<p>and closed it again, thinking it probably not the right time to insist that she was only a trainee.</p>
+<p>Soﬁa seemed to sense Lena’s hesitancy. For a brief instant she was the High Priestess again, </p>
+<p>and allowed herself a momentary eye roll. </p>
+<p>Lena saw this gesture and ﬂushed red, suddenly remembering her place.</p>
+<p>“I… yes. How can I help?” Lena said, trying to project the assured conﬁdence of a priestess, </p>
+<p>despite the distraction of the impossible beauty next to her.</p>
+<p>Soﬁa rubbed small circles in the sea of her exposed bosom. This gentle pressure caused a </p>
+<p>momentary increase in her lactation, and sudden sprays of milk from both of her nipples showered </p>
+<p>upon large swaths of the ﬂoor below. The hot milk ran down the ﬂoor’s slight incline, wetting Lena’s </p>
+<p>bare feet as it ﬂowed to the drain at the center of the room. Lena shivered from the sensation.</p>
+<p>“There’s something happening to me, and I’ve never felt this way before…” Soﬁa said quietly, </p>
+<p>trailing off. She averted her eyes and stared demurely at the milk-soaked ﬂoor.</p>
+<p>Lena immediately felt a sense of kinship with this girl, whom she had to keep reminding </p>
+<p>herself was the High Priestess herself, Sweetwater’s paragon of femininity. She recalled the </p>
+<p>Order’s teachings about the many blessings of the women in their kingdom.</p>
+<p>“Yes, like all women of our kingdom, we gain certain… gifts when we become aroused,” Lena </p>
+<p>said softly.</p>
+<p>“But fear not, for I will be your guide,” she said, smiling. </p>
+<p>12</p>
+<p>She took a step closer, approaching Soﬁa from the side until she felt her exposed nipples </p>
+<p>rubbing against the great expanse of Soﬁa’s left breast. She paused, smiling and slowly twisting her </p>
+<p>shoulders, thrilling with the sensation of her hard nubs dragging back and forth across Soﬁa’s hot </p>
+<p>ﬂesh in a show of open friendship.</p>
+<p>Soﬁa bit her lip and looked up at Lena, frowning. This made something snap in Lena’s mind, </p>
+<p>and she decided at once to embrace this opportunity. </p>
+<p>“First, become still and bring your focus within,” Lena said, lifting her hand and gently </p>
+<p>brushing Soﬁa’s amber hair behind her ear. She continued, tracing along Soﬁa’s neck, gently </p>
+<p>caressing until her ﬁnger was under Soﬁa’s chin. </p>
+<p>She leaned in slowly, amazed at her own gall, their lips just inches apart… but paused, </p>
+<p>frustratingly close, when she felt a gentle pressure pushing her away. She could feel that Soﬁa’s </p>
+<p>massive breasts were swelling even larger. </p>
+<p>She stepped back, her eyes wide, and saw Soﬁa vigorously rubbing her own swelling ﬂesh </p>
+<p>with both hands as it spread outwards between her ﬁngers. Her breasts continued to grow steadily </p>
+<p>larger until they obscured most of her slender thighs from Lena’s view. Her milky nipples were </p>
+<p>stretching longer, straining further outwards until Lena realized with a start that they resembled her </p>
+<p>own forearms in thickness and length.</p>
+<p>Soﬁa’s colossal bosom somehow remained buoyant as it surged ever larger, bouncing and </p>
+<p>swaying in great rolling waves as it crept below her knees. Her dripping milk increased in volume </p>
+<p>until it was spurting steadily from both great nipples, raining in a tremendous milky shower upon the </p>
+<p>chamber’s stone ﬂoors. </p>
+<p>Soﬁa seemed to be somehow unburdened by her colossal chest. She hefted her bosom with </p>
+<p>both arms, sending delicious ripples throughout, as she peered questioningly at Lena.</p>
+<p>“Miss? Can you help me with my breasts?”</p>
+<p>Lena felt her mouth becoming dry once again. Her toes suddenly felt warm and wet from an </p>
+<p>errant spray of Soﬁa’s milk, and she couldn’t help but imagine its taste. </p>
+<p>She blinked, remembering her act as she watched Soﬁa’s growth ﬁnally slowing. </p>
+<p>“The most blessed of us may experience some… slight breast growth,” she said, recalling her </p>
+<p>training and trying to sound authoritative despite making such an obvious understatement.</p>
+<p>13</p>
+<p>“But your milk deserves further study,” she said slowly. She had never seen spontaneous </p>
+<p>lactation on this scale and hoped that Soﬁa wouldn’t notice her surprise.</p>
+<p>She stepped back, then paced around to Soﬁa’s front and knelt on the wet, milky ﬂoor facing </p>
+<p>her. She raised her arms, pressing her own big chest from below into a soft platform underneath </p>
+<p>Soﬁa’s enormous hanging breasts. </p>
+<p>As large as her own bosom was, though, she had failed to account for the tremendous new </p>
+<p>size of the High Priestess, and suddenly doubted whether her huge cleavage could support even </p>
+<p>one of Soﬁa’s massive milky breasts. </p>
+<p>At least, she thought, the High Priestess seemed to have stopped growing for now. Soﬁa’s </p>
+<p>breasts remained taut and ﬁrm, waving slowly in the air before her despite their incredible size.</p>
+<p>She thought better and released her own bosom, instead reaching up and to the sides. With </p>
+<p>both arms outstretched, she was just barely able to wrap one hand around each of Soﬁa’s </p>
+<p>enormous leaky nipples. They were slick with milk and throbbed urgently in her grasp.</p>
+<p>“Hold steady, young miss, and I shall milk you,” Lena said, raising her voice to be heard above </p>
+<p>the splattering of Soﬁa’s uncontrolled lactation on the ﬂoor behind her.</p>
+<p>She slid both hands up the full length of Soﬁa’s nipples, pausing to press her palms against </p>
+<p>their tips. She continued around, gripping their undersides and sliding slowly back in the other </p>
+<p>direction towards their great bases. </p>
+<p>She heard Soﬁa gasp above her. She grinned, the sound of splattering milk increasing in her </p>
+<p>ears. She alternated her grip on one spurting teat and then the other, increasing the speed of her </p>
+<p>motions. </p>
+<p>Soon she was wildly milking both of Soﬁa’s gushing nipples, laughing as errant spurts of milk </p>
+<p>fell upon her beaming face. Her long blonde hair, braided tight and falling down her back, was </p>
+<p>quickly soaking through with Soﬁa’s milk.</p>
+<p>Pausing her milking motions for a moment, she allowed herself a moment to revel in how well </p>
+<p>she imagined her test was going. </p>
+<p>This was a mistake, she soon realized, as a jet of sticky liquid suddenly emerged from within </p>
+<p>Soﬁa’s great cleavage and struck her square in the face. It was followed a moment later by another </p>
+<p>great gush, this one ﬁlling her open mouth. </p>
+<p>14</p>
+<p>She swallowed instinctively. The taste was simply divine, sticky and sweet, and she </p>
+<p>immediately knew it to be Soﬁa’s powerful arousal. She felt its warmth ﬁlling her stomach and </p>
+<p>spreading across her insides. </p>
+<p>She blinked, shaking her head and again remembering herself.</p>
+<p>“Like all women of Sweetwater, my dear, you may ﬁnd yourself becoming slightly… wet when </p>
+<p>you become aroused,” Lena said, trying to sound conﬁdent despite making another obvious </p>
+<p>understatement.</p>
+<p>Soﬁa’s proliﬁc arousal continued dripping down her legs and spurting forward through her </p>
+<p>great cleavage. A faint splashing sound reached Lena’s ears as Soﬁa’s proliﬁc arousal washed </p>
+<p>across the ﬂoor around them.</p>
+<p>Lena tried to focus her willpower. It didn’t help that a foggy haze of arousal had taken hold in </p>
+<p>her mind, and Soﬁa’s incredible squirting tasted simply wonderful on her tongue and felt dripping </p>
+<p>down her bare skin.</p>
+<p>She released her grip on Soﬁa’s slick nipples and reached forward, gently spreading apart </p>
+<p>Soﬁa’s bosom with her arms. She gazed upwards, still on her knees, making eye contact with the </p>
+<p>beautiful visage of the High Priestess.</p>
+<p>“M…Miss, it’s my... oh!” Soﬁa whispered, looking down at Lena and shuddering with another </p>
+<p>uncontrolled gush of her arousal. </p>
+<p>“Can’t you help?” she gasped, her eyes pleading.</p>
+<p>Lena lowered her eyes, gazing ahead between Soﬁa’s enormous breasts at an incredible </p>
+<p>sight. </p>
+<p>Great rivers of Soﬁa’s dripping arousal were streaming down her long, slender legs, which </p>
+<p>now sparkled in the dim candlelight. Lena was pushing outwards with both arms, straining with the </p>
+<p>effort of creating for herself a small pocket of air between Soﬁa’s colossal cleavage. She shufﬂed </p>
+<p>forward on her knees, fully enveloping herself within Soﬁa’s great bosom, and gasped in awe as </p>
+<p>Soﬁa’s beautiful pussy ﬁlled more and more of her vision. </p>
+<p>She was drawing nearer Soﬁa’s dripping center. As she approached, she could feel a </p>
+<p>powerful heat that seemed to burn away the wet droplets of arousal almost as soon as they </p>
+<p>15</p>
+<p>splashed upon her face. The splattering of Soﬁa’s spurting milk on the ﬂoor was still audible behind </p>
+<p>her, but more quietly now as the ﬂesh of Soﬁa’s bosom had closed in, mufﬂing the sound.</p>
+<p>She was now just inches away from Soﬁa’s gushing pussy. The volume of squirting liquids </p>
+<p>seemed to increase, splashing great waves of hot arousal across Soﬁa’s legs and Lena’s body, the </p>
+<p>excess splattering onto the ﬂoor. Lena squeezed her eyes shut, opening her mouth and extending </p>
+<p>her tongue to catch as much of the sticky liquid as she could. The heat on her face was almost </p>
+<p>overpowering, and as she leaned ever closer, she knew she was mere moments from tasting </p>
+<p>Soﬁa’s ambrosia…</p>
+<p>At once the hot embrace of Soﬁa’s nethers vanished. Lena felt cool air on her dripping wet </p>
+<p>skin, making her shiver involuntarily. She opened her eyes to ﬁnd Soﬁa a few paces away, standing </p>
+<p>now at her full height and smiling down at her.</p>
+<p>“Stand and recite your oath,” Soﬁa intoned, speaking once again as the High Priestess. </p>
+<p>Lena’s eyes widened. Every trainee knew the oath, but to recite it before the High Priestess </p>
+<p>could only mean—</p>
+<p>along the milky ﬂoor.</p>
+<p>She leapt to her feet, her heart in her throat, almost losing her balance when her foot slipped </p>
+<p>Soﬁa turned slightly, showing her proﬁle. Her milk had calmed its furious spraying from both </p>
+<p>nipples, now reduced to occasional thick streams that ran down the vast undersides of her bosom. </p>
+<p>Her colossal breasts extended several arm-lengths in front of her, their undersides bouncing </p>
+<p>together below her knees, but she hardly seemed to notice their weight at all. Lena admired this </p>
+<p>seemingly effortless demonstration of magical control.</p>
+<p>“Whom do you serve?” queried Soﬁa.</p>
+<p>“I serve the kingdom of Sweetwater!” Lena replied, ﬁnding her voice and bursting with pride.</p>
+<p>“And who speaks for Sweetwater?”</p>
+<p>“You do, Most Milky Mistress,” said Lena, embellishing with one of Soﬁa’s many formal </p>
+<p>honoriﬁcs.</p>
+<p>The High Priestess beamed at her. Lena felt as if she were staring directly into the sun. The </p>
+<p>allure of Soﬁa’s approval was overpowering.</p>
+<p>16</p>
+<p>“Congratulations, Priestess Lena of Sweetwater,” Soﬁa announced with a ﬂourish. </p>
+<p>Lena’s heart felt too large for her chest, and a great wave of pride in her homeland washed </p>
+<p>over her. But there was one thing, she thought, that would make this moment even better.</p>
+<p>Soﬁa paused, pondering at her newest charge, then grinned.</p>
+<p>“I know what you desire. Come, Lena,” she said, beckoning.</p>
+<p>Lena gasped. It couldn’t be… she couldn’t mean… to do such a thing with the High Priestess </p>
+<p>herself—</p>
+<p>edge of the bed. </p>
+<p>Soﬁa stepped towards the sturdy wooden bed. She turned, the great expanse of her bosom </p>
+<p>swinging around, and sat on its edge. She made eye contact with Lena, grinning and sliding </p>
+<p>backwards with her long legs squeezed tightly together, then sat upright with her toes even with the </p>
+<p>Her enormous bosom rested heavily on either side of her legs, extending over the edge of the </p>
+<p>bed. Her great nipples had retained every inch of their tremendous new sizes, waving slowly in the </p>
+<p>air and dripping small spurts of milk onto the stone ﬂoor below. </p>
+<p>Despite the tantalizing smell of fresh, hot milk, Lena’s eyes had ﬁxated elsewhere. She stared </p>
+<p>directly through Soﬁa’s immense cleavage towards her ﬁrm stomach and along her subtly muscular </p>
+<p>legs, still pressed tightly together and shining wet with her essence.</p>
+<p>Soﬁa leaned slowly backwards, resting on her elbows, sending great shimmying quakes </p>
+<p>through her bosom.</p>
+<p>couldn’t believe—</p>
+<p>Lena felt as if time were slowing to a crawl. She fought through her arousal, but she still </p>
+<p>Soﬁa made eye contact with Lena and, ever so slowly, spread her legs. Her feet soon rubbed </p>
+<p>against the inner walls of her bosom, and she pointed her toes, sliding them further outwards until </p>
+<p>each leg slid out of view underneath a huge ﬂeshy breast. </p>
+<p>Her beautiful bare pussy came into Lena’s sight. It was dripping furiously, spurting her arousal </p>
+<p>and spreading a large wet spot onto the sheets below. </p>
+<p>Soﬁa grinned, seeing Lena frozen in place, and thought she’d help the poor girl along by </p>
+<p>stating the obvious.</p>
+<p>17</p>
+<p>“Come, Lena. Give us your pretty pussy,” she said quietly. </p>
+<p>Lena gasped again. She couldn’t believe her good fortune. The most intimate of gestures in </p>
+<p>Sweetwater society, and to share it with the High Priestess herself? It was beyond her wildest </p>
+<p>dreams. </p>
+<p>She took a halting step forward, then another—</p>
+<p>“Remove your armor,” Soﬁa intoned. </p>
+<p>Lena paused mid-step to bend over and detach her leggings. She sensed her own arousal </p>
+<p>starting to drip down her bare legs. She shrugged the tattered remains of her articulating plate over </p>
+<p>her shoulders, leaving it in a messy pile by her feet, and stood fully nude before the High Priestess.</p>
+<p>With a hesitant step forward, and another, she found herself enveloped between the outer </p>
+<p>reaches of Soﬁa’s grand bosom. She turned to the side, lifting one and then the other leg over the </p>
+<p>edge of the bed.</p>
+<p>She paused there, between Soﬁa’s spread legs, as she felt the burning heat of Soﬁa’s pussy </p>
+<p>warming her bare skin once again. The towering walls of Soﬁa’s bosom enveloped her, seemingly </p>
+<p>channeling the heat from Soﬁa’s center towards her. She felt it ﬁrst across her arms and legs, then </p>
+<p>her breasts and ﬁnally her entire being seemed to exalt in her intimate proximity to this stunning </p>
+<p>goddess.</p>
+<p>weightless on her.</p>
+<p>Soﬁa’s. </p>
+<p>She lifted her left leg over Soﬁa’s right leg and extended it forward, pushing it beneath Soﬁa’s </p>
+<p>colossal right breast. For all its staggering expanse, it felt reassuringly warm and somehow </p>
+<p>She was so close now. Time seemed to slow further as she slid her right leg under Soﬁa’s left </p>
+<p>leg. Her dripping pussy, so obviously betraying her arousal, was now positioned directly above </p>
+<p>Lena grabbed at her own bosom, pulling it apart and staring down at their imminent union. </p>
+<p>She saw herself now steadily dripping with arousal, which fell a short distance until it was lost </p>
+<p>among the great volume of liquids gushing from the High Priestess’ beautiful bare pussy.</p>
+<p>Lena dropped the remaining distance all at once. Their centers ﬁnally met with a large wet </p>
+<p>slap, which soon gave way to a rhythmic squelching sound. Her hips had started thrusting as if of </p>
+<p>18</p>
+<p>their own accord, which made a strange kind of sense in Lena’s hazy delirium, as if every other part </p>
+<p>of her body were watching her pussy in stunned amazement.</p>
+<p>The heat from Soﬁa’s center was nearly overwhelming. Lena felt it caressing her entire body, </p>
+<p>its warmth spreading to her extremities and elevating her arousal even further. She had never </p>
+<p>known such heights of pleasure before. Her mind was nearly lost in an aroused haze, and she </p>
+<p>endeavored merely to preserve their intimacy as long as the High Priestess would allow.</p>
+<p>Her bosom felt tense, and she sensed it was still slowly growing, pressing against the inner </p>
+<p>wall of Soﬁa’s massive right breast. With each rolling thrust of her hips, her nipples rubbed furiously </p>
+<p>against the hot ﬂesh of Soﬁa’s breast. </p>
+<p>Lena was near the very peak of her arousal, and she felt herself plunging over the edge. She </p>
+<p>threw her head back in ecstasy, her hips still thrusting her pussy against Soﬁa’s, riding rolling </p>
+<p>waves of pleasure.</p>
+<p>Soﬁa knew right away that Lena was climaxing all over her. She allowed herself another eye </p>
+<p>roll; it was rather gauche to orgasm before the High Priestess, especially as a guest in her </p>
+<p>chambers. This young priestess should have known better and clearly needed a reminder: it was </p>
+<p>time for the High Priestess to reassert herself.</p>
+<p>Lena had ﬁnally stopped thrusting, panting and wheezing as her dripping gash settled atop </p>
+<p>Soﬁa’s, when she felt a rumbling beneath her. Suddenly a massive arcing column of liquid struck </p>
+<p>her from beneath, its strength powerful enough to launch her out of Soﬁa’s cleavage into the air. </p>
+<p>She landed softly, several feet from the bed atop a large yellow pillow, while the remainder of the </p>
+<p>sticky liquid soaked her entire body.</p>
+<p>She gasped, sitting straight up. She looked down to her sides, blinking, too surprised by her </p>
+<p>sudden ﬂight to consider its improbable origins. She soon felt the High Priestess’ gaze upon her </p>
+<p>and leapt to her feet, standing at attention. She was facing away from the bed, towards one of the </p>
+<p>grey stone walls.</p>
+<p>Soﬁa’s whisper caressed Lena’s ears from behind.</p>
+<p>“Very good, Priestess Lena.”</p>
+<p>Lena grinned to herself, but only for a moment, as she heard the High Priestess adopt a more </p>
+<p>serious tone.</p>
+<p>19</p>
+<p>“The Order needs you, Lena, for a mission of utmost importance,” Soﬁa intoned.</p>
+<p>Lena sensed movement behind her. A series of wet footsteps squelched on the stone ﬂoor, </p>
+<p>drawing ever closer, until the great expanse of Soﬁa’s bosom came into view. The arc of Soﬁa’s </p>
+<p>right breast moved slowly before her, from dripping nipple to sturdy base, as Lena remained at </p>
+<p>attention. </p>
+<p>The stunning visage of the High Priestess herself, framed by her long amber hair, settled near </p>
+<p>the center of Lena’s vision. Soﬁa spoke softly, but with an insistent urgency.</p>
+<p>“There is a stranger in our lands, Lena. She carries something small but immensely powerful,” </p>
+<p>Soﬁa said. She paused, peering down at Lena’s breasts.</p>
+<p>“You will know her, for she is blessed much as you are,” she continued, glancing back at </p>
+<p>Lena’s crumpled armor near the archway.</p>
+<p>“Find her, Lena, and bring her safely to me.”</p>
+<p>Soﬁa raised one of her subtly muscular arms and gestured towards the archway.</p>
+<p>“Your search begins near our kingdom’s northern border. Go now, Priestess Lena.”</p>
+<p>Lena nodded, almost bursting with pride.</p>
+<p>“As you wish, mistress,” she said, inclining her head. She turned slowly, striding conﬁdently </p>
+<p>but cautiously across the milk-slickened ﬂoor towards the archway, desiring not to embarrass </p>
+<p>herself at such a crucial moment—</p>
+<p>“Priestess Lena?” called Soﬁa, her voice again airy and melodious. </p>
+<p>Lena froze in place, her bosom quivering in the air before her. At least now, she thought, her </p>
+<p>breasts had returned to their normal size, and they merely extended beyond her elbows and </p>
+<p>bounced lazily around her waist. Their weight was somehow reassuring, a beloved aspect of her </p>
+<p>femininity, even if her throbbing nipples were still betraying her arousal in front of the High </p>
+<p>Priestess.</p>
+<p>“Leave your armor,” Soﬁa called from behind, and Lena gulped.</p>
+<p>“See the smithy for a new breastplate before you depart,” Soﬁa said. </p>
+<p>Lena visibly relaxed.</p>
+<p>20</p>
+<p>“Yes, mistress,” she said, lifting the yellow curtain aside and departing through the archway.</p>
+<p>It was nearly midday when Lena passed through the gates of Sweetwater’s capital city. She </p>
+<p>grinned, adjusting a strap on her new silver articulating plate, and walked into the countryside.</p>
+<p>(cid:15911)</p>
+<p>Lena was cresting a small hill on a winding road in the Sweetwater countryside. She had been </p>
+<p>lost in thought since leaving the High Priestess, and hadn’t noticed the miles passing by until many </p>
+<p>hours later as the sun crept towards the horizon. She paused, leaning on her quarterstaff, and </p>
+<p>breathed deeply as she admired the peaceful bucolic beauty of the open plains around her.</p>
+<p>The road had turned east and the sun, low in the sky, was gently warming her back. Several </p>
+<p>miles back she had detached most of the front of her articulating plate, allowing her great bosom to </p>
+<p>breathe freely. An early evening breeze tickled as it ran across her exposed breasts. </p>
+<p>A moment later, the dull humming and crackling of the charm around her left nipple indicated </p>
+<p>its enchantment was still protecting her. Its magic was pleasurable but practical as well, helping to </p>
+<p>keep her arousal in check. At least it would allow her the relative luxury of being able to ﬁnd shelter </p>
+<p>for the night before having to contend with her natural abilities.</p>
+<p>Suddenly she heard a timid feminine voice calling to her.</p>
+<p>“Miss? Are… are you a priestess?”</p>
+<p>Lena whirled around, immediately suspicious. She held her quarterstaff at the ready, </p>
+<p>instinctively holding ﬁrm so her huge breasts wouldn’t throw her off-balance. </p>
+<p>A young woman was sitting on a large stone boulder just off the path, staring quizzically at </p>
+<p>her. Lena glanced around — they were alone — and relaxed, cautiously lowering her staff. </p>
+<p>“That I am,” she replied, smiling at the girl.</p>
+<p>The girl jumped down from her boulder and stepped onto the path, slowly approaching her. </p>
+<p>Lena frowned; this was uncannily similar to the test of compassion that the High Priestess had </p>
+<p>described. Had Soﬁa somehow predicted this?</p>
+<p>“I’ve never met a priestess before,” the girl gasped, her eyes wide. </p>
+<p>21</p>
+<p>“Your armor!” she exclaimed. “That’s an artic… articleat…”</p>
+<p>“Articulating plate,” Lena corrected, feeling a wave of affection for the girl. This was her ﬁrst </p>
+<p>encounter since leaving Sweetwater’s capital city and she couldn’t help herself, embellishing </p>
+<p>further.</p>
+<p>“It’s my breasts, you see,” she smiled. “They get bigger when I get… excited, just as I’m sure </p>
+<p>yours do. This plate grows with me, in a way, helping me stay focused in battle.”</p>
+<p>The girl was now just a few feet away. Her grubby tunic was streaked with dirt and clearly far </p>
+<p>too small for her sizable chest, which Lena could now see starting to grow with the girl’s obvious </p>
+<p>arousal. A number of sizable holes in her tattered shirt gave Lena’s peering eyes a tantalizing </p>
+<p>glimpse of the girl’s ﬁrm breasts swelling steadily larger.</p>
+<p>It was uncultured for a girl to let her breasts grow uncontrollably, so most women in polite </p>
+<p>Sweetwater society tended not to leave home without the nullifying magic of a breast charm </p>
+<p>clamped around their nipple. </p>
+<p>Here in the countryside, though, Lena realized that there probably weren’t many breast </p>
+<p>charms to go around. The girl certainly didn’t seem to realize her own embarrassment, instead </p>
+<p>staring openly at Lena’s chest as she drew closer.</p>
+<p>Lena arched her back, an elaborate gesture that had the effect of thrusting her exposed </p>
+<p>breasts towards the girl in a traditional greeting.</p>
+<p>“What’s your name?” Lena asked.</p>
+<p>“Oh my!” the girl marveled, lost in admiration as she cast her eyes over Lena, before </p>
+<p>remembering her manners. </p>
+<p>“I’m Mira,” she said, pausing right in front of Lena.</p>
+<p>“I am pleased to meet you, sister Mira,” Lena smiled. She took a step forward, pressing her </p>
+<p>huge chest into Mira’s. She could feel the younger girl’s smaller chest swelling larger against her </p>
+<p>own. The rough fabric of her tunic felt delectable against Lena’s naked nipples.</p>
+<p>Mira wobbled on her feet, looking nearly overwhelmed. After a moment she seemed to </p>
+<p>recover, throwing her arms around Lena and embracing her tightly, crushing their chests together. </p>
+<p>22</p>
+<p>Lena gasped from the sudden embrace, feeling an especially powerful wave of arousal </p>
+<p>shuddering through herself. There was something else, too: a familiar sensation around her left </p>
+<p>nipple, almost as if she had—</p>
+<p>a few minutes ago.”</p>
+<p>“You know,” Mira said quickly, “Another girl with huge breasts like yours passed this way only </p>
+<p>Lena’s eyes widened in surprise, but not from the sudden touch. She had only ever seen the </p>
+<p>priestesses of the Order to have bosoms quite as large as her own. What could have drawn one of </p>
+<p>them all the way out here? And there was something that Soﬁa had told her…</p>
+<p>“She was wearing these strange blue robes,” Mira was almost babbling, still squeezing her </p>
+<p>arms around Lena’s breasts and resting her head on the shelf of Lena’s bosom.</p>
+<p>“Her chest was soaking wet, though. Maybe she fell in a river?” Mira pondered innocently.</p>
+<p>Lena reached out with both hands, grasping Mira’s breasts to return her friendly greeting. Her </p>
+<p>gentle grip was too much for Mira’s tattered tunic, though, and with a large ripping noise a great </p>
+<p>gaping hole opened in the fabric, exposing much of the girl’s left breast. </p>
+<p>Lena chuckled; the girl had clearly been in need of some attention, but now wasn’t the time to </p>
+<p>indulge herself. Not when she sensed her quarry to be so close.</p>
+<p>“Did you see where she went?” she queried.</p>
+<p>Mira nodded eagerly.</p>
+<p>“There’s an inn just up the road from here,” she said, pointing, then frowning as Lena had </p>
+<p>already started walking away. Lena spun around, walking backwards for a few paces, and smiled </p>
+<p>back at her.</p>
+<p>“Thank you Mira, but I must be along. May we meet again soon,” she called with a smile, </p>
+<p>turning towards the small inn coming into view just down the road.</p>
+<p>(cid:15911)</p>
+<p>Amie blinked. She found herself reclining with Kat in the gardens just outside the Scholar’s </p>
+<p>Guild, both girls nude atop their discarded robes. She shivered as an early evening breeze tickled </p>
+<p>23</p>
+<p>her bare skin, then winced when she felt the insistent throbbing pressure in her chest returning. </p>
+<p>She’d never felt this full before.</p>
+<p>She turned towards her friend. Kat was giggling, her eyes sparkling with delight, leaning in for </p>
+<p>a kiss. Amie instinctively met her lips, opening wide only to receive a ﬂood of liquid from Kat’s </p>
+<p>mouth into hers. She immediately recognized the taste: it was her own milk, playfully fed back to </p>
+<p>her by her lover.</p>
+<p>They separated and Kat leaned back, laughing, as Amie struggled to swallow the unexpected </p>
+<p>mouthful of her own delicious bounty. If anything, it seemed only to make the insistent pressure in </p>
+<p>her bosom all the more acute.</p>
+<p>Kat was again mouthing words at her, her beautiful features ﬂushed and her ﬁery red hair </p>
+<p>soaked through and dripping with milk. Amie squinted at her.</p>
+<p>Within you. What did it mean? The sound of rushing water had returned, now nearly </p>
+<p>deafening in Amie’s ears, and she couldn’t hear herself think. </p>
+<p>She sat back on the grass, feeling frustrated and confused, and gazed upwards. </p>
+<p>Suddenly in the sky, a towering pair of slender feminine thighs were blocking out the sun. </p>
+<p>Amie’s vision was ﬁlled by a giant, stunningly beautiful, and furiously dripping pussy. It was framed </p>
+<p>by two enormous elastic straps attached to a small cloth waistband, a most peculiar undergarment </p>
+<p>that failed to cover much of anything at all. </p>
+<p>Great rivers of translucent liquid were gushing from the giant pussy down both towering legs. </p>
+<p>Amie’s mind reeled. The strange panties, that amazingly wet pussy – it was all somehow familiar, </p>
+<p>on the very tip of her tongue. </p>
+<p>A ﬂash of insight cut through her hazy mind.</p>
+<p>“JESSA!” she yelled with all her might, but couldn’t hear herself making any sound.</p>
+<p>Far above in the sky, Jessa’s enormous pussy lips slowly parted. A roaring ocean of </p>
+<p>translucent liquid emerged, arcing to bear down directly at Amie. The crescendo of rushing liquid in </p>
+<p>her ears was nearly overwhelming.</p>
+<p>She reeled with a stunned realization: she wasn’t here in the gardens, or in Kat’s room, or </p>
+<p>anywhere else at the Guild. No, she was in her rented room in the Sweetwater countryside, with </p>
+<p>Jessa and…</p>
+<p>24</p>
+<p>“KARA!” she yelled, but she could hear nothing over the rush of Jessa’s squirt tsunami </p>
+<p>barreling towards her. </p>
+<p>Her mind was racing. What had Kat been trying to tell her?</p>
+<p>She blinked and saw the wooden slats in the ceiling of her room. A ﬂash of yellow light, the </p>
+<p>magical discharge from her charm, was slowly fading.</p>
+<p>Everything came rushing back to her. She knew she was facing the unpredictable magic of </p>
+<p>her liquid charm, now doubled on account of Kara and Jessa having touched it at the same time. </p>
+<p>This kind of arcane quandary would be of great interest to the mistress scholars of the Guild, </p>
+<p>who might study it for weeks alongside numerous other texts from the Great Library before making </p>
+<p>their recommendation. </p>
+<p>But there was no time for study. She had to act now. Suddenly she knew what she had to do, </p>
+<p>and she felt a rush of magical potential welling up within her.</p>
+<p>She opened her mouth.</p>
+<p>(cid:15911)</p>
+<p>Lena stood outside the inn’s doorway, frowning. She could see the dull ﬂicker of candlelight </p>
+<p>through the windows, but the building was otherwise quiet. She breathed deeply and pressed her </p>
+<p>quarterstaff against the outer door, which swung inwards with a loud creak.</p>
+<p>She stepped inside the inn’s common room, her quarterstaff still at the ready, to ﬁnd herself </p>
+<p>alone. The insulating stone walls were effectively mufﬂing the early evening bird calls from outside, </p>
+<p>and an uneasy silence fell as she paced further into the room, then into a short hallway.</p>
+<p>Small puddles of white-colored liquid dotted the hallway. She stepped carefully around a few </p>
+<p>of them, but there was a scent in the air that suddenly reminded her of the High Priestess’ </p>
+<p>chambers. She paused, kneeling down near one of the larger puddles and snifﬁng it cautiously. It </p>
+<p>was deﬁnitely familiar.</p>
+<p>She untied a small silver vial from a pouch on her belt. She unstoppered it, at once drinking its </p>
+<p>entire contents. It was her last reserves of High Priestess Soﬁa’s breast milk, a special reagent for </p>
+<p>25</p>
+<p>her journey. It felt wonderful as it slid down her throat, although somehow not as divine as she </p>
+<p>remembered it when she drank directly from Soﬁa’s nipples earlier that morning.</p>
+<p>Dipping a ﬁnger in the milky puddle, she brought it to her lips, her mouth open wide… but </p>
+<p>there was a momentary ﬂash of brilliant yellow light that ﬁlled her vision.</p>
+<p>The light was gone in an instant. Lena knew at once that a powerful magical discharge had </p>
+<p>occurred nearby. Waves of arcane energy impacted the breast charm clamped around her left </p>
+<p>nipple, and she felt a pleasurable warmth spread throughout her breasts.</p>
+<p>She stood and continued to the end of the hall, coming to stand before a large wooden door </p>
+<p>mounted on a sliding rail. She heard a faint splashing noise, and saw the door swaying slowly on its </p>
+<p>rail from the impact of what sounded like a large volume of liquid. A moment later, a steady river of </p>
+<p>translucent liquid ﬂowed under the door and pooled between her feet. </p>
+<p>Her heart was pounding, but this still didn’t make any sense to her. The priestesses of </p>
+<p>Sweetwater always sought to use their gifts for the good of their kingdom. What business could one </p>
+<p>of them have all the way out here?</p>
+<p>Another series of wet splatters impacted the other side of the door. The ﬂow of liquid under </p>
+<p>the door increased, spreading across much of the hallway behind her.</p>
+<p>She stepped around the mysterious liquid and slid the door partially open. She carefully </p>
+<p>squeezed her huge chest through the narrow space to enter the room, then stopped in her tracks, </p>
+<p>stunned at the scene before her.</p>
+<p>A young woman was resting on her back near the edge of a large bed. Her brown curls were </p>
+<p>soaking wet, falling over the edge of the bed and pooling on the stone ﬂoor below, dripping a small </p>
+<p>stream down the inclined ﬂoor towards a small drain near the center of the room.</p>
+<p>She was being repeatedly doused by a great jets of liquid from a furiously squirting pussy just </p>
+<p>above her face. Her eyes were squeezed shut but her mouth was wide open, and she seemed to </p>
+<p>be doing her utmost to swallow as much of the spurting liquid as she could.</p>
+<p>A pair of slender legs were straddling her head, quivering with each gushing squirt of liquid. </p>
+<p>Their owner, another young woman, had her head tilted back, her long blonde hair matted and </p>
+<p>damp with her exertions. The blonde’s huge breasts bobbled and swung in the hair, a huge shelf </p>
+<p>above the brunette between her legs.</p>
+<p>26</p>
+<p>On the bed behind the blonde, a third young woman with short, dark hair was on her knees. </p>
+<p>Her legs were straddling one of the outstretched legs of the curly-haired girl beneath her. She was </p>
+<p>rapidly thrusting her hips, rubbing her gushing pussy on the girl’s knee. Her own huge breasts were </p>
+<p>squeezed against the back of the blonde in front of her, thrusting them upwards until they reached </p>
+<p>just below her chin level. She gently rest her chin on the top of her own huge left breast, sighing </p>
+<p>happily as she continued to rub her pussy all over the leg below her.</p>
+<p>There was an almost constant splattering noise. Lena saw that the blonde girl’s pussy was </p>
+<p>squirting in greater volumes than she’d ever seen. The blonde was panting and wheezing for a </p>
+<p>moment between each blast, and each thunderous jet seemed larger than the last. The brunette </p>
+<p>between her legs was still swallowing great mouthfuls of it, but most of it arced across the angled </p>
+<p>stone ﬂoor, the excess splashing down towards the drain in the center of the room.</p>
+<p>Lena looked down to see most of her own body dripping wet with the blonde girl’s incredibly </p>
+<p>proliﬁc liquids. She felt her arousal building. Her breasts shuddered and became warm, then </p>
+<p>suddenly lurched larger from a great wave of growth.</p>
+<p>She was taken aback, blinking rapidly. Her breast charm was meant to prevent exactly this </p>
+<p>type of runaway growth—</p>
+<p>Her great chest heaved again, straining forwards against her articulating plate. There should </p>
+<p>have been a telltale crackling from the magic of her breast charm counteracting her natural growth, </p>
+<p>but she could feel only her own building arousal spreading throughout her swelling breasts. Her </p>
+<p>armor lurched in complaint, and with a ﬁnal creaking sigh it gave way, torn asunder by the </p>
+<p>incredible growth of Lena’s breasts. Lena cursed to herself; this was the second armor her unruly </p>
+<p>breasts had ruined in as many days.</p>
+<p>The blonde girl’s squirting was becoming relentless now. One of its jets impacted nearby, and </p>
+<p>Lena felt her entire front soak through when the liquids splashed across her warming skin. This </p>
+<p>seemed to prompt another great burst of breast growth, and her breasts thundered forward. Her </p>
+<p>armor hung loosely from her shoulders, her enormous breasts now exposed to the cool air.</p>
+<p>Lena felt her nipples straining against the breast charm clamped around her nipple. Her </p>
+<p>thickening teats eventually proved too much for it, and she felt a sudden release as it sprang from </p>
+<p>her nipple, followed by a metallic clang as it clattered on the stone ﬂoor near her feet.</p>
+<p>27</p>
+<p>Priestess Lena at the inn</p>
+<p>by Boobdollz</p>
+<p>Looking down, she saw it ﬂoating past in one of the smaller rivers of the blonde girl’s torrential </p>
+<p>squirt. She leaned over, almost losing her balance as her fully unconstrained bosom swung heavily </p>
+<p>to the side, and picked it up. </p>
+<p>She peered closely at it: it was an obvious fake, conﬁrming her suspicions.</p>
+<p>Mira! That country girl on the winding path had embraced her suddenly, and she had felt a </p>
+<p>great heave in her chest at just that moment. She thought it was only her own surprise, but she </p>
+<p>realized now that it must have been Mira’s quick ﬁngers, swiping her breast charm from around her </p>
+<p>exposed nipple and replacing it with this poor facsimile. She had some nerve, Lena thought—</p>
+<p>“M…Miss! Are you a priestess?”</p>
+<p>Lena felt a sudden shock cutting through the foggy haze of her arousal: it was the third time </p>
+<p>she had heard that question today. The blonde girl was staring at her with pleading eyes, which </p>
+<p>then squeezed shut when her pussy released another colossal gush of liquids.</p>
+<p>28</p>
+<p>The dark-haired girl behind her had stopped thrusting her hips, but was still resting her pussy </p>
+<p>on the girl’s leg below her. A great splashing of liquids from between her legs revealed that she too </p>
+<p>was squirting uncontrollably, but in nowhere near the same volume as the blonde girl. She seemed </p>
+<p>more in control of her faculties despite her situation, turning her head to regard Lena.</p>
+<p>“Madam Priestess!” she exclaimed. “Get Jessa’s breast charm. Right there!”</p>
+<p>She extended her arm, pointing near Lena’s feet. Lena looked down to see a second breast </p>
+<p>charm nearby on the wet stone ﬂoor, sliding lazily on one of the smaller rivers of Jessa’s gushing </p>
+<p>squirt.</p>
+<p>“Miss! There’s something happening to me…” Jessa managed to say, before losing herself in </p>
+<p>a long moan as another thunderous squirt doused most of the room. A great ocean of liquid </p>
+<p>splashed across the ﬂoor, running swiftly down the incline and down the drain.</p>
+<p>Lena sensed her priestess training unconsciously guiding her. Her arousal simmered, once </p>
+<p>again under her control, and she leapt to action. She kneeled, tossing the fake charm aside and </p>
+<p>scooping the other one from the ﬂoor in a single movement. She rose to her feet, stepping quickly </p>
+<p>across the wet ﬂoor towards the trio on the bed.</p>
+<p>She held her arm forward, the charm in her outstretched hand, but her own huge chest had </p>
+<p>swollen even beyond her arm-span. Her throbbing nipple suddenly impacted the side of the blonde </p>
+<p>girl’s breast, making Lena bite her lip from the sensation. She twisted to the side, aligning herself </p>
+<p>shoulder-to-shoulder with Jessa, and at last clamped the charm around the blonde’s thick nipple.</p>
+<p>At once the thunderous squirting ceased. Jessa’s pussy was still furiously dribbling its liquids, </p>
+<p>but now merely in small rivers that splashed across the neck of the girl between her legs and ran to </p>
+<p>the sides, soaking through the bed sheets to the ﬂoor below. </p>
+<p>Behind her on the bed, the short-haired girl sighed with relief, her own squirting reducing as if </p>
+<p>in sympathy, her climax ﬁnally calming.</p>
+<p>“Thank you, miss. Jessa has always been exceptionally wet, but I’ve never seen her like this,” </p>
+<p>she said, still panting heavily from her exertions.</p>
+<p>She extended a hand and Lena smiled, reaching out to grasp it in hers, but the dark-haired </p>
+<p>girl kept reaching upwards, wrapping around Lena’s shoulders and pulling her close. Their lips met </p>
+<p>urgently. Lena knew that it was important to respect local traditions, and she grinned, losing herself </p>
+<p>in their embrace.</p>
+<p>29</p>
+<p>The girl had clearly wanted to make a generous demonstration of her appreciation and </p>
+<p>affection, slurping Lena’s tongue into her mouth. Lena allowed herself to enjoy her tongue being </p>
+<p>sucked by this stunning brunette. At length they caressed each others’ lips, until ﬁnally separating, </p>
+<p>leaving them both breathing heavily. </p>
+<p>“I’m Kara,” the girl said. </p>
+<p>the girl underneath them on the bed. </p>
+<p>“We were just pampering our most honored guest,” she continued, gesturing downwards at </p>
+<p>“But something wonderful happened. Madam? Do you know what it was?” she continued, now </p>
+<p>addressing the girl who had been bathing in Kara and Jessa’s combined liquids.</p>
+<p>The girl beneath them was squirming, and Kara and Jessa reluctantly lifted their legs, allowing </p>
+<p>her to roll to the side and ﬁnally stand upright near the edge of the bed.</p>
+<p>Her dark hair was a soaked mess, her arms and back still dripping Jessa’s arousal. She didn’t </p>
+<p>seem to mind it and straightened up, thrusting her sizable chest forwards with pride, even if at this </p>
+<p>moment it was nowhere near as large as any of the other three girls’ bosoms. She had slender </p>
+<p>arms and legs and carried herself with a steady, assured grace. She was stunningly beautiful, </p>
+<p>leaving Lena at a loss for words, but there was something amiss…</p>
+<p>Lena frowned, thinking it somewhat suspicious that this girl’s breasts didn’t seem to have </p>
+<p>grown at all in the last few minutes. Surely any woman of Sweetwater would have demonstrated at </p>
+<p>least some swelling in such a circumstance, she thought, especially given how much of Jessa’s </p>
+<p>squirting this girl had swallowed. </p>
+<p>Lena felt her blood run cold. Unless she wasn’t a woman of Sweetwater at all—</p>
+<p>As if to conﬁrm her suspicions, small droplets of white liquid suddenly appeared around the </p>
+<p>girl’s nipples. Lena felt her breath catch in her throat. A stunning realization swept over her: this </p>
+<p>must be the stranger that Soﬁa had meant her to ﬁnd. But what of the powerful item she carried? </p>
+<p>Then she saw it: a small silver charm dangling on a chain resting gently in the girl’s cleavage. </p>
+<p>The girl caught her staring, clearing her throat.</p>
+<p>“Thank you, miss. I’m Amie,” she said, smiling.</p>
+<p>Lena saw Kara and Jessa taking note of this as well, as if it were the ﬁrst time they’d heard </p>
+<p>her name. They didn’t have time to embrace in a traditional Sweetwater greeting, though, as Jessa </p>
+<p>30</p>
+<p>suddenly let out a low moan, followed a moment later by Kara. They both fell backwards onto the </p>
+<p>bed, writhing on the soaked bedsheets, gasping and moaning.</p>
+<p>“It’s my charm’s magic! They are under its effects,” Amie whispered urgently, glancing at Lena.</p>
+<p>Kara and Jessa’s breasts were surging larger with great waves of growth. Extending into the </p>
+<p>air above the bed, four great peaks remained magically ﬁrm and taut despite rising beyond each of </p>
+<p>their arm-spans, yet still they grew. They were larger now even than Lena’s massive chest, and </p>
+<p>after another several minutes they at last seemed to stop growing, their grand forms bumping lazily </p>
+<p>into each other.</p>
+<p>A single trickle of white liquid ran down the underside of Jessa’s towering right breast. Soon </p>
+<p>there was a steady splattering noise as both of her teats unleashed several small streams of milk </p>
+<p>onto the stone ﬂoor. A moment later both of Kara’s nipples followed suit, the combined streams </p>
+<p>from all four teats spurting continuously, seemingly without end. </p>
+<p>Amie felt the new rivers of Kara and Jessa’s milk joining with her own, still dripping from her </p>
+<p>nipples, combining into a gentle river of warmth that felt wonderful on her bare feet. It slid down the </p>
+<p>angled ﬂoor past her and ﬂowed down the drain near the center of the room. </p>
+<p>She giggled, drawing Lena’s attention, and their eyes met.</p>
+<p>“What happened to them?” Lena asked, her eyes wide with wonder. She had only known the </p>
+<p>High Priestess herself to demonstrate such incredible spontaneous growth.</p>
+<p>Amie took a few steps forward, placing her bare chest underneath one of the streams of </p>
+<p>“You know,” she said, twisting her shoulders to cover her breasts in Jessa’s milk, “I’m not </p>
+<p>She took a step back from her milky shower, using both hands to spread Jessa’s milk from her </p>
+<p>own breasts across the rest of her body. Her slender arms and legs and her ﬁrm abdomen were </p>
+<p>soon covered in a ﬁne sheen of milk.</p>
+<p>“I haven’t had a chance to bathe since arriving in Sweetwater,” she grinned, enjoying Lena </p>
+<p>It had been quite a long day for Lena. Her own arousal, tinged with exhaustion, ﬁnally got the </p>
+<p>31</p>
+<p>Jessa’s milk.</p>
+<p>entirely certain.”</p>
+<p>watching her.</p>
+<p>better of her.</p>
+<p>“I’ve been looking for you, Madam, and I am glad I arrived when I did,” Lena said, gesturing </p>
+<p>with her arm towards the four enormous breasts on the bed still spurting milk onto the ﬂoor nearby. </p>
+<p>Amie grinned widely at her. Lena felt her insides warming and her knees becoming weak </p>
+<p>under the gaze of this beautiful girl. It was nearly as intoxicating, she thought, as she had felt from </p>
+<p>the affections of the High Priestess.</p>
+<p>Lena wobbled on her feet and almost immediately felt a presence at her side. Her arm was </p>
+<p>soon wrapped around Amie’s shoulder, and she felt herself being led to the large bed nearby. She </p>
+<p>was reclining, then lying down on her side, the great shelf of her unbound breasts hanging lazily </p>
+<p>over the side of the bed. She closed her eyes, soon falling into a deep contented slumber.</p>
+<p>The sun had set, leaving the room illuminated only by the dim ﬂicker of candlelight. </p>
+<p>Amie swept her eyes over the six enormous breasts somehow supported by the impressively </p>
+<p>sturdy bed. Kara, Jessa, and the priestess were all dozing quietly, although Amie noted with interest </p>
+<p>that Kara and Jessa’s nipples were still slowly exuding milk. They were continuously spraying their </p>
+<p>nectar gently down to the ﬂoor below, with some excess running down the undersides of their </p>
+<p>magically buoyant breasts. Their towering shapes still bobbled slowly in the air above the bed.</p>
+<p>She climbed on the bed, lying on her back and nestling her head between Jessa’s legs. The </p>
+<p>wall of Jessa’s right breast towered into the air just next to her, and she turned her head, licking </p>
+<p>along the side of Jessa’s breast and slurping a falling stream of Jessa’s hot milk into her mouth. </p>
+<p>She swallowed luxuriously, sighing. She didn’t understand how she had consumed so much </p>
+<p>of Jessa’s squirt. Even now she still felt a curious sensation within her body. It felt peculiar, but </p>
+<p>warm and powerful, not too unlike the way she felt when experimenting with magic alongside her </p>
+<p>Guild sisters. She wished Mistress Yvette were here to guide her.</p>
+<p>Her thoughts drifted to Sister Katryn, and sleep overcame her.</p>
+<p>(cid:15911)</p>
+<p>The morning sun shone brightly through the inn’s windows. Amie stirred, yawning, and </p>
+<p>stumbled to her feet next to the bed. Her toes soon felt delightfully warm, as the ﬂoor was still wet </p>
+<p>with fresh milk.</p>
+<p>32</p>
+<p>Kara and Jessa were dozing on the bed, their great bosoms still bouncing and swaying as </p>
+<p>they lazily spurted streams of milk onto the ﬂoor nearby. Amie’s eyes widened; had they been </p>
+<p>milking all through the night?</p>
+<p>Amie saw the priestess stretching in the nude on the ﬂoor nearby. The priestess’ huge breasts </p>
+<p>had receded, although even at their resting size they rivaled Amie’s, even while Amie was fully </p>
+<p>burdened with milk.</p>
+<p>A dull throbbing in her chest alerted Amie to a more immediate need. Her breasts had ﬁlled </p>
+<p>overnight with a fresh load of her delicious milk, and while usually she would rely on Sister Katryn </p>
+<p>or her roommate Olivia to ease her burden, she found herself momentarily at a loss.</p>
+<p>She placed one arm under each of her milky breasts, lifting them gently in offering, her eyes </p>
+<p>pleading as she addressed the priestess.</p>
+<p>“Miss? Could you…?”</p>
+<p>The priestess released her pose, turning to Amie and smiling. She said nothing, rising to her </p>
+<p>knees, and Amie stepped close, her teats at the priestess’ eye level.</p>
+<p>She felt her left nipple enveloped by a warm mouth. Sighing, she relaxed, her milky burden </p>
+<p>ﬂowing with ease as the priestess gulped and swallowed with a long series of mouthfuls. Amie </p>
+<p>stood idly for many minutes as her milk was drained, her breath catching as she sighed happily.</p>
+<p>She’d fallen into another one of her aroused dazes, and at long last she belatedly realized </p>
+<p>that both of her breasts had been expertly milked. She felt a presence nearby, realizing that the </p>
+<p>priestess was standing close to her, pressing her own huge breasts into Amie’s.</p>
+<p>Amie grinned, allowing the priestess to express her gratitude in what she now recognized to </p>
+<p>be a traditional Sweetwater greeting. She closed her eyes and their lips met. Amie thrilled at the </p>
+<p>instantly recognizable taste of her own milk on the priestess’ lips. They kissed gently and languidly, </p>
+<p>and only after Amie sighed in content did the priestess pull away, regarding her closely.</p>
+<p>“I was sent to ﬁnd you, Amie,” Lena whispered.</p>
+<p>Amie quirked an eyebrow. She was still uncertain what Mistress Yvette had meant for her to </p>
+<p>ﬁnd in Sweetwater, and this seemed to be as good a lead as any.</p>
+<p>“My mistress can help with your… magic,” Lena said. </p>
+<p>33</p>
+<p>“And she can help them too,” she added, gesturing at the four towering breasts on the bed.</p>
+<p>They helped Kara and Jessa to wake, and all four girls were surprised to discover that despite </p>
+<p>the incredible size of Kara and Jessa’s breasts, which had not become any smaller in the night and </p>
+<p>still extended below each of their knees, they seemed to have little difﬁculty bearing the new </p>
+<p>weight. </p>
+<p>their own.</p>
+<p>Jessa had quickly embraced her new condition. She was seemingly unable to keep her hands </p>
+<p>from squeezing the great expanse of her breasts or sliding along her dripping pussy, and even the </p>
+<p>stunning power of one of Kara’s eye rolls seemed to inspire no shame in her. Kara, for her part, </p>
+<p>reluctantly agreed that without some assistance, they’d certainly have trouble running the inn on </p>
+<p>“It is only a few miles to the capital city,” Lena said, trying to bolster Kara’s spirits.</p>
+<p>She slid in close, wrapping Kara’s arm around her shoulder and motioning towards Amie to do </p>
+<p>the same with Jessa.</p>
+<p>“And we will help you with this burden,” she said, grinning.</p>
+<p>By mid-morning they had set out upon the road. Amie had donned her light blue scholar’s </p>
+<p>robes, although they could only improvise a covering for Kara and Jessa using most of the </p>
+<p>bedsheets. Amie grinned, her arm wrapped around Jessa’s shoulders as they brought up the rear.</p>
+<p>Lena was in front, guiding them even as she helped Kara with her own sheet-wrapped bosom. </p>
+<p>Some compromises had to be made, though, and Kara and Jessa’s great nipples remained </p>
+<p>exposed, still lazily spurting milk seemingly without end onto the ground below as they walked. </p>
+<p>Lena bore the remnants of her battle armor, which hung loosely from her shoulders, leaving her </p>
+<p>own huge chest mostly exposed.</p>
+<p>They made their way to the west. The miles passed easily for Kara and Jessa, thanks to the </p>
+<p>loving support of their new friends. As the sun drew near its highest point in the sky, the great </p>
+<p>portcullis of Sweetwater’s capital city came into their view.</p>
+<p>“We’re nearly there now, girls,” said Lena, her arm still around Kara’s shoulder. Kara was </p>
+<p>whimpering, her huge breasts bouncing together around her waist and still spurting a continuous </p>
+<p>stream of milk on the ground before her. </p>
+<p>34</p>
+<p>Behind them, Amie grinned at Jessa next to her, leaning in and kissing Jessa’s cheek. Jessa </p>
+<p>giggled, her own bosom bouncing around her knees as it too was spraying a seemingly endless </p>
+<p>volume of milk. </p>
+<p>Lena turned her head, gazing over her shoulder directly at Amie.</p>
+<p>“The High Priestess is expecting us.”</p>
+<p>…to be continued?</p>
+<p>35</p>
+<p>Amie’s Charm</p>
+<p>by purplish [email - comments welcome!]</p>
+<p>Amie, a traveling apprentice of the Scholar’s Guild, is visited by two farm girls.</p>
+<p>(For adult eyes only. FF/F, magic, lactation, breast expansion. All characters are 18+)</p>
+<p>I. The Drain </p>
+<p>Amie turned to close the wooden door to her rented room. As a traveling apprentice of the </p>
+<p>Scholar’s Guild she often made do with the barest accommodations; this backwater country inn </p>
+<p>was certainly no exception. The door was mounted on a sliding rail, unusual in her travels but </p>
+<p>stirring fond memories of a dairy farm near the Guild where she’d sometimes wander in her free </p>
+<p>time. She smiled as the door slid closed with a satisfying <em>thunk</em> and turned to face her room. </p>
+<p>Immediately she noticed that the stone ﬂoor was of peculiar construction, angling down from </p>
+<p>all four corners towards a small drain in the center of the room. Atop a small table next to a </p>
+<p>generously-sized bed, she spotted a familiar-looking large metal bucket. Despite her curiosity, she </p>
+<p>couldn’t give her room much more thought, as a distracting pressure in her bosom had been </p>
+<p>building for hours into a more urgent problem. Two problems, really.</p>
+<p>The roads in this remote southern kingdom had been treacherous and slick with rain, so she </p>
+<p>had not stopped even once to relieve herself since that morn. Her needy breasts now almost </p>
+<p>demanded her attention, swollen with nearly a full day’s burden of her delicious milk. She paced </p>
+<p>gingerly towards a full-length mirror mounted near the bed, taking the last few steps very slowly, her </p>
+<p>huge sensitive bosom bouncing lazily in her robe around her waist.</p>
+<p>She sat on the edge of the bed to kick off her boots, then stood in her bare feet facing the </p>
+<p>mirror. Her milk-swollen breasts dominated her torso, entirely obscuring her hips and waist in her </p>
+<p>reﬂection. She grasped at the small silver charm dangling on a necklace just above her cleavage.</p>
+<p>(cid:15911)</p>
+<p>1</p>
+<p>One week earlier, she had been sitting in the front row of Mistress Yvette’s lecture hall. She </p>
+<p>had developed a special affection for Yvette, whom she had long considered to be her favorite </p>
+<p>among the mistress scholars, and today she had been teasing her mistress by allowing her robe to </p>
+<p>fall open during class. She would wait to capture the mistress’ lascivious gaze, then slowly cross </p>
+<p>and uncross her long stocking-clad legs.</p>
+<p>After the lecture had ended, Mistress Yvette, looking ﬂushed, had pointed to a small tear in </p>
+<p>Amie’s stockings that revealed her bare skin – “Most unbecoming of an aspiring scholar,” the </p>
+<p>mistress had intoned – and demanded she accompany her to her private chambers.</p>
+<p>Some time later, a sweaty and unkempt-looking Amie had staggered out of the mistress’ </p>
+<p>chambers with a few more holes in her stockings, much less milk in her breasts, and an unusual </p>
+<p>gift. The mistress had insistently pressed into her hands a bundle of cloth, which she had slowly </p>
+<p>unwrapped to reveal a small silver charm. The mistress had told her only that it contained powerful </p>
+<p>magic and urged her to bring it along on her travels, that she must keep it on her person at all </p>
+<p>times, and she mustn’t allow anyone else to touch it.</p>
+<p>But there must have been something else, she recalled. </p>
+<p>“There’s something else,” Mistress Yvette had said as Amie was leaving her chambers. “This </p>
+<p>is the liquid charm. Seek the glory of its wetness in the kingdom of Sweetwater.”</p>
+<p>(cid:15911)</p>
+<p>Amie bit her lower lip to quiet herself. She almost fully extended her arms, her ﬁngertips now </p>
+<p>hovering just above the plainly obvious points of her erected nipples in the chest of her scholar’s </p>
+<p>robe. She grasped both turgid teats, thrilled at their hot ﬁrmness and immense size and how </p>
+<p>sublime they felt in her hands even through the soft fabric. </p>
+<p>Suddenly the lower third of the mirror was covered with a ﬁne spray of milky whiteness. Her </p>
+<p>knees shuddered at the delirious sensation of her uncontrolled lactation, amazed at the incredible </p>
+<p>pressure of her milk spraying through the fabric. She exerted no small degree of mental focus to </p>
+<p>regain control, her milky spray slowing to a trickle that continued to stain the inside of her robe. She </p>
+<p>ﬂushed at the feel of hot milk dripping down her sensitive bare skin. Not yet, girls, she thought, but </p>
+<p>I’m nearly at my limit!</p>
+<p>2</p>
+<p>She frowned at herself in an unsoiled part of the mirror. The small silver charm on her </p>
+<p>necklace sparkled in the dim candlelight. Her brown curls tumbled down below her shoulders and </p>
+<p>her light blue robes indicated her rank and status as an apprentice of the Scholar’s Guild. Her </p>
+<p>robes had clearly been intended for a much more petite girl, though, and on her busty ﬁgure the </p>
+<p>cloth didn’t even extend as far as her knees, leaving her toned calves and thighs mostly exposed.</p>
+<p>Not that she’d inspire much scholarly respect right now with such embarrassingly large wet </p>
+<p>spots around her nipples, and showing so much leg too, she thought. Her frown slowly turned to a </p>
+<p>smile. If only Sister Katryn could see me now!</p>
+<p>She knew this to be her unique milky afﬂiction. Despite the occasional burden, she couldn’t </p>
+<p>help but admit she loved her milk and the carnal need it seemed to inspire in others. Even the </p>
+<p>mistress scholars of the Guild couldn’t seem to help themselves around her, but she could still </p>
+<p>sense their disapproval, for her marvelously proliﬁc milk was a mystery they could not explain by </p>
+<p>citing a passage from one of the tomes in the Great Library. </p>
+<p>She beamed with pride knowing that even the Grand Archivist herself couldn’t measure up to </p>
+<p>the stupendous size of Amie’s milk-swollen breasts, which could project nearly to her hands with </p>
+<p>arms outstretched and hang below her waist when engorged as much as she knew herself to be at </p>
+<p>present.</p>
+<p>Her fellow apprentices, for their part, envied the outsize attention rendered upon her even as </p>
+<p>they found it hard to resist her generous spirit, loving touch, and her more personal charms. She </p>
+<p>had spent many nights at the Guild enthusiastically sharing her gifts with the younger girls as they </p>
+<p>tried to induce similar effects in themselves, often with her hot milk as the principal ingredient of </p>
+<p>some magical cantrip. She was happy to oblige those efforts and indulge herself at the same time, </p>
+<p>for there was little she enjoyed more than easing her milky burden while sharing with a girl at her </p>
+<p>dripping nipples. </p>
+<p>Lost in her own reﬂection in the mirror, she fondly recalled one such night at the Guild only </p>
+<p>one week prior, on the eve of her departure to the southern kingdom of Sweetwater. </p>
+<p>(cid:15911)</p>
+<p>3</p>
+<p>Sister Katryn, a ﬁrst-year scholar with ﬁery red hair who within her ﬁrst week at the Guild </p>
+<p>became quite smitten with Amie, had been reclining next to Amie in the gardens just outside the </p>
+<p>Guild. Atop their discarded robes, the two girls shivered together for a moment from the gentle lick </p>
+<p>of an early evening breeze across their nude bodies. Kat was sucking noisily at Amie’s right nipple, </p>
+<p>and she could see only the top of Kat’s beautiful red curls over the generous curve of her swollen </p>
+<p>breast. </p>
+<p>Kat gulped and swallowed Amie’s delicious milk for long idle minutes, now and then taking </p>
+<p>short breaks to leave quick loving kisses all around Amie’s chest. Amie’s substantial breasts were </p>
+<p>gradually covered in a ﬁne sheen of their own effusive production.</p>
+<p>She reveled in sharing such intimate closeness with the younger girl. </p>
+<p>“You’re so beautiful, Kat! I love your mouth on my nipples.” She used both hands to squeeze a </p>
+<p>small area of her huge right breast and heard Kat’s surprised moan around her teat, brieﬂy </p>
+<p>overwhelmed by the sudden increase in ﬂow. </p>
+<p>She couldn’t help but chuckle. “Drink all you like, my sweet Kat,” she gushed. “There’s so </p>
+<p>much and it’s all for you.” </p>
+<p>Kat was always such a generous lover, and on this occasion she clearly felt the need to </p>
+<p>demonstrate her thanks to Amie even as she expressed Amie’s delicious milk. </p>
+<p>Kat had started slowly but ﬁrmly twisting her shoulders even as she continued to suckle on </p>
+<p>Amie’s nipple, sliding her own not insubstantial bosom back and forth across her girlfriend’s nude </p>
+<p>abdomen and groin. Amie couldn’t help but giggle as Kat’s hardened nubs tickled her just so, then </p>
+<p>moaned with the raw erotic sensuality of feeling them drag across her bare pussy.</p>
+<p>Kat’s nipples had always been extremely pronounced, quick to harden and often betraying her </p>
+<p>arousal at the most inopportune moments. Her unruly nubs towered above her breasts, slippery </p>
+<p>with Amie’s milk. Her teats had become intimately familiar to Amie, objects of fascination to her </p>
+<p>loving hands and mouth. She knew just where Amie wanted her, and she shifted her weight to </p>
+<p>achieve one of their favorite positions together.</p>
+<p>“Oh, Kat!” Amie wailed. Kat’s teat had suddenly found itself trapped between the folds of </p>
+<p>Amie’s pussy. Amie thrilled at the sensation, feeling a cloudy haze of arousal blanket her mind. </p>
+<p>Amie urged her on, whispering, “Yes! Give me your nipple! I want it in my pussy!”</p>
+<p>4</p>
+<p>Kat grinned to herself around Amie’s nipple in her mouth and twisted, leaned, and shufﬂed </p>
+<p>forward until she had slipped her teat ﬁrmly inside Amie’s pussy. She moved both hands below her </p>
+<p>breasts, lifting and rubbing one nipple along the inside of Amie’s bare thigh and the other in lazy </p>
+<p>circles up and down Amie’s lower lips. Her spectacularly erect teats were lubricated by a heady </p>
+<p>mixture of Amie’s milk and the juicy production of Amie’s pussy, dripping along her breasts and </p>
+<p>down her body.</p>
+<p>Several long minutes later Kat had raised her head from Amie’s right nipple, her red hair </p>
+<p>damp and matted with Amie’s milk and their shared exertions. Amie’s mind was foggy with arousal </p>
+<p>and it took her a few moments to realize that Kat was leaning in close, looking expectantly at her </p>
+<p>with a curious close-lipped smile. A small rivulet of milk escaped Kat’s lips, running down her chin </p>
+<p>and dropping onto the expanse of Amie’s breasts, splattering little white droplets onto them both.</p>
+<p>Amie sighed, blinking slowly in her aroused daze, then smiled back at her friend. </p>
+<p>“Kat my love –” she started, but Kat had at once pressed her lips to Amie’s. Kat parted her lips </p>
+<p>and ﬂooded Amie’s mouth with her own milk. Amie never seemed to tire of the taste, and she </p>
+<p>happily shared a long loving kiss with Kat, passing the milk back and forth until they had swallowed </p>
+<p>her bounty between them. </p>
+<p>Amie felt a moment of great affection for her friend and inserted her tongue deep into Kat’s </p>
+<p>mouth, feeling Kat sucking and releasing it in much the same way she had so lovingly sucked on </p>
+<p>Amie’s nipple only moments before. Amie thrilled as she reciprocated, wrapping her lips around </p>
+<p>Kat’s tongue and happily sucking it into her own mouth as their shared passions grew ever more </p>
+<p>intense.</p>
+<p>on her chest. </p>
+<p>Amie found herself staring lovingly into Kat’s dark green eyes even as their tongues continued </p>
+<p>to writhe together in a sloppy kiss. She was in a happy daze, her mind in the clouds; something </p>
+<p>about sharing her gifts with someone close to her made her feel all tingly and woozy. She was </p>
+<p>distracted by the younger girl’s beauty and didn’t notice at ﬁrst that Kat was reaching for something </p>
+<p>Suddenly, a biting sense of dread made her snap back to reality.</p>
+<p>Looking down with surprise, she yelled “Kat, NO!” and recoiled, but it was too late - Kat had </p>
+<p>grasped between her ﬁngers the small charm on Amie’s silver necklace. </p>
+<p>5</p>
+<p>A sudden ﬂash of yellow light emerged from between Kat’s probing ﬁngers and a powerful </p>
+<p>magical discharge knocked them both ﬂat on the ground. Amie leapt to her knees and nearly fell on </p>
+<p>top of Katryn, ﬁnding the younger girl uninjured but shellshocked. A faint crackling of static </p>
+<p>electricity in her ears conﬁrmed that the charm’s magic had taken hold of Kat. She could see now </p>
+<p>why the charm had come with Mistress Yvette’s warning.</p>
+<p>She felt a chill but not from the early evening breeze, nor from the rapidly cooling saliva all </p>
+<p>over her milky breasts. It was almost as if the heat was being drawn out of the air all around her… </p>
+<p>but to where? She reached out and gently rubbed the side of one of Kat’s supple teats, feeling </p>
+<p>small jolts of electric potential leaping from Kat’s skin to hers, and eliciting a low moan from Kat. </p>
+<p>She pondered for a moment. Could this be part of the charm’s magic?</p>
+<p>Kat blinked rapidly, breathing heavily, as she felt a curious pleasurable sensation in her chest. </p>
+<p>Both girls watched in amazement as her immense nipples stretched fully erect, then lengthened </p>
+<p>even further beyond their previous maximum size, and Amie knew the charm’s magic was pulsing </p>
+<p>through them. </p>
+<p>Kat’s rosy pink nipples stretched, engorged hot and taut, until they had achieved a </p>
+<p>stupendous new length, poking more than two inches into the air above her breasts. Amie was </p>
+<p>shocked at the size contrast from only a moment earlier, observing that those huge teats seemed </p>
+<p>out of place on her chest - they clearly belonged on the breasts of a much larger girl. </p>
+<p>Kat gasped, “Amie, it feels so good!” and Amie couldn’t resist, leaning in to lick along one of </p>
+<p>her girlfriend’s newly-grown nips from base to tip, seeing Kat shiver in response.</p>
+<p>Kat was looking rapidly between her own surging chest and Amie, her eyes pleading. </p>
+<p>“Amie, what’s happening to… to my breasts?” Kat bit her lower lip, riding waves of magical </p>
+<p>ecstasy.</p>
+<p>Amie’s eyes widened as Kat’s breasts began to swell larger, gradually spreading to cover the </p>
+<p>reclining girl’s nude midriff and stomach, but remaining magically perky and ﬁrm despite their </p>
+<p>incredible masses. Kat was clearly overwhelmed with magical pleasure and Amie watched her as </p>
+<p>she squirmed in delight, occasionally helping her along by licking along her swelling breast. </p>
+<p>Barely a minute later, Kat’s chest had matched, then surpassed, the size of Amie’s milk-</p>
+<p>swollen mammaries. Her new breasts seemed to defy gravity, stretching upwards into the evening </p>
+<p>sky, towering impossibly tall above her. Amie smiled at Kat over the sizable hills of her own milky </p>
+<p>6</p>
+<p>bosom, then leaned in close to press their chests tightly together. The chilly evening air around </p>
+<p>them now felt much warmer.</p>
+<p>Amie pondered, twisting the small charm on her necklace between her delicate ﬁngers. </p>
+<p>Mistress Yvette had told her that the charm’s effects were only temporary, but not so temporary that </p>
+<p>Kat wouldn’t have time to enjoy its effects for at least a day, even if that would be after Amie’s early </p>
+<p>departure the next morning. She bent over to brush Kat’s sweaty, milk-sogged hair out of her pretty </p>
+<p>face and saw a contented smile on her lips, then leaned in to plant a small wet kiss on her mouth. </p>
+<p>A minute later they were holding hands, giggling as they ran through the halls of the Guild </p>
+<p>towards the dormitory, their scholarly robes wrapped haphazardly around their expansive bosoms. </p>
+<p>The weight and bulk of her breasts was new to Kat, but with Amie’s loving assistance and ﬁrm grip, </p>
+<p>she had returned safely to her room. Kat seemed to fall asleep moments after her head hit her </p>
+<p>pillow. </p>
+<p>“Rest well, Kat my love,” sighed Amie. “Dream of large women.”</p>
+<p>She had refastened her robes closed around her still swollen breasts, bouncing and straining </p>
+<p>as she dashed through the dark halls of the Guild. She had to prepare for her departure to the </p>
+<p>kingdom of Sweetwater the next morning, and she didn’t stay long enough to see the tiny white </p>
+<p>droplets that had appeared on Kat’s hugely swollen nipples.</p>
+<p>(cid:15911)</p>
+<p>Amie had to admit that her milky condition had gotten her out of – and into! – more than one </p>
+<p>sticky situation in her studies at the Guild. But what good was it, she wondered, if it meant she had </p>
+<p>to spend long weeks separated from Katryn and the other scholars on remote assignments? Were </p>
+<p>the mistress scholars and the Grand Archivist really so embarrassed by her? What did Mistress </p>
+<p>Yvette expect her to ﬁnd here in Sweetwater?</p>
+<p>A sudden knock on the wooden door shattered her daydream and made her jump backwards </p>
+<p>in surprise. She slipped along the milk-slickened ﬂoor, falling over herself and ending up in a most </p>
+<p>unladylike position on the bed. She immediately sat up straight as a rail, a shot of adrenaline </p>
+<p>allowing unusually quick movements despite the massive weight of her engorged breasts, and she </p>
+<p>had barely ﬁnished calling out “Come in!” when the door quickly slid open. </p>
+<p>7</p>
+<p>A girl about her own age swept into the room and stared, tilting her head quizzically at Amie </p>
+<p>lying akimbo on the bed. Amie saw the girl was ﬂushed red, breathing heavily with small beads of </p>
+<p>sweat at her brow. Her long legs were almost entirely exposed below a blessedly short skirt, and </p>
+<p>she noted with interest the girl’s high heeled shoes, held ﬁrm to her toes with thin strips of red </p>
+<p>leather, making echoing clicks on the stone ﬂoor as she paced delicately to the foot of the bed. </p>
+<p>The girl’s straight brown hair curled slightly inwards at its tips near her shoulders, and her </p>
+<p>pronounced brown eyebrows gave her a severe, commanding air. Her lips bore some small </p>
+<p>remnant of a ruby red coloring, but most of it seemed to be smeared haphazardly around her </p>
+<p>mouth and in great red swaths onto her delicate cheeks, almost as if she had… Amie shook her </p>
+<p>head.</p>
+<p>The girl’s ragged cloth shirt left her arms fully exposed, and Amie thrilled at the sight of her </p>
+<p>substantial breasts straining against the fabric, each impressive sphere easily outmatching the size </p>
+<p>of the girl’s head. The shirt seemed far too small for her, leaving the bottom curves of her breasts </p>
+<p>and most of her toned stomach on display under Amie’s rapt gaze. Her eyes ran along the girl’s trim </p>
+<p>and subtly muscled body. Amie wondered what kind of labor she performed at the inn in that outﬁt, </p>
+<p>although – for a moment her thoughts drifted to her own swollen breasts – there was one job in </p>
+<p>particular she had in mind. </p>
+<p>She would usually be the one to take the initiative with her Guild sisters, but she now felt </p>
+<p>strangely subservient, stunned into silence before this dark beauty. The girl blushed and averted </p>
+<p>her eyes, looking demurely down at the ﬂoor.</p>
+<p>Amie was ﬂoored by the girl’s beauty and found herself searching for words as a familiar </p>
+<p>foggy arousal clouded her mind. She could feel her milk insistently, involuntarily, inexorably </p>
+<p>increasing its ﬂow from her thick nipples, her robes now well and truly soaked through with a small </p>
+<p>part of her full day’s production. Her outstretched arms hefted her milk-swollen chest towards the </p>
+<p>girl, struggling to form words, intimidated by the girl and inhibited by her own urgent need even as </p>
+<p>she tried to convey it.</p>
+<p>answer. </p>
+<p>The girl allowed her a few moments of stammering, then smiled and spoke in a quiet voice. </p>
+<p>“Does Madam ﬁnd the accommodations satisfactory?” she queried, but she didn’t wait for an </p>
+<p>8</p>
+<p>Her dark brown eyes lowered to Amie’s chest and a sudden ﬂash of recognition lit up her </p>
+<p>features. She stared unabashedly at Amie’s breasts, their hugely swollen forms and massively </p>
+<p>erected nipples now clearly outlined as they strained against the damp fabric of Amie’s robe. </p>
+<p>The girl smirked at Amie, speaking now more assertively. </p>
+<p>“Ah, perhaps Madam would enjoy our famed massages? I promise Madam will ﬁnd it most… </p>
+<p>expressive.” At this, she quickly and none-too-subtly licked her lips. </p>
+<p>Amie followed the girl’s eye line down to her own chest and turned bright red with </p>
+<p>embarrassment. Her hands leapt up to cover her chest but something stuck in her mind – how </p>
+<p>could this inn, in the middle of nowhere, be famed for anything at all? Why, it must be at least a half </p>
+<p>day’s travel to Sweetwater’s capital city –</p>
+<p>“Would Madam allow me to remove her robes?” the girl, no longer panting but still ﬂushed red, </p>
+<p>tittered in an almost sing-song voice. Amie fought through her own arousal to hear her. She was in </p>
+<p>another of her sensual dazes, feeling unable to focus on much beyond the insistent pressure of her </p>
+<p>milk and a burning need she now felt in her loins. </p>
+<p>Again the girl didn’t wait for a reply. Her heels clicked on the stone ﬂoor as she stepped to the </p>
+<p>side of the bed nearest Amie. She took Amie’s hand and helped Amie to her feet on the stone ﬂoor, </p>
+<p>facing Amie towards the open door and taking a position just behind. </p>
+<p>Amie moaned as she felt the heat of the girl’s ﬁrm breasts pressing into her back even </p>
+<p>through her robes, then ﬂinched as the girl suddenly called out.</p>
+<p>“Jessa! Come here at once!” the girl demanded.</p>
+<p>Moments later, another girl emerged from the hallway into Amie’s room. Jessa stepped </p>
+<p>quickly, standing directly over the drain in the center of the room and facing towards her, but </p>
+<p>averted her eyes, looking reservedly down at the ﬂoor. Amie wondered why Jessa also seemed to </p>
+<p>be panting heavily, her beautiful features ﬂushed.</p>
+<p>Jessa curtseyed towards Amie and spoke quietly, but not to her. “Yes, Kara?”</p>
+<p>Jessa was dressed very similarly to Kara, Amie observed, with a matching short skirt, long </p>
+<p>beautiful bare legs, and unusually high heels, on which she seemed unsure and a bit wobbly. Amie </p>
+<p>noted with curious interest a familiar-looking red coloring that may have once covered Jessa’s lips </p>
+<p>9</p>
+<p>but was now mostly smeared around her mouth. Amie’s thoughts drifted for a moment to imagine </p>
+<p>what Jessa and Kara had been doing outside her room.</p>
+<p>Jessa had long, ﬂowing blonde hair that fell below her shoulders and a grubby work shirt that </p>
+<p>kept her arms bare like Kara’s. A number of holes in her tattered shirt granted Amie’s peering eyes </p>
+<p>generous views of her big chest. Amie noted with glee that Jessa’s fully erected left nipple was </p>
+<p>poking gloriously through one such hole at the front of her shirt, while its twin strained in sympathy </p>
+<p>against the thin fabric.</p>
+<p>A curious metal clasp was gently squeezing around the base of Jessa’s big nipple. Amie </p>
+<p>would later ﬁnd out that it was a Sweetwater breast charm, helping to direct and control a girl’s </p>
+<p>arousal. Jessa at once unclasped it, tossing it aside. Her pointy teats seemed to shudder in relief, </p>
+<p>her abilities now fully unconstrained.</p>
+<p>Amie could feel hot breath on her ear as Kara spoke slowly but ﬁrmly. </p>
+<p>“Jessa, the Madam desires a massage most urgently,” Kara intoned.</p>
+<p>Amie’s eyes ﬂuttered as she rode momentary waves of roaring desire in her loins and felt </p>
+<p>urgent need in her breasts, but she still had the presence of mind to try and help Jessa along by </p>
+<p>stating the obvious. </p>
+<p>“It’s my breast milk,” Amie cooed at the younger girl, “I’m positively overﬂowing!”</p>
+<p>Jessa ﬂushed even redder and bit her lip, still averting her eyes, peering now at the ceiling as </p>
+<p>if to count the wooden slats used in its construction. She twisted slowly back and forth on her long </p>
+<p>legs but stood in place, nervously crossing her hands behind her back. Amie grinned as the </p>
+<p>movement of Jessa’s arms pulled her shirt taut across her sizable chest, stretching the holes in the </p>
+<p>strained fabric and exposing more of her beautiful skin.</p>
+<p>Amie watched as Jessa’s exposed nipple lengthened even further. It seemed to Amie that </p>
+<p>Jessa’s teats were half again as large as Sister Katryn’s legendary pair even with the effects of her </p>
+<p>charm’s magic, or maybe even longer? Amie boggled at the girl’s stunning breasty ﬁgure.</p>
+<p>She felt wobbly and fell back into Kara’s welcoming embrace. She was relieved for the </p>
+<p>support and thrilled at the sensation of her backside seeming to ﬁt so perfectly against Kara’s ﬁrm </p>
+<p>body. Jessa ﬁnally lowered her widening eyes just in time to see the sudden motion make Amie’s </p>
+<p>breasts bounce most weightily against the straining fabric of her robe.</p>
+<p>10</p>
+<p>Amie heard a gasp and looked up to see Jessa with one hand over her mouth, now staring </p>
+<p>directly at the voluminous swell of her breasts. Jessa’s other hand was clutching at her own left </p>
+<p>breast through her shirt and Amie watched as she slowly squeezed and released herself, then slid </p>
+<p>her hand along it until she had grasped her own exposed left teat between her ﬁngers.</p>
+<p>For a moment all three women stood still and the air hung thick and heavy with tension. Jessa </p>
+<p>was giving quick loving squeezes to her bare nipple as she watched in silence. </p>
+<p>Amie’s breath caught in her throat as she heard a brief tinny <em>ping</em>. It sounded somehow </p>
+<p>familiar to her, like a droplet of liquid striking a metallic surface. </p>
+<p>A distinct <em>ping-ping</em> soon followed, then she heard a short <em>RRRRIIIPPP</em> noise like a fabric </p>
+<p>tearing. </p>
+<p>Her mind reeled. Could it be? –</p>
+<p>Kara leaned in close and licked slowly along the back of Amie’s left ear from bottom to top. </p>
+<p>Her knees wobbled from the unexpected wet sensation, and she felt Kara’s hot breath on the back </p>
+<p>of her neck. </p>
+<p>“Jessa! You are positively dripping in front of Madam,” Kara chided.</p>
+<p>Amie watched the next droplet as it fell from behind Jessa’s short skirt down to the metal grate </p>
+<p>on the ﬂoor directly below. </p>
+<p><em>ping</em></p>
+<p>Amie looked up and marveled at Jessa’s long, slender legs, now shining with the girl’s </p>
+<p>amazingly voluminous wetness. The red leather straps on her heels had clearly been treated to </p>
+<p>resist liquids, Amie noted with wonder, as the girl’s dripping arousal had beaded together on the </p>
+<p>leather atop her toes into small sparkling droplets that reﬂected the dim candlelight. </p>
+<p>Large swells of Jessa’s breasts were now exposed through widening holes in her ragged </p>
+<p>shirt. Amie’s mind boggled; hadn’t Jessa’s chest been much smaller only a minute ago? She racked </p>
+<p>her memory for a parchment she had read about the women of Sweetwater. There was something </p>
+<p>about what happens when they get aroused…</p>
+<p>Mistress Yvette’s words rang out in Amie’s milk-addled mind, cutting through her arousal: This </p>
+<p>is the liquid charm. Seek the glory of its wetness in the kingdom of Sweetwater.</p>
+<p>11</p>
+<p>(cid:15911)</p>
+<p>Leaving Mistress Yvette’s chambers behind, Amie had bounded back to the Guild’s dormitory </p>
+<p>and quietly let herself into her room. Closing the door behind her, she was overwhelmed by a </p>
+<p>pungent, sticky smell that she immediately recognized as her roommate’s unmistakable arousal. </p>
+<p>With the dormitory’s insulating stone walls blocking out most external sound, she could now hear a </p>
+<p>rhythmic, wet-sounding <em>squelch-squelch</em> noise and an occasional quick <em>slap</em> sound that brought </p>
+<p>a grin to her face. She knew even before she turned around that Sister Olivia was attending to </p>
+<p>herself again.</p>
+<p>Olivia, a tall girl with beautiful tan skin and long straight brown hair and one of her earliest </p>
+<p>friends at the Guild, was reclining on their shared bed, fully nude atop her discarded robe. Amie </p>
+<p>chuckled at the familiar sight of her roommate with her legs spread, furiously rubbing with one hand </p>
+<p>at what appeared to be a freshly-shaven pussy. </p>
+<p>She saw Olivia’s other hand was clutching at and sliding around a large glass jar; she had </p>
+<p>remembered ﬁlling it with her milk earlier that afternoon at Olivia’s direction (and enthusiastic </p>
+<p>assistance). The jar now contained but a few white droplets, though much of its contents appeared </p>
+<p>to have been spilled variously on the bed and on Olivia herself in great slippery rivers that even </p>
+<p>now ran down her ﬁrm stomach and pooled in her navel.</p>
+<p>A large parchment was unrolled in a dry spot on the bed next to Olivia. Amie’s eyes widened </p>
+<p>as she immediately recognized it as one of the many historical texts found in the Great Library. </p>
+<p>“Olivia! You can’t bring that in here! What if the mistresses –” Amie had blurted, but Olivia </p>
+<p>interrupted her with a crescendoing moan that she knew to be the start of one of Olivia’s famously </p>
+<p>vocal orgasms. </p>
+<p>Olivia was teetering on a knife’s edge of pleasure and Amie knew just how she liked to take </p>
+<p>herself over the edge. Olivia grabbed at her own right foot, folding her long slender leg in close to </p>
+<p>her face, and took a short moment to marvel at her wiggling toes, one of the many extensions of </p>
+<p>her beautiful femininity that Amie so loved. She licked along the outside of her own delicate heel </p>
+<p>and left a wet trail of saliva, then lowered her leg towards her groin until the back of her heel was </p>
+<p>resting against her nude pussy. </p>
+<p>12</p>
+<p>Olivia couldn’t help but cry out again from the sudden warm sensation of her lower lips sliding </p>
+<p>against her heel, then grabbed at her ankle, using her hand to start furiously rubbing her heel </p>
+<p>against her own wet center. Amie rolled her eyes, knowing that Olivia had long enjoyed using her </p>
+<p>own sexy feet like this on herself, although she much preferred when they shared their toes with </p>
+<p>each other. </p>
+<p>Amie looked down, sighing, just in time to see herself struck square in the chest by a </p>
+<p>voluminous jet of translucent liquid, soaking the fabric across her breasts. She staggered a step </p>
+<p>back in shock, then looked up with surprise.</p>
+<p>“Olivia! By the Divine Scholar’s teat, what –” she gasped, but was again interrupted by </p>
+<p>another epic squirt from Olivia, this one ﬁlling her open mouth, drenching her face, and matting the </p>
+<p>thick brown curls of her hair.</p>
+<p>She leapt into action, hurriedly shedding her robe and tossing it aside, anticipating the </p>
+<p>sensation of her roommate’s hot squirt against her bare skin. Olivia didn’t disappoint, and she soon </p>
+<p>exalted in two additional deluges from Olivia’s proliﬁc pussy, covering her nearly head to toe in </p>
+<p>sweet nectar. </p>
+<p>She swallowed luxuriously, cherishing the sweet tang of Olivia’s delicious juices, then </p>
+<p>chuckled despite herself. She knew Olivia was almost as enthusiastic about her milky gift as she </p>
+<p>was herself, and Olivia would often attempt incantations well beyond their abilities in her efforts to </p>
+<p>start milking her own breasts. Amie had always been willing to donate her milk to Olivia’s </p>
+<p>experiments, especially when Olivia would assist in collecting it from her needy nipples, but none of </p>
+<p>those efforts had ever been quite as wet as this one.</p>
+<p>“I think I’ve ﬁgured it out, Amie! Your milk!” gasped Olivia, clearly shaken by the intensity of </p>
+<p>her orgasm and the excitement of her discovery, but still taking a moment to smirk at her dripping </p>
+<p>wet roommate before continuing. </p>
+<p>“All of the women in this text can do what I just did,” she breathed, pointing urgently at the </p>
+<p>parchment next to her on the bed. Her other hand continued to slide along her still-dripping pussy, </p>
+<p>squelching with slow, leisurely strokes. </p>
+<p>“I mean, I could temporarily do it for my next orgasm with some magical aid, your milk, and a </p>
+<p>fresh shave,” she giggled, at once giving her own denuded pussy a light wet slap and blushing </p>
+<p>cutely under Amie’s beaming gaze. </p>
+<p>13</p>
+<p>“But these women - they’re all born with it!” she marveled.</p>
+<p>Amie shivered as Olivia’s sticky sweet liquids dripped down her body into a growing puddle. </p>
+<p>“That was beautiful and very impressive, Olivia,” Amie whispered, still beaming at her </p>
+<p>roommate, “But what does that have to do with my milk?”</p>
+<p>Olivia sat upright, still rubbing herself with an occasional <em>squelch</em>. </p>
+<p>“It’s not just their pussies, Amie.” She lowered her voice. “It’s the kingdom of Sweetwater. </p>
+<p>Where you’re going tomorrow.”</p>
+<p>(cid:15911)</p>
+<p>Kara was pressing her big breasts ﬁrmly into Amie’s back, holding Amie’s elbows and helping </p>
+<p>her to stand upright once again. Amie’s balance now recovered, Kara again leaned in close, leaving </p>
+<p>small kisses on the back of her neck above the folds of her robes. </p>
+<p>Kara then raised her head, looking over Amie’s shoulder to join her in admiration of Jessa’s </p>
+<p>dripping wetness, still running down Jessa’s ﬂushed thighs and occasionally striking the metal ﬂoor </p>
+<p>grate with a soft <em>ping-ping</em>. </p>
+<p>Kara’s voice was a low growl. “Jessa, look at Madam’s huge breasts,” she urged, but she </p>
+<p>hadn’t needed to, as Jessa had been ﬁxated on the heaving mountains beneath Amie’s robe for </p>
+<p>some minutes. </p>
+<p>Jessa was now using both hands to softly knead her own chest through her shirt, squeezing </p>
+<p>down to her nipples and pulling up again, then releasing to repeat the sensual gesture. Each cycle </p>
+<p>sent the most delicious feelings to her head as her dripping pussy gushed in sympathy, further </p>
+<p>drenching her slick, slippery legs, which she rubbed and squeezed together in a slow dance under </p>
+<p>Kara and Amie’s lascivious gaze.</p>
+<p>robes.”</p>
+<p>Kara purred into Amie’s ear, watching Jessa’s wet dance. “Jessa, please remove the Madam’s </p>
+<p>Amie was burning hot, her glorious breasts nearly fully engorged and again leaking even as </p>
+<p>her loins were aﬂame with desire. She grew impatient with need as Jessa remained frozen in place. </p>
+<p>14</p>
+<p>She started reaching up to grasp at her own soaked robes, but before she knew what was </p>
+<p>happening, both of her wrists had been pulled behind her back in the surprisingly strong grip of one </p>
+<p>of Kara’s hands.</p>
+<p>she witnesses.” </p>
+<p>She again heard Kara’s luscious purr and felt hot breath on her ear. </p>
+<p>“Please forgive sister Jessa, Madam,” Kara whispered in her ear, “For she knows not what </p>
+<p>Kara paused for a moment. “But I do.”</p>
+<p>Kara continued to hold Amie’s wrists tightly in one of her strong hands, then reached with her </p>
+<p>other hand around to Amie’s front and grasped the hem of Amie’s robe. She left her hand in place, </p>
+<p>the robe remaining closed as Jessa softly whimpered with frustrated impatience. Her other hand </p>
+<p>released its grip on Amie’s wrists and reached up towards Amie’s chin, leaning in close as she </p>
+<p>slowly turned Amie’s head back towards hers. She was pleased to feel Amie leaving her arms in </p>
+<p>place behind her back. </p>
+<p>Amie opened her palms and reached backwards, ﬁnding Kara’s toned thighs below and </p>
+<p>behind her, even as she kept her eyes locked forward on Jessa’s beautiful body. Her hands made </p>
+<p>contact with Kara’s legs but immediately slid right off. She gasped as she realized that, much like </p>
+<p>Jessa, Kara’s own dripping arousal had left a slick coating over the girl’s beautiful legs. </p>
+<p>She adjusted her stance to spread her legs just beyond shoulder width, smirking as her </p>
+<p>ﬁngers slid along Kara’s legs through Kara’s proliﬁc wetness. She felt Kara’s weight shifting behind </p>
+<p>her and looked down, between and below her hugely pendulous breasts, to see Kara’s toned left </p>
+<p>leg emerge between her own legs from behind. She marveled at the subtle musculature of Kara’s </p>
+<p>long leg as it slid between her own and thrilled at the running wetness that seemed to ﬂow without </p>
+<p>end down Kara’s calves, all the way down to Kara’s beautiful toes in her red leather heels. </p>
+<p>She slowly raised her hands behind her, upwards between Kara’s legs, feeling the intensifying </p>
+<p>heat of Kara’s mound below a mercifully short skirt. She found herself surprised to encounter soft </p>
+<p>fabric in Kara’s nethers. She reeled at the prospect that Kara and Jessa had both soaked through </p>
+<p>their clothes so quickly, but a moment later she felt Kara shudder as her probing ﬁngers </p>
+<p>unexpectedly brushed against Kara’s bare pussy. It seemed that these peculiar undergarments left </p>
+<p>Kara’s throbbing pussy completely exposed. She could feel two sturdy elastic straps running </p>
+<p>parallel to Kara’s hot gash, while a more traditional fabric cloth seemed to cover precious little of </p>
+<p>Kara’s taut bottom. </p>
+<p>15</p>
+<p>She could feel that the juicy folds of Kara’s pussy were completely hairless, a gift surely </p>
+<p>granted by the same blessed genes that had made her dripping arousal so astoundingly effusive. </p>
+<p>Amie found herself marveling for a moment at the many wonders of the women of Sweetwater. </p>
+<p>Kara licked slowly across the back of Amie’s neck, giving her shivers. Amie closed her eyes </p>
+<p>momentarily, hearing another <em>ping-ping</em> sound that she knew meant Jessa was still watching them </p>
+<p>both in rapt attention. </p>
+<p>growl again ﬁlled Amie’s ears. </p>
+<p>Kara thrust her hips forward and ground her crotch against Amie’s probing hands. Her sultry </p>
+<p>“Can you feel how wet I am for you, Madam?” she gushed. “Jessa is too.”</p>
+<p>Kara softly kissed Amie’s cheek before continuing. “Please forgive her inaction, Madam, for I </p>
+<p>think she ﬁnds you quite overwhelming.”</p>
+<p>Amie blushed at the compliment just as Kara had ﬁnished turning Amie’s head towards hers, </p>
+<p>leaning in close, pressing their cheeks together. Kara paused there, teasing, daring Amie to close </p>
+<p>the rest of the distance. Amie sighed into Kara’s arms with a smile, leaning into the girl behind her </p>
+<p>and turning her head further until their lips met in a soft embrace.</p>
+<p>One of Amie’s probing ﬁngers had at that moment slipped inside Kara’s gushing pussy. Her </p>
+<p>ﬁnger was immediately drenched in Kara’s sticky arousal, which dripped down her soft hands and </p>
+<p>fell, splashing in a growing puddle on the ﬂoor between Kara’s heels. She quickly inserted a second </p>
+<p>ﬁnger, bending them slightly and scooping out a soppy dollop of Kara’s essence before withdrawing </p>
+<p>her ﬁngers, raising them slowly. She momentarily broke her kiss with Kara to move her dripping </p>
+<p>ﬁngers into the space between their lips.</p>
+<p>This time it was Amie who paused expectantly, teasing Kara with an impressive display of </p>
+<p>Kara’s own juices. Jessa thrilled as she watched Kara smile and lean in, licking at Amie’s ﬁngers </p>
+<p>and spreading her own wetness over both of their faces as they embraced once again.</p>
+<p>Jessa whimpered as she watched Amie and Kara’s lips kissing around Amie’s dripping ﬁngers </p>
+<p>between them. She had been stunned by Amie since the moment their eyes ﬁrst met, but now felt </p>
+<p>her own urgent need acutely, white-hot at her core. </p>
+<p>Jessa had long suspected that her effusive dripping arousal and voluminous squirting had set </p>
+<p>her apart. Judging by Kara’s past reactions, she had wondered if she might be exceptional even </p>
+<p>among the proliﬁc women of Sweetwater. She had always found it both easy and exhilarating to </p>
+<p>16</p>
+<p>ride through several orgasms in a row, amazed even at herself as each climax was accompanied </p>
+<p>by abundant squirting that always seemed larger than the last.</p>
+<p>Jessa looked down at the curves of her own swollen breasts, which had now grown huge with </p>
+<p>her need, straining against her overtaxed shirt. With little effort, she leaned in to kiss and lick across </p>
+<p>the bare skin of her own breast through one of the stretched holes in her shirt. She knew that her </p>
+<p>aroused breast growth was extremely pronounced; until Amie, she had never met any other girl </p>
+<p>with a chest that could grow quite as expansive as her own.</p>
+<p>Watching Amie and Kara share such delicate intimacy, and feeling the exquisite pleasure of </p>
+<p>her own slender hands still grasping and pulling at her turgid nipples and the warmth of her tongue </p>
+<p>on her own sensitive ﬂesh, she couldn’t hold back anymore and felt herself plunge over the edge. </p>
+<p>She moaned, “OH! Oh Madam! I’m –” </p>
+<p>A lengthy spray of translucent liquid gushed from Jessa’s pussy, soaking her short skirt, down </p>
+<p>her bare legs, and across a large section of stonework ﬂooring near the bed. Amie heard the sound </p>
+<p>of Jessa’s ecstasy and a curiously familiar splashing noise, and she broke her kiss with Kara to </p>
+<p>look towards Jessa. Amie’s mouth opened agape with astonishment and mirth.</p>
+<p>She turned her head back to Kara and kissed her cheek. It seemed to her like Sister Olivia’s </p>
+<p>theory about the women of Sweetwater now had two beautiful examples in its favor, but she still </p>
+<p>couldn’t help but ask. </p>
+<p>“Did she just…?” she started, then giggled, looking up at Kara.</p>
+<p>Kara said nothing, her eyes locked forward at Jessa and her arm still wrapped around Amie’s </p>
+<p>shoulder, grasping the hem of Amie’s light blue robe. With a quick motion, Kara ﬂung open one side </p>
+<p>of Amie’s robe, fully exposing Amie’s enormous left breast. Its huge mass hung below Amie’s trim </p>
+<p>waist, and Jessa reeled at the sight, her experienced eyes at once recognizing its faint reddish tint </p>
+<p>as being angry with milk. </p>
+<p>Jessa’s eyes widened as she realized that Amie probably couldn’t even reach her own huge </p>
+<p>dripping nipples. Jessa smacked her lips together, for despite all her ongoing wetness down below, </p>
+<p>she was suddenly awfully thirsty.</p>
+<p>“Kara! She’s so full!” gasped Jessa.</p>
+<p>17</p>
+<p>Jessa was overwhelmed by the sight of Amie and Kara together; her eyes lingered on Amie’s </p>
+<p>incredible milky breast and Kara leaning in to kiss Amie’s cheek. Her hands were a blur up and </p>
+<p>down her own nipples as she stared at Amie’s spurting teats. She felt herself plunge over the edge </p>
+<p>once again.</p>
+<p>“She’s spraying, Kara!” Jessa exclaimed. </p>
+<p>Splashes of Jessa’s prodigious squirt arced even farther this time, falling across Amie’s bare </p>
+<p>feet and even reaching Kara’s toes to mix with Kara’s own ﬂowing juices. Amie marveled at how the </p>
+<p>angled stone ﬂoor swept away Kara and Jessa’s ﬂuids and her own milky spray while keeping her </p>
+<p>bare feet deliciously warm and wet.</p>
+<p><em>RRRRRRRiiiiiiiiip!</em> Jessa’s tattered shirt gave up the ﬁght against her surging breasts. The </p>
+<p>fabric fell off her shoulders, sliding off her chest, and had dropped down to her waist, but her arm </p>
+<p>grabbed it out of the air before it touched the ground. She spun it once around her ﬁnger, then ﬂung </p>
+<p>it aside, out through the open doorway into the hall.</p>
+<p>(cid:15911)</p>
+<p>Earlier that evening, Kara was moving swiftly through the inn’s hallway, her heels clicking </p>
+<p>rapidly on the stone ﬂoor. Whipping around a corner, she collided at speed with a topless Jessa. </p>
+<p>Both girls took a step back in shock. </p>
+<p>The impact had rubbed Kara’s big chest most deliciously against the rough fabric of her work </p>
+<p>shirt, while Jessa’s sensitive naked teats had clearly enjoyed their brief encounter with Kara’s </p>
+<p>chest. In the cool hallway, both girls’ nipples quickly hardened.</p>
+<p>Jessa was ﬂushed red, but not entirely from the sudden impact. “Kara! Have you seen the girl </p>
+<p>who just arrived? She’s stunning!”</p>
+<p>Kara rolled her eyes. “Jessa, did you forget your shirt again?”</p>
+<p>Jessa seemed to notice her own naked breasts for the ﬁrst time, blushing cutely. She hadn’t </p>
+<p>entirely forgotten, but she did ﬁnd it difﬁcult to cover herself when her unruly chest could change </p>
+<p>size so unpredictably with her frequent arousal. She often eschewed any coverings in private, and </p>
+<p>sometimes even around the inn, a game she enjoyed playing to tease Kara. </p>
+<p>18</p>
+<p>Jessa was talking a little too loudly in her excitement. “I think she’s a scholar! Her robes –”</p>
+<p>Kara leaned in quickly, pressing their breasts and lips together, trying to quiet the younger girl. </p>
+<p>She couldn’t help but reach up, grabbing a large handful of Jessa’s beautiful nude breast, feeling it </p>
+<p>swelling larger in her grip as Jessa moaned into her mouth.</p>
+<p>Kara stepped back, raising an eyebrow. “You’ve been awfully naughty, walking around with </p>
+<p>your pretty nipples out.” </p>
+<p>Jessa played along. “So let’s leave them out for her to enjoy,” she smirked.</p>
+<p>Kara reached into a nearby linen closet, pulling out a large cloth rag that appeared to be clean </p>
+<p>but was littered with holes. Grasping one one of the larger central holes between her delicate </p>
+<p>ﬁngers, she gave it a quick <em>rip</em> then lifted it above Jessa’s head, and down, draping it across </p>
+<p>Jessa’s ﬁrm shoulders and growing breasts. She wrapped the cloth around Jessa’s front with a </p>
+<p>smirk, helping it stay in place by delicately inserting Jessa’s left nipple through one of the holes.</p>
+<p>Jessa giggled. “This won’t ﬁt me for long, Kara.”</p>
+<p>Kara smiled and leaned in to kiss Jessa again, admiring the ruby red coloring on Jessa’s lips.</p>
+<p>(cid:15911)</p>
+<p>Jessa placed a hand beneath both of her huge naked breasts, tilting her head at Kara. “I told </p>
+<p>you that shirt was way too small for me.”</p>
+<p>Amie saw Jessa’s quivering breasts now hanging below her navel, marveling that they were at </p>
+<p>least as large as her own empty bosom would be after a long milking from one of her Guild sisters. </p>
+<p>Amie knew her huge engorged breasts were still the largest in the room at the moment, but she </p>
+<p>could see even now that Jessa’s ﬁrm ﬂesh was still slowly expanding between the girl’s hands.</p>
+<p>Jessa blushed and again averted her eyes. “Please forgive me, Madam,” she whimpered, </p>
+<p>speaking quickly from embarrassment.</p>
+<p>“It’s just that I want you so, and this happens every time I get so hot…” Jessa trailed off, then </p>
+<p>bit her lip and giggled.</p>
+<p>19</p>
+<p>Jessa tried to pull herself together and straightened up, again grasping her bosom and lifting it </p>
+<p>up towards Amie.</p>
+<p>“Madam, do my breasts please you?” Jessa whispered.</p>
+<p>Jessa inclined her head, licking lazily from her collarbone out as far forward as she could </p>
+<p>reach on each swelling breast. She placed both hands under her left breast, lifting it gently upwards </p>
+<p>towards her waiting mouth. Amie gasped at this; sucking at her own nipple had long been one of </p>
+<p>her favorite breasty pastimes, but lately her massive chest had become simply too large for her to </p>
+<p>enjoy this simple pleasure. She was thrilled to see that Jessa shared the same habit.</p>
+<p>Jessa’s proffered nipple was now towering upwards before her, obscuring no small part of her </p>
+<p>pretty face from Amie’s view. Jessa licked slowly around her own throbbing nub, enjoying the </p>
+<p>sensual feeling of teasing herself just so. </p>
+<p>Jessa’s eyes widened from the delicious sensation of licking her own nipple, then looked to </p>
+<p>Amie. </p>
+<p>“My nipples! I’m growing so big for you!” gasped Jessa.</p>
+<p>Jessa popped her teat into her mouth and moaned as she suckled slowly at herself, lost in the </p>
+<p>delicious sensation. Amie gasped at the lewd display. </p>
+<p>Amie’s lactation suddenly increased and her exposed left breast let out a spray of approval. A </p>
+<p>rain of milky droplets easily closed the distance between her and Jessa, and Jessa gasped at the </p>
+<p>delightful sensation of hot milk showering upon her legs and breasts. Amie again fought to reassert </p>
+<p>control over her unruly milk, managing only to slow the spray to an insistent running trickle from </p>
+<p>both throbbing nipples.</p>
+<p>She thought again of Sister Olivia and turned her head back to Kara, trying to convey </p>
+<p>meaning through her aroused haze. </p>
+<p>“Did she…? Can all of you…?” she questioned, looking up at Kara’s pretty face.</p>
+<p>Kara smiled back at her. “She did twice now, Madam.” Kara leaned in for a quick loving peck </p>
+<p>on Amie’s lips. </p>
+<p>as well, my sweet Jessa.”</p>
+<p>“And we have so much more to show you.” Kara paused for a moment, looking up. “And you </p>
+<p>20</p>
+<p>Kara reached forwards around Amie’s other shoulder, grasping the other hem of her robe. </p>
+<p>Jessa’s eyes widened and she sucked harder at her own nipple, feeling it throbbing urgently </p>
+<p>between her tongue and the roof of her mouth.</p>
+<p>Kara paused again, still holding the hem of Amie’s robe in place. </p>
+<p>“Jessa, what do you suppose Madam has hidden under here?” Kara teased.</p>
+<p>Kara threw open the other side of Amie’s robe and pulled it backwards over her shoulders </p>
+<p>until it landed in a heap on the ﬂoor between their legs. Amie now stood fully nude on the moist </p>
+<p>stone ﬂoor. </p>
+<p>Jessa’s eyes widened further and she seemed to choke for a moment around her own nipple. </p>
+<p>She let her big left breast drop from her mouth and it bounced brieﬂy against its twin before settling, </p>
+<p>thrusting outwards and still slowly growing with her arousal.</p>
+<p>Jessa was stunned. She admired Amie’s slender legs, toned arms, and enormous naked </p>
+<p>breasts. </p>
+<p>“Madam is beautiful!” she cried. </p>
+<p>Amie blushed, then kicked her robe aside with one foot, tossing it up and over the bed just in </p>
+<p>time for it to avoid another incoming blast of Jessa’s incredible squirt. Jessa had clearly launched </p>
+<p>into another of her orgasms, and Kara and Amie’s legs were again covered in a deluge of sticky </p>
+<p>sweetness. It dripped down to their toes and gushed across the ﬂoor, mixing with Amie’s spurting </p>
+<p>milk before ﬂowing back towards Jessa in the center of the room.</p>
+<p>Kara rubbed Amie’s shoulders then reached forward and around with both arms, ever so </p>
+<p>lightly touching the outer edges of Amie’s huge milky breasts. She gave each one a soft loving rub </p>
+<p>and she could feel the weight of their urgent milky burden. But ﬁrst, she had an idea.</p>
+<p>Kara kissed the back of Amie’s neck, then lifted her head. </p>
+<p>“Jessa, won’t you show Madam your pretty pussy?” Kara almost sang.</p>
+<p>Jessa had closed her eyes, now stroking and rubbing her still slowly growing breasts with </p>
+<p>both hands and in generous armfuls. She didn’t seem to hear Kara. Amie stared at Jessa’s </p>
+<p>beautiful legs and the short skirt still wrapped around her sexy hips. </p>
+<p>21</p>
+<p>Kara seemed to share some degree of Amie’s impatience with Jessa. Amie heard Kara clear </p>
+<p>her throat and the click-click of Kara’s heels on the stone ﬂoor as she stepped past Amie and stood </p>
+<p>next to Jessa in the center of the room. Kara reached out, insistently pulling Jessa’s left arm away </p>
+<p>from her breast and taking the girl’s hand in her own. </p>
+<p>Amie’s eyes bulged. Kara had been standing behind her ever since Jessa arrived, but she </p>
+<p>was certain that Kara’s shirt had not been so obviously under-sized just a few minutes earlier. </p>
+<p>Kara’s big breasts had clearly swelled substantially larger, now straining against her shirt, but she </p>
+<p>was still massively outmatched by the topless younger girl quivering next to her. </p>
+<p>Kara repeated her command. “Jessa, let us show Madam your pretty pussy, and what we can </p>
+<p>do for her.”</p>
+<p>Kara reached behind Jessa and released a clasp on her short skirt, unwrapping it from her </p>
+<p>legs and tossing it aside. Amie’s searching eyes ﬁnally reveled in the sight of Jessa’s pretty pussy, </p>
+<p>fully exposed thanks to the same kind of curious undergarments that she remembered feeling on </p>
+<p>Kara. With a ﬂourish, Kara discarded her own skirt, now standing side by side with Jessa as Amie </p>
+<p>admired their matching panties and bare, dripping pussies.</p>
+<p>Slap! Kara had lightly swatted Jessa’s ﬁrm bottom, eliciting a yelp from Jessa and coaxing a </p>
+<p>generous squirt of liquid from Jessa’s pussy. A sympathetic spray from Amie’s exposed nipples </p>
+<p>rained hot milk upon Kara and Jessa’s bare legs. Kara grinned at the other two girls’ reactions.</p>
+<p>Amie pulled together the courage to make a request of her generous hosts. “Please, Kara,” </p>
+<p>she was almost begging. “Please show me your beautiful breasts!”</p>
+<p>Kara laughed. “Yes, Madam.” She turned to the girl beside her. “Come to bed, Jessa.”</p>
+<p>Kara turned, leading Jessa by hand to the edge of the bed. Kara locked eyes with Amie, </p>
+<p>slowly lifting her grubby shirt over her head and tossing it aside, ﬁnally exposing her beautiful </p>
+<p>naked breasts to Amie. Amie felt herself shaking, and again the milky spray from her nipples </p>
+<p>steadily increased as her mental control slipped away.</p>
+<p>Kara sat on the edge of the bed, leaving her heels ﬁrmly planted on the stone ﬂoor, then </p>
+<p>reclined backwards. She spread her slender legs, her wet pussy exposed through her open </p>
+<p>undergarments and now leaking her generous ﬂuids down onto the bed.</p>
+<p>22</p>
+<p>Jessa had followed Kara next to the bed, her wide eyes rapidly moving back and forth </p>
+<p>between Kara’s dripping pussy and the overwhelming magniﬁcence of Amie’s nude ﬁgure. Jessa </p>
+<p>seemed stunned into inaction once more, and Kara again tried to help the younger girl along.</p>
+<p>“Come, Jessa. Give us your nipple,” Kara smiled up at Jessa from the bed.</p>
+<p>Amie saw that Jessa seemed to know exactly what Kara had intended, and watched as </p>
+<p>Jessa’s sexy heels clicked around the bed to approach Kara from the other side. Jessa bent over, </p>
+<p>resting her huge breasts against Kara’s, then continued leaning further until she was able to open </p>
+<p>her mouth and suck Kara’s left nipple inside. At the same time from below, Kara had already begun </p>
+<p>suckling on Jessa’s hugely swollen teat hanging above her.</p>
+<p>This had long been one of Kara and Jessa’s favorite positions together. There was something </p>
+<p>simply divine, Kara thought, about sharing their nipples with each other. Giving and receiving in this </p>
+<p>way seemed to Kara to be such a simple sexy expression of deep loving, and she thrilled at the feel </p>
+<p>of Jessa’s huge breasts slowly growing on top of her and Jessa’s nipple expanding in her mouth.</p>
+<p>Amie stood in rapt attention for the next few minutes as Kara and Jessa noisily suckled at </p>
+<p>each other’s nipples. Amie was thrilled to see both girls’ breasts continuing to slowly expand, </p>
+<p>pressing ﬁrmly into each other, as their arousal for each other brought them to ever greater heights. </p>
+<p>Amie felt herself teetering on the edge of her own climax, further enhanced by a stunned realization </p>
+<p>that she had never before felt her own breasts to be quite this engorged.</p>
+<p>Amie was wrestling with the exertion of trying to keep her milk under control and found herself </p>
+<p>again nearly begging. </p>
+<p>“Please, Kara. I need you at my nipples!” Amie whimpered.</p>
+<p>Kara considered this, then wrapped her lips further around Jessa’s turgid hanging nipple, </p>
+<p>pondering. Amie heard Kara’s mufﬂed voice coming from underneath Jessa’s swelling mammaries. </p>
+<p>Kara peered around Jessa’s huge teat towards Amie. “As you can see, Madam, we in </p>
+<p>Sweetwater are experts in matters of the breast.”</p>
+<p>Kara gave one last loving suck on Jessa’s big nipple. “Come, Jessa. Let us attend to Madam,” </p>
+<p>Kara chuckled.</p>
+<p>Jessa struggled somewhat to lift her huge breasts off Kara and stood up. Amie was </p>
+<p>astonished to see that Jessa’s swollen chest had now nearly reached the size of her own. How </p>
+<p>23</p>
+<p>were the women of Sweetwater able to grow so effortlessly, and to such huge sizes? This question </p>
+<p>would have to wait, for Amie was far from the right state of mind for speculation.</p>
+<p>Kara scooted off the bed and kneeled on the ﬂoor in front of Amie, who was still standing with </p>
+<p>her back to the mirror. Kara had placed herself directly in front of Amie’s spurting left breast and </p>
+<p>smiled as Amie’s hot milky spray once again fell upon her own heaving breasts. Jessa soon </p>
+<p>followed, walking around the bed to kneel on the ﬂoor beside Kara. The blessed lactation from </p>
+<p>Amie’s right breast now gently rained upon Jessa’s still-spreading breast ﬂesh and dampened her </p>
+<p>beautiful blonde hair.</p>
+<p>contact with Amie. </p>
+<p>Kara was suddenly in charge once again, speaking ﬁrmly to Jessa but maintaining eye </p>
+<p>“Jessa, let us begin by squeezing Madam’s breast,” Kara commanded.</p>
+<p>Kara and Jessa inched forwards on their knees, reaching up towards Amie’s chest, now </p>
+<p>feeling the huge weight of her hot ﬂesh in their hands and arms. The sudden contact made her legs </p>
+<p>shake and she felt her last vestiges of mental control slipping away. The milk spraying from her </p>
+<p>nipples was now furiously dousing Kara and Jessa’s pretty faces.</p>
+<p>Jessa thrilled at the sweet taste. “Your milk is so delicious, Madam!” she moaned between </p>
+<p>mouthfuls.</p>
+<p>Kara leaned in close to Jessa, licking along her ear and gently grasping Jessa’s breast. “Suck </p>
+<p>her huge nipple, Jessa,” Kara commanded, kissing Jessa’s cheek.</p>
+<p>Amie felt a warm, wet sensation, and although her breasts were blocking most of her view </p>
+<p>down below, she knew Kara and Jessa were both suckling at her engorged teats, gulping and </p>
+<p>swallowing her prodigious lactation. She would periodically feel one of her nipples brieﬂy exposed </p>
+<p>to the air as Kara or Jessa momentarily released it to leave small milky kisses around her chest. </p>
+<p>She loved the feel of her own milk dripping down her sensitive breasts and thrilled that the girls at </p>
+<p>her nipples indulged her in this way.</p>
+<p>She rode waves of ecstasy, cresting up and down as she delighted in the tender intimacy of </p>
+<p>one of her favorite pastimes, sharing her milky gift with two thirsty girls at her teats.</p>
+<p>She would periodically hear a curious <em>spurt</em> or a <em>splash</em> emanating from somewhere near </p>
+<p>the ground, and although she couldn’t place it at ﬁrst, she soon realized with a warm ﬂush that Kara </p>
+<p>and Jessa’s incredible pussies were depositing great swaths of their sweet liquid on the stone ﬂoor 
+24</p>
+<p>below them. The smell was simply divine, a heady mix of their proliﬁc dripping arousal with the </p>
+<p>sweet aroma of her effusive milk running down all of their bodies.</p>
+<p>“You girls are so wet for me!” Amie marveled as Kara and Jessa continued suckling noisily on </p>
+<p>her nipples.</p>
+<p>Amie would now and then feel her own bare legs and feet become doused in sticky </p>
+<p>sweetness, and she felt great affection for the two girls who were now so deftly servicing her needy </p>
+<p>breasts and indulging so many of her senses at once. After some long minutes, Amie felt the </p>
+<p>pressure of her milk easing as it was expressed in great quantities by Kara and Jessa’s expert </p>
+<p>hands and tongues.</p>
+<p>haze of her arousal. </p>
+<p>“Come to bed, Madam,” Kara whispered. Amie blinked hard, trying to focus through the milky </p>
+<p>Amie realized with a start that her outstretched arms had been pulled forward and saw Kara </p>
+<p>and Jessa smiling as they stood. Kara stepped in close to Amie’s left, pressing her big breasts </p>
+<p>ﬁrmly into Amie’s side, and she felt both of Kara’s hands gently holding the underside of her left </p>
+<p>breast. On her other side, Jessa happily smeared her nipples all over Amie’s right breast, then used </p>
+<p>one hand to press her own chest into Amie’s while her other hand reached to grasp the underside </p>
+<p>of Amie’s right breast.</p>
+<p>Kara and Jessa used the gentle pressure of their hands and breasts to guide Amie to the bed, </p>
+<p>helping her lie down on her back. Amie’s still-spurting nipples sent her milk into the air in great arcs </p>
+<p>that managed to reach the vaulted wooden ceiling high above, and continued to rain down on all </p>
+<p>three girls in a warm wet shower.</p>
+<p>The sound of mufﬂed giggling came to Amie’s ears over the curves of her breasts.</p>
+<p>Amie heard Jessa’s distinctive titter. “Madam is so milky!” she gushed.</p>
+<p>Amie felt movement on the bed somewhere beyond her sight, then sensed the warmth of </p>
+<p>Kara and Jessa’s sticky, dripping legs sliding around her own. Their pretty faces peeked at her over </p>
+<p>the swell of her breasts. Kara took an unexpected blast of milk to the face as she leaned towards </p>
+<p>Amie, giggling as Jessa rapidly closed the distance to lick the dripping rivers of milk from Kara’s </p>
+<p>forehead and cheeks.</p>
+<p>Kara smiled at Jessa. “Come, Jessa,” Kara cooed. “Rub your pretty pussy on Madam.”</p>
+<p>25</p>
+<p>At once Amie felt the powerful heat from Kara’s pussy over her left knee and the dripping </p>
+<p>warmth of Jessa’s pussy over her right knee, each girl straddling one of her legs.</p>
+<p>Kara and Jessa lowered themselves further and started rocking their hips back and forth ever </p>
+<p>so slowly, tribbing their gushing pussies over and around her knees. She felt her legs covered in a </p>
+<p>fresh deluge of squirt as the girls were now rubbing their pussies ever more quickly with their own </p>
+<p>peaking arousal.</p>
+<p>for you, Madam!” she moaned.</p>
+<p>Jessa cried out from the feel of her sensitive lips rubbing on Amie’s beautiful leg. “I’m so wet </p>
+<p>Looking up, Amie was treated to a beautiful sight as Jessa had leaned in close to Kara and </p>
+<p>began kissing her, their tongues writhing together in a lustful display, even as they continued </p>
+<p>grinding their pussies against Amie’s knees and calves. </p>
+<p>Jessa broke her kiss with Kara, then looked down at herself, mouth agape. “My breasts! I’ve </p>
+<p>never been so big before!” she gasped.</p>
+<p>Amie was now aware of a weight pressing down on her own breasts, and she realized in </p>
+<p>amazement that Jessa’s growing bosom had at last surpassed her own, resting heavily upon her </p>
+<p>spurting teats. She felt the pressure of the growing weight further increasing the already great </p>
+<p>sprays of milk from her nipples. Jessa’s innate abilities astounded her, and she felt herself about to </p>
+<p>plunge over the edge into her own orgasm.</p>
+<p>Amie cried, “Suck my nipples! Suck me now!”</p>
+<p>At once she felt a warm sensation around both throbbing nipples, and she saw Kara and </p>
+<p>Jessa had leaned forward into her huge cleavage, rubbing their big breasts against her own. She </p>
+<p>felt their teats poking into her even as they again sucked her nubs into their hungry mouths. Their </p>
+<p>vigorous suckling sounds pushed her to an ever higher plateau of pleasure and she knew her own </p>
+<p>climax was just barely out of reach, barreling towards her imminently.</p>
+<p>Kara disengaged from Amie’s spurting nipple, then smiled at Jessa next to her. Kara leaned </p>
+<p>towards Jessa, making eye contact with the younger girl. Kara slowly licked along the top of </p>
+<p>Jessa’s huge slippery right breast even as it was bouncing with her vigorous tribbing on Amie.</p>
+<p>“You’re so beautiful, Jessa,” sighed Kara, admiring Jessa’s beautifully ﬂushed skin, milk-</p>
+<p>dampened blonde hair, and enormous bouncing breasts as they rubbed and slipped all over her </p>
+<p>own chest and Amie’s milky teats beneath them.</p>
+<p>26</p>
+<p>It was Jessa who surrendered control ﬁrst, lost in the ecstasy of the latest in a long string of </p>
+<p>her own orgasms. Amie felt her right knee suddenly soaked with a fresh deluge of Jessa’s </p>
+<p>incredible production, followed just a moment later by Kara’s beautiful pussy rubbing and gushing </p>
+<p>over her left knee. That was too much for her, her own climax triggered as the three girls moaned </p>
+<p>together in a crescendo of milky squirting delight.</p>
+<p>Amie’s insides clutched as she was racked with pleasure, riding waves of ecstasy with her </p>
+<p>eyes shut and ears closed to the world around her. She gradually calmed down, whimpering and </p>
+<p>wheezing and panting heavily, and she knew not whether she had rested for a minute or an hour </p>
+<p>before summoning the willpower to face the world once more. </p>
+<p>Her breasts had nearly emptied themselves, and even before opening her eyes she could feel </p>
+<p>with her hands that her teats had regained their beautiful soft ﬁrmness, her long nipples still </p>
+<p>expressing milk but now in a lazy trickle.</p>
+<p>She opened her eyes, looking up just in time to see Kara and Jessa, clearly both exhausted </p>
+<p>from their own exertions, sighing and collapsing forward. They fell into her huge cleavage, sliding </p>
+<p>across her milk-slickened breasts, until Kara’s right hand and Jessa’s left hand ended up together </p>
+<p>at the front of her neck, each of them at the same time inadvertently touching the small silver charm </p>
+<p>on her necklace.</p>
+<p>There was a brilliant ﬂash of yellow light –</p>
+<p>…to be continued?</p>
+<p>27</p>
+</body>
+</html>

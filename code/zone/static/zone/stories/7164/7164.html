@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Drop The Bass</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>Author’s Note: If you are under 18 turn back now! This is NOT for you. </p>
+<p>This one is a little more standard, especially for this site. I really enjoyed putting it together! Feel free to 
+follow me on deviantart at a-spooky-ghost, which coincidentally is also the best place to contact me. </p>
+<p>Drop The Bass </p>
+<p>Yuna sat alone in her room, swaddled in a blanket, staring at the only source of light: her computer 
+monitor. A slender hand was extended from the blanket clicking the mouse every so often. The monitor 
+rolled through scenes of dialogue on the same erotic visual novel she had played to completion many 
+times. The game had released only in Japan and its name translated roughly to “Can giants find love?” in 
+English. For Yuna, the main draw of the game was that the protagonist was a twenty-foot-tall giant and all 
+of the romance routes involved normal-sized people. </p>
+<p>Through the fantasy of this game Yuna could escape a world she found both disappointing and terrifying. 
+On her best day she stood at 4’11” which when coupled with her utter lack of curves had her constantly 
+mistaken as a child when in public. Such excursions had become increasingly rare over the years until, 
+now at the age of twenty-two, she hardly ever left her room much less the house. The majority of her 
+social interaction was with the roommates with whom she was renting the property. </p>
+<p>Both housemates were sources of jealousy for Yuna. Grace was a year or two younger than her but was so 
+much taller it seemed they were a different species. The 6’4” red-headed athlete played volleyball for the 
+local university, and thanks to her workout regiment boasted an athletic body and a firm ass. Even 
+without the height difference Yuna couldn’t bear to even set eyes upon her. </p>
+<p>Yet, Emma provided no reprieve for Yuna. While a foot shorter than grace at 5’4” she still towered over 
+Yuna. To make matters worse, the blond had been blessed with the largest set of tits Yuna had ever seen 
+on somebody that wasn’t an anime character. Emma may have had G-cups but worked as a bartender and 
+frequently did whatever she could to keep her gorgeous boobs on display. The final nail in the coffin was 
+Emma’s enormous bubble butt. </p>
+<p>The confluence of having two people boast such, to Yuna, ridiculous proportions only drove her further 
+into isolation. Thus, she chose instead the comfort of clicking through the same lines of dialogue she had 
+read a hundred times before. Beyond her locked door the sounds of a gathering crowd began to build. 
+Parties weren’t an uncommon occurrence given her roommates’ outgoing personalities. </p>
+<p>Music began to play which caught Yuna’s attention. She groaned, knowing she wouldn’t be able to exit 
+her room to seek water or food without colliding with the party. Comments about her height, questions 
+about where her parents had gone all played out in her head. The rapid-fire assumptions had driven her to 
+seething over an imagined slight. </p>
+<p>Gradually, the music began to increase in volume. It was some kind of EDM that to Yuna’s ears always 
+sounded the same. The music began to build until it was impossible to ignore, and a bassline dropped that 
+seemed to shake the entire house with each beat. Something about the sound made her feel physically 
+uncomfortable, and to make matters worse she was feeling hot. </p>
+<p>After a few seconds enough was enough. Yuna cast off the blanket and pushed out of the computer chair. 
+She was wearing black oversized pajama pants and a black hoodie that was so large she could fit her </p>
+<p>entire body in it if she tried. The only reason she knew this was because she had, in fact, crawled all the 
+way into the hoodie when she was delivered an XXL hoodie instead of the XXS that she had ordered. </p>
+<p>Yuna threw open the door to a scene of ten, maybe fifteen people milling about the house. They all 
+seemed to be shouting which, given the intensity of the music, seemed the only way they could hear one 
+another. For the moment neither Emma nor Grace were anywhere to be found. </p>
+<p>“Excuse me,” Yuna attempted to get the attention of a nearby frat boy, “could you turn the music down?” </p>
+<p>Not only was the man in the midst of a conversation but the soft timbre of Yuna’s voice was hardly 
+competition for the ear-splitting music. Nobody seemed to pay her any notice, not even to ridicule her 
+stature. </p>
+<p>“Excuse me!” Yuna shouted firmly. Again, there was no response to her request. Her fists balled up while 
+the music began reaching its apex once again. Heat built up from within until it felt like she was going to 
+burst. The bass dropped and once more began pulsing the entire house. This time, however, each pulse 
+felt like it was threatening to lift the short Japanese girl off of her feet. </p>
+<p>Wearing such oversized clothing made the change nearly imperceptible at first. Each pulse of the bass 
+shook Yuna’s body, driving it upward. She swelled up and up, finally breaking the 5’0” barrier that had 
+eluded her for so long. Her head continued to soar upward until the loose-fitting pants grew tight on her 
+legs. All she had noticed, however, was an odd feeling of vertigo over the course of the preceding minute. 
+This lasted until Yuna felt her breasts, previously lacking the need for a bra, started to jiggle along with 
+the beat. </p>
+<p>“Wait…is this…” Yuna muttered as realization washed over her. She ran her hands over the hoodie, 
+grasping what was definitely flesh instead of the flat chest to which she had become accustomed. The beat 
+continued onward and so did her boobs. Her nipples stiffened and brushed against the jacket’s fabric, 
+eliciting a soft moan. Again and again the bassline blasted the house, the conversational murmurs and 
+occasional fits of laughter peppering the beat. </p>
+<p>Yuna withdrew her hands, staring in awe as she watched what must have been C-cup breasts bounce 
+freely from under her jacket. The music had fallen away to the back of her mind, and as a result she didn’t 
+notice that the bassline itself seemed to be building to another apex. Bewildered, she looked up at her 
+surroundings. In the time it took her to explore her burgeoning tits she had neglected to notice her body 
+had kept swelling upward. </p>
+<p>The frat boy whose attention Yuna had failed to grab no longer towered over her. She found herself head-
+level with his shoulders, but as the beat proceeded, she stretched higher and higher. Further did her 
+sweatpants stretch as her hips and ass began to fill out as well. Then, the bassline reached its apex and 
+dropped once again. The sound overwhelmed the house, scared animals in neighboring homes and even 
+rattled the cars parked outside. </p>
+<p>When the ear-shattering bass went off Yuna let out an aroused yelp. Her hips and ass burst outward, 
+straining her sweatpants’ elastic. Inch after inch of delicious, soft flesh poured into her jiggling tits. She 
+stretched upward despite standing still, meeting the frat boy’s eye level and then eclipsing it. Her hoodie 
+became ill-fitting once again, lifted from her torso both by her increasing height and her mind-boggling 
+N-cup breasts. </p>
+<p>“Yes…more…” Yuna mumbled quietly. The beat continued pushing her to greater heights; her hips and 
+ass piled on inches until her pants’ waistband snapped. Each pulse seemed to quicken her growth, pushing </p>
+<p>her breasts further until they could no longer be contained by the formerly-oversized hoodie. In the span 
+of a few minutes, she had gone from wearing oversized clothes to wearing capris and a crop top that were 
+comically small. </p>
+<p>Arousal completely overtook Yuna’s train of thought. Without regard to the party happening around her, 
+she cupped a breast with one hand and began feverishly tending to her crotch with her other. In her 
+current state she couldn’t notice that not only had the other partygoers taken notice of her—they were all 
+watching her expand in quiet awe. </p>
+<p>“Louder,” Yuna said breathlessly, “more bass!” she then cried out. </p>
+<p>At the back of the house stood Emma and Grace. As with the other guests they watched their mousy 
+roommate grow larger in rapt attention. When the command was given Emma seemed to snap out of her 
+stupor. The tall ginger made her way to the custom sound system that one of the partygoers had brought 
+and helped set up. As Yuna commanded, Emma placed her hand on the touchscreen and increased the 
+volume to maximum. She fiddled with the equalizer until the bass overwhelmed the other settings by an 
+order of magnitude. </p>
+<p>Such incredible sound in such a confined space should have deafened all those nearby. The pulsing bass 
+boomed like a gun going off every second. Cars from outside the house were rocked until their alarms 
+went off. Sound disturbances were reported to the police from every neighbor on the block. Anything on 
+an elevated surface not nailed down shook and rattled. </p>
+<p>Nothing else compared, however, to the sight of Yuna tearing her pants and jacket off with both hands. 
+All that remained was an overtaxed pair of underwear whose integrity was tested more each second by 
+her swelling thighs. Despite her immense size, not a single blemish or stretch mark was anywhere to be 
+seen on her body. As her breasts ceaselessly expanded outward, they remained high and firm on her chest. 
+The power of the bass caused nearly every inch of her soft, supple, growing body to jiggle and bounce. </p>
+<p>When Yuna’s panties finally snapped off she wasted no time in massaging her clit. Her head smacking 
+into the ceiling did not register with her on any level. Pieces of plaster began to fall, as she continued 
+ever-upward until her shoulders made contact with the ceiling and soon after, her back. The speed of her 
+massage increased as her legs stretched further. Her ass made contact with the ceiling, jiggling softly from 
+the impact. </p>
+<p>The bass let out one final burst, which at such increased volume could only be registered as the sound of 
+an exploding bomb. Yuna’s entire body grew, uninterrupted, for a full minute. An orgasmic shout 
+competed with the sound of the pulsing bass. Relative to her own body, her breasts were beginning to 
+dwarf even a T-cup. To the average person, however, her breasts alone were the size of a king-sized 
+mattress. </p>
+<p>An ear-piercing cry rang out from the massively overgrown Asian. Yuna had brought herself to orgasm at 
+the track’s final peak. Her growth slowed to a stop, leaving her tall enough that her tremendous ass left an 
+impact in the ceiling and her torso alone long enough to nearly run the entire length of the ceiling. 
+Panting, sweating, and in the afterglow of the most powerful orgasm of her life she took a moment to 
+regard the party of which she had become the center. </p>
+<p>“Damn, girl,” Emma called out. Murmurs of admiration and arousal broke out from amongst the crowd. A 
+few of the attendees had pleasured themselves to the sight, or begun having sex right on the spot, or had 
+passed out in part due to the heavy drinking. The reprieve afforded by the gap in music nearly left enough 
+time for the party to resume. </p>
+<p>Then, the next track began playing, filling the house with a distinct but rhythmic bassline. Both Emma 
+and Grace locked eyes at that moment. Something about either girl’s clothing was starting to feel 
+uncomfortable. </p>
+</body>
+</html>

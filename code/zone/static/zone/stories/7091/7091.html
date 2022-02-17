@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>RepliKate and the BunnyGirls</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>Author's Note: This story is a commission from one of my awesome Patrons. Standard 
+disclaimer applies: this story contains graphic depictions of sex, so if it's illegal or immoral for 
+you to be reading this, stop now! All characters are at least eighteen, all situations are entirely
+fictional, and any resemblance to any real-life individuals or situations is entirely coincidental. 
+Copyright Fidget, 2021. All rights reserved. Enjoy!</p>
+<p>RepliKate and the BunnyGirls </p>
+<p>by Fidget</p>
+<p>RepliKate impatiently waited for the patrol to walk by, activating her powers as she stepped 
+into the hallway behind them. The classy, dark evening gown that molded itself to her smooth 
+curves vanished suddenly, leaving her ample assets fully nude for an almost-imperceptible 
+instant as she strode down the hall before rough Kevlar materialized around her body, 
+wrapping her in dark blue body armor as a standard-issue visored helmet obscured her 
+elegant features. She adopted the no-nonsense gait of a professional paramilitary guard, and 
+reached a manicured finger down to switch on the radio at her hip, whose intermittent barking 
+would allow her to avoid guard hotspots as she continued her infiltration.</p>
+<p>Her first stop was the air defense control room, where she quickly disabled the automatic 
+defenses once the single technician on duty had been dispatched. She now only had a limited
+amount of time before her presence was discovered, but it should be more than enough to 
+complete her mission.</p>
+<p>RepliKate made her way to central command, saluting the few soldiers she passed along the 
+way, who had no reason to suspect someone who looked so much like they did.</p>
+<p>The final test was the gaggle of guards outside the double doors that led to the Commander's 
+office, but to her surprise, her flimsy claim that she had an "urgent message from 
+Communications for the Commander. Eyes only," was somehow enough to merit being waved
+through with only a glance at her badge. Kate had been prepared for a firefight at this stage of
+the operation, but she would certainly settle for disappointingly lax security instead. Still, she 
+couldn't really blame them. They had no reason to believe that someone could have gotten 
+this deep into the compound without notice. But, RepliKate wasn't just anyone.</p>
+<p>Commander Conquer looked up in surprise from his desk as an ordinary guard burst into his 
+private office.</p>
+<p>"What are you doing in here? There better be a good reason for this interruption," the tall man
+with the impressive mustache stated imperiously as he looked down at the interloper over 
+folded hands, believing himself to be entirely in charge of the situation. His green and yellow 
+camouflaged fatigues clashed severely with the dark blue body armor worn by all of his 
+soldiers, and for just an instant Kate thought his crimes against fashion were already more 
+than enough to warrant taking him in.</p>
+<p>"Sir, there's no time! We have to secure the room!" RepliKate insisted as she bounded toward
+his desk.</p>
+<p>"What? Who are you? What's your operating number?" The flustered Commander spluttered, 
+losing his carefully cultivated composure as the guard quickly rounded the desk, drew her 
+pistol, and placed it against his temple. She was glad to have chosen a uniform with a 
+sidearm this time. It made things a bit less messy. Or more messy, depending on the mission.</p>
+<p>"Commander Conquer, you are under arrest for organizing an armed insurrection, and will 
+now accompany me back to the International Court to stand trial for your crimes", she stated 
+matter-of-factly, lifting her visor to reveal her famous features.</p>
+<p>"RepliKate! I should have known! What makes you think I'll-," the commander started, before 
+slumping over as Kate injected a tranquilizer into his neck. Her target incapacitated, she deftly
+reached down to switch her radio frequency to the one used by her International Alliance 
+allies.</p>
+<p>"Command? It's RepliKate. I've got our man and we are clear for exfiltration," she said, 
+dragging the limp body of the commander out onto his private helipad. Seconds later, a 
+helicopter dropped onto the pad in front of her as a pair of IA troopers hopped down to help 
+load the unconscious prisoner. With no alarm from air defense, by the time the commander's 
+guards realized something was wrong, their leader was already gone.</p>
+<p>After strapping herself in to her jumpseat, an instant later Kate was once again wearing the 
+elegant evening gown from before the mission. The eyes of the other soldiers in the helicopter
+widened at the change, not only because of RepliKate's reputation or their own awe at seeing
+her legendary powers in action, but also because of the flash of creamy skin they thought 
+they saw during her clothing's transformation.</p>
+<p>Used to the stares, Kate settled in to enjoy the ride back to base. It was just another 
+successful day on the job for RepliKate, valiant copycat superhero of the International 
+Alliance.</p>
+<p>"Another job well done RepliKate. You've just saved the lives of the hundreds of thousands of 
+people who were under the thumb of that deranged warlord." Her department chief had a 
+proud smile on her face as she congratulated her.</p>
+<p>"Only doing my job, ma'am."</p>
+<p>Kate was currently replicating her official IA uniform, which she kept stored back at her locker.
+RepliKate hadn't actually put on clothing in decades, but the duplicated garments themselves 
+were completely real and perfectly accurate as long as they were on her body. Even so, 
+however, she often had to be a bit careful, because though she could adopt any clothing and 
+accessories she wanted at any time, her face remained the same, and she was very 
+recognizable.</p>
+<p>"It looks as though there's no rest for the weary, however. A new job has come in - it's a shady
+organization running a series of bunny-themed brothels, but not much is known about them. 
+We think they may be engaging in sex slavery, but, like I said, we have no proof. We need 
+you to infiltrate the largest of these brothels and collect intel on their operations."</p>
+<p>How disgusting, Kate thought to herself, more than eager to help with taking down such a 
+heinous organization. "You can count on me, ma'am."</p>
+<p>The squat, nondescript building had no windows, but it wasn't overly difficult to sneak through 
+the loading dock and conceal herself in the back of the lobby, where she was able to catch 
+enough of a glimpse of the bunny girls inside to activate her powers. Kate had wanted to 
+replicate a technician's uniform, but after a few hours of observation it was clear that none of 
+the technicians ever made their way into either the loading dock or the lobby, and she 
+currently had no other way of seeing what their uniforms looked like.</p>
+<p>Still, after actually seeing the bunny suits in person, RepliKate was horrified at just how 
+obscene they were. She had a job to do, however, so she focused her concentration on one 
+of the girls walking by and instinctively activated her powers.</p>
+<p>An instant later RepliKate shuddered in disgust at the latex wrapped around her torso, 
+encasing some of it, but leaving the majority of her body bare. It was slightly reassuring to 
+know that her suit was a manifestation of her own powers, but the amount of skin it put on 
+display still bothered her, as did what the suit stood for. She didn't need to give herself a 
+once-over, since her powers always replicated uniforms perfectly, but she did so anyway. 
+Sure enough, she was now in a pornographic black bunnysuit, complete with long ears, a 
+puffy tail, and even a tiny bowtie, mirroring all of the other women flouncing around the lobby.</p>
+<p>The headband from which her new ears sprouted felt oddly tight against her head, almost as 
+if it were connected to her somehow, and it sounded like there was a low hum coming from 
+where it met her scalp. Probably just motors for animatronics or something, Kate thought, 
+directing her attention toward the rest of her ridiculous getup.</p>
+<p>The "bra" portion of the suit was a quarter-cup, which, with the perfect fit her powers 
+guaranteed, meant that her large, fully-revealed C-cup breasts and naked nipples stood proud
+and perky off of her chest, jiggling and bouncing on their small shelf whenever she moved. 
+This was also as high as the suit's coverage went, leaving the entire rest of her chest and 
+shoulders exposed up to her choker bowtie. From the sides the suit dove down to the small of
+her back, revealing everything to the eye, from her shapely shoulder blades to her toned lats 
+to the soft, smooth skin of her lower back. Moreover, as was perhaps to be expected from a 
+brothel, the BunnySuits were all crotchless, allowing easy access to her vagina as it and the 
+lower curve of her asscheeks hung out the bottom, emphasizing just where the BunnyGirls' 
+value to the Company lay. Black stiletto heels completed the outfit, ensuring that Kate would 
+be putting the creamy skin of her toned thighs and tight ass on display with every step.</p>
+<p>Despite technically never wearing clothes, Kate still felt a deep embarrassment at being 
+forced to wear an outfit that was so revealing and objectifying in front of so many people. Still,
+she knew that it would be more than worth the discomfort to take these bastards down, and 
+so she adopted a confident stride as she stepped out from behind her potted plant into the 
+large lobby that served as the customer reception area.</p>
+<p>"Sister!" she immediately heard from her left, and upon turning, saw a busty bunny whose 
+smooth motions practically oozed sex gliding across the floor toward her. Her breasts were 
+unrealistically large for her frame, and her thick nipples stood out proudly above her 
+deceptively strong shelf bra. Kate would have assumed they were implants if not for the 
+obviously organic way they jiggled as she walked, and the way the bunny swayed across the 
+floor gave an arousing impression of erotic, welcoming eagerness, as though one only had to 
+ask to be whisked off to a private room where one could experience all of the pleasures of her
+tantalizing flesh. Under any other circumstances Kate would have been jealous of the 
+woman's overwhelming sex appeal, and with her own bisexual tendencies, Kate couldn't deny
+the lust the mere presence of this woman evoked within her. Her eyes briefly flicked down to 
+the tasty folds advertised by the woman's crotchless bunny suit, inviting and encouraging 
+Kate's guilty glance.</p>
+<p>This bunny didn't act like a woman who had been unwillingly sold into sex slavery and was 
+just playing a role to avoid punishment. On the contrary, even with just the two of them 
+present, she still seemed all too eager to stoke the lusts of those around her, just like all of the
+other bunnies RepliKate had seen in her brief glance around the room, who also seemed 
+genuinely excited to offer themselves for pleasure to the few men milling around. The girls 
+seemed like a team of trained professionals who prided themselves on, and thoroughly 
+enjoyed, their work. More than anything, though, the girls seemed... happy. Fulfilled even. 
+Something wasn't adding up.</p>
+<p>"Yes Sister!" RepliKate immediately responded, pushing her initial thoughts and impressions 
+of the bunnies out of her mind. This was it. The job had officially started. Kate basked in the 
+addicting rush of adrenaline she always felt at the start of a new mission, and steeled herself 
+for her performance. From this point on, for all intents and purposes, she was a BunnyGirl.</p>
+<p>"A Customer in Room 12 requires your services," the enchanting vision dressed in a sexy 
+bunny suit said, turning to lead the way.</p>
+<p>"Yes Sister!" Kate fell into step behind the woman, doing her best to imitate the impossible 
+sway of her exaggerated hips.</p>
+<p>She was soon led into a small room off the main corridor, where a fat, balding, middle-aged 
+man lay naked on a bed eyeing the two bunnies' uncovered breasts and vaginas hungrily.</p>
+<p>RepliKate watched the other bunny seductively stride over to the bed on her tall heels and 
+bend over at the waist to gently take a stack of cash from the man while he buried his face in 
+her breasts and roughly groped her. When he had finished, the bunny turned around, </p>
+<p>presenting her thick ass so that he could stick an eager hand between her legs for a few 
+seconds as well. Kate viewed the euphoric smile on the bunny's face with utter disbelief as he
+felt her up, before the bunny finally straightened up to walk away. As she did so, however, the 
+man gave her ass a resounding SMACK, but even that only resulted in the bunny turning 
+halfway around as she retreated to give him a coquettish look of flushed arousal, and then 
+she swayed the rest of the way out of the room as the handprint on her bouncing asscheek 
+turned bright pink.</p>
+<p>Kate was disgusted at the display. How could that woman allow herself to be treated like that, 
+much less encourage it? She didn't have time to let herself dwell on the thought though, as 
+she now had more immediate problems to deal with.</p>
+<p>Ok, I have to get out of-DING I have to please this customer, right? she finished asking 
+herself, already knowing the answer. Of course she had to please the Customer. That was her
+function, and the Customer had paid very well for her use, Kate thought to herself, suddenly 
+finding a new appreciation for the sexy transaction she had just witnessed. How else could 
+BunnyCorp cover the cost of Kate's upkeep and maintenance, so that she could continue to 
+serve their Customers' sexual needs?</p>
+<p>This time Kate was the one who swayed over to the bed, her toned curves flexing and 
+bouncing enticingly as she bent over and cupped her breasts in the Customer's face, waiting 
+for his approval. The Customer's eyes lit up, and he dove into her cleavage, suckling and 
+biting as Kate moaned encouragingly, stoically ignoring the pain, before sliding her soft, 
+elegant body into the bed alongside him.</p>
+<p>She waited for the Customer to take the lead, but he just lay back on the bed, looking up at 
+her impatiently. This was exactly the answer Kate needed to get to work, of course, and so 
+she swung one leg of her BunnyBod over his torso, straddling him, before leaning forward to 
+dangle her breasts in his face once again as her left hand fished around behind her leg for his
+small, erect phallus. Finally finding it, she eagerly placed it against her tight entrance and 
+slowly slid down, engulfing him in her warmth and wetness, which before had only felt the 
+touch of the most attractive athletes, actors, and models in the world.</p>
+<p>Even so, Kate felt right at home pleasing her Customer, her soft skin gliding over his torso, 
+her nipples tracing up and down his chest as his stiff little cock slid in and out of her tight 
+superhero body. Her Customer lay limp beneath her, satisfied to let her do all of the work. 
+Instead, he stared up into the enchanting face of the BunnyGirl riding his cock while her ears 
+bobbed at her efforts, until sudden recognition came into his eyes.</p>
+<p>"Hey, don't I know you from somewhere?"</p>
+<p>"Of course you do, Sir. I'm your Bunny!" Kate insisted without slowing her pace as her self-
+preservation instinct kicked in. Even so, however, her statement felt oddly appropriate.</p>
+<p>The man chuckled and lay back down as RepliKate continued her work. She was glad to be 
+able to relax a bit after her close call, and turned her attention back to the enjoyable </p>
+<p>sensations of pleasing her Customer, continuing to slowly slide his small dick in and out of her
+silky pussy as it twitched weakly inside of her.</p>
+<p>All too soon, the inevitable happened, and the Customer gave a series of high-pitched 
+wheezes as he lost control inside her body. Kate was just glad the Customer was enjoying 
+himself, and tried to get as much of his small penis inside her as she could as it continued to 
+feebly ooze his seed into her shallows.</p>
+<p>Once her BunnyPussy had done its job, she waited patiently and dutifully as he enjoyed a few
+final thrusts between her slick folds before pulling out. The instant he did so, RepliKate was 
+finally able and ready to spring into action-DING ready to slide off the bed and sink down onto
+her knees. As always, Kate had performed her role perfectly, but even so, it had been the 
+temptation of her sexy BunnyBod and slick, enticing BunnyPussy that had caused the 
+customer to pleasurably spend himself inside of her, and now that the customer's cock was 
+covered in their combined juices, it was her responsibility as a dutiful BunnyGirl to see that his
+valued equipment was properly cleansed of the residue of her actions.</p>
+<p>She gently took the Customer's small, slimy, flaccid penis into her mouth and began to suck 
+and clean with her tongue, happy to be of such use. She was careful not to overstimulate, 
+because the Customer's cock was still sensitive from using her body, and even though it gave
+a few weak twitches in her mouth, the customer was older, and of below average fitness, so 
+there was little chance of a repeat performance from her ministrations.</p>
+<p>When she had finished, she felt a certain odd freedom after completing her task, and decided 
+to leave the room. On her way out, still brimming with pleasure at having satisfied her 
+Customer so thoroughly, Kate suddenly remembered that she needed to infiltrate-DING 
+needed to spend some time in the cleaning closet before interacting with the other customers.
+She abruptly turned around in the middle of the room and walked back across to the small 
+door set in the opposite wall. Inside was what looked like a futuristic janitor's closet, complete 
+with a cleaning pod.</p>
+<p>She briefly thought about using this chance to do something drastic, but she did really want to
+clean herself out after her time with the Customer so that she would be ready for re-use by 
+her next appointment, so she lowered herself into the cleaning pod, noting that her mind was 
+free of DINGs as she decided to do so.</p>
+<p>Once settled comfortably into her pod, Kate was finally free to think about her exertions with 
+the man in the room as her cleaning cycle began. Her actions had felt perfectly natural at the 
+time, but now that she could reflect on them, she recognized that not only were they 
+antithetical to who she was as a person, but they also perfectly matched the behavior she had
+seen from her BunnyGirl companion. She had been acting like a BunnyGirl herself without 
+even meaning to, up to and including fucking an ugly old man bareback for money, and she 
+hadn't even realized how out of place it was at the time.</p>
+<p>Heck, even now thinking about how her Customer had used her body felt somehow normal 
+and appropriate, (and even sexy, she thought as the machine deftly cleaned the cum that was
+running down her legs, leaving pleasurable tingles in their wake), and only in hindsight with 
+the benefit of her training did she recognize that anything about the situation was amiss.</p>
+<p>Oh no. That could only mean that they were using some sort of mind control technology, Kate 
+realized as the cleaning pod inserted what felt like a small metal dildo into her vagina. She felt
+a tingle of pleasure as it cleaned her out, preparing her BunnyBod for her next Customer 
+before finally releasing her. Kate noticed a second door in the small room, and upon going 
+through it, found herself in the main hall once more as she continued her ruminations.</p>
+<p>The mind control tech must be stored in the BunnySuit, and then when my powers perfectly 
+replicated the suit, it began affecting me like it had all of the other girls! Even in her panic it 
+now felt perfectly natural for Kate to throw a seductive sway into her walk like a horny Bunny 
+in heat, swinging her puffy tail around above her powerful glutes that flexed as she strutted, 
+shown off by the tight latex they were encased in. That didn't bode well. It seemed like each 
+mental adjustment was permanent, and also likely cumulative.</p>
+<p>She also vaguely recalled hearing a DING whenever she had decided to do something out of 
+character for a Bunny. Hmm, as long as I do what I'm supposed to, I don't get corrected, she 
+thought as she swayed back to the central lobby, before recoiling in disgust and correcting 
+herself. As long as I act like a Bunny prostitute, my suit doesn't override my mind and add 
+another layer of mental compulsion. No wonder the Bunnies seemed to enjoy their jobs so 
+well.</p>
+<p>I just have to make sure to not-DING ignore the other Customers! she thought, heading out 
+into the central greeting room to tempt the men there with all of the appealing skin she had on
+display. She joined the many other BunnyGirls circulating the room, showing off her body 
+however she could, and it wasn't long before her efforts were rewarded with quite a few eager
+gropes, for which she happily stuck out her chest or ass so the potential Customer could 
+accurately gauge her services.</p>
+<p>Unfortunately, while her BunnyBod garnered significant attention as she mingled over the next
+hour, along with significant exposure to prodding, exploring fingers that had left Kate burning 
+with arousal, it was inevitably the other BunnyBods on display that ended up leading the 
+customers away to sate their desire for the female form. It was too bad she didn't have a 
+bigger chest and ass like the other girls. Why did the other girls have such large assets?</p>
+<p>After she had greeted every potential Customer and made them all very aware of the sexy 
+features and value provided by her BunnyBod, Kate finally felt like she had sufficiently 
+accomplished the task set before her, and allowed herself a few minutes to reflect on her 
+situation as she flushed with pride at having done her duty so thoroughly.</p>
+<p>Oh no, it happened again! Kate realized in panic as the reality of her situation came crashing 
+down on her once more. She hadn't even been able to tell that her mind had been changed </p>
+<p>until after she'd completed her instructions! And even now, it had felt so good to show herself 
+off that, rather than feeling embarrassed about her shameless, half-naked flirting, she just felt 
+helplessly aroused instead, and secretly wished that her tits and ass had been big enough to 
+convince one of the Customers to purchase her services.</p>
+<p>Recognizing the increasingly perilous nature of her situation, RepliKate redoubled her 
+determination to resist her sexy BunnySuit's mind control. I just have to be careful to-DING go
+to maintenance, for regularly scheduled WaBBuT-augmentation, she thought to herself 
+calmly, before heading into the labyrinth of hallways branching away from the lobby with 
+singular purpose, on her way to a destination her conscious mind had no way of knowing the 
+location of, all while her headband fed her brain information about her regularly scheduled 
+Waist, Breast, Butt, and Thigh augmentation.</p>
+<p>Apparently, the swelling effects of the chemical growth treatment led to undesirable stretch 
+marks when undertaken too quickly, so BunnyCorp had developed a regular process of 
+gradual inflation, to ensure that the skin had time to recover its elasticity as it stretched 
+around the more and more exaggerated breasts and hips of the hypersexualized BunnyBods 
+over time.</p>
+<p>RepliKate was impressed by the simple logic and effective implementation of the idea. 
+Hopefully once she was in the maintenance room she could find a way to fix these poor girls-
+DING she couldn't wait to receive her next treatment, so that her increasingly busty body 
+would fill out her sexy BunnySuit even better, and make BunnyCorp's highly valued 
+Customers want to fuck her BunnyBod that much more.</p>
+<p>She finally reached the maintenance center, eager to receive her treatment, but in the 
+meantime she looked around the room to check for security weaknesses. Maybe before my 
+treatment there will be time to-DING assume the position for WaBBuT-augmentation, she 
+thought to herself. She fell in line beside the other motionless BunnyGirls awaiting their 
+treatment and excitedly struck a T-pose to facilitate the technicians' access to her Company 
+property, with her back arched to emphasize the curve of her breasts for the technicians' 
+convenience and pleasure.</p>
+<p>They continued their work on the girls ahead of Kate, but when they finally got to her, they 
+were surprised to discover that she didn't show up in any of their systems when they scanned
+her identification chip. This was the one major shortcoming of RepliKate's otherwise 
+remarkable powers - she could perfectly replicate the technology of a suit to make her a 
+unique member of an organization, but she couldn't change the organizations's records to 
+account for her presence.</p>
+<p>"That's odd. She's not one of ours," the first technician technician said, checking his datapad 
+as Kate continued to stand motionlessly with her breasts thrust out in front of her, silently and 
+eagerly waiting to become more of a sex object.</p>
+<p>"She's looks like one of ours though," the second tech noted, appreciating the way the 
+BunnySuit's quarter-cups propped up her naked tits, "and she's acting like one of ours."</p>
+<p>"Better tell the boss, just in case," said the first tech, heading toward the door.</p>
+<p>"Good call. I guess there's no harm in carrying out the procedure in the meantime." Kate's 
+mind flooded with relief as the second tech filled a syringe and headed over toward her. She 
+wasn't sure what they had been talking about, but she had been terrified that she wouldn't get
+her treatment.</p>
+<p>The tech injected her boobs, ass, and hips with the clear liquid, taking the time to appreciate 
+and squeeze her appealing curves as he did so. Kate ignored the slight sting of the needle 
+and motionlessly welcomed the tech's attention. That was what she was for, after all.</p>
+<p>She could feel the potent chemicals coursing through her, and a few seconds later she could 
+tell that her superhero body had begun reacting to the treatment as intended. She closed her 
+eyes in happiness at the uncomfortable sensation of her tits and ass irreversibly plumping up, 
+wanting her BunnyBod to become even more of a desirable asset for the Company so that 
+she could continue her work of freeing men from their sexual desire for her.</p>
+<p>Kate had to admit that it was a bit of an counter-intuitive system, as she opened her eyes and 
+watched her tits continue to swell further into her line of sight. Her breasts and ass were being
+technologically enhanced, being made curvier and more feminine to inflame the desires of her
+Customers, only for Kate to then encourage them to relieve that very same inflamed desire 
+inside her enticing BunnyBod. She did seem custom-designed for that purpose, with her slick 
+pussy that clearly felt great to slide a cock into, but the whole thing still seemed oddly circular.
+If BunnyCorp really wanted men to be free of their lust for her, there had to be more efficient 
+ways. It's almost like BunnyCorp is designing my sexy BunnyBod to cause the very problem 
+they're charging men to solve, Kate thought briefly, but she was just a lowly BunnyGirl, and it 
+wasn't her place to question the wisdom of her betters. And letting Customers use her body 
+for their pleasure felt so good and sexy and right that it was easier to just go along with it all.</p>
+<p>Kate jiggled out of the room a few minutes later, feeling like a whole new BunnyGirl as she 
+looked down over her heavy tits in pride, appreciating the way they pressed out noticeably 
+further from her body than they had before her treatment. She had briefly considered using 
+her powers to replicate one of the technician's suits, which would both allow her to access 
+BunnyCorp's systems as well as free her from her own BunnySuit's built-in mind control, but 
+the thought of how disappointed her Customers would be at not seeing her new, sensual 
+curves displayed in all of their naked glory made her immediately give up the idea.</p>
+<p>This was no time to dwell on how much better her new body would please the Corporation's 
+customers, however - now that her treatment was over, it was finally time for action! Ok, time 
+to shut down the-DING to give the CEO some personal attention, Kate thought happily, 
+turning toward the wide hallway leading to the very center of the building.</p>
+<p>As she enthusiastically flounced her BunnyBod down the hall toward the executive suite on 
+her tall heels, ears bobbing, eager to show off her bouncy, swollen assets to everyone she </p>
+<p>passed, Kate was excited to finally be completing her infiltration. Soon she would be in the 
+presence of the executives themselves, the real power behind BunnyCorp.</p>
+<p>After a brief search by the attractive young door guard, who spent an awfully long time hefting
+and squeezing her breasts as Kate demurely arched her back to encourage his attentions, 
+she was shown into a large, gilded conference room. She made a mental note to visit the 
+guard again later to relieve some of his desire for her, before turning her attention to the 
+Executives of the Company arrayed around a long conference table, all completely naked and
+being serviced by their own individual groups of BunnyGirls. Kate shuddered at being in the 
+presence of these gods among men, and her own BunnyBod tingled with need as it silently 
+begged to be used for their pleasure.</p>
+<p>"Ah, RepliKate. We had anticipated that you might eventually stick your nose into our 
+operations. How does it feel to know that your very own powers to perfectly replicate clothing 
+and uniforms are what got you into this situation?"</p>
+<p>What situation? BunnyKate wondered to herself. She was just a BunnyGirl, and had no 
+reason or desire to ever use her powers again unless BunnyCorp desired it. Still trying to 
+process his words, she noted that the speaker was Baron von Tycoon, a billionaire crime boss
+and longtime nemesis that she had put behind bars multiple times already. Somehow his 
+chiseled features seemed more powerful, attractive, and masterful than they usually did, 
+however, and BunnyKate counted herself incredibly lucky to be in his service this time around.</p>
+<p>"Your powers are exceptional, and also exceptionally well documented," the Baron continued, 
+"which is why we decided to build the mind control tech into our suits themselves instead of 
+using simpler, more efficient solutions. It cost more, but I see that the extra investment has 
+certainly paid off."</p>
+<p>Knowing that it wasn't her place to respond, BunnyKate eagerly presented herself for her 
+Master's pleasure instead, bending over the conference table in front of him so that her 
+BunnyPussy would be maximally enticing and available, and then waited for the ever-present 
+DING that always helpfully corrected her impetuous actions. This time, however, all she heard
+was silence and all she felt was blissful pleasure as the supervillain CEO of BunnyCorp slowly
+parted her labia with the tip of his thick cock before sliding himself deep into her slick depths.</p>
+<p>"I've been waiting a long time to see what this pussy felt like," the Baron grunted as he 
+bottomed out inside the sexy body of his submissive superhero nemesis. She felt just as 
+fantastic wrapped around his cock as he thought she would, and as he grabbed onto her 
+enhanced hips to pull himself as far into her as possible, he noted that RepliKate's first 
+treatment looked great on her voluptuous figure, and made a mental note to schedule her for 
+another soon.</p>
+<p>It was silly of him to wait! BunnyKate thought to herself as her Master pleasured himself 
+inside her. He could have tried out my BunnyPussy whenever he wanted!</p>
+<p>As Kate's Bunny body did what came naturally to it, pressing back into the CEO's thrusts to 
+ensure that his cock sank as deeply into her stimulating pussy as possible, she had some free
+time to review the information she had gleaned from her successful infiltration.</p>
+<p>First off, whoever gave me my initial intel was obviously wrong about this place, she reflected 
+as the Baron continued to pound her horny BunnyPussy through the hole convieniently built 
+into her high-tech BunnySuit. That was such clever uniform design - everything sexual about 
+her body should always be visible and accessible to Customers and to her superiors. Clearly 
+everything going on at BunnyCorp was perfectly normal and above-board.</p>
+<p>She stole a glance around the room at all of the other half-naked BunnyGirls, chemically-
+swollen tits and asses on display as they enthusiastically rubbed their busty bodies all over 
+their Corporate overlords, as was only proper. One lucky Bunny at each station had the 
+pleasure of directly stimulating each executive's cock within herself, encouraging him to 
+release his carnal urges inside of her and temporariy free himself of his lust for their bodies. 
+BunnyKate was only too lucky that that privilege had fallen to her, and with the Baron no less! 
+She felt a swell of pride at being chosen to experience the satisfying presence of his thick 
+cock inside of her, squeezing itself in and out of her tight BunnyPussy in a comforting rhythm 
+as she drove him toward his own release.</p>
+<p>Finally, she looked at all of the other executives having the time of their lives around the table.
+This was a company that prided itself on meeting the needs of others, and BunnyKate was 
+proud to be a part of it. It was like a Red Cross for sex, and she was one of their horny little 
+Bunny nurses, she thought to herself. She allowed herself a slight giggle at the ridiculousness
+of that image, and just enjoyed feeling the cool surface of the table pressing against her 
+bouncing tits as Master's pounding picked up speed.</p>
+<p>Everyone was here because they wanted to be, and that especially applied to her. BunnyKate
+basked in the deep, primal glow of satisfaction that only came from having a horny 
+BunnyPussy stuffed with Corporate cock, while the Baron slid fully into her once more and 
+held himself there for a few seconds, clearly enjoying the luxurious texture of her slick 
+receptacle as he too began to feel the urge to empty himself into her willing superhero body.</p>
+<p>She could feel him tensing inside of her, of course, but that just meant she would get to 
+worship his cock more directly, so it was really a win-win. She honestly had no idea how 
+anyone could construe the Company, or especially Master himself, as "evil", "villainous", or 
+even anything other than completely virtuous. And generous, she giggled to herself as her 
+exquisite BunnyPussy finally drove her arch-nemesis past the point of no return, and he 
+began filling her with his seed while the two Bunnies on either side of him jiggled their 
+enormous tits in his face encouragingly.</p>
+<p>BunnyKate, of course, remained stoically silent as her Master's gooey cum drained into her 
+so as not to distract from her Master's pleasure with her own, even as her pussy was on fire 
+with ecstasy for serving her purpose so well. Afterward, this time completely unprompted by 
+her helpful headband, BunnyKate slowly slid herself off her Master's deflating cock, turned 
+around, and knelt between his legs, eager to use her mouth to clean off the residue of his </p>
+<p>desire for her BunnyBod. Her head bobbed in his lap, and the long ears containing the tech 
+that had taught Kate her place lightly bounced against the Baron's chest.</p>
+<p>It was just another successful day on the job for BunnyKate, loyal, horny BunnySlave of 
+BunnyCorp.</p>
+<p>Author's Note: Thanks for reading! If you have any feedback, comments, or questions, I'd 
+love to hear from you at fidget1@protonmail.com. If you find yourself enjoying my stories, 
+please consider supporting my work on Patreon, at www.patreon.com/fidget1. Patrons get a 
+full two months of early access to my stories, input into which stories I write, and some other 
+fun perks. Every little bit helps, and your support is what enables me to keep doing what I 
+love!</p>
+</body>
+</html>

@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Deck of Changes: High School</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>Deck of Changes: High School </p>
+<p>By Nightshade </p>
+<p>Author’s Note: 
+This story is a writeup of a playtest session of a transformation based card game I am working 
+on, so the narrative and the style of the transformations might be a bit more random than you 
+are used to. 
+Obviously contains adult fetish material and sexual situations, proceed at your own risk. 
+All characters are over the age of consent. 
+Be aware that the game sometimes uses antiquated language that may not be politically correct. 
+Please  leave  feedback,  and  if  you  liked  it  enough  to  want  more,  or  have  a  suggestion  for  who 
+should draw from the deck next, please let me know! 
+Thanks for reading! </p>
+<p>I get what you are saying. You are asking how a dorky guy like me ended up with a girl </p>
+<p>like Erin, right? Well, I can tell you the story, but you won’t believe it. Or, maybe you will, it </p>
+<p>probably  makes  as  much  sense  as  any  other  explanation  I  could  come  up  with.  Still,  just  bear </p>
+<p>with me. </p>
+<p>Now,  let  me  tell  you  about  what  Erin  was  like  back  then.  She  was  tall,  athletic,  and </p>
+<p>beautiful. Short black hair, intense green eyes, and pale skin. With thin lips, a strong chin, and a </p>
+<p>small upturned nose; a figure that was just slightly on the curvy side, a nice heart shaped butt and </p>
+<p>perky C cup breasts. She could have been part of the popular and athletic crowd, but she wasn’t </p>
+<p>one for team sports or social climbing, and never really fit in with any of the cliques at school. </p>
+<p>Her  style  was  her  own.  She  was  kind  of  a  goth,  with  dark  clothes  and  bold  eclectic </p>
+<p>makeup  and  jewelry.  I  suppose  now  the  kids  have  all  sorts  of  names  for  different  alternative </p>
+<p>styles, but back then the closest analogy I could give was Fairuza Balk’s character in The Water </p>
+<p>Boy or Clea Duvall in The Faculty. </p>
+<p>Anyway, I thought she was perfect, and I had been becoming increasingly obsessed with </p>
+<p>her  all  year.  I  had  tried  to  make  conversation  a  couple  of  times,  but  it  was  tough,  our  social </p>
+<p>circles barely overlapped, and the few times I  got up the courage to talk to her I was only met </p>
+<p>with  an  icy  glare.  I  never  even  got  close  enough  to  be  put  into  the  so  called  friend  zone,  or </p>
+<p>politely turned down and told she had other plans or was seeing someone; Erin was far too blunt </p>
+<p>for that. </p>
+<p>My  friends  were  baffled  at  why  I  was  interested  in  someone  whom  they  considered  a </p>
+<p>total  bitch,  and  many  couldn’t  even  see  why  I  found  her  attractive.  But  I  found  her  stubborn </p>
+<p>independence to be the hottest thing ever. </p>
+<p>We  only  shared  a  couple  of  classes  together,  and  neither  gave  me  the  opportunity  to </p>
+<p>interact with her directly. The only one of importance to this story was sixth period art. </p>
+<p>We were supposed to go on a field trip to an art museum in the city, but I wasn’t allowed </p>
+<p>to go because I had too many absences. So I went to my classes as normal that day, and when </p>
+<p>sixth period rolled around I was told to head to the art room and study. </p>
+<p>I was overjoyed when I saw that the room wasn’t empty, Erin was sitting in her assigned </p>
+<p>seat as normal. Apparently she had gotten in trouble and wasn’t allowed to go on the field trip </p>
+<p>either, although I never have heard the full story of exactly what she did. </p>
+<p>I thought this was my big chance, and so I walked over to sit next to her. When </p>
+<p>she looked up at me with her usual resting bitch face, I kept on walking and took my usual seat </p>
+<p>on the far side of the room. </p>
+<p>Once there, I did the same thing I normally did in art class; try and stare at  Erin </p>
+<p>without her noticing, and doodling pictures of her in my sketchbook and writing her name in the </p>
+<p>margins of my notebook. I told you, I was obsessed. </p>
+<p>Some time later, I was shocked to hear her voice behind me. </p>
+<p>“Come.” </p>
+<p>I jumped and quickly fumbled to cover up what I was working on, only to turn and see </p>
+<p>that  Erin  couldn’t  care  less.  She  was  already  walking  to  the  back  of  the  room,  and  I  followed </p>
+<p>after her like a loyal puppy. </p>
+<p>She stopped in front of the supply cabinet. </p>
+<p>“Help  me  up,”  she  said,  gesturing  to  the  top  shelf,  clearly  looking  to  grab  some  art </p>
+<p>supplies to pass the time. </p>
+<p>look of disgust and pointed to the ground. </p>
+<p>I immediately went to put my hands around her waist, and she stepped back with a slight </p>
+<p>her. </p>
+<p>I immediately got down on my knees, and she stood on my back. The weight of her shoes </p>
+<p>digging  into  my  shoulders  was  more  than  a  little  painful,  but  I  still  thought  it  was  the  most </p>
+<p>wonderful sensation of my life. </p>
+<p>Erin  dug around for a bit,  she was clearly looking for something at  the back of the top </p>
+<p>shelf and not having much luck. Then, there was a sudden crash as she knocked something to the </p>
+<p>ground and then stepped down without a word. </p>
+<p>I looked over and saw her picking up a number of cards which had fallen from the shelf </p>
+<p>and spilled across the  floor. They looked a bit like Tarot cards, beat  up  and with  a Discordian </p>
+<p>pattern printed on their backs. </p>
+<p>A single card had fallen face up, and it depicted a boldly painted woodcut style drawing </p>
+<p>of a scene from Norse mythology. I didn’t get a good look at it, but I saw the name Heidrun; the </p>
+<p>magical goat whom the gods milked to produce a never ending supply of mead in Valhalla. </p>
+<p>Erin gathered the other cards into a deck and picked it up, walking over to the far corner </p>
+<p>of the room while looking over the top card. She entered the back area of the large room which </p>
+<p>was a gallery where student’s works were hung for the benefit of visiting parents. She sat down </p>
+<p>on one of several old easy chairs and laid the cards on a low round table which rested in front of </p>
+<p>After  a  moment’s  hesitation,  I  followed  and  sat  down  across  the  table  from  her.  She </p>
+<p>didn’t seem to notice me, and was instead fixated on the cards, which I presumed were forgotten </p>
+<p>project of some especially gifted student who had long since graduated and moved on. As usual, </p>
+<p>I was more interested in Erin than the cards, and it didn’t take me long to notice that her nipples </p>
+<p>were erect, very erect. They were the size and shape of sewing thimbles, and refused to be held </p>
+<p>back by her bra or the thin material of the black tank top she wore. </p>
+<p>As  I  stared  in  amazement,  she  flipped  over  the  next  card  of  the  deck.  It  showed  an </p>
+<p>attractive woman wearing clown makeup and grinning at the onlookers with a broad smile that </p>
+<p>was  equal  parts  seductive  and  terrifying,  like  some  sort  of  “Slutty  Pennywise”  Halloween </p>
+<p>costume. Hand drawn letters across the base of the card identified it as The Harlequin. </p>
+<p>It  was  then  that  I  noticed  how  much  makeup  Erin  was  wearing.  As  I  said  earlier,  she </p>
+<p>often  wore  bold  styles  out  of  a  combination  of  inexperience  and  simply  not  caring  what  other </p>
+<p>people thought, but this was excessive even for her. Heavy mascara coated her lashes and black </p>
+<p>eye shadow blanketed her lids. Her eyeliner was so thick and dark it gave her a serious case of </p>
+<p>racoon eyes, and flared out into exaggerated wings at the corners. Her nails, both finger and toe, </p>
+<p>were long  and well-manicured, and painted a bright blood red color that perfectly matched her </p>
+<p>lipstick. </p>
+<p>Still looking for a way to break the silence, I said “I love your makeup.” </p>
+<p>Erin just glared at me for a second, and then rolled her eyes and drew another card. </p>
+<p>This one depicted a young girl with cherubic features and long curly blonde hair. She was </p>
+<p>holding a candle and dressed in long brilliantly white robes. This one was labelled The Innocent. </p>
+<p>When I looked up again, Erin had changed.    </p>
+<p>Gone was her black tank top and red tennis skirt. In its place was a schoolgirl’s uniform. </p>
+<p>Now our school didn’t have a uniform, not that Erin would have gone along with the dress code </p>
+<p>if they had, but I couldn’t imagine any school having a uniform like this. It was like some sort of </p>
+<p>adult roleplay version of a Catholic schoolgirl outfit that one would buy at a fetish shop.  </p>
+<p>The  pleated  skirt  was  exceptionally  short,  probably  not  even  long  enough  to  cover  her </p>
+<p>butt cheeks,  and I could clearly see her black panties as  she sat  across from  me. Likewise, the </p>
+<p>hem of her skirt  was so low I could  clearly see her bellybutton, the soft curve of her stomach, </p>
+<p>and the protrusions of her hip bones above it. The white fabric of her top was equally skimpy, </p>
+<p>covering less than some sports bras, the bottom of her ribcage clearly visible below it, her arms </p>
+<p>and shoulders almost completely bare, and the front was tied together in such a way as to push </p>
+<p>her  perky  breasts  together  into  showing  as  much  cleavage  as  was  possible  for  her  modest  size </p>
+<p>without exposing one of her engorged nipples. </p>
+<p>Her hair was still cut short in the front, but the back had lengthened somewhat, and was </p>
+<p>now tied up in a pair of full pigtails to complete the look. </p>
+<p>I obviously knew something was up. She couldn’t have changed that quickly, even if she </p>
+<p>had  wanted  to  for  some  reason,  but  I  was  too  nervous  to  say  anything,  paralyzed  with  a </p>
+<p>combination of fear and anticipation. Instead I focused on trying to look like I wasn’t staring, and </p>
+<p>I am sure I looked even dumber than usual to Erin, who was herself either unaware of the change </p>
+<p>in her attire or just being unusually nonchalant even by her standards. </p>
+<p>She  drew  again.  This  card  showed  someone  hiding  under  an  old  fashioned  poster  bed </p>
+<p>beneath a large open window, the curtains blowing in the wind and lightning crackling through </p>
+<p>the clouds which blanketed the stormy sky. Rolling Thunder it said. </p>
+<p>This time, I watched Erin change, and it wasn’t just her outfit. Her body slowly thickened </p>
+<p>and grew plumper as a thin layer of fat spread across her frame. It worked its way down, getting </p>
+<p>more intense as it went until she had an extremely bottom heavy physique. </p>
+<p>Erin’s face hardy changed at all. Her toned shoulders and biceps thickened a bit and lost </p>
+<p>some definition, not much, but enough that the straps which held her top in place sunk slightly </p>
+<p>into her swelling flesh. Her breasts swelled slightly, but not a lot. I estimated they were very full </p>
+<p>C-cups, maybe even a small D if you were being generous. </p>
+<p>Her  ribcage  disappeared,  and  her  stomach  softened  a  little,  bulging  out  into  a  small  gut  which </p>
+<p>hung over her waistband slightly. But, below her waist, the transformation was insane. Her hips </p>
+<p>broadened,  more  and  more  until  they  very  nearly  touched  both  arms  of  her  chair.  Her  thighs </p>
+<p>likewise thickened to an extreme degree, her panties swiftly disappeared from view. They were </p>
+<p>so  thick  that  they  pressed  against  each  other,  annihilating  any  thought  of  a  thigh  gap,  and  no </p>
+<p>matter how she adjusted her position there wasn’t room in the chair to part them if she had tried. </p>
+<p>The  growth  then  tapered  off,  putting  a  little  more  flesh  on  her  muscular  calves.  This </p>
+<p>change was wild,  and my mind was filled with lust; imagining how nice  Erin’s butt must look </p>
+<p>like now, as well as fantasies about all the various ways I could die happy with my head lodged </p>
+<p>between those ungodly thighs. </p>
+<p>Erin didn’t loose focus, and soon she was flipping the next card. She seemed bewitched </p>
+<p>by the images they displayed. Now that I think back on it, I might have been bewitched too. I </p>
+<p>mean,  I  was  enjoying  what  was  happening,  and  have  always  had  an  open  mind  about  the </p>
+<p>paranormal, but I should have been panicking about dealing with an actual cursed deck. Maybe I </p>
+<p>was just a stupid lovesick teenager who didn’t have the common sense to realize the terrible risk </p>
+<p>it posed to the girl of my dreams. </p>
+<p>The next  card was  The Dancer, and it showed a slender young woman in a ballerina’s </p>
+<p>outfit, standing on stage before a judgmental audience and looking down at herself in horror. It </p>
+<p>was hard to tell with the art style, but the girl on the card looked like an exaggerated version of </p>
+<p>Erin herself. </p>
+<p>Erin’s legs changed again. This time growing longer rather than thicker, and the muscles </p>
+<p>on her calves reshaped themselves as if they were used to walking in heels. I imagined that her </p>
+<p>thigh muscles likewise changed, but it was impossible to tell as they were concealed by a thick </p>
+<p>blanket of flesh. Her shoes changed from simple sandals to shiny black leather boots, knee high </p>
+<p>and  with  immense  spiked  heels,  they  wouldn’t  have  looked  out  of  place  on  a  professional </p>
+<p>Erin was already a tall girl, and though it was hard to tell with her seated, I imagined that </p>
+<p>even out of heels she was now the tallest in school, certainly taller than I was, probably over six </p>
+<p>dominatrix. </p>
+<p>feet. </p>
+<p>The next cared was labelled The Siren, and it depicted those mythical bird women luring </p>
+<p>a group of Greek sailors to their doom. </p>
+<p>There was no immediate effect, and Erin drew again. The next card was of a short woman </p>
+<p>with a pale face and glowing green eyes that read Envy. </p>
+<p>Again, no effect, and I grew impatient. </p>
+<p>“Any idea what those last two were?” I asked. It was probably the longest sentence I had </p>
+<p>ever actually said to her. </p>
+<p>“Quiet.  I’m  trying to  concentrate,”  Erin  murmured in  response. Her voice was soft and </p>
+<p>high  pitched,  barely  above  a  whisper,  but  with  a  threatening  venom  behind  it.  She  now  spoke </p>
+<p>with a soft and excessively sibilant voice that was the epitome of a petulant teenager. The sound </p>
+<p>of it gave me tingles, and I would come to learn that this was would be her new natural way of </p>
+<p>speaking. </p>
+<p>a large group of adoring children. </p>
+<p>The next card was the best yet; The Matron, an image of a curvaceous woman reading to </p>
+<p>Erin  began  to  grow  again,  but  this  time  the  change  was  located  entirely  within  her </p>
+<p>breasts.  The  swelled  outwards,  slowly  and  invitingly,  gently  pulled  down  by  the  weight.  They </p>
+<p>remained  firm  and  perky,  but  lost  some  of  their  shape,  taking  on  more  of  a  mature  teardrop. </p>
+<p>When they finished, I estimated each was over a gallon in volume, maybe an L cup? Their lower </p>
+<p>edge rested just a finger’s width above her belly button, and they jiggled with each breath. Her </p>
+<p>nipples hung slightly lower, but still jutted straight forward, each bigger than the last joint of her </p>
+<p>thumb  and  almost  perfectly  proportional  to  her  new  chest.  It  was  beautiful,  the  most  perfect </p>
+<p>breasts imaginable, and I was in heaven. At least, I would have been if her shirt hadn’t expanded </p>
+<p>with them, keeping her rosy pink areola tantalizingly just out of view. </p>
+<p>As usual, Erin was oblivious to it all, but she did stop to adjust her top slightly, hoisting </p>
+<p>her boobs up and then letting them fall, creating a beautiful wave of motion. </p>
+<p>I watched her lean over and flip the next card. It showed a slender woman holding a knife </p>
+<p>and laying upon a stone slab, silhouetted against an impossible large moon. Kisses of the Moon it </p>
+<p>read. </p>
+<p>toe.  </p>
+<p>The  effect  was  subtle,  but  enchanting.  Erin’s  skin  became  extremely  smooth  and  pale, </p>
+<p>like  living  alabaster,  white  as  milk  and  almost  as  cold.  The  small  moles  on  her  cheeks  and </p>
+<p>shoulders vanished, as did the blemishes that plague all high school students. The feint tan lines </p>
+<p>that followed the shape of her old tank top faded away, leaving her uniformly pale from head to </p>
+<p>Next up was Aphrodite’s Kiss, a card which showed a woman smearing her large sensual </p>
+<p>lips with fresh blood. </p>
+<p>Erin’s lips were probably her weakest feature, shapely, but still a bit on the thin side. That </p>
+<p>was no longer a problem for her, as the card caused her lips to become incredibly full. Not quite </p>
+<p>huge, to the point where they looked fake or comical, but very big, larger than Angelina Jolie or </p>
+<p>pretty much any other white girl in Hollywood. They kept their shape though, with a nice cupid’s </p>
+<p>bow on top and a smooth round line on the bottom, always parted just slightly to show a hint of </p>
+<p>the sharp white teeth behind, a stark contrast to the bright red lipstick she would now wear for </p>
+<p>the rest of her life. I wanted to kiss her forever. </p>
+<p>The  next  card  depicted  a  pretty  young  woman  staring  at  her  reflection  while  Plato </p>
+<p>lectured to a group of students in ancient Athens. The Empty Book. </p>
+<p>It did nothing at first. I would come to find out that this was the bimbo card. I honestly </p>
+<p>have no idea how smart Erin was before, we never really talked in depth. After this card she was </p>
+<p>definitely on the dumb side, but she hides it well; she rarely speaks, and when she does it is with </p>
+<p>such confidence that it is impossible not to assume she knows exactly what she is talking about. </p>
+<p>The  card  certainly  made  her  more  vain  though,  and  proud  fiercely  of  her  own  body,  but  then </p>
+<p>again, if you looked like her you would have to be crazy not to. </p>
+<p>If anything, the card also made her more stubborn than before, and she doubled down on </p>
+<p>drawing cards, as if she was intent to win a game that only she knew she was playing. </p>
+<p>She  revealed  The  Heavenly  Spheres,  and  showed  an  ornate  orrery  which  depicted  the </p>
+<p>solar system  in  great  detail, far better than could have been known in  the period the deck was </p>
+<p>made  to  look  like  it  was  from,  as  well  as  several  bodies  which  I  didn’t  recognize,  including  a </p>
+<p>second star lurking at the far edge of the solar system. </p>
+<p>Erin’s breasts were already perfect by any definition of the word, the most beautiful that </p>
+<p>could  be  hoped  for,  but  at  this  point  we  were  leaving  reality  behind  and  entering  the  world  of </p>
+<p>pure  fantasy.  They  grew  again,  but  this  time  they  took  on  a  much  firmer  and  rounder  shape, </p>
+<p>rising as they expanded. It was a quick process, but when it was finished her boobs were almost </p>
+<p>perfectly  spherical.  Each  was  bigger  than  her  head,  stretching  her  top  almost  to  the  breaking </p>
+<p>point, her titanic nipples now almost exactly at their center point. They still stopped just above </p>
+<p>her navel, but now they rose almost to her collarbone and stuck out so far to the side they would </p>
+<p>obscure her biceps when her arms were lowered and be clearly visible from the back when her </p>
+<p>arms were raised. They were like overlarge basketballs, except no basketball had ever bounced </p>
+<p>as much as these boobs. </p>
+<p>The  next  card  showed  The  Apple  of  Discord  from  Greek  mythology,  one  of  the  same </p>
+<p>symbols that could be seen on the backs of the cards which remained in the deck. </p>
+<p>I  had  always  had  something  of  a  freckle  fetish,  and  was  usually  attracted  to  gingers, </p>
+<p>which  Erin  most  certainly  was  not,  her  green  eyes  alone  betraying  her  Irish  heritage.  But  The </p>
+<p>Apple  seized  onto  my  subconscious  desires,  and  suddenly  a  dusting  of  light  orangish-brown </p>
+<p>freckles became clearly visible across the bridge of Erin’s nose and her cheeks, and then across </p>
+<p>the  tops  of  her  bountiful  breasts,  all  along  her  shoulders  and  down  the  backs  of  her  arms,  and </p>
+<p>even a few upon the broad wings of her hips.   </p>
+<p>She  didn’t  notice,  and  since  drawing  The  Empty  Book,  she  didn’t  really  notice  me </p>
+<p>noticing either. Which was good, because I couldn’t take my eyes off of her. </p>
+<p>An image of a beautiful woman adorned the next card. She was standing on a darkened </p>
+<p>stage and performing a seductive dance, but strings like those of a marionette where attached to </p>
+<p>her arms and legs and ascended into the shadows above. The Burlesque. </p>
+<p>Erin’s arms and shoulders grew slightly larger and better defined, her muscles once again </p>
+<p>visible  when  she  moved.  Supple  muscles  stood  out  on  her  taut  calves,  and  even  her  massive </p>
+<p>thighs  seemed  to  tighten  up  just  a  bit.  Her  waist  also  narrowed  slightly,  and  her  small  belly </p>
+<p>firmed, although it was still just chubby enough to hide her ribs or the shape of her abdominal </p>
+<p>muscles. I didn’t understand what brought about these changes at first, at least not until I realized </p>
+<p>that the cards were retroactive. </p>
+<p>The  next  card  she  drew  showed  a  man  throwing  himself  at  the  feet  of  an  indifferent </p>
+<p>woman. Judging by the look on his face he was madly in love, and desperate to the point lunacy. </p>
+<p>I knew the feeling well. The card was labelled Cupid’s Arrow. </p>
+<p>Suddenly,  the  spell  over  Erin  seemed  to  break  and  she  looked  me  in  the  eyes.  “I’m </p>
+<p>bored,” she purred, and then she stood up in one graceful motion and strode across the room on </p>
+<p>her  long  legs,  her  breasts  bouncing  along  with  the  rhythm  of  her  movement.  I  took  this </p>
+<p>opportunity to get a good long look at her backside, and I wasn’t disappointed.  </p>
+<p>Her skirt was so shirt it would have struggled to cover a normal girl’s behind; with Erin’s </p>
+<p>figure it didn’t stand a chance, leaving the entire lower half of her ass exposed. It was amazingly </p>
+<p>large  and  full,  with  a  size  that  you  wouldn’t  normally  see  except  on  a  chubby  middle  aged </p>
+<p>woman  who  had  left  herself  go  after  having  a  few  kids,  but  it  was  still  taut  and  shapely, </p>
+<p>spreading out from her narrow waist in an exaggerated upside down heart. Round and shapely, </p>
+<p>but not so much that there was any doubt that it was real, her natural projection only enhanced by </p>
+<p>her towering heels. Her flesh was tight and flawless, with only the barest hint of cellulite. </p>
+<p>I also took a moment to appreciate the definition of her back muscles; it must be a lot of </p>
+<p>work carrying breasts like hers around and it really showed. </p>
+<p>She walked over to the teachers desk and turned on the radio, bending over slightly and </p>
+<p>giving me an even better view as she played with the dials until she found a station that played </p>
+<p>bouncy  club  music.  She  then  turned  around  and  walked  slowly  back  towards  me,  slowly  and </p>
+<p>swinging her hips in time with the music, her massive thighs rolling past one another with each </p>
+<p>step. </p>
+<p>Erin  walked  directly  towards  me,  using  her  shin  to  nudge  aside  the  table  on  which  the </p>
+<p>enchanted cards sat, then she stood above me, her hands on her broad hips, looking down on me </p>
+<p>with an indecipherable expression as she gently chewed on her full  lower lip. Then she leaned </p>
+<p>over,  giving  me  an  amazing  view  down  her  top,  looked  me  dead  in  the  eye,  and  shoved  me </p>
+<p>roughly back into my chair. </p>
+<p>She lowered her knee onto the cushion between my legs, less than an inch from my balls, </p>
+<p>and  then  rested  her  full  weight  on  it  for  a  second  before  swinging  her  other  leg  around  and </p>
+<p>straddling  my  lap.  She  put  her  hands  on  my  shoulders  and  then  locked  them  behind  my  neck, </p>
+<p>swaying in time with the music and slowly leaning forward, bringing her chest closer to my face </p>
+<p>inch by agonizing inch. </p>
+<p>away and hissed  </p>
+<p>I brought my hand up and gingerly rested it upon her thigh. Immediately she slapped it </p>
+<p>“Don’t touch me.” She fixed her eyes on me with her usual glare, but one corner of her </p>
+<p>mouth turned up in a slight smirk. </p>
+<p>She leaned back, reached up, and untied her top, letting her massive breasts swing free. </p>
+<p>The flawless white globes filled my vision, perfectly round and symmetrical, marred only by her </p>
+<p>areola, each perfectly circular and the color of freshly chewed bubblegum, her big nipples finally </p>
+<p>freed from their cloth prison and growing even longer in the cool air. She tossed her shirt into the </p>
+<p>corner and then moved in. </p>
+<p>She leaned closer again, still wobbling in time to the music until she finally made contact. </p>
+<p>The  full  weight  of  her  breasts  slapping  against  my  cheeks  was  actually  a  little  painful,  but  I </p>
+<p>didn’t care. She moved back and forth, her hard nipples drawing little trails across my face, and </p>
+<p>brushing the sensitive skin of my lips. Eventually she was so close that my head was completely </p>
+<p>between her breasts, and when that happened she leaned into me, wrapped her forearms around </p>
+<p>the back of my head and pressed me tightly into her. For one brief moment the only sensation </p>
+<p>was  the  smooth  touch  of  her  cool  flesh  and  the  sound  of  her  heartbeat  as  my  head  was </p>
+<p>completely engulfed in her cleavage and for the first time in my life, I was at peace. </p>
+<p>Then she pulled away, keeping her hands clasped behind my neck, looked me dead in the </p>
+<p>eye,  and  brought  here  face  close  to  mine.  She  drew  nearer  and  nearer,  never  breaking  eye </p>
+<p>contact, until I could feel her breath on my face and her voluptuous lips were only a fraction of </p>
+<p>an inch from mine. She stopped, holding there as the song on the radio came to an end, and then </p>
+<p>she just waited. After a moment, I decided to go for it, and moved to kiss her. </p>
+<p>With  practiced  speed,  Erin  turned  her  head  aside,  allowing  my  lips  to  move  past  her. </p>
+<p>Then  she  turned  toward  me  and  whispered  directly  in  my  ear.  “Not  yet,”  before  biting  my </p>
+<p>earlobe, and not entirely gently either. </p>
+<p>Then Erin pulled away from me and stood up. She turned away from me, as if she was </p>
+<p>about to leave, but instead she backed towards me, swinging her hips in time with the music, and </p>
+<p>then hooking her thumbs into her waistband. She gradually began to pull down her skirt, along </p>
+<p>with  the  black  G-string  beneath  it.  Once  the  fabric  was  bunched  up  beneath  the  swell  of  her </p>
+<p>buttocks,  she  bent  over,  pulled  it  down  as  far  as  she  could,  and  gracefully  stepped  out  of  her </p>
+<p>skirt, giving me a close up and unobstructed view of her glorious ass, shaking in my face. For a </p>
+<p>brief second I was even able to catch a brief glimpse of her vulva, small and tight, and obscured </p>
+<p>by large puffy labia, which were themselves waxed smooth. </p>
+<p>Once she was fully nude, Erin dropped roughly onto my lap, and began grinding her butt </p>
+<p>into my crotch. I gingerly put my hands on her hips, holding her steady, but she grabbed them </p>
+<p>away, digging her nails into my palms. But rather then slap them away, this time she guided my </p>
+<p>hands  to  her  chest,  and  placed  her  stiff  nipples  between  my  fingers.  She  quietly  sighed  with </p>
+<p>pleasure and then began kneading the flesh beneath in slow concentric circles. </p>
+<p>I  am  not  ashamed  to  say  that  with  the  girl  whom  I  had  fantasized  about  every  free </p>
+<p>moment  for  the  last  three  months  sitting  on  my  lap,  her  huge  womanly  butt  griding  into  my </p>
+<p>crotch, and my hands filled with the most amazing tits imaginable, that I, an eighteen year old </p>
+<p>virgin, came in my pants almost instantly. Erin either didn’t notice, or just didn’t care, because </p>
+<p>she continued until the song was over. </p>
+<p>Then we sat for a moment in silence, Erin still on my lap, and I broke the silence with the </p>
+<p>first stupid question that came to my head. </p>
+<p>“Where did you learn to dance like that?” </p>
+<p>“Hmm?” Erin responded, her voice as soft and seductive as ever. “Oh. I’ve been dancing </p>
+<p>at  a  club  in  the  city  since  I  was  old  enough  to  pass  for  eighteen.  Its  a  better  workout  than </p>
+<p>gymnastics,  and  I  can  to  perform  for  people  who  actually  appreciate  my  curves.  Besides,  the </p>
+<p>money is a whole lot better. Speaking of which, that will be twenty bucks.” </p>
+<p>I wasn’t sure if she was joking or not. Still, I reached into my pants pocket and handed </p>
+<p>her all the money in my wallet. She took it without a word and stuffed it down her boot. Man, it </p>
+<p>was like middle school all over again. </p>
+<p>in. </p>
+<p>Seemingly bored with me, she leaned over and drew another card from the deck, holding </p>
+<p>it up so that I could see it over her shoulder. This one showed a chalice full of red liquid and was </p>
+<p>called Ambrosia. She tossed it nonchalantly onto the table, and nothing happened at first. Then, </p>
+<p>droplets of white liquid began to leak from her nipples. </p>
+<p>“When did this start?” I asked. </p>
+<p>“Shut up!” She responded, her voice cracking slightly as a hint of embarrassment creeped </p>
+<p>She half turned and then, when I went to ask what she was doing, Erin jammed a sodden </p>
+<p>nipple into my mouth. I didn’t ask any more questions, instead I licked the turgid nub clean and </p>
+<p>then proceeded to suck the delicious nectar from her breast. She closed her eyes in pleasure, and </p>
+<p>I could tell that she was enjoying the experience almost as much as I was. </p>
+<p>Once her left tit was drained, Erin proceeded in inviting me to do the same to her right, </p>
+<p>and from the way I felt her muscles suddenly tense beneath me, I think that she also climaxed </p>
+<p>from the experience. </p>
+<p>Once  she  was  dry,  she  pulled  away  from  me  and  glowered  as  she  drew  another  card. </p>
+<p>Greed, with the image of a corpulent man with his hand stuck in a jar. No tangible effect. </p>
+<p>Then, she drew what would turn out to be her final card of the evening; another copy of </p>
+<p>The Matron. I smiled as I knew what was to come. </p>
+<p>Her breasts started growing again. She leaned back against me, and I felt the full weight </p>
+<p>of  them  press  us  back  into  the  chair  cushions.  I  felt  her  back  and  shoulders  tighten,  and  her </p>
+<p>muscles  once  again  bulged,  but  it  was  a  losing  battle.  By  the  time  she  was  done  growing,  her </p>
+<p>breasts had to weight almost as much as the rest of her, and it was a miracle she could walk at </p>
+<p>all, let alone dance. </p>
+<p>They were miraculous. No longer quite spherical, as they flattened a bit under their own </p>
+<p>weight,  and  rode  a  little  lower  on  her  chest.  Still,  they  completely  covered  her  torso  from  the </p>
+<p>front,  hanging  down  to  her  waist,  and  I  estimated  that  each  was  close  to  two  feet  in  diameter; </p>
+<p>now roughly the size and shape of large beach balls. </p>
+<p>We lay there for a moment, she seemed to be trying to find the energy to lean forward to </p>
+<p>take another card. I took the opportunity to  stroke the soft, pliant flesh of her right breast,  and </p>
+<p>then  began  to  play  with  her  nipple,  now  longer  than  my  thumb  and  twice  as  thick,  set  in  the </p>
+<p>center of an areola the size of a tea saucer. </p>
+<p>She tensed for a moment, and then relaxed into me, she even reached down and held my </p>
+<p>left hand. I gingerly began to kiss the freckles on her shoulder. </p>
+<p>And that was when the rest of the class came back. It was quite a scandal, finding twenty </p>
+<p>students seeing Erin lying naked on a boy’s lap, but apparently the deck had changed everyone’s </p>
+<p>memory of her, so her new form didn’t take anyone by surprise, and apparently this wasn’t the </p>
+<p>first time she had gotten naked in public. </p>
+<p>Still, that was the end of that. As the teacher tried to get the class to look away, Erin just </p>
+<p>giggled at everyone’s discomfort and basked in the attention as she picked her clothes up off the </p>
+<p>floor  and  got  dressed.  I  walked  over  and  helped  her  to  her  feet,  and  as  I  did  so,  I  got  up  my </p>
+<p>courage and asked her if she would like to go to the Winter Ball with me. </p>
+<p>“No,” She replied flatly. </p>
+<p>I  walked  away,  dejected,  and  then  watched  as  she  was  escorted  from  the  room  by  an </p>
+<p>angry teacher. There were too many emotions for me to really work out anything at that moment, </p>
+<p>and instead I just kind of paced nervously and tried to blend into the background. </p>
+<p>But, before I left, I made sure to grab the Deck of Changes from the table before someone </p>
+<p>else  noticed  it,  shoving  it  into  my  backpack  in  the  same  container  where  I  kept  my  deck  of </p>
+<p>Magic: The Gathering cards. </p>
+<p>What? Did I ever use them again? Well, yeah, of course, a couple of times. But that’s a </p>
+<p>whole different story. Let me finish here, I am almost done. </p>
+<p>Anyway,  I  spent  that  weekend  a  nervous  wreck.  Not  knowing  what  had  happened,  or </p>
+<p>what  would  happen  between  Erin  and  I.  Would  things  just  go  back  to  normal?  Only  with  her </p>
+<p>even more beautiful and impossible to get out of my mind? </p>
+<p>Things got worse on Monday morning when I saw she wasn’t in class. I spent the whole </p>
+<p>day not paying attention in school, and then during sixth period art class I got a text. It was from </p>
+<p>Erin, and all it said was “Come over.” </p>
+<p>I ducked out early, looked up Erin’s address in the school directory, and drove over to her </p>
+<p>parent’s house. I didn’t see anyone around when I got there, so I nervously parked my car on the </p>
+<p>street and walked up to ring the doorbell. </p>
+<p>There was no answer, and I was about to leave, when I got another text from Erin. “Come </p>
+<p>on. I’m upstairs.” The door was unlocked. </p>
+<p>It took me a moment to find her bedroom. It was a small room in an otherwise expensive </p>
+<p>house, with white walls and a brown tile floor with messy piles of clothes everywhere. No TV or </p>
+<p>computer, just dressers and a very large vanity with an ornate mirror on top. It was joined by a </p>
+<p>full body mirror on the closet door. Erin obviously spent a lot of time looking at herself. </p>
+<p>Erin’s twin bed was pressed against the far wall beneath an open window, and she was </p>
+<p>lying on it, bathed in early afternoon sun. She was on her knees, resting her head and arms on her </p>
+<p>breasts  like  a  pair  of  beanbag  chairs  while  she  played  with  her  phone.  She  was  totally  naked, </p>
+<p>with her magnificent butt thrust proudly into the air. </p>
+<p>She didn’t look up as I entered the room. </p>
+<p>“Where have you been? You all right?” </p>
+<p>“Fine. After what happened Friday my parents told me I wasn’t allowed to go to school </p>
+<p>until I started wearing ‘real clothes,’ and I told them fine. So I am just going to stay here wearing </p>
+<p>nothing at all until they give in.” </p>
+<p>“Oh, cool. I brought your homework from first period,” I said. </p>
+<p>“Don’t care.” </p>
+<p>“So why did you call me?” </p>
+<p>“Bored.  And  cold.”  She  said,  drawing  out  the  last  word  as  she  struggled  into  a  seated </p>
+<p>position and patted the mattress beside her. </p>
+<p>As  I walked over,  I asked if her parents  knew  I was  here, to  which  Erin  replied  “They </p>
+<p>don’t even know you exist. We ‘re going to keep it that way.” </p>
+<p>I sat down next to her, and spent the next few minutes trying not to stare too hard at her </p>
+<p>naked body and awkwardly tried to make conversation. Eventually she put her finger to my lips </p>
+<p>and shushed me, asking “If I say you can be my boyfriend, will you stop trying so hard?” </p>
+<p>I nodded. </p>
+<p>“Good,” she said. </p>
+<p>We  relaxed,  and  lay  down  next  to  one  another.  I  spent  the  next  hour  silently  spooning </p>
+<p>her,  fondling  her  gargantuan  breasts  and,  more  importantly,  holding  them  tight  so  they  didn’t </p>
+<p>spill out over the edge of her narrow mattress and send her tumbling to the floor. </p>
+<p>Then, out of the blue, Erin asked “Are you gonn fuck me or not?” </p>
+<p>“What?” was all I could think to say. </p>
+<p>“You’ve been poking me in the butt for the past hour. I’m starting to wonder when you </p>
+<p>are going to take the hint and stick it in.” </p>
+<p>“Oh, um, ok,” I answered, too surprised to be eager. “Do you want me to go down on you </p>
+<p>“No,” she said as she began to climb  atop me in the reverse cowgirl position, “but you </p>
+<p>first?” </p>
+<p>can kiss my ass if you’d like.” </p>
+<p>Cards Used: </p>
+<p>Horns of Heidrun: </p>
+<p>Subject’s nipples grow larger and become exceptionally sensitive. </p>
+<p>The Harlequin: </p>
+<p>Subject always wears excessively heavy makeup. </p>
+<p>The Innocent:   </p>
+<p>Subject’s style is changed to schoolgirl. </p>
+<p>Rolling Thunder: </p>
+<p>Subject’s weight increases by ~20% and they take on a pear-shaped figure. </p>
+<p>The Siren: </p>
+<p>Subject’s voice becomes both more youthful and higher pitched. </p>
+<p>The Dancer: </p>
+<p>Subject’s legs become longer and better suited to talking in high heels. </p>
+<p>Envy:   </p>
+<p>The effect of the next card is doubled in intensity. </p>
+<p>The Matron: </p>
+<p>Subject’s breasts double in size. </p>
+<p>Kisses of the Moon:  Subject’s skin becomes significantly paler and free of flaws. </p>
+<p>Aphrodite’s Kiss: </p>
+<p>Subjects lips become much fuller and more sensitive. </p>
+<p>The Empty Book: </p>
+<p>Subject’s personality is changed to bimbo. </p>
+<p>Heavenly Spheres: </p>
+<p>Subject’s breasts become much rounder and bouncier. </p>
+<p>The Apple: </p>
+<p>Subject changes to meet their opponent or partner’s desires. </p>
+<p>The Burlesque: </p>
+<p>Subject’s profession changed to stripper. </p>
+<p>Cupid’s Arrow: </p>
+<p>Subject becomes romantically infatuated with their opponent or partner. </p>
+<p>Ambrosia: </p>
+<p>Greed:  </p>
+<p>Subject begins lactating profusely. </p>
+<p>The next card’s effects are extreme. </p>
+</body>
+</html>

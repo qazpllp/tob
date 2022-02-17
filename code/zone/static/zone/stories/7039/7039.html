@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Challenge Accepted</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p><strong>Challenge Accepted</strong></p>
+<p>Contains: Massive BE, unstoppable forces, a "god"parent, and the end of
+the world</p>
+<p>This was not what I planned to release next, but I wanted something out
+before the end of the year (although moderation might take some time...)</p>
+<p>(All characters are fictional, only characters 18+ perform sexual
+activities)</p>
+<p>----------------------------------</p>
+<p>I was there when the fate of the world was decided. I stood and watched
+as it was all destroyed knowing there was no way for me to stop it.</p>
+<p>To understand how everything went down, I guess I'll have to start with
+my aunt. Cindy Knight, my aunt, is a person who can be kind,
+affectionate, and far too obstinate and determined for the good of
+herself and the people around her. While I call her my aunt, we aren't
+really blood-related, more like a godmother. Still, she and I have been
+living together for 12 years now, ever since both my parents died in a
+car crash when I was 8.</p>
+<p>Aunt Cindy has a wonderful figure ... as, uh, my friends have said many
+times. She has a more bottom-heavy shape to herself but has large enough
+breasts that she might be considered more of an hourglass. Honestly, I
+think that's up for determination. She stands at a decent 5'9" with
+light brown hair and nice green eyes. Her meaty/doughy body does hide
+the fact that she has some surprisingly strong legs. It all happened
+because one time someone told Cindy that "she couldn't run a marathon
+with a body like that."</p>
+<p>Long story short, she did. Somehow. It was like she was so determined to
+prove them wrong that reality just gave up.</p>
+<p>And that's my aunt's greatest flaw, that she takes everything as a
+literal challenge. We had to stop watching the discovery channel because
+she kept trying things every time she was warned not to do it at home.
+We're very lucky she didn't watch anything with explosions. VERY.</p>
+<p>And that brings us around to the beginning of the end. It was a warm
+spring day and Aunt Cindy and I were at the mall chatting and not really
+paying any attention. She was saying, "I can't believe you haven't had a
+girlfriend yet, Matt," when she bumped into someone.</p>
+<p>While I will never condone Cindy's following actions, it was this woman
+who would set off the series of events to end the world. When both
+parties had regained some of their bearings. This other woman looked
+like a bony mess or maybe just a starved runway model. She was shorter
+than my aunt and was 100% a goth chick of some kind. This woman's hair
+was clearly dyed black with a single streak of blue and she had a number
+of piercings over her face. Said face was now in a hate-filled scowl as
+if my aunt was the only offending party and somehow her MILFy body was
+to blame.</p>
+<p>"You bitch!" yelled the obnoxious goth girl, generating a number of
+looks because, of course, we were in the middle of a mall.</p>
+<p>Aunt Cindy visibly breathed in through her nose at the audacity, but her
+voice was relatively calm when she replied, "I'm sorry, I'd like to not
+make a scene."</p>
+<p>The other woman bristled at the words, "I walked into your fucking tits,
+you big-busted cow!"</p>
+<p>As I said earlier, my aunt could possibly be defined as an hourglass, so
+I could kinda see what the jerk was saying. Looking at the woman's flat
+chest again, it was clear she was just jealous. Either way, this REALLY
+riled Aunt Cindy.</p>
+<p>"What did you call me," asked Cindy with a voice of ice.</p>
+<p>"A cow, you dumb bovine! God, why don't you fucking motorboat the world
+with those meat sacks, you slut!"</p>
+<p>Uh oh. With those words, I visibly paled. What had been a shouting match
+had turned into a challenge. One directed at the undisputed queen of
+challenges, my aunt. I guess I could have stepped in but, as far as I
+know, once words leave someone's mouth, they are pretty difficult to
+shove back in again.</p>
+<p>"Maybe I will!" yelled Cindy, fire in her eyes as she grabbed me by the
+arm, "We're going home. NOW."</p>
+<p>Well, it didn't take long for my aunt to start looking up breast
+enhancing supplements online. Within a week, she had obtained five
+different types of pills and ointments to try. I never found out if this
+was the case or not, but I'm pretty sure each and every one was a scam.
+Unfortunately, reality seems to have a way of bending around Aunt
+Cindy's desires. Now just two weeks after the challenge was raised, she
+was two cup sizes larger. She told me herself quite proudly. I
+personally had to stop myself from showing her how I was feeling with a
+cold shower after that.</p>
+<p>This was not enough for my aunt, she couldn't just grow a couple of
+sizes a week, oh no no no! If she wanted to motorboat the Earth she
+would need to get bigger, faster.</p>
+<p>"I can't wait for millennia, Matt!" Aunt Cindy declared that day, "I've
+got other things to do!"</p>
+<p>Despite her words, she spent most of the rest of the week studying other
+forms of breast expansion. And by studying I mean looking at porn.
+Through her infinite wisdom, she narrowed her options down to "Green
+Beam," "Nanites," and "Magic" of which I really had to convince her
+option 3 was a big no go. In the interim, my aunt had gained another 4
+cup sizes making her truly gigantic.</p>
+<p>At this point, I thought that maybe the challenge would be impossible.
+It is with great regret that I must admit I was mistaken.</p>
+<p>Just two days later, my aunt had found the solution. She called me down
+from my room where I had been telling my friends that it would probably
+be a good idea to get out of town for a while, considering my escalating
+aunt. When I arrived she dropped the first bit of news on me.</p>
+<p>"I figured it out! In two weeks we're going to take a nice sailing trip
+to a small island where I am going to make that skinny bitch eat her
+words!" she said triumphantly.</p>
+<p>I gave her a nice round of applause while trying desperately not to look
+down from her face.</p>
+<p>"Well, that's not the only reason I called you down today, Matt.
+Recently I've been having some... issues that I need your help with."</p>
+<p>I hadn't seen Cindy this shy before. Normally she was such a force of
+nature that I just got swept along with her. Of course, I asked her what
+I needed to do to help.</p>
+<p>"Well, along with the growing, the supplements may have had some
+unforeseen side effects. BUT! Um ... in the end this will all work out
+soooooooo ... oh, fine. Look, I need you to help milk me."</p>
+<p>With a great tug, Aunt Cindy pulled her strained shirt over her head,
+leaving my eyes bulging at her suddenly naked, incredibly large melons.
+Yeah... definitely melons. From the tips leaked droplets of milk that
+the dark T-shirt she had been wearing hid surprisingly well. I also
+suddenly questioned how she managed to get a T-shirt her size,
+considering how massive she was. I guess I'm going to have to chalk this
+one up to my aunt's seemingly endless luck.</p>
+<p>I'm not going to go into detail about what happened next. I will say
+that it was one of the most enjoyable experiences I've ever had and that
+I may have let some of that joy escape in liquid form. New pants were in
+order for both of us after that.</p>
+<p>The next two weeks were a wet-dream. Thrice a day, my aunt would call me
+down to expel the increasingly copious amounts of milk from her growing
+chest. Each tit, I mean, breast (*ahem*) was consuming her torso,
+pushing outward and managing to creep down her thighs. By the time it
+was all over I was finding myself doing laundry every other day just to
+keep up with the piles of soiled clothes.</p>
+<p>It had only been 5 weeks, just a couple of days over a month since the
+challenge was issued, and now the world would end. Cindy had rented a
+boat and sped the two of us out to a small-ish island where already I
+could see a small building among the trees. It stood on a set of eight
+stilts and held up by a layer of thick metal.</p>
+<p>When we arrived, I was surprised to find three other women on the
+island, to which Aunt Cindy just giggled, "They're some of my friends
+who want to see me conquer yet another challenge."</p>
+<p>I would eventually get to know these girls well, but I didn't at the
+time. There was a short redhead with oversized jugs, a tall black woman
+of an hourglass shape, and a cute glasses wearing, dark-haired Asian
+with an unusually large bosom. My aunt just leaned down to me and said,
+"I know you like them," giving me the shivers.</p>
+<p>The five of us proceeded to the platform where I got a better look at
+the building. It looked less like a house and more of a miniaturized
+industrial complex. Nanites? I still don't know, but whatever it was, it
+worked.</p>
+<p>My aunt hooked herself in and the machine started up. A large hole in
+the center of the plate let her dangle her breasts through and as the
+system got into action, the space between her massive mammaries and the
+ground became smaller and smaller. Quite quickly, contact was made, then
+just as quickly, the platform began to rise as the size of Cindy's
+breasts applied enough pressure to lift the whole construction.</p>
+<p>So I and the other three girls stood and watched as we picked up speed,
+the trees on the island falling one by one to the onslaught. Then the
+sounds of splashing as water made contact. Eventually, we were raised
+high enough that the landscape around us seemed to shrink and the city
+that had once been my home was destroyed.</p>
+<p>Did I feel remorse? Undoubtedly, but when against a force of nature like
+my aunt, I honestly felt it inevitable. The other girls were doing
+surprisingly well, only the Asian girl fainted, and even then I think it
+might have been from pleasure. She sure seemed to be smiling to me.</p>
+<p>Within a day, Aunt Cindy had motorboated the entire Earth, then crushed
+it with the gravity of her planet-sized tits. With her goal reached, she
+had turned off the machine. When I saw her she smiled at me and I
+couldn't help but give a weak smile back.</p>
+<p>"I think that went really well! Showed that goth weirdo what for!"</p>
+<p>I could only agree but, of course, I had to wonder what we were doing
+now.</p>
+<p>"Silly boy! I produce incredible amounts of milk, you guys can survive
+on that alone. I told you it would come into play! Besides, now you've
+got a paradise where you're the only boy with a set of large-chested
+beauties whiles standing ON a large-chested beauty. Don't worry, I've
+got plenty of life left in my tank!"</p>
+<p>I thought for a moment right then before a come up with the right words
+to say. "Well, I don't think you can live forever though. You're going
+to die eventually," I said to her while staring directly into her eyes.</p>
+<p>Those eyes gleamed right back at me, and with a wolfish smile she said,
+"Is that a challenge, Matt? Because I just thought you should know I'm
+the queen of challenges."</p>
+<p>Then with force she stated, "I NEVER LOSE."</p>
+</body>
+</html>

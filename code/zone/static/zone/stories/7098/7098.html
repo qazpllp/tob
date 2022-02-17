@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Yes Master !</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>Author : Wokod</p>
+<p>Warning : I'm not a native English speaker, so sorry for the mistakes, and feel free to correct anything! And of course, have fun!</p>
+<p>Note : Comments? Opinions? Questions? ! I'm available, just tag or send a message to u/wokod. If you want to start a topic about a specific story, you can! Just don't forget to tag me when you do on the appropriate reddit, like r/overflowingbra or r/expansivewriters.</p>
+<p>And since I can't answer to the comments/ratings on the main website, once again, thanks again for them all! Your comments, both positive and negative, help me a lot to improve :) (or so I hope :o ). Now, I hope you'll enjoy this story!</p>
+<hr />
+<p>Yes, master !</p>
+<p>"What's that?" Chris exclaimed.</p>
+<p>"That? That's a slave collar, it's written on the box. Is it why you're shocked? My, you good guys are my favorites." the HellMart clerk smiled as he picked it up "This product used to be pretty popular a couple centuries ago. But nowadays, not so much. The brand tried to make it look cooler, but it's still not coming back." </p>
+<p>Chris felt uncomfortable. Not just about this strange product, but about everything in this shop, clerk included. Since Chris walked in this strange "HellMart" minutes ago, everything had gone wrong. First, the clerk sounded like he knew everything about Chris. Then, he proved Chris magic was real by showing him a screen displaying every thought and secret Chris ever had. And last, but not least, he invited Chris to check what his shop had to offer in its many, many aisles.</p>
+<p>"Now, since this product got your attention..." the bald clerk said as he opened the box.</p>
+<p>"Wait no, I think slavery is the worst thing ever, I..."</p>
+<p>Chris stopped as the clerk took out of the box a very thin band of black velvet, with a tiny silver clasp. It looked really, really small in the man's hand.</p>
+<p>"That's not looking like a slave collar at all." Chris commented.</p>
+<p>"Told you, they made it look cooler. But it's still what it says it is: clasp it around the neck of anyone, and this person is yours, mind and body. Whatever you order them, they'll do it. From bringing you a drink to think they're a parrot, or to grow bigger breasts."</p>
+<p>The clerk smirked. He knew Chris was into breasts expansion, and it even appeared on the strange screen he showed him earlier. Chris looked away, his face entirely red.</p>
+<p>"You know, just keep it." the clerk said as he placed the collar in Chris' hand "I have dozens and dozens of these, and as I just said, they're not trendy lately. So, take one and give it a try. If you don't want it, you can always bring it back later."</p>
+<p>Chris wasn't sure. But while the clerk went on talking to him, soon, he realized they had walked back to the main door. And moments later, Chris was standing outside HellMart, the strange, thin band of velvet in his hand.</p>
+<hr />
+<p>A few days later, Chris had still not used the collar.</p>
+<p>Enslaving someone felt like something he simply couldn't do. He thought about it every day, every hour, and just couldn't make up his mind. As even if it sounded terrible... he couldn't either simply ignore the fact he possessed a magic item able to turn any woman into his fantasy. And this idea was making the temptation grow stronger and stronger. Every day, while he was working at the local bank, he'd think more and more about it during meetings.</p>
+<p>I could just clasp it around my boss' neck and she'd crawl in front of me.</p>
+<p>Damn, Jim's new secretary has nice breasts... I could make her mine and grow these!</p>
+<p>What if I clasped it around the neck of a trainee? I could do it easily...</p>
+<p>But then he'd shake his head, disgusted by his own thoughts. </p>
+<p>Is it who I really am deep down? A man ready to enslave a woman just to satisfy his breasts expansion fetish?</p>
+<p>But then, one evening, Chris found a way to solve his morale debate. What if... he found a woman who'd be into it? A volunteer? It'd be totally different, since she'd actually like it!</p>
+<p>Chris had been in breast expansion since he was a teenager. He still remembered the day he found out. He had heard two girls talking about their breasts growing bigger, and the topic sounded hotter to him than anything else. A few days later, he discovered online he wasn't alone. And then found forums, stories, morphed pictures... and years and years later, he still loved it like on the first day. But he never told it to anyone. Not even to his previous girlfriends. So how could he find a volunteer?</p>
+<p>He smiled as he obviously had the answer: online forums and boards about breast expansion.</p>
+<p>Over the next few days, Chris posted the same message everywhere he could:</p>
+<p>"Hi. This message is for females ONLY. I happen to have a way to make your breasts bigger without surgery, fast and efficiently, but the price is high. Really high. Contact me if you're interested."</p>
+<p>First, a lot of messages were erased, considered as spam or a stupid scam by the local admins. Then, there were the guys pretending to be girls, thinking this was some roleplay. And then came the first few curious women. Most of them bailed out when Chris told them his way to make them grow was "magic". Only a few stayed. When he told them the price was giving him total control over their minds and bodies, most of them quitted. Either because it sounded too ridiculous, or too dangerous. </p>
+<p>Only one stayed.</p>
+<p>And even better, she told him she lived in the same area he did. It was time to meet. </p>
+<p>On the day they decided, Chris putted on his best suit, and after work, headed for coffee shop and sat at the table they agreed on. He checked his watch nervously many times, as the woman was already late by five minutes. And for the fifth time, checked his emails on his phone, when a voice called him.</p>
+<p>"Chris?" said the voice, sounding quite surprised.</p>
+<p>Chris looked up. And paled. Here was Nina, the youngest daughter of his coworker Jim. Jim and him had been friends since they started working at the bank together, and Chris had been invited at Jim's house many, many times. So he perfectly knew his three daughters: Emily, the oldest, who was in her last years of college, Rose, the troublesome one, and Nina, the youngest. A real book worm. And right now, she was standing right in front of him.</p>
+<p>The brunette adjusted her glasses as she looked at Chris strangely.</p>
+<p>"Uh... hi Nina, can we talk later please? I'm waiting for someone." Chris coughed.</p>
+<p>"It's... eeer... okay, that's awkward." Nina blushed.</p>
+<p>"Oh boy... don't tell me your nickname online starts with Lilith."</p>
+<p>Nina sat down immediately. Chris had his answer. One he didn't expect. And for a second, the two of them stared at each other with obvious discomfort and shame. Chris couldn't believe from all the persons who read his message, it had to be Nina who ended up taking on his offer. What were the odds?</p>
+<p>"Okay, we can't do this. Let's forget about it." Chris said as he stood up.</p>
+<p>"No, wait!" Nina grabbed his hand to his surprise "Please. Sit. I know it's awkward, but you have to listen to me."</p>
+<p>"Fine." sighed Chris "But you know I can't do this to your dad."</p>
+<p>"Listen." started Nina "You know my big sister Emily. I know you noticed she grew quite... curvy during high school. She got it from daddy's side of the family. She used to complain about needing E cup bras to support her melons. And when she arrived to college, you know how it went. She dyed her hair blue, went hairy everywhere else, went on with the "Down with the patriarchy!" stuff and asked mom and dad to pay her a reduction. She's three cup sizes smaller now."</p>
+<p>Chris said nothing. Yes, he knew. And yes, he was sad. He remembered Jim totally supporting his daughter's decision.</p>
+<p>"Then there's Rose. She used to make fun of Emily before her breasts ballooned too. And unlike Emily, she used them to get some fun with boys, her grades crashed and... well, good thing mom and dad spent so much time trying to help her find her own path. Because now, she's about to become a pro tennis player. And that's why she also reduced her breasts from Es to Bs."</p>
+<p>Chris knew about this too. And didn't mention to Nina how he had jacked off many, many times while thinking about her sisters. It was wrong, but it was just a guilty fantasy, nothing more. Except now, he had the third sister sitting in front of him... and she was talking about boobs, his favorite topic.</p>
+<p>"Meanwhile, I'm the only one who took from mom's side. I'm still as flat as a board. My sisters were D cups when they were my age, come on! Why do you think I ended up on breast expansion boards? I grew up next to sisters getting big breasts and throwing them away while I had nothing! And mom and dad were always about "Emily needs support, Rose needs help to find her own path, but Nina? She's quiet, don't worry, give her a book, she'll be fine". To them, I'm just the future librarian of the family."</p>
+<p>When she paused, Chris thought about it. Indeed, he never really looked at Nina before, and had the same opinion: she was the quiet one, the book worm on her way to a very predictable life. </p>
+<p>He didn't expect her to be the one to share his deepest fetish.</p>
+<p>"So? Are we doing it or not?" Nina asked boldly.</p>
+<p>"Nina, I'm a friend of your father, I work with him everyday, I can't..." Chris started.</p>
+<p>"Why does it always have to be about everyone else in my family but me? Listen Chris, let's be honest. Yes, it's awkward. Yes, you're twice my age or something. Yes, you work with my dad. But I. Want. It. I want giant tits. I'd do anything for it. Why do you think I didn't bail out when you told me the price was giving up my freedom of mind and body? I'm ready to pay anything for it. So don't tell me you're the one to back off now."</p>
+<p>Chris felt really bad about it. Jim would kill him if he found out. But could Chris pass the opportunity? He wanted ti, Nina wanted it, and now, it was quite hard to just leave and pretend nothing happened. </p>
+<p>He took the collar out of his pocket. And Nina looked at it with a big smile. </p>
+<p>"That's it?" she asked.</p>
+<p>"That's it." </p>
+<p>She offered her neck to him, and he carefully locked the collar around it. He did. </p>
+<p>And nothing happened.</p>
+<p>The collar looked like a thin choker on her, and since it was quite trendy, it didn't even look out of place. But she was patting it, and looked disappointed.</p>
+<p>"I don't feel any different." she said "Try something."</p>
+<p>"I don't know... stand up?" Chris said. </p>
+<p>Nina just shrugged.</p>
+<p>"Damn, I should have asked for the guy to give me the instructions..." mumbled Chris.</p>
+<p>"It's a slave collar you told me. Don't ask me. Order me." Nina said with a naughty smile.</p>
+<p>"Okay..."</p>
+<p>"I order you to stand up." Chris said with a fake, authoritative voice.</p>
+<p>"Yes master!" Nina blurted out as she jumped out of her chair like a spring. She looked quite surprised as her body escaped her control for a second... even her mouth. She didn't mean to say that!</p>
+<p>"I order you to sit down!" Chris said before she could recover.</p>
+<p>"Yes master!" Nina exclaimed again as she sat down as brutally as she stood up.</p>
+<p>"I order you to clap your hands!" Chris added, obviously enjoying it.</p>
+<p>"Yes master!" </p>
+<p>She did. And people at the other tables started looking at them in a weird way. And yet, Nina was clapping, looking around with a weird smile.</p>
+<p>"Chris, I can't stop!" she said while still clapping her hands "Please!"</p>
+<p>"Uh... sorry, I order you to stop."</p>
+<p>She did. And sighed with relief. People around returned to their own business, while Nina was checking her hands.</p>
+<p>"That was... weird. I couldn't control myself. Just like I can't stop myself from saying "Yes master!" when you order me around!"</p>
+<p>"That's amazing, I love it!" Chris laughed before he calmed down "I... I mean, it's quite powerful, I'm impressed."</p>
+<p>"It's strange to know you have absolute control over me." Nina said after she made sure other people weren't listening "But... it's kind of arousing, I have to admit it. Now what about trying something... a bit more magic?" </p>
+<p>She smiled. But then again, Chris felt like he had been a little too enthusiast with the previous orders, and decided to calm down.</p>
+<p>"Yes, let's try something small." he said calmly, trying to be the adult there "I order you to not need glasses anymore."</p>
+<p>"Yes master!"</p>
+<p>Nina's hands flew for her glasses, and she immediately dropped them on the table. She blinked as she looked around.</p>
+<p>"So?" Chris asked.</p>
+<p>"It's... perfect!" she giggled "I see better than ever! Even with my glasses my sight wasn't so good before! Amazing! You indeed totally control me! So could you give me..."</p>
+<p>She gestured at her flat chest under her white blouse. With a smile. She had paid the price, now, she wanted what she was here for.</p>
+<p>"Wait." Chris again tried to cool down and not act on impulse "If I order you to have big breasts, you're going to grow here and now. People around might freak out and your parents too. We need to do this in a quieter way."</p>
+<p>"Fine." sighed the impatient Nina.</p>
+<p>"Alright then... I order you to grow big sexy breasts at a very fast, yet natural rate, until you're as big as your sisters were."</p>
+<p>"Yes master!" Nina said in answer.</p>
+<p>She felt a warm feeling in her chest... then nothing. But she knew what was up.</p>
+<p>"Not bigger?" she asked with a grin.</p>
+<p>"One step at a time." Chris answered, still trying to keep control of his desires "Then we'll talk about the next one."</p>
+<p>"Fine. Then I hope growing "fast" is really fast, because I have a lot of hopes there!" Nina said "Now, I think I'll have to leave. I had told a few friends I joined them after my meeting with a mysterious stranger, and they might get worried if they don't see me coming. Here, that's my number, Chris. We'll see each other soon I believe!" she winked.</p>
+<p>"Sure. And not a word avbout all this to your family, especially not to your dad, right?" Chris added.</p>
+<p>"Of course not... but if you want to make sure, you can simply... order it, master!" she grinned.</p>
+<p>Nina seemed to like it a lot more than even he expected. The day definitely took a strange turn, and the quiet girl was very, very different from what he imagined. But no, Chris didn't want to start abusing his power. He started being afraid of where he'd stop if he didn't restrain himself right now.</p>
+<p>"No, I trust you." Chris said "See you soon then." </p>
+<p>Nina said goodbye and left, her new collar around her neck. And as he looked at her walking away, Chris looked down at the hard-on in his trousers. Despite the madness of the situation, he loved it more than he wanted to admit it.</p>
+<p>"Fuck." he grumbled.</p>
+<hr />
+<p>"So, Jim, how's the family?" Chris asked innocently a few days later.</p>
+<p>"Fine, thank you!" Jim smiled while filling his cup of coffee "The girls are doing great. Emily is working on the campaign of her candidate for the next elections but she's home for a few days, Rose won her two last games, and Nina... well, Nina is just as usual." </p>
+<p>"Cool." Chris guessed nothing was visible yet. And at least, Jim didn't find anything suspicious.</p>
+<p>"But if you want, come eat with us tomorrow night! It's been a while since you've seen everyone!" Jim offered.</p>
+<p>"Sure, I'll be there, thank you." </p>
+<p>And the next evening, Chris arrived at Jim's house for dinner. And as he walked in there, he was met by Jim's wife, and eventually, the girls joined them. Emily, Rose and of course, at last, Nina arrived, her elegant choker around her neck. </p>
+<p>"How are you Chris? I haven't seen you for quite a while." Nina lied.</p>
+<p>They went on with little chit-chat until dinner, Nina and Chris not saying a word about their secret, perverted meeting from a few days before. Around the table, they had to listen to Emily talking constantly about the patriarchy and political things, then Rose talked about the famous tennis players she met a few weeks before and Nina... just mentionned how, now, she felt more comfortable without glasses. Something no one seemed to really care about. These were just good news.</p>
+<p>But when no one was looking, she pulled on the sides of her shirt, and the fabric molded some breasts that definitely weren't there before. She stared at Chris with a wicked smile, and Chris hoped no one noticed his hard-on. </p>
+<p>Nina was as big as her sisters... after their reductions.</p>
+<p>To her family, Her current size probably looked like some normal growth spurt that was just noticed now. Nothing weird. The dinner finished normally, Chris left, and when he arrived home, he texted Nina.</p>
+<p>Looks like it's going well. - Chris</p>
+<p>It is. Just so you know... <em>1 attached picture</em> - Nina</p>
+<p>And here was the picture of a bra with the label "32B". Chris had to admit it wasn't much, but receiving pictures of bra from a growing girl...  and the cute daughter of his friend was strangely arousing. In a very, very guilty way. </p>
+<p>Just so you know, these are my sisters bras. I thought a breast man would like to know. - Nina</p>
+<p>Fuck. The fact they shared the same fetish for breasts made her know how to arouse him. It was hot enough for Chris not to answer, and instead, to go jack off in his shower. He had done it in the past thinking about Emily or Rose when they were still busty college girls. But now, it was Nina's time. An unexpected development.</p>
+<p>But for now, Chris waited.</p>
+<p>Two days later, he received a text message while he was in a meeting at the bank. He checked it, and read:</p>
+<p>Update. <em>1 attached picture</em> - Nina</p>
+<p>And here was the picture of a bigger bra with the "32C" label on. He immediately hid his phone, in fear someone might see the screen. Especially Jim who was sitting right in front of him, ignoring his daughter was sending pictures of her bra to his friend. Chris' phone buzzed again, and another message was there.</p>
+<p>This is one of my sisters bras... since they don't need them anymore. But I do now. - Nina</p>
+<p>Chris wanted to excuse himself and go jack off right now, but he couldn't. If he stood up right now, everyone would know he wasn't looking at some work on his phone. He silently prayed for Nina not to send another message, and even thought about ordering her not to for now, but thankfully, he didn't receive anything else until he was calmed down.</p>
+<p>Once back home, he eventually texted Nina.</p>
+<p>Don't send me these pictures when I'm  at work with your dad - Chris</p>
+<p>Is now a good time then? - Nina.</p>
+<p>Chris stared at his phone with a frown.</p>
+<p>Nina, what are you trying to do with these messages? - Chris</p>
+<p>Are we going to pretend we both don't know how it'll end? - Nina</p>
+<p>Nina, I'm using this collar to make you grow because we share this fantasy. I don't want you to feel obliged to do anything else. - Chris</p>
+<p>But I want you to oblige me to do anything else. - Nina</p>
+<p>Wow. Did he read that right? Chris' palms were sweating as he typed more messages.</p>
+<p>I'm trying not to abuse this power. Don't push me. - Chris</p>
+<p>Why do you think I accepted? I like the idea of you abusing your power on me. - Nina</p>
+<p>Chris realized she was right. The ones who weren't into this bailed out long before they even thought about meeting him.  </p>
+<p>Now, wanna see my breasts or are you gonna be happy with just pics of my bras? - Nina</p>
+<p>Shit. Okay, how could he resist this?</p>
+<p>Sure. Send pics. - Chris</p>
+<p>Sure. Order me to. - Nina</p>
+<p>What? Why? - Chris</p>
+<p>I want you to use this power on me. It's sexier if you make me do it. - Nina</p>
+<p>Chris shook his head. Well... if she was the one asking... it was kind of her free will, right? And this was a good opportunity to see if the magic worked at distance? </p>
+<p>You asked for it. I order you to send me pictures of your breasts. - Chris</p>
+<p>Nothing. No messages during a few minutes.</p>
+<p>You're okay? - Chris sent, worried.</p>
+<p>And then he received them. Pictures. A good dozen ones. Nina standing in front of her mirror, her breasts perfectly visible. They were the size of peaches, teardrop shaped, nicely full behind her nipple, and actually, nicely tanned, even if her nipples and areolas were quite pale... and large. They were indeed sexy, and looked realy nice, but these were just a bit above average in terms of size. Chris checked all the pictures, and saw how they gently filled Nina's delicate hands, how they filled her bra, how they tensed the fabric of her white blouse, creating a few stress lines...  she had indeed given him a very good view of her breasts.</p>
+<p>It works. I was totally compelled to do it and couldn't stop until now. And I loved it ;) - Nina</p>
+<p>Okay, that was it, Chris dropped his phone and jacked off. Again. But between the arousal, the messages, the pictures and his dick in his hand right now, he couldn't help himself and with his free hand, typed.</p>
+<p>I order you to send me pictures of your growth like these every day. - Chris</p>
+<p>That's the spirit, master! By the way, I just said "Yes master" out loud in my bedroom... good thing I'm home alone! - Nina</p>
+<p>The arousal was stronger than the guilt, and since Nina sounded quite volunteer indeed anyway... Chris came happily.</p>
+<hr />
+<p>"So, Jim, how's the family?" Chris innocently asked a couple days later.</p>
+<p>"Fine, fine." Jim answered while checking his phone "Just..."</p>
+<p>"Just?" Chris repeated.</p>
+<p>"That's just... no, you know how I had to pay surgery for my two first girls? We didn't expect Nina to need it, but lately, it looks like she will. Good thing her eyes seem to be fine now. The budget for glasses will go into... well... a reduction." Jim admitted.</p>
+<p>Chris thought about the fifty pictures or so in his phone of Nina's breasts, getting bigger and bigger with and without clothes on, and now, gently overflowing her sisters D cup bras. The ones the girls didn't need anymore, but now, Nina definitely needed. And her breasts had grown sexier too. Bouncier in a way, as Nina sent a few gifs of herself bouncing around to Chris. He didn't ask for this, but he didn't complain either.</p>
+<p>"A reduction? Did she ask for it?" Chris added innocently.</p>
+<p>"No, but it's Nina." Jim shook his head "She'll do it, we know our little Nina."</p>
+<p>Or so you think, tought Chris. Actually, no one knew Nina like he did. Actually, maybe it was because they always considered her as little Nina that she started wishing she was big Nina. But for now, Chris just pretended he believed him.</p>
+<p>And while more and more pictures and sexy comments from Nina were piling up in his phone, Chris waited for two more ways until eventually, he received a picture of a bra filled to the max. And pictures of Nina's naked breasts, bigger and heavier, the gap between them much smaller as they had grown wider. Her areolas had grown along.</p>
+<p>I'm as big as Emily was at her biggest. Everyone here is shocked I grew five cup sizes in less than two weeks. We need to meet. - Nina</p>
+<p>As much as Chris wanted to meet her, there was a little problem.</p>
+<p>I'd like to, but the bank is sending your dad and me on a business trip. We'll be away for one week. We'll meet when I'll be back. - Chris</p>
+<p>Then order me to grow bigger. - Nina</p>
+<p>Not until we meet again. Be patient. - Chris.</p>
+<p>Order me to be patient or I won't be! ;) - Nina</p>
+<p>Chris guessed it was another provocation, and didn't answer to it. And the next day, he was on a plane for some boring, bankers meeting in a big city. Somehow, even if there were a lot of attractive women at the meeting, they looked a lot less interesting since Chris knew he had a young hottie waiting for him home.</p>
+<p>Except Nina wasn't really waiting.</p>
+<p>She had stopped sending pictures since she had stopped growing, and wasn't compelled to do so anymore. But Chris got news when he noticed Jim was constantly leaving to take care of "family calls". When Chris eventually asked what was wrong, one evening at the hotel bar, Jim told him.</p>
+<p>"That's... Nina." Jim sighed, a glass of whisky in one hand "She's not herself lately. She had some kind of late growth spurt, and obviously, she's full of hormones because she's... she's very active."</p>
+<p>The poor Jim sounded despaired.</p>
+<p>"Her mother caught her with a boy in her bedroom the other day. And instead of being ashamed of it, Nina just told her mother to leave her alone. What made it worse was... it was one of Rose's ex-boyfriends. So Rose is pretty pissed off at her. And now, I just got a call: she's ben seen with another boy, at the back of a car, and then again, it was another of Rose's ex-boyfriends. Just when Rose was done causing trouble to her mom and I, Nina, our quiet little Nina, is starting to do the same... and then some."</p>
+<p>Chris didn't need more to understand Nina was just enjoying the things she had been jealous of. And obviously, showing her sister Rose what she had lost along with her bra size. She was provoking her. And the only reason Emily wasn't already implied in this mess was that the girl was on her campus for a while. </p>
+<p>Back in his hotel room, Chris sent her a few messages.</p>
+<p>Nina, what are you doing? - Chris</p>
+<p>Just living the life my sisters gave up. I've wanted this for so long. - Nina</p>
+<p>Chris was typing his answer when he received:</p>
+<p>And I want more. - Nina</p>
+<p>Chris froze. But then again, his phone buzzed, as another message came in.</p>
+<p>Come back and order me to grow bigger.- Nina</p>
+<p>Chris eventually got the time to send in an answer without Nina interrupting.</p>
+<p>I will. - Chris</p>
+<p>Then I hope you'll do more than just grow me ;) - Nina</p>
+<p>Chris could hardly believe how much Nina was into it. But wasn't he granting her the fantasy she had been dreaming of most of her life? Of course she was into it. She was having both her breast expansion fantasy... and her dom fantasy. Little Nina was definitely way, way different from the quiet bookworkm everyone thought she was... until now.</p>
+<p>Chris couldn't wait for the end of this stupid business trip. And each day, Jim looked a little more despaired, saying Nina was definitely going wild in the house. And was blaming this "stupid late puberty" to explain her change of behavior. Not realizing it was Nina's real behavior. She only had been quiet until now because she didn't have the means to go wild.</p>
+<p>But when Jim told Chris "That's it, if she goes out with another boy again before I'm back, I'll tell her mom to confiscate her phone and we'll send her at my sister's place for a couple weeks. Away from Rose, Rose's boyfriends, and all the boys she knows."</p>
+<p>Crap. This could be a serious problem. If Jim took her phone and sent Nina away, Chris wouldn't be able to change her anymore. He knew she was Jim's daughter... but she was his slave first, he thought with a grin before he realized what he just thought about.</p>
+<p>That day, when he returned to his hotel room, Chris called Nina.</p>
+<p>"Missing me?" she said as she picked up.</p>
+<p>"Nina, are you alone?" Chris asked.</p>
+<p>"Alone in my bedroom. But my mom is in the house, and Rose too. They want to stop me from leaving the house. But I've a date tonight so..." she giggled.</p>
+<p>"Nina, don't go."</p>
+<p>"Getting jealous, "master"?" Nina asked with a mocking voice "It's about time..."</p>
+<p>"Nina, I just learned they're going to take your phone and send you away if you see this boy tonight. If they do, I won't be able to see you. So..."</p>
+<p>"Then stop me." Nina provoked.</p>
+<p>Chris paused. He was still not wishing to abuse hsi powers, but he knew Nina wanted the exact opposite. </p>
+<p>"We both know we're going to have sex." Nina went on "So why don't you stop pretending to be nice? I don't need chivalry, Chris. I need fun. Why don't you make it fun for me?"</p>
+<p>"Nina, I..."</p>
+<p>"Don't "Nina" me. Do it. If you don't have the balls, I'll go see this boy tonight. He has balls for me, unlike you." Nina provoked.</p>
+<p>"Nina, don't push me!" warned Chris.</p>
+<p>"What if I do?" she cooed "Is it why you're still single? No balls?"</p>
+<p>"Stop it, Nina!"</p>
+<p>"I'm pushing, but nothing happens, so obviously, you have no b..."</p>
+<p>"THAT'S IT!" Chris exploded "Nina, I order you to stay home tonight, furiously masturbate while thinking about me, and enjoy every second of it!"</p>
+<p>"Yes master!" he heard her exclaiming before she added, with a much more sensual voice "That's... what I'm talking about. Thank you Chris, I think I'm going to have a really, reaaaally nice evening... I wish you the same thing. Now, I have to go, it's starting and my panties are on fire for you, big guy!"</p>
+<p>She hung up.</p>
+<p>Chris stayed there, sitting on his hotel bed, his phone in his hand, for a while. And then, just threw the phone away, and decided to do exactly what Nina was probably doing right now.</p>
+<hr />
+<p>The last remaining days had been quiet. Even Jim looked a little less stressed. From what Chris managed to make his friend say, Nina eventually calmed down. And now spent her evenings in her bedroom, instead of trying to go see some boys. From the tone Jim used, obviously, the whole house knew Nina wasn't just reading in there, but they probably thought it was better for Nina to have some me-time than to sleep with every boy she could find.</p>
+<p>It was weird to know the truth and not tell Jim. But the secret was also kind of exciting and... arousing. </p>
+<p>And now, it was time to fly home.</p>
+<p>Once back to their hometown, Chris returned to his place to rest a bit. He was always tired after a trip, and needed a good drink, some music, and a quiet moment to recover. </p>
+<p>That was when someone knocked at his door.</p>
+<p>"Hello, "master"!" cooed Nina, standing at the door, her E cup breasts pushing the fabric of her tight blouse so much you could see the round, luring flesh through the gaps between the buttons.</p>
+<p>"Nina? What are you already doing there? I didnd't even send you a message!" Chris said.</p>
+<p>"Daddy's home, so you're home too. I know where you live because you invited the family once, remember? Now, are you letting me in or not?"</p>
+<p>Chris allowed her in and closed the door behind her. Nina walked in like she owned the place. Except I own her, Chris thought again without even realizing it. She sat in the couch with a smile.</p>
+<p>"I just couldn't wait to see you again." Nina said.</p>
+<p>"How did you manage to leave the house without your parents being suspicious?" Chris asked.</p>
+<p>"Asked my friend Melody to pick me up. Officially, I'm with her and some friends trying to talk to me about my recent behavior. Mom and dad were too glad to get some help. But Melody is a good friend. She dropped me there and will pick me back when we're done."</p>
+<p>"Done?" smirked Chris, amused and aroused.</p>
+<p>Nina crossed her legs sexily.</p>
+<p>"Asks the man who made me masturbate like never before. You see, my tastes changed for older men now, so I don't care about boys anymore. But you... you... I'm wet right now just because I know we're about to do it. And I'm not even speaking about growing my tits."</p>
+<p>She cupped them and made them wobble with pride.</p>
+<p>"That's... if you're a nice girl." Chris went on, playing her game.</p>
+<p>"Order me to be one." she smiled back, while he walked toward her, making her even hornier.</p>
+<p>"So that's how you want to play it... alright Nina, enough games." said the aroused Chris "If that's the way you like it then... be my guest. I order you to spread your legs."</p>
+<p>"Yes master!" Nina said sexily, as she slowly spread her legs... fully.  Revealing how she wore nothing under her skirt.</p>
+<p>"Oops." she said "Looks like I forgot something when I walked out of home."</p>
+<p>"Trying to be the one teasing there?" Chris went on, enjoying this "I order you to stay there, get hornier and hornier, wetter and wetter, and so until I order you to move."</p>
+<p>"Yes master!" she smiled.</p>
+<p>Chris sat in a comfy chair, poured some alcohol into a glass, and stared with a smile at the busty girls, legs spread, sitting in his couch, her face getting more and more flushed with every passing second. He could see her pussy getting wetter and wetter, and juices starting to drip out of it. Her breathing accelerated.</p>
+<p>"Chris... Chris, okay, you won, please, do me!" she begged as every second she desired him more.</p>
+<p>"No, no, no..." grinned Chris, savoring his drink while watching  "You wanted to tease me... just had to remind you who was the boss."</p>
+<p>Okay, he had to admit it, playing the "master" in sexual games was funny. Especially with this power. But he eventually realized he might have overdone it when Nina reached such levels of arousal she was basically grunting and shivering with desire, her mouth drooling so much she had a hard time speaking, while sitting in a puddle of her own juices.</p>
+<p>"Okay, I order you to move." Chris said as he placed his empty glass on a nearby table.</p>
+<p>Nina jumped on him like she had a spring right under her ass. She was savage. She ripped his clothes off, and immediately jumped on his dick. Chris, still sitting in his chair, the girl on him, didn't fight, and unbuttoned her blouse to get access to her mighty new E cups, admiring his work.</p>
+<p>They were perfect.</p>
+<p>Round, bouncy, moving with her every move on his cock, soft under his hands, warm... probably the best tits he ever touched. And they were, indeed, his work. This was way too much not to come fast in the wild girl.</p>
+<p>"I'm gonna come, that's too good!" Chris warned.</p>
+<p>"No, not yet!" begged Nina "Please!"</p>
+<p>"Can't stop it, I'm gonna come!" Chris said.</p>
+<p>"No, no!" she begged "I didn't even..."</p>
+<p>"Fuck, Nina!" Chris grunted as he found an easy way to solve this "I order you to have the biggest orgasm of your life!"</p>
+<p>"HOLY..." screamed Nina.</p>
+<p>She grabbed his head and pushed it between her generous breasts. While she screamed out loud. Loud, and long. As she was having a tremendous orgasm, enough for Chris to come in her while she was shaking with incredible pleasure.</p>
+<p>When she was done screaming, her muscles relaxed, and Chris felt Nina's head on his shoulder. He moved back, and realized she just passed out from the pleasure. Okay, maybe he overdid it a little in the heat of the moment.</p>
+<p>He placed her back on the couch, smiled as she was still wearing her wet dress and had her blouse open and her bra down, and dressed her up a little while he gave her some time to rest a bit. She might have been a girl with big fantasies, she was still a girl with limits.</p>
+<p>Nina opened her eyes minutes later, blinking slowly. When she spotted Chris next to her, she smiled.</p>
+<p>"That was... I mean, now you understand why I always wanted a man able to control me, mind and body." she smiled.</p>
+<p>"Point taken." Chris said  "Even if I overdid it a bit."</p>
+<p>"Think so?" Nina said as she slowly sat in the couch "We can always try it again slower if you prefer it that way."</p>
+<p>"Give me time to reload!" joked Chris, patting his crotch "By the way... I order you not to get pregnant until you want it."</p>
+<p>"Yes master." answered Nina "Smart move."</p>
+<p>"I prefer to keep it fun." Chris smiled.</p>
+<p>"Speaking of fun..."</p>
+<p>Nina opened her blouse, and massaged her big, beautiful melon-sized breasts, her hands caressing the bottom of these sexy teardrops.</p>
+<p>"I'm as big as my sisters were. Isn't it time I start to show them what "Big" really means? I'm done wearing their bras. I want to need the ones they could never fill."</p>
+<p>"How can I say no to that?" Chris smiled "That was our deal anyway, bigger breasts against... you know. So of course, I'm happy to deliver: I order you to grow huge breasts, even bigger and sexier than they are right now, at the same pace than before."</p>
+<p>"Yes master!" Nina exclaimed with joy as she felt the warm feeling in her chest "Anything else?" she asked with a wide smile.</p>
+<p>"I see... then I order you to buy and wear sexy lingerie only as underwear, and to send me a lot, lot of sexy pictures of your breasts every single day until you're done growing."</p>
+<p>"Yes master." she said with a sexy voice , caressing her collar "My pleasure. I'm glad you start to like this as much as I do."</p>
+<p>"Hey, I'm just making this because you want to." Chris pointed out.</p>
+<p>"Sure, if you say so... master." she winked.</p>
+<p>She then stopped as her phone bipped. She grabbed it.</p>
+<p>"Oops. That's Melody. I have to go."</p>
+<p>"Okay, I'll walk you to the elevator." Chris offered.</p>
+<p>On the way there, Nina asked him when they'd see each other again. Of course, Chris told her she was welcome anytime, especially since they had reached a new stage in the relationship they shared. And most of all... he wanted to feel these growing tits. Nina was more than happy to tell him she'd pay him a visit anytime it'd be possible. As she eventually got inside the elevator, she turned to him.</p>
+<p>"By the way, since you can do anything to me, I still smell like sex so... can you order me to smell nice and fresh or something?" Nina asked.</p>
+<p>"Sure I can." Chris said.</p>
+<p>"Cool." Nina smiled.</p>
+<p>"Except you forgot one thing." Chris added.</p>
+<p>"What?"</p>
+<p>"I'm the master. So I order you to come, hard, here and now."</p>
+<p>"YESMAST..."</p>
+<p>The elevator doors closed on Nina, and Chris laughed as he heard a muffled moan coming from inside.</p>
+<p>Okay, she was right: he was starting to like this.</p>
+<hr />
+<p>The following days were amazing.</p>
+<p>Chris would receive dozens and dozens of messages of Nina. Probably more than even he ordered. Nina's breasts from her point of view when she woke up, naked in front of her mirror, trying sexy bras at home or in shops, and making sure to point out how she was overflowing her current cup size.</p>
+<p>The girl's melons had expanded bigger, and E cups were too tight. And the new bras she was buying were lacy. Always lacy. Sexy underwear only. Chris' favorite picture was one Nina took, he couldn't tell how, but with her phone from a quite high angle. Nina was laying down on her bedroom floor, wearing only her choker, surrounded by bras forming a circle. Each bra bigger than the previous one. it was the inventory of all the bras she had outgrown. And on her navel, with lipstick, she had written:</p>
+<p>"Growing for you"</p>
+<p>It would have been Chris' phone wallpaper if he wasn't so afraid of someone finding out. God, he had ordered sexy pictures, and Nina was providing. Chris felt like he was having his own supermodel sending him private pictures. Because Nina was turning hotter. It wasn't just her breasts growing bigger on her thin body. Her face... the way she smiled, her eyes... it was sexier. Maybe it was the boost of confidence she got with living her fantasy. Maybe it was what she always hid before. Or maybe, by making her unable to buy anything but sexy stuff, he made her just a bit sluttier... but Chris prefered to think it was years of sexual frustration being released at once in Nina. Whatever the reason, she seemed to like it. And he did too.</p>
+<p>At work, Jim was at the opposite. His quiet life was turning into a complete mess, as his younger, quiet daughter was turning into a sex bomb only listening to her desires. And constantly bragging about her increasing bustline whenever her sister Rose was around. </p>
+<p>"See how it is now, flatty?" she would say as she told Chris "I'm the real woman now. You said you got a reduction because it was painful for your shoulders when you played tennis... but you just didn't have the shoulders to be a real woman."</p>
+<p>Rose could probably have dealt with it if all the boys she knew didn't start to talk more about Nina than about her. From "Nina's hot sister" as she used to be once, she was now "Hot Nina's sister".</p>
+<p>"What about the plan to send her to her aunt, far from home?" Chris asked one day to Jim at work.</p>
+<p>"I have a friend who's a psychologist. He said it's just a phase caused by her... changes, and we should let her "experiment", like teenagers do during puberty. Even if in her case, it's a very late, very strong one."</p>
+<p>"And do you know where she goes when she's outside the house?" Chris asked.</p>
+<p>"No. I'm not sure I want to." he just sighed.</p>
+<p>Chris wasn't really going to tell him "Actually, I know where she is: getting a good tit-fuck at my place, just like it'll happen again today right after work."</p>
+<p>Every day, she would arrive at his place minutes after he was back. She just couldn't wait, and had to show him how much bigger she was. How she filled a little more a bra, overflew a top, how her nipples were slightly bigger... </p>
+<p>And it always ended up with Chris tit-fucking her, this girl showing him always bigger, sexier tits every single day. It was like his perfect breast expansion fetish: a girl sharing it... and growing. Every day, her balloons were filling his hands a little more, covering a litte more of his dick. They also had all kind of sex, but Chris loved to order her to have big orgasms, sometimes in rows, whatever they were doing. But tit-fucks were definitely the thing they loved the most.</p>
+<p>"You do realize my ballons will soon be so big your cock won't escape from them?" Nina once told him.</p>
+<p>Chris was pretty average down there. Nothing to write home about. But Nina? Her sexy 32G bra was filled to the max, and she looked like she owned a pair of tanned, soft, sexy watermelons tied to her chest. Her areolas had grown even larger, and her nipples in the middle were as big and thick as very tiny fingers ready to be toyed with. Tit-fucking those was paradise.</p>
+<p>And now, since Chris was used to give her orders to have orgasms just for fun, he also started giving her many more orders.</p>
+<p>"Shut up." he answered what Nina just said about his cock "I order you to tell me about how it feels to grow bigger tits."</p>
+<p>Nothing better than to tit-fuck the girl while she tells the story.</p>
+<p>"Yes master! It is amazing." Nina told from her female perspective of the fetish "Feeling my clothes getting tighter and tighter, losing sight of my own feet, feeling the weight of my femininity growing on my chest, looking down to stare at my big balloons bouncing, jiggling, see the stares on them as I pack them in tight tan tops, the desire I cause in male, the jealousy in females..."</p>
+<p>"I'm coming!" warned Chris before he splashed her cleavage and chin with cum.</p>
+<p>"Nice, Chris." Nina said as she looked down.</p>
+<p>"Now, I order you to lick it all and to have a nice rewarding orgasm when you'll be clean."</p>
+<p>"Yes master!"</p>
+<p>She licked it all like her life was on the line, and when she licked the last drop from her finger as she cleaned her chin, she just came out of nowhere in a long, pleased moan.</p>
+<p>And everyday went like this. All day long, Chris would received pictures of Nina showing her ample, growing breasts. And after work, he'd fuck them for real. Life was getting better and better, while Jim was in despair at work, unable to understand what was happening to his daughter. Chris wanted to laugh when he discovered Nina latest provocation. Her mom had given her a couple hundred dollars to go see a surgeon about a potential future reduction. Nina went there. And returned home... without having been to the surgeon. Instead, she had used the money to get a tattoo right above her ample breasts :</p>
+<p>Bigger is better, written in elegant letters.</p>
+<p>"Told ya you should have not insisted, mom." she just laughed "I'm not the little girl you want. I'm the woman I always was meant to be."</p>
+<p>Chris just loved it. A bold move. And he didn't care. The tattoo was fun, and when he'd grow tired of it, he'd just have to order Nina to make it disappear. He didn't even think twice about it, because he was more and more using "super" orders, forcing Nina to do things she wouldn't even be able to do normally. Like one evening, when he noticed a couple hairs on her legs, and just said:</p>
+<p>"I order you to stop growing hairs anywhere under your neck."</p>
+<p>"Yes master!"</p>
+<p>She wouldn't need to wax ever again. And when she mentionned how men loved redheads, Chris answered with:</p>
+<p>"I order you to become a natural redhead."</p>
+<p>"Yes master!"</p>
+<p>Two days later, the roots of her hair were growing red. And each day, as they grew, Nina was getting a little more ginger, and a little less brunette. And all along...</p>
+<p>Her breasts were growing bigger.</p>
+<p>She eventually looked like she had stolen volleyballs under her shirt. Bigger than watermelons, they wobbled a lot now, and even covered were so damn sexy she looked like some porn star. A porn star mysteriously turning into a redhead after having been a brunette her whole life. As Jim told Chris "Weird but... the doctor said it's just some dormant genes woken up by her late puberty.". They were trying to explain the unexplainable. </p>
+<p>Nina danced for Chris one night with one of her former E cups, showing how she was ridiculously too big for them at now a HH cup. Calling her sisters "Small, and even smaller now", and eventually leaving the bra to Chris, saying "It's yours. Three sisters needed it, three sisters don't need it anymore, keep it." </p>
+<p>Chris jacked off in the bra the next night. He knew he was a perv, but neither he or Nina cared about it anymore. They were just living their fantasy. And having fun. But they always had to go further, since the possibilites were almost limitess. Like that night when eventually, it happened : Nina was feeling tight in HH cups, and her head-sized boobs were now...</p>
+<p>"Big enough to entirely cover your cock. You'll come in my cleavage now." Nina said as she proudly noticed how Chris' cock couldn't escape from her dark, deep cleavage now. A comment arousing enough for Chris to come, indeed, right in her cleavage.</p>
+<p>"Oops... your girl is too big for you now." provoked Nina.</p>
+<p>"You are as big as I tell you to be." Chris proudly answered.</p>
+<p>"Except we both know you're not going to shrink my mighty boobs."</p>
+<p>"No, but I can do this."</p>
+<p>Chris grinned.</p>
+<p>"I order you to produce a saliva that makes any cock you suck grow until it fully fills your mouth."</p>
+<p>"Yes master!" she exclaimed before she cooed "Oooh... naughty!"</p>
+<p>Just the time for Chris to recover from his orgasm, and she was blowing him. One hand on her red scalp, now only the tip of her hair still being dark, he looked with delight as the young beauty with huge tits was sucking his dick.</p>
+<p>And the more she did, the bigger he could feel it growing. It was... amazing. Not just the growth feeling. But how he could feel her mouth getting tighter and tigher around his expanding cock, until Nina started making choking sounds. </p>
+<p>That made Chris come.</p>
+<p>And after she swallowed it all and gasped for air, Chris looked down to realize his cock had grown from 5'' to a huge 10'', getting much thicker, and his balls had grown along somehow! He had a massive package down there! Chris stupidly patted his new cock with pride.</p>
+<p>"It's... huge." Nina looked down, wiping her mouth "Did I do that?"</p>
+<p>"You did. Now, I guess you're not so big anymore when it comes to tit-fucks..." he grins.</p>
+<p>"Wait until I'm done growing to say that!" she winked.</p>
+<p>And indeed, she was still getting bigger. In just a few weeks, Nina had gone from "I don't need bras" to "I've outgrown normal shops". She bought bras in specialized shops, and eventually, as she reached J cups, she eventually had to admit, one evening that her back was getting sore. Chris' answer was immediate.</p>
+<p>"I order you to strengthten your back quickly instead of complaining."</p>
+<p>"Yes master!"</p>
+<p>The next day, the nearest gym saw a girl with huge tits walking in, and going right for the bench with everything she needed to strengthten her back. The results appeared in just a few days, as thanks to Chris' order, her back muscles were developing quickly. A side effect was that her body got even sexier, every baby fat melting until she was perfectly fit, with a strong back enabling her to support her breasts... without having reasons to complain anymore.</p>
+<p>She eventually reached K cups. And stopped growing there. At her size, the best way to describe it was to simply tell that each of her tits was sligthly bigger than her head. But now, one or two cup sizes weren't making as much of a difference as when she was an A cup. </p>
+<p>"Love the new you?" Chris asked one night, while Nina was sitting in his couch, a fit ginger dressed in a dress way, way too tight, her breasts bulging out of it in all directions.</p>
+<p>"Hell yes. I overheard someone saying I looked like a perverted version of my former self. The funny thing is: that's the real me, and the previous one was the perverted one, full of frustrations, looking like people wanted her to look. I'm free now."</p>
+<p>"Free?" Chris grinned.</p>
+<p>"Okay, not the best choices of word but you got me. And you know the best? Rose... she broke. That's it. Weeks and weeks of teasing while I was growing and growing paid. She told me yersterday the words I wanted to her so badly: "I'm jealous of you"."</p>
+<p>"She said it?" Chris blinked "And that's what you wanted?"</p>
+<p>"I've been dying with jealousy for years. So yes, that's the words I've wanted to hear for so, so long. My breasts are so sexy than she even admitted she regretted her reduction. She even mentionned implants. She looks up at me now. And I love it."</p>
+<p>Everything was perfect. Or should have been.</p>
+<p>Because Emily came back home from College for some vacations. And discovered her sister Rose, broken and now thinking about implants, while cute little Nina was now an arrogant redhead with huge tits and a superiority complex, constantly flaunting her tits.</p>
+<p>"Nina, you're bodyshaming people with your attitude, and that's not something acceptable!" Emily explained to her sister "The changes in your body don't give you the right to comment on other people bodies. Plus, the way you dress, and your stupid new tattoo are just a proof that you are doing exactly what the patriarchy expects of you! Attraction for big breasts is a social construct, made by the patriarchy and..."</p>
+<p>"Stop your neo-feminist bullshit." Nina interrupted her "Just because you butchered your own breasts doesn't make you a better woman. You just did what your friends expected of you to fit in, just like your stupid blue hair. My red ones are much better looking don't you think? And fully natural."</p>
+<p>"See? Again! Bragging, making agressive comments, I'm not letting you through this one, Nina! I'm going to educate you!"</p>
+<p>"Just when I thought no one would bother me... listen Emily, I tamed Rose, i'm gonna tame you too."</p>
+<p>"Nonsense. I need to deconstruct you, you sound like a slave of the patriarchy!"</p>
+<p>Nina giggled.</p>
+<p>"What's so funny? This is a serious topic!" Emily frowned.</p>
+<p>"You wouldn't get it. But believe me, I'm going to make you shut up, big time."</p>
+<p>Nina left without explaining herself. It was almost 5PM and soon, Chris would be home. The moment he was back from the bank, he found Nina waiting at his door with a strange smile. Chris grinned as he saw her.</p>
+<p>"Someone couldn't wait for her daily tit-fuck and sex festival?" Chris said.</p>
+<p>"I'm not saying this is not gonna happen, but I have a favor to ask. Pretty big one." Nina answered.</p>
+<p>"You do remember who's the master?" Chris laughed as he opened the doors.</p>
+<p>"Yes I do. And god, you totally love this now." she commented as she walked in "But that's not the point. Emily is back home for a while, and she's on a holy crusade to turn me into another blue haired moron like she is, hating everything beautiful because it's oppressing to ugly people or something. I think she's the reinforcement my parents were badly waiting for."</p>
+<p>"Just ignore her. She'll eventually return to college." Chris shrugged.</p>
+<p>"No. I don't want to call it a draw. I fucked Rose up, made her submit, I want to fuck Emily up too. But unlike Rose, she doesn't seem to be so impressed by my current self. So I'm here to ask for... more."</p>
+<p>Chris sat in his couch, looking interested.</p>
+<p>"Alright, I'm listening."</p>
+<p>"Okay then... I need several things. First, I need you to turn me... into a latina chick."</p>
+<p>"Wh... what?" Chris blinked "That's..."</p>
+<p>"Nothing my master can't do." Nina explained "Emily is all about minorities and privileges. If I suddenly am a minority, she'll find herself having to shut up, while I can tell her to "check her privileges". I want to beat her at her own game. And, come on, I turned into a redhead and no one found it so weird in the end. Who knows how many other "dormant genes" are waiting in my body?"</p>
+<p>"That's pretty fucked up, but... I like it."</p>
+<p>Chris didn't just enjoy his power on the girl now. He wanted to experiment further. Always further. They had done many things until now, but how could he stop? Why not give her what she was asking for. It'd be new and exciting.</p>
+<p>"Is that all?"</p>
+<p>"No." Nina said, not even blushing, fully confident in what she needed "I need to attract girls. And to love it."</p>
+<p>"Wait, are we talking about making you bisexual?"</p>
+<p>"Exactly. But I don't want to be just horny for girls. I want girls to be horny for me. If i'm a latina girl sleeping with girls, I'll be exactly the kind of girl Emily is supposed to support. Not to fight."</p>
+<p>"But if you make girls horny, Emily will be too." Chris said "Not that I'm against the idea at all."</p>
+<p>"My point." Nina winked "I want to have 100% no problem with this. I want her to stop blaming me for being a sex bomb. I want her to see me as a sex bomb. And maybe, if she's really nice, I'll sleep with her."</p>
+<p>"That's fucking wicked! I love it!" laughed Chris "Okay, big change coming I..."</p>
+<p>"Wait." Nina smiled even wider "And I want bigger fucking tits. When we first met, I told you I wanted giant tits. These are huge, but I want giant. And I want Emily to watch me grow even more into the woman she'll never be able to be."</p>
+<p>Chris loved every single word she said. The former E cups  hottie having to stare at her little sister's huge boobs growing into even crazier sizes... and lusting for her... oh boy, he couldn't pass on this. But still, he was the master.</p>
+<p>"Give me a good blowjob and your benevolent master might grant you what you asked for." Chris said as he unpacked his 10'' huge cock, made for his slave's mouth. Nina happily  did as she was asked, and eventually, Chris came with a loud grunt, Nina swallowing every drop of his cum while looking up at him with eyes full of desire. He waited for her to lick him clean until he stood up with pride, looking down at her, still kneeling.</p>
+<p>"You've been a good girl." Chris told her "Here. I order you to have orgasms in rows until the next orders I'm giving you soon."</p>
+<p>"Yes mastaaaaah!"</p>
+<p>Nina started screaming and moaning, eyes rolling up, as her body was uncontrollably coming. She fell on her side, her limbs shaking and her body arching as she was coming, again and again.</p>
+<p>Giving time for Chris to think about how to word this. He walked in circles around the orgasming girl in the middle of his living room, and eventually, stopped, looking at her with a big smile.</p>
+<p>"That's it. Nina... I order you to naturally turn into a latina over the next few weeks. I order you to become bisexual, and to attract females just like you attract males, and to be attracted to both, even if you'll never be attracted to anyone as much as you're attracted to me. I order you to have no problem with incest or such moral limitations. And last but not least, I order you to grow your breasts bigger and sexier naturally, at the same pace than before, until... you can't even fit in any dress you own right now.</p>
+<p>Chris smiled as Nina owned dress already made for a very, very busty girl. Meaning she was going to be quite a show.</p>
+<p>"Yes mastaaaaaah! Yessss master! Yes mastaaoooooaaah! Yes masterrrrr!" she answered while coming again and again... until her body eventually stopped</p>
+<p>"My god... thank you, master!" she panted while staring at him with a very naughty expression.</p>
+<p>"No need to say I want more pictures of your growth, and you at my place every single day to let me enjoy it." Chris crossed his arms.</p>
+<p>"No need to say indeed." Nina winked.</p>
+<p>And then, started a new era of changes for Nina, even crazier than all the ones before.</p>
+<p>First, her red hair turned darker. Her facial features changed slightly, so slowly it was almost impossible to notice on a daily basis, but it was there. Her ass grew larger. Her lips plumped up a bit. And as her skin turned darker, soon, she looked like some latina girl who had some kind of natural dark red hair.</p>
+<p>"More dormant genes." tried to explain Jim to Chris "She had a great-grand-aunt on her mother side who was from South America so...it's... natural." </p>
+<p>"Yes sure, it's not like there's a better explanation anyway." Chris patted his back with a grin.</p>
+<p>"No... no indeed. That's why she's been changing so much lately. Her body is awakening a lot of these dormant genes. Looks like it's going to be a long, late puberty... with a lot more changes than most people.It explains why she's troublesome, it's not her fault, it must be hard to deal with it."</p>
+<p>"No, it's not her fault." Chris approved "She's the victim there."</p>
+<p>"Let's not go all the way there." Jim said, surprising Chris "Her attitude at home is still a problem. And since Emily is back, the war between sisters is stronger than ever."</p>
+<p>Chris barely cared. Because every single day, Nina would come to his place, her enormous breasts even bigger than the day before. She was starting to get ridiculously big compared to her thin frame. At the gym, no one could look away from the girl with the massive tits strengthening her back for hours before leaving. Even girls had started looking her way.</p>
+<p>The way she moved, she talked, the way her massive breasts bounced, everything had been altered so slightly it was hard to tell, but now, it stimulated female desires. And all along, Nina realized how girls were looking more and more attractive. The idea of eating pussy and sucking tits sounded as good as sucking a dick. Even if the only person she was really into was her master Chris. </p>
+<p>As time passed, at home, Nina was slowly making Emily lose the war. And shut up. </p>
+<p>"Yes, I'm a latina. Obviously, always was, it just didn't show until now. You should check your privileges, Emily, before telling me how to live my life. Also, yes, I like girls, mom and dad don't know yet... so are you really going to oppress me, a bisexual latina girl, whitey?"</p>
+<p>Emily just stuttered. She never saw that one coming. But Nina wanted more than make her shut up: she wanted to fuck her up. And as her sexual preferences changed, she also wanted to fuck Emily in new ways.</p>
+<p>Except there was a small problem. All this time, Nina's breasts had been growing bigger and bigger. They had reached basketball size now, and it was hard not to think about it whenever she walked around with these bouncing boulders trapped in too small bras, since she overflew them day after day. Chris had ordered her to outgrow all her dresses, and she had pretty stretchy ones to explode out of. And one evening, at Chris' place, she looked... annoyed. Something that usually never happened.</p>
+<p>"What's the matter?" Chris asked.</p>
+<p>"I need another favor, Chris." she said.</p>
+<p>"Excuse me? I've been pretty generous lately. You're the one abusing my benevolence now." Chris said with pride. "But what's the matter?"</p>
+<p>"You ordered me to only buy sexy underwear. And I did. But since at my size, it's almost impossible to find, I've used up to my last cent to buy these." she pointed at an already too small M cup overflown with olive flesh "My parents agreed to support me... but refuse to buy me anything "sexy". Just the minimum sturdy, ugly looking bras I need."</p>
+<p>"So you want me to give you money?"</p>
+<p>"I... I don't know, I thought you might have an idea..." she blushed.</p>
+<p>Chris shook his head.</p>
+<p>"No no no, Nina. You're supposed to bring me pleasure, not problems. I order you to find a way to make your parents pay for your expenses."</p>
+<p>"Yes master!" she said with an unsure voice.</p>
+<p>"Now... dance for me!" Chris grinned "You'll solve this later!"</p>
+<p>And she solved it, because she never ever mentionned it again, and now, constantly had sexy underwear. Chris wanted to ask her how she did it, but he learned about it his own way. He was at work, in the men bathroom, when Jim came in. The man looked strangely calm and relaxed lately. </p>
+<p>"Hey Jim, how's life treating you?" Chris asked.</p>
+<p>"Nicely."</p>
+<p>"Isn't... Nina still a problem at home?" Chris wondered why he wasn't mentioning it.</p>
+<p>"Actually, she and I found an agreement. She need our support in this phase... I should be a better dad for her."</p>
+<p>He smiled in a strange way as he went for an urinal. And has he got down his zipper, Chris caught a glimpse of a massive cock jumping out of his trousers. A 10'' long monster with quite girth, something able to fill the mouth of...</p>
+<p>Chris grinned. Looked like he found out how Nina convinced her daddy to pay for whatever she needed. </p>
+<p>A few days later, Nina stopped growing at a tremendous NN cup. Massive basketballs not a single of her previous dresses could cover. She only had brand new clothes now, all happily paid by daddy. Nina never mentionned it, probably not to make her master jealous, but Chris loved it. He knew she was doing it to please her master, and was just using her dad. He loved how slutty little Nina was now. And how he could fuck her gigantic breasts every single night. It was never getting old. </p>
+<p>He'd order her to describe how she loved being so big while he fucked her, describe how she recently started having sex with her very own sisters, unable to resist her charms anymore, and was literally the sex queen of the house. Even her mom was trying to spend most of the time at work to not face her now sexy daughter. Emily was done with her political speech. Now, she basically drooled in front of her sister, and would have done anything for sex with her. Nina would let her sleep with her, just like Rose, as long as they repeated how jealous they were of her, and how sexy and busty she was.</p>
+<p>One evening, Nina was late. Chris had already started drinking a couple glasses of whisky, thinking about his super busty slave and how he'd punish her for being late. When his phone bipped. It was Nina.</p>
+<p>"Sorry for being late, I just wondered if you'd like me to fuck my sisters before I come to see you? You know, so you know where I was before you and I have sex." Nina provoked sexily. She knew sex with Chris was great, but they always needed to try something new.</p>
+<p>"That's a fucking great idea!" Chris answered, tipsy "Man, I'd love to watch!"</p>
+<p>"Maybe one day we'll do it, but my sisters aren't ready yet, so you'll just have to imagine it." Nina sent him a kiss through the phone.</p>
+<p>"No... actually, I can't wait. I want it now. You made me wait today, now, I'm done waiting. I want to watch it all... and enjoy it fully."</p>
+<p>"Chris?" Nina "What are you talking about?"</p>
+<p>"You're mine Nina, never forget it." Chris said "So I order you to lend me your body!"</p>
+<p>"Yes mast..." exclaimed a very surprised Nina over the phone.</p>
+<p>"... ter!" Chris finished with a high-pitched voice.</p>
+<p>He wasn't home anymore. He was in Nina's bedroom. Chris blinked, and noticed a strand of dark red hair in the corner of his eyes. And as he looked down. </p>
+<p>"Oh fuck!" he exclaimed with a mix of disbelief and arousal.</p>
+<p>Here were two absolutely enormous tits, looking even bigger from this perspective, perfectly tanned and mashed together through a sexy dress showing as much cleavage as it was possible. He hung up the phone, threw it away, and allowed his hands to touch this amazing wonders. They felt so gigantic... so heavy... yet so sexy and so good! Chris still felt like he was in some kind of mental fog, as this body was quite aroused, and it was confusing his thoughts.</p>
+<p>"Wow." he laughed in his new female voice "I'm in Nina's body! It worked!"</p>
+<p>He stared at himself in the mirror, and saw Nina proudly smiling back, hands on her hips, the latina with breasts so huge they could easily be seen from behind moving exactly like he desired. Or as he tried to make it move, because the balance in this body was totally fucked up. Chris had to arch his back a little to let the crazy weight of these giant tits rest on his chest more easily, despite the gigantic lacy bra he was wearing under the dress. This was crazy to think this body able to make a porn star drool used to be the flat, tiny one of Nina the bookworm. He patted the collar around his neck, blessing it.</p>
+<p>"And now, I'm not here to stare at Nina." he said to the mirror.</p>
+<p>Trying to walk as naturally as he could, feeling the bounces with every step, and a strange arousal whenever he thought about his own boobs, Chris walked right to Emily's bedroom. He didn't even knock, and walked in like he owned the place. Strangely, these gigantic boobs seemed to give him some kind of erotic confidence. He couldn't explain it otherwise. But as he walked in, he saw Emily on her bed. The girl's hair were only partly blue. She was letting them grow back to their natural color again. She was waxed, and as she looked up at Nina, her stare betrayed how she wanted to look good for her sister and... the total submission of the poor Emily. And Chris could tell Nina's body loved it because everything became a little hotter in there, and not just because he was about to get his way with Emily.</p>
+<p>"Nina!" Emily looked at her "Need anything, sis'?"</p>
+<p>"Aren't my needs your needs?" Chris said with confidence, hands over his giant boobs.</p>
+<p>"Are you gonna let me..." Emily asked with hope, pointing at Nina's breasts.</p>
+<p>"Only if you ask Rose to join us." Chris grinned.</p>
+<p>"Sure, I'll be back in one second!"</p>
+<p>Emily stormed out of the room and returned with Rose. Both wondered why Nina looked so amused, but quickly stopped caring. Their sister was hot, willing to have sex, and that was all that mattered right now. Chris couldn't help but enjoy how Nina created, at home, the same master/slave relationship she had with himself.</p>
+<p>"So, Nina... how do you want us to do it this time?" Rose asked, blushing with the ashamed feeling of doing something forbidden, and the arousal coming along.</p>
+<p>"Please me at your best, girls. Make Big Nina a happy woman." Chris answered.</p>
+<p>The two girls moved toward her with unsure moves, but soon, found her mouth and started french kissing her. Then their hands went for her giant boobs, and Chris moaned as the feeling was incredibly weird and rewarding. Fucking in a girl body was strange... especially since he was fucking Rose and Emily. And didn't have to do one thing. These two girls he jacked off at in his shower before were now giving him a threesome, and pleasing him. A strange experience happened when Emily started eating out Nina's pussy, while Rose was focused on her tits, but soon, Nina was coming, without even caring about the other girls' pleasure. A female orgasm felt much stronger and longer than a male one, and also strangely different... quite an experience Chris never thought he'd know one day.</p>
+<p>He needed help from Rose and Emily to pack her giant tits back in her bra once she was done. She noticed the stares of Nina's sisters on her massive breasts.</p>
+<p>"Like what you see?" Chris teased.</p>
+<p>"Yes..." Emily said in awe "I can't believe we reduced ours..." she said, touching her own scarred B cups "What a stupid mistake..."</p>
+<p>"Indeed." Chris smiled before he thought of something "Say... would you like to regrow them? Maybe even grow even bigger ones?"</p>
+<p>"Are you talking about implants?" Rose asked "It wouldn't be the same."</p>
+<p>"No. I'm asking you: if you could grow bigger breasts, get rid of the scars and be huge and natural... would you do it? Even if the price was to be the toy of someone else?"</p>
+<p>"Yes." Emily said without hesitation, showing how much she fell from her previous moral high ground "Any time."</p>
+<p>"Keep that thought then." Chris laughed "We'll speak about it later."</p>
+<p>Emily and Rose heard their sister explaining she had somewhere else to be, and saw Nina jumping into a taxi. They noticed she walked like she wasn't used to her own balance, but didn't care: it was sexy anyway. </p>
+<p>At the back of the taxi, in Nina's body, Chris ordered the driver to go to his normal address. The very idea of going there made Nina's body go horny again. God, this body was definitely really, really attracted to Chris.</p>
+<p>The driver couldn't believe how big was the chick on his back seat, and even tried to give his number to the giant-boobed girl when she arrived at the address. She declined. He didn't make her pay for the trip. The pros of having enormous tits. Chris made his way to his place, starting to get impatient to return to his normal body. But as he arrived at his appartment door... he didn't have the keys! They were with his body, inside!</p>
+<p>"Shit." he said with his female voice "I'm locked out. What if..."</p>
+<p>He knocked. </p>
+<p>And to his surprise and shock, someone unlocked the door. His pussy went wet despite everything he was thinking when his very own body, towering above him, opened the door. It was strange to be attracted to himself, but the biggest shock was... how could his body move if his mind was in Nina's?</p>
+<p>"Hey Chris." his body said with a smirk "Got fun in my body?"</p>
+<p>The answer was there. Simple. Nina and him just traded bodies. Chris quickly got inside the place, staring at his own body in shock. It was hard to recover from seeing yourself from a third point of view in just a few seconds. Strangely, Nina seemed quite amused by the situation, from Chris' body.</p>
+<p>"So. Did you fuck my sisters?" she asked.</p>
+<p>"Yes?" Chris confessed.</p>
+<p>"Good. Was it good?"</p>
+<p>"I... guess?" Chris answered "But wait, no, it's wrong! First, we should trade bodies again! Okay: I order you to give me back my body!"</p>
+<p>Nothing. </p>
+<p>Chris' body smiled.</p>
+<p>"Oops." he said "Looks like you're the one wearing the slave collar now."</p>
+<p>"No!" Chris exclaimed, patting his collar "Impossible!"</p>
+<p>"And yet, here you are..." Nina seemed to enjoy every second of it "You're the slave, I'm the master now... isn't it funny? Maybe I should say something like... I order you to sit down?"</p>
+<p>Chris felt his body escape from his control, and immediately sat on the couch, hands on his female knees.</p>
+<p>"Cool." Nina laughed from her new body "I love it."</p>
+<p>"Nina I... give me back my body, please!"</p>
+<p>"Why should I do that?" Nina toyed "Being the master is nice. I could order you to like being the slave. I could order you to not even remember you used to be the master. I mean, playing with this big cock was fun, I could grow used to it." she laughed, patting her crotch.</p>
+<p>Chris knew he was fucked. He shouldn't have stolen Nina's body. She had no reason to ever give back his...</p>
+<p>"But I prefer to be me." Nina suddenly said "I'm not gonna live the rest of my life without the giant boobs I gave myself."</p>
+<p>"For... real?" Chris couldn't believe it.</p>
+<p>"Didn't I tell you I was ready to give up everything to get the boobs I dreamed of? But since I can still order my body to do anything, before I take it back, maybe I should order it to grow to 10' with tits each as heavy as my sisters are?"</p>
+<p>Chris gulped.</p>
+<p>"No..." Nina eventually said "I think I'll do simpler. I only want to be huge in one place, and I can't get enough of it: I order your body to naturally grow sexy tits so gigantic they cover its navel!"</p>
+<p>"Yes master!" Chris answered, out of control, feeling a tingle.</p>
+<p>"Good. Now, it's just one more reason to give you back your body. Mine is gonna be even funnier now. Just one last thing before we do the trade..."</p>
+<p>"Yes?" Chris asked, a little worried, still stuck down on the couch.</p>
+<p>Nina smiled.</p>
+<p>"A taste of your own medicine: I order you to have the biggest, longest orgasm this body ever got."</p>
+<p>Chris felt like a volcano erupted in his belly, and screamed out with pleasure so loud, and so much, he passed out on the couch while creaming his panties with his own juices, his scream covering Nina's laughter.</p>
+<hr />
+<p>"So?"</p>
+<p>Nina asked while tugging on the straps of her gigantic bra. People walking by looked in awe at the girl sporting tits so massive they went from the bottom of her neck to right above her crotch. They were probably one third of her weight, if not even more. But despite the fact it was crazy, no one could deny it: it was incredibly hot. Men and women alike were staring at the hottie, talking with some older man.</p>
+<p>"So... your sisters, your dad's secretary, your mom since we're at it, my coworkers..." Chris answered "I don't have a complete count."</p>
+<p>"Do you really need one?"</p>
+<p>"No." Chris answered "True."</p>
+<p>"Then go, I'll wait for you there."</p>
+<p>Chris nodded and walked past the doors of the shop. Inside, the bald man behind the counter looked up at him with a jaded expression at first.</p>
+<p>"Welcome to HellMart, s... " his expression changed into a mocking smirk "Wait, isn't it Mr Slavery-is-bad?"</p>
+<p>"Yes. I'm here about the slave collar indeed." Chris said.</p>
+<p>"You want to bring it back?" the clerk asked.</p>
+<p>"No." Chris smiled "I want your entire stock."</p>
+<p>THE END</p>
+</body>
+</html>

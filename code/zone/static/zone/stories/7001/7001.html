@@ -1,0 +1,1798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Star Power</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>Star Power </p>
+<p>by purplish [email]</p>
+<p>(For adult eyes only: lesbian, breast expansion, lactation, mind control, reality alteration. All </p>
+<p>characters are 18+)</p>
+<p>Jenny was a ﬁrst-year student at her local university. She thought herself to be intelligent, </p>
+<p>but she knew she got in her own way sometimes, being quiet and sometimes almost painfully shy. </p>
+<p>It was her ﬁrst Saturday night away from home after her ﬁrst week of classes, but she didn’t feel </p>
+<p>like going out with the other students. Instead, she thought it worthwhile to read her textbooks in </p>
+<p>preparation for the week ahead.</p>
+<p>She was sitting by a window in the common area of a dormitory room she shared with three </p>
+<p>other girls. She had been in a weird funk this whole week; something about living with other girls </p>
+<p>her age for the ﬁrst time had stirred some peculiar feelings in her gut, and raised some questions in </p>
+<p>her mind. She knew that she was struggling with her own sexuality, an awkward and unwanted </p>
+<p>distraction when she was just trying to get ahead in her studies. </p>
+<p>It certainly doesn’t help either that all of them are so attractive, she thought. </p>
+<p>Ugh, what am I thinking? They’re the worst! She sighed, brushing her brown hair behind her </p>
+<p>ear.</p>
+<p>Her three roommates all seemed to care more about boys than their classes, and far below </p>
+<p>their academics was Jenny, whom they barely tolerated. She could sense their constant </p>
+<p>disapproval. They tended to ignore her, and when they paid her any attention at all it seemed to be </p>
+<p>only to belittle or insult her. Two of them were sitting on the couch nearby, idly chatting.</p>
+<p>Hannah, a tall athletic girl on a basketball scholarship, was recounting a tale from her ﬁrst </p>
+<p>fraternity party the previous evening. Jenny found herself sneaking a peek at Hannah’s long toned </p>
+<p>legs in her form-ﬁtting exercise pants, and watched her blonde ponytail swishing back and forth.</p>
+<p>“I was over by the punch bowl, and Marc was totally checking me out,” Hannah giggled.</p>
+<p>1</p>
+<p>“Ohmygoshnoway! You mean Marc the starting quarterback?” Monica, an excitable girl who </p>
+<p>had just made the volleyball team, was wide-eyed. She had long straight brown hair and </p>
+<p>pronounced eyebrows, which she would arch knowingly and with devastating effect when teasing </p>
+<p>Jenny.</p>
+<p>“The same! We made plans to meet at the canteen after my basketball practice tomorrow! </p>
+<p>What should I wear?” Hannah was practically vibrating with excitement. She and Monica had been </p>
+<p>best friends for years, and Jenny couldn’t help but admit she envied their close relationship. She </p>
+<p>didn’t have many friendships with other girls… or anyone, really.</p>
+<p>Jenny sighed and looked out the window just in time to catch a blue light streaking across </p>
+<p>the sky overhead. It lasted only a moment before fading away into darkness. A shooting star? I </p>
+<p>guess I should make a wish, she thought.</p>
+<p>I wish that they started talking about something I would ﬁnd more interesting, she </p>
+<p>thought to herself as she stared at the stars. She sighed once again, looking back down at her </p>
+<p>textbook.</p>
+<p>“You should wear that babydoll tee from high school! It’s way too small for you now, but it’ll </p>
+<p>make your boobs look amazing!” Monica suggested, grinning at Hannah.</p>
+<p>Jenny’s ears perked up. She turned to see Hannah looking down at Monica’s chest.</p>
+<p>“You’re right, I totally should,” Hannah chuckled, “Although, I don’t think I’d be showing him </p>
+<p>as much cleavage as you would be in that shirt.”</p>
+<p>Monica laughed and arched her back, thrusting her big chest towards Hannah.</p>
+<p>“Hey Marc, like what you see?” she teased, before continuing.</p>
+<p>“Whatever, girl. You say that, but these boobs tend to get in the way when I’m on the </p>
+<p>volleyball court,” Monica retorted.</p>
+<p>“As if! Any girl would be lucky to be carrying those around,” Hannah sighed wistfully, then </p>
+<p>snorted. </p>
+<p>him!”</p>
+<p>“It’s a good thing Marc saw me ﬁrst, before you had a chance to jiggle your big boobs at </p>
+<p>2</p>
+<p>Jenny rolled her eyes. As much as she had enjoyed this brief moment of admiring her </p>
+<p>roommates’ breasts, all this talk about boys was boring her. She sighed again, gazing out the </p>
+<p>window. </p>
+<p>A few moments later, her fourth roommate emerged from their shared bathroom. Kelly was </p>
+<p>on the cheerleading team and gave it all of her focus, leaving her with even less patience for Jenny </p>
+<p>than what little Hannah and Monica had. She was dressed for a Saturday night out, wearing a tight </p>
+<p>pink miniskirt and a sleeveless black top. Kelly was a shorter girl, and she tended to </p>
+<p>overcompensate by wearing the tallest stilettos she could bear. Her long blonde hair fell straight </p>
+<p>down her back nearly to her taut bottom, and her lips bore a ruby red coloring. She strode towards </p>
+<p>the doorway, but suddenly stopped in her tracks as her eyes widened at Monica.</p>
+<p>“Wow, Monica, your boobs look amazing in that shirt,” Kelly complimented.</p>
+<p>“Thanks Kelly! And that neckline – your cleavage looks amazing!” Monica gushed.</p>
+<p>Kelly smiled, then looked up to meet Jenny’s eyes. She sighed in disgust; she really didn’t </p>
+<p>care for that girl at all.</p>
+<p>Kelly’s scorn.</p>
+<p>“I’m going out to see Brad. Later, loser,” she rolled her eyes as she turned to leave, but not </p>
+<p>before taking a long swig from a clear plastic water bottle. Jenny knew herself to be the target of </p>
+<p>Monica turned back towards Hannah, ﬂashing her friend a wide grin.</p>
+<p>“Did you see her boobs? Brad is going to ﬂip!” she chuckled.</p>
+<p>“For sure. Honestly Monica, you and Kelly both have the most amazing big boobs. I’m so </p>
+<p>jealous,” Hannah admired. </p>
+<p>Jenny felt a moment of acute frustration; she didn’t understand the sensations she kept </p>
+<p>feeling around her roommates. She loved that for some reason they had suddenly started talking </p>
+<p>about their breasts, but why now? She didn’t remember such extensive discussion on that topic any </p>
+<p>other time within the last week.</p>
+<p>She knew she couldn’t conﬁde this in them; they would be no help to her. They’d probably </p>
+<p>just make fun of her… or worse, she thought. Sighing, she stared out the window once again and </p>
+<p>found herself peering into the darkness of the night sky.</p>
+<p>3</p>
+<p>I wish that Kelly wasn’t so mean to me all the time, she thought. A moment later she </p>
+<p>jumped in surprise when she suddenly felt a hand on her shoulder. Spinning around in her chair, </p>
+<p>she looked up to see Kelly standing at her side.</p>
+<p>“Hey Jenny!” Kelly was smiling down at her. </p>
+<p>“I was thinking maybe you could borrow some of my clothes?”</p>
+<p>Jenny was taken aback. “What? Why would I borrow your clothes?”</p>
+<p>Kelly laughed. “For the party tonight, silly! Look, your boobs are pretty nice, and I have just </p>
+<p>the top to help you show ‘em off!”</p>
+<p>Before Jenny knew what was happening, Kelly had leaned over to give her a quick hug. </p>
+<p>Jenny felt the brief crush of Kelly’s big breasts against her shoulder and smelled the delicious scent </p>
+<p>of her perfume.</p>
+<p>“Come on, bestie!” Kelly was still beaming at her.</p>
+<p>Jenny’s frustration rushed back to the front of her mind and she let out a disgusted sigh; </p>
+<p>Kelly was making fun of her again. What did Kelly think she was playing at, trying to pretend like </p>
+<p>she wanted to spend any time together at all?</p>
+<p>Suddenly Monica piped up. “It’s true, Jenny! You should ﬂaunt those boobs more.”</p>
+<p>Hannah seemed to agree. “You know Jenny, you and I are nowhere near as big as Kelly or </p>
+<p>Monica, but we’re not so small either! Your boobs look great!”</p>
+<p>Jenny felt embarrassment burning from her roommates once again all ganging up on her. </p>
+<p>“Whatever, Hannah,” she muttered, turning back towards the window. </p>
+<p>Kelly shrugged, then looked towards the two girls on the couch. </p>
+<p>“Yeah, Monica, but your big boobs really do look great in that shirt. So hot.” Kelly grinned at </p>
+<p>Monica and headed back towards the door.</p>
+<p>Jenny’s head was in her hands. She felt her anger simmering as she stared once again into </p>
+<p>the darkness outside. Why were they still talking about their breasts and teasing her about them? </p>
+<p>4</p>
+<p>She despaired silently, feeling like there was nothing she could do to earn some respect from her </p>
+<p>roommates. She looked up to the night sky once more.</p>
+<p>I wish I had huge breasts so my roommates would ﬁnally appreciate me, she thought, </p>
+<p>ﬁnding herself daydreaming again.</p>
+<p>There was a loud WHOOMPH as if from a sudden gust of wind. At once Jenny felt the </p>
+<p>empty space between her and the table had suddenly ﬁlled… with her own ﬂesh? Her expanding </p>
+<p>breasts demanded more room, and their quickly swelling forms pressed against the table, </p>
+<p>launching her backwards. Her chair tilted back until she fell over onto the ground.</p>
+<p>She was thankfully uninjured and leapt to her feet with a rush of adrenaline, despite the </p>
+<p>massive new weight she now felt on her chest. Her plain white shirt was nowhere near large </p>
+<p>enough to contain her new breasts – at least, it shouldn’t have been. She found herself wearing an </p>
+<p>extra-large tee that ﬁt snugly around her huge new chest, each of her big breasts now far larger </p>
+<p>than her own head. They were astonishingly ﬁrm and taut, extending down to her navel and out to </p>
+<p>her elbows, and as best as she could tell from a quick feel, they were completely natural. It was like </p>
+<p>they were somehow meant to ﬁll the cavernous space in her oversized t-shirt.</p>
+<p>Kelly, nearly out the door, heard the crash of something falling to the ground. She spun </p>
+<p>around and saw her roommate standing awkwardly, then rushed back to Jenny’s side. </p>
+<p>“Are you okay, Jenny?” Kelly was holding Jenny’s shoulder again and seemed genuinely </p>
+<p>concerned.</p>
+<p>Jenny felt a curious twist in her mind. It was true: she’d always had these huge breasts. She </p>
+<p>sensed a second set of memories forming, remembering suddenly that she’d been so shy in high </p>
+<p>school only because she was embarrassed by her big chest.</p>
+<p>“Yeah Jenny, you need to be careful carrying those huge boobs around!” Monica chuckled.</p>
+<p>Hannah laughed. “You know, I spend lots of time with basketballs… but damn, girl! Are you </p>
+<p>sure you don’t want to go to the party with Kelly? The guys will be all over you!” </p>
+<p>Kelly stared openly at Jenny’s breasts. “I thought Mon’s boobs looked great, but seriously </p>
+<p>Jenny, your huge boobs are so beautiful in anything, even a t-shirt!” she marveled.</p>
+<p>5</p>
+<p>Jenny was ﬂoored. Did they not see her chest growing just now? Why did her shirt change </p>
+<p>as well? She turned around, feeling the huge new weight of her bosom settling slowly, looking out </p>
+<p>the window once more. Could it be that shooting star? Are my wishes coming true?</p>
+<p>She found herself stammering. “It’s, er, no thanks. I’m just trying to get ahead on my </p>
+<p>reading.” </p>
+<p>thought.</p>
+<p>She picked up the chair, righting it and sitting back down, though much farther from the table </p>
+<p>this time. She gazed again out the window. </p>
+<p>“Don’t mind me,” she mumbled.</p>
+<p>She was trying to play it cool, but her thoughts were racing a mile a minute. She knew that </p>
+<p>she had a chance to get back at her roommates while also exploring the confusing feelings inside </p>
+<p>her. She raised her eyes to the starry sky once again. There’s only one way to ﬁnd out, she </p>
+<p>I wish that my roommates felt the same way I feel about girls, she thought with glee, </p>
+<p>then spun around in excited anticipation. </p>
+<p>Hannah and Monica were suddenly sitting much closer together on the couch. Jenny </p>
+<p>watched as Hannah leaned in, brushing Monica’s dark hair behind her ear, then kissed her on the </p>
+<p>cheek. Monica giggled, then looked up to see Jenny staring at them with wide eyes.</p>
+<p>“Not here, Hannah! We have an audience,” she chuckled.</p>
+<p>Hannah grinned, then turned to look at Jenny. “Whatever, girlfriend. She’s had plenty of </p>
+<p>chances to join us, but she never seemed interested.”</p>
+<p>“Yeah, but I sure wish she would,” Monica pouted. </p>
+<p>“Jenny, we just love your huge boobs, so why not share them with us? I promise we’ll make </p>
+<p>you feel good,” she added, openly staring at Jenny’s huge chest.</p>
+<p>Kelly was still standing next to Jenny’s chair, speaking now in a dismissive tone. </p>
+<p>“Girls, you need to back off. Jenny and I have been together only since we ﬁrst met last </p>
+<p>week. You two have been an item for years!” she harrumphed.</p>
+<p>6</p>
+<p>Hannah rolled her eyes. “Whatever, Kelly. How can you keep Jenny’s glorious boobs to </p>
+<p>yourself?”</p>
+<p>“They’re just so huge,” Monica marveled, still staring at Jenny. “I can’t get enough of them.”</p>
+<p>Kelly put one hand on her hip. “Look, girls, I know we all love Jenny’s breasts, but you need </p>
+<p>to give us some space.”</p>
+<p>Hannah turned back towards Monica, again kissing her girlfriend’s cheek. </p>
+<p>“It’s okay babe,” she cooed. “We still have each other, and your big boobs are all mine.”</p>
+<p>Jenny sat back in shock. Kelly was now her girlfriend, being protective of her? And Hannah </p>
+<p>and Monica had been together for years now too? Kelly was still being awfully pushy though, and </p>
+<p>Jenny wouldn’t have minded having a little more control over the situation.</p>
+<p>She turned to look out the window once more. </p>
+<p>I wish that my roommates would do whatever I say, or believe whatever I want them </p>
+<p>to believe, she thought. She almost couldn’t believe her own thoughts. Was this a side of herself </p>
+<p>she had never explored until now? She turned again to face Hannah and Monica on the couch.</p>
+<p>She found herself stammering, still shocked at herself but too curious not to try an </p>
+<p>experiment. </p>
+<p>“H… Hannah, Monica, you two should get back to making out.”</p>
+<p>Hannah grinned at her. “Sure, Jenny,” she smiled, then turned back to embrace Monica. </p>
+<p>She reached up with both hands to grab at her girlfriend’s big breasts through her shirt, the two girls </p>
+<p>losing themselves in a deep sensual kiss. Jenny’s eyes widened as she watched their tongues </p>
+<p>wrestling, hearing Monica moaning softly into Hannah’s mouth as her girlfriend squeezed her chest.</p>
+<p>Jenny felt a pang of jealousy and a rush of excitement at the prospect of achieving her own </p>
+<p>ﬁrst kiss. She stood, her heart racing, and turned towards Kelly. </p>
+<p>“Kiss me, Kelly,” she whispered, again almost unable to believe what she was saying. Kelly </p>
+<p>ﬂashed her a wide smile with her ruby red lips, brushing her long blonde hair behind her ears, and </p>
+<p>leaned in and pressed their chests together. Jenny marveled at the delicious sensation of Kelly’s </p>
+<p>big chest pressing into her huge breasts as their lips met in a torrid embrace. Kelly was clearly an </p>
+<p>7</p>
+<p>expert kisser, losing herself in her efforts around Jenny’s tongue, putting in a valiant effort despite </p>
+<p>Jenny’s clear lack of experience. </p>
+<p>Jenny was thrilled at the sensation of Kelly’s tongue in her mouth, but something wasn’t </p>
+<p>right. She felt her heart drop. How could she do this to these girls? Wasn’t she being awfully selﬁsh, </p>
+<p>using them like this for her own ends? Suddenly disgusted with herself, she pushed Kelly away and </p>
+<p>spun around to face the window once more, crossing her arms underneath her newly grown </p>
+<p>breasts.</p>
+<p>I wish that I didn’t feel guilty about anything I do to my roommates, Jenny thought to </p>
+<p>herself. She had almost stopped herself – what was she becoming? – but just as soon as her </p>
+<p>doubts had appeared, they had suddenly vanished, replaced by a comforting sense of power and </p>
+<p>control. She spun around to face her roommates once again, now smirking at them.</p>
+<p>“Hannah, Monica, stop making out and stand up,” she said. The two girls disentangled </p>
+<p>themselves and stood, facing her.</p>
+<p>breast through her shirt. </p>
+<p>Monica was again staring openly at Jenny’s chest, grasping with one hand at her own </p>
+<p>“Wow, Jenny, I just love your huge breasts. Won’t you show us your pretty nipples?”</p>
+<p>Jenny ignored her. “Kelly, go stand next to Hannah,” she directed. Kelly did just that, smiling </p>
+<p>expectantly back at her.</p>
+<p>within herself.</p>
+<p>She took a moment to study her three roommates. They had all been so cruel to her, but </p>
+<p>now she ﬁnally had a chance to make things right. She could feel contempt for these girls rising </p>
+<p>“All of you, take off your clothes. When you’re here in our room, you won’t wear anything </p>
+<p>except for your high heels,” she intoned.</p>
+<p>“Anything for you, Jenny!” Hannah giggled.</p>
+<p>“If that’s what you want, Jenny!” Monica smiled, still staring at Jenny’s big breasts.</p>
+<p>“Good idea, babe! This will be fun!” Kelly grinned at her girlfriend.</p>
+<p>8</p>
+<p>All three girls disrobed at once. Hannah and Monica were standing nude, while Kelly was </p>
+<p>left wearing only her stilettos from her party outﬁt. Jenny admired Kelly’s beautiful toes in her heels, </p>
+<p>then turned back to Hannah and Monica.</p>
+<p>“Hannah, Monica, go fetch your highest heels and bring them here.”</p>
+<p>They smiled at her and turned to leave, but then Jenny had an idea.</p>
+<p>“Wait. I want you to crawl. Slowly,” she smirked.</p>
+<p>Hannah dropped to the ﬂoor, her long slender legs propelling her forward even as she </p>
+<p>smiled up at Jenny. Monica fell in behind Hannah, and Jenny smiled down at them as they turned </p>
+<p>to slowly crawl away. They were thrusting their hips up and out, but Jenny’s grin soured when she </p>
+<p>saw their furry pussies winking at her. Well, this won’t do at all, she thought.</p>
+<p>Jenny sat in her chair again, crossing her legs under her huge hanging chest. </p>
+<p>“Come here, Kelly,” she pointed to the ﬂoor next to her chair, and Kelly immediately walked </p>
+<p>over, standing next to her. Jenny smiled up at her girlfriend’s pretty features framed by her long </p>
+<p>blonde hair.</p>
+<p>“Give me your nipple,” she whispered. Kelly grinned and bent at her waist, presenting her </p>
+<p>big chest at Jenny’s eye level. Jenny leaned forward slightly, sucking into her mouth Kelly’s left </p>
+<p>nipple and much of her surrounding breast. </p>
+<p>A minute later she was grinning as she peeked out from Kelly’s cleavage at the sight of </p>
+<p>Hannah and Monica returning, crawling back to her with each hand grasping one of a pair of high </p>
+<p>heels. Kelly was still bending at the waist, wrapping her big chest around her girlfriend’s head, and </p>
+<p>turned her head to smile at Hannah and Monica on the ﬂoor.</p>
+<p>Kelly’s eyes widened at Monica. “Oh wow, Monica, I love how your big boobs hang down as </p>
+<p>you’re crawling!” she marveled.</p>
+<p>see Jenny’s huge boobs!”</p>
+<p>Monica grinned up at Kelly as she shufﬂed past. “Thanks Kelz, but I think we’d all still love to </p>
+<p>Hannah had suddenly stopped crawling, turning to look curiously behind her towards </p>
+<p>Monica. Monica was still grinning up at Kelly, not paying attention as she continued forward to run </p>
+<p>9</p>
+<p>face-ﬁrst into Hannah’s outthrust pussy. Hannah giggled, smiling as she made eye contact with her </p>
+<p>girlfriend crawling just behind her.</p>
+<p>Hannah nodded up at Kelly. “You’re totally right Kelly, her big breasts look so good while </p>
+<p>she’s crawling!”</p>
+<p>thought.</p>
+<p>I say otherwise.”</p>
+<p>Jenny grinned as she waited for them to crawl back next to the couch, then had a further </p>
+<p>“Hannah, Monica, from now on you’ll always crawl when you move around our room, unless </p>
+<p>The two girls smiled up at Jenny from their positions near the ﬂoor.</p>
+<p>“Of course, Jenny!” Hannah tittered.</p>
+<p>“That’s so hot, I love it!” Monica offered.</p>
+<p>Jenny chuckled at them. “Hannah, Monica, stand up. Kelly, help them put on their heels,” </p>
+<p>she intoned. </p>
+<p>Kelly unwrapped her cleavage from Jenny’s head and walked over to the couch. She </p>
+<p>crouched to help her friends put on their shoes, making sure to spread her legs wide open towards </p>
+<p>Jenny. Hannah and Monica daintily lifted one leg, then the other, as they enjoyed the attention from </p>
+<p>their roommate. Kelly left lots of small kisses on each of their legs as she lovingly fastened her </p>
+<p>friends’ high heels to their toes.</p>
+<p>Jenny found her eyes drawn towards Hannah, the beautiful tall blonde now towering even </p>
+<p>higher in her heels. She was stunning, an amazon goddess, but still in need of some </p>
+<p>improvements. Jenny turned back towards the window.</p>
+<p>I wish that the wishes I make using “we” or “us” or “our” will apply to me and my </p>
+<p>roommates, and I wish that we had no hair growing below our necks, she focused as she </p>
+<p>stared at the starry sky.</p>
+<p>She turned back around and luxuriated in the beautiful sight of her roommates’ newly </p>
+<p>denuded pussies. The girls were clearly feeling every bit as aroused as she was feeling, just as she </p>
+<p>had wished. Hannah couldn’t seem to help herself and had taken this opportunity to bend slightly at </p>
+<p>10</p>
+<p>her knees, leaning over her long legs and rubbing with both hands at the nude pussies of the girls </p>
+<p>on either side of her.</p>
+<p>at the ﬂoor in front of her chair. </p>
+<p>Jenny wasn’t having it. “That’s enough, Hannah. All of you, come over here,” Jenny pointed </p>
+<p>Kelly immediately walked over, standing directly in front of Jenny’s chair, ﬂashing a wide </p>
+<p>smile down at her girlfriend. She was followed some time later by Hannah and Monica, who had </p>
+<p>both dropped to the ground, crawling around the table in front of the couch to arrive on either side </p>
+<p>of her.</p>
+<p>few minutes earlier.</p>
+<p>“All of you, on your knees,” Jenny ordered. Kelly dropped between Hannah and Monica, all </p>
+<p>of them now upright on their knees, naked and smiling at her. Jenny again delighted in the sense of </p>
+<p>power and control she felt over these girls, then thought back to her fumbling efforts with Kelly a </p>
+<p>“We’re going to play a game. Let’s ﬁnd out who’s the best kisser!” Jenny grinned at them.</p>
+<p>All of their faces lit up, beaming at her.</p>
+<p>“Yay! I like this game!” grinned Hannah.</p>
+<p>“Babe, you know I always give you the best kisses!” leered Kelly.</p>
+<p>“No way, I’m the best kisser! Just ask Hannah!” urged Monica.</p>
+<p>Jenny swiveled back to the desk and picked up a small glass from which she’d been </p>
+<p>drinking. It was about a quarter full of water. Spinning back around, she splashed its contents at </p>
+<p>Kelly. </p>
+<p>her. </p>
+<p>Kelly laughed, her face dripping wet.</p>
+<p>“Oh Jenny, you’re so silly sometimes!” she chuckled. Hannah and Monica giggled along with </p>
+<p>Jenny placed the glass ﬂat on the carpet in front of her chair, then gave it a vigorous spin. It </p>
+<p>soon came to a stop, pointing most closely towards Hannah. The tall blonde girl brightened, </p>
+<p>grinning widely with anticipation. </p>
+<p>11</p>
+<p>Jenny grabbed at Hannah’s blonde ponytail and pulled her in, their tongues extended and </p>
+<p>sliding together. Jenny fumbled around with her tongue in Hannah’s mouth, enjoying the curious </p>
+<p>sensation of her tongue being sucked and their lips smacking together. After about a minute, she </p>
+<p>sat back and pushed Hannah away. Kelly and Monica had been staring at them in silence, their </p>
+<p>eyes wide.</p>
+<p>she added.</p>
+<p>“Not bad, Hannah,” Jenny remarked, leaning back in her chair.</p>
+<p>Monica whistled. “That was so hot, Hannah!” she marveled, smiling at her girlfriend. </p>
+<p>“It’s a good thing we’ve had so much kissing practice with each other before this contest!” </p>
+<p>Jenny reached down and spun the glass once again. It came to rest facing Monica, who </p>
+<p>grinned at her, lewdly shaking her big naked breasts and brushing her dark hair behind her ears.</p>
+<p>Jenny sneered at her, then announced, “Challenge round! Hannah, you get to distract your </p>
+<p>girlfriend however you like, but using only your mouth.”</p>
+<p>“Wha –“ Monica started, but Jenny immediately pressed her lips to the brunette’s, cutting </p>
+<p>her off. Hannah giggled as she crawled behind Kelly to arrive at Monica’s other side. Straightening </p>
+<p>up, she gave a long slow lick across her girlfriend’s ear, hearing her whimpering into Jenny’s </p>
+<p>mouth.</p>
+<p>Monica was facing a quandary. She knew it was so important to give her roommate the very </p>
+<p>best kiss possible to win the contest, but she feared her girlfriend would know just how to distract </p>
+<p>her! As she was tonguing Jenny’s mouth, she sensed Hannah’s weight shifting next to her and </p>
+<p>realized at the last moment what her girlfriend had planned.</p>
+<p>No, not there! It’s too much! Not while I’m – Monica was inwardly panicking, but hoped her </p>
+<p>desperation didn’t come across to Jenny while they were kissing.</p>
+<p>Hannah bent down, sucking Monica’s left nipple into her mouth. She licked at the big teat, </p>
+<p>smacking her lips and making the loudest sucking noises she could, thinking it all the more </p>
+<p>distracting while her girlfriend was trying to focus.</p>
+<p>Jenny found herself laughing at Monica’s obvious predicament and pushed her backwards, </p>
+<p>disengaging their kiss. Hannah’s lips detached from her girlfriend’s nipple with an audible <em>pop</em>.</p>
+<p>12</p>
+<p>“Sorry Mon! You had to know I would go for your big sexy boobs,” Hannah giggled at the </p>
+<p>brunette on the ﬂoor.</p>
+<p>Jenny tried on her best announcer voice. “Double challenge round! Hannah, Monica, I want </p>
+<p>you both sucking on Kelly’s nipples.”</p>
+<p>Kelly’s eyes widened as Hannah crawled behind her, appearing once again at her other </p>
+<p>side. Kelly immediately lunged at Jenny, trying to kiss her girlfriend before her roommates were </p>
+<p>able to distract her. She found it admittedly very difﬁcult to concentrate, feeling incredible </p>
+<p>sensations coming from her big chest as her nipples were sucked. Her ears ﬁlled with even louder </p>
+<p>smacking noises than during the previous round. </p>
+<p>Focus! You can do this Kelly! Do it for your girlfriend, the cheerleader thought to herself. She </p>
+<p>gave it her all, but couldn’t hide her disappointment when she felt Jenny pushing her away only a </p>
+<p>few seconds later. Still, she had at least succeeded in smearing her ruby red lip coloring all around </p>
+<p>Jenny’s mouth, and found it quite fetching on her girlfriend. She hoped it might count in her favor for </p>
+<p>bonus points.</p>
+<p>“You three, kiss.”</p>
+<p>“That was impressive, Kelly,” Jenny remarked, studying all three girls for a moment. </p>
+<p>Hannah and Monica leaned towards Kelly, all three girls tonguing each other in a wanton </p>
+<p>display, even as their eyes peered questioningly at Jenny. Was this another challenge round? They </p>
+<p>couldn’t be sure, but they knew it was important to Jenny so they gave their all to kissing each </p>
+<p>other. Jenny pitched forward, studying her roommates spreading Kelly’s lipstick on each other, </p>
+<p>trying to derive any means to improve her own skills.</p>
+<p>There’s no substitute for practice, Jenny thought.</p>
+<p>“Now all of you, kiss me,” she whispered.</p>
+<p>They lunged at her, all of them trying to make out with Jenny at the same time. They were </p>
+<p>no longer kissing each other; rather, they all seemed to be forcing their own tongues into her mouth </p>
+<p>simultaneously. She enjoyed the curious sensation of three other girls’ tongues on her own, but </p>
+<p>found it difﬁcult to concentrate with her roommates ﬁghting each other.</p>
+<p>Jenny pushed the other girls back, then looked into her girlfriend’s eyes.</p>
+<p>13</p>
+<p>“Congratulations Kelly, you won the contest! You were an incredible kisser, overcoming </p>
+<p>nearly insurmountable odds to emerge victorious,” she embellished.</p>
+<p>Kelly let loose a cheer, though perhaps not one she’d learned on the cheerleading team.</p>
+<p>“Yay! Me and Jenny, sitting in a tree, KAY EYE ESS ESS –“</p>
+<p>“Ugh,” Jenny interrupted her. “Seriously, Kelly?”</p>
+<p>Kelly pouted momentarily, then grinned widely at her girlfriend. She couldn’t stay mad at that </p>
+<p>sexy brunette with the huge boobs!</p>
+<p>“Sorry, Hannah and Monica,” Jenny said, turning to the runners-up. </p>
+<p>“You didn’t win, but you still get a consolation prize!” she grinned at them.</p>
+<p>“We do? Hooray!” Hannah cheered.</p>
+<p>“Oh wow! What do we get?” Monica tittered. </p>
+<p>“You both win Kelly’s lipstick! But here’s the catch: you have to collect it yourselves with only </p>
+<p>your mouths! Readysetgo!” Jenny announced with dramatic ﬂair.</p>
+<p>Kelly saw Hannah and Monica leaping at her and she fell back, tackled to the ground. They </p>
+<p>were not quite kissing her as much as rubbing their lips all around her mouth, trying to coat </p>
+<p>themselves in her lipstick. She giggled at the curious sensation and enjoyed the intimate attention </p>
+<p>from her roommates.</p>
+<p>A moment later, Jenny had another game in mind.</p>
+<p>“All of you, sit up,” she ordered, and at once they were on their knees again, smiling at her. </p>
+<p>She looked into her girlfriend’s eyes.</p>
+<p>“Truth or dare, Kelly?”</p>
+<p>“Truth! But babe, you know I could never lie to you,” Kelly cooed.</p>
+<p>Jenny grinned at her. </p>
+<p>14</p>
+<p>“Something true about you that I love, Kelly, is how you always greet your roommates with a </p>
+<p>wet sloppy kiss!”</p>
+<p>Kelly immediately lunged forward, closing her eyes and pressing her lips to Jenny’s. While </p>
+<p>she was animatedly tonguing her girlfriend, Monica piped up, sounding perplexed.</p>
+<p>“That’s not how… you didn’t even ask her a question, Jenny!” the brown-haired girl boggled, </p>
+<p>before continuing.</p>
+<p>all!” she reminded Jenny.</p>
+<p>“Besides, obviously we all know about Kelly’s very friendly greetings. It’s been a week, after </p>
+<p>Hannah gave an appreciative whistle. “Kelly is such an amazing kisser, though! After all, she </p>
+<p>won the contest! It makes sense that she’s always smooching us.”</p>
+<p>After Jenny had moaned her satisfaction, Kelly leaned back and turned to kiss Hannah for a </p>
+<p>while. A minute later, she broke her kiss with Hannah and swung around to look at Monica.</p>
+<p>“You know I’d never forget about you, sweetie!” Kelly grinned at the brunette, then leaned in </p>
+<p>to share a sloppy kiss with her.</p>
+<p>Jenny interrupted their embrace. “All of you, go sit on the couch.”</p>
+<p>Kelly stood and paced over to the couch, sitting at one end. Hannah and Monica fell into </p>
+<p>formation, crawling slowly towards Kelly, then climbing up onto the couch next to her. As Hannah </p>
+<p>and then Monica sat down, Kelly smiled at them, giving each girl in turn another quick kiss in </p>
+<p>greeting. All three sat pressed close together, clearly enjoying the sensation of each other’s nude </p>
+<p>skin. </p>
+<p>the heat, she thought.</p>
+<p>Jenny pondered at them for a moment, then turned back to the window. It’s time to turn up </p>
+<p>I wish that when anyone looks at my roommates’ breasts, my roommates will get </p>
+<p>more aroused and their nipples will fully harden. The more they are desired by others, the </p>
+<p>more aroused they will feel, and this is all a new experience for them, Jenny thought.</p>
+<p>15</p>
+<p>Jenny turned back around and admired the sight of her three nude roommates awaiting her </p>
+<p>commands. She made eye contact with Monica, who gave a small whimper from the sudden </p>
+<p>attention.</p>
+<p>“Girls, wouldn’t you say Monica has the most beautiful big breasts?” she suggested, </p>
+<p>gesturing at Monica on the couch.</p>
+<p>Kelly and Hannah turned to look at Monica’s big chest. At once Monica suddenly felt a </p>
+<p>burning heat within her, and her pointy nipples became obviously erect. She squirmed under the </p>
+<p>hot gaze of the other three girls.</p>
+<p>Kelly whistled. “You’re right Jenny, Monica’s breasts really are incredible.”</p>
+<p>Hannah nodded as she stared at Monica’s chest. “I just love her big nipples! And it looks like </p>
+<p>she enjoys us looking at her.”</p>
+<p>she offered.</p>
+<p>Kelly nodded. “You’re right Hannah, but you know, Jenny’s huge breasts are even bigger,” </p>
+<p>Monica was still squirming from the attention, now squeezing her legs together. </p>
+<p>“Oooh, girls, you’re making me so hot!” she gasped.</p>
+<p>Jenny’s eyes lowered to her roommates’ midsections. They were clearly feeling Jenny’s </p>
+<p>eyes on them even as they continued to stare at Monica’s breasts, and all three girls wantonly </p>
+<p>spread their legs for her, crossing their legs over each other. Hannah was unsubtly licking her lips </p>
+<p>as she stared at Monica’s big nipples. Jenny turned to the window once more.</p>
+<p>I wish that our pussies will drip and squirt profusely when we’re aroused and when </p>
+<p>we climax, and we’ll never get dehydrated as a result, and this is new for me but not for my </p>
+<p>roommates, she grinned to herself. Why should they have all the fun?</p>
+<p>She paused for a moment, delighting in the feel of her panties and shorts immediately </p>
+<p>soaking through with her arousal. She looked down between her huge breasts and unbuttoned her </p>
+<p>shorts, hearing someone gasp as she lowered them to the ﬂoor and stepped out of them, leaving </p>
+<p>just her oversized t-shirt and drenched panties. A stream of wetness was continually running down </p>
+<p>one of her legs, but there was one more thing she wanted.</p>
+<p>16</p>
+<p>I wish that when any of my roommates has an orgasm, their breasts and nipples will </p>
+<p>grow larger, and the bigger their breasts grow, the more sensitive to pleasure they become. </p>
+<p>This is a new experience for them, she thought. She was ﬁnally exploring her deepest desires, </p>
+<p>and she exalted in the delirious sense of power she felt over the other girls.</p>
+<p>Jenny turned back around again, grinning with anticipation. Three pairs of beautiful legs </p>
+<p>were still spread open for her, crossing over each other, and she saw all three nude gashes were </p>
+<p>absolutely soaked, dripping down onto the couch below them. Monica seemed to be especially </p>
+<p>aroused; her pussy was periodically squirting small gushes of her juices as she writhed under her </p>
+<p>roommates’ continued attention.</p>
+<p>Jenny chuckled at Monica’s obvious need, then spoke cheerfully. </p>
+<p>“But girls, wouldn’t you say that Kelly’s big boobs are just as impressive as Monica’s?” she </p>
+<p>grinned, as all four sets of eyes swiveled towards Kelly’s chest. </p>
+<p>Kelly immediately felt herself burning hot, squeezing her legs together involuntarily from the </p>
+<p>sensation of her roommates’ attention. Even her own gaze on her big chest seemed to contribute to </p>
+<p>her urgent need. She was trying to rub her gushing pussy on the couch below her, but she wasn’t </p>
+<p>getting any relief.</p>
+<p>Hannah admired Kelly’s big breasts and watched her nipples quickly harden. “Wow Kelly, </p>
+<p>Jenny is so right. Your boobs really are beautiful – I’m so jealous!”</p>
+<p>Monica leaned forward, resting her big breasts on her knees, as she looked around Hannah </p>
+<p>towards Kelly. “Yeah! Kelly, your nipples are so hard! Oh my gosh, and your pussy is so wet!”</p>
+<p>Kelly was quivering from the heat she felt from all of their eyes looking at her. She knew her </p>
+<p>pussy had always been so embarrassingly drippy and wet when she got turned on, and the </p>
+<p>sensation from her roommates’ attention was making her gush onto the couch. She felt a warm wet </p>
+<p>spot quickly spreading under her legs.</p>
+<p>Jenny, Hannah, and Monica continued to stare at Kelly’s heaving chest. Her nipples were </p>
+<p>straining, diamond-hard, and she was panting, clearly edging towards climax. Jenny grinned at </p>
+<p>Kelly’s predicament and wanted to push her further.</p>
+<p>“Hannah, blow gently across Kelly’s nipples,” Jenny whispered.</p>
+<p>17</p>
+<p>Hannah giggled, leaning to the side and teasing Kelly’s teats with her hot breath. It was all </p>
+<p>too much for Kelly, and she felt herself plunge over the edge.</p>
+<p>“Oh HannnNNNAAAAH!” Kelly screamed, achieving a tremendous climax. Her pussy </p>
+<p>squirted great voluminous jets of nearly translucent liquid, arcing nearly to the ceiling before landing </p>
+<p>upon herself, Hannah and Monica next to her, and even reaching the other side of the room to </p>
+<p>splash across Jenny’s overburdened t-shirt. Even after such an impressive display, Kelly could feel </p>
+<p>her dripping gash was still streaming her liquids down her legs and the couch below her. </p>
+<p>Kelly fell back into the couch, panting and wheezing with her eyes closed, but she could </p>
+<p>sense the other girls still watching her and she again felt incredibly turned on. She opened her </p>
+<p>eyes, her pretty features ﬂushed and her long blonde hair soaked, to look up at Jenny.</p>
+<p>“Ohmygosh, I’m so sorry, girls!” she was blushing a deep red. </p>
+<p>“It’s that... I’ve always had this condition. I just get so wet sometimes, and when I climax, </p>
+<p>well, you can see how much I squirt!”</p>
+<p>Jenny was grinning widely, watching her roommates’ antics. She felt a near-constant deluge </p>
+<p>of her own arousal gushing forth from her newly hairless pussy, continuously soaking through her </p>
+<p>panties and dripping down her bare legs.</p>
+<p>Hannah reached over, lovingly brushing Kelly’s wet blonde hair behind her ear. </p>
+<p>“It’s okay, sweetie,” she smiled at the shorter girl. </p>
+<p>“That was really hot! And I’ll tell you a secret too: I’ve always been quite the squirter myself,” </p>
+<p>she continued, blushing.</p>
+<p>Monica laughed. “That’s an understatement!” She lovingly jabbed her girlfriend in the ribs. </p>
+<p>“The truth is, we’re both big squirters! We always get so wet every time we’re together.”</p>
+<p>Hannah grinned back at Monica. “It’s true! Kelly, we’ve always been able to squirt as much </p>
+<p>as you just did!”</p>
+<p>Kelly was stunned and delighted to ﬁnd that her friends shared her condition and, with the </p>
+<p>added sensation of still feeling their eyes on her, she knew another shuddering orgasm was about </p>
+<p>18</p>
+<p>to overtake her. Her pussy was again betraying her arousal by gushing huge arcs of her essence </p>
+<p>every few seconds. </p>
+<p>“That’s amazing, girls!” she gasped as a particularly acute shudder spurted a huge jet of </p>
+<p>liquid from her pussy across the far wall. </p>
+<p>“You two have me so turned on right now!” she was almost moaning.</p>
+<p>Jenny caught Kelly on a knife’s edge. </p>
+<p>“Kelly, would you mind telling us your biggest fetishes?” she queried.</p>
+<p>“Sure Jenny!” Kelly grinned, straining through her arousal. </p>
+<p>“I just love how wet my pussy gets when I’m turned on, and I’ve always enjoyed how </p>
+<p>amazingly big my squirting orgasms can get! I love big boobs too, both mine and other girls’, but I’d </p>
+<p>really like to see yours right now, Jenny! And you know I love kissing you pretty girls!”</p>
+<p>Kelly was blushing and sweating, clearly overwhelmed by so freely revealing her secrets </p>
+<p>combined with the attention from her roommates gazing at her, and felt herself plunging over the </p>
+<p>edge once again. She strained to look back at her roommates through the waves of her shuddering </p>
+<p>climax, marveling at them even through the intensity of her own arousal. </p>
+<p>“Oh my gosh, you weren’t kidding – look at you two, your pussies are so wet!” she admired.</p>
+<p>Hannah and Monica were grinning, holding hands as they squirmed under the attention from </p>
+<p>Kelly and Jenny. Hannah’s sopping pussy let out a short jet of squirt, which arced through the air </p>
+<p>and contributed to a growing wet area on the carpet. Monica’s dripping pussy soon followed, </p>
+<p>gushing in sympathy with her friend.</p>
+<p>Jenny are making our pussies so wet!”</p>
+<p>Monica was grinning widely at Kelly, squeezing Hannah’s hand in her own. “Yeah! You and </p>
+<p>Jenny pondered, suddenly wondering about any logistical issues that might get in the way of </p>
+<p>her fun. She looked out the window behind her once again.</p>
+<p>I wish that our room was totally soundproof and waterproof, but without any obvious </p>
+<p>changes to its appearance, except that we all share one extra-large bed, she thought, then </p>
+<p>19</p>
+<p>heard a familiar WHOOMPH of rushing air coming from one of the bedrooms. None of the other </p>
+<p>girls seemed to notice it.</p>
+<p>Jenny turned around to continue watching Kelly closely. Her girlfriend had been giving </p>
+<p>gradually smaller shudders for the last minute even as she was talking to them. Jenny noticed that </p>
+<p>each shrinking shudder was accompanied by a progressively smaller jet of liquid arcing from Kelly’s </p>
+<p>pussy. Is she still climaxing? she pondered. We’re two orgasms behind one of my wishes…</p>
+<p>Kelly’s second climax had been brought on and further extended by the revelation that her </p>
+<p>sexy roommates looked just as wet as she was, and she didn’t notice the soft WHOOMPH below </p>
+<p>her as their nylon couch suddenly changed to a light tan leather. At last she felt the end of her </p>
+<p>second shuddering orgasm, even though she could sense her pussy still dripping, and at once she </p>
+<p>became aware of a curiously pleasurable sensation in her breasts.</p>
+<p>It seemed to Jenny that all three of her roommates were feeling the same thing, as all of </p>
+<p>them suddenly glanced down at their own chests. She saw all of them start squirming as their </p>
+<p>attention to their own breasts got them even more turned on, then gasped with delight as all of their </p>
+<p>chests suddenly surged larger in two great waves. Kelly and Monica’s huge bosoms were now </p>
+<p>easily larger than their own heads, while Hannah’s smaller chest had swelled larger than Monica’s </p>
+<p>had been only moments before.</p>
+<p>Hannah gasped. “Ohmygosh! Did my… did my boobs just grow?” She paused for a moment </p>
+<p>before grinning widely. “That is so hot!”</p>
+<p>Monica was watching her own chest growing larger; it felt simply amazing. She turned at </p>
+<p>once to admire her girlfriend’s newly swollen breasts.</p>
+<p>“Mine did too! Oh Hannah, you’re amazing! Your boobs are so much bigger now!” Monica </p>
+<p>gushed, staring at Hannah’s much larger nipples, which seemed to strain even more erect under </p>
+<p>her gaze.</p>
+<p>Kelly grinned at her roommates, hefting her own bigger chest in her hands as she turned </p>
+<p>back towards Hannah. “So did mine! Wow Hannah, your big nipples look so hard now!”</p>
+<p>Hannah was grinning widely, her eyes shooting back and forth between Kelly, Monica, and </p>
+<p>her own newly-grown breasts. She reached up, grasping her completely erect nipples, and </p>
+<p>20</p>
+<p>shuddered from the sensation. She could feel the other three girls watching her, and she felt herself </p>
+<p>burning even hotter.</p>
+<p>their chests to grow. </p>
+<p>“Ooooh! My big nipples feel soooo good!” she whimpered, gently twisting her own teats.</p>
+<p>Jenny was momentarily taken aback. She hadn’t expected Kelly’s climaxes to cause all of </p>
+<p>I’ll have to be more careful in wording these wishes, she realized with a start. Maybe I </p>
+<p>should slow things down for a moment?</p>
+<p>She deliberately averted her eyes from the couch before speaking quietly but ﬁrmly.</p>
+<p>“Kelly, why don’t you make a snack for us?”</p>
+<p>Kelly ﬂashed a wide grin back at her. “Sure, Jenny!” she smiled, then stood in her high </p>
+<p>heels, pacing delicately towards their small shared kitchenette. Jenny watched Kelly’s heels clicking </p>
+<p>delicately on the tile ﬂoor, leaving large puddles behind with every footstep as the girl’s incredibly </p>
+<p>effusive arousal streamed down both of her legs. As Kelly stepped in front of their pantry, pausing </p>
+<p>to let her big new breasts settle, she could still feel Jenny’s eyes on her from the other room. A </p>
+<p>growing puddle of her sticky arousal quickly spread on the ﬂoor between her heels, ﬂowing lazily </p>
+<p>back towards the doorway to their common room.</p>
+<p>She heard Jenny’s voice calling to her. “Hey Kelly, what’s your major again?”</p>
+<p>She grinned, calling a response to her sexy girlfriend, and couldn’t resist embellishing. </p>
+<p>“We haven’t declared majors yet, silly! But I’m thinking about nursing. You know, like I’d like </p>
+<p>to nurse from those beautiful boobs of yours, girl!”</p>
+<p>Jenny grinned deviously; Kelly had given her an idea. She turned once again to gaze at the </p>
+<p>dark void through her window.</p>
+<p>I wish that Kelly’s major was <em>wet</em> nursing! She’s studying to be a lactation expert, </p>
+<p>and it’s a good thing that she never gets dehydrated, because any liquid she drinks will </p>
+<p>immediately become milk in her breasts! Jenny thought. It might be useful having an expert </p>
+<p>around, she grinned to herself, keeping her focus on the night sky.</p>
+<p>21</p>
+<p>I wish that any excess liquid spilled in our room will be quickly cleaned up, she </p>
+<p>thought. The idea of making a sexy wet mess with her roommates got her turned on again, and a </p>
+<p>huge gush of her arousal soon splashed through her panties, streaming onto the ﬂoor between her </p>
+<p>legs. After a few moments, it seemed to fade away, leaving the carpet clean and dry. Even the </p>
+<p>smaller streams of her dripping wetness that seemed to ﬂow without end down her bare legs </p>
+<p>somehow left no mark on the carpet below. She marveled for a moment at the power of her wishes.</p>
+<p>A moment later, she heard Kelly’s stilettos clicking as her girlfriend returned from the </p>
+<p>kitchenette, now carrying a small tray with four glasses. Kelly walked with a curiously wet-sounding </p>
+<p><em>squelch-squelch</em>, as her gushing arousal continued to slicken her legs as they rubbed together. </p>
+<p>The large wet puddles left behind by her footsteps quickly faded away a step or two behind her. </p>
+<p>Kelly set down her tray on the small table in front of their couch, then paced towards the </p>
+<p>window. Jenny looked up to see Kelly’s breasts bouncing as her girlfriend approached, then </p>
+<p>immediately saw a gush of liquid splattering from her pussy onto the carpet below. Kelly grinned, </p>
+<p>bending over to give her girlfriend a quick wet smooch, and enjoying the sensation of feeling Jenny </p>
+<p>watching her.</p>
+<p>Kelly smiled and stood upright again, turning towards Hannah and Monica seated on the </p>
+<p>couch, then walked towards them. Bending over again, she gave each girl another quick wet kiss </p>
+<p>on the lips. As she kissed each girl in turn, their own dripping pussies released huge gushes of their </p>
+<p>squirt that sprayed across the table, including the tray that Kelly had just set down.</p>
+<p>On the tray were four small glasses, each ﬁlled with an opaque white liquid. Kelly stood, </p>
+<p>smiling at her friends on the couch, delighting in how she saw them blushing from her attention. </p>
+<p>“Girls, I’ve brought you each a glass of my milk!” she grinned. “I squeezed it fresh just now.”</p>
+<p>Jenny’s eyes widened. Kelly had ﬁlled all of those glasses just now? That was so –</p>
+<p>“Hot!” Monica exclaimed with a giggle. “Your big milky boobs are so sexy, Kelly, and I’ve </p>
+<p>been wondering when you’d let us try your milk!”</p>
+<p>“No kidding! Kelly, I’ve been admiring your milky breasts since we met last week!” Hannah </p>
+<p>smiled up at her.</p>
+<p>22</p>
+<p>Kelly felt all of her roommates’ eyes on her once more. She shuddered from the attention, </p>
+<p>struggling to stay standing. Her nipples seemed to extend even further, and her incredible bare </p>
+<p>pussy quickly started gushing her juices in even greater volumes. Jenny’s eyes widened as Kelly’s </p>
+<p>nipples started leaking, streaming, and ﬁnally spraying with ﬁne arcs of her breast milk. Jenny </p>
+<p>suddenly remembered the water bottle that Kelly had been drinking from only a few minutes earlier; </p>
+<p>its contents had been quickly turned to milk in her breasts.</p>
+<p>Kelly gasped, again blushing in front of her roommates as she felt the need to divulge </p>
+<p>another secret about herself. </p>
+<p>“Gosh, girls, I’m so sorry again! It’s my breast milk,” she giggled nervously. “Every time I get </p>
+<p>this turned on, it just sprays from my nipples!”</p>
+<p>Hannah and Monica both chuckled at Kelly’s milky spray arcing several feet in front of her. </p>
+<p>Some of the spray was landing in the four glasses still on the table, overﬂowing the cups onto the </p>
+<p>tray below. Only Jenny seemed to notice the excess milk on the tray slowly fade away.</p>
+<p>Monica seemed impressed. </p>
+<p>“That is so hot! Your big boobs are so milky, Kelly!” she gushed. Her roommate’s huge chest </p>
+<p>was really turning her on, and she felt her own pussy suddenly squirting again in sympathy, gushing </p>
+<p>across the table next to the tray. Some of her squirt seemed to land in the glasses, mixing with </p>
+<p>Kelly’s milk.</p>
+<p>arm. </p>
+<p>“I’ll say!” Hannah agreed, then turned to her girlfriend, playfully bumping Monica on the </p>
+<p>“I want to try her milk so badly, so can you keep your squirt to yourself for a hot minute?” </p>
+<p>she giggled, before turning back towards Kelly. Her own wet center was positively gushing from the </p>
+<p>sight of Kelly’s amazing spraying nipples.</p>
+<p>Kelly was riding waves of pleasure from the loving feeling of sharing her milky bounty with </p>
+<p>her roommates, combined with the sensation of their eyes on her big breasts. She felt herself </p>
+<p>climaxing once again. She rubbed furiously at her pussy with one hand, splashing her furiously </p>
+<p>gushing squirt on her roommates, the couch, the table, and absolutely everywhere else, as her </p>
+<p>other hand grasped and squeezed at one of her nipples, hosing down everything in front of her with </p>
+<p>the incredible volume of her milk.</p>
+<p>23</p>
+<p>Hannah and Monica were laughing with glee. They didn’t even have to drink from the </p>
+<p>glasses – Kelly’s milk was coming to their mouths where they sat! They luxuriated in the delicious </p>
+<p>taste, licking the streaming milk off their own arms and legs.</p>
+<p>Hannah was basking in the sensation of Kelly’s hot milk covering her bare skin. She turned </p>
+<p>to Monica next to her and leaned in, the two girlfriends sharing a milky kiss. </p>
+<p>A few moments later, Monica broke her kiss with Hannah, gasping. </p>
+<p>“Your hot milk tastes so good, Kelly!”</p>
+<p>Hannah agreed with her girlfriend. </p>
+<p>“It’s amazing! I love the taste, Kelly! I’m so happy you ﬁnally let us try your milk.”</p>
+<p>Jenny was staring with her mouth slightly agape, her hand furiously squelching against her </p>
+<p>own dripping pussy through her panties, as she saw her roommates’ breasts all expand once again </p>
+<p>from Kelly’s climax. Kelly’s huge milky boobs and Monica’s impressive pair were now approaching </p>
+<p>the size of her own huge chest, while Hannah’s wasn’t far behind. </p>
+<p>Hannah moaned loudly, grasping at her own growing breasts. </p>
+<p>“Ooh, I forgot about that! I love how my boobs get bigger when we cum together!”</p>
+<p>Kelly and Monica were both moaning, lost in the sensation of their own growing chests. It </p>
+<p>seemed to Jenny that it must have been quite overwhelming for them, as all three of their spurting </p>
+<p>pussies suddenly released fresh blasts of their juices across their legs, the ﬂoor, and anything </p>
+<p>nearby, which dutifully faded away only moments later.</p>
+<p>Jenny pulled herself together enough to issue a command.</p>
+<p>“Hannah, Monica, lick Kelly’s milk from each other. And Kelly, keep spraying them!” Jenny </p>
+<p>urged, but she hadn’t particularly needed to, as Hannah and Monica had once again melted into </p>
+<p>each other’s arms, their needy tongues searching for and swallowing Kelly’s effusive milk.</p>
+<p>Kelly grinned, turning to face her friends on the couch, as she moved her hand from her </p>
+<p>dripping pussy up to her other spurting nipple. She gently hugged and squeezed her huge chest, </p>
+<p>delighting in the sensation of spraying milk all over her friends.</p>
+<p>24</p>
+<p>This gave Jenny another idea. “Kelly, go get one of your nursing bras,” she commanded.</p>
+<p>Kelly smiled back at her. “Of course Jenny, but I’m not sure they’ll ﬁt me right now!”</p>
+<p>Jenny paused; the girl was probably right. Still, this was nothing she couldn’t remedy, she </p>
+<p>thought, as she turned once again to her window.</p>
+<p>I wish we all had lots of sexy clothes that ﬁt us no matter how large we grow, Jenny </p>
+<p>thought into the darkness outside.</p>
+<p>Sure enough, Kelly returned a moment later, her heels clicking and her pussy still gushing </p>
+<p>as she twirled an extra large bra around her ﬁnger. Jenny’s eyes widened; it was by far the largest </p>
+<p>bra she’d ever seen. And it was… a sexy, nearly transparent nursing bra?</p>
+<p>Kelly was grinning at her. “That was silly of me, I totally forgot that I had all of these nursing </p>
+<p>bras for my big milky boobs! I have only been going to lactation classes for a week, though!”</p>
+<p>Jenny smiled back at her. “Put on your bra, Kelly, and open the ﬂaps. Let’s see your pretty </p>
+<p>nipples.”</p>
+<p>Kelly did just that, expertly slinging her huge milky breasts into the large cups as if she’d </p>
+<p>done it a thousand times before. She smiled as she lowered the ﬂaps over her nipples, exposing </p>
+<p>her huge erect teats and seeing them once again idly leaking milk. She felt the added heat from her </p>
+<p>own eyes joining Jenny’s on her dripping teats. She was thankful for the extra support of her </p>
+<p>undergarment as she felt her milky spray slowly increasing as she got even more turned on.</p>
+<p>Jenny frowned; she had been hoping to see some even more impressive lactation from </p>
+<p>Kelly, but everything so far seemed so tame to her. </p>
+<p>“Kelly, why don’t you try some milk?” Jenny’s frown turned to a grin as she gestured to the </p>
+<p>glasses on the small table.</p>
+<p>panties.</p>
+<p>Kelly’s eyes lit up as she watched a powerful gush of juices spraying through Jenny’s </p>
+<p>“Oh my! Jenny, you know I just love the taste of my milk!”</p>
+<p>She bent at the waist, her huge spurting nipples momentarily dousing her own long bare </p>
+<p>legs and her toes in her stilettos in great sheets of her milk. She giggled from the warm sensation </p>
+<p>25</p>
+<p>of her milk on her sensitive skin, then straightened upright, now grasping one of the glasses of her </p>
+<p>milk in one hand. With little additional ceremony, she tilted her head back, ﬁnishing the entire glass </p>
+<p>in one go.</p>
+<p>She let out a satisﬁed sigh, then licked along the milk mustache on her upper lip, </p>
+<p>withdrawing her tongue to swallow her leftover milk. She just loved the taste of her milky bounty, </p>
+<p>and she was so thrilled to see her roommates did as well. She exalted in the taste. </p>
+<p>“Mmm, my milk is so good!” she smiled, turning to Jenny and winking at her girlfriend. </p>
+<p>“And you know drinking it makes my boobs extra milky, too!”</p>
+<p>Jenny’s eyes widened. It made a strange kind of sense that, for Kelly, some liquids might be </p>
+<p>milkier than others. Sure enough, Kelly’s lactation soon increased, erupting in fresh streams of her </p>
+<p>milky spray.</p>
+<p>Kelly was giggling to herself, bouncing her big boobs around with her hands and arms as </p>
+<p>she continued spraying her milk all over Hannah, Monica, and the couch.</p>
+<p>Jenny felt annoyingly distracted by her soaked panties. She absent-mindedly reached down, </p>
+<p>around her huge breasts, to pull them down her legs and kick them aside. Her newly hairless pussy </p>
+<p>gushed immediately at the delicious sensation of ﬁnally being exposed to the open air. It continued </p>
+<p>to send great streams of wetness splashing down her legs and toes before fading on the ground.</p>
+<p>Jenny lightly patted the desk next to her. “Come sit here, Kelly,” she smiled at her girlfriend. </p>
+<p>Kelly smiled back and complied, walking over and setting her slender, dripping wet legs on the </p>
+<p>surface next to Jenny. Small gushes of her excitement were now and then spraying from her </p>
+<p>dripping pussy, ﬂowing off the edge of the desk between her knees.</p>
+<p>Jenny studied her for a moment.</p>
+<p>“You know what Kelly? Take off that bra,” she intoned, and Kelly reached behind herself to </p>
+<p>expertly unclasp it and toss it aside, leaving her enormous milky breasts naked once again.</p>
+<p>Jenny turned back to Hannah and Monica on the couch. They were still embracing, licking </p>
+<p>Kelly’s milk from each other’s skin, and ﬂushing hot with new urgency as they felt Jenny and Kelly’s </p>
+<p>eyes watching them.</p>
+<p>26</p>
+<p>“Hannah, Monica, I want you to eat each other out. Give each other orgasms until you’re too </p>
+<p>big to reach each other anymore.” Jenny’s word was law to them.</p>
+<p>Hannah’s eyes lit up. “Oh my, thank you Jenny! I’ve always wished my boobs would be as </p>
+<p>big as yours!” she gushed, even as she crawled into position atop Monica.</p>
+<p>Monica, on her back between Hannah’s spread legs, widened her eyes at Jenny. </p>
+<p>“Yeah! I want my boobs to –“ she started, but was suddenly interrupted by an unexpected </p>
+<p>splash of Hannah’s copious squirt ﬂooding her mouth and drenching her face and hair. She </p>
+<p>luxuriously swallowed her girlfriend’s squirt, then giggled.</p>
+<p>Monica and Hannah were doing their best to lick at each other’s dripping pussies, but they </p>
+<p>were proceeding only in ﬁts and starts. Each girl had to take frequent breaks to come up for air </p>
+<p>around the gushing pussy of her girlfriend. Jenny frowned once again; this wouldn’t do at all.</p>
+<p>“Get in there, you two! I don’t want to see you spill a single drop!” she urged.</p>
+<p>Hannah and Monica’s eyes widened. Surely Jenny couldn’t be serious? They’d been eating </p>
+<p>each other out for years, but in all their time together, they had never been able to swallow but a </p>
+<p>small fraction of each other’s prodigious squirt. Hannah felt herself leaning forward until she had </p>
+<p>wrapped her lips ﬁrmly around Monica’s gushing pussy, and she sensed the warm sensation in her </p>
+<p>nethers of Monica having done the same to her. </p>
+<p>Hannah felt a moment of encouragement: if Jenny believed they could do this, then surely it </p>
+<p>must be possible! She was straining upwards, trying to clamp her mouth into a seal around </p>
+<p>Monica’s pussy, when she suddenly felt a moment of gratitude for her girlfriend. </p>
+<p>It’s a good thing Monica’s always been hairless down here, she thought to herself. It makes </p>
+<p>this much easier!</p>
+<p>Hannah and Monica were now playfully sucking at each other’s pussies. Even though they </p>
+<p>were focused entirely on their ministrations, they could sense Jenny and Kelly were watching them, </p>
+<p>and felt their own arousal peaking even higher.</p>
+<p>Jenny saw Hannah and Monica’s eyes periodically widen as one or the other girl suddenly </p>
+<p>received an overwhelming mouthful of her girlfriend’s squirt. Each girl would periodically gasp for </p>
+<p>breath before quickly trying to reattach their lips to her girlfriend’s squirting pussy. After barely a </p>
+<p>27</p>
+<p>minute, it was clear that they simply couldn’t keep up with each other’s voluminous squirting, and </p>
+<p>huge gushing swaths of their arousal were dripping down their cheeks, pooling between their </p>
+<p>breasts, and running down onto the couch. Hannah tried to apply herself with one last valiant effort, </p>
+<p>but took an unexpected blast of squirt to her face and frowned as it splashed all around her.</p>
+<p>Hannah and Monica both felt disappointed in themselves, not least because they sensed </p>
+<p>that they might have disappointed Jenny. Hannah piped up ﬁrst, turning towards Jenny, trying to </p>
+<p>offer an explanation even as her face was dripping with Monica’s juices.</p>
+<p>“I’m so sorry Jenny, it’s just that she’s so wet! I can’t swallow it all!” she gasped, trying to </p>
+<p>speak while being splashed repeatedly in the face by Monica’s continued gushing.</p>
+<p>Jenny laughed at her. “Just keep licking each other. I want to see you grow.”</p>
+<p>Hannah and Monica immediately set to their task, licking along each other’s gushing </p>
+<p>pussies. They were clearly experts at this, having years of memories in this position with each </p>
+<p>other, and each girl knew just how to use her tongue for the greatest effect on her girlfriend.</p>
+<p>Within a few minutes, the space between the two entwined girls on the couch had </p>
+<p>completely ﬁlled with growing breast ﬂesh. Hannah and Monica’s huge breasts were rubbing </p>
+<p>against each other, pressing them further apart, as each girl strained to lean farther and farther in to </p>
+<p>keep tonguing her girlfriend’s pussy. They could still sense Jenny and Kelly’s rapt attention on </p>
+<p>them, which made them feel even hotter for each other.</p>
+<p>Hannah and Monica’s incredible pussies were now gushing a nearly continuous ﬂow of their </p>
+<p>arousal onto each other. The deluge from their squirting gashes was plainly audible, soaking their </p>
+<p>faces and hair and splashing everywhere around them on the couch. Still, they maintained a valiant </p>
+<p>effort at licking each other, gasping and nearly choking around the incredible ﬂow of liquid spilling </p>
+<p>all over them.</p>
+<p>Out of the corner of her eye, Jenny suddenly became aware of a large, slow moving mass. </p>
+<p>Kelly’s huge breasts had been growing in sympathy with Hannah and Monica, and her big nursing </p>
+<p>bra had magically grown as well, still appearing to be perfectly sized for her enormous milky </p>
+<p>breasts. Jenny reached out, gently patting the side of Kelly’s huge breast nearest her, giggling as </p>
+<p>Kelly’s huge nipple let out a sudden milky spray that easily covered the distance to their couch and </p>
+<p>rained onto Hannah and Monica.</p>
+<p>28</p>
+<p>Jenny felt a sinister grin covering her face. “Kelly, turn around and lie down, and tilt your </p>
+<p>head back over the edge of the desk.”</p>
+<p>Kelly did just that, her spread legs now facing directly towards the window near Jenny’s </p>
+<p>desk. The anticipation of whatever Jenny had planned for her was clearly taking its toll on her, and </p>
+<p>her gushing pussy at once leapt to life, sending periodic arcing sprays of her essence several feet </p>
+<p>into the air to splash across the glass window. Jenny grinned, seeing the window magically drying </p>
+<p>itself out, only to be soaked again just a moment later by a fresh deluge of Kelly’s squirt, the cycle </p>
+<p>repeating every few seconds.</p>
+<p>here.”</p>
+<p>Jenny turned her eyes back towards the couch. “Hannah, Monica, that’s enough. Come </p>
+<p>Hannah and Monica disentangled themselves, sitting upright and smiling, but clearly </p>
+<p>unaccustomed to the huge weight of their new breasts. Hannah’s chest covered her lap, now </p>
+<p>extending past her knees, even larger now than Jenny’s newly-grown breasts. Monica was larger </p>
+<p>still, and Jenny realized with a ﬂush that the dark-haired girl would probably have no small amount </p>
+<p>of difﬁculty reaching her own nipples.</p>
+<p>Hannah and Monica dropped to the ﬂoor in front of the couch, slowly crawling around the </p>
+<p>table. Jenny grinned, remembering her earlier command, and laughed as they were clearly having </p>
+<p>difﬁculty dragging their huge chests below them across the carpet. They were obviously struggling </p>
+<p>with the mass of their new chests, as well as from the delicious sensation of their nipples rubbing </p>
+<p>against the carpet, and Jenny could only imagine which they found more distracting. </p>
+<p>Jenny laughed again, then looked down at Kelly’s upside-down visage. She stepped around </p>
+<p>the front of the desk, then lifted one of her legs up and around Kelly’s head, centering her own </p>
+<p>gushing pussy directly over Kelly’s neck. She leaned back luxuriously, reclining into the soft masses </p>
+<p>of Kelly’s huge breasts towering into the air behind her.</p>
+<p>Kelly arched her neck, looking down into the most beautiful sight: her girlfriend’s gushing </p>
+<p>pussy had been placed in an ideal position just above her. Despite all her effusive wetness squirting </p>
+<p>from between her own legs, and the milky spray she still felt issuing from her big breasts, she was </p>
+<p>suddenly awfully thirsty.</p>
+<p>29</p>
+<p>Kelly thought that she sensed what Jenny wanted, and extended her tongue, lifting her head </p>
+<p>towards Jenny’s gushing pussy. Jenny seemed displeased and reached down, suddenly striking </p>
+<p>Kelly’s cheek with a wet-sounding <em>slap</em>. </p>
+<p>“No, Kelly. You just wait there. Play with yourself as you admire my pussy,” Jenny sneered.</p>
+<p>Kelly found herself in something of a predicament. She could see her own huge breasts </p>
+<p>towering up behind Jenny, but she knew she could no longer reach her own nipples. Her panic </p>
+<p>soon faded, however, when she realized she could still reach under her big chest to rub at her own </p>
+<p>nude pussy. Jenny heard a familiar wet-sounding <em>squelch-squelch</em> coming from behind her as </p>
+<p>Kelly started playing with herself.</p>
+<p>Kelly’s eyes widened as she gazed up at Jenny’s pretty pussy. She thought it might be the </p>
+<p>most beautiful hairless gash she had ever seen, and she thought herself so incredibly fortunate to </p>
+<p>be dating this amazing girl. Jenny was clearly aroused, Kelly marveled, as the dripping pussy </p>
+<p>above her was releasing regular gushes and squirts of the girl’s liquid all over her face and neck. </p>
+<p>She grinned, trying to catch Jenny’s gushing arousal in her open mouth and savoring the delicious </p>
+<p>taste of her girlfriend.</p>
+<p>Hannah and Monica had at last managed to drag their huge breasts across the ﬂoor as they </p>
+<p>ﬁnished crawling towards Jenny. They were looking up at Jenny, smiling as they blushed and </p>
+<p>panted from their exertions. Jenny looked down at them as Kelly tilted her head back farther to look </p>
+<p>upside-down at her roommates on the ﬂoor. Hannah and Monica ﬂushed even redder from the </p>
+<p>attention and they felt their own pussies starting to gush once again.</p>
+<p>“Hannah, Monica, stand up. Let me see you holding your huge boobs,” Jenny snickered with </p>
+<p>anticipation.</p>
+<p>Hannah and Monica tried to stand, struggling mightily with the weight of their expansive </p>
+<p>chests. Jenny knew this to be a problem she could solve, but for now she laughed heartily at her </p>
+<p>roommates’ efforts. After a few moments, Hannah found that she could use her own hands and </p>
+<p>arms to support the weight of her big chest, and she grinned over at her girlfriend.</p>
+<p>“Use your arms, Mon! Wow, your huge boobs are so sexy now!” Hannah admired.</p>
+<p>Monica ﬂushed from feeling her girlfriend’s eyes on her and found it somewhat more difﬁcult </p>
+<p>to wrangle her own larger chest, but eventually struggled upright, smiling back at Hannah.</p>
+<p>30</p>
+<p>“Thanks Hannah,” she beamed at her girlfriend. “Wow, you look so hot with those big new </p>
+<p>boobs! You’ll be the biggest on the basketball team for sure!” she complimented, staring at the </p>
+<p>blonde’s nipples as they seemed to stretch even longer under her gaze.</p>
+<p>Jenny chuckled. “Come girls, let’s show Kelly our appreciation for sharing her milk with us. I </p>
+<p>want all of us to give Kelly a shower. And Kelly, I want you to swallow it all!”</p>
+<p>Kelly’s eyes widened, looking up at Jenny from between her spread legs. “Oh thank you, </p>
+<p>Jenny! You know I’m always happy to share my milk with you girls anytime you want!”</p>
+<p>Hannah grinned down at Kelly. “Thank you so much for sharing your delicious milk!”</p>
+<p>“It was so good! Let us thank you properly,” smiled Monica.</p>
+<p>As they all looked down at Kelly’s head between Jenny’s legs, Kelly felt herself blushing </p>
+<p>from their attention. They could all suddenly hear what sounded like liquid gushing against glass, </p>
+<p>coming from somewhere near the window. Jenny looked up again at Hannah and Monica, speaking </p>
+<p>loudly to be heard over the sound of rushing liquid.</p>
+<p>“I want each of you rubbing me and your girlfriend with one hand,” she commanded.</p>
+<p>At once Hannah and Monica’s hands left their huge breasts, and they wobbled momentarily </p>
+<p>but managed to remain standing upright. Hannah’s right hand and Monica’s left hand met just </p>
+<p>above Jenny’s gushing pussy, while each of them reached their other hand over to rub at her </p>
+<p>girlfriend’s pussy.</p>
+<p>Jenny sighed, closing her eyes and leaning back into Kelly’s towering soft breasts behind </p>
+<p>her. She felt her roommates rubbing expertly at her wet center and felt her own effusive dripping </p>
+<p>arousal steadily increasing. Below and between her spread legs, Kelly had opened her mouth wide, </p>
+<p>gasping and grinning with anticipation, even as she caught and swallowed some initial small squirts </p>
+<p>from the three pussies hanging over her.</p>
+<p>Somewhere behind her, Jenny heard the crescendoing sound of Kelly’s milk spraying </p>
+<p>progressively harder against the wall. Three pussies’ worth of gushing, streaming liquids were </p>
+<p>spraying into Kelly’s mouth, and thanks to the power of Jenny’s wish, all of their squirting was </p>
+<p>immediately transformed into milk inside Kelly’s surging chest.</p>
+<p>31</p>
+<p>Jenny was luxuriating in the feel of Hannah and Monica’s hands rubbing her newly hairless </p>
+<p>pussy. They were clearly experts in pleasuring other girls, thanks to her earlier wish, and she </p>
+<p>exalted in feeling her own arousal slowly growing from the delicious sensations at her core.</p>
+<p>She looked down just in time to see a voluminous gush from her own pussy ﬁlling Kelly’s </p>
+<p>mouth and soaking the girl’s face. Kelly seemed to be riding waves of her own ecstasy, swallowing </p>
+<p>her roommates’ gushing squirt as quickly as possible, then opening her mouth once again to accept </p>
+<p>more of their gifts.</p>
+<p>The sound of spraying liquids behind her was now echoing even louder. Jenny felt a curious </p>
+<p>wet sensation, and looked down to see her own shoulders and t-shirt gradually dampened from the </p>
+<p>milky rain spurting from Kelly’s huge nipples. The moistness in her shirt, however, would </p>
+<p>periodically fade away every few seconds, even as it was again hosed down by Kelly’s incredible </p>
+<p>milk production.</p>
+<p>Jenny reached back with both arms, feeling the huge towering spheres of Kelly’s growing </p>
+<p>breasts behind her. She rubbed briskly along their distended forms, grinning as she felt Kelly’s skin </p>
+<p>hot and angry with milk. She wanted to keep her girlfriend’s chest a surprise for herself, however, </p>
+<p>and she kept her eyes forward and down at Kelly’s open mouth between her legs.</p>
+<p>Hannah and Monica were each still using both of their hands to rub furiously at the two </p>
+<p>pussies nearest them. Jenny felt herself nearly peaking, at long last, and was ﬁnally ready to enjoy </p>
+<p>her own ﬁrst orgasm with the other girls.</p>
+<p>“Come, girls. Let’s all cum together!” Jenny gasped.</p>
+<p>Hannah and Monica grinned at her, then moaned as all four of them reached their climaxes </p>
+<p>together. Kelly gave a valiant effort, swallowing repeatedly as many mouthfuls of her roommates’ </p>
+<p>gushing squirt as she could manage, but she simply couldn’t keep up. Great swaths of their juices </p>
+<p>ended up on their legs, in Kelly’s hair, and on the ﬂoor below them, but none of them save Jenny </p>
+<p>noticed Kelly’s hair quickly drying out again.</p>
+<p>Monica’s legs were shaking and the sudden increase in weight from her growing chest </p>
+<p>caught her off-guard. She fell backwards, her taut bottom landing on the carpet below her, as her </p>
+<p>surging breasts completed their latest round of growth. She pushed off the ﬂoor to sit up, thrilled at </p>
+<p>how her huge chest now spread past her knees over her outstretched legs. She was laughing and </p>
+<p>wheezing from the delirious sensation of growing.</p>
+<p>32</p>
+<p>“Oopsies!” Hannah giggled. “Wow Mon, your boobies are even bigger now! Can you even </p>
+<p>stand up?”</p>
+<p>Jenny took a step forward, dismounting Kelly’s beaming face, then turned to look behind </p>
+<p>herself. Kelly’s chest towered several feet into the air, and the added intensity of all the squirt being </p>
+<p>transformed into milk had clearly put her girlfriend’s nipples into overdrive. Huge swaths of the wall </p>
+<p>were being continuously doused in Kelly’s spurting milk, soaking through the wallpaper only to be </p>
+<p>magically dried out just as quickly only a moment later. </p>
+<p>Jenny chuckled at her immobilized girlfriend, knowing that she could easily address this </p>
+<p>problem with a wish. She tried stepping around Kelly, but the girl’s enormous breasts had swelled </p>
+<p>so large that they completely obscured the small window by the desk. Jenny tilted her head; this </p>
+<p>was not something she had expected. </p>
+<p>I need to be more careful with that window, she pondered, then giggled to herself at the </p>
+<p>absurdity of her situation. At once she took off, walking towards the bedroom featuring their new </p>
+<p>shared bed.</p>
+<p>“Kelly, you rest up a while,” she called over her shoulder. “Hannah, Monica, come to bed.”</p>
+<p>Hannah and Monica grinned at each other, then immediately dropped to the ﬂoor, crawling </p>
+<p>slowly towards their bedroom. It was slow going as they dragged their enormous breasts and </p>
+<p>sensitive nipples across the ﬂoor.</p>
+<p>Monica was grinning as she looked up at Hannah’s dripping pussy ahead of her. “It’s a good </p>
+<p>thing we’re crawling now, Hannah! I’m not so sure I could walk with these big boobs!”</p>
+<p>Hannah paused for a moment, smiling back at her girlfriend, though somewhat disappointed </p>
+<p>that Monica had avoided a collision this time. </p>
+<p>“You’re right, Mon, but these huge boobs are so amazing! Come on, Jenny needs us!”</p>
+<p>Monica reached up to lightly pat her girlfriend’s taut bottom, chuckling as her touch caused </p>
+<p>Hannah’s pussy to squirt all over her outstretched arm. </p>
+<p>“Then let’s not keep her waiting!”</p>
+<p>33</p>
+<p>Jenny was sitting on the edge of the single large bed in their shared bedroom, still wearing </p>
+<p>her oversized white t-shirt but nude from the waist down. She grinned as Hannah and Monica </p>
+<p>slowly crawled in front of the bed, dragging their huge boobs along the carpet. They remained on </p>
+<p>their hands and knees, smiling up at her.</p>
+<p>Monica was trying to keep both hands on the ground, gently spreading her breasts to an </p>
+<p>impressive radius around her torso. Jenny realized that Monica and Hannah both seemed much </p>
+<p>larger than even a minute ago, and laughed when she realized that their increased sensitivity </p>
+<p>probably made their crawl into the bedroom most titillating.</p>
+<p>Jenny uncrossed her legs, thrilled anew at the sense of power she felt over these girls. At </p>
+<p>once a huge spray of her essence spurted from her pussy, covering Hannah’s grinning face.</p>
+<p>“Yum!” Hannah giggled, licking at the juices around her mouth.</p>
+<p>Jenny stood up in front of the bed. Looking down on her roommates from this height </p>
+<p>seemed to enhance her sense of power over them. </p>
+<p>“Turn around. Present your pussies,” she commanded.</p>
+<p>Hannah and Monica grinned, then hefted and dragged their huge boobs around until they </p>
+<p>were facing away from Jenny, still on their hands and knees. Jenny pondered for a moment, taking </p>
+<p>in the sight of their drenched pussies squirting their juices down their legs.</p>
+<p>“You know girls, something I’ve always liked about you two is that you can’t keep your legs </p>
+<p>closed for more than a moment,” Jenny offered.</p>
+<p>Hannah and Monica’s legs immediately slid open. It seemed almost involuntary, and as they </p>
+<p>looked back at her, they didn’t seem to notice anything unusual.</p>
+<p>Hannah looked perplexed. “Well sure Jenny, but you know we’ve always been like that!”</p>
+<p>“Yeah, we talked about this last week. You know we always get so turned on we can’t keep </p>
+<p>our legs closed!” Monica reminded her.</p>
+<p>Jenny paused to admire their dripping pussies between their toned, spread legs. As she </p>
+<p>looked back and forth between them, she grinned to herself as each pussy in turn suddenly gushed </p>
+<p>when she settled her eyes upon it. She knew that they could feel her gaze upon their bodies.</p>
+<p>34</p>
+<p>“Right, of course,” Jenny rolled her eyes, then looked back to the tall blonde.</p>
+<p>“Hannah, it’s so fun how, when you’re not busy doing something else, you always have at </p>
+<p>least one hand pleasuring yourself,” she observed.</p>
+<p>Hannah frowned, suddenly facing a predicament. She’d always found it comforting to idly </p>
+<p>rub her pussy or tug on her nipples, but how could she do so now with these huge new breasts? A </p>
+<p>moment later she had an epiphany, grinning to herself at her own ingenuity. She leaned forward, </p>
+<p>resting her weight on her massive breasts, stimulating her nipples most deliciously against the </p>
+<p>rough carpet and freeing her to lift both arms up and around her chest.</p>
+<p>Hannah’s delicate ﬁngers suddenly came into view as she reached both hands between her </p>
+<p>legs, lazily sliding her ﬁngers around her dripping pussy with noisy <em>squelch-squelch</em> sounds. </p>
+<p>Rubbing herself like this had always helped her focus, and she knew it would help her be prepared </p>
+<p>for anything Jenny might ask of her. The added sensations from her extra-sensitive big nipples </p>
+<p>rubbing on the ﬂoor made her ﬂush, and she closed her eyes, feeling the other two girls’ eyes on </p>
+<p>her turning her on even more.</p>
+<p>It was Monica’s turn to look perplexed. </p>
+<p>“Jenny, you know Hannah can’t help rubbing herself all the time! You don’t need to tease her </p>
+<p>about it,” she offered, defending her girlfriend.</p>
+<p>Jenny’s gaze turned back to Monica. The chatty brunette was starting to get on her nerves. </p>
+<p>Monica blushed red from the attention, and Jenny saw her dripping pussy gush profusely across </p>
+<p>the carpet behind her, which remained magically dry despite the enormous volume of liquid.</p>
+<p>“You know Monica, I love how, when you’re not busy doing something else, you’re always </p>
+<p>using your mouth to pleasure Hannah or one of your other roommates, or yourself if they’re not </p>
+<p>around,” Jenny remarked.</p>
+<p>Monica suddenly lunged towards Hannah until their lips met. Hannah’s eyes widened in </p>
+<p>surprise for a moment, but she soon grinned and leaned back into Monica, inserting her tongue into </p>
+<p>her girlfriend’s mouth and enjoying the sensation of feeling her sucking on it.</p>
+<p>“Sit up Hannah, and face me,” Jenny intoned.</p>
+<p>35</p>
+<p>Hannah detached herself from Monica, earning a disappointed moan from the other girl. As </p>
+<p>she turned around to face Jenny, swinging her huge breasts around and settling them in her lap, </p>
+<p>Monica kept launching herself at Hannah, trying to kiss or lick her but having only limited success </p>
+<p>as she shifted around. Monica seemed also to be heavily weighed down by her own huge hanging </p>
+<p>breasts.</p>
+<p>Hannah ﬁnally settled facing the bed, her huge boobs in her lap and her legs spread wide </p>
+<p>open. Immediately she found herself idly grabbing at the tender ﬂesh of her left breast with one </p>
+<p>hand, while her other hand reached forward and around to grasp at her own nipple, giving it gentle </p>
+<p>squeezes. She felt her ministrations on her own sensitive chest heating herself up again, and she </p>
+<p>could hear and feel generous gushes of her squirt arcing from her pussy to splash across the </p>
+<p>undersides of her big breasts.</p>
+<p>Monica was still searching for something, anything, on Hannah that she could kiss or lick. A </p>
+<p>moment later she had a sudden revelation, thinking herself brilliant for ﬁguring out how to please </p>
+<p>her girlfriend and Jenny at the same time. She scooted in front of Hannah and sucked her </p>
+<p>girlfriend’s big nipple into her mouth as she kept her pussy thrust upwards and back towards Jenny, </p>
+<p>her legs still spread wide open.</p>
+<p>Hannah grinned down at her girlfriend sucking on her nipple, and saw Monica blush as an </p>
+<p>arcing jet of squirt shot from her pussy back towards Jenny. They maintained eye contact with each </p>
+<p>other, each girl feeling themselves heating up even more.</p>
+<p>Hannah broke eye contact with her girlfriend; there seemed to be something strange about </p>
+<p>Jenny lately and she couldn’t help but mention it.</p>
+<p>“Jenny, we all know Monica can’t help herself around us. She’s just trying to be generous! </p>
+<p>You know, you sure are saying a lot of obvious things lately!” Hannah boggled, even as she rode </p>
+<p>waves of pleasure from her girlfriend sucking on her huge nipple.</p>
+<p>Jenny’s head snapped up as she heard a sudden knock on the outer door to their room. </p>
+<p>She felt a sudden sense of panic replacing the drunken power she’d been enjoying until now.</p>
+<p>Her mind was suddenly racing again. I need to clean up more than just their liquids! she </p>
+<p>thought, then leapt into action.</p>
+<p>36</p>
+<p>Spinning around as quickly as her huge new chest would allow, she ran to the bedroom </p>
+<p>window. It looked like dark clouds had been rolling in; the starry sky was now almost entirely </p>
+<p>obscured. I have to make this quick, she thought. But what to wish for?</p>
+<p>I wish that Kelly had… that Kelly gets wishes… she wasn’t thinking clearly. She felt </p>
+<p>herself panicking as she saw only a small patch of starry sky remaining between the gathering </p>
+<p>clouds.</p>
+<p>I wish that… that my roommates were mine to – she started, but her last glimpse of the </p>
+<p>stars had at that moment vanished behind the thick cloud cover. It was now nearly pitch black and </p>
+<p>she could hardly see anything at all outside the window.</p>
+<p>I… what? I didn’t ﬁnish! Her thoughts were suddenly pierced by a second sharp knock at </p>
+<p>their door. She spun around again, nearly throwing herself off balance. Monica had scooted her </p>
+<p>legs around, keeping her mouth on Hannah’s nipple as she pointed her pussy at Jenny, still trying </p>
+<p>to present herself.</p>
+<p>In her sudden panic, Jenny had barely noticed that Hannah and Monica’s breasts had </p>
+<p>grown even larger in the last minute. Monica’s huge chest was pancaking impressively beyond her </p>
+<p>arms as she remained on her hands and knees and attended to her girlfriend. Hannah’s growing </p>
+<p>chest had pushed her nipple further outwards, requiring Monica to crawl backwards from the gentle </p>
+<p>pressure.</p>
+<p>door.</p>
+<p>Jenny rushed past them, stepping through the doorway to their common room. As she </p>
+<p>approached the outer door, she turned for a quick glance at Kelly. Sure enough, her new girlfriend </p>
+<p>was still dozing quietly on the desk near the window, her enormous breasts towering into the air </p>
+<p>above her and leaning against the wall. Kelly’s nipples had softened somewhat, but even in her </p>
+<p>sleep they were constantly leaking small rivers of milk that dripped down her breasts onto the table, </p>
+<p>where it slowly faded away a few moments later. </p>
+<p>At least there’s some peace and quiet out here, Jenny thought, bracing herself in front of the </p>
+<p>Jenny swung the door wide open to reveal Erica, a third-year student who lived a few doors </p>
+<p>down and was responsible for all of the girls in their wing of the dormitory. Erica’s ﬁery red hair was </p>
+<p>tied back in a neat ponytail, her small t-shirt stretched around her sizable chest, and her tight jeans </p>
+<p>37</p>
+<p>showed off her slender ﬁgure. She was cradling in her right arm a clipboard with a few sheets of </p>
+<p>paper.</p>
+<p>Erica had promised herself that she wouldn’t be caught staring at that ﬁrst-year with the </p>
+<p>enormous boobs. It was bad enough that the girl had to live so close by, and she worried that even </p>
+<p>a formality like this routine inspection might lead her too close to temptation. </p>
+<p>Looking through the open doorway, her eyes landed on a truly enormous pair of breasts in a </p>
+<p>tight white t-shirt. </p>
+<p>brown-haired girl. </p>
+<p>It’s her! she thought, then quickly raised her eyes to meet the surprised gaze of the cute </p>
+<p>I said I wouldn’t! she chastised herself, then nervously looked back down at her clipboard.</p>
+<p>“Hi Jenny! I just need to take a quick look around your room, if you don’t mind,” she offered, </p>
+<p>trying to stay professional.</p>
+<p>Jenny reeled back. </p>
+<p>“NO! I mean, this is not a good time, can you –”</p>
+<p>wall.</p>
+<p>Jenny’s mouth fell open. </p>
+<p>“Is that Kelly?” Erica was peering around her at the huge ﬂeshy mass leaning against the far </p>
+<p>“I… who? Nobody here –” she started, but Erica had already stepped past her into the room. </p>
+<p>She spun around and almost fell over from the motion of her new center of gravity. She looked up </p>
+<p>to see Erica standing next to the sleeping girl with the towering milky breasts.</p>
+<p>Jenny rushed to Erica’s side, her eyes wide. </p>
+<p>“Look, I can explain! Kelly was –” she started, but stopped herself, seeing Erica smiling as </p>
+<p>her green eyes tilted higher, taking in the true enormity of Kelly’s huge breasts. Erica was watching </p>
+<p>streams of Kelly’s milk lazily exuding from her nipples and rolling down her breasts.</p>
+<p>“Your possession, I know,” Erica nodded.</p>
+<p>38</p>
+<p>“My WHAT?” Jenny was agog.</p>
+<p>“Look Jenny, I won’t use that other word,” Erica said, shifting uncomfortably.</p>
+<p>“But come on, everyone knows that Kelly, Hannah, and Monica are your… your property. Of </p>
+<p>course you have every right to do anything you like to them, Jenny,” she said cheerfully, smiling at </p>
+<p>Jenny. </p>
+<p>Jenny’s head was spinning. What did I just wish for? That they were… were mine?! And </p>
+<p>everyone knows it? A confused fog settled in her mind as she found herself recalling memories of </p>
+<p>having ownership of her three roommates.</p>
+<p>Erica cast an appreciative eye upwards again, admiring how Kelly’s huge nipples seemed to </p>
+<p>instantly harden and start spraying milk even while the girl was asleep. As they stood gazing at </p>
+<p>Kelly’s towering breasts, they both thought they heard the mufﬂed sound, coming from somewhere </p>
+<p>beyond the wall of breast, of a nearly continuous jet of liquid striking against glass.</p>
+<p>Jenny couldn’t help herself reacting to the sheer erotic weirdness of all of this, and her </p>
+<p>pussy suddenly released a sizable gush of sweetness that sprayed across Erica’s jeans. She froze, </p>
+<p>suddenly remembering that she wasn’t wearing anything below her waist.</p>
+<p>Erica chuckled, dexterously lifting her clipboard out of the way to keep it dry, and discreetly </p>
+<p>rubbed her other palm around a spot on her thigh where Jenny’s squirt had landed. She had heard </p>
+<p>some of the other girls talking about how wet Jenny and her roommates could be, and if anything </p>
+<p>they seemed even more so in person. She didn’t want to be rude, however, and besides, weren’t </p>
+<p>they in the privacy of their own room?</p>
+<p>“You are so lucky Jenny, living with the university’s only lactation major!” Erica admired. </p>
+<p>Jenny stared at her. </p>
+<p>“I really am,” she admitted, still dumbfounded.</p>
+<p>Erica was grinning widely as she watched small rivers of milk ﬂowing down Kelly’s breasts. </p>
+<p>“I mean, just look at her!” she marveled.</p>
+<p>The splashing sound of liquid against glass grew louder in Jenny’s ears, and as she turned </p>
+<p>back towards its source, she was certain that she saw the sleeping girl’s huge nipples creeping </p>
+<p>39</p>
+<p>higher on the wall. Kelly’s milky teats were being pushed towards the ceiling as the huge breasts </p>
+<p>below them swelled inexorably larger. </p>
+<p>Erica seemed to notice this as well, observing a sizable increase in the rate of Kelly’s milky </p>
+<p>spray.</p>
+<p>nodded, sounding impressed. </p>
+<p>“Makes sense that you’d have her growing larger. After all, it’s more milk for everyone!” she </p>
+<p>Jenny suddenly remembered the two girls in the bedroom. Her eyes widened.</p>
+<p>“Hannah! Monica! Stop whatever you’re doing and come here at once!” she yelled.</p>
+<p>A long moment passed and no one had emerged from the bedroom. Finally Jenny saw what </p>
+<p>appeared to be a large nipple emerge through the doorway and suddenly rotate down to the </p>
+<p>ground. Hannah had ﬂipped head over breast to pitch herself through the doorway into the common </p>
+<p>room, followed a moment later by Monica successfully repeating the exercise with her even larger </p>
+<p>chest. Both girls came to kneel upright, side by side, with their legs spread and their huge breasts </p>
+<p>splayed out before them nearly to chin level.</p>
+<p>Monica immediately leaned towards Hannah and began eagerly licking along the top of </p>
+<p>Hannah’s huge breast. Neither of Hannah’s hands were visible behind her bosom, but Jenny heard </p>
+<p>a rhythmic <em>squelch-squelch</em> and surmised what the blonde was up to.</p>
+<p>Erica had barely acknowledged them, instead studying the checklist on her clipboard. She </p>
+<p>appeared to be closely inspecting Kelly’s huge breasts, testing the ﬁrmness in various places and </p>
+<p>sampling some of the milk dripping down their towering forms.</p>
+<p>Jenny turned back to Erica, watching her poking at Kelly’s enormous bosom.</p>
+<p>“So, er, what can I do for you, Erica?” she offered, having mostly recovered.</p>
+<p>“Sorry Jenny, it’s just a routine lactation inspection,” Erica apologized.</p>
+<p>“I’ll just need to take a look at Kelly’s breasts,” she gestured at them with the tip of her pen, </p>
+<p>then checked a box on her clipboard.</p>
+<p>“By the way, I’ve heard a lot of the other girls expressing interest in Kelly’s milk. Do you think </p>
+<p>you could share with them?” Erica queried, checking another box with a satisﬁed smile.</p>
+<p>40</p>
+<p>Jenny couldn’t help but laugh, releasing a momentary loud guffaw. </p>
+<p>“The more the merrier,” she said gamely.</p>
+<p>“Hi Mistress! Oh, hey Erica!” Kelly suddenly said cheerfully, grinning upside-down at them, </p>
+<p>her head still tilted back over the edge of the desk. </p>
+<p>Kelly was suddenly shifting uncomfortably, trying to grasp and heft her huge breasts, but </p>
+<p>making no progress; she was immobilized by the weight of her bosom. Jenny realized that the short </p>
+<p>blonde, still wrestling with her chest in vain, was trying to greet her girlfriend in her own special way.</p>
+<p>“I’m so sorry Mistress, I’m just too big to move right now!” Kelly apologized. She was a </p>
+<p>smaller girl, easily the shortest between the four of them, and Jenny doubted her girlfriend’s </p>
+<p>outstretched arms could reach even halfway around one of her own huge breasts. </p>
+<p>“I wish that I could move these boobs so I could give you a big kiss!” the short blonde </p>
+<p>giggled.</p>
+<p>This sounded to Jenny like a strange thing for Kelly to say. After all, Kelly was such a tall </p>
+<p>girl, more so even than Hannah, and she was so toned and subtly muscular. Jenny couldn’t </p>
+<p>imagine that Kelly should have any trouble moving around at all, even with her chest having grown </p>
+<p>to such an enormous size.</p>
+<p>Kelly easily slid her huge breasts off the wall and spun around, then stood up in front of the </p>
+<p>desk. The tall blonde would have normally towered over the other two girls barefoot, but now even </p>
+<p>more so wearing her stilettos. Her breasts were truly immense, extending below her knees and </p>
+<p>projecting several arm lengths in front of her, topped with hugely erect nipples longer than Jenny’s </p>
+<p>hands. Their massive forms seemed taut and buoyant, though, and Kelly seemed to have little </p>
+<p>trouble standing upright. As Jenny stared at her girlfriend’s massive chest, Kelly’s hard nipples </p>
+<p>seemed to stretch even further and started spraying milk all over her and Erica.</p>
+<p>“Oops, sorry for the milky shower, Erica! But you know how my milk just sprays on its own </p>
+<p>sometimes,” Kelly apologized to the older girl. Erica didn’t seem to mind, marveling quietly to </p>
+<p>herself and busily licking milk from her hands. </p>
+<p>Kelly grabbed at her huge breasts with her long arms, pulling them apart and stepping </p>
+<p>towards Jenny in a single expert motion, smiling as her huge chest naturally bounced back together </p>
+<p>41</p>
+<p>around her girlfriend’s body. She leaned forward and lost herself in a sloppy kiss with Jenny, the </p>
+<p>smaller girl completely enveloped in her enormous hanging cleavage.</p>
+<p>While still kissing her girlfriend, Kelly leaned back and Jenny felt her feet leaving the ﬂoor, </p>
+<p>her weight entirely supported by Kelly’s incredible strength and enormously ﬁrm breasts. Kelly was </p>
+<p>animatedly tonguing Jenny as she paced forward, carrying her mistress in her cleavage, walking </p>
+<p>past Erica towards her other roommates kneeling by the bedroom door. Two spurting streams of </p>
+<p>nearly translucent liquid were gushing downwards from underneath Kelly and Jenny, splattering </p>
+<p>across the ﬂoor as the tall girl strutted across the room. A moment later the excess liquids faded </p>
+<p>away, leaving the ﬂoor dry.</p>
+<p>Erica tried to busy herself with her inspection, following Kelly around and focusing on her big </p>
+<p>milky breasts while attempting to ignore the tall girl’s very friendly behavior with her roommates.</p>
+<p>Kelly kneeled down in front of Hannah and Monica, smiling at Jenny as she broke their kiss, </p>
+<p>then twisted her shoulders, leaning her huge breasts sideways and Jenny along with them. She </p>
+<p>leaned over the huge shelf of Hannah and Monica’s chests and gave a sloppy kiss to each of them </p>
+<p>in turn. They grinned back at her, eagerly returning her friendly greeting.</p>
+<p>Kelly found herself admiring Monica’s huge breasts, and Jenny turned to look as well from </p>
+<p>her vantage point inside Kelly’s cleavage. Monica suddenly felt herself ﬂushed, extremely turned on </p>
+<p>“You girls are so big now! Keep that up and you’ll be as huge as me!” Kelly smiled down at </p>
+<p>them, watching as Monica returned to giving her best effort at licking across Hannah’s enormous </p>
+<p>breasts. The brunette was making slow progress, though; there was simply so much of Hannah’s </p>
+<p>Kelly pondered at Monica for a moment, thinking that the girl had been so generous, always </p>
+<p>seeking to please all of them so selﬂessly with her mouth. She found herself daydreaming in her </p>
+<p>aroused haze, watching Monica ﬂush under her glare even as the brunette kept licking across </p>
+<p>from the attention.</p>
+<p>ﬂesh to cover. </p>
+<p>Hannah’s huge chest.</p>
+<p>grinned.</p>
+<p>“Monica, I wish you had a super long tongue so you could lick us all much better!” Kelly </p>
+<p>42</p>
+<p>Jenny’s ears perked up at this, again thinking it a very peculiar thing for Kelly to say. </p>
+<p>Monica’s amazing prehensile tongue had always been extremely long, after all, and that was why </p>
+<p>Jenny had told her earlier to keep her mouth busy on the other girls. Jenny shrugged, pressing </p>
+<p>gently at the ﬁrm breast on top of her, able to extricate herself from Kelly’s cavernous cleavage as </p>
+<p>Kelly twisted her shoulders back again to assist her. </p>
+<p>Monica was grinning, fully extending her incredibly long tongue and slathering Hannah’s </p>
+<p>breasts in great sheets of her saliva. It took but a few quick licks to cover even the extensive </p>
+<p>surface area of Hannah’s bosom, and Monica seemed satisﬁed at this, rotating herself in front of </p>
+<p>Hannah, spreading her legs again, and leaning backwards to slide into her blonde girlfriend’s huge </p>
+<p>bosom. Hannah, still rubbing at her dripping pussy, suddenly felt Monica’s tongue slither between </p>
+<p>her ﬁngers and plunge into her wet center.</p>
+<p>Hannah yelped with pleasure, and Kelly, Jenny, and Erica suddenly turned to look at her. </p>
+<p>Monica’s amazing long tongue was expertly caressing her insides, and the added sensations from </p>
+<p>feeling Monica squirming around in her bosom and sensing the three other girls staring at her was </p>
+<p>almost too much to bear. She felt the onset of her orgasm, immediately gushing great jets of liquid </p>
+<p>across Monica’s body and forward out of her cleavage onto Jenny, Erica, and the side of Kelly’s </p>
+<p>enormous left breast.</p>
+<p>Hannah wheezed and sighed as Jenny and Erica turned away from her, feeling herself </p>
+<p>settling down into an ongoing aroused haze, and still enjoying Monica’s tongue writhing inside her </p>
+<p>pussy. She lifted one hand from her pussy and encircled her girlfriend’s long tongue with her </p>
+<p>ﬁngers, gently stroking it even as it continued ravishing her insides.</p>
+<p>Erica’s eyes widened as the outer edge of Kelly’s breast suddenly grew towards her. She </p>
+<p>nodded with satisfaction, ticking another box on her clipboard, and took a large step to the left to </p>
+<p>avoid a sudden incoming blast of Kelly’s milk.</p>
+<p>Jenny stepped over Kelly’s spurting nipples, sensing her long hair immediately soak through </p>
+<p>with milk but magically drying out again, and walked around the expanse of Kelly’s right breast </p>
+<p>towards Erica.</p>
+<p>“Sorry Erica, what was it you were looking for again?” Jenny queried, feeling herself </p>
+<p>regaining some measure of conﬁdence.</p>
+<p>43</p>
+<p>“Well Jenny, the university’s Department of Lactation takes its research seriously, as you </p>
+<p>know,” Erica nodded at her.</p>
+<p>“And with just one student in the program right now,” she said, gesturing at Kelly, “You can </p>
+<p>imagine they are keenly interested in her progress!” she grinned.</p>
+<p>Kelly had leaned back over Hannah’s huge cleavage and was sharing another sloppy kiss </p>
+<p>with the other blonde, but she perked up at the mention of her academics and turned back towards </p>
+<p>“It’s true, they are. But it’s so great being a lactation student!” she exclaimed, then sighed </p>
+<p>Jenny.</p>
+<p>happily.</p>
+<p>“I wish that all of you girls were lactating like me, so we could all milk together!” she cooed.</p>
+<p>Jenny pondered for a moment why Kelly kept saying things that were obviously true, then </p>
+<p>shrugged, patting the sides of her own huge milky breasts through her t-shirt. She’d always been </p>
+<p>milking, after all, just like these other girls, and it made sense that the university would have all ﬁve </p>
+<p>of its lactation majors sharing a room together.</p>
+<p>Erica was studying her clipboard again when she suddenly sensed her own leaking milk had </p>
+<p>started soaking through her thin t-shirt. She frowned, trying to peer over the shelf of her big milky </p>
+<p>breasts, and conﬁrmed that most of the front of her shirt had darkened with her milk.</p>
+<p>Kelly giggled, identifying with Erica’s current plight. After all, she’d had the same challenge </p>
+<p>herself of leaking milk through her shirts until Jenny told her that she didn’t need to wear clothes </p>
+<p>anymore.</p>
+<p>“Bummer, Erica!” Kelly consoled her. “I wish you didn’t have to wear clothes like us!”</p>
+<p>Jenny angrily swung her head back towards Kelly. Why did Kelly keep saying such plainly </p>
+<p>obvious things, embarrassing her in front of the older girl? Jenny removed her t-shirt to allow her </p>
+<p>milk to spray more easily, frowning again at Kelly.</p>
+<p>“Kelly, everyone knows that Erica is a lactation and nudity double major!” Jenny upbraided </p>
+<p>her, rolling her eyes.</p>
+<p>44</p>
+<p>She turned back to Erica, admiring the girl’s milk leaking from her nipples and running down </p>
+<p>her nude body. She found herself somewhat envious of the older girl; it must be really nice to not </p>
+<p>have to wear clothes anywhere.</p>
+<p>turning to Jenny. </p>
+<p>Erica was determined to carry out her inspection, looking brieﬂy at her clipboard before </p>
+<p>“How is your production lately, Jenny?” she queried, arching an eyebrow.</p>
+<p>Jenny grinned back at her. Her own milk production had always been excessive thanks in </p>
+<p>large part to her huge chest, and she thought she was giving a rather impressive demonstration </p>
+<p>even now, but she still indulged her older roommate.</p>
+<p>“Oh, you know these girls, Erica. They always keep me well-milked!’ she said, grabbing her </p>
+<p>own breasts for emphasis. A sudden sizable milky spray from her nipple didn’t exactly bolster her </p>
+<p>claim, however. </p>
+<p>“Yes, I see,” said Erica, frowning momentarily. “And how about Hannah and Monica?”</p>
+<p>“As you can tell,” Jenny offered, pointing, “They’ve always been quite impressive.”</p>
+<p>Monica was still on her back between Hannah’s legs, her legs spread wide as her pussy </p>
+<p>doused the ﬂoor in front of her. Hannah and Monica’s towering breasts were spraying arcs of their </p>
+<p>milk into the air, raining down on Jenny, Erica, and the vast expanse of Kelly’s chest. </p>
+<p>A dull roar of rushing liquids was audible, and all of the girls found themselves talking loudly </p>
+<p>to compensate. Kelly’s enormous nipples were dousing the far wall as her pussy gushed across the </p>
+<p>ﬂoor, Hannah and Monica were both squirting from their pussies and sending showers of milk from </p>
+<p>their nipples, Jenny found her own wet center actively gushing, and even Erica found herself turned </p>
+<p>on enough by her four roommates for her own milk to start spraying.</p>
+<p>Jenny turned back to Kelly for a moment, seeing her blonde girlfriend still kissing Monica on </p>
+<p>the ﬂoor next to her. She had to take care of all three of them, of course, and she found herself </p>
+<p>wondering how they’d be able to keep up with their coursework.</p>
+<p>“Kelly, we’ll need your help next week getting Hannah and Monica to their classes,” she </p>
+<p>intoned loudly, impressed with herself for thinking ahead.</p>
+<p>45</p>
+<p>Kelly chuckled; her girlfriend was always so serious all the time. Couldn’t she relax with </p>
+<p>them for once?</p>
+<p>on the lips.</p>
+<p>“Sure thing Jenny, although I wish that you didn’t have to worry about any of that stuff, and </p>
+<p>we could all just focus on having fun!” she said, turning back to Hannah and giving her a quick peck </p>
+<p>Jenny thought that Kelly sure was saying a lot of obvious things lately, but it didn’t </p>
+<p>particularly bother her. In fact, she couldn’t really bring herself to worry about much of anything at </p>
+<p>all. Everything she needed was provided by her mistress, Erica. This certainly came with some </p>
+<p>perks as well, and she grinned, reclining into a pillow on the ﬂoor.</p>
+<p>Monica was sitting next to Jenny on another large pillow, several feet away from the two </p>
+<p>sophomore girls loudly slurping milk from her huge breasts. Jenny thought Monica must have been </p>
+<p>enjoying their attention, as the brunette was whimpering with excitement, fully extending her long </p>
+<p>tongue and lazily licking across the huge spheres of her own breasts.</p>
+<p>Nearby on the ﬂoor in front of her, Jenny recognized the huge forms of Hannah’s breasts </p>
+<p>towering into the air. Two athletic-looking girls were leaning gently on Hannah’s chest, grinning as </p>
+<p>they suckled milk from the blonde’s big nipples.</p>
+<p>Jenny looked up to see, descending slowly from above, a trim pair of thighs framing a </p>
+<p>beautiful nude pussy. She’d have recognized those subtly muscled legs anywhere, and grinned </p>
+<p>widely, seeing Kelly’s pussy start gushing her juices as if in response to her attention. She let out a </p>
+<p>short whoop and opened her mouth, trying to swallow all of her girlfriend’s spurting liquids.</p>
+<p>She stretched her neck to momentarily avoid Kelly’s incoming squirt all over her face, then </p>
+<p>peered around for her mistress. She saw Erica reclining nearby in the sunken pillow pit that was </p>
+<p>their dormitory room, leaning her head back with pleasure as her nipples were sucked by two ﬁrst-</p>
+<p>year girls. Jenny recognized the girls drinking Erica’s milk as her next-door neighbors and found </p>
+<p>herself admiring their lithe forms.</p>
+<p>Erica was lovingly patting the heads of the younger girls at her nipples.</p>
+<p>“Zara, Haley, that’s enough for now. My, you girls are thirsty this evening!” she chuckled at </p>
+<p>them as they gave a disappointed whimper and disengaged from her dripping nipples.</p>
+<p>46</p>
+<p>“Be a darling and send in the next two girls, would you?” Erica said, smiling at them.</p>
+<p>Late into the evening, a line of girls was forming outside their door. They were all thirsty for </p>
+<p>their regular milky nightcap before bed from the ﬁve lactation majors at the end of the hall.</p>
+<p>47</p>
+</body>
+</html>

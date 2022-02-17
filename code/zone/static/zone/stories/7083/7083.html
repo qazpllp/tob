@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>The Apple Doesn't Fall Far from the Tree, Ch. 02</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>Author's Note: The idea for this story and the protagonist's name are based on suggestions 
+from two of my awesome Patrons. Standard disclaimer applies: this story contains graphic 
+depictions of sex, so if it's illegal or immoral for you to be reading this, stop now! All characters
+in sexual scenes are at least eighteen, all situations are entirely fictional, and any 
+resemblance to any real-life individuals or situations is entirely coincidental. Copyright Fidget, 
+2020. All rights reserved. Enjoy!</p>
+<p>The Apple Doesn't Fall Far From the Tree </p>
+<p>by Fidget</p>
+<p>Chapter 2 - Completing the Circle</p>
+<p>"I think our changes are getting stronger, Amy. I've been feeling... really horny around you 
+lately. Even more than usual," Josh grunted during one of Amy's daily after-school visits. His 
+large dick throbbed visibly against his athletic shorts, and his new girlfriend's eyes widened 
+rhythmically in excitement with each pulse. "It's making it... hard to think," he concluded 
+roughly, as his own eyes hungrily devoured his girlfriend's curves. Her bust and hips had put 
+on at least another three inches in the past month, and at this point his formerly petite best 
+friend had to be at least a D-cup. It was getting harder not to grab her increasingly appealing 
+feminine body as soon as he saw her each day, and squeeze, and grope, and thrust.</p>
+<p>Josh had learned over the past month just how good thrusting could feel. In the weeks after 
+their first explosive contact they had continued to explore their exciting new sexuality, 
+encouraging each other's powerful new desires even as their urges continued to strengthen.</p>
+<p>At first, they had experimented with heavy petting and hand play. The next time they hung out,
+Amy had secretly snuck Josh's cock out into the open after getting it all nice and hard under 
+his shorts, and she was completely entranced the first time she watched his dick straining and
+jerking under her gentle strokes as it delivered its thick load onto Josh's washboard abs. Josh
+had gotten over his initial embarrassment more quickly this time, and had returned the favor 
+with his own fingers, probing and exploring the tantalizing topology under Amy's shorts as he 
+groped her heavy breasts with his other hand while Amy moaned in pleasure. His 
+inexperience hadn't seemed to matter much, because the excitement and sensation soon had
+Amy clamping her toned thighs around his hand and grinding against his fingers as her own 
+strengthening core muscles involuntarily clenched in her own climax.</p>
+<p>They had quickly graduated to blowjobs, since the sight of Josh's cock twitching and 
+throbbing filled Amy with an inexplicable desire to feel it moving like that within her own body. 
+Josh clearly felt the same way, and as he eagerly watched Amy's soft lips closing around the 
+head of his dick for the first time, he let out a low groan as his pelvis began reflexively </p>
+<p>thrusting into her slick mouth, and Amy sighed with pleasure as she felt his surprisingly tasty 
+dick twitching strongly against the rough, wet stimulation provided by her tongue.</p>
+<p>That stimulation quickly became too much for him, but he couldn't bring himself to stop, and 
+his cock began to stiffen as his automatic thrusting increased in speed and urgency. "Amy, I 
+think I'm gonna..." he growled, but Amy only cupped his balls gently with her free hand in 
+response, suddenly obsessed with feeling them powerfully contracting as they forced his 
+gooey reward out into her waiting mouth. Something about that process suddenly seemed so 
+attractive, so masculine, and Amy couldn't help but feel a giddy thankfulness at Josh choosing
+her to receive his seed.</p>
+<p>For his part, however, Josh had felt a distinct lack of choice ever since he had touched that 
+stupid football, and even now a primal urge drove him to continue mindlessly thrusting into the
+willing female in front of him. His powerful muscles clenched in anticipation, and then choice 
+was suddenly taken away from him entirely. His final thrust brought his mind back to reality 
+even as he felt himself lose control, and his dick began involuntarily emptying itself into Amy's 
+eager mouth. She did her best to swallow as much of the delicious liquid as she could, but 
+Josh's heavy balls continued pumping, and eventually it overflowed her soft lips, ran thickly 
+down her chin, and dripped down onto her large chest.</p>
+<p>When Josh saw the mess he had made of his girlfriend's face and breasts, he felt an 
+unexpected, inordinate swelling of pride and satisfaction at his actions, and that scared him a 
+bit. Not enough to prevent him from compulsively repeating the entire process every time he 
+saw Amy's fuckable body for the next month, but enough to regret how good he felt about his 
+actions afterward as Amy lay back on the bed, apparently delirious with pleasure at being 
+covered in his cum.</p>
+<p>In sum, the main takeaway of the past month was that Josh liked thrusting now. He liked 
+thrusting a lot, and he wanted more of it.</p>
+<p>Amy was bobbing her head, making her tits jiggle delightfully to let him know that she agreed 
+with his assessment. She was feeling even hornier lately too, if that were possible. Amy 
+understood all too well how hard it was to think whenever she was near her tall, increasingly 
+muscled boyfriend, and she was eager to let him know as much.</p>
+<p>"I know what you mean Joshie. Whenever we hang out my little pussy gets so wet and tingly 
+for you that I can hardly stand it!" Josh wasn't sure how he felt about "Joshie", but after what 
+she had done to his dick with her still-growing tits the previous night, he figured she could call 
+him whatever she wanted.</p>
+<p>"Amy! You've never said anything like that before!" Josh exclaimed, trying to hide the fact that 
+her words were going straight to his boner, which was also larger than it had even been.</p>
+<p>"I can't help it. I know that whatever's changing us is making me feel this way, but you just 
+smell so good and it makes me wanna... do things..." she said, her voice trailing off as she </p>
+<p>was once again distracted by her need for his powerful body. Over the past few weeks, Amy 
+had noticed that whenever she was in Josh's presence, it became increasingly difficult to 
+string together multiple coherent sentences. She looked back up at him and opened her 
+mouth as if to speak, hesitated, and then decided to come right out and say it. "Josh, I think 
+we should fuck."</p>
+<p>"What? Are you sure that's what you want?" Josh growled as his stiff cock strained against 
+the polyester of his practice shorts. He was barely able to hold himself back already, and 
+knew that any more encouragement on her part would inevitably result in him fucking her, 
+whether he wanted to or not.</p>
+<p>"Oh god yes! I even bought a pack of condoms a few days ago, so that we could finally enjoy 
+ourselves without worrying about anything!" she said enthusiastically, proud to display what 
+remained of her ability to plan ahead.</p>
+<p>"But we always said we would never do this, and there's no turning back from here," Josh 
+responded even as his body had already backed hers up to the foot of the bed. His cock had 
+decided to fuck her whether Josh wanted to or not, and its patience was wearing thin.</p>
+<p>"I know, but I'm horny and want to feel your dick cumming in my pussy this time!" Amy giggled
+at the intense look on his face as he approached her, knowing that her words had had their 
+intended effect on her big, manly boyfriend. She knew all too well how overwhelming his sexy,
+masculine urges had become for him, and now he definitely wouldn't be able to resist her big 
+titties and curvy hips any longer as her small, receptive body continued to call to his.</p>
+<p>Josh pushed her down onto the bed, gently but firmly, and ripped her tiny, soaked shorts from 
+her hips. His own shorts soon followed, and then his dick was bouncing into view, fully erect 
+and eager for action as it dripped with precum.</p>
+<p>Josh was briefly distracted by what looked oddly like a hint of regret in Amy's eyes as she 
+slowly rolled the condom over the tip of his cock, but then the feeling of her soft hands 
+stroking the condom down his stiff shaft pulled his attention back to what she was doing. 
+Finally Josh could take the delay no longer, pushed Amy down on the bed, and mounted her 
+in his need, plunging himself into his enthusiastic girlfriend and unrolling the condom the rest 
+of the way as he pressed himself fully into her.</p>
+<p>He moaned as the tight pressure of her pussy pulled at his sensitive dick through the thin 
+latex, and then his hips began their instinctive thrusting once again, sending him deep into his
+girlfriend's stimulating passage as the sight of Amy's firm breasts bouncing beneath him 
+spurred him on to even more vigorous motion inside of her.</p>
+<p>For Amy, the pleasure of feeling Josh powerfully pounding into her and the throaty grunts and 
+moans he let out as he did so, clearly oblivious to everything but the call of her seductive 
+pussy and the pleasure it could provide, was driving Amy wild with desire. She slammed 
+herself down onto his dick, wanting his cock as deep inside of her as possible as her own 
+high-pitched gasps and moans of pleasure echoed his with each thrust.</p>
+<p>Her soft, increasingly alluring body was entirely too good at sex, however, and soon Josh felt 
+a familiar euphoric feeling building within him, but many times stronger than ever before now 
+that a silky, receptive pussy was the one doing the coaxing. The testosterone coursing 
+through his veins wouldn't allow him to hold himself back, and the man who had so recently 
+been a weak, stringy nerd with a squeaky voice now groaned in deep baritone satisfaction as 
+his mind blanked with pleasure and his body began its procreative pulsing, sending a thick, 
+heavy load spurting against the tenuous latex barrier protecting his girlfriend's vulnerable 
+reproductive tract from his torrent of catalyzing seed.</p>
+<p>Josh didn't remember pulling out, but when he came to and saw that Amy's tiny, curvy figure 
+was snuggled up against his, he was overcome with a sudden, overwhelming urge to protect 
+her as his body released powerful post-orgasm bonding hormones, and over the next few 
+minutes he waxed poetic (or at least as poetic as he was currently able given their diminishing
+mental faculties) about how much he loved her and how she would always be the only one for
+him.</p>
+<p>Amy, full of happy satisfaction herself after a good fucking, was drinking in every one of his 
+words of devotion. Even so, she found herself frequently gazing over at the spent condom 
+with disappointment; her first time with her sexy, masculine boyfriend had been amazing, but 
+she couldn't help but feel like all of that tasty-looking jizz belonged inside of her instead of in 
+the trash. She'd earned it, after all.</p>
+<p>Josh's physical prowess on the football field had been improving just as quickly as his 
+prowess in bed, and when the first game finally rolled around early in the school year, he was 
+surprised to discover that his coach had made the choice to start him at quarterback. With the
+excitement and intensity of a real game it took a few minutes to settle down into the position, 
+but by the end of the first half Josh already had two passing touchdowns and nearly a 
+hundred yards rushing.</p>
+<p>His dad came to watch him play, of course, and when Josh was off the field between 
+possessions, he would look up in the stands and think about how he'd never seen his dad 
+more proud than he was at that moment.</p>
+<p>On the field, however, Josh wasn't thinking about anything. He was in his element, and 
+everything was instinct. It was the best feeling in the world to just shut his brain off entirely 
+once the play had been called, and let his strength, reflexes and muscle memory do the work 
+for him. He loved the way his powerful legs flexed as he flew down the field on running plays, 
+but his favorite part was taking hits from defenders larger than he was, testing his body 
+against theirs as he roared with cathartic rage, and he won the clashes as often as not.</p>
+<p>Football had become an important emotional outlet for Josh over the past month or so. He 
+had been slowly losing his natural state of calm, objective detachment as his emotions 
+became more intense and harder to control, but here on the field he was finally able to </p>
+<p>release all of his confusing, pent-up feelings about his father, Amy, and himself in a relatively 
+controlled environment where he didn't have to hold anything back.</p>
+<p>On the sidelines Josh's grunts and exertions were having a visible effect on the busty Amy, 
+and she felt herself tingling with arousal as she tried to focus on leading the cheers, jiggling 
+and bouncing in her revealing outfit for Josh's eyes alone. She was proud of his success, of 
+course, and proud to be his girlfriend, but it went beyond that - watching his powerful body 
+flexing as he established his dominance over the other players was striking a primal feminine 
+chord somewhere deep within her, and she was filled with an oddly contradictory sense of 
+submissive possessiveness, almost a need for Josh to mark her as his own in some more 
+permanent way.</p>
+<p>After winning handily, Josh was unprepared for his newfound popularity the week following 
+the game, having been mostly ignored in school his entire life. Now, however, guys were 
+chest bumping and high-fiving him as he walked through the halls wearing his letter jacket, 
+but it was the senior girls' reactions that he really took notice of as they began seeking him 
+out and showering him with flirty attention. The curves of their tight, eighteen- and nineteen-
+year-old bodies had grown increasingly enticing to him over the past month, and, though few 
+of them could hold a candle to Amy's tits and ass at this point, his drastically strengthened 
+reproductive urges still welcomed the other attractive females' not-so-subtle displays of sexual
+interest. He found himself eagerly anticipating the frequent embraces and other light physical 
+contact the girls began giving him as their natural desire for his new chiseled looks and 
+muscular physique increased. Their arched backs and "innocent" touches frequently sent 
+blood rushing to his dick, resulting in a bulge too large for him to hide, and seeing the result of
+their flirtations and physical contact left many of the girls flushed and practically panting with 
+their own arousal.</p>
+<p>During the pep rally before the next game, Josh was surprised to see that there were actual 
+signs made about him. He tried to keep his eyes on Amy as she flexed her own muscles and 
+showed herself off for his benefit during the pep rally cheers, but his attention kept drifting to 
+the smooth skin and petite curves of the other senior cheerleaders as well, and though he 
+was still more attracted to Amy, he couldn't help but wonder how the other girls would feel 
+pressed up against his powerful body, mewling with need as his thick cock probed and sought
+for what they both wanted.</p>
+<p>Amy was more popular as well of course, with her busty new body, though she wasn't getting 
+anywhere near the attention from the older senior guys that Josh was getting from the girls. 
+This was partially because Josh had quickly made it known that she was taken, but also 
+because Amy never showed any interest in the other guys in the first place. She felt a strong 
+physical attraction to a few of the more masculine jocks on the various sports teams, but it 
+paled in comparison to what she felt for Josh, who had quickly outstripped all of the others, 
+and his attentions were more than enough to meet her needs.</p>
+<p>Still, Josh noticed that the mysterious changes had affected her just as strongly as they had 
+affected him, and mentally just as much as physically. Their much less frequent conversations
+were rarely about anything more complex than cheerleading or football, and Amy was also 
+becoming increasingly obsessed with makeup and fashion. She no longer hung out with her 
+nerdy friends from before her transformation, and instead spent all of her time with the other 
+cheerleaders and popular girls. Also, Amy's grades had dropped, and on some level Josh 
+found himself missing the close friendship he had had with the girl Amy used to be.</p>
+<p>Even so, Josh was finding it harder and harder to care. His own grades had slipped a bit due 
+to all of the time he devoted to football (and fucking Amy), and his interests had shifted as 
+well. Even if Amy were the same person she used to be, he didn't think they would have 
+enough in common to share that kind of friendship any longer. Also, he appreciated what her 
+new interest in makeup and clothing did for her ridiculously sexy body, and, though he 
+wouldn't admit it to himself, he also found himself appreciating her increasing submissiveness
+and eagerness to please him sexually. So, in the end, as much as he missed the friendship 
+they used to have, he couldn't deny the intense, carnal pleasure he got from fucking every 
+part of her willing, delightful little body over and over again.</p>
+<p>At home, the two of them were fucking more and more often, especially with the sexual 
+frustration building up inside Josh everyday at school from the other girls' flirtations, and Amy 
+was more than willing to relieve all of that pressure, encouraging Josh to use her any way he 
+wanted, especially if it resulted in watching his balls clench as he covered her with his cum. If 
+Amy was ever bothered by the other girls' interest in her man, she never mentioned it.</p>
+<p>Josh was filling their condoms up fuller and fuller each day as his balls continued to grow and 
+he produced more and more cum with each release. Amy eyed each discarded condom full of
+potent jizz greedily, and first brought up the possibility of fucking bareback in early October, 
+initially couching it as a response to the fact that at this point most of his cum squeezed out of
+the condom and ended up all over her crotch anyway. Her advances were getting harder for 
+Josh to resist, especially because he too was now feeling a desire to thrust himself into his 
+girlfriend's enticing body without protection, and that need was growing stronger and more 
+insistent with each passing day. He would come home incredibly horny after eight hours of 
+constant titillating yet unfulfilling sexual attention from the other senior girls, and it was all too 
+easy to just lie back and let his seductive, smoking hot girlfriend release all of that tension 
+with her body. It felt so good to let her go further and further each day before reluctantly telling
+her to put a condom on, and then he'd throw her down and fuck her with reckless abandon, 
+grunting and straining with his need for release, asking himself why he was still wearing a 
+condom and coming up with fewer reasons each time.</p>
+<p>For her part, Amy was completely unable to resist her growing need to feel him thrusting raw 
+inside of her. It was like a primal instinct deep within was driving her to get just the tip of his 
+dick inside her pussy, where she knew everything would take care of itself and all would be 
+right with the world, whatever that meant.</p>
+<p>One inevitable day in late October the mindless pleasure of thrusting his naked cock against 
+the curvy, inviting body beneath his was more than Josh could resist, and after Amy had 
+teased his throbbing erection against the smooth skin of her mons a few times, she eased it a
+bit lower and looked up at him with the coquettish, come-hither eyes her transformation had 
+recently caused her to develop, and which tugged at his cock whenever he saw them. That 
+look, combined with the soft, encouraging folds surrounding the entrance he suddenly found 
+himself pressing up against, ready to submissively give way to his eagerly probing dick, 
+silently convinced him to allow just the tip to slide into her warm, slick canal unprotected, just 
+to see what it felt like. Predictably, it felt very good, and as Amy pressed her new bombshell 
+body up against the hard muscles of his chest and abs in wide-eyed urgency, it was all too 
+easy to allow himself to slide in another centimeter.</p>
+<p>This felt even better, and just as Amy's honed reproductive instincts had known it would, the 
+pull of her tight pussy against the sensitive skin of his hard cock as he squeezed it into her 
+was too much for Josh to resist. His body flooded with a cocktail of testosterone and 
+endorphins specifically designed to convince him to drive his dick further into that pussy, and 
+Josh's resistance to his body's compelling new urges finally broke down entirely. He released 
+a primal groan as his powerful abdominal muscles clenched instinctively, sending his hard 
+cock sliding deep into his girlfriend's tight, unprotected pussy, where it throbbed with pleasure 
+as Amy cooed encouragingly. She playfully offered her massive, tempting tits up to his greedy
+male gaze, secure in the knowledge that her virile, masculine boyfriend would no longer be 
+able to resist doing to her what came naturally.</p>
+<p>Josh had been convinced that giving in to his body's insistent demands and fully thrusting into
+Amy's enticing pussy bareback like this would somewhat relieve the desire and need that 
+currently overwhelmed him, but now that his dick was inside her where it belonged, 
+experiencing the soft slickness of her pussy rubbing directly against his sensitive skin, Josh 
+instead felt his need becoming even more unbearable. A new urge was growing within him 
+now, driving him to continue moving his dick inside of her, to stroke it against the stimulating 
+pressure of her tight embrace. He slid out a bit to experience more of that delightful friction, 
+but his cock knew what its true objective was, and he found himself helplessly shoving himself
+back inside, feeling the silky grip of her slick walls pulling and tugging at him enticingly.</p>
+<p>This new pleasure built on top of the pleasure of his previous stroke, and Josh lost himself in 
+chasing the sensation, feeding and encouraging it as he increased his pace, sliding his cock 
+back into her seductive depths again and again, groaning in need as the feeling continued to 
+build. It felt like the cycle could go on like this forever, growing more and more intense, but 
+Josh's ability to indulge in the pleasures of Amy's flesh without consequence was finite, and 
+eventually his mindless bliss began to tingle with urgency as pressure slowly began building 
+at the base of his shaft. He briefly recalled the ultimate purpose of this pleasure and realized 
+that result was becoming more of an inevitability with each thrust, but his body was moving on
+pure instinct now, driving him back into his slutty girlfriend over and over again as his dick 
+throbbed and tightened ecstatically inside of her, each new burst of dangerous pleasure 
+threatening to trigger his involuntary ejaculation.</p>
+<p>Amy was deep in the grip of instinct and thousands of years of human evolution as well, her 
+hypersexual body knowing exactly what to do to get what it needed from the irresistible hunk 
+of testosterone and powerful masculinity that was plunging himself into her. Josh lost more 
+control with each thrust as her receptive body exerted its own power over his, and Amy knew 
+that soon he'd no longer be able to resist the urge to cum inside her. She arched her back to 
+let her swollen tits, symbols of her fertility and suitability as a mate, bounce and jiggle in her 
+boyfriend's face, and she enjoyed the pleasure of friction and fullness as he continued to slam
+himself into her, panting and grunting from the exertion of driving himself ever closer to the 
+edge. Meanwhile, the slick folds of her sly pussy continued to gently massage his cock with 
+each deliberate stroke, quickly eroding what remained of his self-control as she drove him 
+toward his blissful release.</p>
+<p>"Oh God Joshie, you're gonna cum in me! You're gonna fill me up! I can feel it! I want you to 
+do it!" Amy cried, overwhelmed with need at being this close to her goal, and full of 
+satisfaction from using her body for its intended purpose. She had never felt more in love with
+Josh than she did at that moment, looking up at him euphorically as his eyes clouded with 
+mindless intensity, no longer seeing hers as the pressure building within his body threatened 
+to overwhelm him.</p>
+<p>Josh, on the other hand, didn't care who the girl beneath him was at that moment - he just 
+knew his dick wanted to cum inside that pussy. The testosterone his body had been 
+manufacturing nonstop for months had given him an irresistible urge to spread his seed, to 
+pass on his strong genes to the next generation and add as much of his strength to the world 
+as he could. It didn't occur to him that his former weak, nerdy self had been the product of his 
+father's body, but even if it had, his testosterone-fueled need to reproduce was beyond his 
+power to resist. Thrusting himself to completion inside whoever this chick was was an 
+inevitability, a law of nature, and even now his body was tightening, his large muscles 
+clenching, wavering on the edge of release.</p>
+<p>He had never felt manlier than he did at that moment, as he chose to thrust his stiffening dick 
+into the hot slut beneath him once more knowing full well what would happen even as he did 
+so, and then he was roaring out the satisfying agony of his climax, a flash of anger rippling 
+through him as control of his body was forcibly wrested away by unstoppable reflex. The 
+muscles of his arms tensed as he grabbed Amy's shoulders and sank himself fully into her 
+one last time, and his large balls clenched with irrevocable finality. His dick began its own 
+rhythmic pulsing deep inside the fertile body of his former nerdy best friend, and Josh couldn't
+help but send his largest load yet spurting into her unprotected depths as his bimbo 
+cheerleader girlfriend's slutty pussy continued to exert its irresistible influence over his 
+powerful body.</p>
+<p>For her part, Amy was overwhelmed with bliss as soon as she felt his cock jerking inside of 
+her, steadily pushing against her walls with each throb. She remembered the first time she 
+had been entranced by the hypnotic pulsing of his cock in her hand, watching it tense and 
+surge as it released its load in response to her stimulations, and the knowledge that that was 
+happening inside her flirty pussy at that very moment was more than she could take. She </p>
+<p>sank her fingernails into her Josh's broad back as she screamed out her own orgasm, and the
+contractions of her powerful abdominal muscles involuntarily pulled Josh's potent seed further
+up into her fertile reproductive tract, making it more likely that his strong genes would merge 
+with hers. Amy had finally accomplished her goal, and she reveled in the sensation of warm, 
+sticky fullness growing within her as his large balls continued to pump what seemed like an 
+endless supply of cum into her body, full of catalyzing potential.</p>
+<p>As her virile mate filled her pussy to overflowing, unknowingly intent on using her body to 
+make more copies of himself, Amy realized she'd never felt happier or more fulfilled in her life.</p>
+<p>The day after not being able to resist busting a fat nut raw inside his sexy girlfriend for the first
+time, Josh finally decided that it was time to face his father.</p>
+<p>"Dad, what was Grandpa like? I was so young when he died that I don't really remember him."
+Josh said, trying to stay calm and control his churning emotions as he fished for info.</p>
+<p>His father leaned back in his chair, and his eyes took on a faraway look. "He was a powerful 
+man. Even taller than I am, and strong as an ox. .... He played professionally for a couple 
+years, but this was before you could make any money at it, so he quit to get a factory job to 
+support his large family."</p>
+<p>"Was he always that big?"</p>
+<p>"He did mention a few times that he had hit a sudden growth spurt after he turned eighteen."</p>
+<p>"What about you, dad? Were you always this big and strong?"</p>
+<p>His father looked him solidly in the eye for a few seconds before answering. "No. I was pretty 
+small when I was a kid. Kinda bookish. I got beat up a lot, and didn't have many friends. That 
+all changed around my 18th birthday. I met your mom, went out for the football team, and 
+from that point on life kept getting better."</p>
+<p>Josh felt himself growing angrier, and his frustration at himself for not being able to help it just 
+increased his rage.</p>
+<p>"It's the football, isn't it?! That's what's changing me and Amy?"</p>
+<p>"Yes son, it is," his father responded calmly.</p>
+<p>"Why would you do something like that to your own son!?"</p>
+<p>"Because I wanted you to see the same success your grandfather and I have. Also, it's an 
+heirloom in our family, and it's your birthright."</p>
+<p>"Birthright!? How is becoming dumber and angrier a 'birthright'? And how is working for an 
+auto shop 'success'?"</p>
+<p>His father ignored the jab. "Son, you have to look at it pragmatically. Eventually you'll see that 
+it's a change for the better, just as I did."</p>
+<p>"But I didn't want to change!"</p>
+<p>"Are you sure? Do you hate being the star quarterback of the football team? Having beautiful 
+women throw themselves at you day after day? You would rather choose to continue to be 
+ignored, in the hopes that a decade from now you might make enough money from being 
+smart to make up for losing the best years of your youth?"</p>
+<p>Josh was a bit taken aback at the intensity of his father's words, though his father was just as 
+patient as ever as he uttered them. Josh took a second to calm himself down and tried to 
+think about the situation rationally, still unused to how much harder it was to spend any 
+lengthy amount of time in thought. He wasn't sure how much he could trust his feelings after 
+his transformation, but as much as he hated it, his dad was right. He loved playing football 
+now, and he loved the attention and popularity that came with being really good at it. And he 
+especially loved the attention he was getting from women. Particularly from Amy, he thought, 
+remembering how good her sexy body had felt on the end of his cock the night before as he 
+emptied himself into her.</p>
+<p>"But what about Amy? She didn't ask for any of this!" he demanded next, having remembered 
+that he wasn't the only one affected by his current predicament.</p>
+<p>"Ah yes, Amy. I've noticed the way she's been filling out recently. She was an excellent 
+choice, son."</p>
+<p>"It wasn't a choice! She touched the ball by accident and now she's becoming a sexy bimbo 
+cheerleader!"</p>
+<p>"Have you talked to her about all this? What does she think about what's happening? Son, 
+you're going through some pretty powerful changes right now, and you're probably starting to 
+feel some powerful new urges to go along with it. It was very important that you pick someone
+who can go through this alongside you, who can keep up with you, because things can easily 
+get a bit... out of control if you're not careful. Don't worry about Amy. I promise that if she's 
+anything like your mother, she's loving every bit of what's happening."</p>
+<p>That evening Amy came back over, now that the cat was out of the bag about their 
+relationship. His dad greeted her politely, told the two of them to stay safe and have fun, and 
+went back to watching his football game.</p>
+<p>"I talked to Dad," Josh informed her once they were alone. "He confirmed that the football is 
+what's been changing us, and that he did it to us on purpose," Josh said, watching her face 
+intently for her reaction to the news.</p>
+<p>"Oh. Well, that's what we thought anyway though, right? At least now we know, I guess. 
+Wanna fuck?" she asked, grinning and cupping her bra-less tits for him, knowing the effect 
+they would have on his supercharged libido.</p>
+<p>"Amy, don't you even care that this has been done to you without your consent?"</p>
+<p>"I mean, I guess. But there's nothing we can do about it now, right? I know that you'll take 
+care of me, and I'm really enjoying cheerleading and fucking you, so I'm not too worried about
+it. Plus, I feel so good all the time now!"</p>
+<p>"But what about your dreams? You were going to be an award-winning author!"</p>
+<p>"Yeah, and I guess I should totally be sad about that, but that stuff just seems so boring 
+now..." Amy made a show of acting disappointed about not becoming an author, but Josh 
+could tell that, ultimately, she was glad the football had made her so happy and sexy. "There 
+are plenty of people writing books, though, and I, like, want to enjoy my own life! With you!" 
+she said, glancing down at his crotch suggestively.</p>
+<p>"If you're sure..." he grunted as his dick swelled. Josh felt the familiar sensation of his mind 
+clouding as the proximity of his sexy girlfriend's enticing pussy began monopolizing his 
+thoughts once more.</p>
+<p>"I'm sure! Will you fuck me now? I forgot to bring the condoms though," she said impishly, 
+looking down at his hardening dick with a twinkle in her eye. She already knew the answer, of 
+course.</p>
+<p>End of Chapter 2</p>
+<p>Author's Note: Thanks for reading! If you have any feedback, comments, or questions, I'd 
+love to hear from you at fidget1@protonmail.com. If you find yourself enjoying my stories, 
+please consider supporting my work on Patreon, at www.patreon.com/fidget1. Patrons get a 
+full two months of early access to my stories, input into which stories I write, and some other 
+fun perks. Every little bit helps, and your support is what enables me to keep doing what I 
+love!</p>
+</body>
+</html>

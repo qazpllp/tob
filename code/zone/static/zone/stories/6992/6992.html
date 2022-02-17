@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Prussian Blue</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p><strong>[Prussian Blue]{.underline}</strong></p>
+<p>*warning very mature content. All characters are over age of 18. Main
+character is 24. All characters are purely fictional. This is my first
+and only piece of writing I have and probably will submit. I think I'm
+fucked up. So please keep an open mind. I wrote this high on dabs.
+Warning GORE.* good luck.. enjoy. (Wrote this because I wanted to give
+back and maybe a few will like it. Just an old idea.. thought I might
+give it a go.)</p>
+<p><img alt="" src="media/image1.jpeg" />{width="5.2756944444444445in"
+height="3.0104166666666665in"}</p>
+<p>The red Toyota 4X4 quickly delivered its package and pulled away.
+(Details of the vehicle and story until the arrival of eye witnesses is
+to be taken with scrutiny due to the severity of the subjects condition
+upon arrival.</p>
+<p>She awoke feeling the damp, slimy concrete of the underpass. As she
+clawed and broke from the fog she immediately knew something was
+different. She was somewhere completely unfamiliar. Last time she
+remembered it was morning and she had just left Target, buying
+groceries.</p>
+<p>Daisy was 24. She was a recently single Blonde. She was small in stature
+but had large boobs for her waist size. She had a thick bubbly ass to
+match. That morning she was wearing yoga pants with a blue flannel top.
+As most days she started by plucking a fresh yellow daisy and tucked it
+tightly behind her left ear.</p>
+<p>She was beautiful. Daisy is a story of complete injustice to science and
+humanity.</p>
+<p>Daisy looked down to realize that her ankles were shackled and spread in
+a V . Long chains were bolted to the bottom of the pylons supporting the
+rail road tracks overhead. She was completely exhausted. She could not
+muster the will to kneel. The weight of the chains strained her ankles.
+What was wrong with her. \"I have to be drugged!\" Daisy Thought.
+Suddenly she felt something begin to rumble in her stomach. \"What the
+fuck now\" she moaned in pain. Clinching her aching belly tightly. Lying
+on her back, her chains now twisted at her feet. She gazed above seeing
+the rail road tracks. Maybe she could yell and someone would hear her.
+\"No way a train would know I was here going over head\" she thought..
+her stomach continued to wrench as she cradled it tightly with both
+hands. She felt completely stuffed. Her stomach was used to eating a
+salad and a few small meals a day..</p>
+<p>She felt like she had drank a gallon of thick sweet syrup. Stretching
+her poor tummy to the max she looked down and saw what was a small pooch
+maybe (a normal persons day a buffet) and that was still enough to
+terrify her. She was used to a cut trim abs that led out to wide hips.
+..</p>
+<p>Her stomach didn't quit. Slowly her agony built. Screaming. Knowing she
+couldn't take much more...</p>
+<p>Juice!! - Daisy thought. I remember drinking blueberry concentrate.
+*shuddering at its chemically after taste*</p>
+<p>Fuck how she wanted more though. Remembering its creamy goodness and
+sweet juice running down her when she was forced to gorge earlier that
+day.</p>
+<p>Daisy began a low throaty scream that echoed through the 20 feet arch in
+the single lane underpass. She could feel her stomach tearing from the
+liquid. She could feel the liquid start to force up her throat when she
+began frantically swallowing and swallowing. In one last moment she
+squeezed in pain as she shed tears and screamed at the top of her lungs
+running out of breath as her stomach now looked like she was 6 months
+pregnant and had a blue tint. Suddenly after minutes of swelling and
+pain her eyes widened and a look of shock and horror over came her as
+she felt her stomach tear from the immense pressure and flood her
+insides with blueberry juice. It sounded like a torrent of flowing water
+tightly bouncing against rubber. She was not dead. Far from it. Now she
+could continue to grow.</p>
+<p>She felt immense relief. Like giving birth to sextuplets an orgasm of
+ecstasy and relief overcame her.</p>
+<p>Suddenly followed by the wonder of what would happen next. She looked at
+her stretched out belly now knowing everything she ate or swallowed
+would go right into her skin, sloshing with her organs. She could feel
+the juice now seeping into her intestines, blood and veins. She was
+still growing. Now at immense speed. Daisy didn't know it but her blonde
+hair and once brown eyes turned a shade a violet. The juice was mixing
+with her DNA. Altering her. She was trapped swelling under a small
+overpass. Maybe a train would see her butt hanging out once she got big
+enough she sickingly joked to herself..</p>
+<p>She still lay on her back now starting to swell a bit over the road. Her
+legs were still crossed over one another making daisy feel uncomfortable
+and want to flip over but there was no way she could maneuver her
+growing mass. She was not in control anymore.</p>
+<p>Quickly her expansion quickened as her tits and nipples started to rip
+through her overalls. Like a short stack of half dollars on a Frisbee
+her juicy ripening tits began to grow back over her face making it
+harder for her to breath. She mustered all her strength and with the aid
+of pillar her left side was swelling against, she managed to grab her
+throbbing left nipple with her whole palm.</p>
+<p>Instantly daisy moaned dripping in ecstasy, her pussy dripping juice
+from the stimulation from her now rib cage crushing basketball sized
+tits.</p>
+<p>Daisy knew she needed to flip over before she got trapped and suffocated
+by her two massive globes and growing stomach. Daisy could feel her ass
+start to arch her back as she started to cry knowing at this rate every
+part of her was now mixing with juice. She began crying the juice as her
+ass pushed up from the ground pushing her growing tits further into her
+already winded face. She hadn't realized the true weight and surface
+area of her swell until she lost a grip on her cupped hands and they
+broke through like a deluge, sweating with sticky sweet blueberry juice.
+As she ballooned and her breasts approached she began to scream and cry
+as her now 50lb a piece bust started to suffocate her.</p>
+<p>Soon her screams turned to moans of agony and muffled chokes as her face
+turned a deeper blue. Her arms and swelling fat legs trying and failing
+to fo anything but barley flail. As her swelling blue tits were now
+completely covering her nose and mouth she was hopeless. As she gazed up
+gasping she saw the black gleam of a camera. They were going to record
+her suffocating. These were going to be her last thoughts. Thousands of
+people watching her balloon and expand beyond humanly proportions. Some
+watching for curiosity and other sick reasoning.</p>
+<p>Her ballooning tits were throbbing veins now popping through her
+thinning skin. Deeper and deeper blues ran through her. A long with
+valleys of stretch marks.</p>
+<p>Her stomach was following right being her boobs now 6 feet wide and
+showing no signs of slowing. Tears began to stretch thinner as she grew.
+Gasping for air. Suddenly a burst of growth from her ass ripped through
+her tight yoga pants and twisted her on her side. Exposing her mouth as
+she could finally draw a breath. She coughed blueberry juice for a few
+minutes as she regained her breath. She was now sitting up with her
+sagging tits pulling down hard on her back. She could take that pain as
+long as she could breathe. Her stomach and ass completely covered her
+lower half. Her feet were no where to be found.</p>
+<p>she was now rounding out and began again swallowing as to not allow the
+juice up into her head. She began tightening her jaw and collar joints
+to hold the pressure down. Slowly it still leaked by as her cheeks began
+to puff and swell along with her tongue and lips making it hard for her
+to talk. She moaned as her hands began to loose grip on her sides as her
+rounding skin began to grow tight causing her to wobble and her fat ass
+wobble with her breaking the buckle on her last straining buckle on her
+overalls tearing them releasing her massive boobs pulling down causing
+her knees to give and her spine to land at a z shape and she felt an
+immense pain and popping sound..</p>
+<p>Daisy knew what her massive boobs had done. Her screams grew as her pain
+grew. The weight of her breasts had broken her back. Probably in
+multiple places... she stood jaw wide open in agony screaming as her
+head sunk deeper into her rounding form. She could now only feel
+anything below her vagina.</p>
+<p>Which she knew was still in tact as her growing pressure pushed on her
+flowing folds as her clit filled with sensitive juice. Her panties blew
+off as a breeze blew between her now separated legs.</p>
+<p>She begged for someone to fuck her. And bring her throbbing engorged
+pussy to completion one more time... she knew it was fucked up but she
+needed it.</p>
+<p>Sensitivity was growing as her pussy pushed down below her now just
+kissing the wet pavement. Her limp ballooning numb toes swelling beyond
+belief. Her toes turning deep purple as if the were collecting juice or
+dying. One couldn't tell.</p>
+<p>Pain was overcoming her as she felt her juice begin to shift as she felt
+herself begin to rise and her spine begin to re-stretch</p>
+<p>She moaned with mixed pain and ecstasy as her body rocked side to side
+as her body swelled her arms and now just chubby blue fingers
+disappearing into her growing form.</p>
+<p>Her tits still hanging from her, refusing to flatten with her body. They
+were now the size of weather balloons. Massive and totally engorged. If
+there were any sharp edges, they better stay far away if she wants a
+chance. tightening skin creaked as juices flowed from her growing tits.
+She screamed, her tits spurted in waves as growth ripples throbbed
+through her growing mass. Now over 200 gallons each her growing boobs
+were beginning to slow down as they pushed against the concrete pylons
+in front of her. Like two tight strings through rising soft dough her
+growing bust expanded forward morphing around the pillars. They were
+strong they would hold. The pressure was now if even possible, picking
+up pace as she swelled and space ran out.</p>
+<p>Daisy's now round form was quickly approaching the top of the overpass.
+In her one stretch of luck (if you can call it that), she managed to
+wiggle her barely connected upper body just enough to align her sunken
+crater head to be between the two train rails, hopefully giving poor
+daisy the little extra bit of swelling room that she needs for this
+agony to end.</p>
+<p>The juice was beading up on her drum tight skin. One piece of old
+crumbly concrete landing on her could do her in. Daisy was praying for
+it. Anything for this pain to end.</p>
+<p>* Daisy bust shifts the pylons causing small chunks of rubble to fall
+and bounce off her paper thin translucent smooth skin.* like a dart to
+a yoga ball Daisy was at her limits.</p>
+<p>The pylons began to crack as the immense force of her mass was pushing
+against them. The pylons buckled first in the middle. Daisy finally
+again felt a false sigh of relief. Giving her boobs a big more growing
+room... they were growing faster still with a Bellagio of juice
+egressing from her swollen utters..</p>
+<p>Daisy was ready to go..</p>
+<p>Her arms had formed a T position 90degrees with her head. Her swollen
+dying hands could only take so much before she became DE gloved. She
+clenched her hands hard as she fought the urge to release her grasp and
+just maybe she could reach her swollen gushing clit...</p>
+<p>Daisy moaned and fought the urge. Still giving in to the occasional try
+to grind her clit on the cement, to no avail it was instinctual to her
+at this point to want to grind and hump.</p>
+<p>She kept clenching her swollen pudgy dripping hands shut screaming.
+Knowing the consequences if she gives up. Suddenly her inflation slows
+as her body seems to finally have slowed down.</p>
+<p>Daisy is still clenching her neck tight while swallowing to slow the
+passage of juice to her swelling dome.</p>
+<p>By now daisy's forehead was crease free shiny swollen like a beluga...
+gleaming to the touch. Her cheeks were drooling with juice. Here screams
+were beginning to be muffled by the gurgling juice rising within her
+weakening throat. She cant hold ...without more room..</p>
+<p>As her body stays temporarily slowed it is apparent that the swollen
+berry has reached her limit. Long tears spider web through her paper
+thin moist skin. She is screaming unable to breathe as her head has sunk
+below and light is slowly closing in. the juice bubbling up from her
+mouth like a fountain, filling her last bowl of life with the sweet
+juice..</p>
+<p>Daisy choked as her fists finally began to release.. at the same time
+her shoulders were tearing at the elbows and her hands at the wrists...</p>
+<p>Daisy let go.</p>
+<p>Agony shot through her as she released. Skin simultaneously inflating
+and ripping her skin from her hands and palms. She was in pain
+screaming... numbed only by the total euphoria bursting down below.</p>
+<p>Her clit was tearing as her arms tore from her spine. Making her totally
+spherical from her top to her bottom. Besides her ripping bust of
+course..</p>
+<p>She screamed choking on her own juice as she began to loose her grip on
+reality. .. \"blu\" \"bery\" played over in her mind as she pictured a
+giant piece of fresh blueberry pie on a plate... the juice was swelling
+her brain.</p>
+<p>With a final surge her swollen dying head rose up slowly through the
+gleaming hold towards the sun....</p>
+<p>Daisy could see the light.</p>
+<p>Her head pushed up. Her spine free to float up. She began to push
+against the rail road ties. Like a popping zit her swollen disgusting
+mug was rising up through the tracks waiting for the slightest sharpened
+resistance to end her misery...</p>
+<p>Her dark violet blue hair peaked through the tracks.. The once beautiful
+24 year old Daisy rose up from beneath the bridge swelling through her
+now all black eyes still moving. Trying to focus on something, but
+what??</p>
+<p>A drone was now over head as over 750,000,000 viewers watched the
+inevitable demise of Daisy. Cnn,Fox,BBC every TV channel broadcasted her
+final moments. The drone shifted the camera down the track to show the
+viewers the Amtrak Train 1 mile down the track.</p>
+<p>Live footage was being broadcasted by the train. The satanic Engineer
+was later found behind the spectacle. Laughing as he steadily approached
+his long awaited prize he masturbated quickly in the cab watching her
+rise up from the tracks below.. a swollen, sweaty explosive cyst ready
+to burst...</p>
+<p>Daisy saw the train before the heard the horn... who knows if her horse
+black eyes could see the Amtrak train full of poor passengers.. knowing
+not how sever the situation is.. Oh. Trains hit cows all the time and
+the people are Okay! Marked one man at the Bar.. surely going to be
+scarred, mentally and possibly physically..</p>
+<p>Daisy could have never withstood the pressure on her own.. the bridge
+held her, the rails keeping the pressure to a slow leak as her neck rose
+through twisting directly toward the camera level with her face..</p>
+<p>Daisy's head was the size of a beach ball.. her tongue was inflated like
+a beached whale sitting in the sun swelling.. rotting.. waiting to
+rupture and explode..</p>
+<p>Her black eyes bulged out as the train approached less than 100 yards
+away.. she screamed as her neck and top of her head finally gave way and
+filled to un-imaginable size, no orgasm in the world could hide her pain
+as her brain slowly crushed and swelled from the pressure.. as the train
+approached the passengers were all now well aware as the inboard had
+been showing he tvs r death.</p>
+<p>Right before the train impacted daisy ballooned blueberry head, juice
+pressed behind as her eyes exploded in a rupture of blue berry juice as
+her scream trailed as piercing as ever.. the train plowed right into
+Daisy's swollen face sending pressure rupturing her clit forcing her
+into final eternal ecstasy as her pussy exploded Cumming a river of
+blueberry juice down the road. with her gushing sockets equal height
+with the cab - the train tore through Daisy's Head crushing the cab
+instantly upon impact followed by a geyser of pressured blueberry juice.
+Flesh and concrete from the complete failure of the bridge. The front of
+the train hit a cistern of approx. 78,000 gallons. Sending the rest of
+the train off of the track into the river of Blueberry juice as her more
+than some scientists believe could be 500K gal. 1.75Mil. gal...</p>
+<p>Flesh and fiery train tore down the newly formed blueberry river right
+towards the small town of Bedford..</p>
+<p>Daisy remains remain tangled to the cab with most of the cab being
+nipple and boob flesh.. some say the engineer lost his final breath to
+her swollen breasts.. who knows... who would want that sick man to
+win.. poor Daisy.. her poor Family..</p>
+<p>I for one watched the whole thing. I saw him suffocate on her juice and
+tit flesh... she will be missed...</p>
+<p>The juice flowed into the cars.. death traps.. swamped by juice and
+filled with now... known Poison Prussian-Blu-95.</p>
+<p>Quickly Prussian Blu filled scrapes, mouths, eyes, asses, breasts bodies
+inflating trapped any living form expanding.. genetically perfect water-
+air- rain borne virus... they exploded the cars quickly as they sailed
+with Daisy toward the town.. seeping deep into the water bed...
+forever...</p>
+</body>
+</html>

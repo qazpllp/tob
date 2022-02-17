@@ -1,0 +1,1900 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Huge Fuckin' Insects</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>Huge Fuckin\' Insects!</p>
+<p>Part Two</p>
+<p>(Inspired by <em>Ravaging A New Host</em> by Little White Mouse)</p>
+<p>By The Preve</p>
+<p>Thanks to Emerald Mbuku for the edit.</p>
+<p>It was mating season and the wasps were in heat. This created a dilemma.
+The old queen was dead, the new one was too young to receive sperm, and
+most of the other prospects were sterile. Something had to be done to
+expend the excess sexual energy, otherwise the males would turn on each
+other.</p>
+<p>The increased aggression had already led to disaster. A strange wasp
+recently appeared over the island. A swarm went out to attack the
+interloper but the creature proved to be formidable. Many wasps died
+before the creature was driven into the lagoon. Wasps left the hive,
+some to investigate the crash, others in search of animals upon which to
+expend sexual energy. There were very few candidates.</p>
+<p>The only creatures comparable to the wasps were the ants and they were
+dangerous. Ants and wasps were incompatible and a mating attempt could
+lead to conflict, a disaster on an island with limited resources.</p>
+<p>One wasp, flying over the water stream near the lagoon, spotted an
+animal lying on the edge of the pool. It was pale and mostly hairless,
+almost like an aphid, albeit the wasp\'s keen eyes noticed hair on its
+head, and a dusting of fur between its legs. Curious, the wasp flew down
+to investigate.</p>
+<p>Wasps\' senses are highly sensitive; while few animals, other than ants,
+lived on the island, the wasp could tell the difference between male and
+female. The animal\'s scent marked it as female. Within the wasp\'s
+limited brain, a decision was made.</p>
+<p>The creature lay spread out and apparently defenseless, a pink slit
+between its legs. Other non-insect inhabitants had similar features, so
+obviously it was an opening. The wasp knew its comrades would spot this
+creature soon enough. It presented the wasp an opportunity to expend its
+sexual energy before the others could get to her.</p>
+<p>The creature was lucky; if it were male, the wasp would have immediately
+stung it as a threat. Instead it quietly climbed on top of the reclining
+female, placing its legs on the animal\'s limbs to restrain it. Two long
+objects slowly emerged from the tip of the wasp\'s abdomen, one long,
+hard, and sharp, serrated like a knife; the second, longer, wet, rounded
+at the tip, with a hardness quite different from the other.</p>
+<p>The first stinger folded back into the wasp\'s body like a switchblade,
+leaving the second cocked and ready. The wasp raised its long, wet,
+dripping stinger and poised it over the creature\'s moist, pink slit.
+The creature stirred a little, turning her head to the side, muttering
+some incomprehensible sound. The wasp hesitated. After a moment, it
+buzzed its wings and thrust forward.</p>
+<p>The tip slipped through the slit with a soft slurp. The pussy stretched
+around the stinger, adapting to its girth. The pink vulva devoured the
+purple stinger. As it drilled forward, a bulge appeared on the
+creature\'s pelvis, traveling upward towards her flat, toned belly. The
+stinger slid through the warm, wet tunnel, sliding against the moist
+walls. The tunnel convulsed, involuntarily working the stinger further
+within. The creature began to breathe and moan heavily.</p>
+<p>Emma thought it was Doug. She was half asleep when she felt herself
+entered. She smiled; it happened often, when she and Doug were in bed.
+Both would be asleep, entwined, and one would always wake and fuck the
+other. Sleepy sex was the best. She liked this game. The burbling of the
+stream, the lapping of the pool, the soft warm breeze added to the opium
+pipe dream. "Mmmm," she purred.</p>
+<p>A faint buzz sounded nearby, some insect she supposed. Her breath
+hitched and came in faint gasps. She moaned, close to cumming. "God, he
+is soooo gooood," she thought. Her tongue came out and licked across her
+lips.</p>
+<p>Emma kept her eyes closed, wanting to preserve the dreamy sexual
+atmosphere. A light sheen of sweat beaded on her skin, coating her head
+to toe in a shiny polish. Emma waited until she came before opening her
+eyes. "Ooohh! Mmmm! Doug, you brought some wood after aaaahhhh!" It
+wasn\'t Doug.</p>
+<p>The sight overloaded her vision. The giant head, mandibles clicking
+inches from her face; the multiple legs holding her prisoner; the
+bulbous abdomen, striped in yellow, orange, and red, thrusting a long,
+wet purple shaft into and out of her pussy, sliding back and forth
+through her pink lips, her muff already wet with cum. A large wasp,
+larger than any insect had a right to be, on top of her, raping her.</p>
+<p>Emma, explorer that she was, had her share of strange encounters;
+ferocious bears, fierce lions, marauding bandits, overly sexed-up men.
+She was strong, athletic. She knew how to run, how to fight.
+Unfortunately, this time she had to deal with a man-sized wasp with
+proportional strength. She struggled, she screamed, "Yaaaah! Doug! Help!
+A wasp is raping me!" Doug was nowhere to be seen. "Fuck! Where is he?!"</p>
+<p>The wasp thrust and buzzed. Emma, in spite of her terror and outrage,
+felt the tingle of a building orgasm. "Fuck!. . .Uck!. . . Ugh!. . .
+Uck!. . . Get. . . off. . . me!" Her body arced pneumatically, up and
+down on the wet stone. Water and sweat sheened her body. Toned muscles
+moved under her skin as her belly rippled, twisted and turned. "Ugh!"
+she grunted again. Her body convulsed; cum squirted over the wasp\'s
+stinger.</p>
+<p>Emma\'s mind was a tornado, not merely because of the wasp\'s impossible
+size but from its effect on her body. "Impossible!" she gasped. "No
+insect can ever get this big!"</p>
+<p>Her body writhed and turned as it moved during sex with Doug. Her boobs
+quivered, tits swollen and conical from blood rushing through her body.
+Her breath hissed through her lips punctuated by grunts, responding to
+each thrust.</p>
+<p>She kept struggling, unwilling to sit still while an impossibly huge
+insect humped her vagina. The fact her orgasms were beginning to overlap
+mattered little, nor that the wasp\'s long and thick schlong excited her
+clit in ways that rivaled Doug, or other humans for that matter. It was
+the fact that the thing performing this carnal exercise was a GIANT
+FUCKING WASP! Emma just couldn\'t process it. "Im. . . ugh! Impossible!
+Ughnn! Wasps. . . ugh! Wasps don\'t fuck people! They. . . ugh! They
+can\'t! Is this. . . even. . . \'Ugh!\' a. . . wasp?!"</p>
+<p>After a few minutes of futility, Emma stopped struggling. <em>"It\'s. . .
+too. . . big!"</em> she thought between orgasms. <em>"Proportional strength;
+I\'ll have to let it finish. Fucked by a wasp! Nobody will believe this!
+Oh God! What if it\'s carnivorous!"</em></p>
+<p>Emma knew little of wasps. Her expertise tended more towards larger
+animals. Creepy crawly things and insects were her sister\'s interest.
+The thing on top of her would qualify as a large animal of course. Emma
+encountered more than her share of predators in her travels. Past
+experience taught her that knowing the animal was important to survival.
+"What do I know?" she asked herself. "They feed on nectar and carrion.
+Some are parasitic, laying eggs in paralyzed hosts for the larvae to
+eat. Oh God! Please don\'t let it be that! Damn! Stella would know what
+to do. She knows more about these insects." A shudder rippled through
+her body as she came again. "Well, whatever it\'s doing, my pussy likes
+it at least."</p>
+<p>The wasp buzzed its wings happily as it enjoyed the creature. The female
+was soft and pliant, arching her back and shuddering with each thrust.
+The walls of her inner tunnel were warm and wet, caressing its stinger
+with the silky touch of a flower petal.</p>
+<p>Emma exhaled a series of sounds: gasps and grunts. Her skin glowed from
+moisture and her tits stood red and swollen like berries. Curious, the
+wasp lowered its head and took one in its mandibles. Emma gasped, quite
+loudly. She moaned even louder when the wasp started to masticate, not
+quite breaking the skin. It found that using its forelegs and antennae
+to massage the creature\'s breasts caused the berries to swell further.
+The reddish brown teats weren\'t sweet, like the berries the wasps
+sometimes ate, but the salty sweat on them was tasty enough.</p>
+<p>Emma whipped her head from side to side; her eyes clenched shut, not
+from fear or outrage at the wasp\'s molesting, but from the exquisite
+blend of pleasure and pain resulting from the wasp\'s breast work. Low
+moans of increasing frequency accompanied her exhalations. "Uuunnngh!
+Mmmmm! Uuuunnnngh!" she ululated, alternately licking and biting her
+lip. A shocked revelation broke through her erotic haze, "Fuck! A giant
+wasp is fucking me and I\'m enjoying it!"</p>
+<p>Sure, she\'d been terrified initially. Terror was a logical reaction to
+her unique situation, partnered with a sense of outrage at the sexual
+violation. Emma, however, shared her sister\'s capacity for
+open-mindedness and guts, albeit she was less reckless. Plus, she had an
+intense libido which, when combined with her traitorous body\'s response
+to the wasp\'s attentions, set off a reaction far more intense than even
+she expected. Thoughts and worries about Doug receded far into the
+background. Any potential danger from the creature was no longer
+considered. Emma\'s only concern was for the moment and the creature.</p>
+<p>The day was quiet and overcast. The sounds were soft and sensual: the
+cool rush of the wind through the palms, the quiet burble of the stream
+over the rocks, the soft grunts and lustful sighs of Emma as the wasp
+rutted on top of her.</p>
+<p>She gazed at her body. <em>"It\'s no different from Doug,"</em> she thought.
+Her body moved as it always had when being fucked. Her breasts wobbled
+like pale flesh colored balls of jelly, when not covered by the wasp\'s
+mandibles.</p>
+<p>It bobbed its head from left to right, plumping one tit or the other.
+Emma gasped twice, one for each orgasm. The intensity of her orgasms
+indicated the creature had a slight advantage over Doug in performance
+but seemed equal to the swimmer in stamina. <em>"Good grief! I\'m comparing
+Doug to a wasp! What would he think?"</em></p>
+<p>The insane surrealism of her situation gave way to its opposite. What
+should have been the single most terrifying event of her life, a stretch
+given her exploratory lifestyle where strange situations were a stock in
+trade, instead became a hyper real, fantastically new sexual experience
+unlike any before, <em>"Or anyone else for that matter,"</em> she thought
+(unaware her sister was undergoing a similar experience).</p>
+<p>Emma\'s sexual life taught her to maintain some detachment even as her
+body did the opposite. When the wasp switched breasts, Emma was able to
+observe some details.</p>
+<p>The creature was roughly her size. Its main colors were a range of
+black, dark blue, red, orange and gold in elaborate designs over its
+body. The body was divided into three sections: head, thorax, and
+abdomen. Yellow and gold antennae, and mandibles tipped in black ink,
+protruded from a bulbous head almost completely covered by two, giant
+multifaceted eyes.</p>
+<p>The wasp\'s legs, six in all, grew out of its thorax, jutting like
+red-gold tree branches sparsely covered in dark blue fur. The thorax
+itself was a shiny black carapace, hard with streaks of red and shaped,
+roughly, like the gas tank of a motorcycle.</p>
+<p>Its abdomen was a broad fat bulb covered in red, gold, and yellow fur in
+the upper area, but tipped in ink-black sable at its bottom. It curled
+around so that its stinger, long, wet, penile, could enter her pussy.
+Emma put the circumference at three to four inches, roughly as thick as
+Doug\'s cock. It certainly stretched her walls well enough, but its
+length was indeterminate. The shaft penetrated deep however.</p>
+<p>Emma noted how the smooth purple stinger, shiny with her juices, would
+slide through her vulva until the wasp\'s furry tip brushed against her
+pussy. Her pelvis bulged with the creature\'s girth and then flattened
+as it withdrew. Emma\'s pussy squirted clear, wet cum with each
+withdrawal. A series of moans, grunts, and gasps, usually reserved for
+Doug and involuntary, issued from her lips. "Uuuuuunnngh! Oooohhhh! Ugh!
+. . . Ugh! . . . Ugh!" came forth with an almost mechanical regularity.
+Occasionally she would lick her lips or roll her eyes. Her body,
+sweat-shined, would arc or quiver with each climax.</p>
+<p>In the fleeting moments between the waves she observed the wasp. She
+realized something, unnoticed during the sex. "It hasn\'t cum yet."</p>
+<p>For all its activity, the only constant with the creature was the
+humping. Emma felt no corresponding climax, no sense of fluid in her
+womb, no wet cum between her legs other than her own. <em>"But then, how
+would I know when a wasp cums?"</em> she asked. <em>"How do I know it hasn\'t
+cum already?"</em> Still, the feeling the creature hadn\'t even begun a
+climax was strongly persistent. It raised another question. <em>"How long
+can I last?"</em> She\'d already cum multiple times, one on top of the
+other. Exhaustion was near, not even Doug wore her out this way. Emma
+took great pride in her stamina, an easy match for Doug but not,
+apparently, for a giant wasp.</p>
+<p>Emma, after giving up her struggles, had spent the time laying on the
+rock, allowing the wasp to fuck her while she observed its activity.
+Now, watching its head bob from one breast to the other, she wondered,
+"What will it do if I touch it?"</p>
+<p>She tentatively raised her hand and touched its head. The wasp responded
+with a slight buzz. Emma sensed no menace. It felt more like an
+acknowledgment. She stroked it softly, cautiously, worrying a wrong
+touch would trigger a dangerous response. The wasp seemingly ignored
+her, focused on her breasts and pussy. She ran her fingers around its
+head, hard and smooth like a helmet. Even its eyes felt like a
+multifaceted grouping of glass lenses.</p>
+<p>Emma cautiously raised her right leg, curled, and rubbed it against the
+wasp\'s furry abdomen. The wasp reacted with a loud buzz, its pace
+increased, a not unpleasant feeling for Emma. "Oooo! You like that,
+don\'t you?" Emma purred. "Let\'s try some more."</p>
+<p>She raised her other leg and wrapped them both around the wasp\'s
+bulbous abdomen. She stroked the fur with her legs. "Okay," she said.
+"Let\'s see what it\'s really like to fuck a wasp." A brief alarm blared
+through her head, "EMMA! YOU\'RE COMMITTING BESTIALITY!"</p>
+<p>Emma, as Doug well knew, was always adventurous and willing to try new
+things, but she drew the line at animals. Her definitions of such
+activities were limited to creatures like dogs or cows or some other
+four-legged creature, an idea so repulsive as to be unthinkable. Then
+again, getting fucked by a giant wasp was so far outside the realm of
+experience, it went beyond unthinkable to unimaginable. Reciprocating
+went even further, but then Emma thought, <em>"What the hell, I\'m already
+three quarters involved, I may as well go all the way. Who\'s to know,
+except maybe Doug. And where is he anyway?"</em></p>
+<p>Emma\'s concerns about Doug were mild for the moment. Doug was a big
+boy. He could take care of himself. Besides, Emma was too lost in lust
+to worry overmuch. Wrapping her arms around the wasp\'s thorax and
+crossing her legs around its abdomen, Emma rutted back to the insect\'s
+thrusts. The creature responded by wrapping its four lower legs around
+her waist and hips, and crooking its two shorter upper legs over her
+shoulders.</p>
+<p>The pace of its thrusts increased and the buzz grew in intensity. Emma
+stroked the wasp\'s thorax and head, but when she touched its antennae,
+Emma made an important discovery: wasp antennae were even more erogenous
+than the abdomen.</p>
+<p>The buzz turned into a roar. The water around Emma and the wasp rippled
+as if under the blades of an aircraft. The wings beat so furiously, Emma
+and her hymenopteric lover were lifted off the rock. Neither noticed so
+locked were they in erotic frenzy.</p>
+<p>Emma\'s shrieks of lust would surprise even Doug. "Ugh! Ugh! Ugh! Come
+on! Uuuuggghhnnn! Come on you fucking insect! Ohhhh! Aaaauuugghhh!
+Ooohhh! Fuck! Fuck me! Fuck me you fucking wasp! Oh fuck! Ogodogodofuck!
+Oh fuck! I\'m cumming! Fuck! I\'m cumming!"</p>
+<p>Emma had cum before with the wasp, but the earlier orgasms were minor
+earthquakes compared to the seismic explosion that erupted between them.
+Emma came. . . and so did the wasp.</p>
+<p>Finally.</p>
+<p>Human and wasp spunk splattered the wet rock below and washed into the
+pool. "Oh fuck!" Emma gasped and passed out, overcome, finally, by
+exhaustion. She hung limply in the wasp\'s arms, a testament to her
+pioneering act of intimate human/insect contact.</p>
+<p>The wasp, itself, was tired, in spite of its stamina. This soft creature
+had proven to be far more cooperative than most animals, an interesting
+new paradigm. The creature lay beneath the wasp, breathing softly.</p>
+<p>The wasp was unsure as to its next move. The creature was useless as
+food. The wasp\'s species fed on fruit, nectar, and the occasional dead
+ant. Aphid juice was good too. The wasp, however, was not willing to
+leave the creature behind, so useful was it at helping the wasp expend
+sexual energy, but the creature was too heavy to carry to the nest. The
+wasp also did not want to tarry overlong as there were ants nearby.
+Moments later a solution presented itself.</p>
+<p>A humming buzz filled the air. The wasp looked upward as several of its
+companions flew down, curious as to the wasp\'s discovery. A brief
+communication was exchanged and a decision was made. The unconscious
+Emma didn\'t notice as insectoid arms and legs lifted her up and flew
+her limp body. . . to the volcano at the island\'s tip. . .</p>
+<p><strong>To Be Continued.</strong></p>
+<p>Huge Fuckin\' Insects</p>
+<p>Part Three</p>
+<p>Doug In The Anthill</p>
+<p>by The Preve</p>
+<p>Thanks to Todger 65 for the edit.</p>
+<p>"Fuck man!" Doug gasped. His eyes darted about, wide-eyed with terror.
+The nightmare into which he\'d just been thrust needed a word. "I\'m in
+a fucking fifties monster flick man!"</p>
+<p>It would look that way to anyone in the same situation. It was dark . .
+. well not so dark once his eyes adjusted. The <em>room? Vault? Cave?
+Whatever man!</em> Looked like a cross between a giant mushroom, a spider
+web, and a padded cell. <em>A fucking padded cell is apt!</em> "An ant hill!
+I\'m in a fucking giant ant hill!"</p>
+<p>It happened so quick. One moment, he was gathering wood. The next, he
+was in the maws of something that shouldn\'t exist in nature. "What the
+fuck?!" he\'d screamed as something snatched him in a vise-like grip and
+held him off the ground. He struggled, surprised, and then he took a
+look at the creature. "WHAT THE FAAAAAUUUUCK!"</p>
+<p>Doug didn\'t know much about ants. His only reference to the thing was a
+fifties sci-fi flick, <em>Them!</em>. It held him in its mandibles, binding his
+arms to his sides. Doug screamed in white-hot terror, kicking his legs
+and squirming. "Fuck man! Let go!" The creature didn\'t notice. It
+trundled along, making occasional trills, and then it came to the ant
+hill.</p>
+<p>If a snatch by a giant ant put the terror in Doug, it paled against the
+fear nova at the sight of the hill. It swarmed with ants; some the size
+of large dogs, others larger than his captor. They flowed continuously
+in and out of the hill. Many carried objects in their mandibles: trash
+and twigs, balls of waste, giant white blobby things with stubby legs.</p>
+<p>Doug took one look and screamed, "OOOHHH FAAAAAUUUUCK!" He went into a
+frenzy of desperate struggles. The ant\'s grip was iron.</p>
+<p>"Oh man! Oh fuck!" Doug wept unapologetic with terror. The other ants
+ignored him, busy with other projects. The ant carried the howling
+swimmer into the hill.</p>
+<p>Right now, Doug wasn\'t howling; it didn\'t seem useful anymore. The
+panic abated, yes, but it didn\'t disguise the fact that, to Doug, he
+was ant food. It was just a matter of when. <em>Man, I got to find a way
+out before they come back.</em></p>
+<p>He took stock. The chamber looked to be the size of a small garage. The
+walls, ceiling, and floor were covered in soft, white fungi. The fungi
+emitted a slight glow. <em>Fuck!</em> <em>Is this stuff radioactive?</em></p>
+<p>It made sense; between the ants\' size and stories of nuclear testing,
+glow-in-the-dark mushrooms weren\'t out of place. Neither was radiation
+poisoning . . . or whatever unnatural mutation would happen if he stayed
+long enough. <em>Man! I got to get out of here, like fucking now!</em></p>
+<p>It\'s an easier said than done task. It wasn\'t the blocked entrance but
+there were so many. One wrong choice could put him deeper in the hill.
+God knows what he\'d find.</p>
+<p>Doug decided to check out his "room" first. "Maybe I can hide
+somewhere," he hoped. He didn\'t know why the ant put him here, <em>Unless
+they\'re storing me for later.</em> The implication sent a shiver up his
+back.</p>
+<p>Another movie, about a boy who\'s magically shrunk and held captive by
+ants, marched into his head, joining the other giant ant movie. <em>Ants!
+Ants! Ants! In my fucking head man! I might be fucking dreaming. Maybe I
+ate a fucking mushroom or something.</em></p>
+<p>It didn\'t help to see parts of the wall move. <em>What the fuck\'s that?!</em>
+Instinct told him to flee into one of the passageways but, <em>What good
+would that do?</em> Besides, Doug, for all his fear, was a curious fellow.</p>
+<p>He padded to the wall for a closer examination. There were things
+embedded in the fungi; they looked familiar. <em>Fuck! It\'s those blobs
+the ants were carrying!</em></p>
+<p>He found, however, they weren\'t actual blobs but more like giant,
+worm-like creatures with short, stubby legs; their shape vaguely
+reminiscent or a football. Their bodies were smooth for the most part;
+some sported very fine hairs. Their colors ranged from pale, milky
+yellow to light pink, almost fleshy in hue.</p>
+<p>Doug\'s earlier panic had prevented him from noticing these creatures.
+Now, he saw how they vibrated slightly, purring like tribbles. <em>Now I\'m
+in fucking Star Trek. So now what?</em></p>
+<p>The answer came right as he finished the thought. It began as a faint
+rumble. Doug shrank against the wall. <em>What the fuck now?</em></p>
+<p>The rumble grew until it filled the chamber. It took the swimmer a
+moment to recognize the rumble as footsteps, lots and lots of footsteps.
+<em>Aw shit!</em></p>
+<p>The rumble emanated from the tunnels leading into the chamber. <em>Aw fuck!
+It\'s dinner time! I\'m fucked! I\'m ant chow!</em></p>
+<p>A troop of ants trundled into the chamber. They were the size of small
+cars, like a Mini Cooper, for the most part. They ignored Doug,
+initially, instead going to the walls to pluck the aphids.</p>
+<p>Doug almost felt relieved until a mid-sized ant with moose horn
+mandibles trundled towards him. "Aw fuck!" he cried. "No way I can fight
+this thing!"</p>
+<p>The swimmer hoped it wouldn\'t hurt when the ant sliced him in half.
+Instead, the ant gently, but firmly, grasped him by the waist and
+carried him off with the others.</p>
+<p>They moved through tunnels which emitted the same glow as the chamber.
+Doug noticed the hairs on the aphids\' bodies. <em>Fuck man! What\'s this
+about?</em></p>
+<p>Doug didn\'t struggle or fight. If the ants were going to eat him, he
+figured they\'d have done so already. Curiosity kept him quiet more than
+anything.</p>
+<p>The ants carried their charges through an arched entrance, into a
+bell-shaped chamber, and at the center was a large pool.</p>
+<p>Other ants, each carrying an aphid, entered through tunnels around the
+chamber. They trundled to the pool and, using their mandibles, dipped
+the aphids in, repeatedly.</p>
+<p>"Shit! I\'m going to get dunked," Doug realized. The water, as it turned
+out, was not quite water. It tingled like mild acid. The feeling was of
+being dipped in soda water.</p>
+<p>The swimmer closed his eyes as the ant dipped him, covering them with
+his hand. He thought the "water" would not be good on his eyes. <em>I wish
+I had my goggles.</em> Some liquid did get up his nose, causing a slight
+burning.</p>
+<p>The ant dipped him several times until he was thoroughly soaked. Doug
+was curious why but, helpless in the ant\'s grip, could only let it
+happen. <em>I\'ll know soon enough.</em></p>
+<p>The ant finished and backed away from the pool. Doug waited until the
+"water" dripped off his face before removing his hand. The air in the
+chamber cooled his skin; he shivered slightly. He was aware of a strange
+feeling. <em>Smooth. I feel . . . smooth.</em></p>
+<p>He noted a few of the other ants had finished with their aphids. Some of
+the formerly hairy aphids were now bald.</p>
+<p>He felt his own skin. "Son of a bitch!" While he\'d been relatively
+hairless and maintained it for swimming, some stubble recently began to
+appear on his skin. Now the stubble was gone. The only thing, close to
+hair, left on his body were his eyelashes. <em>Holy shit! Natural hair
+removal! If I get off this island, I could tell someone, Emma\'s Dad or
+Moira\'s parents maybe. We could come back and make a fortune.</em></p>
+<p>The ant, still carrying Doug, rumbled into another passage, following
+the others bearing aphids. Doug now had an idea why the ant snatched
+him. <em>Geez! They think I\'m an aphid! Does that mean I\'m safe?</em></p>
+<p>As with ants, Doug didn\'t know much about aphids, just that ants used
+them in some fashion. <em>At least they don\'t eat them, so far as I
+remember. Doesn\'t Emma\'s sister know about these things?</em></p>
+<p>The ant carried Doug to another chamber, large and padded like the aphid
+room. Ants were gathered near groups of aphids, like shepherds tending
+their flocks.</p>
+<p>Some groups of ants held aphids, stroking them with their antennae.
+"What the fuck is that about?" Doug asked.</p>
+<p>A large bead of golden yellow fluid beaded on the nether region of one
+of the aphids. The ant holding it, drew the creature close, placed its
+mouth on the bead, and sucked it in, trilling happily.</p>
+<p>"Oh man!" Doug cried, with a chill of horror. He now knew why he\'d been
+brought to the chamber. "But I\'m not a fucking aphid, man! I don\'t
+have that stuff! No! Wait!"</p>
+<p>The ant carried him to the middle. Several other ants gathered around.
+Doug struggled, not wanting to imagine his fate when the ants found he
+had none of the strange fluid. He didn\'t try to hit the ant; its grip
+was gentle but firm, and he didn\'t want to make it angry. <em>It might
+crush me or cut me in half, I\'ll have to be careful. Fuck! It\'ll do it
+anyway once it finds I got nothing.</em></p>
+<p>Once they reached the center of the chamber, the ant hesitated, trilling
+to the others. They trilled back, their communication unknown to Doug,
+and drew closer. The ant waved its antennae for several moments, then
+lowered them to stroke Doug\'s body, focusing on his lower torso, hips,
+and groin. Doug tried very hard not to giggle. The stroking was,
+initially, very ticklish.</p>
+<p>It was at the swimmer\'s groin where the ant drew a response. The only
+people previously allowed access to that area were Emma, earlier
+girlfriends, and Doug himself. While the ant had not touched his cock,
+the groin itself was sensitive enough to cause an erection.</p>
+<p>"Oh fuck me!" Doug\'s pale skin blushed pink. He tried thinking of the
+world\'s ugliest people to deflate; nothing worked. <em>Fuck! If the guys
+knew about this, I\'d . . . Oh no!</em></p>
+<p>The "Oh no" came as the ant\'s antennae reached his cock, and discovered
+stroking it made it even bigger. "Fuck!" he squirmed, "This is fucking
+embarrassing man!"</p>
+<p>The ant trilled, intrigued by this new discovery. This strange new aphid
+displayed a much larger dispenser than the others. Maybe that meant much
+more nectar from this one. It communicated its interest to the others,
+who trilled back, equally intrigued.</p>
+<p>Ants crowded around Doug and the stroker. Some started to participate
+with their antennae, trilling excitedly. The swimmer squirmed as
+antennae caressed all over his body. "Fuck me man!" he gasped.</p>
+<p>As if in answer to a request, several pairs of antennae traced along his
+butt crack and plunged into his bunghole. Doug\'s blue eyes popped,
+"Whoa!" He struggled more frantically. "Fuck! Fuck! Fuckety fucking shit
+man! Get off me!"</p>
+<p>Doug was extremely dismayed to see his prodigious cock stone hard,
+vein-twined and throbbing, with pre-cum at the tip. His dismay turned to
+absolute and utter mortification when his formic captor brought him
+forward, and drew his sausage into its mouth.</p>
+<p>"Aaahhh! Fuck! Blown and buggered by ants, man! Fuck me fuck!"</p>
+<p>The ant did not have a tongue, but the warm, wet interior of its mouth
+produced the same effect as fellatio. Combined with the effects of ant
+antennae pumping in and out of his butt-clenched man hole, and stroking
+his painfully throbbing balls, Doug "The Dolphin" Doyle\'s detonation
+was inevitable.</p>
+<p>A massive convulsion rolled through his body. The most mind-blowing
+orgasm Doug ever experienced, followed. His eyes rolled back to their
+whites. His mouth opened wide in a ululating groan, "Uuuunnnngh!" His
+body quaked in the ant\'s grip.</p>
+<p>The ant, in turn, received a blast of something it never before tasted:
+man-cream in prodigious amounts. Doug, as Emma and prior girlfriends
+attested, was a prolific squirter.</p>
+<p>The ant was stunned. What kind of aphid was this? It\'s nectar tasted
+vastly different from the others, not that it was any less delicious.</p>
+<p>It trilled this information to the others. A chorus of trills answered.
+<em>A new aphid?! A new type of nectar?! Let me have some of that!</em></p>
+<p>Doug, gasping and slick with sweat, still reeling from orgasm, and
+anally invasive antennae, gradually became aware of hundreds of rumbling
+feet. He turned his head at the sound. "Awww fuck!"</p>
+<p>The rest of the ants in the chamber were heading towards the already
+sizable gangbanging crowd, and more ants were crowding in.</p>
+<p>Aphids were dropped as news raced through the hill of the strange new
+creature with the amazing nectar.</p>
+<p>Doug watched the swarm balefully, knowing he wasn\'t going to be eaten,
+but not wanting to imagine the alternative.</p>
+<p>The ant trilled to the swarm. Doug gasped as antennae withdrew from his
+ass and ceased stroking his body. The ant crowd seemed to withdraw for a
+moment. Doug experienced a second\'s worth of hope. <em>Are they done? Is
+it over?</em></p>
+<p>The ants formed a circle around Doug and his ant. More ants piled on top
+of the others. The swimmer couldn\'t help his curiosity. <em>What the fuck
+they doing?</em></p>
+<p>The ants began to build a wall of their bodies, locking their legs
+together. Doug watched, confused, the ant wall grow around him and the
+others. As it curved over, it became clear. <em>They\'re building a dome!
+Why?!</em></p>
+<p>Doug remembered, with his little knowledge, ant sometimes formed balls
+when their hills flooded. He couldn\'t know, besides their large, atomic
+radiation-influenced size, the relative isolation, and different
+behavior, made them unique to others of their species.</p>
+<p>The ants finished their dome. The interlocked, using their legs, but
+faced their heads and mandibles inward. Objects emerged from their lower
+torsos; familiar in shape, long, thick, pink, and fleshy, and pointing
+in the same direction as their heads. The implied meaning of their
+appearance made Doug shudder.</p>
+<p>The ants, unknown to Doug, liked to play a game, occasionally, with the
+aphids. It might seem human-like to an observer, but this species, in
+isolation, evolved different habits and, being male, practiced them
+between breeding seasons.</p>
+<p>The living dome vibrated with the trills of hundreds of ants. Doug\'s
+formic captor carried him to one side of the dome.</p>
+<p>"No! Fuck! No! No! No!" the swimmer cried as the looming wall of
+clicking mandibles and ant cocks loomed closer. He squirmed and
+struggled to futile results. The ant\'s grip was like a vise. The ant
+came to the wall. Doug\'s last thought before mandibles snatched him up
+was, <em>I should have stayed my ass home!</em></p>
+<p>And so The Great Ant Balling of Doug "The Dolphin" Doyle, champion
+swimmer, Olympic prospect, lover of a woman who, unbeknownst to him,
+just had a similar experience with a giant wasp, commenced.</p>
+<p>The ants, for all the menace represented by their mandibles, displayed a
+surprisingly gentle touch in handling this new aphid. The term for orgy
+was still an apt description.</p>
+<p>Antennae held the swimmer\'s well-shaped, exercise-sculpted ass
+constantly spread. His anal passage stuffed with ant cock or antennae
+drilling in and out. His spear point cock, hard erect, was plunged into
+one ant mouth after another, and sucked until he filled it with nectar.
+Once done, he was immediately passed to another.</p>
+<p>An unbroken helping of ant cock filled his mouth. It wasn\'t exactly
+voluntary. It\'s difficult keeping one\'s mouth closed in a giant
+orgasm; impossible if they overlap. The ants took every opportunity to
+stuff any open hole in this new aphid.</p>
+<p>Doug, in short order, discovered something interesting: ant spunk tasted
+good, like slightly less sweet honey. His mortification at the massive
+ant buggery decreased, in part because of this. The other reason: he
+knew, if he ever got out of this predicament, no one would know, so long
+as he kept his mouth shut. <em>Emma\'s definitely not hearing of this, and
+neither the team!</em></p>
+<p>The final reason: realizing the obviousness he wasn\'t going to be torn
+apart or eaten, just fucked silly, Doug found himself enjoying the
+experience. <em>I\'m definitely keeping my mouth shut on this one.</em></p>
+<p>The swimmer never knew how long his ordeal lasted. He remembered it as a
+swirl of ant cocks in his mouth and ass, stroking antennae, sweat and
+ant spunk drenching his skin, and cumming, lots and lots of cumming.</p>
+<p>His body was manipulated and passed around the dome, and on the floor,
+where more ants had congregated, cocks, antennae, and mouths at the
+ready.</p>
+<p>In the first moments of the orgy, Doug gasped the grunts used during
+sex. He was reduced to sighs by the time they passed him to the floor.</p>
+<p>The ants did not let up. Their boundless energy used on the colony, was
+directed to Doug. He couldn\'t gasp out pleas or beg for mercy. He was,
+to the ants, a new kind of aphid. The methods used to squeeze nectar
+from his body amounted to a major fuck fest.</p>
+<p>Doug, by the time the frenzy abated, was a semi-conscious cum fountain;
+dripping with sweat, cum, and ant juice. His body twitched with
+micro-orgasms, his erect cock squirted seed over the ants in the dome.</p>
+<p>The swimmer was handed to an ant. He didn\'t know or care if it was the
+same one who\'d snatched him. Too spent to feel anything but a faint
+awe, he marveled, "Fucking . . . ants." His semi-limp body was carried
+deeper into the hill.</p>
+<p>****</p>
+<p>The ant Queen rested in her chamber, bored as ants define the term.
+She\'d laid the season\'s quota of eggs several weeks ago; mating season
+wasn\'t due for another month. She had plenty of downtime, with nothing
+to do except suck aphids and mate a worker or two, out of season. So
+when a lowly worker, one of the gatherers, bumbled in with an aphid, she
+was unimpressed, initially.</p>
+<p>A series of trills communicated back and forth between them. They
+translated more along the lines of, <em>What is this creature? It\'s
+different from the others.</em></p>
+<p>A new kind of aphid, recently discovered, your Majesty.</p>
+<p>The worker handed the aphid to the Queen, who examined it closely. A
+strange looking thing, it was, with fewer limbs, a more slender build,
+and a slightly different color than a usual aphid.</p>
+<p>The Queen trilled a question to her minion, who trilled back, an ant
+equivalent of a shrug.</p>
+<p>The Queen noted the limp way the aphid hung in her mandibles, and
+trilled again. The minion waved its antennae, pointing towards its
+mouth.</p>
+<p>Doug didn\'t notice at first but when ant legs gripped and flipped him,
+he revived to find himself upside down. The Queen gripped him by his
+hips. His limp cock dangled downward.</p>
+<p>"Wha . . . what the fuck?!"</p>
+<p>The Queen trilled; ant antennae stroked his dong. Doug grew hard.</p>
+<p>"Awww fuck! Not again!"</p>
+<p>His cock was drawn into the Queen\'s mouth, and Doug\'s formic cock-blow
+resumed.</p>
+<p>The Queen quickly brought the swimmer to orgasm, and trilled happily
+when the nectar her minion mentioned, filled her mouth. A most
+interesting and intriguing new aphid! She gripped it closer to her torso
+for better purchase. Doug\'s head was placed close to her gaster, near
+the egg-laying orifice. A thick clear fluid dripped from it.</p>
+<p>Doug, wasn\'t inclined to bring his head closer, but the Queen,
+thoroughly obsessed with this new aphid\'s nectar, grasped him tight.</p>
+<p>The mortified swimmer turned human aphid, found his puss planted on the
+ant\'s pussy. His mouth, open to gasp out an orgasm, found itself filled
+with the strange fluid. <em>Geez! It tastes sweeter than ant spunk!</em></p>
+<p>Doug\'s tongue swirled round and in the ant\'s snatch. The ant reacted.</p>
+<p>The Queen had never experienced this kind of activity, especially from
+an aphid. <em>What kind of aphid is this?!</em> The regular matings with her
+males were functional, perfunctory. She took in their sperm to fertilize
+her eggs, but took no pleasure in the activity. This . . . aphid was
+performing an unprecedented act. She doubled down on the aphid\'s nectar
+producer, while it, Doug, wrapped its arms around her thorax.</p>
+<p>Doug raised his head just long enough to think, <em>Holy fuck! I\'m
+sixty-nining a giant ant! </em>He plunged back into the formic\'s honey pot,
+slurping away at the sweet syrup gushing forth.</p>
+<p>A trilling, grunting, slurping, human / formic fuck fest ensued. Doug
+gasped as two pairs of antennae (the Queen rewarding her minion for
+bringing this new treasure, by allowing it to join in) plunged into his
+bung hole.</p>
+<p>The syrup seemed to endow him with new energy. His balls plumped, and
+pumped greater amounts of man cream into the voracious ant. His pale
+white body writhed and shuddered. His hairless head bobbed. His pink
+tongue slurped.</p>
+<p>Doug\'s stamina, honed by years of exercise and swimming, kept him going
+for hours, aided by the ant syrup\'s remarkable properties. Eventually,
+though, even he had to quit to recover.</p>
+<p>The ant Queen felt the aphid give one last shudder before it went limp.
+She was disappointed but knew better than to overuse this unique
+creature. Overused aphids tended to dry out, if not given time to rest.</p>
+<p>She trilled an order to her equally disappointed minion, who nodded,
+understanding, and took the aphid. The worker set it on a bed of fungi
+in the Queen\'s chamber.</p>
+<p>The Queen then trilled orders to the minion, who conveyed them to the
+rest of the hill. They were in regards to the care and feeding of this
+unique aphid. The Queen\'s prerogative ordinarily allowed her to keep
+the aphid for herself. She was devoted to her subjects, however, and
+more than willing to share. She had great plans for this creature.</p>
+<p>Doug slept, dreamless, on the fungi bed. He awoke to the caresses of
+antennae on his body, his cock, his ass. He gasped, already erect, with
+just enough time to realize, <em>So it wasn\'t a dream.</em> Mandibles picked
+him up; his cock was in an ant mouth seconds later. The licking,
+sucking, trilling, and fucking began anew.</p>
+<p>So the pattern was set for Doug. A timeless cycle of ant-fucking,
+interspersed with regular feedings of edible fungi, fruits, ant spunk
+and ant syrup.</p>
+<p>They dipped him regularly in the aphid pool, for baths mostly. His hair
+did not grow back after the first dip. Sometimes he was allowed to swim
+in it.</p>
+<p>Time passed. Doug ate and fucked. Early in the cycle, a thought crossed
+his mind; a possibility of keeping track through his sleep cycle. The
+timelessness of the hill, and the continuous ant orgy thwarted him. His
+thoughts dulled into an erotic fugue.</p>
+<p>The ants did not rely on Doug exclusively. They gathered and milked
+other aphids but Doug remained the prize. The Queen kept first dibs.</p>
+<p>In the end, the swimmer\'s mind reduced to little more than lust-driven
+instinct. Every act he performed was automatic, reduced to three basic
+functions: eat, fuck, sleep. He\'d become a human aphid; a cum fountain
+and cock sheath, milked like the others.</p>
+<p>Sometimes, however, a name would rise from his miasma; a tenuous grip on
+his last human vestiges, and it was this name he muttered, when antennae
+roused him from his sleep, and mandibles bore his pale white body ever
+deeper into the ant hill.</p>
+<p>And as for that woman . . .</p>
+<p><strong>To Be Concluded.</strong></p>
+<p>Huge Fuckin\' Insects</p>
+<p>Conclusion</p>
+<p>The Waspinization of Emma</p>
+<p>by The Preve</p>
+<p>Thanks to Todger 65 for the edit.</p>
+<p>She lay on her back, on a paper bed. Her nude body dripped with sweat.
+Her legs were spread, her pink pussy wide, wet, and open. Her moans and
+gasps alternating with a gnawing of her lower lip. She looked down, not
+in horror, over her swollen breasts and belly, at the remarkable thing
+the wasps were doing to her pussy.</p>
+<p>They worked in cycles. One inserted an egg, another fertilized her womb.</p>
+<p>Emma would have felt horror days ago. Her body, today, was bloated with
+eggs in a surreal "pregnancy". Her former toned athletic shape
+transformed into gravid fertility.</p>
+<p>Days ago, for Emma, sex with giant wasps was new. She\'d given no
+thought or care for the consequences; no question whether the wasps
+would eat her afterwards. She was to immersed in exploring this new and
+unique experience. Playing host to fertilized wasp eggs didn\'t factor.</p>
+<p>After that first encounter, she\'d woken to the sound of wings. It was
+almost a musical, soothing hum. "Mmmm," she muttered, drowsily.</p>
+<p>The platform she\'d woken on was soft and dry. She was on her side,
+curled. Emma struggled between sleep and wake. The hum was so soothing,
+hypnotic.</p>
+<p>Emma turned on her back and opened her eyes. She blinked until they
+adjusted and gasped. Her startled sigh was involuntary, not in fear or
+horror but awe. <em>Wasps!</em></p>
+<p>Giant wasps, everywhere, lining the walls of the vaulted cave. The walls
+themselves were made of paper, with pentagonal niches and passageways.
+An opening at the top let sunlight and air into the nest.</p>
+<p>In spite of it all, Emma wasn\'t terrified. <em>If they were going to kill
+or eat me they\'d have done it already. And I\'m just a single human,
+not enough to feed all of . . . these. Still, why did they bring me
+here?</em></p>
+<p>Emma took stock of her situation. The platform was a rock formation,
+covered in wasp paper. <em>Like a bed or throne.</em> The "bed" was set in the
+exact center of the vault. The sunlight streamed directly upon it.</p>
+<p>Emma expected a cave to be cool and uncomfortable, given her nude state,
+but the nest was surprisingly warm.</p>
+<p>She noticed a few vents nearby, hissing steam, and a pool of water at
+the base of the formation. <em>A volcano, probably dormant.</em> Some dormant
+volcanoes contained vents and hot springs. She\'d explored a few before.</p>
+<p>The wasps seemed uninterested in her at the moment. Emma felt muggy and
+sticky, <em>Like I just fucked a giant wasp,</em> so she walked to the pool to
+test the water. <em>Some of these pools can be scalding, so I\'ll have to
+be careful.</em></p>
+<p>The water was warm, not scalding, and it tingled, <em>Minerals.</em> The pool
+was deep. She swam, dipped, and washed, and then climbed out, clean,
+slick, and wet.</p>
+<p>"I wonder what happened to Doug?" she asked, slicking back her hair.
+"Did the wasps catch him?"</p>
+<p>She hoped he was okay. *No sign of him in here. *</p>
+<p>Most of the wasps clustered around a ledge near the roof. <em>Almost as if
+they\'re having a conference.</em></p>
+<p>Emma was right in that aspect. Most questioned the wisdom of bringing
+this creature to the nest. The wasps who\'d brought it argued its status
+as a female made it harmless. Moreover, she had potential as a
+distraction, until a new queen could be hatched. The issue, right now,
+was the eggs. They were unfertilized and needed an incubator.</p>
+<p>The idea went off simultaneously. Antennas raised and all the wasps
+looked at the creature. It might work, the collective thought suggested.
+The special pollen might be required to pull it off. A collective
+decision was made; several wasps were sent to the nearby island to
+gather the pollen. The unprecedented novelty of the decision was lost on
+the hive. They were desperate, and wasps are absolute pragmatists.</p>
+<p>Emma passed the time exploring the vault. She noted many tunnels but
+indications of an exit. "I could climb to the roof," she thought, but
+given her nudity, and the vigilance of the wasps, the prospect was
+problematic.</p>
+<p>The warmth and humidity created a gloss of sweat on her skin so, to
+relieve the mugginess, she took a few more swims. A growl in her stomach
+revealed another problem. <em>Food; what is there to eat?</em></p>
+<p>As if on cue, a hum filled the vault. Three wasps flew into the chamber,
+covered in saffron, or amber powder.</p>
+<p>They landed on Emma\'s platform. She noticed, on a closer look, objects
+in their mandibles. The wasps\' bodies vibrated, like wet dogs drying
+themselves.</p>
+<p>The "powder" shook off their bodies. She found the powder was, in fact,
+small fibrous tufts of a mysterious substance. The other objects fell
+from the wasps, revealed as assorted fruits and tubers. <em>Bananas,
+papaya, breadfruit, and taro. I guess this is feeding me, huh? What\'s
+with the weird fluff balls?</em></p>
+<p>The wasps flew away; the rest ignored her. Emma went to the food pile
+and examined the fluff. The experienced traveler knew what not to put in
+her mouth. On the other hand, she was an experimental woman. The fruits
+were mixed with the fluff so they had to be washed, <em>If this stuff is
+dangerous.</em></p>
+<p>She picked some of the fluff up and examined it. <em>It looks familiar . .
+. pollen?</em></p>
+<p>Emma\'s experience, between here biology masters and nature hikes, let
+her recognize pollen. She just never seen such an abundance. <em>This
+either came from thousands of flowers, or one giant one.</em> She might have
+dismissed the idea of supersized flowers earlier, but then, giant wasps
+were not a factor.</p>
+<p>She pondered her next move. The fruit and tubers were covered in the
+stuff. The reason could be incidental contamination. <em>Pollen\'s not
+exactly poisonous. What flower did this come from?</em></p>
+<p>She held it to her nose. The smell was sweet, cloying, subtle, like a
+rose or carnation flower. She\'d met a few health nuts who attested to
+pollen\'s benefits. That thought explained why Emma touched her tongue
+to it.</p>
+<p>It tasted mildly sweet, not overwhelming in flavor, but very subtle.
+Emma pondered some more.</p>
+<p><em>Okay, so wasps don\'t make honey but these wasps gathered this pollen.
+It\'s not poisonous, at least to them, and I\'m feeling no effects. They
+wouldn\'t poison me. If they wanted me dead, they\'d have killed me
+already. The fruit\'s covered with the stuff. I don\'t think they\'re
+fattening me up. They are feeding me, but why?</em></p>
+<p>She went over monster stories about parasitic wasps but discounted them.
+<em>Emma, you watched too many Alien films. </em>These wasps didn\'t give off
+that vibe. <em>No eggs or larvae. I could be wrong.</em> As it stood, to Emma
+there was no other choice. <em>Eat or starve.</em></p>
+<p>The following days settled into a routine. The wasps left Emma alone
+except to give her regular feedings of fruit, tubers, and pollen. Emma
+kept herself clean with the pool water, taking regular dips to relieve
+the mugginess.</p>
+<p>She observed the wasps behavior. <em>I wish I had a notebook or camera,
+I\'d be a celebrity for sure. The wasps\' Dian Fossey.</em></p>
+<p>She noted an aggressiveness in the wasps, not towards her, but against
+each other. <em>Am I seeing the start of a war?</em> They weren\'t at the
+stinging point yet. Emma couldn\'t help but feel some irony. <em>A wasp
+nest in a volcano,</em> and still the over arching question: <em>Why am I
+here?</em></p>
+<p>The answer came some days later, a week or two into her "captivity".
+She\'d just left the pool, nude and slick. The wasps were agitated,
+buzzing around the entrance and passageways. The thrumming was near
+melodic, and produced a light, and not unpleasant, breeze.</p>
+<p>"Something\'s up," she murmured. A whirlwind was developing at the
+volcano entrance. <em>What\'s that about?</em></p>
+<p>Two wasps detached from the swirl and buzzed toward her. Emma wasn\'t
+afraid, but had some trepidation. They could have killed her in the days
+<em>(Weeks? Months?)</em> since they\'d brought her to the volcano. There
+seemed no reason to do so now but, certainly, something was about to
+happen.</p>
+<p>They landed on either side of her, one to the front, the other to the
+back. "I don\'t like the looks of this."</p>
+<p>The wasp in front buzzed forward. Emma backed up, nervously, until she
+realized her steps would only back her into the other. <em>Okay Emma,
+they\'re not going to harm you, I think. Stand still and see what this
+is about.</em></p>
+<p>She stood and let the wasp come up to her, curious but anxious. The
+wasp, then, did a curious thing . . . with its antennae. It leaned
+forward and poked her belly, and light touch, it seemed at first.</p>
+<p>It poked harder; Emma giggled. <em>It tickles. What is this thing up to?</em></p>
+<p>The wasp\'s antennae probed and poked from her belly to her groin. Emma
+didn\'t back away or move but stood still, curious. The wasp seemed to
+be testing her torso with its antennae. Emma gradually noticed something
+peculiar as it poked. <em>Is it me or does my belly feel a little . . .
+rubbery?</em></p>
+<p>She\'d not noticed before but, now, her torso, from belly to groin,
+seemed to have acquired a certain . . . elasticity.</p>
+<p>The was no pain, or discomfort from the poke. It felt kind of nice, in
+fact.</p>
+<p>Emma poked herself, taking care not to provoke the wasp. <em>What the
+hell?!</em></p>
+<p>At first, there didn\'t seem much difference, but the more Emma examined
+herself, the more strange her torso felt. <em>It\'s like my body\'s turned
+to rubber. What happened?</em></p>
+<p>She\'d only eaten tubers and fruit the past several weeks. <em>And that
+strange pollen? Hmmm . . .</em> If the pollen had something to do with it,
+the development was for the scientists. <em>If I can get samples. If I can
+get off this island.</em> The question remained why the wasps were doing
+this. "Oh!" she gasped, startled.</p>
+<p>Antennae probed her back. The other wasp, about whom she\'d forgotten,
+had come close. Its antennae probed along her ass. Emma tensed,
+involuntarily. <em>Is this thing interested in . . .?</em> The wasp wasn\'t.
+Instead it moved its antennae between her thighs to probe her quim. The
+other wasp joined in.</p>
+<p>"Gasp! What is this?" Emma was wet; something she hadn\'t noticed until
+two pairs of antennae entered her. She didn\'t move, keeping her eyes on
+the wasp in front, moaning softly.</p>
+<p>While her body reacted, Emma sensed the wasps\' actions were non-sexual.
+They didn\'t try to stimulate her in any other way. Their probing
+focused on stretching her pussy and vaginal passage. It wasn\'t
+uncomfortable. <em>They\'re testing my canal. Why?</em></p>
+<p>The two wasps probed deep, testing all the way in to her cervix. One
+antenna pushed inward, drawing out another gasp. No pain came from this
+deep penetration. Emma swayed, suspended between the two wasps. Her
+lightheadedness as much from cumming, as from the weirdest erotic
+experience of her life. <em>A nineteen year old swimmer to a giant wasp to
+two more. How crazy can my life get?</em></p>
+<p>The wasps withdrew their antennae, satisfied the creature could handle
+the important duty planned for her. One flew to convey the news to the
+swarm. Emma swayed, pussy dripping, and collapsed . . . back into the
+waiting body of the other wasp. "Oh!"</p>
+<p>It was not quite falling into the arms of a lover, but legs and thorax
+came close. The wasp beat its wings, creating a soft breeze, and used
+its legs to prop Emma upright.</p>
+<p>"What is it . . . oh!" Something firm and fleshy slid between the globes
+of her ass, where none but Doug had permission. <em>Giant wasps doing
+anal?!</em> She didn\'t struggle. Her earlier encounter made Emma curious,
+and weird was moot at this stage.</p>
+<p>It soon became obvious the wasp had a different reason for the anal
+invasion. Using its legs and penile sting, the wasp kept Emma at a
+tilted back angle. <em>It\'s propping me up!</em></p>
+<p>A reason popped into her head, confirmed when the wasp used its legs to
+spread her legs and pussy.</p>
+<p>The other wasps of the hive flew down and surrounded them. Stingers, not
+the hard pointed ones, but the softer cum-beaded drillers, unsheathed.</p>
+<p>"Oh fuck!" Emma gasped, "I\'m going to be gang banged by wasps!"</p>
+<p>Emma, sexually experienced, usually stuck to one partner. She remembered
+a threesome once in college. Most encounters, though, were a couple of
+long-term boyfriends or an occasional date. She was a sexually active
+but not overly active woman of the modern age. No porn-style gang bangs.</p>
+<p>Her first gang bang would be performed by giant wasps; an event far
+beyond her wildest sexual fantasies.</p>
+<p>The first wasp flew forward. Emma, wet and open, shuddered. The long,
+thick stinger slid inside her with some ease. Her pussy, while elastic,
+needed some effort to accommodate it. The following drill session was
+punctuated by gasps and grunts from Emma. Wasps don\'t grunt.</p>
+<p>The pattern which set in was Emma\'s first wasp fuck times . . . well,
+she experienced difficulty keeping track.</p>
+<p>A wasp would settle on her body, bury its thick stinger into her
+dripping wet flower, drill her until it came, then fly off to be
+immediately replaced by another. Emma\'s orgasms, on the other hand,
+were constant.</p>
+<p>At some point, between the buzz-fucking, Emma noticed, barely, her feet
+no longer touched the ground. The frenzied wasp schlonging had moved
+into the air.</p>
+<p>She might have gasped, "wow" at some point but for the latest wasp
+pumping helm deep. A new pattern asserted itself.</p>
+<p>While a new wasp pumped her, the back wasp withdrew from her anus, and
+another took its place. The following wasping increased the weird level
+past her first encounter. An experience which would see her passed from
+one wasp to another, in the air, held aloft, sometimes switched out or
+falling onto one wasp cock after another.</p>
+<p>Flesh stingers kept her ass and pussy filled. Cum splashed out her
+overflowing womb, raining in honey gold droplets to the floor.</p>
+<p>Her sweat-gleamed body, shuddered, bounced, and quaked as it filled with
+wasp spunk.</p>
+<p>Nor was Emma passive in the airborne orgy. Once the pattern was set, she
+became an enthusiastic participant. She kept her legs spread wide and
+ground against each successive wasp.</p>
+<p>Her screams of, "Fuck! Fuck me you goddamn wasps! Pound my ass! Ream me
+out! Give it to me!" subsided gradually to moans, grunts, and occasional
+profanities.</p>
+<p>Her mind cleared in due course. She found herself on a paper bed,
+different from the other. Her very wet pussy gushed cum, her own and the
+wasps\'. No shock for her, just exhaustion and faint curiosity. <em>What
+are they going to do next?</em></p>
+<p>The wasps next action wasn\'t surprising in hindsight. A wasp crawled
+over her supine body with an erect stinger. Instead of her pussy it
+placed the stinger at her face. Emma immediately got the message. "Oh!"</p>
+<p>Wasp cocks were thicker than human but not by far. Wasp cum, at least
+this species, tasted more like honey. Emma filled her belly with jizz
+from three wasps before exhaustion overcame her body. She woke to a
+swollen belly and wasps putting eggs in her pussy.</p>
+<p>****</p>
+<p>Her shock came more from her body\'s transformation. <em>My womb should
+have ruptured! I should be dead!</em></p>
+<p>Instead the eggs went in with ease. Her belly grew bigger and rounder.</p>
+<p>The wasps alternated egg insertions with cum fillings, whether through
+her mouth to feed her, or her pussy to fertilize. In between, they fed
+her pollen.</p>
+<p>"The pollen! It has to be! Or maybe the cum! Or both!"</p>
+<p>There seemed no other explanation for her elasticity. <em>I\'m like a
+rubber balloon!</em></p>
+<p>Emma lost count of the eggs put inside her womb. She didn\'t care,
+actually. In another life she would view this experience with horror.
+The weeks of human / wasp fucking, led her to embrace the weird. Her
+only emotion was curiosity.</p>
+<p>The wasps, eventually, stopped filling her with eggs. On viewing the
+result, Emma saw little difference with a pregnant woman. She wondered
+with no little detachment, "How long until they hatch?" She didn\'t
+think a bloody, Alien style death was in her future. It didn\'t seem in
+this species nature.</p>
+<p>The following days or weeks or months, saw Emma suspended in a state of
+languor, fed constantly, cleaned and groomed, and otherwise treated as a
+Queen. Her belly continued to grow, as did her breasts. Her body reacted
+as if pregnant but with a shocking hyper-gravidness. Her breasts and
+belly grew to take up a sizable portion of her body.</p>
+<p>Emma was fed, massaged, and wasp-fucked every day. Her mind and body
+dulled, over time, to a basic primal existence. Eat, fuck, and sleep
+became her three tenets. Sometimes she ran her hands over her milk-laden
+melons and hyper-pregged belly. The only word rising from her dulled
+mind was, "Egg sac."</p>
+<p>Sometime during her confinement, a gush of fluid poured from between
+Emma\'s legs. Her gravid belly rippled; things began to move through her
+canal. She huffed, puffed, moaned and sighed, too busy to notice the
+commotion from one of the tunnels.</p>
+<p>The wasps were in a frenzy. Ants! Ants! Were coming into the nest. Wasps
+and ants, while distant cousins, were not exactly friends; less so on an
+island with limited resources.</p>
+<p>The ants came through a tunnel, long thought sealed off. The tunnel led
+to a system of caves which connected to the ant hill. Frequent
+skirmishes between the factions brought both to the brink of war. A
+mutual decision, long time past, led to the passageway\'s closure. Ants
+and wasps decided to share the island, and keep well away from each
+other.</p>
+<p>Now, it seemed, the passage was re-opened. The ants were invading.</p>
+<p>Wasps swarmed the tunnel\'s entrance, hard stingers at the ready.</p>
+<p>The ant army approached, and then stopped at a safe distance from the
+wasps. A small ant, the weakest and least threatening, bumbled near. It
+assumed a supplicant position, trilling softly and emitting calming
+pheromones.</p>
+<p>The wasps buzzed among themselves. This action was unconventional. It
+could be a trick. One of the smaller wasps was sent forward. It
+approached the ant, emitting suspicious and mildly hostile buzzes. Its
+pheromones exuded some hostility but the buzzing assumed a questioning
+tone.</p>
+<p>The two insects buzzed, trilled, and pheromoned back and forth, and
+ultimately a parlay took shape. The gist of the exchange unfolded as
+follows:</p>
+<p><em>\&lt;Greetings to the Hive.></em></p>
+<p>\&lt;What brings you here, ant?></p>
+<p>\&lt;We wish to discuss the current situation on the island.></p>
+<p>\&lt;And that being?></p>
+<p>\&lt;The scarce resources. Our Queen has a proposition. We wish to discuss
+such with your Queen.></p>
+<p>\&lt;Our . . . Queen is indisposed. State your offer and we shall convey it
+to her.></p>
+<p>\&lt;The resources of the island are ever more limited. Only proper and
+efficient use will allow benefits to both our peoples. We propose a
+series of trades and mutual population controls to improve the use of
+resources. The Queen offers the use of a quarter of her aphids, plus
+regular supplies of fungi in exchange for a quarter of your grubs, and
+regular supplies of pollen. As a gesture of amity, our Queen offers the
+services of this unique new aphid recently discovered by our worker.></p>
+<p>The ant stepped aside. Another ant trundled forward, bearing a pale
+figure in its mandibles.</p>
+<p>The wasps buzzed excitedly. This "aphid" as the ants thought it, bore
+similarities to the creature currently utilized as their breeder. There
+were some differences.</p>
+<p>It had the same number of limbs and a similarly shaped head. Its body
+was paler than the breeder, nor had it the head fur the breeder sported.
+In fact, no fur on its body at all. Its chest displayed similar
+swellings to the breeder, with nubs in the middle, but were far smaller
+and flatter, barely noticeable. Nor did they produce to copious fluid
+squirting from the breeder.</p>
+<p>The most notable difference was the fleshy stinger, similar to the wasps
+reproductive stinger, and round balls of flesh dangling between its
+legs. The wasps were familiar enough with other animals to recognize a
+male. That the ants could not recognize this was unsurprising to the
+Hive. Ants were more single-minded, and less knowledgeable than the more
+out-going wasps. It didn\'t make them less intelligent.</p>
+<p>The wasps buzzed among themselves. The ants had a point; conflict over
+resources threatened to destroy them both. It would be better for all if
+some arrangement were made. Some of the Hive\'s current problems stemmed
+from overpopulation. Plus, while this creature the ants offered was
+definitely not an aphid, the wasps did have a yen for aphid juice. The
+ants, however, monopolized the supply. If the ants vouched for this
+creature\'s juice, then there was reason not to try it out. After all,
+given the current circumstances, why not? The wasps buzzed <em>\&lt;Deal.></em>
+An even further change in the nature of the swarm.</p>
+<p>****</p>
+<p>Doug woke to the touch of antennae stroking his body. He thought it was
+the ants, at first. His cock swelled, prepared for milking. Something
+warm and wet enclosed it. "Mmmm," he moaned.</p>
+<p>Something was different. Instead of the rhythmic trills which normally
+accompanied the milking, his ears heard a soft, "Thrummm!" Its sound,
+like a distant helicopter.</p>
+<p>He blearily opened his eyes. His faint shock barely registered. <em>This
+not an ant.</em> It didn\'t stop him cumming, but his lethargic mind took a
+few moments to figure what he came into.</p>
+<p><em>A wasp! I\'m being blown by a wasp! Where are the ants?!</em></p>
+<p>He looked around. He was held in the mandibles of a giant ant but a
+giant wasp (which should have shocked him more, but after weeks of
+ant-fucking, nothing surprised him) sucked his cock. The chamber did not
+look like the ant hill.</p>
+<p>The thrumming sound buzzed from dozens of wasps flying overhead. <em>What
+is this place?</em></p>
+<p>Another sound, two actually, filtered through the low thrum. The first
+were a series of soft, wet slurps accompanied by faint moans. They
+issued from a cluster of ants and wasps on his right.</p>
+<p>They were gathered around a large, pale, roundish object on a platform,
+like a bed made of paper. Some of the wasps stroked the object, which
+had a fleshy color, and a soft blobby aspect, like a liquid filled
+balloon.</p>
+<p>Doug took a few moments to see the object was, in fact, a round,
+pregnant belly. As his mind cleared of its haze, and his eyes focused,
+Doug discerned legs, thighs, breasts (larger than he remembered) and the
+moaning head of a very familiar woman. "Emma."</p>
+<p>Her body was enormously gravid. Her hands roamed over her swollen
+breasts, tits (which Doug noshed on many times past) squirting milk, and
+belly, large, round, and rippling.</p>
+<p>The soft, wet slurps came from the pussy into which he\'d drilled his
+cock time and time again. Pale, white, blobs splooshed out of that
+pussy, into the mandibles of the wasps, who handed them to the ants. The
+ants carried them away into a nearby tunnel. <em>Larvae?</em></p>
+<p>The ant holding Doug had positioned him to allow the wasp access to his
+cock. Doug admitted the wasp was just about as good as the ants. His
+cock was still erect when it finished. Another wasp immediately replaced
+it.</p>
+<p>Doug remembered someone else working his cock a lifetime ago, before
+they came to this island. "Some weird vacay," he muttered before
+squirting cock cheese into the wasp\'s mouth.</p>
+<p>Emma was too focused on the larvae emerging from her womb to notice
+Doug. She\'d taken note of the "Giant ants! Wow!" Her pussy drew most of
+her attention, though. She couldn\'t see the larva. Her huge belly and
+swollen breasts obscured the view. She felt them come through.</p>
+<p>There was no pain; she even came a few times. Her pussy stretched and
+contracted with each larva. <em>It\'s the pollen. Remarkable.</em></p>
+<p>Ants and wasps clustered around her body. Her rippling belly was stroked
+and petted. A wasp would dip between her spread legs and raise it with a
+pale, wet form in its mandibles. Emma had lost count of the eggs during
+implantation. They were obviously a great amount. Her belly showed
+little shrinkage, in spite of the larvae birthed thus far.</p>
+<p>Emma finally noticed the ant and wasp with the pale white thing between
+them. <em>Huh? What\'s that?</em></p>
+<p>She\'d been sucking on her tit, her eyes wandering at random. She
+thought, at first glance, it was a larva but it looked too large. It was
+pale like one.</p>
+<p>The ant held the creature in its mandibles while the wasp stroked it
+with its antennae. The creature emitted faint moans. <em>Those moans are
+familiar.</em></p>
+<p>Emma looked closer, at the swimmer\'s body she used to run her hands
+over more times than she could count; the face, paler than she
+remembered, model handsome, whose blue eyes gazed back with dawning
+recognition.</p>
+<p>The bobbing head of the wasp obscured his lower half. Emma recognized
+its movements. She\'d performed them often herself.</p>
+<p>Emma didn\'t consider this a holy fuck moment; few things surprised her
+about these creatures. The interest that held her was Doug\'s skin,
+bleached near bone white, and his utter lack of hair. It was not the
+shaved or naired look where one might find stubble, but total, even his
+eyebrows.</p>
+<p>It gave him an appearance like a sculpted marble statue, with blue
+sapphire eyes. A low moan, tensed muscles, and shuddering body expressed
+the "Dolphin\'s" orgasm. Emma watched the wasp receive that which filled
+her womb and / or belly many times.</p>
+<p><em>This . . . is . . . sooo fucked.</em> A search for her missing sis and
+sis\' BFF ends with a gang bang by giant wasps, a pregging with larvae,
+and a boyfriend getting blown by insects. <em>So utterly fucked beyond
+everything.</em></p>
+<p>The wasp finished and withdrew. A brief communication of buzzes and
+trills exchanged back and forth. The ant came forward with Doug in its
+mandibles. His cock was at full mast, throbbing and nearly as pale as
+the rest of him. The ant set him down. He stood, swaying on his feet,
+staring at her.</p>
+<p>The ants and wasps were satiated for the moment. The ant saw no need to
+keep hold of this aphid. It doubted the aphid would try to escape. The
+others never did, and this one seemed content to be milked. Best to
+place it with this strange-looking aphid, the wasps were oddly using as
+a brood mother (<em>\&lt;Wasps are so strange.></em>) while negotiations
+continued.</p>
+<p>Doug took in Emma\'s immensely gravid body, with her breasts larger than
+Moira Kelly\'s. Her belly rippled and contracted, and larvae squeezed
+forth from her pussy. Emma smoothed her hands over her breasts and
+belly, watching him, not exactly lewd, but with curiosity.</p>
+<p>Doug staggered close, "Hi."</p>
+<p>"Uh . . . hi," she looked him up and down. "Ants Doug?"</p>
+<p>"Uh huh . . . wasp for you."</p>
+<p>"Uh huh."</p>
+<p>Doug placed his body against Emma and ran his hand with hers. Emma
+moaned softly. Doug laid his head on Emma. She ran her fingers over his
+smooth head.</p>
+<p>"What the fuck, Emma? Giant wasps? Fucking giant ants? It\'s a fucked up
+sci-fi flick from the fifties."</p>
+<p>"It\'s crazy all right."</p>
+<p>"They snatched me while I was collecting wood. They\'ve been blowing and
+fucking me for weeks, I think."</p>
+<p>Emma giggled.</p>
+<p>"What\'s so funny?"</p>
+<p>"No . . . nothing. It\'s just when . . . uh . . . the wasp, the first,
+started fucking me . . . um . . . I thought it was you. My eyes were
+closed. I pretended I was asleep. That wasp had a really big cock. They
+all do."</p>
+<p>"Um . . . so do the ants. Except the Queen."</p>
+<p>"Fucked by ants and wasps. Fucking crazy."</p>
+<p>"You think they\'ll believe us when we get home? If we get home?"</p>
+<p>"I don\'t think we\'re going home, Doug. We snuck here, remember? No one
+knows where we are, except maybe the P.I."</p>
+<p>"You think maybe this happened to Stella and Moira?"</p>
+<p>"I don\'t know. There\'s no sign of them here. They might be on one of
+the other islands."</p>
+<p>"Ants and wasps on the other islands?"</p>
+<p>"I think this is the only one. Something tells me Sis and Moira are
+fucked in a different way."</p>
+<p>Doug lay, not talking for some moments. "What do you think they\'ll do
+when they\'re done?"</p>
+<p>"I don\'t know. I don\'t think they\'ll eat us."</p>
+<p>"I guess they\'ll just fuck us."</p>
+<p>"I guess."</p>
+<p>Doug stroked Emma\'s breast. "You mind if I suck your tit?"</p>
+<p>"No . . . your cock is hard. You waiting for the ants?"</p>
+<p>"I guess. It\'s the weirdest sex I\'ve had, ever. I don\'t think I want
+to stop."</p>
+<p>"I feel that way with the wasps."</p>
+<p>"I guess we\'re insect lovers."</p>
+<p>"I guess so."</p>
+<p>Doug "The Dolphin" Doyle, former competitive swimmer turned human aphid,
+placed his lips on the tit of Emma Burgess, explorer turned wasp brood
+mother, and began to enjoy a repast of breast milk.</p>
+<p>Emma stroked Doug\'s smooth head, and lay back to quietly watch the
+wasps dip between her legs to draw out more larvae.</p>
+<p>"Is this what it\'s going to be from now on?" she pondered.</p>
+<p>Her sister might say maybe . . . but such questions are outside the
+scope of this story.</p>
+<p>The End.</p>
+<p>Huge Fuckin\' Insects!</p>
+<p>Part One</p>
+<p>(Inspired by "Ravaging A New Host"</p>
+<p>by Little White Mouse)</p>
+<p>By The Preve</p>
+<p>Thanks to Emerald Mbuku for the edit.</p>
+<p>Emma Burgess watched the plane sink into the azure blue waters of the
+lagoon. Bad luck all around. "We are fucked," she said to Doug. "And the
+week started off so well."</p>
+<p>Actually the week hadn\'t started off well. Emma didn\'t really want to
+come to Tahiti but her sister Stella had apparently gotten into trouble
+<em>"Again," sighed an exasperated Emma</em> so the parents asked (actually
+commanded) Emma to look for her. Stella and her best friend Moira, whom
+Emma didn\'t particularly like, <em>"Smartassed bitch," </em>had dashed off on
+some end-of-college excursion and, after a brief phone call from the
+hotel, promptly disappeared.</p>
+<p>The Burgesses waited several weeks after Stella\'s failure to return
+before sending Emma. They did so reluctantly. Until recently, Emma was
+considered the level headed sister but then she had to get involved in
+that scandalous relationship. . . Bad enough he wasn\'t of their class,
+but a nineteen year old? Emma was thirty. "We expected this behavior
+from Stella but you. . . etc, etc."</p>
+<p>Emma, in truth, couldn\'t say why she was involved with Doug. She
+didn\'t know herself. The closest explanation was, "It was Daytona. It
+was spring break. There were all these boys and well. . ." Blind
+coincidence that she would vacation in Florida on spring break. Blind
+luck she would meet a freshman on the beach, with the slim, athletic
+body of a competitive swimmer and (as she would find after a dare from
+her friend, Mariko, and a couple of tequilas) the dick and stamina of a
+Viagra cranked porn star. In hindsight, she thought, "It was his cock. .
+. and those eyes." Doug had the clearest, bluest eyes she\'d ever seen
+on a human face; bluer even than Stella\'s.</p>
+<p>***</p>
+<p>Doug "The Dolphin" Doyle, on his part, couldn\'t believe his good luck.
+There he was, his first spring break, surrounded by the choicest college
+babes from all points, US, and the first chick to come on to him was a
+hot number old enough to be. . . well his swim coach.</p>
+<p>The first night was mind blowing (or cock blowing, Emma was really
+good). It wasn\'t the virginal teen vs. Mrs. Robinson. Doug lost his
+virginity at fifteen and had had several girlfriends prior to Emma. It
+was more the energetic young man and the experienced older woman. Doug
+didn\'t do much else that spring break except fuck Emma. His friends
+were scandalized. Sure, the lady was hot, but she was, um. . . thirty. A
+one nighter was fine, but the whole two weeks? And now they\'re dating?
+His friends didn\'t know whether to say "Cool!" or "Huh?!" Doug\'s views
+tended towards the former.</p>
+<p>She was adventurous in and out of bed. Doug loved going in and out of
+her. It was difficult scheduling screw sessions between college classes
+and swim meets. Emma was good about withholding sex before competition.</p>
+<p>Thanks to Emma, Doug became somewhat of a nudist. The first time he came
+to her house, she dared him to skinny dip in the pool. Doug was more
+than happy to oblige. It got better when she joined him. Nude swimming
+and fucking became a regular pastime. It helped with the lovemaking that
+Doug was relatively hairless.</p>
+<p>Doug was dark-haired; before swim meets, he shaved his head and waxed
+his body hair to reduce friction. Just before Emma got the phone call
+about her sister\'s disappearance, Doug was in the pool as usual, Emma
+lounging on the patio. Doug climbed out of the pool, bald and hairless
+after a recent swim meet. . . mostly hairless. "You missed a spot," Emma
+giggled. Doug looked down at the dark patch between his legs and
+smirked. He walked into the house, ignoring Emma\'s quizzical
+expression. A few minutes later, he returned with a huge grin and a
+giant erection on his now hairless crotch.</p>
+<p>Emma looked at the long red pole jutting from the swimmer\'s light pink
+body and licked her lips. "Looks yummy," she said. "Bring that sausage
+over so I can have some. And lick my pussy while you\'re at it." Doug
+laughed and walked over.</p>
+<p>"Bring!" went the phone. "Ignore it," said Emma. She opened her mouth to
+give Doug a proper kebassing. Doug plunged his tongue into Emma\'s
+flower in response. The phone continued to ring as Emma and Doug worked
+each other over. Doug swirled and licked his tongue around her vulva,
+gliding across her swollen clit, drinking the nectar squirting from her
+flower. He rolled his eyes, reveling in the pleasure of her warm slick
+cum on his face. Emma reciprocated, sliding her wet tongue over and
+around his hard shaft. She licked his precum, beaded at the tip, and
+moved her tongue across his bald crotch, licking his bare balls.</p>
+<p>Emma\'s hands clutched his tight buttocks. They hadn\'t noticed the
+interlude where the phone stopped, then resumed ringing. She\'d worked
+him to near orgasm. Doug was close to cumming. . . and then the
+answering machine switched on. "Emma! Emma! I know you\'re there with
+that boy! Pick up the phone, Emma! Your sister\'s missing!"</p>
+<p>At her mother\'s voice, Emma detached from Doug\'s dick (he actually
+heard a comical "pop!"). "Damn!" said Emma.</p>
+<p>"Damn!" said Doug, as his dong deflated.</p>
+<p>He waited while Emma spoke to her mother and then decided to take a few
+laps to cool off. When he climbed out, Emma was waiting. "Stella decided
+to take a trip to Tahiti with Moira. They haven\'t called for awhile and
+mother says the local cops are morons. She wants me to fly down and look
+for them. I think she\'s overreacting but she insists. Want to come
+along?"</p>
+<p>"Hell yes!" Doug\'s dick said. He\'d met Emma\'s sister and her best
+friend; both of them were hot but Stella seemed unapproachable. Emma was
+hot but Stella, "Wow!" Emma\'s beauty, at least, seemed more accessible,
+girl-next-door vs. Stella\'s supermodel looks. Add Moira, a cheesecake,
+voluptuous vixen type. The prospect of a vacation with three hot women
+was too much to resist. Emma was a licensed pilot who knew her business.
+"Pack light," she told him.</p>
+<p>They took the Burgess\' family Lear jet, landed and checked into a hotel
+(the same one as Stella and Moira). The next day, they went to the
+police. Her mother was right. "Morons," Emma said. She hired a local
+P.I. Unlike most detectives, he was helpful. His probing turned up the
+name of a local private chopper pilot, described as an unscrupulous
+bastard, who may have taken a pair of tourists to some restricted
+islands southwest of Tahiti. Nothing more was heard of him but it was a
+start. "I suggest you take care, Madame," he cautioned. "If you do look
+in that direction, do not tell anyone. The islands are restricted and
+people are known to disappear."</p>
+<p>Emma didn\'t care. Among the few traits she had in common with her
+sister was a certain bold recklessness. It served her well as a pilot
+and explorer. She wasn\'t overly reckless, like her sister, and the
+temptation to take Doug and head back home was very powerful. Sure it
+was Tahiti, but her presence was attributable to her unlikable parents.
+That aspect spoiled any prospect of a good time in paradise. "Sis,
+why\'d you have to fucking go and get yourself lost?" Emma thought with
+a good amount of rue. She sighed, sorority trumped convenience. "Know
+where we can find a good plane?" she asked the P.I.</p>
+<p>Acquiring the float plane took a few bribes and several close
+inspections. Some of the prospective salesmen were dismayed to find that
+the "easy" mark was an expert pilot, a top flight mechanic, and a shrewd
+buyer with lengthy experience dealing with con artists. An hour\'s
+flight later and the couple were over the islands.</p>
+<p>Doug didn\'t need coaxing the get on the plane. The adventure excited
+him. Thoughts of three hot babes on a tropical island crowded out any
+misgivings. The flight was uneventful until they passed over the second
+island. "What did the P.I say about this one?" He asked.</p>
+<p>"He called it Wongo," Emma said. "I\'m going to make a quick pass. I
+don\'t want to be here longer than I have to."</p>
+<p>Wongo was a reasonably sized island with a large lagoon. It didn\'t have
+as many plants as the other islands. Longo, the first one, seemed
+particularly lush. Emma took note of the many hills dotting Wongo\'s
+interior. A large extinct volcano sat at the southern tip.</p>
+<p>"Quite a few pools in this place," Doug remarked. "I see some streams
+and falls. This looks like a good place to swim."</p>
+<p>"Mmph," Emma grunted. She was more intrigued by the strange looking
+birds near the volcano. "I don\'t see any wreckage. I\'m going to the
+next island." Emma turned the plane towards Mongo.</p>
+<p>Wham! "What the-?!" Emma cried as the plane shuddered. Something was
+smeared across the windshield. A splotch of pale brown and beige viscera
+stained the glass. "What the hell is that?" asked Doug. Emma was about
+to answer when the plane came under an onslaught of multiple impacts.
+"Damn! Bird strike! Hold on! We\'ve got to get out of here before the
+engine seizes!"</p>
+<p>The smeared windshield limited the occupants\' vision. Emma was busy
+keeping the plane aloft. Doug clutched the seat, staring at the viscera
+on the windshield. Bits and pieces of bird were smeared and wiped away.
+One piece caused Doug to blink. "That looks like an insect wing," he
+thought. The wipers erased it a second later.</p>
+<p>There was another jolt. The engine gave a sickening sputter and cut out.
+"Oh fuck!" Emma cursed. She looked through the smeared windshield and
+turned to Doug, "I\'m going to glide her in. Brace yourself; I\'m aiming
+for the lagoon."</p>
+<p>Emma\'s expert piloting managed to get them to the water, but the plane
+flipped and started to sink almost immediately. Doug\'s swimming skills
+took over. He helped Emma unbuckle and, with his help, exit the plane
+and swim ashore. Now they were on the beach and Emma was saying, "We are
+fucked. . ."</p>
+<p>"Look," Doug said. "It\'s not so bad. Your parents will send someone
+eventually. All we have to do is survive until then. Where are we
+again?"</p>
+<p>"Wongo," Emma replied sourly. "They don\'t know where we are, Doug, and
+we couldn\'t tell the authorities because they\'d stop us."</p>
+<p>"Emma, if Stella and Moira could find these islands, and we could too,
+what makes you think it will be any different with your parents?"</p>
+<p>Emma thought for a second. "No, Mother couldn\'t find her way out of a
+beauty salon, but they could hire someone who can. I can scrounge up
+some food while we wait." Emma, like her sister, was an excellent hiker
+with hunting skills. "Most of these islands have coconut and banana
+trees, and I think we can. . . what are you doing?"</p>
+<p>Doug was stripping off his clothes. "I\'m going to dive to the plane and
+salvage our packs. Wanna help?"</p>
+<p>Emma thought for less than a second, "Hmmm, why not?" And began to
+strip. They could have just as easily dived with their clothes but it
+seemed pointless. Better to let them dry on the beach.</p>
+<p>Doug stripped to his briefs and, after a moment\'s hesitation, took them
+off. "There\'s nothing she hasn\'t seen before," he thought. Emma,
+matching her boyfriend\'s nudity, dispensed with her bra and panties.
+Doug gazed at her body. "God she\'s hot," he admired. "Not as hot as her
+sister but still...."</p>
+<p>Emma\'s straight dark brown hair went to her shoulders. She sported a
+more athletic look than Stella, more demure, with dark brown eyes, a
+broader nose, and thinner lips. While she matched her sister in c-cup
+breast size and had a taut muscled midsection, Emma was wider in the
+hips. "Child bearing hips, Mom would say," thought Doug. Emma was
+shorter than her sister, standing at 5\'9". She was beautiful but not a
+stunner. "That\'s the thing," Doug thought. "She\'s approachable, not
+like Stella. I\'m so lucky."</p>
+<p>Emma looked at Doug. His hair hadn\'t grown back from a few days ago.
+His hairless state only emphasized the musculature of his athletic
+frame. "He looks like a Greek statue," she thought. "A Greek statue with
+the bluest eyes ever. I\'m so lucky."</p>
+<p>Staring at Emma\'s naked form caused a flashback to the moment before
+the phone call. "Whoa pardner," Emma said, staring at Doug\'s swelling
+member. "Remember? The packs? Time for that later."</p>
+<p>"Oh! Erm!" gulped Doug, startled out of his erotic reverie. His pale
+body blushed pink.</p>
+<p>"You can\'t possibly be embarrassed," Emma laughed, walking into the
+water.</p>
+<p>"\'Course not."</p>
+<p>In due course, they retrieved the backpacks. They held enough rations
+for two days. "We can\'t stay on the beach," Emma said. "We need to be
+near a source of fresh water. I saw a pool nearby."</p>
+<p>Their clothes were still wet, so the couple decided to carry them and
+wear sandals. It was a short hike. "It\'s quiet," Doug noted. Indeed,
+other than the trees rustling in the breeze, everything was silent.
+"Yeah," Emma agreed. "Where are the birds? That was a major bird strike
+up there."</p>
+<p>"It\'s creepy," Doug added.</p>
+<p>A sense of unease settled upon the couple. It disappeared when they came
+to the pool. It was roughly circular, fed by several streams which
+flowed over and through rock outcroppings surrounding it. Years of water
+flow had worn the rocks smooth. There were plenty of places around the
+pool to rest. The streams were no more than a few inches deep. The
+babbling flow of the water was almost joyful.</p>
+<p>"Well, this is fun," said Emma with a genuine smile. Doug, however,
+didn\'t hesitate. There wasn\'t a pool anywhere that could keep out "The
+Dolphin." Almost before Emma finished, Doug was in the pool with a "Woo
+hoo!" and a "splash!"</p>
+<p>"Doug!" an exasperated Emma exclaimed.</p>
+<p>"Oh come on, Em! There\'s nothing dangerous around. We can gather food
+later. Just spread the clothes on the rocks and let them dry. \'Sides,
+you need to rinse the salt water off."</p>
+<p>Emma smirked wryly. Doug was splashing around like a pale pink seal.
+Minutes later, the clothes were spread and Emma was splashing in the
+water with Doug. Normally one thing would lead to another, certainly
+Doug\'s dick plumped with expectation. Emma was tempted but survival
+came first. "Whoa there, fella," Emma said. "Get some firewood first,
+then I\'ll plant myself on your wood."</p>
+<p>"Now?"</p>
+<p>"Yes now. I want some wood around here before it gets dark. Shouldn\'t
+take more than a few minutes. There are branches everywhere, no
+dangerous animals. Go get the wood. I\'ll be waiting." Emma smiled, swam
+to a rock on the edge of the pool, climbed on it and lay back with a
+grin of mischief. Doug frowned, grumbled, and swam to the other side. He
+climbed out and walked over the rocks towards a wooded area. Emma
+giggled, "Ha! He\'ll get over it." And lay back on the rock to rest.
+"It\'s only a few days," she thought. "They\'ll find us soon enough. May
+as well enjoy it."</p>
+<p>The day was overcast but warm and humid. The burbling stream was a
+lullaby. Emma closed her eyes for a light doze, unaware that she and
+Doug would soon be undergoing the strangest most harrowing experience of
+their lives.</p>
+<p><em>The ant was a forager. Its task was to range far and wide, picking up
+anything of use to the colony. It did so not as ordered but as instinct.
+It held the basic philosophy of all ants: queen and colony above all. A
+simple philosophy for a simple life.</em></p>
+<p>The ant had just left the colony, trundling through the jungle, heading
+towards the pool. There were coconut trees nearby; some coconuts plus a
+few large tree branches were on its gather list. The concepts of
+serendipity and fortune were meaningless to the ant. Many animals lived
+on the island, of different varieties, none strange to the ant. So when
+it came across the aphid, the ant didn\'t hesitate to pick it up.</p>
+<p>It had to be an aphid, of course. It was strangely shaped and had less
+appendages, but it was pale and hairless and, therefore, an aphid. The
+ant just scooped it up in its mandibles and headed back to the colony.
+It was strange the aphid made different noises from others of its kind.
+In fact, more often than not, aphids were usually quiet. It squirmed a
+lot for an aphid as well. Aphids were generally docile.</p>
+<p>The ant had to take care not to crush the creature while keeping a tight
+grip. The aphid\'s struggles increased as the ant approached the mound
+housing the colony. It made louder noises when it saw the other ants.
+The ant was mildly annoyed; this behavior was strange for an aphid. It
+hoped the creature wouldn\'t make trouble when it was milked. Aphid
+honey was a great delicacy; the queen would be very pleased. The ant
+crawled into the mound, pulling the struggling, screaming aphid behind
+it.</p>
+<p><strong>To Be Continued.</strong></p>
+</body>
+</html>

@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Little Black Notebook 1</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p><strong>Chapter 1</strong></p>
+<p>"Scarlet, do you want to go to dinner with some of our friends?" Kayla
+questions as they sit in the one of the many art studios.</p>
+<p>"I'm sorry Kayla, I need to get this done. I have crit on Monday."
+Scarlet sadly declines her best friend. Kayla has been Scarlets best
+friend since the beginning of college. Kayla is someone who is a bit
+more popular than Scarlet. With shoulder length brown hair that she
+always dyes so it's a deep red with some sort of colored tips and hazel
+eyes. Kayla did stand a bit on the short side only at 5'1" tall. She
+would be a real knock out if she would be able to lose some weight, but
+it's always been difficult for her. Scarlet has broken it down to how
+big her friends breasts are. With them being E cups but she shoves them
+most of the time into a slightly smaller bra so when she wears her
+shirts her cleavage is on full display.</p>
+<p>Scarlet on the other hand is only an A cup, and on the small side at
+that. Many times she has been mistaken for a guy with how she wears
+baggy clothes. Her ginger hair is always pulled up into a ponytail that
+help her blue eyes pop against her fair skin and freckles. She was into
+sports during high school, but when she got into college she stopped and
+wanted to focus on her major. Telling herself that she'll keep up with
+working out turned out to not be the case and in the past three years of
+college she's gained some weight which she has despised how she let
+herself go. It wasn't as bad as she makes it out to be. She was a bit
+pudgy but no one would consider her fat.</p>
+<p>"Well, if you change your mind, just text me. You need to joy your
+Friday night at least once in a while," Kyla sighs at the rejection as
+she stands up from the stool she was sitting in watching her friend
+work.</p>
+<p>"I will, at some point," Scarlet sighs but a smile spreads on her face
+as Kayla gives her a hug before grabbing her things and heading out,
+leaving Scarlet alone in the studio. After about another hour of working
+on her oil painting she decides to call it and go and rinse her brushes.</p>
+<p>While she was bringing her brushes back to her locker so she could lock
+them up safely with the rest of her art supplies. She noticed a black
+notebook that wasn't in her locker before she started working on her
+painting hours ago. "Did someone put this in the wrong locker?" She
+mumbles to herself setting her brushes down before pulling the notebook
+out. Opening the front cover and back cover she didn't find any name on
+it and shrugs, "I guess I keep it then." She mumbles taking it back over
+to her station and slipping it into her bag. She proceeds to finish her
+clean up, grab her back and turns off the lights to the studio when she
+leaves. Instead of texting Kayla to see where she is, Scarlet just heads
+back to their apartment on the other side of campus. It was just a two
+person apartment that the school offered on campus. It was nice and
+cozy. Kicking off her shoes, Scarlet flops down on the couch relaxing.
+"Oh, the notebook." She mutter to herself reluctantly pushing herself
+upright and opening her bag to pull out the object she was looking for.</p>
+<p>Now that she actually is getting a better look at it she noticed that
+the notebook is about the size of a daily planner. It could easily fit
+in one of her side pockets on her cargo pants. Resting her elbows on her
+knees she opens up the notebook.</p>
+<p><strong>This notebook can grant your wishes that include the human body.
+Simply begin your sentence with I wish. There is no limit to the amount
+of wishes you can make.</strong></p>
+<p>"What?" Scarlet asks to the book in confusion. "What does that mean?"
+She flips through the pages, but nothing else is written or typed within
+this hand book. "Is this like some sort of magic lamp? But I'm not
+seeing a genie anywhere." Looking around as if someone was going to come
+in and see her she quickly collets her things and goes to her room,
+shutting the door behind her. Taking her bag and the note book to her
+desk she set everything down before pulling out a pencil from her cup
+and opening the spiral notebook once more. Coming to the first blank
+page she sits there thinking about what she should write.</p>
+<p>"Hmmmm." She looks down at herself, "I know what I want to use as a test
+run." She leans forward writes in her notebook. I wish <strong>I was fifty
+pounds lighter with a flat stomach.</strong> Once she set down her pencil she
+didn't feel anything and she sighed, "Figures, I'm just being pranked."
+She chuckled standing up she then felt her body tingle like it somehow
+had fallen asleep.</p>
+<p>Little pin pricks poked her all over, but the heavy focus was around her
+stomach and legs. The places where she had gained the most weight. Her
+pants came loose and fell to the floor and she gasped in shock. Lifting
+up her baggy she watched her stomach shrink back tighten back to a
+smooth surface and thighs were now showing the sexy gap that she always
+dreamed of having, but because of sports she could never obtain from the
+workouts she had to do. Once the tingling was finished she stripped off
+her shirt down to her panties that were now baggy on her btu held up
+because of the elastic band and sports bra. Running to from her room to
+Kayla's empty room she went to the full length mirror and was in deed
+not seeing things. She was skinny, with a flat stomach and tight skin
+once more. "There's only one more test." Heading back to her room
+Scarlet pulls out the scale she always kept hidden under her bed and
+steps on her. The last time she checked her weight she was 170 pounds.
+She gasped when the scale reads 120. She in fact lost the amount of
+weight she has specified.</p>
+<p>"This is amazing!! Oh my god, I can't believe it worked!!" Scarlet
+exclaims hopping off the scale her heart pounding from being so happy.
+She is now the best weight she has ever been in, in her entire life. Not
+even in high school was she ever able to get down to 120 pounds. Racing
+back to her desk is a bit taken back when her wish that she wrote is no
+longer there. "Is this what it means? I can't fill up the notebook?" She
+mutters in complete shock. "This is going to be fun." She smirks with a
+glint in her eyes, knowing exactly what she wants to do next as just
+another test of course.</p>
+<p>Scarlet walks away from her desk and takes off her sports bra since it's
+one of her new ones. Picking up her long sleeve shirt from the floor she
+slipped it back on. The shirt is XL in size so it goes down to about her
+mid-thigh. Running to her best friends room she grabs the full length
+mirror and sets it up against her closet door. Once the mirror is in
+place, Scarlet goes back over to the desk she picks up her pencil once
+more.</p>
+<p><strong>I wish I had perky G cup breasts that won't affect my back.</strong></p>
+<p>Setting her pencil down, Scarlet stood away from the full length mirror
+so she could watch herself grow. Just like before a tingling feeling
+begun, but this time it was entirely focused on her chest. The small
+bumps her A cups made in her shirt begun to swell with each breath she
+took. A warm sensation spread through her body and down to her lower
+region. Watching her shirt lift and tighten while her chest expanded
+sent her heart pounding. To make sure it was real she grabbed a hold of
+her breasts through her shirt and could feel them filling in her hands
+and she gasped at the sensitivity of her growing chest. Her white long
+sleeve shirt because tight and her breasts fill the empty space pulling
+it taut and creating a tent effect. Now the heat has heavily focused on
+her aerosols as they began to expand to match her new chest. The
+friction between her nipples and the fabric sent shivers down her body
+and she collapsed to the floor, her chest bouncing wildly making her
+squeak out in bliss. Her right hand started fondling her new additions
+as her left slips into her panties and fondles her clint. The
+sensitivity of her chest was too much for her to handle and she climaxed
+quickly wetting her panties and hand.</p>
+<p>Breathing heavily Scarlet lays on the floor her own breath sending new
+waves of pleasure from her new chest against the fabric of her stretched
+out shirt. "I should time these wishes, see if I can make them work in
+different ways." Scarlet comments to herself. After calming herself down
+enough she tugged her shirt off with a little bit of difficulty to see
+herself. Her new breasts fell to just above her naval and her nipples
+were as thick has her thumb. "No wonder why they are so sensitive." She
+mutters to herself hefting them up in her hands. Losing her hands to the
+mounds of tit flesh. Everything she did with them sent chills through
+her body. She can't help herself as she fondles her chest once more
+until she climaxes once again.</p>
+<p>"Okay, Scarlet, focus, you need to think of another wish." She smacks
+her cheeks making her chest jiggle uncontrollably as she does so. She
+gets up from the floor and discards her soaking wet panties into her
+hamper. Holding her new chest with arms so they don't send her into a
+new wave of pleasure just from walking she makes her way over to her
+desk. She slides the notebook up as her boobs press between her desk and
+herself creating a deep cleavage "Oh my god," Scarlet moans at the
+feeling of the hard wood against her hard nipples.</p>
+<p>It was a struggle but she got herself to focus on the notebook. <strong>I wish
+my had A cup breasts with no stretchmarks.</strong> Putting the notebook to the
+test she grabbed her phone and went to the timer after unlocking it. She
+hit start just as the prickling feeling started in her chest once more.
+Scarlet was disappointed to watch herself sink back towards the desk as
+her breasts shrank back down. Picking herself up once her ribcage was
+pressed against the desk once more and her breasts were now a small C
+cup and still shrinking. Once she was back to her A cup chest she
+noticed that they still stood perky and firm as well as all the stretch
+marks were now completely gone. Reaching over to her cell phone when the
+tingling finally left she hit stop. "So that took about ten minutes and
+that's right after that feeling starts."</p>
+<p>Taking her phone with her to her dresser she pulls out a pair of new
+panties that are still too big for her and a pair of her gym shorts and
+a tank top. Slipping on everything she goes back over to the notebook.
+"What do I experiment with next?" She mutters to herself leaning back in
+her chair. As much as she adored her large chest and misses it already
+she knew in order for her to concentrate and figure out this book more
+she would need to have her small breasts present.</p>
+<p><strong>I wish that my panties would fit to my new body.</strong></p>
+<p>She wrote down to see if she could affect what she was wearing.
+Surprisingly, she felt her baggy panties shrink down and tighten
+themselves against her new body. "Okay, so if I specify my clothes that
+I'm wearing will adapt as well." Bringing out another notebook she began
+taking notes on her discoveries with the notebook. "I wonder if I can
+affect others as well." Scarlet hums to herself thinking of her best
+friend who was still out enjoying her Friday night with friends. "If I
+word this right, this could be fun."</p>
+<p>Sliding her notebook to the side, she grabs the black notebook once
+more. <strong>I wish my best friend Kayla would lose 60 pounds and her
+clothing would adjust to her new body, but her bra will stay a size to
+small. Also, that her chest would increase a cup size from E to F cup
+slowly, so she will not notice. As well as giving her the perfect bubble
+butt making her pants fit snuggly. Also, no one will notice the changes
+taking affect other than myself. Keep her personality the same that it's
+always been. When Kayla arrives back here at the apartment and looks in
+her mirror she will finally notice the changes to her body.</strong></p>
+<p>Once she was finished with the details for her best friends new figure
+that Kayla has told Scarlet she always wanted she got to work on another
+wish before the first one could disappear once more. <strong>I wish to have a
+higher IQ and a toned, athletic body and six pack of abs. As well as a
+penis that is 10 inches in length when not erect. I can control the
+girth and length of a cock and the balls will grow accordingly.</strong></p>
+<p>Setting her pencil down she smiled happily with her two wishes. She's
+always wanted to know what it was like to have a dick. Hell, she's even
+wondered what it was like to be a man, but she didn't want to throw
+things too fast. She wanted to enjoy this little book to herself. It
+started with her head first. Things became clear and my mind became much
+more active. Standing back up from her desk she grabbed Kayla's mirror
+and put it back in its proper place while her entire body began to
+tingle once again. Scarlet could feel herself becoming stronger. When
+she reached her hand out to shut Kayla's door she saw how toned her
+muscles in her arms were. "Very nice." She cooed happily and then she
+gasped in pleasure and pain. Her knees becoming weak and she caught
+herself on the wall before she fell to the floor a very strong sensation
+began in her lower regions. The sensation of losing her vagina was
+something not even her new higher IQ could even withstand. Her entire
+body shook with pleasure as her ovaries sunk down and out of her body as
+they expanded to hold her new semen filling her panties. Sliding down to
+the floor she felt her new member growing making Scarlet more aroused by
+the minute as her new cock forced itself out of her panties and up
+towards the brim of her gym shorts.</p>
+<p>When the sensation finally died down, Scarlet was left feeling extremely
+horny. Looking down to see the tip of her new cock proudly sticking out
+of her gym shorts resting on her tank top with the tip being next to her
+belly button, and pre cum seeping out of its tip should couldn't help
+but marvel at it. Lifting the band of her shorts up she could see that
+her dick was about fourteen inches in length with a seven inch girth.
+She's never seen a dick this size before. Only in the erotic stories
+that she reads. Wrapping her cold hand around her girth Scarlet shivers
+as she begins to slowly pump her new member. Slow at first and then she
+picked up the pace. It didn't take long for her to have her first climax
+with her name male member. Shooting off three loads onto her tank top
+she laid down panting heavily. "That, was amazing."</p>
+<p>Once she calmed down and her dick shrunk back down to its ten inches
+being flaccid she adjusted herself to make it fit in her panties then
+took off her tank top. Wrapping it up she tossed it in her hamper before
+going to get a new tank top and sitting back down at her desk. "Now,
+that that's out of the way I can go back to focusing." Scarlet comments
+to herself looking at the notebook once more. Both her first and second
+wishes that she wrote have now disappeared from the book. "Good, that
+means that the changes for Kayla are underway." Picking up the pencil
+she leans forward. She knew her best friend is pansexual and she was the
+only one that Scarlet could talk to about deep secrets. Scarlet knew
+that Kayla also has a small crush on her, but tried her best not to
+flirt so she wouldn't ruin their friendship. What Scarlet kept to
+herself was that she liked her best friend as well, but she had always
+wished that she could have the body that she would love and accept.</p>
+<p><strong>I wish my breasts size will increase when Kayla gets back to the
+apartment and notices her changes. As well as to grow to 5'5" while we
+make out and that Kayla's vagina will accept any size dick and she will
+not get pregnant from having unprotected sex and her vagina will always
+go back to being tight. She not question what's going on, but enjoy the
+changes. Kayla will think that I've always had a dick, but kept it a
+secret since I was so good at hiding it. Once I climax my chest will
+stop growing.</strong></p>
+<p>Satisfied with my latest wish I closed the book and hide it in my desk.
+Standing up and stretching her new and improved body and gathers up her
+clothes that hadn't made it into the hamper and slips on some shoes and
+takes her laundry down to the too the laundry. There was one guy taking
+his laundry out of the washer and placing it in the dryer. By his
+muscles you can tell that he was on the football team and hit the gym
+whenever he could. His name is Rick and Scarlet swears that she saw a
+new girl with him each week. He was the one that a lot of the girls in
+her art classes threw themselves at. According to them he has the
+biggest dick on campus, well had now.</p>
+<p>"Hey Rick. I'm surprised that you aren't out partying," Scarlet comments
+setting her hamper down next to a washer that's two down from him.</p>
+<p>"Had to do laundry before my roommate murdered me," He chuckled closing
+the dryer and turning it on. "Oh! I see you've been hiding yourself
+under baggy clothes. You have nice muscles, you shouldn't hide
+yourself."</p>
+<p>"Thanks Rick," Scarlet giggles a little putting her clothes in the
+washer.</p>
+<p>"Seriously come to the gym with me tomorrow morning. I wanna see how
+much you can bench." This was the first time that Scarlet heard
+something genuine from him. Most of the time it was him flirting with
+the big busty girls. Never would she have thought that he would even
+want to hang out with her.</p>
+<p><em>Shit, I should go and retract that part where my boobs grow. I don't
+think I can handle working out with large tits.</em> Scarlet thinks to
+herself placing her now empty basket on top of the washer with her soap.
+A warm prickling sensation started in her chest. <em>Oh no. She's already
+home.</em> She could feel her chest slowly start to swell once again. Trying
+to ignore it like it was nothing Scarlet turns to Rick and smile, "What
+time do you want me to be down at the gym?" She asks her shirt becoming
+tighter. Scarlet could already tell that she's closing in on B cup just
+from their weight.</p>
+<p>"Nine sound good?" Rick questions and then looks breaks eye contact and
+his eyes widen as he sees her chest filling her tank top, clearly no bra
+to be found.</p>
+<p>Before he could ask anything Scarlet quickly scoots past him, "See you
+at nine then Rick. Gotta go!" Scarlet waves and runs out of the laundry
+room. Her new chest bouncing and expanding as she races up the stairs.
+Rushing into the apartment and slamming the door behind her she quickly
+locks it. "Scar you won't believe it!!" Kayla squeals in delight rushing
+out of her room. Kayla looks absolutely stunning. Her face has slimmed
+down and is no longer pudgy looking. Her t-shirt has shifted to a button
+up that is exposing a large amount of cleavage from her now F cup chest
+making her shirt tent hiding the rest of her slim body. Her pants are
+skin tight and look like they fit her perfectly making her body take on
+an hourglass shape.</p>
+<p>Scarlet chuckles and walks over to her best friend, "Do you like it?"
+Pressing her growing chest up against Kayla's basketball breasts.</p>
+<p>"I love this!" Kayla giggles as she keeps looking down at Scarlet's
+chest that is now straining her tank top and creating a cavern between
+them.</p>
+<p>"You look absolutely sexy though. I wanna try out the new goods."
+Scarlet caresses her best friends cheek and slides her hand down to the
+back of her neck pulling her in and pressing her lips against Kayla's
+full lips. She didn't think that Kayla had such full lips and her dick
+quickly responded by twitching to life in her panties. Kayla kisses her
+friend back and they begin making out. As they made their way to Kayla's
+bedroom the prickling sensation spread through Scarlets body as her body
+began to grow in height. They hit the bed and Scarlet stops to take off
+her to tight of a tank top so she doesn't ruin it. Her now DD cups
+bouncing freely for Kayla to admire. "And they'll keep growing if we
+don't have sex. This toned body is something I've always wanted so b"
+Scarlet smirks running her hands around her chest and grabbing the front
+for Kayla to watch as her tit flesh pushed through her hands. Kayla
+couldn't take it and began fondling her best friends growing breasts.
+Making it more difficult for Scarlet to focus and get her shorts off.</p>
+<p>"Kayla I need you to help me," Scarlet moans as she presses her tits
+into her best friends face even more so she can slide her panties and
+shorts off letting her dick free of its tight restraints.</p>
+<p>"Ooohhh, someone is very excited!" Kayla giggles after she breaks away
+from the expanding bosom of her friend.</p>
+<p>Thanks to her small growth spurt, Scarlet was looking down at Kayla even
+more and with hunger rips her friends shirt open so she can see the
+glory of the new tits that are spilling over the bra just how Kayla
+liked them to be. With Kayla's help they got her naked and Scarlet lays
+down on top of her best friend crushing their chests together as she
+slowly moves away from her. "Are you ready to have my new dick in your
+pussy?" Scarlet licks her lips making sure that Kayla can feel her
+throbbing, thick fourteen inches against she tight stomach.</p>
+<p>"Oh god yes, please! I've been wanting this since we were in high
+school," Kayla begged spreading hers. Grabbing a hold of her shaft,
+Scarlet eases her tip into Kayla's clint. She was so wet, there was no
+need for lube. It was tight and the pleasure sent rockets through them
+both making them climax. "Oh god yes!!" Kayla screamed in bliss. Scarlet
+was slightly disappointed that she climaxed so soon. She wanted to be
+bigger than Kayla by the end of her fun little experiment. But no matter
+she was at least as big as Kayla so it would due.</p>
+<p>Slowly she started thrusting in and out of Kayla in a humping motion
+until Scarlet pushed herself up letting her large breasts hang down.
+"What do you think? Does it live up to your expectations?" Scarlet
+questions looing down at her best friend with a smirk plastered on her
+lips.</p>
+<p>"Yes! Oh my god I'm so full. You're so thick," Kayla is panting just
+from the slow easy thrusts that Scarlet is doing.</p>
+<p>"Oh good, what if I told you I can make it bigger whenever I want?" A
+blush spread across Kayla's face when Scarlet let that little "secret"
+slip.</p>
+<p>"I don't know if I can handle anymore. I'm surprised that you even fit
+at all. What is your real size then?" Kayla squeaked out as Scarlet
+slams her hips into Kayla getting a nice feel of her plump ass that's
+been naturally holding up her hips.</p>
+<p>"This is my natural size," Scarlet coos and then concentrates and
+expands the length and girth of her cock, her balls naturally expanding
+along with them.</p>
+<p>Kayla muffled her screams of bliss with her pillow that she pulled out
+from under her head as Scarlet picked up the pace. Stopping when she
+felt that her dick was another two inches longer and an inch wider.
+Scarlet couldn't take it any longer and climaxed for the second time in
+her best friend. Collapsing down on Kayla both of them breathing
+heavily.</p>
+<p>"That was the best sex I've ever experienced," Kayla complimented
+between pants.</p>
+<p>"I'm glad you enjoyed it too," Scarlet laughs pulling out he member from
+her best friend it finally turning limp. "That's exhausting though. I
+can't believe I came twice."</p>
+<p>Rolling off her best friend she marveled at her new chest and how they
+hung perfectly and were plump with no stretch marks. Proving another
+theory Scarlet had of where her wishes to in fact stack. "I'm so jealous
+that your breasts are so perfect and you don't even need a bra." Kayla
+comments running her hands against Scarlets perfect breast.</p>
+<p>"Oh yours are just fine," Scarlet giggles slapping Kayla's hand away
+from. "Go take a shower first. You were out partying." Scarlet wiggles
+her way off of the bed and proceeds to pick up her few clothes off the
+floor.</p>
+<p>"You can go first." Kayla protests but Scarlet shakes her head and
+smiles.</p>
+<p>"Can't do that, I have laundry going," Holding her stuff under her new
+breasts she then heads out of Kayla's room and back to her own. Instead
+of fussing with her panties she just tossed her shorts back on. "Oh
+right, my little growth spurt I added in." She mumbles to herself when
+she notices her shorts down go down to her knees anymore.</p>
+<p>Going over to her dress she pulls out the biggest hoodie she owns and
+throws is on her F cup chest creating a tent once again and she still
+can feel a breeze on her stomach from some skin showing. Once she hears
+the bathroom door shut and goes back over to her desk and pulls out the
+little black notebook once more.</p>
+<p><strong>I wish my chest was back to A cups but still stayed on the large side
+of A cups. Kayla will not be able to notice that my breasts are growing
+and shrinking.</strong> Before the first wish could take affect Scarlet goes to
+her next wish. <strong>I wish that Kayla's breasts were plump and perky and
+didn't hurt her back, that way she doesn't have to wear a bra if she
+doesn't want to. Also that her breasts will go up half a cup size while
+she is massaging them in the shower but doesn't notice that they are
+growing again. She will also have a growth spurt up to 5'4" through the
+night.</strong> The tingling sensation took effect in her chest shrinking it
+down once more. Scarlet thought it was hard the first time getting rid
+of them but this time was even harder. But keeping them on the larger
+side of A cups made her feel not as bad. "Now, what to do about Rick."
+Scarlet hummed to herself leaning back in her chair. "I could just wish
+him to forget that he saw my little stunt, but I don't know how that
+will go."</p>
+<p>Still contemplating what to do with Rick. Scarlet took the notebook with
+her hiding it in the pocket of her hoodies along with her pencil in case
+she needed to do something. She stood up from her chair as the door to
+the bathroom opened and Kayla walked out with a towel wrapped around
+her. "I think we should get some new towels. My legs are freezing."
+Scarlet looked at her friend to see her larger breasts bulging out of
+the top of the towel and just barely covering her hips.</p>
+<p>"Well, you're the one with the bubble butt, you should get the new
+towels if you want to cover those tits and that ass." Scarlet chuckled
+as her best friend walking out of her room and walking behind her to
+finally grab a hold of the new ass. Scarlet's strong hands sunk into her
+friends plump ass making Kayla shiver at the touch.</p>
+<p>"Don't be dissing my new body when you just fucked me." Kayla pulled
+away from Scarlet her cheeks turning pink.</p>
+<p>"I'm not, I'm not, You look very sexy and I know you'll get so much dick
+and pussy now. Everyone will want to see if your stuffing your shirt and
+pants." Scarlet teased her best friend before slipping on her shoes,
+"I'm gonna go change my stuff over. You should get some sleep."</p>
+<p>"Sounds good. I'll see you in the morning dear," Kayla sighs at Scarlet
+waving her off.</p>
+<p>Scarlet heads to the laundry room and is surprised that Rick isn't there
+even though his laundry is done. Shrugging to herself Scarlet moves her
+laundry over to a dryer. After turning it on she feels a pair of strong
+hands grab a hold of her cupping her breasts and pulling her back into
+them. Without meaning to Scarlet lets out a small squeak and looked up
+to see it's Rick that is the one holding her against him, his hands
+firmly squeezing her breast. "R-Rick? What are you doing?" Scarlet
+questions scrambling out of his hold.</p>
+<p>"Sorry, don't be mad. I needed to know. I could have sworn your breasts
+were growing when we were talking an hour ago." His face flushed pink
+and he placed his hand on the back of his head and looked away from
+Scarlet.</p>
+<p>Sighing Scarlet smiles softly at him, "It's alright. I get it. Let's
+just act like this didn't happen. I'll see you tomorrow morning. Be
+ready to have a run for your money with lifting." Scarlet chuckles
+patting Rick's chest. Rick isn't a bad looking guy. With blonde hair
+that's shaved on the sides. He stands at 5'11" and some nice muscles to
+his body. He's currently wearing a tank top with the sides cut low
+exposing his sides and sweatpants. Sliding her hand off his chest,
+Scarlet heads out of the laundry room and then heads back up to the
+apartment.</p>
+<p>Kayla didn't come out of her room so Scarlet went back to her own room
+and quietly closed the door. <em>That was close.</em> She thought pulling her
+notebook out of her pocket along with her pencil. Sitting on her bed
+this time she opened up the book once more. "I've don't so many wishes
+today, This book really doesn't have a wish limit it seems. Well, until
+you fill it then you have to wait for all of the wishes to take effect."
+Mumbling to herself she taps her pencil against her lip. "Most
+important. I can't let anyone else know about this book."</p>
+<p>After sitting there thinking for a few minutes Scarlet sighs a bit, "I
+don't even know how much I can bench. I should probably get my vagina
+back, as much as I love having a dick, I don't want to struggle and hurt
+myself because I'm not used to exercising with it. I can always get it
+back if I want."</p>
+<p>With that she got to work on her wishes. <strong>I wish that I had my vagina
+again. I won't get pregnant from having sex and I can fit any size in my
+vagina with a snug fit.</strong></p>
+<p><strong>I wish I can bench double the amount of weight my body can naturally
+do with ease but my muscles stay the same.</strong></p>
+<p>Having to stop writing because of the first spell taking affect she had
+to lay down and cover her face with her pillow to stop her moans as her
+lower regions changed back once more. Right as that was finishing the
+pricking sensation spread through her body and she felt much stronger
+than before even though she noticed that no actual physical changed
+happened to her. After calming herself down, Scarlet sat back up and
+reached for her pencil once more. "I guess I should be nice to Rick
+since he so graciously invited me to work out with him. Since I don't
+think he's getting out of this without us having sex." Scarlet had her
+first taste of sex and now she wanted more. This time she wanted to know
+what it was like to be penetrated by someone and why not give Rick a
+show while they work out.</p>
+<p><strong>I wish that Rick's muscles were finely toned and had plush pecks. He
+will grow another three inches. His endurance will be doubled and he can
+go for more rounds than he normally can. His dick will grow to eight
+inches flaccid and grow another three inches in girth. His balls with
+enlarge according to his penis growth. All this will happen while he
+sleeps soundly.</strong></p>
+<p><strong>I wish that every time Rick would look at my chest it will grow larger
+for the duration of time that he is staring at me chest. It will
+continue to increase in size until it gets to DD Cup size. It will
+strain my clothes but not rip my clothes. They will shrink back to my
+large A cup when I take a shower later in the day. If Rick sucks on my
+tits they will grow a cup size while he does.</strong></p>
+<p><strong>I wish that I can take in all of Rick's dick and not have to worry
+about the gag reflex. If I swallow his cum it will go to my boobs and
+fill them out more but keep them super soft fuckable and also fill out
+my ass into a perfect bubble butt.</strong></p>
+<p>"We will see where this takes us and if I think of anything else I'll
+write it down in the morning before going," Scarlet mumbled to herself
+satisfied as she watched the two wishes sink into the paper and
+disappear. Walking out of her bedroom after stashing the notebook again
+she noticed Kayla's light still on. Opening up the door to see if she
+needed to use the bathroom before she took a shower, Kayla was passed
+out on her bed naked with her covers half on her and sleeping soundly.
+Sighing Scarlet when into the room and covered her friend the rest of
+the way up. Turning off the light and closing the door behind her she
+proceeds to the bathroom and strips down and looks at herself in the
+mirror above the skin. She could tell that her breasts were larger than
+normal and it made her so happy to see them this way. "You girls are in
+for a treat tomorrow." Scarlet whisper to her breasts before hopping in
+the shower. Scarlet takes a bit longer in the shower than she usually
+does just so she can feel up her new and improved body. "Oh, I forgot
+something!" She instantly says to herself and quickly finishes up with
+her shower. Drying off and tossing her shorts and hoodie back on she
+goes back to her room and pulls out the notebook once more.</p>
+<p><strong>I wish while my breasts are expanding that I will adjust accordingly
+and they won't hinder me during my work out. Every time Rick and I work
+out together this same process will repeat.</strong></p>
+<p>"There we go." Scarlet stands up satisfied and then heads back out for
+the final time to go and get her clothes from the laundry room. "Maybe
+if he's a good boy and can keep this secret I'll let him ask for some
+more changes." Scarlet giggles to herself as she heads back up to her
+apartment. Once she was back in she locks the door. Taking her stuff to
+her room she then finishes off her Chinese left overs from the night
+before and then heads to bed.</p>
+<p><strong>Chapter 2</strong></p>
+<p>When Scarlets phone started buzzing with her alarm for seven am that she
+forgot to turn off she fell out of bed and quickly turned off her phone.
+She startled herself with seeing a toned arm. She had forgotten the
+events that happened yesterday. Going over to her desk she pulls open
+the draw and the notebook was where she left it. Sighing in relief she
+picks it up and opens it once more. This time there as a new rule on the
+front page</p>
+<p><strong>This notebook can grant your wishes that include the human body.
+Simply begin your sentence with I wish. There is no limit to the amount
+of wishes you can make.</strong></p>
+<p><strong>Day 2: Adjustment of clothes has been automatically been added. You no
+longer need to specify for the clothes on one's body to alter. They will
+all do so automatically unless otherwise written in a wish.</strong></p>
+<p>"Hua?" She mutters flipping through the book. She doesn't remember
+hearing someone come into her room last night. Of course she slept like
+a rock so she she's not entirely sure. Her best friend Kayla is even
+worse with getting woken up, so Scarlet knows that it wasn't Kayla, she
+doesn't even know about the book. "Does this book have its own update
+system or something?"</p>
+<p>Looking at what time it was she noticed that she has time before she has
+to meet up with Rick at the gym. She wanders over to her dresser and
+opens it up. Pulling out a pair of panties she realizes that they are no
+longer too big. She slipped them on and they fit perfectly. Throwing on
+some leggings and a sports bra she then picks a tank top and pair of
+socks. Throwing her hair up in a high pony tail she does some morning
+stretches while she opens her book to a new page.</p>
+<p><strong>I wish Kayla wouldn't remember our night unless I bring it up.</strong></p>
+<p>"Covering my tracks is always important. It was a very wonderful
+experiment," Scarlet smiles happily watching the wish disappear from the
+page. Grabbing her duffle bag from under her bed and put in a change of
+clothes and a towel along with her shampoo and body wash The last thing
+she put in was the note book before closing up the main compartment and
+taking her bag out to the living room. Then filling up a water bottle
+and sticking it in the bag as well. She made sure that had everything
+including her student ID so she can get into the weight room. Grabbing
+her keys to the dorm as well as her duffle bag she then heads out.
+Scarlet decided to walk across campus to the gym instead of taking her
+car like she's grown accustomed to doing. With her new body she realized
+that she has more energy than when she was even in high school.</p>
+<p>She makes it to the gym around 8am. Realizing that she has an hour
+before Rick should be here she goes slides her ID through the card
+reader and walks into the gym. Taking a right she heads right to the
+locker room. There is no one in, but she knows that next to no one will
+even want to be up this early in the morning on a Saturday. She doesn't
+expect to see anyone for some time. Sitting down on a beck by a tall
+locker that's on the back wall of the locker room, Scarlet sets her bag
+down next to her and brings out her magic notebook.</p>
+<p><strong>I wish that no one will come in to the weight room until Rick and I
+are finished. Giving us the entire room to ourselves.</strong></p>
+<p>"Just to be safe," She mutters to herself. And then looks down at the
+notebook once more.</p>
+<p><strong>I wish to see the wishes that I made yesterday for five minutes and
+then they can disappear again.</strong> It was a hunch, but she had to try it.
+Shortly after all the wishes that she made yesterday appeared before her
+eyes in the small notebook. She had made two pages front and back worth
+a wishes. Scarlet was happy to know that she could recall all her wishes
+thus far.</p>
+<p>"Oohoho, that's right. I'm super excited to see what Rick is going to
+look like today." Scarlet giggled to herself biting her lower lip as she
+read over everything that she was going to go through today if it went
+according to plan. Just then she got a very wicked idea in mind. "It can
+wait until after this little experiment is over. She told herself making
+a mental note to write it down later.</p>
+<p>Switching out her shoes to her work out shoes, scarlet puts everything
+in her locker. Once she pulls off her tank top so she's in her sports
+bra and leggings. She pulls out her water bottle and the lock that she
+always keeps in her duffle bag and locks her locker so no one can get
+in. Then she heads out of the locker room and to the weight room. Just
+as she wished, there was no one there, not even the older people that
+would normally be in at this hour. Looking at herself in the mirrors
+that are on the back wall she loved seeing a nice six pack just peeking
+out of her skin to match the rest of her toned body.</p>
+<p>To her surprise the door opened up behind her and she turned around to
+see it was Rick. Rick is now 6'3" tall and his muscles just on his
+forearms alone Scarlet could tell that he was new looking very fine and
+muscular. Even his tank top looks like it's standing out a bit more
+because of his plush chest. "Scarlet?" Rick's voice was filled with
+surprise. He may have been thinking the same thing of wanting to check
+himself out before she made it.</p>
+<p>"Morning Rick. How are you feeling this morning?" Scarlet questions with
+a sweet and innocent smile on her lips.</p>
+<p>"Um, good. I'm doing great actually." He answers her quickly.</p>
+<p>"Did you hit a growth spurt since last night?" She raises her brow
+looking him up and down and taking in her handywork.</p>
+<p>"You noticed that too? I thought it was just me. I don't know what it
+was. But after we talked last night and I got back to my room I felt
+tired as fuck. When I woke up this morning I felt like I had the best
+night sleep I've ever had. Also, don't fucking judge but, I still
+measure my height because of the other guys picking on me. I don't know
+if it's the supplements or what, but when I went to my door and noticed
+my sticky note was at eye level instead of just above my head, I
+realized that I grew three inches. I also feel a lot stronger and my
+muscles seem to show up more. I slow think I have a side effect of those
+supplements and my chest pushed out a bit." His blush spread further and
+he looks away from Scarlet. "Sorry that was probably TMI"</p>
+<p>"Don't be sorry. You can talk to me whenever. I'm not like other girls,"
+Scarlet shrugs, "Come on let's warm up." With that she walks over to the
+treadmill.</p>
+<p>Starting out on her mile run that she used to do back in high school.
+Rick joined her a smile on his face knowing that there's someone who
+doesn't think that he's insane from what happened to him. It didn't take
+long for Scarlet to feel her breasts begin to tingle letting her know
+that Rick was staring at her chest. With her running it obscured his
+view and the sensation of her breasts growing subsided. Gaging by it
+being only a few second her chest might have just entered the small B
+cup so not much to really tell the difference. By the time that they
+finished their warm up She had reached a full cup size. Getting off the
+treadmill Scarlet adjusted her sports bra with it feeling a little bit
+tighter.</p>
+<p>As they continue to go on Scarlets chest expands into a D cup and it
+keeps expanding even more as she does pulls ups. Rick can't stop staring
+at her chest as he can't believe himself that her chest has literally
+enlarged before his eyes and are still going. His dick was very painful
+in his spandex wanting to be released. He's been one to read expansion
+stories while he lays in bed at night and here it was happening right in
+front of him. Scarlets breasts bouncing as she lifts herself up and
+drops back down. How her sports bra hasn't exploded from all the tit
+flesh was something he couldn't get across. There is so much of her
+cleavage bulging out of her top and sides.</p>
+<p>When she finishes and jumps down her breasts have reached the DD cup
+size that she specified. "Oh that was a good work out." Scarlet comments
+sticking out her chest stretching her arms behind her back pushing out
+her chest even more.</p>
+<p>"What the fuck is happening? You realize that your boobs have fucking
+like tripled in size since we started?" Rick comments. "Do you have a
+balloon stuffed in your sports bra?"</p>
+<p>"You did this actually," Scarlet giggled pressing her hands against her
+chest. "It happened yesterday too didn't it? She you started at my chest
+it started growing." Scarlet walked up to Rick and grabbed his hand
+pulling it up and then lifts up her sports bra with her right hand
+releasing her new melons from their tight restraints. "I assure you they
+are very real." She presses his hand against her left breasts so he can
+see for himself.</p>
+<p>"I...did this?" He mutters in shock bringing his other hand up and
+started squeezing her tits.</p>
+<p>Scarlet let out a moan and a blush spread across her cheeks, "They're so
+sensitive. Please Rick I'm super horny after all of this." She didn't
+have to say another word as Rick pressed his lips firmly into hers
+making her heart race. They started making out their sweaty bodies
+pulling off each others clothes as fast as they could without being
+apart for too long. "Your bigger than I heard." Skipping the foreplay
+Rick lifts Scarlet up off her feet and free standing slides her onto his
+dick.</p>
+<p>"Oh, fuck Scarlet, you are the tightest girl I've ever been in." He
+grunts as she slides all the way down to the base of his dick.</p>
+<p>"You fill me up so much. Ah, this is amazing." Scarlet cooed wrapping
+her strong legs around his waist. He starts pumping into her as sucking
+on her left nipple. Her breasts started expanding once again making her
+moan loudly between her pants as she rides Ricks cock. <em>I want it
+bigger.</em> She thought to herself as she tried her best to mentally focus
+on if she could make Ricks rock hard member fill her even more. Rick
+grunts and squeezes onto her pressing her even more into him. The
+sensation was unreal he felt like his dick was getting bigger and so
+were his balls as he fucked Scarlet. "YES RICK YES!! CUM IN ME!" Scarlet
+screams in bliss as she feels him grow inside her.</p>
+<p>Rick tensed up and explodes inside of her. Letting out six loads his
+knees weaken and he sinks to the floor with Scarlet still on his dick.
+Panting heavily between her cleavage he kisses both of her tits. "That
+was the best fuck, I've even had. I literally felt like my dick was
+being squeezed while we were having sex."</p>
+<p>I'm glad you enjoyed it as much as I did." She giggles getting up and
+sliding off his still half erect dick. While he was in her, his dick
+grew by another three inches in length and two in girth. His balls were
+about the size of baseballs. Taking him from a hearty eight inch cock to
+eleven inches when he's flaccid. "We should clean up our mess. And get
+cleaned up ourselves." Scarlet comments her E cup chest giggling as she
+holds out a hand to help him up.</p>
+<p>Rick takes her hand and pulls her down towards him and gives her one
+more passionate kiss before getting up and running his hands over her
+boobs and give them one more squeeze, "I guess we should, before people
+show up." He mutters quietly. He picked up his spandex and slipped them
+one. Grunting a bit from his new and improved packed being a bit harder
+to shove in and situate. Once he had everything all together he has a
+much larger bulge than when they started their little work out session.</p>
+<p>Picking up her leggings she slipped those on first so Rick could have a
+show before she grabbed her sports bra and struggled to get it on. There
+was tit flesh spilling out of the top, sides, and bottom by the time she
+got her smaller bra situated enough to cover her nipples. They walk
+together out of the weight room after they clean up their mess they made
+with the paper towels that are always left in there as well as the
+sanitizer. They split off going to their separate locker rooms. Scarlet
+goes into the woman's locker room and unlocks her locker. She pulls her
+sports bra off releasing her breasts as she sits down on the bench in
+front of her locker. "That was amazing. Good to know my wish works on
+all cocks that are inside or connected to my body. I wonder if it'll
+work with my not touching it." She mutters to herself as she massages
+her tits. Pulling her hands away from her breasts she turns around and
+pulls out her notebook and tank top. Throwing on her tank top just as
+she hears people coming into the locker room. It's a group of girls
+giggling. Some of them she recognized from the cheerleading squad. They
+all had fairly large chests, certainly not as large as Kayla's but there
+are around the E and G cup size. They don't seem to notice her as she
+pulls out the notebook and pencil. Making it look like she was writing
+out her workout that she did. But instead she was writing out her next
+wish.</p>
+<p><strong>I wish that every time Rick grabs my breasts from behind that he will
+get a one in growth spurt until he gets to the height he's always wished
+to be and feel stronger. After the fifth time his muscles will show new
+growth.</strong></p>
+<p><strong>I wish that my lips were slightly more plump but it wasn't that
+noticeable.</strong></p>
+<p>Closing the book and putting it back in her locker she grabs her bag and
+closes it up. Not wanting to take a shower here for the girls to
+question her chest. Slipping her phone into her leggings pocket and
+throwing her duffle bag over her shoulder she left the locker room.</p>
+<p>"Did you not shower?" Rick's voice rang out making her turn around and
+her chest bouncing freely since she wasn't wearing anything under her
+tank top.</p>
+<p>"I forgot a towel, so I figured that I'll just shower when I get back up
+to my apartment," She smiles up at him sweetly.</p>
+<p>"Wanna go on a date with me? I don't really count working out as a
+date," Rick's cheeks flush as he looks away from Scarlet and then back
+at her.</p>
+<p>Pulling out her phone from her pocket she hands it to him after
+unlocking the phone and going to contacts. He took her phone happily and
+worked on putting in his number. As he did she started down at her bulge
+and thought about it becoming bigger. Rick shivered out of nowhere and
+his package grew in his pants making an even bigger bulge being shown.
+"I know pretty sure it's bigger, actually I'm positive that it's bigger
+than when I woke up this morning." Rick commented making Scarlet break
+her concentration. "I don't know why but, I think you have an effect on
+it." He chuckles and hands Scarlet back her phone. Closing the distance
+between them, Rick pulls her in and grunts when her hips press against
+his bulge sending another shiver through his body. "I don't know what it
+is, but I'm gonna figure it out. But for now I don't want you to be
+anyone else's." Rick whispered in his deep voice grabbing her right tit
+firmly making her gasp and shudder. He leans down and presses his lips
+against hers and bites her lower lips as he pulls away. "Later Scarlet."</p>
+<p>"Y-Yeah, later Rick." Scarlet stutters her heart still racing from the
+kiss. She watches him walk away and then looks at her phone and text's
+Rick so that he has her number. Scarlet practically skips out letting
+her tits bounce freely catching all the men's attention that were
+walking past her. Finally she made it back to her apartment and opened
+up the door. It turns out that it was already eleven in the morning by
+the time she was done. There's a note on the small table that's in the
+living room.</p>
+<p><strong>Hey dear,</strong></p>
+<p><strong>I went to go get some coffee and breakfast with some friends. Let me
+know when you get home.</strong></p>
+<p><strong>Love Kayla</strong></p>
+<p>"Well that makes things easier." She chuckled setting the note down and
+walking to her room. Setting her stuff down she grabs her towel from
+last night as well as her shampoo and body wash and then heads into the
+bathroom.</p>
+<p>When the water hits her and she starts to clean the sweat off of herself
+she can feel her breasts practically melting away and shrinking back
+down to her small A cup breasts. "Much better." She sighs happily
+getting out and drying off. Going to her room she throws on her large
+hoodie because she didn't want to wear a bra and then some of her cargo
+pants before grabbing her water bottle and notebook from her bag. "Now,
+what fun can we wish for today?" She asks herself opening up her
+notebook. "So every day there's a new rule added to this thing. Do I not
+play that much today and just see what new rule I get tomorrow?"</p>
+<p>The question pegged her to no end while she sat the playing with her
+water bottle. "I should eat first." With that she walked away from her
+desk and went to make some breakfast.</p>
+</body>
+</html>

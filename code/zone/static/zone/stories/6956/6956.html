@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Your Average Fairytale</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>The mountain loomed over Karmina, rising almost to the clouds, billowing smoke coming from the top. This was surely the lair of her target. Just standing at the entrance, she could feel it's scorching hot breath; the evil dragon that had stolen The Princess' beauty!</p>
+<p>Karmina had traveled days and days, following the dragon's tracks. As the Head Knight, she was the only person allowed to know of what had happened to The Princess, and thus the only person allowed to go on such a dangerous quest. If word got out to the people, they would lose faith, perhaps there could even be a revolution! She couldn't let that happen!</p>
+<p>Dressed in a set of red cups and a thong accented with gold, the most powerful and sensible armor in the Kingdom, Karmina was ready for anything the dragon could throw at her! She had to admit though, it was a little small on her, squeezing her big knightly knockers tightly, not to mention that riding her royal steed chafed like hell, and every time he galloped she was sure her breasts were going to bounce free! "Any sacrifice is worth it for the wellbeing of The Princess!" She reminded herself every time she was attacked not by devilish beasts sent to kill her, but instead by her own bosom slapping her face!</p>
+<p>Stepping into the mouth of the mountain, she readied her blade, making sure to stay on her toes. Suddenly, two imps jumped out from the shadows, and with a loud "Hyah!" were immediately sliced in half. Their bodies puffed into red smoke, which quickly flew deeper into the cave. Karmina chased after it, as fast as she could without smacking herself again.</p>
+<p>She descended farther into the mountain, being accosted by more and more monsters, each disappearing into smoke. Karmina knew she was getting closer to the dragon, with every step the heat increasing, causing her to sweat more. </p>
+<p>Finally, she was at the deepest part of the mountain...the dragon's lair. What stood in front of her was...not what she imagined, to say the least. A beautiful woman with long crimson hair rested atop breasts that were twice, maybe even three times either girls' size. The only tip of draconic being were bright gold eyes, long, twisted horns that grew from her head, and a pair of ginormous wings at her back. The smoke Karmina had been following was sucked up by the dragoness. "Hmhmhm, I see that you're here, oh brave Knight!" She grinned, causing her mighty throne of bosom to wobble, and making a mini earthquake happen thousands of miles away. </p>
+<p>"So when they said The Princess' beauty was stolen, they meant..."</p>
+<p>"Her bust, of course! Ohohohoho!~" Her haughty laugh boomed, echoing throughout the entire cave.</p>
+<p>It made sense...There had been rumors of maidens suddenly losing all their chest, and The Princess was rather, well, well endowed. What a nice royal rack she used to have... Karmina shook her head. "Fiend! Return The Princess' breasts at once, or else!" She shouted, readying her sword.</p>
+<p>The dragoness just shook her head and laughed again. "What, and lessen my wonderful, wonderful hoard?" She moaned, feeling what little of her breast she could. "I think not!" Suddenly, she exhaled, blowing out blasts of smoke that formed into a horde of imps. Her breast rest lessened slightly. </p>
+<p>"So her magic comes from her boobs, huh? Of course it does..." Karmina sighed, before running into her enemies, making quick work of them. Instead of returning to its mistress, the smoke merged together, becoming a monster about the same size as her, and much stronger. Before she could act, it kicked her, sending the knight flying. "Shit!" She gasped, smacking against the wall. </p>
+<p>"Ahahaha, your wonderful tits will become a great addition to my collection, oh brave hero!" The dragoness taunted as the monster slowly closed in on Karmina. It drew dagger like claws, its fangs salivating, gold eyes gleaming, ready to dig into her flesh. </p>
+<p>"Think fast, Karmina, think fast..." She thought, desperately searching the lair for anything to help. The image of the giant, cart sized cans looming over her gave her an idea... "Take this!" </p>
+<p>Karmina suddenly sprung up and thrust her chest out. Her boobs took a huge bound, hitting the monster on the chin. The impact was so powerful that it cleanly sent its head flying, and its body falling to the ground. She kicked off of the wall, dashing towards the dragoness, and grabbed her sword. "Your reign of evil stops here you monster!"</p>
+<p>Karmina rushed the Dragoness, took a leap, getting her foot lodged into her mighty cleavage. That didn't stop the knight, doing a full spin, so that she could still launch herself up into the air. </p>
+<p>"Guh! What are you doing?!" She gasped. Karmina readied her sword downward, stabbing it right into the Dragoness' head, shouting a triumphant "HYAH!" </p>
+<p>"Heh...You actually did it..." The dragoness' head began to crack, letting out blinding light. She quickly flapped her wings, causing a huge boobquake.</p>
+<p>"W-woah!" Karmina gasped, dropping her sword and quickly losing her balance on the wobbly flesh, falling face first. The Dragoness quickly grabbed her by the shoulders. "You fell for it, ahahahahaha!~" She laughed. She brought in Karmina, giving her a long mouth to mouth kiss. She groped her killer, a final goodbye. The Knight's lungs were suddenly flooded with smoke, and just like that, the Dragoness was gone. </p>
+<p>Karmina fell to the floor, coughing and wheezing. Not a single puff of smoke left her lungs... "Wh-what did she do to me?! O-oh no..." She was feeling hotter and hotter, her whole body sweating like a pig. "How will I return The Princess' boobs now?! Her..." Karmina's mind suddenly felt strange... What was happening to her? "Her wonderful melons..." She thought of how big The Princess' chest was, the pride of the kingdom, so large and perky... "Why should I return them?! She's spoiled enough as it is!" </p>
+<p>The heat wasn't stopping. Her mind got fuzzier. Suddenly, her breasts...started to grow. "Mmmmph, that's right! I fought that dragon for them! All that bustiness should belong to me!" She proclaimed, starting to fondle her funbags. "Grow, my beauties! Grow, grow, grow!" She demanded, feeling the 'unstoppable' cups of her armor suddenly snap, uselessly falling to the floor as her now 4 foot breasts paraded forward and up. </p>
+<p>"Being a knight was so hard...Battle after battle, escort after escort, ugh! They probably sent me here to die!" Her boobs now reached the ground, and only grew faster. Her headache subsided as a pair of tiny, hard nubs sprouted from her forehead, swiftly growing into full fledged horns. "Heh, I should keep this hoard of 'treasure' for myself!" She leaned against her wall of breast flesh, letting a moan escape her lips. They were so much more sensitive now. Every inch she gained she could feel herself slipping deeper and deeper into evil...</p>
+<p>Her eyes shined brighter than gold, as her boobs grew further and further, tightening the chamber she was now effectively stuck in. They were so big now she had to tip herself over, laying on top of them.</p>
+<p>It struck her that this would be her life from now on; sitting in this cave, laying on unmanageable breasts, unable to do anything she used to. Would she ever see the Princess again? The Kind and Queen? Her beloved horse Chester? Weighed down by her breasts, she would no longer be able to go on any heroic adventures...</p>
+<p>"OH WELL!~ OHOHOHOHOHOHOHO!~" She cackled, which caused her breasts to send quakes down the entire mountainside that could be felt all over the world. "WHO NEEDS TO BE A 'HERO' WHEN YOU CAN BE STACKED?!~"</p>
+<p>Karmina used her long, crimson red tail that sprung from her behind to lovingly carres her breasts. She hadn't felt anything more pleasurable in her whole life. What chump would go fight monsters when they could have such HUGE TITS?!</p>
+<p>"Huge..." Karmina sighed, looking down at her hoard of breasts. "This isn't huge at all! I'm practically flat! My beautiful, wonderous chest MUST be bigger!" She demanded. Instantly, from her mouth spouted a familiar red mist, forming into an army of ghouls.</p>
+<p>"Go and find the bustiest maidens in the land, and bring them to me! They will make fantastic offerings to my mammaries!" She commanded. In an instant, her minions were off to scour for breasts for their mistress.</p>
+<p>Years and years went by, as the infamy and power of Karmina the Breasted Dragon grew. Eventually, there was no girl bigger than a B cup in the entire Kingdom. The mountainside was destroyed, her bust reaching zenith levels of hugeness. Still, her greed would never be satiated. Her minions brought her maidens from neighboring Kingdoms to satiate her...</p>
+<p>Soon enough, her bust grew so bountiful that the Kingdom as a whole had to be evacuated. Instead of a mountain, Karmina now resided in the crumbled ruins of the Castle, resting in the elegant and comfortable bed that once belonged to The Princess.</p>
+<p>She grew happily ever after...</p>
+</body>
+</html>

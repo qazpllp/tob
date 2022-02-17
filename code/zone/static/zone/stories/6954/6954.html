@@ -1,0 +1,1338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Wishes Ad Infinitum</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>Wishes: Ad Infinitum  </p>
+<p>Part One </p>
+<p>Inspired by a concept from Max Mammaries </p>
+<p>ACT I – Vickie’s Story </p>
+<p>*Day 0  </p>
+<p>Vickie stared at her reflection in the mirror. 
+ Her critical eyes focusing in on each of her perceived faults, 
+expanding them until they were all she could see. A mental 
+checklist that grew in length and gained flashing exclamation 
+marks with every passing second.<br />
+ Too many freckles!<br />
+ Eyes too close together!<br />
+ Flat chest!<br />
+ Podgy Belly!<br />
+ Nondescript ass!<br />
+ Her face was too square!<br />
+ Scrawny, weak arms and legs!<br />
+ No one could quite tell if her hair was red or brown, it was 
+something muddy in between.<br />
+ In conclusion a plain, average looking woman that was ‘okay’ but 
+would never turn heads in a crowd.<br />
+ The problem was she was too thin. Her arms, legs and torso had 
+no meat to them at all. She was skin and bone, a walking 
+skeleton in need of more than just one big meal. But whenever 
+she did eat the fat went straight to her stomach and nobody 
+thought a pot-bellied woman was sexy so she stayed thin and 
+emaciated. 
+ Everyone said ‘lean’ was beautiful – just look at the models 
+starving themselves to fit into size zero dresses – but they were<br />
+thin ‘with’ curves and perfect skin. She was just… 
+ Well, she was just small.<br />
+ It wasn’t feminine. It wasn’t sexy.  </p>
+<p>She didn’t hate her body, but neither was she particularly 
+attached to the damn thing. She had turned out… fair? Average?<br />
+Normal? Not pretty, but not ugly either, just an ordinary girl.<br />
+Someone that nobody would pick out of a crowd.<br />
+ She was fed up of being ordinary. Fed up of being weak.  </p>
+<p>Whenever she was out with her friend’s men ignored her.<br />
+ Each and every one inevitably dove towards Jane, Penny or 
+Laura…<br />
+Tall, short or busty, her best friends and ex-classmates had all 
+the female attributes between them to appeal to any man. All of 
+them were beautiful but distinct.<br />
+ If it weren’t for her fantastic tits Jane could have been described 
+as a beanpole! She was almost as thin as Vickie but she had 
+some muscle and the curves were there where it counted. Over 
+six and a half feet tall with beautiful radiant blonde hair she stood 
+out in any crowd. She was so elegant, so authoritative.<br />
+ When Jane entered a room the world saluted.<br />
+ Conversely Penny was just a few inches bigger than any legal 
+definition of being medically short, and her lack of height meant 
+the plentiful curves she had stood out on her petite frame double.<br />
+She was sensual and voluptuous, short but stacked, her body 
+incapable of adopting any pose that failed to radiate her beauty.<br />
+ Then there was the self-declared ‘tit’-ania herself.<br />
+ Sexy, ultra-top-heavy Laura; who has been a DD-cup at 14 and 
+not stopped piling on extra boobage until she was past 21. She 
+was gorgeous, with radiant red hair and a perfectly lightly 
+freckled face that looked stunning from any angle as long as you 
+could tear your eyes upwards! <br />
+ Her eyes were deep blue, stunningly captivating, and they had to 
+be to stop your gaze falling downwards into the cleavage below. 
+Cleavage that went on for miles, that bounced and swayed and 
+entranced everyone who saw it.  </p>
+<p>It felt as though Laura’s curves entered a room several minutes 
+before the rest of her, like the prow of a great ship clearing the 
+way. <br />
+ All three had qualities that made them special!<br />
+ None of the three could be remotely called ordinary, and all three 
+had curves that had men fawning over themselves to get at. They 
+were almost too successful in love – they had no problem 
+attracting men, but long-term relationships were… 
+ Difficult.<br />
+ Unlike Vickie who had spent several years working very hard at 
+not being jealous. After all it wasn’t their fault her friends had 
+been born genetically blessed.<br />
+They were great girls to hang out with; fun, exciting, friendly. The 
+group had such a great dynamic and though all three of them 
+were different they made Vickie feel stronger by being amongst 
+them.<br />
+ Alone she felt week, but they held her up; treated her as 
+someone special even though she really didn’t think she was.<br />
+When she was alone Vickie hated herself for being weak and 
+pathetic, but they never treated her like that, and she loved each 
+and every one of them for it.<br />
+ In the absence of a love life of any sort Vickie tended to keep her 
+head down and study. She partied – she partied hard when the 
+occasion came, but she slept alone and found other things to 
+occupy her time besides men.<br />
+ Almost all of her energy went towards her research.  A PhD in 
+archaeology had sounded exciting at the start but without her 
+three best classmates, who had all graduated and got high 
+powered jobs after University, she’d found a career in academia 
+a lot less fun than expected.<br />
+ At least until she had discovered the Dream Chest.<br />
+ It was a simple relic, not an ancient treasure but a hundred-year-
+old antique that could only be traced back to the early days of the 
+British Empire. It had been pilfered from some ancient part of the </p>
+<p>world long forgotten – the thieves had returned it to the empire 
+without bothering to inform their lords and masters which ancient 
+culture they had looted it from. There were a lot of items that fit 
+this description, but the Dream Chest was special.<br />
+ She had been helping catalogue a museum foreclosure to sell 
+on the assets when she’d discovered the box. It had belonged to 
+a Victorian Heiress, one who had passed through the British 
+Colonies before settling in America.<br />
+ Legend said she had written her heart’s desire in the dream 
+chest and it had come true, she’d married an American lawyer 
+and lived happily ever after, spawning six children and a dynasty 
+that had flourished for the next fifty years.<br />
+ Eventually it had gone to the museum and been catalogued 
+away with all the other nondescript oddities.<br />
+Something about the box had tickled Vickie so rather than price it 
+up for resale she’d bought it herself. It had taken a month to get 
+internal approval but to anyone not familiar with the box’s 
+intimate history it was just a small oddity of no real worth.<br />
+ Well, they would test that theory tonight.<br />
+ So, she had immediately invited round Jane and Laura (Penny 
+was on duty at the record store prepping for the week ahead) and 
+showed them her new prize. Sunday night be dammed!<br />
+ Enjoying their bemused expressions, she explained the history 
+of her new acquisition with pride, then stood back so the two 
+women could have a closer look at it.<br />
+ Once she had explained how the box was supposed to work she 
+nipped out to the toilet so they could consider their dreams. She 
+had been thinking about hers for a while now but she wanted to 
+give them time to consider.<br />
+ It was just a bit of harmless fun but imagine if it really did work?<br />
+She gazed into her reflection in the mirror, taking a mental note 
+of her small, weak body. If her suspicions about the box were 
+right…  </p>
+<p>So, clutching a piece of paper in her hand, she turned from the 
+full-length mirror in her bathroom and re-joined them in the 
+lounge.<br />
+ To her disappointment both sat on her sofa at the fat end of the 
+room looking at each other doubtfully, pens still idle and not a 
+single thought jotted down.<br />
+ “You just write your dream on a scrap of paper and leave in the 
+top drawer,” she said, wiping clean a line of dust along the back 
+wooden edge with her finger. “It is supposed to bring you luck.”<br />
+“Is this actual witch magic?” Laura asked suspiciously, “Or have 
+you lost your head girl?”<br />
+ “I thought it would be fun,” Vickie replied, which got Laura 
+nodding at least. “You don’t have to do it if you don’t want to.”<br />
+“I’m game for anything,” Jane laughed, “But when you said you 
+had something amazing to show us, that it couldn’t wait, I didn’t 
+expect it to be this. I thought you might have been holding out on 
+us and…”<br />
+ “She’s too wrapped up in her work,” said Laura, who was 
+scribbling, then crossing out and tossing away, then re-scribbling 
+notes. A pile of scrap paper was forming by her feet, and her 
+eyes were glinting with mischief. “I can’t work out which wish 
+would be most fun. I’m just going to wish for good health. It’s all I 
+really want.”<br />
+ “Sensible,” Jane nodded sympathetically.<br />
+ Laura worked as a senior nurse, the most popular nurse by 
+some margin, at the local maternity ward. She said it was perfect 
+besides two things; because of her bust everyone assumed she 
+was a wet nurse, and secondly she picked up every infection 
+going around off the patients.<br />
+ Satisfied she leant forwards over the small box with her 
+completed wish and frowned down at it suspiciously. Her 
+pendulous boobs dwarfed the small antique and for a second 
+Vickie was terrified her friend would take the opportunity to crush 
+it.  </p>
+<p>She’d dropped her assets on more sturdy things before and 
+come out the victor! 
+ “You just slot it in there?”<br />
+ “Top drawer,” Vickie nodded, tapping the drawer that opened 
+and closed. Below it was a slot into the lower compartment which 
+despite trying to pry open was sealed firmly shut. “If it comes true 
+you’re meant to place in the bottom one. Then when the chest is 
+full it means all your dreams have come true.”<br />
+ “Crazy,” shrugged Jane, climbing to her feet to join her friend. 
+Together they slotted two post-it notes into the top drawer. “I just 
+want to meet a few men less intimidated by my size. I’m fed up of 
+first dates who think I’ll be exciting but who just can’t handle a 
+full-size package.”<br />
+ Jane’s longest relationship ever was four months.<br />
+ That was three and a quarter months longer than Vickie’s…<br />
+Vickie placed her wish beside Jane and Laura’s and slid the door 
+shut, a massive grin on her face. Of course, they didn’t believe it 
+– they thought this was just a joke.<br />
+ If they had cared they would have thought to ask what she had 
+wished for.<br />
+ But unlike them Vickie had faith.  </p>
+<p>*Day 1  </p>
+<p>Vickie woke up and nothing was different.<br />
+ Well that wasn’t true. She felt light and refreshed, a little stronger 
+and healthier than the day before. She didn’t notice it until she 
+was halfway through breakfast, but she felt energized, healthier 
+than ever. Normally getting out of bed in the morning was a slog 
+but today she zipped through her morning routine with an extra 
+spring in her step.<br />
+ She just put it down to just being a good day.<br />
+ She went to work on the bus, sat at her desk and answered 
+emails for ninety minutes, before walking down to the sealed unit 
+that the museum goods had been stashed in.<br />
+ She then continued unpacking boxes, large unwieldy boxes that 
+you needed a good grip on before shifting down from the storage 
+unit before unpacking and sorting.<br />
+ She lifted them down, unpacked and sorted the contents inside, 
+before repacking them and loading back into the storage unit.  It 
+was hard work, and usually by lunchtime she was sweating, but 
+today she felt good about herself.<br />
+ She had a big lunch, all that packing had given her an appetite, 
+before there was a meeting with her supervisor that afternoon.<br />
+It was a big meeting, discussing her funding, and she’d been 
+dreading it for weeks….<br />
+ Somehow though it wasn’t as bad as she’d been expecting. 
+ He was unusually polite, and kind, and she was guaranteed at 
+least another six months to write up. Just what she’d wanted! 
+ She left work early, did some shopping on her way home, and 
+went to bed feeling unusually content with the world.<br />
+ In the lounge the Dream Chest, tucked away behind the sofa, 
+stood silently.  </p>
+<p>*Day 3  </p>
+<p>On Wednesday Vickie arrived at work an hour early, completed 
+all of her tasks by midday and spent the afternoon unboxing and 
+cataloguing storage crates from the museum.<br />
+ The crates, each as wide as her arms spread and just as tall, 
+didn’t feel exactly light in her hands but they were incredibly easy 
+to lift today, almost as though she was getting stronger.  For 
+three days in a row she had felt more energised each morning, 
+more capable of coping with whatever the day would throw at 
+her.<br />
+ Rather than get the bus home she decided to walk back.  It 
+wasn’t too far, three quarters of an hour away, and she could 
+swing by the supermarket and get some orange juice on her way 
+back.<br />
+ To her surprise she ended up jogging most of it; she felt 
+incredibly light on her feet and still full of energy when she got 
+home.<br />
+ That night, at a quarter to midnight, her phone buzzed. She 
+blinked and gazed bleary eyed at the screen. It was from Jane.   </p>
+<p><strong><em>DATE FRIDAY!<br />
+SUPER EXCITED!<br />
+DRESS SHOPPING TOMORROW </em></strong>  </p>
+<p>*Day 4  </p>
+<p>“Wow girl, have you been working out?”<br />
+ It was the first thing Jane said when she spotted Vickie in the 
+shopping mall after work.<br />
+ Vickie smiled self-consciously and ran a hand down the side of 
+her dress, feeling the toned skin of her rib cage and the new 
+muscle that was forming between her abs.<br />
+ And though the scales said she’d put on several pounds she 
+hadn’t actually even gone up a single dress size! Her muscles 
+were still small, but they were dense.<br />
+ She’d been feeling extremely good about herself all week.  At 
+this point she was almost certain the Dream Chest had done its 
+job. Thanks to her wish to be a stronger woman she’d started 
+feeling stronger, more confident, more able than before.  She 
+spent the next hour helping Jane carry out the impossible task 
+of finding a dress both sexy, not sluttish, classy, not posh, and 
+most importantly suitable for someone over six foot six.<br />
+ All the time she quizzed Jane about the lucky man.<br />
+ “Well it was really odd,” Jane laughed, “He just approached me 
+in a bus queue. Normally I’d have laughed him off but, it’s been a 
+while and he was absolutely gorgeous, so I thought… Why not 
+treat yourself?”<br />
+ “You deserve it,” Vickie smiled, nodding internally. It made 
+sense. Jane had asked for men to find her size less intimidating 
+and that true had come true, Proof that the Dream Chest 
+worked!<br />
+ But one of her closest friends had missed out on this opportunity! 
+Penny had been busy all week with the relaunch of the store and 
+still had no idea what was going on.<br />
+ She’d have to do something about that.  </p>
+<p>*Day 5  </p>
+<p>That evening Penny was introduced to the Dream Chest.<br />
+Vickie gazed lovingly down at the wooden box that had, in one 
+solitary week, completely turned her life around.<br />
+ She was eating more healthily, exercising more, sweating less…<br />
+She felt like she could run a marathon and that was just her 
+body. Colleagues were complementing her more, her boss had 
+started to notice her, and she’d noticed that although her boobs 
+were still tiny the better muscle definition on her torso made them 
+stand out slightly more proudly.<br />
+“So you’re saying that you wished to be a stronger woman and it 
+came true?” Penny asked suspiciously, squinting up at her with 
+one eye. “And Laura wished not to fall ill, and Jane to be less 
+intimidating to men?”<br />
+ “I asked Laura if she had a cold this morning and she hasn’t had 
+one all week,” Vickie replied proudly. “Not that that proves 
+anything.”<br />
+ “But she’s never ill,” Penny replied incredulously, “And you’ve 
+always been an athlete and Laura gets tonnes of dates with men.<br />
+She practically has to fend them off with a stick.”<br />
+ “No,” Vickie shook her head, a little taken aback at her friend’s 
+outburst. “Laura is always ill. Do you remember her birthday last 
+year? She spent a whole fortnight in bed and had to cancel her 
+holiday…”<br />
+ “She went to Ibiza,” Penny replied angrily. “You know she went 
+to Ibiza, she was bragging about it for weeks, and there were<br />
+those photos from the beach….”<br />
+ “No, she was ill in bed,” Vickie frowned.<br />
+ At this Penny pulled out her phone and started flicking 
+backwards through her photographs. She found a photo of a 
+woman wrapped in a towel (and literally only a towel) standing 
+between four extremely tall, extremely bronzed, extremely proud 
+looking men.  </p>
+<p>Men who had probably never been so close to two of the natural 
+wonders of the world, perky monster boobs straining against the 
+towels knot. <br />
+ Vickie starred at it for a moment, mentally processing the image.<br />
+She had never laid eyes on it before but at the same time… it felt 
+familiar.<br />
+ “Laura... Topless beach… Ibiza… Last September?”  “Duhh,” 
+Penny sighed, shaking her head like a disappointed teacher. 
+“And you’ve been on a health fetish since you were 13; the only 
+one of us who actually gets their money’s worth out of the gym 
+membership!”<br />
+ “But I don’t remember,” Vickie stared with confusion down at the 
+wooden box.<br />
+ Then something in the back of her head clicked and suddenly 
+the situation seemed to make sense. Penny didn’t know about 
+the wishes; she hadn’t been there on Sunday night.<br />
+ For her the world had always been like that.<br />
+ However, it was further proof that the Dream Chest worked. It 
+was so efficient it didn’t just change the here and now but 
+retroactively altered their history.  It wasn’t just her imagining 
+things had changed – the world really was different.<br />
+ Penny was staring at her fearfully.<br />
+ “Vickie, I know you’re a little crazy at times, but you don’t have to 
+make things up to impress me. What is this really about?”  “It’s 
+about the fact I have a magic box that can grant wishes.”  “It can 
+grant wishes,” Penny repeated sarcastically. “Seriously, you 
+expect me to believe that?”<br />
+ “Try it,” Vickie insisted, scrabbling for the post-it notes she kept 
+on the fridge door. “Try writing something you’ve always dreamed 
+of and putting it in this drawer. Tomorrow it will start to come 
+true.”<br />
+ “You’re mad,” Penny replied, throwing her hands in the air.  “Just 
+do it,” Vickie insisted. “And don’t tell Jane or Laura about this. 
+Wait a day then see if they notice what has changed – I don’t </p>
+<p>think they will. It seems the only people who know about the 
+wishes can see what’s changed. Jane noticed I was getting fitter, 
+but she saw me put my wish into the chest.”<br />
+ Vickie and Penny both wrote their own requests, then Vickie slid 
+open the top drawer of the chest to reveal the three scribbled 
+notes from the previous weekend.<br />
+ Carefully Vickie removed her own, leaving Jane and Laura’s in 
+there, added the two new notes and closed the drawer shut.<br />
+Then, with a contented smile, she slotted her completed wish into 
+the sealed compartment. Her body was singing with anticipation 
+of what was to come…<br />
+ She wouldn’t be the only flat chested member of the group for 
+long!  </p>
+<p>*Day 6  </p>
+<p>Vickie’s phone was ringing.<br />
+ The room was dark, there wasn’t even a hint of sunlight behind 
+the curtains, but her phone was screeching for her to wake up.<br />
+Bleary eyed she fumbled for the handset at the side of the bed 
+and saw that Penny was ringing her. Why the fuck was Penny 
+ringing her this early? Without even rolling over she pulled the 
+mobile onto the bed and put it on loudspeaker; “What time in the 
+morning is it?”<br />
+ “It’s 4 AM,” Penny’s tinny screech filled the room, far too loudly. 
+“It’s 4 AM and there’s a hundred fucking thousand pounds in my<br />
+bank account! Vickie, I’m fucking rich!”  “It 
+worked then,” Vickie replied with a grin.<br />
+ She resisted the urge to pull her hands up to her chest and feel 
+her own progress. Instead she rolled over to get more 
+comfortable, and she immediately felt her arm brush against 
+some flesh that definitely hadn’t been there the night before. “You 
+didn’t believe me but I told you it would work.”<br />
+ “Too fucking right it worked,” Penny cackled like a mad woman. 
+“But only you and I know that this is because of your wish box? 
+As far as Jane and Laura will be concerned I will always have 
+been rich? I’ve been looking at pictures on my phone history and 
+I’ve got shots of both of them trying on posh frocks and dresses 
+that look waaaaaay too expensive.”<br />
+ “That’s what I guess will happen; we’ll find out,” Penny tried to 
+blink sleep out of her eyes. She popped her legs over the side of 
+the bed and padded over to the nearest mirror.<br />
+ “Well I’ve got three weeks holiday saved up,” Penny cried 
+delightedly. “I’m driving down to the airport, parking my car and 
+getting on the first plane to Barbados. I’ll be back in three weeks!<br />
+Fancy coming with me?”<br />
+ “I can’t take three weeks off without notice,” Vickie scoffed; “I 
+have a paper due!”  </p>
+<p>“What do you mean? You have a magic box that grants wishes, 
+magic the work done and come with me,” Penny laughed madly. 
+“I’m going to invite Jane and Laura, see if they bat an eyelid 
+when I tell them I’ve already paid for their tickets. If you change 
+your mind ring me back by 9.”<br />
+ Hanging up Vickie put the phone down, then reached for her 
+pyjama top. She lifted, slowly, carefully, eyes wide as she looked 
+down at her naked breasts. She felt friction against the fabric that 
+normally wasn’t there.<br />
+ It wasn’t a big increase, in fact they didn’t look so much bigger 
+as more defined, but it was real. She had spent so long staring 
+mournfully down at them that she was certain they had changed! 
+ For the first time since a very disappointing puberty Vickie 
+Spencer was growing tits! 
+ They poked out from her petite frame, retaining their natural 
+firmness to give her some amazing cleavage! 
+ Nothing at all compared to her friends but for her this was 
+amazing. Vickie was ecstatic! 
+ She spent most of the day topless in her house marvelling at the 
+fact she had a full, womanly bust! 
+ The sensation of swaying weight in her chest was new and she 
+marvelled in every moment. The only downside she had noticed 
+was her nipples and aureoles were extremely sensitive. 
+ She couldn’t wear a shirt as the sensation of fabric brushing 
+across her breasts set pulses of pleasure rushing through her 
+body! 
+ She found herself caressing her newly expanded aureoles, her 
+fingers slowly moving towards her puffy nipples, holding them 
+tight between her fingertips, squeezing and pulling on them 
+alternately as she worked herself into a fervour. 
+ As the sun set and night fell Vickie realised she had masturbated 
+the day away without getting a single productive thing done! 
+ But fucking hell she still felt good. 
+ Tomorrow though would have to be different…  </p>
+<p>*Day 7  </p>
+<p>Vickie rose early on Sunday, excited for a very specific purpose, 
+a direction she had decided on the night before settling down to 
+bed.<br />
+ She ate breakfast, hands eagerly searching out the fresh folds in 
+her pliant flesh that was building beneath her top. 
+ The skin was taut but not painful, every brush and caress a new 
+wave of pleasure. She was still small enough to walk around 
+unsupported without feeling more than a gentle sway but that 
+wouldn’t last much longer.<br />
+ On a whim, because it was the weekend and because she 
+wanted to enjoy her new assets, she had gone braless all day.<br />
+She revelled in feeling her breasts moving independently as she 
+wandered around the house, the little jump they made when she 
+flopped down on the sofa or the rubbing against her forearm 
+when she tried to move her arms forward forgetting they were 
+there… It had been fun at first but by bedtime she could feel 
+them pulling at her ribcage. And the constant slight irritation from 
+her shirt had set her nipples to hard and they hadn’t gone down 
+until she’d turned in for the night.<br />
+ At 8 AM she left the house expectantly, more than an hour to 
+wait before her appointment, but she knew the walk, then train, to 
+the supermarket would fly by. The whole time she was grinning 
+ear to ear, waiting for conformation of what she already knew.<br />
+She arrived ten minutes early and waited eagerly to be let into 
+the brassier. An elderly woman opened up at 9:00 exactly and 
+led her through to the back room, instructing her to strip down to 
+her bra and wait for her to fetch her tape measure.<br />
+ Vickie held her arms up excitedly as the woman passed the tape 
+measure around her shoulders then pushed it down into position 
+snugly against her bust. After a few more positions, numbers 
+being jotted down, and then another repeat of the first 
+measurements it was done.  </p>
+<p>“34 D,” the woman declared confidently.<br />
+ Vickie’s heart swelled with pride.<br />
+ “So there’s no need to change size,” the woman replied 
+condescendingly, “Unless you were just retaining water when you 
+rang yesterday. This is exactly the same as your current bra.” <br />
+Vickie opened her mouth to disagree then frowned. She glanced 
+down at the fitted bra she had put on that morning without 
+thinking about it. It didn’t feel tight, or clingy, just extremely 
+comfortable and fitted. Why hadn’t she realized? Not only had 
+she grown but all of her bras had changed with her.<br />
+ There was no need to come back here and get measured; she 
+could check her progress simply by examining the tags on her 
+clothing.<br />
+ “I guess I was just panicking,” she apologized, smiling at the 
+woman. “I need to get some more anyway so it’s not been a 
+wasted trip.”<br />
+ All of the bras in her wardrobe were functional at best. As she 
+had no chest to speak of she had never gone in for fancy lingerie 
+before. Now that she had something to show off that would have 
+to change.<br />
+ She spent nearly an hour trying on a variety of styles and 
+colours, marvelling at the way different shapes lifted and cupped 
+her new assets. And in almost all of them she looked fucking 
+awesome!<br />
+ Sexy bras purchased she headed back home, and as she 
+walked her phone beeped to inform her she had a voicemail 
+message. Plucking the phone from her pocket she was surprised 
+to hear a message from Penny.<br />
+ “Good news – safely arrived on beach. Record store is doing 
+fine – just checked our sales figures and it’s never been so 
+profitable! It will be safe until I get back.<br />
+ Am alone as Jane has hot date and Laura’s on shift for the rest 
+of the week. I also checked my bank account and there’s almost 
+triple the cash in my account compared to yesterday! I was rich </p>
+<p>before but now I’m over halfway to being a fucking billionaire!<br />
+When I get back, just want to say I owe you! I owe you big time. 
+Tell me what you want me to buy and it is yours girl!”  Vickie just 
+smiled and pocketed her phone.<br />
+Her suspicions were confirmed – as long as you left the wishes 
+in the box they would repeat. And just as every day over the last<br />
+week she had gotten stronger, now every day coming her boobs 
+were growing!   </p>
+<p>*Day 8  </p>
+<p>Vickie woke up and rolled over, feeling her arm brush against 
+new flesh that hadn’t been there the night before!<br />
+ She sat up quickly and looked down at her naked breasts, proud 
+and jiggling on her torso. She cupped her hands over her 
+breasts, which were now large enough that they filled her hands 
+completely.<br />
+ A quick check of the bras hanging in her closet confirmed that 
+the wish had changed her surroundings as well as her body, with 
+each label proclaiming her new size of 34 DD.<br />
+ Standing naked before the mirror she admired how these once 
+small (or not so small) additions to her lithe body completely 
+changed her shape. 
+ They were round, and proud, and heavy! Their slight, but not 
+prominent sag, meant her nipples no longer pointed proudly 
+skywards but drooped towards the floor. 
+ She got dressed and felt that her boobs were finally filling out her 
+shirts properly. She spent the rest of the day with her head held 
+high, although it was a quiet day doing jobs around the house so 
+there was no-one to admire her new form. <br />
+ Her schedule was too busy to really explore what her new body 
+would be like, so she headed out of her apartment and to her 
+work. <br />
+She had arranged to meet Jane for lunch and it would be a 
+fantastic opportunity to see whether her other friend had noticed 
+her new developments. It would also be a chance to find out how 
+date night had gone.<br />
+ Laura was still the ‘largest’ of the group – but now only by just a 
+few cup sizes.<br />
+ Since Friday Vickie’s boobs had caught up with Jane and Penny 
+just leaving ‘Tit’ania herself to pass.<br />
+ That wouldn’t come for a while yet but the unthinkable was now 
+within sight…  </p>
+<p>When they arrived at the cafe Jane looked different.<br />
+ She was dressed more conservatively than normal. It took Vickie 
+a moment to realise what it was but as her friend sat down 
+opposite her in the cafe she realized just how many layers the 
+woman had on.<br />
+ Jane’s clothes were baggy, wider and drabber. She was 
+dressing to try and hider her bust. That was difficult when your 
+extra height naturally brought them up to most men’s eye level.<br />
+Vickie glanced around and realized that almost every man in the 
+cafe was staring at them. But this was different to normal. Intent 
+gazes flickering from herself to her friend, with her it was passive 
+but when they turned to Jane there was something predatory 
+about them.<br />
+ “You’re looking as healthy as ever,” was her friends opening 
+remarks. Vickie blushed but before she could thank her Jane 
+gave a worried glance around the room. “Sorry I can’t stay long.<br />
+I… I feel a little self-conscious here.”<br />
+ “You’ve never been self-conscious before,” said Vickie as she 
+sipped at her late. There was a long pause before at last she had 
+to ask; “So…. How did date night go?”<br />
+ “It was fine,” Jane said, shrugging. She had never looked so 
+awkward before in her life.  “It was good… I think… So… I really 
+liked it until he started groping my tits in the taxi home.”  Vickie 
+rolled her eyes but Jane glared at her to hold back the snide 
+remark.<br />
+ “This wasn’t normal. A quick feel in the taxi is one thing but he 
+wasn’t subtle at all. He practically tried to rip my top off. The Taxi 
+driver was watching, and we knew he was watching, but the dude 
+was shameless. I was up for it at first but it got out of control 
+and…. Well, the Taxi Driver started egging him on. It was like the 
+two of them were in on something and I was just stuck there, 
+waiting to get home, a fantastic date suddenly turned into 
+something awful in just a second. It wasn’t normal.”  </p>
+<p>“He sounds like a sicko.” Vickie shook her head, amazed. “I’m so 
+sorry, you were so excited. Did he apologise? Have you reported 
+him?”<br />
+ “No. I just got out the taxi and slammed the door on him. He was 
+really apologetic afterwards, I think he realized what he had 
+done, sent me a text message to say he didn’t know what had 
+come over him. I said fine but I never want to see him again. The 
+thing is…. He’s not the only one,” Jane grumbled. “I mean, I get 
+stared at, I always have. But this last week something has 
+changed. At first I just got more smiles, more nods, more 
+wandering eyes. I can cope with wandering eyes. I ‘like’ 
+wondering eyes. But over the last three days its changed.”  She 
+leant back in her chair and cast her eyes around the room. And 
+as she did Vickie realized just how wrong this situation had 
+become.<br />
+ Normally when you make eye contact with a leering man they 
+turn away and try to pretend that they hadn’t been sneaking a 
+look. Some of the more confident men would smile, maybe wink 
+or at least shrug and give an apologetic nod that they had been 
+caught out.<br />
+ Men were gonna look. 
+ With things that big and that prominent it was just going to 
+happen. But today?<br />
+ Every man who was leering (openly leering, not trying to hide it 
+at all) at Jane’s chest met her gaze head on. They didn’t even 
+acknowledge she had caught them. They just carried on with this 
+predatory half smile, half longing gaze pointed straight at her 
+friend.<br />
+ She was almost more a slab of meat on display than a woman. 
+ “I think it’s your bloody wishing box,” Jane said at last. “I didn’t 
+believe it at first but I wished men would be less afraid of me. 
+Well they are less afraid now and I don’t like it. It’s gone too far 
+the other way. I’ve felt it get worse every day since Thursday and<br />
+I want it to stop.”  </p>
+<p>“You wished men would be less afraid of you?” Vickie repeated, 
+shaking her head as she recalled. And as she’d intuited the 
+wishes were repeating – each and every day. Eight days had 
+now passed and each time Jane had become a little less 
+intimidating. 
+ Less… respected? 
+ Oops.<br />
+ “Its… Well, yes. Okay. I see the logic.”<br />
+“How do we stop this?” 
+ “You are meant to move the paper into the lower drawer when 
+your wish comes true,” Vickie said slowly. “I haven’t bothered 
+moving any of our wishes down – I left them where they were, 
+and I think the wishes have been repeating themselves. Every 
+night I’ve felt a little stronger than before.”<br />
+“You look like an athlete,” Jane smiled, flicking her hair back 
+from her face. “Well, except for your front. It’s like all the fat in 
+your body coalesced inside your bra.” 
+ “I need to move the wishes down,” Vickie nodded; “That will stop 
+this getting worse. But can we undo this? You’d need to make a 
+new wish.”<br />
+ “That makes sense,” said Jane hopefully, a hopeful smile briefly 
+appearing. “I can undo this!”<br />
+ “But be careful! Think carefully about it because you don’t want 
+to make the situation worse.”<br />
+ “I’ll think about it,” Jane replied thoughtfully. “I like the attention 
+when it’s respectful but the last two days have just been too 
+much. A checkout assistant called me ‘tall jugs’ when he was 
+scanning my groceries yesterday. He wasn’t ashamed at all 
+about it. If this is what ‘no fear’ means I’ve made a terrible 
+mistake.”<br />
+ “It’ll get better,” Vickie promised her. The tension settled 
+somewhat, although their audience had not gone away Jane 
+seemed content to have shared her anxiety.  </p>
+<p>They chatted for a few more minutes until it was nearly time for 
+them to head back to work but both agreed to meet after work for 
+Jane to put in a new wish.<br />
+ Her friend spent the afternoon locked in her office trying to find 
+the best wording for the new wish and come up with the perfect 
+compromise.<br />
+ Vickie spent the afternoon trying not to fantasise about how big 
+her boobs would be tomorrow. She sent a text asking Laura if 
+she was free for lunch – she just HAD to compare sizes. 
+ When she got home Vickie opened the drawer and removed all 
+but one of the previous wishes, the one about her boobs, and 
+slotted them in the lower drawer.<br />
+ Wishes fulfilled!<br />
+ Then Jane arrived with a new one ‘men will admire but also 
+respect me and my wishes’ and inserted that in the top. Hopefully 
+if that was allowed to repeat for a few days they would get some 
+semblance of normality.<br />
+Everyone could come out of this a winner!  </p>
+<p>*Day 9  </p>
+<p>Vickie examined her new oversized bras the next morning with a 
+smile on her face. 
+ She’d outgrown skimpy lingerie apparently and begun to move 
+towards solid, construction grade scaffolding. The straps were 
+wide brimmed, designed to spread the weight over her shoulders 
+evenly, and the cups wide and full to both lift and support. 
+ The magic had changed her entire wardrobe to fit the new 
+woman; still sporty but with the twist that every top had to fit her 
+new bust. 
+ Almost as a guide there were photos on the wall of her in 
+running clothes with the straps of three, separate sports bras 
+visible through her skimpy top. Certainly her drawers were full of 
+the things; the evidence indicating she went through them faster 
+than ever before. 
+ She tried one of the mammoth boulder holders on, did a few test 
+star jumps, and grinned her way through the pain of over-
+stretched skin as they flopped around wildly in front of her. 
+ From now on it looked like she’d be double, or even triple, 
+bagging it she ever wanted to move above a medium pace and 
+not wobble everywhere! 
+ At lunch the cafe was less busy than the previous day…<br />
+ Without Jane in the room it had a much calmer atmosphere – the 
+only tension or starring was the normal eye-magnets that both 
+Vickie and Laura sported on their chests.<br />
+ People couldn’t NOT stare – it would just be rude to let these two 
+wonders of nature pass without a glance!<br />
+ And somehow Laura had no idea that Vickie was still growing! 
+From the way the conversation was going it appeared her friend 
+thought they had been the ‘busty duo’ since college!  Vickie had 
+to hold back tears of joy thinking about what was going to 
+happen next!  </p>
+<p>Penny and Jane were both true believers in the Dream Chest 
+now, but busty Laura was still sceptical. She didn’t even 
+mention the dream chest until Vickie brought it up. 
+ “You do look a little healthier,” Laura said, frowning at her 
+friend but doubt still clear on her face. With squinting eyes and 
+a furrowed brow; “If you’ve been working out at the gym over 
+the last few months to play some kind of elaborate prank …” 
+ “No prank,” Vickie retorted, “Check your social media account 
+Laura; there’s photos of your trip to Ibiza last year that never 
+happened because you were ill.” 
+ “Hmmm….” Laura said with a furrowed brow. 
+ The girl had always had problems admitting when she was 
+wrong. This wouldn’t be any different. 
+ “Out of curiosity… I’ve been thinking about… Maybe… Wishing 
+for a different enhancement myself.”<br />
+ Her eyes flickered downwards at her burgeoning (but practically 
+flat compared to Laura’s) chest.<br />
+ “A boost?” Laura asked, “Why girl? You’ve got the dream 
+package; curves and muscles. Beneath this dress I’m just all flab 
+but you?”<br />
+ She hadn’t noticed. She hadn’t noticed that she’d gone from 
+nearly an ironing board to a double D in just four days.  So 
+that proved it; only people who saw you putting the wish in 
+would be aware of the changes. As far as the world was 
+concerned things had always been this way.<br />
+ “I just wandered what it was like to have KK boobs?” she said, “I 
+mean, this is an opportunity of a lifetime, and I’ve always admired 
+you.”<br />
+ “I’m a freak,” Laura laughed. 
+ It was a deep belly laugh and the two pendulums on her front 
+shuddered with amplified momentum. Vickie couldn’t help herself 
+but watch, wondering how long it would take for the monster 
+boobs to stop trembling. </p>
+<p>“Seriously? You don’t want these girl; you couldn’t handle them! 
+And I don’t know if I could be friends with someone bigger than 
+me. I always got on with you three because your ‘big enough’ to 
+know what I’m going through but not threaten my place as the 
+queen of tits.”<br />
+ “You’re proud of that title?”<br />
+“I’m fucking ‘Tit’ania,” Laura replied, sticking her tongue out at 
+her friend. “That fucking nickname didn’t happen by accident, I 
+knew these things would dominate my personality, so I forced a 
+title I wanted. It was difficult, growing up with these things, getting 
+re-fitted every six months, but once I had found some bras that 
+actually fitted, actually held my bust up where they should be, I 
+loved it. I love myself.”<br />
+ “You say we know what it’s like, but we don’t,” Vickie prodded. 
+“What’s it really like being off the deep end of the bra size 
+catalogue?”<br />
+ Laura sighed. “Well, I keep having to buy clothes too big and get 
+them altered – off the shelf they fit my bust but swamp my waist. 
+And I constantly have to fiddle with bra straps that are digging in, 
+or sometimes double up on bras just to hold me up and prevent 
+spillage. I have to exercise constantly and watch what I eat 
+because they swell painfully if I over-indulge. There’s boob sweat 
+in the summer which is awful… It’s a pain. But it’s all me; I love it. 
+Now push off and stop asking intimate questions. What’s come 
+over you girl?”<br />
+ “I’m just wondering about the wishing box,” Vickie said idly, “And 
+now our first wishes have come true what we could do with it.” 
+ “You’ve turned into a fucking athlete and I appear to be 
+impervious to disease,” Laura replied with a laugh; “And poor 
+Jane… That thing is dangerous Vickie – my advice would be to 
+take this as a win and walk away!” <br />
+ “Hmmm,” Vickie replied, grinning on the inside because she dare 
+not let ‘Tit’ania know the truth. “Perhaps your right.” 
+ The irony was just too delicious. </p>
+<p>They got up, gave each other a quick hug (both leaning 
+ridiculously far over to avoid boob smotherage) and then Laura 
+took her handbag with her to the bathroom. Men around the cafe 
+watched her go longingly.<br />
+ Just not quite as longingly as they had followed Jane yesterday!<br />
+Vickie left through the front doors, copping a quick feel of her 
+own chest as she went, wondering how many days it would take 
+for her to catch up with her old friend.  </p>
+<p>*Day 10  </p>
+<p>Vickie climbed out of bed eager for the day even though the sun 
+had yet to rise. 
+ The clock on the wall told her it was 5 AM – it seemed she only 
+needed a few hours’ sleep now. One boon that the dream chest 
+had granted her. 
+ The other boons stood proud on her chest, their bulk one of the 
+reasons she was on her feet so soon. All her life she had tossed 
+and turned in her sleep but now… Now if she turned to lie on her 
+front she couldn’t last long. 
+ Well, loosing the ability to sleep face down was a worthy 
+sacrifice for what she was gaining. 
+ She took stock of what the last week had brought. She had 
+become an endowed goddess; a woman in peak physical fitness 
+bragging 36E boobage. Despite the present weight on her 
+ribcage she felt light on her feet, her muscles toned and ready for 
+action.<br />
+ Her skin was perfect; most of her freckles had gone and the 
+ones that remained were smaller and lighter. Her hair was 
+glorious whether she showered or not.  She was fitter than she 
+had ever been in her life.<br />
+ Jane was now far less intimidating to men but hopefully with her 
+new wish she would also find some safety. 
+ Apparently, the fine line between ‘intimidatingly tall’ and ‘sex 
+prey’ was a thin one indeed but if they left this new wish repeat a 
+few times things should get better.<br />
+ Jane had reported that she was fine. Apparently, a flu was going 
+around the maternity ward but she hadn’t caught it. In fact, 
+according to her medical records, she hadn’t taken a day off sick 
+in her entire career.<br />
+ And Penny was still in Ibiza and had reported that her bank 
+account had finally settled at $80,432,000. She was a little miffed </p>
+<p>when Vickie told her she had removed the wish and that would 
+be it however 80 million was hardly a number to sniff at.<br />
+ Vickie stood wearing just a bra before her bedroom mirror and 
+began to stretch. She watched her new athlete’s body with a 
+critical eye as she went through a variety of poses, limbering 
+herself up for the day ahead. It was like watching a Greek 
+goddess at work; curves, muscles and tits!<br />
+ In just over a week their worlds had changed completely, and it 
+was AWESOME!<br />
+ But she wasn’t quite where she wanted to be yet. She’d leave 
+the Dream Chest a few more days before she declared her 
+wishes complete.  </p>
+<p>… To be continued in Act II  </p>
+<p>Also Available from Sobtac  </p>
+<p>The Twins  </p>
+<p>Gina's life is going through some changes. 
+Hopefully bigger breasts will just be the start of an 
+incredible journey.  </p>
+<ul>
+<li>contains bonus Epilogue <br />
+‘Perfect Bodies’  </li>
+</ul>
+<p>Further short stories and illustrated sequences available for 
+purchase through Deviantart or https://sobtac.e-junkie.com/: </p>
+<p>Status: Recruited </p>
+<p>Making Adjustments </p>
+<p>Two Pills </p>
+<p>In a secret location 
+deep underground a 
+Giantess slumbers, 
+observed by patient 
+eyes... </p>
+<p>Despite her misgivings 
+Nadine answered an 
+online advert to try out a 
+new experimental drug 
+designed to enhance 
+feminine beauty. </p>
+<p>35 page pdf 
+sequence. 
+Giantess. </p>
+<p>30 page pdf sequence. 
+Breast Expansion. 
+Penis Expansion. </p>
+<p>Strip naked and take 
+one pill each. Which 
+one will you have; red 
+or blue? 
+Choose wisely and 
+discover your fate. 
+Learning is all part of 
+the fun </p>
+<p>11 page pdf comic. 
+Breast Expansion. 
+Shrinking Woman. </p>
+</body>
+</html>

@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Harmless Wishes Between Friends</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>Author's Note: With the recent twenty-fifth anniversary of the EMCSA, I've started going 
+back to some of the stories that got me interested in MC in the first place. I found myself 
+frequenting some of MrGrey's stories from twenty years ago and got inspired to try my own 
+take on their fantastic style. This story will likely be very reminiscent of masterpieces like 
+Cynthia and the Stone and Mental Pills, but the resemblance is absolutely the sincerest form 
+of flattery. </p>
+<p>Standard disclaimer applies: this story contains graphic depictions of sex, so if it's illegal or 
+immoral for you to be reading this, stop now! All characters are over eighteen, all situations 
+are entirely fictional, and any resemblance to any real-life individuals or situations is entirely 
+coincidental. Copyright Fidget, 2021. All rights reserved. Enjoy!</p>
+<p>Harmless Wishes between Friends</p>
+<p>by Fidget</p>
+<p>"What's this amazing thing you wanted to show me? Also, why aren't you dressed yet?" Katie 
+asked as she burst through the front door of Blake's dorm room. The pair of twenty year-olds 
+had just started their junior year in college and had become somewhat close over the past 
+two years, though Katie still saw Blake as nothing more than a friend.</p>
+<p>"Katie, it's the craziest thing! I dreamed that I could make wishes about other people to 
+change them however I liked, but then when I woke up, I discovered I still could, like for real!" 
+Blake's eyes were wild with excitement, and he either hadn't noticed or didn't care that he was
+still wearing his pajama pants and undershirt.</p>
+<p>"You're so full of shit, Blake. You dragged me all the way over here at 9am for this?" Katie 
+crossed her arms in incredulity and gave him a bit of stink-eye.</p>
+<p>"No, it's true! Here, watch!" He grabbed her arm and pulled her over to the window. "I wish 
+that girl's hair would turn red!" he said, pointing at a cute coed sitting on a park bench 
+scrolling through her phone. To Katie's amazement, the girl's hair suddenly changed from dull 
+brownish-gray to bright red! She had her hair pulled up in a ponytail, so she didn't seem to 
+notice that her hair had somehow become a lot more attention-grabbing in the span of an 
+instant.</p>
+<p>"What on earth!? How did you do that? What's the trick?" Katie asked, her voice full of 
+astonishment, but even so she was certain that this was all a weird ruse that Blake had 
+orchestrated somehow.</p>
+<p>"It's not a trick! I already told you - when I woke up this morning, I could change people with 
+my wishes!" He could tell from the look on her face that she still didn't believe him. "Ok, you 
+pick someone and tell me how to change them."</p>
+<p>Katie leaned out of the window and chose a pale, somewhat out-of-shape guy running 
+shirtless down the street. "Fine! Give that guy a six pack!"</p>
+<p>"Ok, I wish that guy had a six pack!" Blake said, and then added, "and a tan!" for good 
+measure, and right before Katie's eyes the jogger suddenly had visible abs and a noticeably 
+darker skin tone. He must have noticed that something was amiss because he stopped briefly
+and looked down at his torso, surprised to see that his stomach was suddenly much trimmer 
+than usual, before chalking it up to gains from his first week of exercise and continuing on his 
+way.</p>
+<p>The reality of the situation was now undeniable to Katie: somehow, Blake was actually able to
+make wishes that could change people.</p>
+<p>"This is so cool!" Blake shouted. He danced around the room a bit as he pumped his fists in 
+excitement, not noticing as his antics caused his dick to flop out out of the front flap of his 
+pajama pants in full view of a horrified Katie, who was still dazed by the implications of what 
+she had just witnessed.</p>
+<p>"Uh, Blake, you're, uh, hanging a bit loose there," she said, giggling a bit in her 
+embarrassment at unexpectedly coming face to face with her platonic friend's flaccid member.</p>
+<p>"Oh, sorry," Blake said, starting to put himself back in his pants, but then he had a better idea.
+"Actually, I wish you felt perfectly comfortable seeing my dick." And Katie did. She instantly 
+relaxed, and her gaze popped back up to Blake's face, only casually glancing back down to 
+his exposed penis every few seconds. After all, it was just a natural part of her friend's body. 
+There was no reason that seeing it should make her uncomfortable.</p>
+<p>"What should I wish for next?" Blake asked, starting to get a bit turned on at just how easy it 
+had been to make Katie ok with having his dick out in front of her like this. It began to swell 
+just a little, sticking a bit further out into the open air as the implications of his new wishing 
+ability sank in. He'd always had a slight crush on Katie, but he knew she didn't feel the same 
+way, and until now he was happy respecting her wishes. Now that he could make her into 
+whatever he wanted, though, the temptation to take their relationship beyond platonic was 
+growing incredibly quickly.</p>
+<p>Katie casually glanced down at his slightly more prominent dick before continuing. "I dunno, 
+Blake, this is all kinda freaking me out. I don't know how I feel about you wishing that I was 
+comfortable seeing your dick like that. I mean, I am comfortable seeing it, of course, there's 
+no question about that, but knowing that you've made me feel that way is kind of off-putting."</p>
+<p>"Aw, that's unfortunate. I wish you wanted to hang around and let me change you with my 
+wishes."</p>
+<p>"Well of course I want that! But only because you made me want it, you jerk! Now hurry up 
+and wish for something already!" Even though Katie had been tempted to run out of the room 
+in panic just seconds before, she now couldn't deny the excitement she felt at the prospect of 
+staying put and offering herself up to be modified according to Blake's wishes. She knew her 
+new feelings weren't real - actually, come to think of it, she knew that they were real, beyond a
+shadow of a doubt - but her knowledge that this had been done to her without her consent did
+nothing to prevent her from feeling exactly as he had wished.</p>
+<p>"Uh, ok, I wish your hair was blonde!"</p>
+<p>As soon as his words had registered in her brain, the sandy brown curls Katie was used to 
+seeing framing her face were suddenly much more vibrant. She hadn't felt a thing. Katie knew
+that she should get out of there before Blake took his new power too far, but she really did 
+want to hang around and let him change her, just as he'd wished she would. And so she 
+stayed put, and Blake immediately took it too far.</p>
+<p>She could practically see his hormones getting the better of him, and then he blurted out, "Uh,
+now I wish that you loved looking at my dick." Well, of course she did, or she did now at least. 
+It was just so perfectly shaped, and now that she was actively staring at it, it began to twitch 
+and rise even further. Katie watched with rapt attention, loving the way it grew and thickened, 
+standing out more and more proudly from his pajamas as Blake's physical arousal clouded 
+his brain with even more thoughts of sex.</p>
+<p>"You love looking at my dick, don't you?"</p>
+<p>"Of course!" Katie responded automatically, feeling just how irrevocably true that statement 
+was. She knew it hadn't always been the case, and that as recently as a few minutes ago 
+seeing Blake's cock had made her incredibly uncomfortable, but now his dick was just so 
+appealing that she couldn't bring herself to look away. It wasn't even a sexual thing - or not 
+much of a sexual thing, at least - it was more like looking at art. Blake just had a nice dick, 
+and Katie couldn't deny that she loved looking at it.</p>
+<p>She was again struck by a realization that she should leave while she still could, saddled only 
+with an undeniable love of looking at Blake's thick, pulsing cock whenever she got the 
+chance. But it was so nice to just stand here and keep staring... Plus, she was still clearly 
+affected by his first wish for her, and couldn't wait to see what he wished for next.</p>
+<p>"Would you like to touch it?" Blake asked with a cocksure grin.</p>
+<p>"Yeah, you wish. I'm perfectly happy just looking at it, thanks," she responded disdainfully. 
+Men were such horndogs. All the while, her gaze was still entirely focused on his cock, which 
+had finally reached full mast, and was giving a small twitch every second or so. Her eyebrows
+raised in time with each movement, eyes full of unmistakable interest.</p>
+<p>"I do wish. I wish that the more you look at it, the more you'll want to touch it," he said, sitting 
+down on the edge of his bed and leaning back so that his erect phallus was pointing straight 
+up into the air from the hole in his pajamas.</p>
+<p>Well that wasn't fair at all, Katie thought. Blake had made her look at it in the first place, but 
+even now she was already starting to feel the slightest bit of an inclination to walk across the 
+room and maybe run just the tip of her finger along its length. For just a second, of course, 
+just to see how it felt. His cock was so nice to look at, after all, an appealing juxtaposition of 
+hardness and softness, powerful yet vulnerable, a twitching mast of Blake's masculinity, and 
+Katie couldn't help but continue to stare, even knowing what it would do to her after Blake's 
+most recent wish.</p>
+<p>Thirty seconds later Katie still hadn't looked away, and her desire to touch his cock had 
+continued to grow. Now she was imagining lovingly running her hands over it so that she 
+could watch it jerk and dance playfully at the stimulation. She found herself absent-mindedly 
+getting up and walking across the room to sit next to Blake on the bed, still gazing down into 
+his lap as her hands twitched with anticipation.</p>
+<p>"Here, I'll help you out. I wish having a dick in your hands felt perfectly natural to you."</p>
+<p>Katie wanted to stop him, to keep his words from making her touch his dick, but he had 
+already finished his sentence, and suddenly having a dick in her hand seemed like the most 
+natural thing in the world. She immediately dropped her arm into his lap and began gently 
+stroking his shaft, enjoying the feel of the soft, sensitive skin of his cock against her own soft 
+fingers. She loved how comfortable it felt to be sitting here with a good friend, casually 
+caressing his dick, and all the while her eyes continued to eagerly watch as his fascinating 
+phallus enjoyed her efforts.</p>
+<p>Even with his crush sitting here calmly giving him a handjob, however, Blake still wasn't 
+content. The heavenly feeling of Katie's delicate hand wrapped around his cock only 
+increased his need for sexual release, and he found himself seeking more intense stimulation 
+as a result.</p>
+<p>"I think you should suck it."</p>
+<p>She looked up at him in horror. "Blake, please, no! I don't like blowjobs!"</p>
+<p>"Katie, I wish you loved blowjobs."</p>
+<p>Sure enough, Katie suddenly found herself eyeing his cock with newfound hunger. It wasn't 
+even an "irresistible compulsion" or anything like that - she just knew all of a sudden that she 
+loved giving blowjobs, and that she'd obviously love giving Blake one too. Still, just because 
+she loved it didn't mean she had to do it. She didn't want to give him the satisfaction of 
+knowing just how much she wanted to suck his cock right now, and she also didn't want to 
+stop looking at it long enough to slide it into her mouth. All the while, of course, her hand 
+continued to gently caress his dick, and she didn't think a thing of it.</p>
+<p>"I don't care how much I love them - I'm not some slut who just goes around giving everyone 
+blowjobs!" Katie countered indignantly, though secretly she was already looking forward to 
+seeing how he'd change her next in response to her insolence.</p>
+<p>"Katie, I wish you were a natural cocksucker who thought blowjobs between friends were 
+perfectly normal."</p>
+<p>"I am a natural cocksucker!", Katie agreed matter-of-factly as she casually dropped to her 
+knees between Blake's legs, pulled his pajama pants down to his ankles, and eagerly slid his 
+dick into her mouth. She missed looking at it, but it just felt too natural to wrap her lips around 
+his thick cock to stop. Somehow she knew exactly what to do to give him the most pleasure, 
+and she cupped her free hand around his balls as she took him deep, wrapping his cockhead 
+in the slick skin of her soft palate and the back of her throat. She recalled how just seconds </p>
+<p>ago she hadn't wanted to blow him at all, but after his wish she had realized that sucking cock
+was clearly her calling, and Blake was her friend, so why deny him?</p>
+<p>Blake watched her work, and Katie glanced up and gave him a wink as she began to swirl her
+tongue along his frenulum. He was clearly enjoying the sensation and the view, but was 
+struck with a sudden idea of how he could improve it.</p>
+<p>"I wish it was second nature for you to pull up your shirt and bra when blowing someone."</p>
+<p>Katie was so focused on his cock that she hadn't heard him properly, but even so she 
+immediately used her free hand to pull up her stretchy top and bra so that her petite A-cups 
+could be out in the open where they belonged.</p>
+<p>"What are you doing with your shirt?" Blake asked, feigning ignorance to fully enjoy her 
+reaction to this newest development.</p>
+<p>"Oh, sorry, it just feels more comfortable for some reason to get my breasts out when I'm 
+giving a blowjob. Sorry if it's awkward, but try not to look. I know we're friends and all, but I 
+don't really feel comfortable getting too sexual with you."</p>
+<p>"No problem, I understand completely. I just wish you enjoyed having your tits looked at."</p>
+<p>"Oh, I absolutely do enjoy it! I just don't want you to get the wrong idea," Katie responded. 
+She was still a bit self-conscious about having her top pulled up, but with how right it felt to 
+have her breasts on display, combined with how much she now enjoyed seeing people staring
+at her tits, she was also secretly hoping that Blake would steal a glance or two as she 
+continued pumping her soft lips up and down his slick shaft.</p>
+<p>Blake did steal a glance or two, of course, and Katie felt a small thrill whenever she'd look up 
+from her blowjob to see him contorting to try to catch a glimpse of her naked torso, though 
+she continued to act like she hadn't noticed. With his legs and her head and arms in the way, 
+however, there really wasn't much for Blake to see, and, since her chest didn't protrude far 
+enough to hold her shirt and bra up consistently, Katie had to frequently pause her blowjob to 
+expose herself again. The solution to these problems was obvious.</p>
+<p>"I wish you had huge tits!"</p>
+<p>Katie looked up at Blake in offended shock as her torso suddenly threatened to pitch forward 
+with the weight of the enormous new globes now firmly attached to her otherwise slim figure.</p>
+<p>"What the fuck? Why did you do that? I didn't want bigger breasts!" As much as she enjoyed 
+sucking Blake's dick and looked forward to seeing him change her further, Katie knew that he 
+had crossed a line, and angrily popped her lips off his cock in retaliation. As natural as it was 
+for her to give her friends blowjobs, Katie still knew that you don't suck a guy's cock when 
+you're mad at him.</p>
+<p>Now that his dick was back in her line of sight, however, she found herself helplessly gazing 
+at it once more, and, after a few seconds of basking in its phallic magnificence, she also felt </p>
+<p>her hands instinctively stealing up to gently stroke and caress it, continuing to stare even as 
+she berated Blake for giving her giant tits straight out of a horny teenager's wet dream.</p>
+<p>"I can't believe you would do something like this to me! I thought we were friends!"</p>
+<p>"We are friends!" Blake responded, taking advantage of the fact that her attention was 
+focused on his dick to admire her new boobs. He loved the way they hung heavily from her 
+naked chest, large, round, and obscene. Meanwhile, Katie watched with glee as Blake's dick 
+throbbed with increased need, even though she knew that his growing arousal was due to the
+pornstar tits he had forced her to have. "I didn't mean to offend you!" Blake continued. "I just 
+wish you liked them!"</p>
+<p>"I do like them! It's just that you should ask permission before doing something so... sexual to 
+me!" Katie complained. But, with how much she wanted to get his dick back in her mouth 
+where it belonged, his half-apology was enough to appease her for the moment, and she 
+smiled with satisfaction as she calmly slid her tongue back along his shaft, reveling in her 
+newfound dick sucking talent once again. She knew that it too was the result of Blake's 
+wishes, of course, but it just felt so comfortable having a nice, thick cock in her mouth to 
+stimulate and suck on. And, despite her irritation at having been given new breasts without 
+her permission, she still felt the need to give them a happy little shake for Blake's benefit, 
+enjoying the sensation of their surprising weight swinging back and forth as they dangled off 
+her body. She really couldn't help but like them. They were just so large and - she had to 
+admit - sexy.</p>
+<p>Still, there was no way her new knockers were going back into her tiny clothes. "Blake, my 
+shirt won't fit now! As much as I like my new tits, you should probably put them back," Katie 
+said more than a little regretfully.</p>
+<p>"That's no problem. I wish all of your clothes fit your body perfectly, clinging tightly to your 
+figure and showing off your curves."</p>
+<p>Katie shifted uncomfortably as her pants suddenly felt a lot more snug against her hips and 
+ass. This wasn't quite what she had meant.</p>
+<p>"I dunno Blake, I feel like this makes me look like a slut or something."</p>
+<p>"That's because I wish you were a slut."</p>
+<p>There was nothing she could do to stop it; Katie was suddenly flooded with a powerful desire 
+to offer her body to the nearest willing sexual partner. She had always liked sex, but it had 
+never been central to her personality like it was now, and she had never had such a strong 
+urge to seek it out before. Still, thanks to Blake's wish, she knew beyond a shadow of a doubt 
+that she was now well and truly a slut, and couldn't wait to use her sexy body and big tits for 
+what they were so obviously designed for. Katie went back to work on his erection with a 
+vengeance, and her attitude about what she was doing down there suddenly felt much more 
+sexual than it had a moment before.</p>
+<p>Even so, as she continued to savor the sensation of blowing her friend, she had a moment of 
+self-reflection and briefly pulled off Blake's dick to talk about what had just happened. She 
+continued to stare at his cock in the meantime, of course, and that meant her hands were 
+soon lovingly fondling and stroking his erect member as it stood rigid between his legs, loving 
+the attention.</p>
+<p>"So, Blake, I certainly can't deny that I'm a slut now, and it's a huge turn-on to see my slutty 
+body making you all hard like this," Katie said before taking a brief break to stick one of her 
+hands into her pants to play with herself, "and I can't wait to make you cum with whichever of 
+my holes you like. But I'm still aware that you made me like this, and that my old self would 
+hate what you've done to me."</p>
+<p>"Does it matter?"</p>
+<p>She rubbed her tongue against the underside of his shaft thoughtfully. "I guess not. I know 
+that this is who I am now, and it's not like I can help it. While part of me thinks I should be 
+furious with you, the other part thinks that part is a prude, and that I should embrace the real 
+me, who clearly no longer cares about outdated and repressive views about sex." Katie 
+flashed her familiar, beautiful smile up at him before going back to work on his cock, making 
+sure to thrust her large chest out as she did so. She loved her new tits, and she loved when 
+Blake looked at them, so she wanted her sex pillows to stand out as proud and prominent as 
+possible to fuel his arousal. And she knew it was working too - she could feel his cock getting 
+harder in her mouth as its twitching became more urgent, and she couldn't wait for him to fill 
+her slutty body with his cum.</p>
+<p>Blake, however, was still mulling over what she had said, and decided to make her an offer. 
+"Would you like me to make being a slut seem more natural to you?"</p>
+<p>"No no, it's fine. I'm aware of all of those changes too, like how you made touching your dick 
+seem natural to me and all. It's just that it feels so second nature when I do it that it doesn't 
+really occur to me not to, and I think I'd like how I used to feel about things to be a bit more 
+obvious to me. Don't get me wrong, I'm certainly not complaining," she said as she jiggled one
+of her double-Ds and winked at him, "but I don't love being a slut. I clearly am a slut now, 
+thanks to your wish - that much is undeniable with how willing I am to fuck pretty much 
+anyone who asks - but I'd like to still feel a bit of my old self's hatred for it."</p>
+<p>"Well too bad. I wish you loved being a slut anyway."</p>
+<p>The change was immediate. Katie's wanton behavior before had been enthusiastic, but now 
+she was positively exuberant. "Oh god, I was wrong, this is so much better!" she moaned as 
+she now completely savored every sensation of having that cock filling her mouth, sending 
+sparks of pleasurable arousal down to her soaked, needy pussy. "Are you sure you don't want
+to fuck instead?" she cajoled, wiggling her butt seductively behind her. "Think about how good
+it would feel to slide this throbbing fuckstick into the hole it was made for, all nice and tight, 
+perfectly designed to make you cum."</p>
+<p>Katie's words and her new, even sluttier demeanor were already having a renewed effect on 
+Blake's cock though, which, when combined with the soft, slick stimulations of her talented 
+mouth, began to spark an instinctive urgency in Blake's pelvis that made him want to stay 
+right where he was, in spite of the tempting offer to try out his friend's tight, slutty pussy.</p>
+<p>"Nah, I think I'll just let you finish me off here."</p>
+<p>"Suit yourself," she said, eager to do just that as she got back to doing what she did best.</p>
+<p>"Oh, and also, I wish your name was Chastity," Blake blurted out unexpectedly, which made 
+Chastity think about how weird it was that her name hadn't always been Chastity. She knew 
+perfectly well that her name had been Katie up to a second before, of course, but she now 
+knew with equal certainty that, regardless of what it used to be, Chastity was undoubtedly her 
+name now.</p>
+<p>"Why on earth would you change my name?" Chastity asked, confused.</p>
+<p>"I dunno, I just think it fits you better, and I wish you did too."</p>
+<p>She did, of course. Katie had been a perfectly fine name, but now it seemed like it had never 
+been quite right for her, while Chastity on the other hand somehow fit her like a glove.</p>
+<p>"Not to mention," Blake continued, "I could have changed it to something like Sparkles or 
+Candy. You should be thanking me!"</p>
+<p>"Oh, I'm not complaining," Chastity protested once again. "I think it suits me perfectly, of 
+course, and even with how slutty you've made me, I still don't think I'm quite ready for a name 
+like that just yet." She giggled at the thought, and at how ridiculous it would have been for 
+Blake to have made her think her name was something like Candy.</p>
+<p>Perfectly comfortable with her changes once more, Chastity dove back onto his dick, and, 
+now that he'd decided he was ready to cum, the coaxing of her soft mouth and talented 
+tongue had him on the edge in less than a minute.</p>
+<p>"Where do you want it?" he grunted, knowing that his load was coming either way as he felt 
+his shaft tightening with final, irresistible pleasure.</p>
+<p>"What kind of natural cocksucker would I be if I didn't want to swallow?" she asked with a 
+knowing smirk before she casually popped his dick back into her mouth, sucked him far 
+beyond the point of no return, and enjoyed feeling his body stiffen in anticipation.</p>
+<p>Once she was certain she'd triggered his reflex, she pulled her open lips slightly off his cock 
+to receive his load as she continued jacking his shaft, and relished her amazing view of his 
+perfect dick spasming in orgasm. It spurted his tasty jizz into her open mouth for a few 
+seconds before his climax wound down, and then, like a proper slut, she seductively showed 
+Blake his thick cum on her tongue before she sucked it down her throat.</p>
+<p>"Holy shit, that was amazing," Blake mumbled as he collapsed back onto the bed, utterly 
+spent.</p>
+<p>"I know!" Chastity responded enthusiastically, standing back up and sinking down onto the 
+bed beside him once more, eyes still locked onto his dick in fascination as it majestically went 
+back to rest after its hard work. "God I love being a slut!"</p>
+<p>"I'm glad, Chastity, but I'm even more glad to have you as a friend, and not just because 
+you're super hot." Blake confessed, feeling more than a little guilty about what he'd done to 
+her now that he'd fulfilled his urge to cum.</p>
+<p>"Yeah, I'm glad to have you as a friend too, you jerk, though I somehow think that if you ever 
+turned me back, I'd probably kill you. And if I didn't, I definitely wouldn't ever talk to you 
+again."</p>
+<p>"Well we'll just have to make sure that if that ever happens, you won't remember enough to be
+mad at me."</p>
+<p>"I can remember everything so far though," Chastity insisted.</p>
+<p>"Yeah, but stuff like that's easy to fix. If I said something like, 'I wish you had always been a 
+slut', it would change your past too, and you'd have no idea."</p>
+<p>He saw her expression change slightly even as he finished his sentence and instantly 
+regretted his phrasing. He'd meant to just give an example, but he knew the wish had still 
+taken effect anyway, and as Chastity continued to ogle and caress Blake's deflating dick, she 
+knew, beyond a shadow of a doubt, that she had always been a needy cocksucking slut, and 
+she knew that she had loved every second of it.</p>
+<p>Author’s Note: Thanks for reading! If you have any feedback, comments, or questions, I'd 
+love to hear from you at fidget1@protonmail.com. If you find yourself enjoying my stories, 
+please consider supporting my work on Patreon, at www.patreon.com/fidget1. Patrons get a
+full two months of early access to my stories, input into which stories I write, and some other 
+fun perks. Every little bit helps, and your support is what enables me to keep doing what I 
+love!</p>
+</body>
+</html>

@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Valentine's Gift</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>Valentine's Gift</p>
+<p>By Max</p>
+<p>"Will you return early my love?" said Rebecca kissing the lips of her husband on his way out.</p>
+<p>"Of course I will do. Today is our first Valentine's day as a married couple, so I wouldn't miss it. I </p>
+<p>have a reservation in that fancy restaurant you wanted to go" said Steve rubbing gently </p>
+<p>Rebecca's chin. The smile on her lips and bright in her eyes told him she liked his surprise.</p>
+<p>"You are so romantic... but don't worry I have a surprise for you at night too. I promise it will </p>
+<p>shock you" Rebecca moved her hands in front of him to give her news a touch of mysticism.</p>
+<p>"I will be looking forward for it then" he said suddenly placing his arm behind Rebecca's back and </p>
+<p>pulling her toward him to share another kiss. "Until the night my love" he said giving her another </p>
+<p>small kiss.</p>
+<p>"Until the night my love" replied Rebecca returning the small kiss before Steve left their </p>
+<p>apartment. </p>
+<p>Once the door was closed, Rebecca rushed toward their spare room. There, she had hidden a </p>
+<p>small box which contents took her a month to obtain. She pulled out the three objects inside the </p>
+<p>box and dug them deep into her purse. "If this works, this will be a Valentine either of us will </p>
+<p>forget" Rebecca said imagining Steve's reaction when he sees the gift she was preparing for him.</p>
+<p>In her way to the office, Rebecca replayed the steps of her plan. The mere idea of such boldly </p>
+<p>strategy was something non common on her, but the words of her mysterious benefactor </p>
+<p>resounded put a grin on her face. "There is nothing to lose and a lot to win"</p>
+<p>Arriving at her office removed her grin as she had to face at her tyrannical boss. "You are so late. </p>
+<p>The presentation is in a few minutes and I haven't reviewed your notes about it. There will be a </p>
+<p>lot of big investors there and we need their money".</p>
+<p>The only thing Rebecca hated about her work was her boss. She was known for being a brutal </p>
+<p>shark when it was related to business. Unfortunately for Rebecca, that attitude was applied to </p>
+<p>how she worked. Rebecca lost count at how many people her boss has humiliated, demanded </p>
+<p>and even raped according to some sources to obtain what she wanted. Now, she was her slave </p>
+<p>doing all the work while her boss took all the credit for her.</p>
+<p>'Well, it's time to take something back from all the work I do here' thought Rebecca as she stood </p>
+<p>up and walked toward the bathroom carrying her purse.</p>
+<p>"Where are you going? I need you in the conference room. The coffee isn't going to be served </p>
+<p>by itself" her boss said quite arrogant.</p>
+<p>"Of course not. I was going to watch my hands. I will be there" said Rebecca in submissive tone.</p>
+<p>"Very well. Now hurry" her boss said clapping her hands rushing Rebecca into the restroom.</p>
+<p>"Bitch! I'm not your dog" said Rebecca placing her purse over the sink. "Now, it's time to show </p>
+<p>you who is holding the leash here" Rebecca added as she began to undone her blouse. With her </p>
+<p>blouse removed, Rebecca observed the small vial hanging over her breasts as it was hold by a </p>
+<p>gold chain. "And you are the one that will help me do that" she said lifting the vial to her lips to </p>
+<p>kiss it.</p>
+<p>Taking a deep breath, Rebecca looked into her purse and then proceeded to take out a large bra. </p>
+<p>A bra she stole from her boss. "You think because you have large breasts you can use them to </p>
+<p>intimidate people? Do you think you have the right to bully people around as you please? Well, </p>
+<p>let see how you feel to have your power removed from you" said Rebecca placing the large bra </p>
+<p>into the sink. Then, she unhooked her small bra and placed it over the large one of her boss.</p>
+<p>"Time for you to do your magic" said Rebecca as she poured one of the three doses the vial had </p>
+<p>over the bras. Rebecca watched in awe as the two bras began to merge. When she received the </p>
+<p>vial, she didn't receive a demonstration of how it works; only she was instructed in how it will be. </p>
+<p>"Amazing. It's happening just as promised" gasped Rebecca as her bra was absorbing the one of </p>
+<p>her boss. Its cups were expanding and even its constitution was changing assimilating the style </p>
+<p>and materials of the other. When the fusion was completed, she picked nervously her enhanced </p>
+<p>bra.</p>
+<p>"This is so exciting" Rebecca said grabbing the amalgamated bra. Resisting the urge to try it on, </p>
+<p>she decided the label of it. "Oh my... even the two sizes were combined. I can't wait to see how </p>
+<p>you will look as flat as a board" she chuckle thinking on her boss as she put the large bra on her. </p>
+<p>The new bra wrapped around her torso perfectly as her previous one, but the visible difference </p>
+<p>was the big empty cups that hang lose over her chest. "Like if I need to feel they were even </p>
+<p>smaller" Rebecca sighted at the poor sight reflected in the mirror in front of her. "But don't </p>
+<p>worry Rebecca, you will be soon filling this bra and Steve will received what he deserves" she </p>
+<p>smiled.</p>
+<p>Closing her blouse, Rebecca walked quickly into the conference room where her boss was </p>
+<p>waiting her impatiently. "Are you having your period or something? Get the coffee running that </p>
+<p>people is waiting" her boss yelled loud enough that everyone in the room could hear. Rebecca </p>
+<p>simply wanted to be swallowed by the ground and disappear.</p>
+<p>The embarrassment that was burning her cheeks and the hot coffee she was serving avoid she </p>
+<p>noticed the warm feeling concentrating on her breasts. As she was calming down, the feeling </p>
+<p>became noticeable for her. 'It's working' she cheered inside her mind without uncaring her </p>
+<p>attention to the clients in the meeting. All of them had sympathy smiles for her after the mean </p>
+<p>words of her boss and she was glad that they weren't mean like her.</p>
+<p>Serving the coffee helped Rebecca to notice something about the magic that was working </p>
+<p>between her boss and herself. The closer she got to her, the more intense the heat on her </p>
+<p>breasts became and the more distance she put between them, the lesser the heat felt. It didn't </p>
+<p>take her long to figure out the closest she is to her target; the faster the transference seemed to </p>
+<p>be.</p>
+<p>As she was finishing serving coffee, Rebecca was more than sure that her breasts had gotten </p>
+<p>bigger. The increasing number of men's stares that were slowly being drawn toward her chest </p>
+<p>was enough prove of that. Their eyes seemed to be more focused on her swelling bust line </p>
+<p>stretching quite erotically her small blouse that in the presentation. Not that she mind at all.</p>
+<p>After making such discovery, curiosity took the best of her and Rebecca and stole a glance to her </p>
+<p>boss's chest. Certainly her boss had been prepared for the meeting as she was using a business </p>
+<p>suit with a low cut to emphasize her prominent cleavage, and while it displayed quite lusty sight </p>
+<p>when Rebecca arrived at work, now, the suit wasn't as tight or stretched over her breasts as she </p>
+<p>remembered. 'It's only a matter of time before all the exquisite breast flesh will be mine'.</p>
+<p>Knowing that her boss could realize soon where the attention of the clients was redirected, </p>
+<p>Rebecca decided to sit next to her. That way, the man could pretend seeing the presentation </p>
+<p>while in reality they were observing Rebecca.</p>
+<p>Now that Rebecca was so close to her boss, the transference intensified to the point in which </p>
+<p>Rebecca had to bit her lip to hold the moans of pleasure the warm on her growing breasts was </p>
+<p>producing on her. She was glad that the magic working on her was also affecting the people </p>
+<p>witnessing it so she was the only one aware of what was truly going on, while the rest accept it.</p>
+<p>Rebecca estimated that her boss could have lost around two full cups as she could see the space </p>
+<p>between the bra and breasts of her boss; two sizes that were giving at Rebecca the profile she </p>
+<p>had always wanted to have. Feeling how constrictive her blouse was becoming around her bust </p>
+<p>was one of the most arousing moments Rebecca had experienced in her life. </p>
+<p>By the time Rebecca and her boss were reaching equal sizes, something strange began to </p>
+<p>happen. Her boss, for the first time in her life, began to show signs of anxiety. Small signs of </p>
+<p>being nervous, like shaking hands and having small problems when talking began to be more </p>
+<p>noticeable for Rebecca. 'Could it be possible to be related to the transference?' wondered </p>
+<p>Rebecca as the answer became quite clear when she caught what her hands were doing.</p>
+<p>Without even thinking about it, Rebecca had already undone the top buttons of her blouse. Such </p>
+<p>maneuver wasn't actually needed as she was confident her blouse could have handled the load </p>
+<p>she was placing on it, but somehow she found herself already wanting to show off her </p>
+<p>expanding breasts. The nice valley of female cleavage exposed drawn the stares of the people in </p>
+<p>the room like mops to a flame. Rebecca grinned as she felt something inside her she hadn't felt </p>
+<p>in quite a long time. Confidence and power. Two attributes that her boss was losing along with </p>
+<p>her breasts.</p>
+<p>With more than half of her boss's breast size was gone, the effect of it was perceptible in her </p>
+<p>speech. Rebecca found amusing how her boss began to confuse words and got quite nervous to </p>
+<p>be in front of people. They didn't seem to be as mesmerized by her as they were when the </p>
+<p>meeting started. Feeling their attention focused on her, Rebecca made a boldly move.</p>
+<p>Stepping up, Rebecca address to 'her' audience. "I think we have made an enormous progress </p>
+<p>so far, so what about if we take a small break of 10 minutes" she said being sure to drag the word </p>
+<p>enormous as she thrust forward her magnificent breasts. All men just nodded as she had let </p>
+<p>them speechless with her sensual display. "Very good then. We will back in short" said Rebecca </p>
+<p>guiding at her boss out of the room.</p>
+<p>Once outside the room, the boss broke in a nervous attack. "I don't know what is going on with </p>
+<p>me. Why I'm so nervous and insecure" said the boss as she began to walk from one side of her </p>
+<p>office to the other.</p>
+<p>"Maybe you just need to relax. What do you say if I finish the presentation? I know everything </p>
+<p>about it so it won't be a problem" said Rebecca with a confidence that surprised her.</p>
+<p>"You are right. You are perfect for it. Take care of the presentation. I better go home" said the </p>
+<p>boss feeling quite anxious.</p>
+<p>"Before you go, there is something I need you tell you" Rebecca said passing her arm over her </p>
+<p>boss shoulder holding her.</p>
+<p>"What is it?" asked Carol.</p>
+<p>"Thanks Carol." said Rebecca referring to her boss by her name for the first time since she began </p>
+<p>working for her.</p>
+<p>"You deserve it. You don't need to thank me" said Carol finding herself being quite honest.</p>
+<p>"Oh but I do..." grinned Rebecca as she watched how even Carol's breast buds were melting on </p>
+<p>her chest. "...You don't know how much this means for me" Rebecca said releasing Carol after </p>
+<p>being sure there was nothing left for her to take.</p>
+<p>"OK. I just feel you have taken a huge burden from my chest" said Carol closing the door in her </p>
+<p>way out.</p>
+<p>Rebecca couldn't avoid laughing out loud at the irony of Carol's words.</p>
+<p>Rebecca seemed to glow charisma and intelligence as she continued the presentation. She felt </p>
+<p>incredible good and confident as all people in the room were concentrated on her, following </p>
+<p>every word she pronounced as well as every bounce her new breasts gave with each step.</p>
+<p>Once the presentation was over, the clients were quite impress by Rebecca's knowledge and </p>
+<p>they agreed she will be the one leading the project making her take over Carol's position. </p>
+<p>Rebecca's felt at the verge of tears as she was finally recognized and given the credit she </p>
+<p>deserved for her work.</p>
+<p>After being sure that she was alone inside the restroom, Rebecca closed the door and began to </p>
+<p>spin all over the place. "I got it!!! I finally got it!!!" she cried in happiness. "Thank you so much </p>
+<p>girls" she added cupping her breasts. "Without you, Carol won't eclipsed me again"</p>
+<p>Then, as vengeance thoughts began to flow in her mind, Rebecca shook them off recalling the </p>
+<p>nature of the potion. "No. Doing something to Carol will only make me the same bully she was </p>
+<p>and I don't want that. Now that she is as flat as a board, she won't be a menace to people. I </p>
+<p>should be an example for her now that she works under my guide" she said without holding a </p>
+<p>brief grin on her lips. "I won't do anything to make her feel insecure or humiliate it, but nothing </p>
+<p>says I can't enjoy it in secret".</p>
+<p>Once Rebecca resolved that she will help Carol being a good woman, her mind moved to other </p>
+<p>important manners. Looking down to her chest, Rebecca felt her breath being taken away by the </p>
+<p>sight revealed by her open blouse. "No way!!" she said as her hands move at inhuman speed </p>
+<p>releasing the remaining buttons of her blouse. She had to hold her urges to avoid tearing the </p>
+<p>blouse apart. "Astounding!" were her words when she observed her new breasts filling her bra.</p>
+<p>Rebecca took her time to enjoy the weight on her chest as well as the marvelous orbs that were </p>
+<p>her breasts. "Now, it's time to see my new babies" Rebecca squealed excited as she unhooked </p>
+<p>her bra and softly peeled the cups from her bare skin. "No wonder why Carol felt so confident. I </p>
+<p>will feel the same after seeing this reflection every morning" gasped Rebecca as her senses were </p>
+<p>trying to assimilate that the empowering figure in front of her was actually herself. "I seem to </p>
+<p>radiate power. Pure lust power" Rebecca smiled placing her hands on her hips to thrust her chest </p>
+<p>out.</p>
+<p>"Certainly Carol's fullness has become part of me along with her size" Rebecca said seeing that </p>
+<p>while her breasts sagged due the weight, they didn't seem flabby at all giving her a nice profile </p>
+<p>when they were held by her bra. "But large breasts look even better if they are perky. Let's </p>
+<p>hope Mrs. Rosebud can help me with that issue".</p>
+<p>In order to continue with her plan, Rebecca pulled out a silky bra from her purse. "Incredible!" </p>
+<p>gasped Rebecca remembering how big the silky bra felt when she obtained it. Such perception </p>
+<p>was impossible to keep after seeing how its large cups were completely engulfed by her new </p>
+<p>bra. "I guess there is no argument about who has the bigger bust" smiled Rebecca cupping her </p>
+<p>bare breasts and seeing how much distance she had to put between her fingers to encase her </p>
+<p>orbs.</p>
+<p>After placing the silky bra on the sink with her own on top of it, Rebecca returned her hands </p>
+<p>toward her breasts. Parting them aside, Rebecca pulled out the magical vial that was engulfed by </p>
+<p>her flesh expansion. "You have worked great so far my little friend. Not only you gave me Carol's </p>
+<p>size on top of my own as well as her thickness, but you let me keep the tight shape of my breasts </p>
+<p>instead of adopting the separated one of Carol. Now, I only wish if you can repeat the same </p>
+<p>favor and give me, besides Mrs. Rosebud's size, the great perkiness she has despite her age" </p>
+<p>she said before purring the second dose the vial kept inside. Rebecca smiled as fusion process </p>
+<p>started.</p>
+<p>While Carol's bra had been designed to support heavy puppies, Mrs. Rosebud was designed to </p>
+<p>be light and barely perceptible. Attributes only women with firm breasts and lot of money could </p>
+<p>afford to consider at the moment to order custom-made bras.</p>
+<p>The quite expensive silky bra wasn't match for the contents of the vial and soon was forced to </p>
+<p>release its qualities to Rebecca's bra improving it once more. The cups swelled in size once more </p>
+<p>leading Rebecca to letters of alphabet not many women are able to print on their bras. Then, the </p>
+<p>garments began to dissolve as the material was changing into the exquisite silk Mrs. Rosebud </p>
+<p>had chosen for her underwear; an expensive choice that Rebecca was looking forward to enjoy.</p>
+<p>When the process was completed, the resulting bra was quite impressive. Rebecca held it in </p>
+<p>front of her becoming perplexed by its size. "Once our breasts are combined like our bras, I will </p>
+<p>be so big that I will have to refer to my babies as tits" she laughed. "What do you think of that </p>
+<p>ah? You never thought to get big enough to be called tits right?" she said looking at her breasts. </p>
+<p>The time for Mrs. Rosebud arrival was getting closer, so there wasn't much time to lose. After </p>
+<p>hooking up her twice expanded bra, Rebecca closed her blouse and admired the remarkable </p>
+<p>curve of her new breasts gave to her silhouette. "From now on, you two will only get bigger and </p>
+<p>better" Rebecca said walking out of the bathroom.</p>
+<p>Back into her office, her new acquired duties kept her quite busy until she felt a warm feeling on </p>
+<p>her breasts that was getting warmer and warmer. "I think Mrs. Rosebud is coming this way" said </p>
+<p>Rebecca preparing to receive at her new donor.</p>
+<p>"Good morning. Miss Hills is expecting me" said Mrs. Rosebud as she made her way into Carol's </p>
+<p>office without even sparing a look to Rebecca.</p>
+<p>"I'm sorry Mrs. Rosebud, but Carol isn't here. I'm in charge" said Rebecca standing in middle of </p>
+<p>her path. Seeing Mrs. Rosebud surprise's face when she noticed the bounce and size of her new </p>
+<p>breasts was priceless. "Where you always that busty?" gasped Mrs. Rosebud before the magic </p>
+<p>involved in Rebecca's transformation affected her. "Of course you were. I hate when age play </p>
+<p>this tricks on me" she apologized.</p>
+<p>"It's actually my fault. I just have a massive growth spurt recently" smiled Rebecca.</p>
+<p>"Don't say nonsenses girl. Breasts can't grow at your age" said Mrs. Rosebud annoyed.</p>
+<p>"I will agree it isn't natural, but they are still developing" Rebecca grinned as she could feel her </p>
+<p>breasts responding to Mrs. Rosebud close proximity. "In fact, they are growing as we speak" she </p>
+<p>moaned involuntarily as the transfer was happening even faster than the one with Carol.</p>
+<p>"What a cheap demonstration. If Miss Hills isn't here, I don't have to remain here any longer" </p>
+<p>said Mrs. Rosebud turning around to leave the office.</p>
+<p>"Oh crap!" Rebecca sighed as she hasn't foreseen such outcome. Without Carol, Mrs. Rosebud </p>
+<p>didn't have any reason to stay and if she didn't stay, Rebecca won't be able to get those breasts.</p>
+<p>As the doors of the elevator were closing, a hand stopped the doors. "Do you have anything </p>
+<p>more to say?" said quite arrogant Mrs. Rosebud noticing Rebecca was the one holding the </p>
+<p>elevator.</p>
+<p>Rebecca didn't reply anything as she was trying to catch her breath. She got quite worried as the </p>
+<p>warm on her breasts was dissipating, so she had to rush to keep Mrs. Rosebud close by. She was </p>
+<p>relieved to feel the warm on her breasts began to increase once more. "I just want to apologize </p>
+<p>for my poor behavior. Can I invite you a coffee? We have a nice coffee shop in the first floor".</p>
+<p>"Very well. I can accept that" said Mrs. Rosebud stepping back allowing Rebecca to step in. </p>
+<p>"Hope you have time for a small chat, a woman my age can get quite talking" she said.</p>
+<p>"It's true that Miss Hill's departure left a huge burden over me, but also freed up some room in </p>
+<p>my agenda. A space I won't mind filling it up with your company" grinned Rebecca as the doors </p>
+<p>closed.</p>
+<p>Due the time of day, the coffee shop was completely empty. Hearing Mrs. Rosebud talked about </p>
+<p>her personal life remained Rebecca why she hated her so much.  The best word to described </p>
+<p>Mrs. Rosebud was a classic gold digger. She had been married with more men that fingers she </p>
+<p>has in her hands and each marriage only help her to increase her fortune. What really was </p>
+<p>beginning to bother at Rebecca was the fact that Mrs. Rosebud had gotten quite open with her </p>
+<p>to even let her call her by her name as well as giving her advices to get as men and keep their </p>
+<p>money to enjoy life.</p>
+<p>"I tell you Rebecca dear, follow my advice. You are still quite young and sexy. Those breasts of </p>
+<p>yours could get you as many men as you like. Marry only the ones that have money, keep them </p>
+<p>happy so they will buy you a lot of stuff that you can sell later before divorcing. That way, you will </p>
+<p>keep that money out when the time to split the bounty arrived" laughed Mrs. Rosebud.</p>
+<p>'I'm not gaining your breasts to become like you Helen!!' Rebecca mentally screamed. 'Breasts </p>
+<p>should be used to make happy at the man we love and not as tool to take everything from him. </p>
+<p>You don't deserve to keep the blessing nature gave you. Your charms will be better with me'.</p>
+<p>Thanks to their prolonged conversation, most of Helen's breasts had been already added on top </p>
+<p>of what Rebecca had.  The incoming mass had made Rebecca's breast to sag due the extra </p>
+<p>weight. Rebecca got worried when her breasts got so large and heavy that they were resting on </p>
+<p>top of the table even she had her back resting on the chair. Fortunately, her preoccupation </p>
+<p>became joy as she felt how an invisible force was lifting them from the table. Helen incredible </p>
+<p>perkiness was becoming hers as well.</p>
+<p>"Are you listening me young one?" called out Helen moving her hand in front of Rebecca's face.</p>
+<p>"Oh yes. I'm sorry. My mind wondered for a moment about some heavy dealings I'm stuck with" </p>
+<p>she said forcing a smile for Helen. She certainly enjoyed her breast expansion, but having </p>
+<p>another theme of conversation could make it more pleasing for her. </p>
+<p>"It's alright. It must be quite problematic to have to your mind busy even while drinking a coffee. </p>
+<p>I do hope you can solve that issue soon and have your mind in peace. One of the good things of </p>
+<p>being married is that you will be never alone at the moment to face an adversity" Helen said.</p>
+<p>'Did I hear well?' gasped Rebecca at Helen's words. 'She is showing not only concern for others </p>
+<p>but is she considering a marriage something more than just a way to get easy money?'</p>
+<p>Rebecca noticed how Helen's semblance seems to be gradually changing as it seemed her own </p>
+<p>words had dig deep in her. Her expression seemed a bit gone, just to later become one of </p>
+<p>sadness.</p>
+<p>'Could it be that, like Carol, she is losing her meanness along with her breasts and she is realizing </p>
+<p>now her own bad deeds?' Rebecca wondered as she noticed that Helen should be retaining </p>
+<p>around a tenth of her original size. 'There is only a way to find it out'</p>
+<p>"I'm married too, so I know how wonderful is to arrive home and have a lovely husband waiting </p>
+<p>for me. It feels me with love and hope knowing that he will be always there for me and that he </p>
+<p>loves me above all things" Rebecca said holding Helen's hand.</p>
+<p>"Oh my... what kind of monster I have been!" began to cry Helen. "Rick, Tom, Fred, Sam and so </p>
+<p>many others. I broke their hearts for their money. I'm so despicable"</p>
+<p>Rebecca tried to find the right words that will help Helen, but she couldn't hide the true. She did </p>
+<p>harmed those men and now that she was feeling the amounted guilty of her acts, Rebecca didn't </p>
+<p>want to imagine how that should be felt.</p>
+<p>"You can try to correct your wrongs. You are still on time to reverse the damage you have done, </p>
+<p>or at least try it. Also, don't forget you have Bud at your side now. He loves you even he knows </p>
+<p>your past. He will help you. You are not alone in this" said Rebecca.</p>
+<p>"You are so kind Rebecca. Talking to you has been the best thing I could have done. Thank you </p>
+<p>for helping me realized how bad I have been. Today's is Valentine's day, so I will be sure Bud will </p>
+<p>have the surprise of his life" said Helen standing up from the table.</p>
+<p>"That is the spirit Helen. I wish you the best" said Rebecca watching at Helen rushing out of the </p>
+<p>coffee shop. She had finished draining Helen a few minutes ago, but that wasn't important for </p>
+<p>her right now. In that moment, Rebecca felt quite happy as she had helped a woman to find her </p>
+<p>way.</p>
+<p>The idea of helping at the women that she was punishing seems quite farfetched, but thinking it </p>
+<p>well, it made sense. Since the magic she was using prevent people to realize the change, how </p>
+<p>the other person will learn a lesson? This way, Rebecca understood the nature of the potion, </p>
+<p>which meant that she will need to help find her way to redemption at the last woman in her </p>
+<p>black list.</p>
+<p>This thought kept Rebecca distracted in her way to her office until she pass by in front of one of </p>
+<p>the office which crystal walls. The image displayed in the reflection certainly called her attention </p>
+<p>and she couldn't believe how much she had changed. She knew how big she was suppose to be, </p>
+<p>but seeing it was a whole different experience. </p>
+<p>Slowing her steps allowed her to notice the soft bounce of her breasts. Their nice flow </p>
+<p>movement was a sign of the natural magnitude of her size. Nobody could put in doubt that her </p>
+<p>breasts were 100% natural, even not all of them naturally matured on her.</p>
+<p>Once she stopped walking, Rebecca watched pleased how enormous breasts stood up proudly </p>
+<p>on her chest with no sign of sagging. 'This bra is only to show off, my defying-gravity tits don't </p>
+<p>need any support at all. That will save me a lot of money at the moment to buy bras. Still, getting </p>
+<p>a few for a nice foreplay will drive Steve crazy. I wonder which models he will like me to wear for </p>
+<p>him?'</p>
+<p>Rebecca pictured her naked figure being the one reflected on the crystal wall and began </p>
+<p>mentally try different bras imagining how they will fit her. Soon, her breasts responded to those </p>
+<p>thoughts and her nipples began to harden under her clothes. Having her blouse being quite </p>
+<p>stretched due the considerable mass she was packing on it, her hard nipples poked through the </p>
+<p>material.</p>
+<p>When Rebecca found her nipples showed off being quite hard in her fantasies, she knew they </p>
+<p>should be begging for attention in the real world. Clearing her head, she saw her image once </p>
+<p>again clothed and grinned to see the erotic sight of her nipples denting her bra and blouse.</p>
+<p>"Don't worry momma hasn't forget about you" said Rebecca talking to her excited nipples </p>
+<p>making them get even harder. She was leading her hands toward them, when she caught </p>
+<p>something in the corner of her eye. Focusing on it, Rebecca gasped as several coworkers were </p>
+<p>already looking at her. She blushed deeply knowing that her nipples and words should have </p>
+<p>revealed to all of them how aroused she was feeling at the moment. </p>
+<p>This discovery was like being bath with cold water and her nipples quickly hide out. Doing the </p>
+<p>only thing she could, Rebecca finished raising her hands toward her chest but to accommodate </p>
+<p>her blouse. Then, she continued walking trying to pretend nothing had happened, but she knew </p>
+<p>that won't be possible. She should get used to the idea that from now on, she won't be able to </p>
+<p>pass unnoticed. No matter where she is, she will always draw attention to her, so she must be </p>
+<p>sure it will be the kind of attention she wants and not the one that could make her embarrassed. </p>
+<p>The urge to play with her new breast was a temptation, but the work left by Carol wouldn't solve </p>
+<p>by itself. With the clients accepting the project and she be left in charge of it, Rebecca began to </p>
+<p>make phone calls and prepare the reports for the main bosses. The routine caught her and </p>
+<p>Rebecca went into autopilot for the rest of the day until she received a phone call.</p>
+<p>"Hello baby. Will you be leaving soon?" asked Steve on the phone.</p>
+<p>"Of course baby, I will be there waiting for you" said Rebecca feeling her heartbeats accelerating.</p>
+<p>"Great. Just be sure to have time to get ready. You could take a lot of time just by choosing </p>
+<p>which kind of dress you are going to wear" Steve joked.</p>
+<p>"I have that one already fixed smart mister. You will love the one I chose for you" Rebecca </p>
+<p>purred.</p>
+<p>"Don't tell me. Are you going to chose one that will let me see your cleavage all night?" he </p>
+<p>teased.</p>
+<p>"Oh mister, you are psychic. You are going to see a lot more of cleavage now that..." suddenly </p>
+<p>Rebecca realized a flaw. "I'm sorry baby, something came up and I need to take care of it. Kisses" </p>
+<p>said Rebecca hanging down the phone before Steve could even reply back. "I'm so clueless!!" </p>
+<p>she said Rebecca grabbing her things and throwing them into her purse. "There is still time to fix </p>
+<p>this".</p>
+<p>Rebecca didn't like to push her luck specially since Carol left early, but fortunately she had </p>
+<p>finished all the work for the day and ask permission to leave early as there was an 'emergency' </p>
+<p>she needed to take care of. Of course, she promised to recover her absent time tomorrow. </p>
+<p>"How could I forget such important detail" Rebecca sighed as the elevator doors closed. "There is </p>
+<p>no way I could fit these in my dress" she said cupping her breasts. "If my hands aren't big enough </p>
+<p>to cover them, how my dress will handle such dimensions. I need to get a new dress, ASAP"</p>
+<p>Once outside, Rebecca realized one of the great advantages her new breasts were giving her. As </p>
+<p>soon as she was in the edge of the sidewalk, three cabs were already fighting to take her. Two of </p>
+<p>them even offer her to take her for free no matter where she will like to go. Rebecca's forgot </p>
+<p>her worries and simply laughed at the fact that she wouldn't suffer to get a cab ever again.</p>
+<p>The cab left her in an exclusive boutique where busty women buy nice dresses for their figures. </p>
+<p>"At least working for Carol had some advantages" she said taking out Carol's membership card.</p>
+<p>"Welcome back Rebecca. What I can do for you?" said Melanie, the receptionist.</p>
+<p>"I need a dress and it's kind of urgent" said Rebecca.</p>
+<p>"Sure. What kind of event Miss Hill has tonight?" Melanie wondered.</p>
+<p>"Oh no. It's not for her. I need it for me" Rebecca replied.</p>
+<p>"For you... but..." Melanie blinked her eyes several times as she noticed Rebecca's mighty </p>
+<p>endowments. "... but of course. Follow me" said Melanie wondering she hadn't given Rebecca </p>
+<p>her own membership card. "What kind of event are you going to assist tonight?" she asked.</p>
+<p>"It's a romantic dinner with my husband to celebrate our first Valentine together as husband and </p>
+<p>wife" blushed Rebecca.</p>
+<p>"That sounds nice. Do you want a tight dress or something to match your figure?" Melanie asked.</p>
+<p>"Actually, I need a dress that will be lose up here" Rebecca said indicating her bust. "I need to </p>
+<p>give some room for the babies to grow"</p>
+<p>"Ah?" said Melanie raising her eyebrow.</p>
+<p>"It's a sexual game I have with my husband. Something private" said Rebecca grinning how close </p>
+<p>to the true were her words.</p>
+<p>"I understand" smiled Melanie. "We got a couple of request like that from time to time"</p>
+<p>Now it was time for Rebecca to be puzzled.</p>
+<p>Back at home, Rebecca looked at the clock and was glad that she still was on time. "Make up, </p>
+<p>checked! Hair done, checked! Sexy panties, checked! Magical bra..." she slipping her arms into </p>
+<p>her third-time improved bra. She pulled the cups over her breasts and clapped the lock. </p>
+<p>"...checked!" </p>
+<p>At the difference of the previous merging, this time her bra didn't get as big as she expected. </p>
+<p>Certainly being so stacked should have made that the next contribution won't appear as </p>
+<p>substantial as the others. Still, it was enough to make her the bustiest woman in the city. That's </p>
+<p>according to Melanie's records. She hasn't registered a client bigger than Rebecca planned to </p>
+<p>get.</p>
+<p>Picking up her dress brought a big smile on Rebecca's face. It was so daring and at the same time </p>
+<p>so formal. She chose it to reflect how she felt inside. She wanted to impress Steve with her new </p>
+<p>job position as well as her new bustline. "It's a pity Steve isn't here yet. I could use his help with </p>
+<p>the zipper" she said sliding up her dress over her hips.</p>
+<p>"Fortunately for you, I arrived earlier" said Steve walking into the room.</p>
+<p>"S t e v e . N o o o o !!" Rebecca screamed as everything seemed to go in slow motion for her.</p>
+<p>Turning around, Rebecca watched how Steve's eyes got wide open as they scrutinized the alien </p>
+<p>quantity of breast flesh that keep coming more and more into his view. Rebecca knew what will </p>
+<p>be happening in the next and even it will take a few minutes, for her felt like an eternity.</p>
+<p>Once she has turned completely her humongous breasts slapped against each other still in slow </p>
+<p>motion. The sound of her flesh orbs clashing against each other made Steve dropped his jaw. </p>
+<p>Rebecca could see in his eyes how his mind was racing trying to understand how her modest </p>
+<p>wife was hauling porn star breasts.</p>
+<p>Rebecca felt Steve's mind was at the breaking point. She wanted to shout that everything was </p>
+<p>fine, but she didn't need it. It was too late now. When she saw his eyes relaxing and his jaw </p>
+<p>closing, she knew it was done. The magic had affect him so for him, everything was normal, even </p>
+<p>Rebecca had gained several breast cups during the day. For him, she was as busty as he left her </p>
+<p>in the morning.</p>
+<p>"No? You don't need to be embarrassed to need my help my love" said Steve walking around </p>
+<p>Rebecca to face her back. "You only need to call me" he said grabbing the dress and pulled it up. </p>
+<p>Rebecca felt sad as she had planned for Steve to touch the vial with the potion so he won't be </p>
+<p>affected by its magic. That way, he will notice how big she had gotten for him. Now, such </p>
+<p>experience was gone. He will always believe she has large breasted since they meet. "I'm sorry" </p>
+<p>were the only words she could manage to say.</p>
+<p>"Why for? Have you done something that needs to be forgiven?" said Steve as his fingers slide </p>
+<p>under Rebecca's bra to rub softly the curve of her under boob.</p>
+<p>"Oh Steve!" moaned Rebecca feeling her exciting rising. "It's about your gift. I may have spoiled </p>
+<p>it"</p>
+<p>"I don't think you could have spoiled it" he said as his fingers moved forward. Soon his thumbs </p>
+<p>found their way toward her nipples and began to massage and press firmly on them.</p>
+<p>"Oh Steve. Calm down a bit. I'm trying to tell you something" Rebecca gasped between moans.</p>
+<p>"Uhm... I think I found my gift" said Steve finding the hook of the bra. "You are so kinky to get it </p>
+<p>in front. You really want me to get addicted to your tits, ah?"</p>
+<p>"What did you just say?" asked Rebecca.</p>
+<p>"That you are kinky?" he said.</p>
+<p>"No... about you getting addicted" she begged.</p>
+<p>"To your tits?" he wondered.</p>
+<p>"Oh Steve!" moaned aloud Rebecca as she turned around slapping with her breasts at Steve and </p>
+<p>sending him backwards toward their bed. "I have wait too long to hear you say that" said </p>
+<p>Rebecca losing all her self control and jumping over Steve. "I guess we will have to lose our </p>
+<p>reservation" she grinned as she stood in four over him holding her breasts mere inches of his </p>
+<p>face.</p>
+<p>"I imagine you will take longer to get ready so I delay the reservation for an hour" he grinned.</p>
+<p>"Smart mister" smiled Rebecca and she smoother Steve's face with her breasts. His lips and </p>
+<p>tongue playing with her tits brought her the most fulfilling orgasm she had in a long time.</p>
+<p>An hour later, the couple was finishing getting ready for the date, and even the sex have been </p>
+<p>great, Rebecca decided to reveal the true to Steve and have been trying to convince him for the </p>
+<p>last 15 minutes that she hasn't been the titty queen he remembered getting married with.</p>
+<p>"Sorry honey, but even you must understand how silly your argument is. Magic? Come on" said </p>
+<p>Steve getting a bit tired of Rebecca's claims.</p>
+<p>"You have to believe me. You can look at any picture we have in the house. Even my bras are too </p>
+<p>small for these" said Rebecca pointing her breasts.</p>
+<p>"Well, I know you have a fetish for small breasts and that is why you always had your pictures </p>
+<p>being photoshop to look smaller and even you brought those small bras" he explained.</p>
+<p>"Aarrggh. This is so hard. Just grab this and say 'I want to see the truth' and we can go" said </p>
+<p>Rebecca handling him the empty vial.</p>
+<p>"OK, if that makes you happy" sighed Steve grabbing the vial. "I want to see the truth... What? </p>
+<p>No lightning or magic dust?" he joked.</p>
+<p>"No. If those things will have happen, people will have been alarmed as I took the breasts of </p>
+<p>Carol and Helen" sighed Rebecca. "Now, zipper me and we can go"</p>
+<p>"Sure" Steve smiled as he pulled up the zipper.</p>
+<p>"Thanks" Rebecca said turning around. "How do I look?"</p>
+<p>"Incredible beautiful as always" grinned Steve closing his eyes while placing his arm behind </p>
+<p>Rebecca's back. He pulled her toward him for a kiss, but got puzzled as their lips never met. He </p>
+<p>opened his eyes and found Rebecca face was a few inches away from his. He looked down and </p>
+<p>noticed the obstacle that was keeping them apart. "This is strange. Your breasts never stood </p>
+<p>between us before" he said.</p>
+<p>"Yes! Yes!" exclaimed Rebecca happily. "You remember it, don't you? You always like to pull me </p>
+<p>into you to kiss me. It's only natural on you and since the magic is no longer affecting you, your </p>
+<p>brain is having a conflict. You remember me big breasted, but also small breasted to be able to </p>
+<p>kiss me like that" smiled Rebecca clapping her hands together and giving small jumps of </p>
+<p>happiness making her breasts bounced in heavily hypnotic movements. </p>
+<p>"I.. I.. I don't know what to say?" said Steve confused.</p>
+<p>"Don't worry. I will explain it again in the car. I bet you will be more understanding" said Rebecca.</p>
+<p>Fifteen minutes later, Steve parked the car a block away from the restaurant. "I must say that I </p>
+<p>have some problems believing what you have said to me Rebecca. I mean, magic? But I can't </p>
+<p>deny anymore that the more I think about it, the more I remember you with breasts way smaller </p>
+<p>than those" he grinned.</p>
+<p>"Thanks for the 'way smaller' comment" said Rebecca punching him on the shoulder.</p>
+<p>"Hey! I'm not the one to blame here. You should have kept those big guns folded until I have </p>
+<p>used the vial. You can't blame me for being a gentleman and help at my damsel in distress" he </p>
+<p>said.</p>
+<p>"You are right. Still, I think it's quite naughty how you make love to me before. You were doing all </p>
+<p>those things to my breasts I never thought you want to. I got a whole new perspective of you. I </p>
+<p>have always known you are a breast man, but after tonight, I want to ask you. Why did you </p>
+<p>marry me if I wasn't the type of woman you fantasy about?" she asked getting nervous of the </p>
+<p>answer.</p>
+<p>"While I could be attracted to large breasts, none of those women could compare to you. You </p>
+<p>were truly beautiful as you were since you are truly big in all the areas that count for me. Your </p>
+<p>intelligence, sense of humor, cooking skills has no match baby. You complete me and if nature </p>
+<p>didn't give you large breasts, you certainly found you r way to correct her mistake. Those look </p>
+<p>great on you" Steve said.</p>
+<p>"And they are about to get bigger" Rebecca smiled.</p>
+<p>"This will be the best Valentine's gift ever" he said starting the engine again.</p>
+<p>Once they got into the restaurant, a young lady guided them to their table. "Good evening. Your </p>
+<p>waitress will come soon to take your orders". She gave them the menus and walked away.</p>
+<p>"Are you sure, she will be attending us?" asked Steve.</p>
+<p>"This is the VIP zone. Only she attends it... Oohh! I feel her approaching" grinned Rebecca feeling </p>
+<p>the tingling on her breasts increasing with each breath she exhaled.</p>
+<p>"You may want to keep your hands from your breasts" said Steve.</p>
+<p>Rebecca noticed that her hands had moved to cup her breasts without her realizing it. "Sorry... </p>
+<p>they seemed to have acquired a mind on their own" she joked placing her hands on her legs.</p>
+<p>"Good evening. My name is Katherine and I will be your waitress tonight" introduce herself quite </p>
+<p>a busty waitress. She should be in her late thirties, but still look quite imposing.</p>
+<p>"Watch this..." whispered Rebecca to Steve before introducing herself to the waitress. "Hello </p>
+<p>Katherine. Long time without see you" said Rebecca.</p>
+<p>Steve watched as Katherine focused on Rebecca. He grinned as she backed off seemly to </p>
+<p>remember his wife but not her impressive rack. Then, she shook her head regaining her </p>
+<p>composure. He smiled thinking how silly his expression should have been when he passed for </p>
+<p>the same thing. With evidence that the magic was altering people perception, he waited for the </p>
+<p>second part to be visible.</p>
+<p>"Good to have you back madam. I hope everything will be of your pleasing tonight" Katherine </p>
+<p>said with a serious face that was in the edge of being polite and annoyed.</p>
+<p>"Oh you can bet I have 'large' expectations" said Rebecca blinking an eye to Steve. "Since it has </p>
+<p>been quite a time since the last time I was here, do you mind tell me which are the specials for </p>
+<p>today. Of course, I will like to know the ingredients and the way you cook them of course".</p>
+<p>If there could have been any doubts about Katherine annoyance, those were dissipated by now. </p>
+<p>Rebecca knew such request will take a lot to a waitress to explain. Due the rules of the </p>
+<p>restaurant, Katherine can't refuse such request and while she will be using such request to get </p>
+<p>back at Katherine for bullying her in the past, it will also served to keep her close for the </p>
+<p>transference.</p>
+<p>As Katherine went mentioning the dishes and ingredients, Rebecca had difficulties trying to keep </p>
+<p>a straight face. The pleasure she was feeling seemed to intensify with the time. 'It seems the </p>
+<p>rumors were true. Very well hidden you have it Katherine' thought Rebecca as she focused her </p>
+<p>eyes on his husband. He seemed to be a truly believer of magic as his was quite aware of the </p>
+<p>slow but steady swell of her breasts. 'It's a pity I can't see the swell in his pants. It would have </p>
+<p>been fair' she joked.</p>
+<p>Seeing Steve hypnotized by her growth is what she had been wishing all day. His rapture was </p>
+<p>intoxicating and she felt her expansion even sweeter. Of course, watching how Katherine blouse </p>
+<p>was collapsing over her deflating chest and the certain that she was taking something more than </p>
+<p>just size from her was quite a combination that was making her moist. She felt like a vengeance </p>
+<p>lustful force of nature and she loved every minute of it.</p>
+<p>Finally, Katherine ended with the long request. Rebecca knew for sure that Katherine was very </p>
+<p>pissed off by it even she didn't show it in her face. The fact that she was the one asking it didn't </p>
+<p>help her to assimilate it. If it wasn't for the magic preventing Katherine realize the stealing of her </p>
+<p>breasts, she could have went into a rampage against her.</p>
+<p>With strike one already in place, Rebecca ordered for her and her husband. Katherine </p>
+<p>reverenced and walked away with their order. Once he was sure the waitress was out of the </p>
+<p>hearing range, Steve was the first to talk.</p>
+<p>"That way soooo erotic. I mean, you are a fantasy made flesh!" gasped Steve trying his best to </p>
+<p>keep his enthusiasm down. "I mean... your breast were growing, her deflating. It was something </p>
+<p>out of this world. It truly blew my mind and you certainly took a heavy load from her" he said.</p>
+<p>"Oh yeah! And there is a lot more to take" said Rebecca pulling her bra straps to notice how lose </p>
+<p>the cups were on her. "Besides, recall what I told you I was hoping to get from her?"</p>
+<p>"You mean like your boss fullness and her friend perkiness?" recalled Steve.</p>
+<p>"Yes. Still, it's too early to say I got it, but I'm pretty sure I will get it" said Rebecca. "Now, if you </p>
+<p>excuse me, I need to go to use the restroom"</p>
+<p>Once she got inside the restroom, Rebecca didn't bother to get into one of the stalls. She only </p>
+<p>took out her lipstick and applied it slowly as she only waited. As she predicted, a minute later, </p>
+<p>Katherine burst inside and her semblance wasn't of a friendly waitress.</p>
+<p>"How dare you to make me pass an embarrassment like that" Katherine groaned. "You think you </p>
+<p>can come here and boss me around? Just because you were one of the few that leave this place </p>
+<p>after graduating, you think you are special? No matter what you think, I own you Rebecca. I own </p>
+<p>you as well as all those miserable girls that think being a waitress will be easy. You want to make </p>
+<p>money, you will sweat blood for it" said Katherine.</p>
+<p>"Now listen to me bitch!!" said Rebecca firing back at Katherine. "You have been a bitch to me </p>
+<p>and to every single girl that only want to make money to finish their college. If you ended being </p>
+<p>trapped here is your problem. You shouldn't go around and unload your hate and anger toward </p>
+<p>innocent girls. I have seen you break too many girls to even make an account during my service </p>
+<p>here. But now things are different. Now, I'm the one holding the power here".</p>
+<p>"Don't lie to you little girl. Just because you found a husband, that won't make you better than </p>
+<p>me. You are still the same insecure girl that I enjoy making her stay until late cleaning the toilets. </p>
+<p>If I remember well, you spend a lot of night scrubbing this floor. But guess what, your successor </p>
+<p>does a better job than you did, won't you agree?" grinned Katherine.</p>
+<p>"First of all, I'm not a little girl. If you haven't notice it, my breasts are bigger than yours" said </p>
+<p>Rebecca smashing her breasts against Katherine's bust taking her by surprised. "Secondly, you </p>
+<p>better watch out what you say to a costumer Katherine. I don't think the owner of a five stars </p>
+<p>restaurant will like an scandal in the news about how one of their maids faced at one of his </p>
+<p>costumers in the bathroom"</p>
+<p>"Good luck proving that" laughed Katherine.</p>
+<p>"Good luck proving that" replied the recorder Rebecca had hidden between her breasts.</p>
+<p>"Well played Rebecca. You won this match" said Katherine accepting her lost.</p>
+<p>"Just one more thing Katherine. Is it true that your breasts are so sensitive that you could orgasm </p>
+<p>just by playing with them?" asked Rebecca. "I heard the girls say that one of them caught you </p>
+<p>playing with your tits and pinching your nipples while your body rocked due an orgasm"</p>
+<p>Katherine grinned as she could sense the envy in Rebecca's words. "If you want to know, yeah. </p>
+<p>My breasts are so sensitive that I don't need a man to please me. Something you won't ever </p>
+<p>experience for sure" she laughed as she left the restroom.</p>
+<p>"I won't be counting with that" grinned Rebecca feeling the additional weight Katherine left on </p>
+<p>her after their prolonged discussion. Being alone in the restroom, Rebecca pulled out of her large </p>
+<p>breasts over her dress and bra. Then, she give a tender pinch to her nipple and she gasped </p>
+<p>involuntarily at the exhilarating electricity that shocked her body. "Oh yeah. I'm sooo looking </p>
+<p>forward to experience it Katherine. Steve and I will enjoy it for sure. More me than him anyway"</p>
+<p>When Katherine returned to her table, she was sure to emphasize every step making her </p>
+<p>breasts bounce quite noticeable. All the stares were on her and she could feel their lust bathing </p>
+<p>her. She felt like a succubus being desired by so many, but she only have eyes for one man. The </p>
+<p>only man she was putting such display for. Rebecca could swear she could see the Steve's pupils </p>
+<p>seemed to go up and down at the rhythm of her breasts.</p>
+<p>"Welcome back my love. I see it was quite productive your trip to the bathroom" said Steve </p>
+<p>noticing Rebecca's dress wasn't as lose as it was before she stood up. In fact, it fit her perfectly </p>
+<p>now, but he knew Rebecca was aiming for a more tightly look.</p>
+<p>"Indeed. That is strike two.  One more and she is out" grinned Rebecca.</p>
+<p>"And did you... you know... confirmed it?" Steve asked.</p>
+<p>"If you mean Katherine's sensitiveness becoming mine. Yes. Katherine confirmed she had such </p>
+<p>trait and now she is passing it to me as more and more of her breast flesh becomes mine" she </p>
+<p>said. "It's a pity I can't be mean to her, but at least I managed to release all my frustration as she </p>
+<p>was the one facing me. I doubt that after a few more minutes attending us, she will keep that </p>
+<p>arrogant attitude".</p>
+<p>A few minutes later, Katherine returned with the dishes and served them. "Here is your order. </p>
+<p>Bon Appetite" she said.</p>
+<p>"Thank you Katherine. Ah! Before you go. My husband is fascinated by this restaurant and he will </p>
+<p>like to know the story about it" said Rebecca.</p>
+<p>"Are you kidding me?" said Katherine.</p>
+<p>"Excuse me?" said Rebecca pretending to be offended by resting her hand over her breasts. As </p>
+<p>she parted her cleavage, Katherine noticed the recorder.</p>
+<p>"Apologies madam for my poor response. I will be more than glad to share with the mister the </p>
+<p>story about the restaurant" Katherine said.</p>
+<p>With Katherine proximity secured, Rebecca decided to enjoy her meal and stopped focusing in </p>
+<p>the incredible feeling that was building on her breasts. Certainly the warm was great, but as her </p>
+<p>breasts finally were filling the cups of her bra, new problems raised for her.</p>
+<p>Rebecca wasn't prepared for what it will be like to grow having her sensitivity enhanced. As her </p>
+<p>breasts filled the cups, they rubbed more and more against the silky material. Such action </p>
+<p>produced dozens if not hundreds of small pleasure shocks that were quickly distributed through </p>
+<p>her body. They rushed toward her brain and ended in her trembling womanhood. Rebecca's legs </p>
+<p>were palpitating but there was nothing she could do to avoid it.</p>
+<p>'Hold you could control this' thought Rebecca looking at Katherine while feeling her mind getting </p>
+<p>buried under so much pleasure. Her nipples were hardening due her excitement making things </p>
+<p>ever worse as they began to pulsate against the fabric increasing the pleasure tenfold. </p>
+<p>Rebecca knew she was trapped in an exponential cycle. The more her breast grew, the more </p>
+<p>they will rub against her bra. The more they rub, the more pleasure she will feel, and since </p>
+<p>Katherine's sensitivity was flowing into her breast, the pleasure was on alarming raise. She could </p>
+<p>only hope she could survive at what was building between her legs. </p>
+<p>Steve watched in silent awe how Katherine expression seemed to change as less and less chest </p>
+<p>she seemed to retain. Her words carried more happiness and gave the impression she was </p>
+<p>enjoying telling him the tale. Certainly Rebecca's words were true and Katherine meanness was </p>
+<p>just disappearing as well as her breasts.</p>
+<p>Turning his eyes toward Rebecca, Steve gasped to see the valley of cleavage his wife was </p>
+<p>displaying. He doubt there could be a letter to describe Rebecca's size, and she was still growing. </p>
+<p>Her breasts were finally stretching the material of the dress remarking how perky and massive </p>
+<p>they were. Rebecca's size was really breathtaking, but he noticed something strange in her face. </p>
+<p>Something was going on and he needed to act fast. Fortunately Katherine seemed to have </p>
+<p>completed her tale.</p>
+<p>"Thank you Katherine for it. That should be all" said Steve.</p>
+<p>"Glad to be at your service. Enjoy your meal" smiled Katherine as she withdrew.</p>
+<p>"Are you alright Rebecca?" said Steve grabbing his wife hand.</p>
+<p>"Hold me!" was the only thing Rebecca managed to say as her building orgasm finally exploded. </p>
+<p>She did her best to keep her composure while Steve held her in place. After what it seemed like </p>
+<p>an eternity, Rebecca rested her back in the chair catching her breath.</p>
+<p>Seeing his wife exhausted face change slowly into a grin was enough for Steve to know what </p>
+<p>have just happened. "How was it?" he asked.</p>
+<p>"Amazing!" said Rebecca still out of air. "I'm still recovering but I already want to try it again. In </p>
+<p>fact, I want you to try it again" she said with a predatory smiled on her face. "So what do you say </p>
+<p>if we finish our dinner and see what you can do with this loaded babies of mine" said Rebecca.</p>
+<p>"You are up for quite a ride" said Steve as he began to eat quite fast.</p>
+<p>Paying the check assure enough time for Rebecca to appropriate of what little size the former </p>
+<p>evil waitress could still have. After receiving a generous tip for her services, Katherine apologized </p>
+<p>for her misbehavior in the restroom. Rebecca accepted the apologies and even gave her the </p>
+<p>tape only asking her in return to be good with all the girls from now on. Katherine thanked her </p>
+<p>for her gesture and even invited them to come another day and the check will be on her.</p>
+<p>Back in their home, as soon as they close the door, the couple began to kiss and fondle each </p>
+<p>other with teenage passion. They were spinning over the walls as each pushed the other kissing </p>
+<p>and biting their skin driving each other crazy. Rebecca tore off Steve shirt and he would have </p>
+<p>done the same if he wouldn't have known how much Rebecca paid for it.</p>
+<p>Finally in their bedroom, Rebecca gave her back to Steve and he quickly pulled down the zipper </p>
+<p>at the same time he pulled down Rebecca's dress leaving her standing with only her underwear.</p>
+<p>"Oh baby. You smell so good" groaned Steve catching the scent of Rebecca moisten panties. </p>
+<p>"You have been such a bad girl" he said getting on his knees before gently pulled down her </p>
+<p>panties. "You need to be punished" he said licking by surprised her exposed sex.</p>
+<p>"Oh yeah. Punish me baby. Do it" Rebecca said grabbing Steve facing and smothering against her </p>
+<p>sex. "Punish me with that godly tongue of yours" moaned Rebecca. Feeling Steve hands crawling </p>
+<p>up her thighs, she grabbed them and guided them to her breasts. "Are you looking for these </p>
+<p>babies? Do they need to get even bigger for you to find them?"</p>
+<p>Rebecca teasing was making Steve get quite painful in his pants. "Oh you... you are so mean... so </p>
+<p>delicious mean" said Steve standing up again and looking into Rebecca's lovely eyes. "You </p>
+<p>haven't change Rebecca. You are still the same lovely and naughty girl I decided to marry. I love </p>
+<p>you for who you are and I want to be sure that you understand that" he said.</p>
+<p>"I know that silly. I did this because I love you too. I'm the perfect woman for you. I only got a </p>
+<p>couple of accessories. That's all" she grinned.</p>
+<p>"You know how to drive me crazy" he said grabbing the hook of her bra. "May I?"</p>
+<p>"They are yours silly. They are your gift after all. Happy Valentine" said Rebecca trying to kiss him </p>
+<p>but found that her breasts were getting in middle.</p>
+<p>"Happy Valentine my love" said Steve coming closer to Rebecca and sealed their kisses. "Should I </p>
+<p>unwrap my present now?" he grinned.</p>
+<p>"If you delay more I will think you don't like it and may consider returning it" Rebecca teased.</p>
+<p>"No way" said Steve as he unhook the bra at lightning speed. "Don't even dream of it" he said </p>
+<p>lowering himself to her breasts level to watch marveled at his present in all their naked glory.</p>
+<p>Rebecca's breasts were simply fantastic. Two perfect orbs of womanly flesh that defied gravity </p>
+<p>and were extremely sensitive. They seemed to bounce lightly with each of Rebecca's breaths </p>
+<p>accentuating how genuine they were. No other woman could possibly have breasts like those as </p>
+<p>it was required the size and attributes of four women put together to obtained them.</p>
+<p>"Seeing you looking at my breast gives me an idea" said Rebecca as she part her breast with her </p>
+<p>hands. Then, she suddenly moved forward engulfing Steve's head with her breasts. "Oh yes! </p>
+<p>The perfect size and the perfect fit" she moaned as each of her mammoth breasts were bigger </p>
+<p>than the head of an adult man. By pressing them together Steve's head simply vanished </p>
+<p>between them.</p>
+<p>Rebecca moaned as Steve began to move his head between her breasts and give her several </p>
+<p>kisses. "That's not fair. You know how sensitive I have become" she said releasing her prisoner. </p>
+<p>"In love and war, everything is fair" said Steve lowering his pants to take then his trouser off.</p>
+<p>"Wow! Did the little me gave you such massive boner?" said Rebecca biting her lips at sight of her </p>
+<p>husband erection. "It's quite impressive my love, but do you think it is long and hard enough so </p>
+<p>you can try to take my gigantic knockers?" she grinned grabbing his penis. Steve moaned of </p>
+<p>pleasure and before he realized it he was bathing Rebecca's breasts with his release. "Touch�". </p>
+<p>The End.</p>
+</body>
+</html>

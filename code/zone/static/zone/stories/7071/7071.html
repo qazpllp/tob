@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Owning the Competition</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>﻿Owning the Competition</p>
+<p>By Max</p>
+<p>"And it is finally here..." Ruby said, closing the door after receiving the package her friend sent a week ago. "Who would have imagined witches used normal mailing for delivery?" she jiggled rushing quickly through her modest apartment. She never mind it was quite small, but today she was particularly glad as she didn't have to walk too long to reach the bedroom.</p>
+<p>Even though she was alone in the apartment, Ruby closed the door of the bedroom and put the package over the bed. Then, she was sure to roll the curtains assuring herself that nobody could see what was about to happen. Trembling, she rubbed her wedding ring as she started to have second thoughts about opening the box.</p>
+<p>Turning around, Ruby found herself looking at her reflection in the mirror she kept in the bedroom. By most people standards, Ruby was a quite attractive woman. She was 5' 7", long black hair, and had a trim body with an sculpted derriere thanks to the time she spent in the gym. Her personality and intelligence were the attributes that seduced Rob and convinced him to marry her. Still, she won't deny there was a certain area of his liking she couldn't cover, or rather said, the lack of it.</p>
+<p>Feeling frustrated, she went into their closet and picked up a box labeled "Return to the sender" which had been kept hidden by Rob. She quickly tossed its contents over their bed and felt disgusted and the numbers of bras that were packed inside of it. Each bra had come with a note from its owner addressed to Rob and while its content differs from woman to woman, all of them had one thing in common, they asked Rob to return to work with them.</p>
+<p>Ruby and Rob got married barely a month ago, but when they did, Rob promised to leave his usual job to dedicate himself to Ruby. She appreciated such gestures even though she never demanded him to do such a thing. After all, they met and knew each other for a long time, so for her, she was marrying the man she had loved all her life, and not at the rising star of the porn industry her friends always like to remind her with envy.</p>
+<p>"I always knew he had sex with other women, but never imagine it could have being with so many" Ruby said surprised  at the numbers of bras over her bed. What didn't surprise her was the cup size of some of them. She always knew Rob had a thing for big breasts, so she was quite thrilled that he was into her even though she has small ones. However, realizing how many busty women were after her husband made her feel insecure of herself. She absently cupped her breasts with ease just proving how little she had to offer and for the first time, she felt inadequate for being married to a porn star who clearly enjoys big breasts.</p>
+<p>"Well, if Rob likes big breasts, that is what he is going to get" she said, opening the package just to be amazed at the exquisite red silk bra in its interior. Recalling the words of her friend, she quickly stripped off her shirt and hooked the bra on her bare chest as most of the time she was just braless, one of the little joys of having small breasts. She grinned widely knowing those days were about to end as the bra glew in a rich carmesi light indicating the magical undergarment was getting linked to her. Soon the cups of the bra got tight around her breasts, squeezing a surprise gasp from her lips, until they perfectly adjusted to their size and shape. “Not bad, not bad at all” she said feeling bra like it was a second skin hugging her chest. </p>
+<p>“Now that my new bra is ready, let’s put its magic to test. Any volunteer?” she asked, looking among the bigger brassieres dispersed over her bed. A grinned formed on her face as she picked up a blue D-cup bra. “What about you Miss Eager to be Touched?" Ruby said recalling the content of the letter attached to it. "My body and especially my large breasts really miss your strong hands on them. They need to be touched so don't let them keep waiting. Sarah" Ruby read aloud. "Don't worry Sarah, Rob will soon have his hand all over those large breasts, once they stand out proudly on my chest, that is" she grinned maliciously unhooking her bra.</p>
+<p>Ruby placed the bra on an empty side of the bed, being sure the interior side of the cup was up. "And now magic bra, give me the size Rob's desires" she said dropping the blue bra over hers. As soon as the two fabrics touched, the carmesi light engulfed both undergarments and to Ruby's joy, she watched in awe how the big cups of Sarah’s bra were sinking into her smaller ones making them expand and grow. But her excitement was cut short as her bra had stopped swelling even though the blue underwear continued being absorbed into it.</p>
+<p>"What happened?" Ruby asked, confused as she picked up her bra which seemed to have doubled its size, but no more. "I was hoping you will be able to handle some ripped melons, but instead you only swelled from barely fitting lemons to cope with… large oranges? Where did the rest of the size go?" she said frustrated as she examined her bra up and down.</p>
+<p>Intrigued, Ruby grabbed her phone and searched for Sarah on the internet to learn about her.. "It seems you weren't lying when you said you wanted to be touched. Most of your movies reviews talk about how sensitive you are in your films and the great stamina you have to keep going after easily achieving several orgasms" she said quite impressed, considering it wasn't just an act for the camera. "Those full lips should drive men wild for sure" she said.</p>
+<p>Knowing her husband was given jobs to initiate amateurs girls, she looked for the movie both starred together and found the piece of the puzzle she was looking for.  While the picture of Sarah’s in her debut video with Rob showed she still has her impressive sluty lips, her breasts were a lot smaller a year ago. "She got a boob job!" Ruby sighed facepalming herself. "The bra couldn't get more size from her since there wasn't much to take to start with" she laughed at how jealous she had been of a woman whose real breasts were even half of what appeared to be. “I should have known amateur actresses always enhanced their breasts to make a name in the industry. So perhaps instead of going for something too big to be true, I should try something smaller but truthful” she considered while rubbing her chin. </p>
+<p>Decided to get bigger, Ruby picked up a smaller bra hoping it could belong to a non operated woman. "Do you remember this bra? It was the one I used during my debut. I can’t believe I was so little back then, but now, well, if you decide to return filming, look for me and you can taste by yourself how huge I have become. Love Danny” the letter attached to it said. </p>
+<p>After a quick search, Ruby found Danny was an amazon stripper who casually made her debut in the porn industry filming with Rob two years ago. Her current photo showed her standing at 6' 2" with hypnotic zaphire eyes and stacked with huge breasts worth her status as stripper. "Well, she definitely got a boob job too. At least, she sent her bra before her operation" she said, dropping the chosen underwear into the cups of her hungry brassiere. Soon, a carmesi light wrapped the two intimate pieces and forced them to become one.</p>
+<p>Ruby saw her bra started to swell again and hoped Danny could provide enough boob juice to double its size. To her surprise, her brassiere did more than that, as her cups soon outgrown and swallowed the ones of the sinking undergarment. Surprised, Ruby looked again at the info of the stripper and couldn't believe her eyes. "Oh my… she is all natural" she exclaimed in awe as she read Danny had a nice chest when she started her career as a stripper to pay her studies, but it was until she got into adult filming that she blossomed into a busty amazon much to the delight of her fans that followed her delayed growth spurts.</p>
+<p>When the light vanished, Ruby couldn't believe how big her bra had turned into. Definitely bigger than the D-cup she aimed to get, but how much bigger? There weren't many bras larger than her own over the bed to compare with, which filled her with an undeniable pride, but for what she could obtain, her new breast size was between an E and a F-cup. "A double EE perhaps? Breasts that large should be quite heavy" Ruby wondered feeling the unfamiliar weight of her bra in her hands. When she put on the enlarged underwear, the sight of its huge cups overshadowing her small breasts should have made her feel even smaller, but instead got her excited. "It seems you two are quite eager to cover the gap…" Ruby said, feeling her nipples becoming very hard and pointing forward. "... well, let's do it" she said, hooking the bra.</p>
+<p>Ruby quickly bit her lips as she felt a building pressure inside her breasts. With awe and joy, she watched her bosom start to swell, but along with its growth, a flow of new sensations stroke her with force. "What is this?" she moaned aloud as she felt her breasts being held by invisible hands. She pressed the cups of her bra against her growing chest trying to understand what she was feeling, but she ended moaning even louder as the sensations intensified.</p>
+<p>While Ruby will have enjoyed feeling the sensations of her breasts finally overflowing what her hands were able to hold in, she couldn't as was assaulted by even stronger, arousing ones. She moaned and panted ashamely as felt first her breasts being groped, to later feel her nipples being pinched and licked at the same time. "This is not possible. It's too much pleasure…" she moaned, groping her expanding bust as her legs trembled and shaked. "It's too much... too muuuuuch!" she screamed as the mind blowing sensation of feeling both of her nipples being greedily sucked triggered a devastating orgasm that knocked her out and Ruby fell on the floor as her body still spasmed as a result of the afterglow.</p>
+<p>"Why am I on the floor?" Ruby said, recovering her senses. When she tried to stand up, an alien weight on her made it difficult. "WHAT THE.." she gasped, noticing two magnificent  hills of woman flesh standing proudly on her chest. "It wasn't a dream! I really got tits!" she screamed in happiness cupping her larger breasts and fondled them through the magic bra. "Mmmm… and they are quite sensitive" she moaned while biting her lip in pleasure.</p>
+<p>Ruby stood up and gasped to realize her bedroom wasn't her bedroom any more. Indeed, she could recognize some of her stuff, but the room, while seemed bigger, she could sense something was off. The bed was definitely larger, but still had the sheets she liked. Even the curtains were shut down, she noticed the windows had a different shape. A quick peek outside let her realize she wasn't in a building anymore. She could see a yard and people walking on the sidewalk. "I'm in a house. But how?" she said walking around and gasping to see her reflection in the mirror when she passed in front of it "No way" she said staring at a woman with mesmerizing blue eyes and fuller lips looking back at her. "These eyes and lips are…" she said, touching her lips and feeling their volume was indeed real. "... it can't be".</p>
+<p>Just then, her phone rang with Mara's tone and Ruby rushed to get it. When she did, she gasped again as it wasn't the phone she knew. It was a very expensive one. Disregarding that for later, she answered the video call. "Wow Ruby. I sensed your change, but seeing it is a different experience" Mara said looking down at the impressive bust Ruby had. </p>
+<p>"Mara… What is going on??!" Ruby asked impatiently feeling her friend knew the answers she was looking for. "What happened to my apartment?"</p>
+<p>"Oh right! I forgot to mention it" Mara said feeling stupid. "Remember when we talked about your concern about people finding out you were stealing the breast size of porn stars that were after Rob? Well I added a little reality shift effect to the bra. Now reality will change so for everyone else you will have been heavy chested and the other girls won't" Mara said quite proud.</p>
+<p>"But that’s not all you added" Ruby accused while raising an eyebrow. "These eyes and lips... You make the bra stole more than just their breast size" she said recalling the girls’ photos.</p>
+<p>"Well, you always feared that besides large breasts, Rob could find an irresistible woman with sex skills that will drive him away from you. So I made possible for you to take their best attributes and sex experience along with the breasts size. Am I good or what?" Mara smiled.</p>
+<p>Ruby needed a moment to process what she just heard. "So, are you telling me that each time I use this bra, I will not only get bustier, but also sexier and skillfully in bed while reality will be altered so I will have been like that since always?" She said while picking up her wedding portrait she kept in her night stand. Indeed, she was there smiling next to Rob but now she flashing an spectacular cleavage as her dress barely concealed her prominent bust. She also noticed Rob was now the smallest in the relationship as she had acquired the amazon height of the stripper along with her fascinating blue eyes. ‘Oh my… I look so good!’ she thought.        </p>
+<p>"Indeed. You even have a set of alter memories to help you with your new reality" Mara said. "I got mine too so that was how I knew you used the bra. Just concentrate and you will see them"</p>
+<p>Ruby nodded and closed her eyes to review her new memories. She watched pleased how indeed she grew a nice set of breasts during her late teens, but it wasn't until her university days she sported the marvelous orbs she possessed now. "I guess I got my breast development around the age each porn star got theirs" she said, enjoying how Rob was fascinated by her voluptuous amazon figure as well as being entranced by her zaphire eyes and irresistible lips.</p>
+<p>"Each porn star? How many did you steal from in your first try?" Mara asked, surprised.</p>
+<p>"Just two. I was looking for a D-cup to begin with, but the first had a boob job and wasn't enough, and the other was bigger than I thought" Ruby sighed feeling the weight of her breasts. “I didn't plan to go this big in my first try, but I’m quite eager to try a heavier burden” she grinned.</p>
+<p>"So two ah? I don't want to imagine the feedback you got for experiencing the pleasure both pairs received in their lifetime. It must have been overwhelming" Mara said.</p>
+<p>"That was why I felt my breasts being sucked and pinched at the same time. I experienced the concentrated sensations their breasts provided when they were stimulated” she said gently rubbing her nipple and enjoying how sensitive it had become. “Oh yeah. It seems Miss Sensitivity had her reputation well earned. I feel I can easily achieve an orgasm by just touching myself. This should make my sex life with Rob more interesting from now on” she grined.</p>
+<p>“What a wonderful improvement Ruby, but you don’t need to wait to see what sex feels with your new sensitivity. Just check your sex memory and find it out” Mara grinned mischiviously.</p>
+<p>“Oh right!” Ruby blushed as she had forgotten about her alter memories. She closed her eyes, but it didn't take long for her to open them again. "Oh no… oh no…" she said alarmed as she walked into her computer, which she didn't own in the previous reality and signed in</p>
+<p>"What? What have you seen?" Mara asked, alarmed.</p>
+<p>Ruby didn’t reply as she was busy typing something on the computer. “This can’t be possible. Oh Mara, what had you done?” she sighed, as she decided to share screens with Mara showing her phone browser that displayed a 404 page. “This web address belonged to a porn star who was also a stripper. Without her breasts, you could say that she never had the nerve to become one right?. Well, now look at this” she said, swapping the page, showing the cover of the porn video where she discovered Sarah had smaller breasts. The cover still exists but instead of Sarah, the image of an amazon Ruby with her impressive nude breasts filled the cover. “By giving me their sex experience, you make me fill their roles. Everything related to their sex life is now bounded to me” she said showing an image of folders in her computer containing several adult videos under her name. "I’m the protagonist of every porn video they shoot. You made me a porn star, and possible a stripper too” she said quite horrified to even look up for it.</p>
+<p>“I’m so sorry Ruby. I didn’t anticipate such collateral effect, but look at the bright side. The reason you live in a house now must be because you make more money. I mean, you must have gotten paid for doing those movies, and with your big melons, they should have paid you quite good” Mara tried to show the positive outcome.</p>
+<p>"That's not all" Ruby grinned, noticing the number of bras on the bed had diminished. "Having done two porn movies with me, made evident that Rob likes big breasts, so girls smaller than me won't even bother trying to lure him, but seems he got new co-stars that are quite busty" she said realizing that most of the remaining bras were way bigger than hers. "Mmmm… perhaps if I make more movies with him can diminish how many women could be after him?" she reasoned.</p>
+<p>"Or you can outgrow all of those women so nobody can compete against you" Mara suggested.</p>
+<p>"I don't want to have gigantic breasts. Just big enough to keep Rob happy and those bitches away from him" Ruby said.</p>
+<p>"Well, just chose the bra of the girl that Rob had made more movies then" Mara said.</p>
+<p>"I was considering that, but since I will be getting her best attributes too, I better think well which one to choose. After all, one of these girls will make me bigger than this so I have one shot to make it right. I better do some researching. Thanks for the bra Mara, talk to you later'' Ruby said, hanging down on her friend. "But before that..."</p>
+<p>Ruby stood in front of the mirror to admire her jutted profile. She thrusted her chest out and smiled proudly at the wobble of her swelled bossom. “You girls are more than a handful” she grinned while using her fingers to trace the full shape of her breasts and sensing how big and sensitive they had become. “Let’s see how Rob likes both of you now” she said, closing her eyes and quickly reviewing how her sex life with Rob had been change. "Oh yes. Having huge knockers really motivates him" she moaned biting her lip as her new memories showed him being more intense and wild during their love making. Of course, having great stamina, enhanced sensitivity and the combined sex experience of two porn stars improved greatly how she experience sex. She also found it interesting that being taller than him really excited him, especially when she dominated him with her presence and smashed her breasts all over his face. "Don't worry baby. Your wife will be sure to grow the biggest breasts you always wanted" she said, grabbing a bunch of bras and taking them to her computer to investigate their owners.</p>
+<p>Once her research was completed, Ruby narrowed the number of candidates to only three bras. One belonged to Trisha, a very voluptuous thicc woman; from her, Ruby planned to acquire her wide hips and prominent butt. The second bra was a nursery one making evident she was trying to get the induced lactating condition a woman called Alexa had achieved. The third bra was the only she had doubts about since it belonged to Laura a young porn star who offered stream sessions dressed in small bikini tops and bra to show the jiggle and bounce of her large breasts while using a very erotic voice to arouse men. Ruby imagined how much money she could make if she fueled that voice with her soon-to-be bigger breasts.</p>
+<p>"I don't think Rob will mind if I balance my figure a bit…" Ruby said holding the bra of the thicc porn star, "... but he is a tit man and he did enjoy being breastfeed" she said raising an eyebrow while holding Alexa's nursery bra with a mix of hate and envy as she recalled what Rob mentioned about his experience with that particular porn star. "Well, if Rob wants milk, mommy Ruby will be happy to provide for him" she said making a decision by discarding Trish bra and dropping it  over the bed, on top of Laura's one bra. </p>
+<p>“I barely can’t wait to fill my jugs with hot milk” she grinned in anticipation as she unhooked her magic bra. “Oh.. crap!!” she yelled, moving her hands in a frenetic way as, unfortunately, feeling for the first time the full weight of her breasts pulling on her chest threw her balance off and made her softed the pressure of her fingers in the bras she was holding. Both bras quickly were claimed by gravity and she tried her best to catch them. The movement of her arms made her breasts bounce and womble uncontrollably making her moan due the involuntary stimulating. When she regained her senses, she saw the nursery bra had fallen over the other two discarded bras, and the magic bra had fallen over them… with the cups upside down. “Fuck!” </p>
+<p>A carmesi light engulfed the pile of bras and soon the voracious fabric of the magic garment devoured the other bras adding to itself the natural heft and girth of three busty porn stars. With the bras gone, the magic brassiere started its growth. Ruby could only gasp in shock as the cups expanded and swelled. She was planning to be around a G-cup, but now, that dream was shattered as the cups ended so big that she imagined carrying bowling balls on them easily. </p>
+<p>“Oh my… I really screw it up” she sighed noticing the vast garment resting on her bed. It was by far the biggest bra she had ever seen. “This is too much. None of Rob’s co-stars, even with boob jobs, could possibly fill the enormity of this brassiere” she said holding the huge bra. </p>
+<p>Suddenly, her own words rang inside her head. “None of his co-stars… which mean I will be bustiest woman he had ever fuck” she said feeling quite aroused at the idea. “Yes… yes…” she said in trance as she put the humungous bra on. “I will be the biggest. Nobody will challenge me for Rob’s attention. All those over inflated bimbos will feel so jealous of my natural blessings” she laughed like a maniac, but as she was about to hook the bra, she realized something. </p>
+<p>“Uhm… I would like to feel my breasts doing something more than growing…” she said going to her drawers and quickly rummaging through her clothes. “You will do it” she said, picking a tight shirt. Once she put it on, she could feel its tightness pressing against her chest sculpting the shape of her wonderful EE-cups. Of course, the view was spoiled by the jagged wrinkles of the oversize cups. “Well, these cups won’t be so empty for too long” she grinned, slipping her arms under her shirt and behind her back to hook her bra on. “Oh yes!! I can feel it!! Those women really pack some serious boob power and now it’s all mine” she moaned as her breast tingled.</p>
+<p>At the difference of the first time, the growth of her breasts were accompanied by an arousing stretching sound. “Oh yes, I always fantasize about my breasts being so big to stretch my clothes to its limits,. but I never imagined I would actually experience it" she laughed enjoying how the enormous combined size of three pornstars were poured into her breasts, fueling a massive growth that was quickly filling her vision and shirt which started to slid up revealing her plain abdomen in a quite erotical way.</p>
+<p>Even though Ruby imagined her skin would feel a bit tight, the truth was that she wasn't getting implants. It was a natural growth that didn't happen naturally, but the state of her shirt was a different story. It was losing the battle to contain such mamonthal burden and once the fabric became second-skin tight, inevitably started to tear apart revealing her deeping cleavage. "Ha ha ha, my bulging breasts are ripping off my shirt. My growing babies don't want to be contained" she laughed admiring how her tits were getting so incredibly big. Rounder, fuller and heavier were the adjectives that describe the constant growth of Ruby’s bustline. But as her mammaries kept expanding, new sensations assaulted Ruby’s mind. </p>
+<p>“Mmmm… so this is how it feels to breastfeed another person” she said focusing on the sensations coming from the life experiences of Alexa. “I can get used to this sensation for sure and will love to experience it first hand as soon as possible” she moaned enjoying how good it felt for an engorged tit to be released from the milk pressure.</p>
+<p>Experiencing the life time stimulation of three pairs of breasts at the same time prove to be a challenge, but knowing she will get those prepared her better and while she didn't pass out this time, she cried out loud several spontaneous orgasms.</p>
+<p>Sensing her growth subsiding, Ruby took a deep breath and stood in front of the mirror. The first thing… or better said, two things she saw were how her breasts were covering more than half of her torso now. Her tits had swollen so round that she couldn't see her arms behind them. They had gotten so massive that the shirt had slid up until it was visible the underline of her bra poking out at the bottom. Also, the heave of her bust forced an inverse v-cut on her shirt revealing how tight her breasts were against each other. Their cramped size made a mouthwatering cleavage that could drive any man insane. Ruby bit her lip as she fondled her sensitive nipples through her magic bra and enjoyed how hard they were. “I could poke out a person's eye with these” she said admiring how fiercely they pierced through her bra and shirt.</p>
+<p>"They couldn't be more perfect" Ruby said excitedly, spinning to the side to admire how her chest stood out almost a foot in length from her chest. "But what about the other goodies?" She said cupping her bust while seeing her derriere. Just as it was waiting, the bra glew once again.</p>
+<p>Ruby moaned as she felt her sensitive breasts shifting inside her bra. A sensation of fullness followed by a sloshing sound that let her know she had successfully acquired the lactating condition she was trying to obtain. Then, she felt her posterior shifting too and thanks to the mirror, she watched pleased how her butt was swelling and along with it, her hips got quite wider. It didn't take long for her to experience another wardrobe problem as her sudden thickness ripped out her leggings. "Hahahaha. Mere clothing can't conceal my fertility goddess looks" she said amazed by her curvaceous silhouette. Her lower half wasn't on pair to her upper one, but did help to even out a bit her proportions.</p>
+<p>Ruby blinked her eyes a few times as her vision was getting blurry. Things around her seemed to lose cohesion as if she was waking up for a dream. She didn't have much time before her mind was invaded with force. "What is going on? What is this?" She complained, feeling a terrible headache. She closed her eyes and grabbed her head as her brain was overloaded by a strong sensorial feedback of different images, sounds and even smells. Among all of that white noise, she managed to sense something familiar to her. Focusing on it, her mind filtered the sensations. A very well known odor, a strong voice, and finally a beloved face. "Rob?" Ruby asked, seeing Rob approaching her. He was totally naked and sporting a massive hardon. "It's ok. I will go slow" he said in an echo voice before splitting in three as he approached. Hearing his catch phrase used in his movies was the final piece of the puzzle. Ruby gasped surprised to realize she was experiencing the livid memories of the women whose breasts she had stolen.</p>
+<p>Ruby moaned and panted like she never did in her life as she experienced Rob's strong sexual assault multiplied by three. Her mind was being turned into mushroom as she felt Rob filling in both of her lower entrances at the same time. And if that sensation couldn't be erotic enough, she also enjoyed how he was eagerly sucking the milk of her breasts. "So this is what an orgy feels like" Ruby moaned loudly, very ashamed to admit how much she liked it. </p>
+<p>Besides seeing and feeling Rob through the eyes and senses of the porn stars, Ruby could feel more than a hundred sexual experiences going at the same time in her head. Every sex encounter any of those women had was being integrated into Ruby’s knowledge and while she could avoid focusing on those at the moment, she knew that when reality will reshape she will become into the woman that those men had sex with and while she felt quite dirty for cheating on Rob like that, even it wasn’t her doing, she tried to see the positive outcome of it. </p>
+<p>“I never wanted to admit it, but Rob’s sex techniques improved with each woman he slept with. I trembled imagining how much better I will become after this is over” she moaned feeling other kinds of knowledge started to flood into her mind. Persuasion skills, ways to flirt and be provocative, even how to laugh and giggle to produce a sexual response in man, every seducing weapon those women possessed, were integrated into Ruby’s arsenal powering her up to unparalleled seductress levels. “Rob won’t know what hit him” she laughed, feeling the vast concentrated female carnal recollections at her disposal. “Tapping on it will let me exploit to the maximum the raw femininity encased into my voluptuous body” she purred while caressing the sides of her torso, from the curvature of her breasts to the distended shape of hips.</p>
+<p>Once her mind had processed all the unwilling information those porn stars gave her, Ruby opened her eyes and smiled noticing in her reflection that her clothes had been fixed. Now, instead of a shirt, she was wearing a tight hot tube that barely concealed the magnitude of her overflowing chest. Then, her ruined leggings had changed into an expandible yoga pants that shaped up her bulging butt and put on evidence how ample her hips were. “I do like how arousing my body shape is now, but I really want to appreciate closely the state of enhanced assets” she grinned, having problems pulling up her hot tube over the girth of her breasts. After tossing the stretched tube aside, she quickly unhook her bra and dropped it on the floor, letting her massive knockers bounce and wobble free from their enclosement. Ruby bit her lower lip enjoying how good it felt the heavy pull of her breasts making her sense their size and power. </p>
+<p>“Now this is unexpected,” Ruby said admiring the shape her breasts had adopted. Certainly, she expected her breasts to soft and sag some after having grown so much, but to her amusement, they looked even perkier than when they were smaller. She casually poke them gasped to feel how firm they were. “But how?” she wondered until realized such a shape was quite similar to the young Laura displayed on her videos. “Oh I see. Men must have favored the fresh unspoiled looks of her breasts. After all, who can resist a nice pair of juicy young ripe melons" she grinned, thrusting her bust out to admire its hypnotical bounce. "Gaining such firmness and perkiness from her was a great bonus, and it seems she wasn’t the only one giving me something extra” she smiled as a further inspection revealed that her flat nipples had become quite prominent and plump like Trisha's. A gentle tweak on her hefty nipple was enough to yank an indecent moan from her lips as well as a thick stream of milk. “Oh fuck! This feels way better than the lactating memories of Alexa showed me. Sarah's extra sensitivity and Trisha's sturdy nipples definitely must have improved the experience” she moaned enjoying how fertile and motherly her body had become. “Hope you will be hungry Rob. Mommy Ruby will fill your belly with her new and... delicious... milk… hopefully” she said, stretching those last words as she tried to guide her nipple to her mouth but the size and firmness of her breasts made it impossible. “Oh well, I can try to milk myself later” she grinned.</p>
+<p>Finally taking her eyes away from her hyper fertile reflection, Ruby looked at her surroundings and realized that not only they had stopped shifting, but had been improved once more. The bedroom had become so big she felt it was the size of the whole apartment she woke up this morning. Her bed was even bigger than a king size covered in satin sheets and feather filled covers. She also noticed that at once side of the bedroom was installed a dance pole and next to it could be seen an illumination set with a profesional digital camera on a tripod. The recording device was plugged into an even more powerful computer making her wonder the reason for those in her bedroom. “Oh my…” she said as a quick look into her memories revealed how much her new reality had changed her and what was her new role to play in it.</p>
+<p>Again, a phone call coming from her computer interrupted her dazzled state. Imagining it was from Mara, Ruby moved closer to the professional camera and clapped twice indicating at the computer to answer the call. “Hello Mara. I can imagine you sense my recent change, and you couldn’t wait to see it right? You naughty witch” Ruby said in her new voice, as it’s seductive power was carried through the internet and manifested through Mara’s headphones. Ruby smiled seeing Mara moaning as her body must have been warmed up by just her voice. “It’s a pity that you aren’t here, you know...” she said, approaching her face to the camera lense which zoomed in on her sparkling sapphire eyes. Then, she raised a bit so the lense could focus on her plump kissable lips. “... things between us could get quite hot” she said, dampening the image as the lense was bathed in her moist exhaled breath.</p>
+<p>“Oh my… you almost a lesbian of me. What has got into you?” Mara said, visibly aroused as her cheeks were red and she was winding some air to her face.</p>
+<p>“The result of concentrating the sexual maturity of five different porn stars developed during their lifetime, thanks to you of course”, she smiled exuding pure sexual energy. “But that’s not all I got from them in me… are you ready?” she grinned as she slowly walked back from the camera. “Tada!!” she exclaimed enthusiastically jumping back to make her colossal bust bounce on view. “I gathered every ounce of breast flesh they had. I should be on the top of the natural bustiest porn stars with these” she said fondling her impressive breasts.</p>
+<p>“Wow Ruby, I’m impressed. You are adapting very well to your new reality as a successful porn star. I can even see a dance pole there. Are you performing for Rob in private?” she asked.</p>
+<p>“Actually…” she said, grabbing the dance pole and quickly starting to dance on it very professionally as well as erotically. “... I got some streaming abilities from Laura, the previous owner of this magnificent voice, and in this reality, I used them to display the variety of unique talents I acquired from the other women. While this amazing pole dancing skills were obviously stripped from Danny, the stripper, she never had Trisha's ass to do this...” she said, dropping her head down and resting her back on the pole. Mara gasped as Ruby extended her arms and legs holding herself just by pressing together the prominent buttchecks “... but I do now along with her lustful hips that allow me to do a very serious twerking. I have seen my memories and people pay a lot to see me do it against the pole...” she smiled grabbing the pole to turn herself up, “... and if that is not enough, showing them how I use the lactation I sucked from Alexa while I perform gives my audience such hardons” she grinned engulfing the pole between her huge udders as her nipples leaked some of the warm milk contained inside them “You wouldn’t believe how much money they offer me to encourage them to touch themselves while I use my seducing voice” she purred in a naughty and sensual way. "And the best of it is that Sarah's sensibility gives me such erogenous feelings while performing that most of the time I had to hide my orgasms in front of the cameras.</p>
+<p>“I barely recognize you Ruby, but I can tell you are happy with the results” Mara said, getting warmer again after feeling the voice intensity her friend imprinted in those last words.</p>
+<p>“I truly are. Even though I seem to be out of character, I can’t put into words how “natural” it is for me to act this way. I didn't even know how to use half of the things here this morning, but without thinking I answered your call and set my camera to give you this naughty show as it was something I normally do. It’s like being playful and teasing has always been a part of my being” Ruby said smiling a bit embarrassed of her own actions, specially as part of her did enjoy how flustered Mara was becoming at her presence. “With this body, knowledge and skills I had acquired, there is no chance Rob could ever consider making another sex movie with another woman. In fact…” Ruby said, reviewing her memories. “... it seems Rob still works in the adult industry, but now he only shots movies with me. We produced and sold our videos here at home and with the money we made on my streamings, we got enough money to buy this mansion” she said revealing to her friend the type of home she and Rob bought after getting married.</p>
+<p>“I don’t only help you change from a scared tiny cub into a fierce huge lioness, but now you won’t have to worry about other woman stealing Rob’s attention as you are the only woman he will have sex from now on. I’m good or what?” Mara said quite proud of the result of her magic.</p>
+<p>“You will imagine that being married to one of the most bustiest women in the porn industry should keep the rest of those flat bitches away from him, but....” Ruby pointed the camera toward her bed and shockingly enough, there were still some bras left on it, but this time, the size of those were out of normal charts. “... now there are some overinflated bimbos after him”.</p>
+<p>“I’m sorry Ruby. I can’t believe they still think to have a chance to stand against you” Mara said.</p>
+<p>“My mere thoughts Mara. They must know Rob enjoys natural breasts over fake ones, so they must be confident enough to have something besides their breasts to lure his attention. Something they had and I don’t” she said while stocking up the bras in a pile. “Fortunately, you have given me the means to fix that” Ruby grinned greedly as she picked her magic bra.</p>
+<p>“Wait a moment Ruby. I was just joking about outgrowing them. You are quite big already” Mara panicked as she could see the greed on her friend’s eyes. “What size are you anyway? An  H-cup perhaps. That's plenty of breast for Rob” she tried to asured.</p>
+<p>“H-cup? Pffft” Ruby snored, “My breasts should have been a J-cup, but my lactation boosted me to a large K-cup” she said, quite proud of her huge orbs. “And now, they will be amplified again with whatever real breast flesh those bitches had while I took possession of their most precious attributes to refine my beauty even more" she smiled placing the magic bra on top of the bras. </p>
+<p>"Oh my…" Mara gasped as she saw the crimson garment quickly devouring those huge bras and making its cups slowly expand as the magic in it harvested the natural breast size those porn stars had. By the time the absorption ended, the red brassiere had grown so much that if it was folded, could be used as a holder bag for a large medicine ball. She didn't want to imagine how much weight will carry the pair of breasts that will fill such monstrosity.</p>
+<p>"Amazing, isn't it?" Ruby grinned, picking up her bra and showing one of its sizable cups was big enough to engulf her whole head. "The size labeling of this thing must be around two thirds into the alphabet at least" she laughed, failing to imagine herself with breasts that big.</p>
+<p>"That's too big Ruby. Think about you back" Mara tried to reason with her friend.</p>
+<p>"I consider that, but you know what? Even though I have these gigantic breasts, I don't feel any discomfort or back pain. I even checked my memories and nothing. Whatever magic you use, you clearly make it so I will be able to carry all this weight without a problem" she said, smiling later as Mara facepalmed herself. "Thank you for this Mara. You are a very good friend, and that is why it breaks my heart to leave you now" she said pouting her lips together.</p>
+<p>"Wait what?" Mara said, confused. "You aren't letting me see your triumphal ascension into a busty goddess?" she said a bit desperate.</p>
+<p>"It sounds quite cruel, doesn't it?" Ruby said as she approached the camera with a grin on her face. "But it is for your own good. Who knows what will happen if after seeing me become the natural bustiest woman in the world, my augmented glamour ends up enrapturing you" she said.</p>
+<p>"That won't happen" Mara said quite flushed. "Your beauty can't influence in me"</p>
+<p>"Oh Mara, but it already did it. You just haven't realized it" Ruby said blinking her eyes</p>
+<p>Mara didn't understand her friend's words until she realized she was fondling one of her breasts while playing her nipple. "What the…" she said in shock from her actions, but still kept doing it.</p>
+<p>"You see it now?" Ruby giggled as she zoomed the image into one of her eyes  "With only the use of my erotic voice I have been able to arouse you. But if beside it, I let you stare into my hypnotic eyes, you won't be able to resist me" she said.</p>
+<p>"Oh my…" Mara said as her face showed she was having urges to please herself badly. She let the phone down and while Ruby was able to only see Mara's ceiling, she could hear her friend's heavy breathing increasing as her pettings were getting louder.</p>
+<p>"If you aren't able to resist me now, how will you stand seeing me after seizing the allurement of more than a dozen women and forcing it into me?" she said enjoying how Mara's was no longer trying to cover her moans. "But I'm a good friend. Once I'm done, I will invite you over so you can see, and perhaps even touch, the fruits of your hard work" she said quickly, raising up to let the camera focus on her massive breasts as she noticed Ruby’s eye in the corner of the screen. Then, as she massaged them for the camera, she heard Mara's cursing before disappearing again from the camera while her moans were getting higher. Her vast sexual knowledge let her know Mara was close to finishing, so she only needed a little push. "Besides, if you are able to stand my mind blowing looks, I’m sure that my intoxicating body odor will make you orgasm” she said stretching the sound of her last words timing them to help her friend achieve an intense orgasm. Her cries were loud and in her release, she must have hit the place where she left the phone as the image flipped around before hearing a crash and then everything turned black.</p>
+<p>Ruby gasped as one the image was off and the call was ended, she kind of recovered her senses. “What the hell?!” she said quite astonished of what she did. “Did I just make Mara orgasm by rubbing my breasts? What is wrong with me?” she said realizing that once the camera was on, she felt another personality taking over. “I went into autopilot and became this kind of skifull seductress… oh and her phone. I’m so sorry” she said putting her palms together over her head. “I promise I will buy you a new one” she said, focusing her attention back into the persona she became. Such personality was the result of merging the experience of five porn stars, and she was about to add more spice into the mix. “If I was able to make a woman have hots for me. There is no doubt that a man will be putty on my hands” she said feeling quite nervous and anxious to what will be of her once such extensive expertise will be printed in her core. “Well, it will be better with me than with them” she grinned as she put her bra on.</p>
+<p>Suddenly, her room was filled with an intense carmesi light as she laughed like a maniac.</p>
+<p>An hour later, only the sound of Rob entering into the house broke Ruby’s trance of starting herself in the mirror. “Oh wow. It’s this late? How the time flies when you appreciate your divine beauty” she purred in her sultry voice. She smiled her voluptuous lips letting her sparkling teeth flashed into her reflection as she batted her larger-than-life eyelashes. “Time to see first hand how Rob managed to function at the presence of sexual goddess made of flesh and blood”</p>
+<p>As soon as she walked out of her room, she marveled at how wide the door frame was. Certainly the latest reality change must have altered a lot of things in the house to accommodate better her gargantuan dimensions. She stood on top of the stairs that lead to the main living room waiting for Rob to make her entrance. Then, she sees her husband carrying a large box in his hand. “Hey handsome. I have a few minutes before my next stream session. Do you want to come up and play with your steamy wife and perhaps do another home porn video just for the fun of it” she said, feeling quite playful since the moment his eyes will pose on her.</p>
+<p>Finally, he left the box on the table and raised his eyes to see the full figure of his wife. Ruby bite her lip as even though he should be quite used to seeing her voluptuous form, she noticed the changes her mere presence was causing on his body. His respiration was accelerating, his pupils were dilating, and his hard-on… oh my… she never had seen his beast raging so furious before. 'It is growing so big and fast, and why wouldn’t it be?. That is the effect my body had on men now' she thought quite proud, and while she joked about it with Mara, the truth was hee odor was enough to wake up in any person their primal instincts.</p>
+<p>“What? No answer?” Ruby said stretching her very long and shapely leg (two attributes combined from different women)  to walk down the stairs. She was sure to put extra force on each step to produce nice ripples which crawled up from her ankle toward her small waist (another addition), and while they fade in the pendulous swing of her luscious prominent hips, they boost the bounce and jiggle of her oversized bulging ass. “And just when I thought I could use a very good spanking” she said slapping her buttcheeks adding more arousing ondulations on her fleshy ass. “Or perhaps you may be a bit thirsty” she said feeling his intense stare over her chest. Ruby felt like hervbra was going to melt. </p>
+<p>“You know, they have gotten quite heavy after the last time you drink from them,” she said, trying her best to embrace the magnitude of her chest and failing miserably. Even she wasn’t prepared for the enormity her bust had become. Two perfect spheres of woman power pressed against each other that block her vision more than a foot in distance. They had gotten so big, that even her belly button was hidden behind them. Even with her amazon stature, according to her new memories, it was hard for her to see people below average height if they stood too close to her, not to mention the countless times she had knocked down little kids because she just couldn’t see them standing next to her. Seeing people in the face was a challenge for Ruby, so she had to keep her distance to avoid their vision being eclipsed by her overdeveloped breasts, and their sanities as well.</p>
+<p>As she kept walking down, it was obvious Rob was trying to hear the melodious sloshing sound of the milk stored inside her breasts. “I think today I’m going to break a kind of record. I felt so full that I could feed an entire infant ward and still have milk to spare” she said groping her breasts from the sides making even more louder how much overflowed her tits were. And just to prove her point, she moaned as her nipples leaked some milk, but it wasn’t just a few drops. It was just a nice hot stream of milk that wet the cups of her bra. “Oh crap. See baby. You made me spill my milk all over the stairs” she said in the most innocent angelic voice while her facial expression could have made an iceberg evaporade itself in a flash. “Will you be a dear and clean this mess for me” she winked him an eye.</p>
+<p>“Be right back” was all Rob said before he rushed out of the kitchen with his hard-on painfully erected as a tent pole inside his pants. </p>
+<p>“Well, that was easy” Ruby giggled seeing how easy it was to arouse Rob. “And I haven’t even touch him yet” she laughed fully aware that her body screamed being build for sex and it couldn’t be more accurate. After all, she had successfully integrated the unique body qualities of almost 20 women into her own being resulting in an exaggerated hourglass shape mold tight by a fitness level training, a beyond flawless light-tanned skin (result of mixing different ethnics), a diminutive waist, and a face that any model will cry for it. There wasn't a woman sexier than her or that had natural breasts more colossal than her own. </p>
+<p>"But even my body is erotic enough, it's the collective sex knowledge gather in my head the one that makes me exploit it to the max" she said streching her long frame while thrusting her chest out.  Even such innocent movement revealed an imbued sex aura hard to miss. "Funny how all the sex experience I gained had changed my personality" she smiled quite confident as a result of her massive acquisition of the porn star sex life experiences, she now had thousand of hours of expertise under her belt. She had gained so much that even some of the movies the porn stars had shot overlapped among them, so they became unified as threesomes and even some into orgies in this new reality. </p>
+<p>After considering the fact that she had sex with countless men to achieve the level of sexual mastery she domained, Ruby felt a bit depressed to have being unfaithful to Rob in such scale, but a smile formed in her face as she recalled how supportive he had been in her role and how she shared everything she learn from other men to improve his performance. As a result, he was even a greater lover and the best of it, it was that now he was all hers as she was all his.</p>
+<p>"By the way, what is with this box?" Ruby asked curious while she started to unbox its content.</p>
+<p>"Nothing important honey. Just let me take care…" Rob said rushing back into the living room just to see his wife retrieving a massive bra from the box.</p>
+<p>"Oh my… I knew I was the biggest but this proves it" she said, showing Rob a certifique that stated that she was the porn star with the biggest natural breasts in the world. "And they even sent a bra with our initials printed on it" she said as the cups had a R printed on each of them.</p>
+<p>"Uhm… those aren't our initials babe" Rob tried to reason but Ruby removed her bra. The sight of her huge naked knockers took away from him any capability to express a coherent thought.</p>
+<p>"Sure they are… otherwise why will they print them?" Ruby said hooking the enormous bra on her. "Uhm… funny, they didn't get my measure right. And I thought it was word wide known" she joked, feeling the bra cups a bit loose.</p>
+<p>"That is what I was trying to say honey" Rob said, recovering his senses after his wife covered her mighty chest. "Those aren't our initials, those are to show the size of the bra" he said.</p>
+<p>"Don't be silly. I'm big, but I can't fill a RR-cup" Ruby said annoyed the bra didn’t properly fit her.</p>
+<p>"Because that is not your bra" Rob said, taking out a letter from his pocket and handing it to Ruby. "I found the box outside and after reading the letter I was going to throw the box into the trash when I saw you on top of the stairs and made my heart beat so fast. I mean, you are the only woman for me. I love you for who you are, not for the size of your breasts".</p>
+<p>Meantime, Ruby was furious. The letter was from a woman called Rebeka who started her career as porn started in a distant country, and even though she was quite young, the size of her breasts had already outclassed Ruby's mammoth ones. But that was not the worst of it. What really pissed Ruby off was that this woman dared Rob to become her sex partner in her following movies, because he was the only able to handle a woman so blessed like her. She even promised him that things will get only better with time as she hasn't done growing yet. As a proof, she sent him the bra and record she had outgrown two months ago.</p>
+<p>“That’s it! How much bigger I must be for this to stop” she said crushing the letter in hand. Then, the answer was actually wrapped around her. She was wearing what had been the biggest world wide bra of a natural busty porn star. She had the tools to actually become the undisputable tit queen of the entire world, she only needed to make the decision to do it.</p>
+<p>“Rob… be honest with me. Are you happy with how big I’m?” Ruby said thrusting her chest out.</p>
+<p>“Of course baby. And you know I will love you even without such huge fun bags” he grinned.</p>
+<p>Ruby smiled as such a statement will be hard to prove in this reality, but coming from another when she had a very modest size, she knew for fact he wasn’t lying to her “But you will love if I could be as big as Rebeka, don’t you?” she pouted, wanting an excuse to use her magic bra.</p>
+<p>“No. I don’t” he said.</p>
+<p>“Well…” she said ready to use her crimson garment when she realized his answer had been negative. “No? Are you sure? I know you are a tit man. Why wouldn’t you love that?” she asked.</p>
+<p>“I won’t like you to be as big as her...” he said looking down as a kid being reprimanded. “... I want you bigger” he said raising her face wearing the biggest grin she had ever seen in her life.</p>
+<p>“Now, that is more I like it” Ruby purred entering into the game. “So, imagine for a moment all Rebeka’s tit flesh, ok?” she said walking next to him so she could approach his face. She couldn’t do it forward due her breasts working as bouncing bumpers each time. “Now, picture it being taken away from her as I hold it quite tight” she whispered in his ear  as she grabbed his hard-on over his pants making him gasp in surprise and pleasure. “Now that I grabbed all that lovely tit mass in my lovely hands…” she whispered while stroking him steadily. “.. will you love to see me adding such a heavy burden on top of my own? It will double my size for sure. Would I be big enough to satisface your deep desires?” she whispered, feeling his close to explode. ‘Not yet’ She thought as she slowed down her ministrations prolonging a bit more his release.  .</p>
+<p>“Sure baby” he said, catching his breath as she felt losing the grip his wife had on him. “For starters anyway” he grinned knowing quite well that Ruby will finish him off in retaliation.</p>
+<p>“Good boy. That is what I wanted to hear” she said patting his manhood as she stepped back.</p>
+<p>“What? What?” Rob asked, confused as Ruby left him with a severe case of blue balls. She wasn’t that bad, but when he saw his wife putting her bra on top of the other pornstart, he knew she was planning something. “Uhm… dear,... what is going on?” he asked intrigued.</p>
+<p>“Let’s say that I’m a very supportive wife giving my husband what he wants" Ruby said pushing Rob into the couch. "Are you ready to be married to the woman with the biggest natural breasts on the planet?" she asked with her erotic voice making him go insane. </p>
+<p>Thinking it was a kind of roleplay, Rob quickly got his shorts and underwear down, making her smile while wondering how many times she had done the same thing before as he seemed to understand perfectly what she wanted from him. The answer to her thoughts made her blush as she realized her yoga pants had a special cut between her legs for 'easy access' when she got in her ‘playful’ mood. "Just remember, you were the one asking for this and I’m just enjoying the ride” she grinned, hooking the bra on while taking in until the last inch of her husband's pride.</p>
+<p>“Oh fuck!! I never got in all of it!” Ruby gasped, enjoying the benefits of her last heist as her pussy had received two major enhancements in terms of tightness and deepness. She wasn’t sure from whom she obtained them, but combined both elements boost her sex enjoyment tenfold. ‘Now I can see why all those women were after you. Your full cock feels amazing. It fills me so good’ she thought, using every talent she acquired from the porn starts to enjoy her love making to the maximum. She even tight and relax the muscles in her sex she even wasn’t aware of having. Rob moaned in response as she adjusted her inner grip on his rod, riding him in a way no woman could ever have and as she was doing it, she could feel her breasts growing once more flushing her body with overwhelming sensations, but suddenly something felt off. For the first time since she had been using the magic bra, it was becoming tight on her.</p>
+<p>Ruby examined her bra and noticed the cups of Rebeka's bra were sticking out of her own. Somehow, the garment wasn’t yet fully absorbed and was getting more than the proper load for its dimensions. Her smile couldn’t be wider as the cups were being overflowed by her constant growth. ‘You really know how to please a woman, do you?’ she mentally said to her magic bra enjoying how the biggest-bra-on-earth was suffering to hold her expanding mammaries. </p>
+<p>“Yes!!” Ruby moaned as one of Rebeka's straps gave in. “Oh Yes!!” she moaned louder as the second one was teared off. “Come on… come on… YEEEES!!” she screamed as her orgasm hit her just at time the hook of the bra got broken. “I’m bigger than the biggest porn star on the planet!! I made it!” she cried as the ruined bra was quickly absorbed into her magic one.</p>
+<p>“Holy cow!!” Rob gasped realizing for the first time the humongous breasts of his wife were growing. “What is going on Ruby?” he said alarmed but still quite excited.</p>
+<p>“I already told you. I’m stealing all the breast size Rebeka has so I will become the undeniable tit goddess of this fucking planet” Ruby said tilding back while placing her hands on her husband knees. Her breasts were growing so big that if she kept her torso straight, she could end up burying and suffocating Rob with her tits. Not that he will mind at all. Still, she had other plans.</p>
+<p>“But how is it possible?” he asked, feeling quite aroused at the spectacle before his eyes.</p>
+<p>“I could explain it to you, or you can uncap my milk juggs and drink to your heart’s content. What do you prefer?” she teased him. “Because all this growing is making my breasts very very full and I could use a release” she said patting her breasts making them slosh in the inside</p>
+<p>Rob grinned and quickly fetched Ruby’s breasts from the bra and gasped to see her nipples had passed from plump raspberries to very big thick strawberries. One of them was enough to fill his mouth. Sucking on a nipple like that felt divine and his efforts were rewarded by a hot stream of the most delicious milk he had ever tasted.</p>
+<p>Meantime, Ruby kept moaning and panting as she could feel Rob’s rod still getting harder and longer. She knew she was over stimulating him as her breasts were swelling in front of his eyes and he could feel how heavy they were getting. Even the couch was groaning due all the pounding and increasing weight it was receiving.  But as Rob’s enthusiasm felt like he would split her in two, Ruby was fighting the incredible stimulus he was unaware of providing. </p>
+<p>Since the bra was still on, the flow of breast flesh from Rebeka still continued, forcing Rob to adjust the grip of his hands over Ruby expanding breasts while he continued latched on her nipple. Such a fix made Ruby realize how her tits were overflowing Rob’s hands. She felt how his manly strong hands were diminishing at the imposing present of her breasts.</p>
+<p>Ruby had to almost lay her back on Rob’s legs as her breasts were growing beyond big. She felt that she must have outgrown Rebeka's tit record by at least 10 cups and was still growing. “Once the transference is completed, people will have to invent a new alphabet to classify these milk tanks'' she said, caressing the side of her breasts. But her happiness was cut short as she felt her breasts rubbing on her chin. “What the... ?” she said alarmed.  Fearing her breasts were about to swallow her face, she raised up without considering the consequences.</p>
+<p>Rob didn’t have time to react as a massive wave of breast flesh came toward him. “Honey…” was all he could say before he was silenced as everything turned black for him.</p>
+<p>Once Ruby got properly seated, her breasts settled down and she was no longer in fear to be suffocated. “That was close. I don’t know my own boob power right Rob?” she joked. Then, her fear returned as she could feel Rob was still under her, but she couldn’t see him before her. </p>
+<p>“Rob? Oh no!” Ruby cried trying to put her breasts appart with her hands, Suddenly she felt movement between her tits and a moment later Rob’s head popped out from between her neverending cleavage. “There you are! You scared me so much” she said, catching her breath.</p>
+<p>Rob seemed to say something, but Ruby couldn’t hear him as the sensations of Rebeka's breasts had experienced during her life started to manifest in her head. Unlike the other girls, these experiences weren’t gentle at all. She felt her massive breasts being groped and badly treated due the lust of men. For a moment, she felt sad for Rebeka and understood why she will have a partner to be gentle with her. 'Well, at least you won’t have a problem with men mistreating your breasts from now on' she grinned sensing her breasts had finished storing everything Rebeka had to offer. As result, her breasts ended covering a large part of her couch, not to mention having completely trapped Rob between them. She also saw her bra had altered its appearance to accommodate and support better the unbelieve size and weight of her breasts. While the straps had gotten thicker and wider to handle the heavy load, the shape of her cups resemble two opened umbrellas linked by an elastic band. Those had slipped back in place when she got up and the stretchy band along with flesh walls of her breasts had Rob’s arms pinned making it impossible for him to escape. </p>
+<p>“You weren’t lying baby. You really took all Rebeka’s boobage!” Rob exclaimed while feeling quite aroused surrounded by so much tit flesh. His excitement didn’t pass unnoticed by Ruby as she felt him getting even thicker inside her. She feared she could pass out from having so much of his blood flowing to his erection, but imagined he would be fine once reality reshaped itself.</p>
+<p>“You know, I know you love a good tit fuck, but I didn’t have the proper size to give you a satisfying one. Now, I have so much that I could tit fuck your entire body” she grinned. Then, switching to her seductress mode, she whispered. “What do you think about becoming the first and only man whose completely body was tit fuck by the biggest tits mankind will ever known”</p>
+<p>Rob’s sanity seemed to totally switched off as an animalistic instinct took him over. Even, he was totally buried in Ruby’s gigantic bosom, he summoned every bit of strength in him and started pounding her with all his might. Ruby gasped at her husband inhuman vigor and without wanting to feel short in her response, she rammed his cock frantically while using every trick she assimilated to delay his husband's release forcing him to build an even more powerful.</p>
+<p>And when Ruby thought her pleasure couldn’t be more satisfying, she felt her whole body tingling from something different than her incoming orgasm. “Oh my… Rebeka  wasn’t joking when she said she hadn’t done growing yet” she said in awe as she felt herself starting to get taller. “Yes, oh yes! I can feel her future development flowing into me. I’m absorbing any growth potential she could still have and it feels so erotically orgasmic” she moaned as Rebeka’s eventual adulthood blossoming struck her as a sudden and very potent second puberty. </p>
+<p>Ruby moaned as she felt her highly developed body maturing even more alluring, more sexualized. Her hips and ass swelled so greatly that the fabric of her yoga pants were stretched to the point of becoming translucent around her pelvis while her breasts resumed their unstoppable growth threatening to cover the whole couch and Ruby’s husband along with it.</p>
+<p>“Oh crap!” Rob cursed as his vision was covered one more as his head was swallowed but the still inflating cleavage of his wife. He was so turned on that he came like a fire hose inside Ruby. If it wasn’t for the weight of ber bust, he imagined he would have ricoteched her into the ceiling.</p>
+<p>A few seconds after, Ruby felt how big she was getting. She was sure she must have been more than 7 feet tall. Her pants started to rip apart and even more important, her bra seemed to be finally outgrown by her breasts. Her previous female orbs were getting so big and heavy that she estimated just one of them should weigh more than the rest of her whole body. It was at this moment that she was taken by surprise by Rob’s hot flush inside her that she flexed her whole body resulting in the explosion of her pants. Such events combined were too much for Ruby and she ended having the mother of all orgasm. She screamed, releasing the full power of her voice. If someone will have heard her, will have just end orgasming like a savage without control.</p>
+<p>Completely drained, Ruby managed to slip off Rob’s legs and landed on her hyper cushioned ass without feeling any discomfort. Even, with her butt on the floor, she was looking down at her exhausted husband. Free from her tit prison, he collapsed on the couch sporting the biggest smile a human could possibly have. For the first time in her life, Ruby felt Rob had overpassed the maximum pleasure his body could handle. “You were great baby. A truly stallion” she said, quite proud of what she had done and become. Then, as reality started to reshape around her, Ruby couldn’t avoid feeling curious about how her life as the woman with the biggest breast in the planet really turned out for her. But one thing was for sure, if any woman could appear to challenge her tit supremacy, her magic bra would let her come out owning the competition.</p>
+<p>The End.</p>
+</body>
+</html>

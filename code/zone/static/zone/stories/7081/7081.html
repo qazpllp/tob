@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Yuri 5 - The Masterpiece</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p><strong>Yuri's Antiques: The Masterpiece\
+#5</strong></p>
+<p>By: Specter09</p>
+<p><strong>Disclaimer:</strong> This is a work of fiction with adult themes. If you are
+under the age of 18 or it is illegal for you to view this in your place
+of residence, please turn away and find something else to do. This work
+is strictly fantasy and does not reflect the author's real life values.</p>
+<p>This story was an attempt at practicing 2^nd^ person perspective and a
+tg theme. If that isn't your style, you've been forewarned.</p>
+<p>If you are still here, please continue reading and enjoy!</p>
+<p>The piece was massive -- far larger than anything you thought Marcie was
+going to actually buy. She claimed it was a steal, a meager Benjamin
+when other comparably sized works would sell for tens to hundreds of
+Benjamins. Regardless, it was still insanely large -- you had let her
+decorate the interior of the house, but couldn't fathom why she got
+something so large and expensive with their limited budget -- the ink
+drawn masterpiece was nearly as tall as the wall and almost as long as
+your six person dining room table.</p>
+<p>"Look, I know it's a lot, but it's a wonderful discussion piece and
+there's so much to look at! You could just get lost in it!" Marcie
+beamed, trying her best to win you back over. She had been pushing hard
+to convince you to upgrade the interior. You had both been in it for
+over three years, and she wanted to update the look a bit. She had
+eventually sold you on a budget of her choice and free reign so long as
+she limited your help. The past year had been rough, you had been laid
+off at first and each interview fell flat. You couldn't carry the same
+appeal through a screen for interview as you could in person -- your
+confident mannerisms dissipated as they traveled through the digital
+nexus. It had been ten months and you weren't sure that you could
+recover that confidence again. Failure after failure seemed to haunt you
+like a poltergeist.</p>
+<p>Yuri was his name -- the antique dealer that Marcie had apparently
+bought the piece from. If had any shred of that confidence left, you'd
+promptly take the masterpiece back and demand a full refund from the
+man. Marcie told you that it had captivated here -- almost like hypnosis
+as she was traveling in the store. Yuri had stirred her from her stare
+and promptly presented an analysis of the masterpiece like a seasoned
+purveyor of such things.</p>
+<p>The masterpiece was apocalyptic. Yet, not in the conventional modern
+western idea of it. It was revelatory, a revelation piece that would
+unveil truth about individuals. When a person was enthralled by its
+intricate details, it was in the process of awakening the thrall to the
+truth of themselves. The branches would guide the partaking of its
+curiosities to discover something long slumbering within themselves.</p>
+<p>And you had to agree to an extent -- it was truly a masterpiece,
+something actually worthy of that grand title. At a glance, from a
+distance, there was a behemoth of a tree, much like Yggdrasil itself.
+It's branches and roots wrapped and moved like pythons over the space of
+the canvas, each guiding the eye to a new theme; a new plane of
+existence. Not only was there much to behold, but each sector of the
+painting had an explosion of color that countered the muted earth tones
+of the bark. The tree alone, with its explosion of color acting as a
+sort of wondrous crown adorning the branches.</p>
+<p>But a closer inspection unveiled fine details -- a seemingly infinite
+amount of minor things, of people practicing their comings and goings, a
+tidy and miniscule hustle and bustle. The tree was embedded with the
+works of man, street signs, lamp posts, cars, rice terraces, protests,
+sports, skyscrapers, farmers farming, nomads wandering, people
+celebrating and weeping, ancient ruins, and more -- if it had ever been
+built by human hands or crossed the imagination of a homo sapien, like a
+comet in the sky even once, it found immortalization in the dark, bold
+lines of the artists' ink pen. You had to agree -- it was sort of
+living, breathing labyrinth that reached out with inky gentle fingers
+and beckoned you to lose yourself in its intricacies.</p>
+<p>Yet to even attempt to zoom back out from the details was to recognize
+the more moderately sized images, compiled of those minor little human
+activities, that they themselves contributed to the structure of the
+grand tree. Larger human forms could be made out in the abstract, their
+forms a concoction of a myriad of other things.</p>
+<p>Realizing the draw, the aura of power and attraction it had, like vines
+attempting to seize your eyes, you shake yourself free. Yet, even as you
+break free, it takes a moment for reality to find you. Everything was a
+moving blur that slowly worked itself back to a realignment of sorts.
+You focused on yourself first, taking stock like Descartes, before
+tethering yourself to you wife.</p>
+<p>Your inventory reveals nothing new, just a reminder of the fat you
+accumulated over the past year -- nearly thirty extra pounds of weight.
+Food had been your primary comforter rather than the missus. Talking
+with Marcie was to enter a confrontation with your inner beasts and the
+constant strife of the year had worn you down to the point where such a
+conflict was the last thing you wanted. Chips on the other hand did not
+attempt to challenge you nor your demons, but to simply placate them for
+the time being. Appeasement was preferable to war.</p>
+<p>Marcie, however, had thrived during their struggles of the past year.
+She took the extra time working from home had given her to improve her
+skills in cooking, to exercise more, and to pursue new hobbies in
+literature and writing -- she had even gotten published in a few online
+outlets! You were a yin and yang of sorts. She had found herself a
+success in the face of the struggle and thrived. Marcie exuded a greater
+beauty than the day you were married. You, however, were the inverse of
+this truth. Repeated failure in the face of trials had desecrated your
+body, leaving you fat, balding, depressed, and bereft of purpose and
+ambition. You were left rudderless in a storm.</p>
+<p>Marcie had settled into a near daily fitness regimen which had left her
+abs marvelous -- like smooth rolling hills over a plain. Unfortunately,
+those wondrous hills were hidden beneath the shell of her lime tank top.
+Each of her legs were incredibly strong, yet somehow retained their
+feminine features and ran up to her hips which we still wonderfully wide
+and it all worked together to give her a backside that made many of her
+friends jealous. You had to admit that it was one your favorite things
+about her body -- besides her piercingly pale blue eyes that could
+convey cerulean pools of affection or icy glacial daggers when you had
+said something stupid or upsetting.</p>
+<p>From her legs, you raised your eyes to her chest were her small breasts
+hung snugly within her sports bra. They were noticeable, yes, but they
+had been a sore point for her throughout much of her teen years. You had
+always told her that you loved for who she was -- mind and body as they
+were. Yet, Marcie had always felt that breasts were the most prominent
+indicator of one's femininity, and the lack of such a clear indicator
+had taken her significant time to work through.</p>
+<p>Finally, you brought your eyes to rest on the profile of her wonderfully
+petite face. It's delicate form had only made those cerulean pools feel
+even larger. Her nose was quite feminine and she had a smile that was
+undeniably warm and comforting. All she had to do was flash a quick,
+genuine smile and anyone's problems would simply melt away. It was her
+nuclear option when you both in a fight -- you couldn't stay mad in the
+midst of such authentic joy despite the conflict. This was the
+superpower that ultimately drew her to you, and yet its magic felt as if
+it was no longer effective as the year lurched on for you.</p>
+<p>Yet, as you beheld her, Marcie was none the wiser. She was fully
+enamored by the cornucopia of life bursting before her. You snapped,
+yelled, and yet nothing registered to her. She was fully engaged, eyes
+focusing in and out, zooming back and forth, navigating the trails that
+led her only deeper into the forest. She was gone.</p>
+<p>Defeated for the moment, you took one last look at yourself, repulsed by
+what the quarantine had formed you into, and returned your gaze to the
+decorative masterpiece. It felt new, fresh, different somehow -- like it
+had opted to reorganize itself into something wholly new, yet still
+unchanged. It felt alive.</p>
+<p>You turned your eyes back to the great tree and a similar feeling soon
+embraced you, one of feeling lost, yet of also, paradoxically, of being
+found. Your senses now feel foreign, yet familiar. The shape of the tree
+is still there with its blossoming fountains of color contrasted against
+the lichen hues of the bark of the tree. The minor details were still
+there, but you were certain that they had undergone a mild transition.
+That road sign had certainly said 'Exit 3' and not 'Exit 43'. The cars
+had been primarily shades of blue and not red had they not? Had the
+tulips become daisies or was that always the truth? Was the past truth
+or was the present truth?</p>
+<p>And as your mind reeled from the chaos of impossible changes and
+alterations, running without concern or care along the highways of the
+arbor maze, you couldn't help but feel the gentle touch of invisible
+tendrils seizing your eyes. Slowly, you worked your way through the
+maze, much as you were prone to do on the diner menus while you waited
+for food. You felt lost, yet strangely fully aware of your journey
+through the maze. It felt like chaos, yet ordered.</p>
+<p>You weren't sure how long you were lost for. No matter how you try, you
+can't shake yourself free or even close your eyes to refresh them. They
+were an uncompliant student as your reason attempted to be the educator.
+Out of the periphery, reality itself had seemingly melted away. The
+dining table was no longer a conception in your mind. To think of the
+thing would be to try and pull material out of vapor. Even your Marcie
+was gone -- only you and the masterpiece existed. Reality was nothing
+beyond just the bizarre visual dance between you and your non-sentient
+partner.</p>
+<p>The choreography was simple -- eyes to the obelisk that was being
+revered by people, then to the orchards and its seeming miles of
+nourishing fruits, to the prison like structure on the opposite end of
+the image, and then to visually inhale the crimson that seeped from
+everywhere. To inhale the red was to get lost in its dizzying embrace
+only to come back to the obelisk. That was his dance. Obelisk. Orchard.
+Prison. Red storm. Obelisk. Orchard. Prison. Red storm.</p>
+<p><strong>Obelisk. Orchard. Prison. Red. Obelisk. Orchard. Prison. Red. Obelisk.
+Orchard. Prison. Red. Obelisk. Orchard. Prison. Red. Obelisk. Orchard.
+Prison. Red. Obelisk. Orchard. Prison. Red. Obelisk. Orchard. Prison.
+Red. Obelisk. Orchard. Prison. Red. Obelisk. Orchard. Prison. Red.
+Obelisk. Orchard. Prison. Red. Obelisk. Orchard. Prison. Heat. Obelisk.
+Orchard. Prison. Heat. Obelisk. Orchard. Prison. Heat. Obelisk. Orchard.
+Prison. Heat. Obelisk. Orchard. Prison. Heat. Obelisk. Orchard. Prison.
+Heat. Obelisk. Orchard. Prison. Heat. Obelisk. Orchard. Prison. Heat.
+Obelisk. Orchard. Prison. Heat. Obelisk. Orchard. Prison. Heat. Obelisk.
+Orchard. Prison. Heat. Obelisk. Orchard. Prison. Heat. Obelisk. Orchard.
+Prison. Heat. Obelisk. Orchard. Prison. Heat. Obelisk. Orchard. Prison.
+Heat. Obelisk. Orchard. Crib. Heat. Obelisk. Orchard. Crib. Heat.
+Obelisk. Orchard. Crib. Heat. Obelisk. Orchard. Crib. Heat. Obelisk.
+Orchard. Crib. Heat. Obelisk. Orchard. Crib. Heat. Obelisk. Orchard.
+Crib. Heat. Obelisk. Orchard. Crib. Heat. Obelisk. Orchard. Crib. Heat.
+Obelisk. Orchard. Crib. Heat. Obelisk. Orchard. Crib. Heat. Obelisk.
+Orchard. Crib. Heat. Obelisk. Orchard. Crib. Heat. Obelisk. Orchard.
+Crib. Heat. Obelisk. Orchard. Crib. Heat. Obelisk. Breasts. Crib. Heat.
+Obelisk. Breasts. Crib. Heat. Obelisk. Breasts. Crib. Heat. Obelisk.
+Breasts. Crib. Heat. Obelisk. Breasts. Crib. Heat. Obelisk. Breasts.
+Crib. Heat. Obelisk. Breasts. Crib. Heat. Obelisk. Breasts. Crib. Heat.
+Obelisk. Breasts. Crib. Heat. Obelisk. Breasts. Crib. Heat. Obelisk.
+Breasts. Crib. Heat. Obelisk. Breasts. Crib. Heat. Obelisk. Breasts.
+Crib. Heat. Obelisk. Breasts. Crib. Heat. Obelisk. Breasts. Crib. Heat.
+Obelisk. Breasts. Crib. Heat. Obelisk. Breasts. Crib. Heat. Obelisk.
+Breasts. Crib. Heat. Obelisk. Breasts. Crib. Heat. Obelisk. Breasts.
+Crib. Heat. Obelisk. Breasts. Crib. Heat. Obelisk. Breasts. Crib. Heat.
+Obelisk. Breasts. Crib. Heat. Obelisk. Breasts. Crib. Heat. Phallus.
+Breasts. Crib. Heat. Phallus. Breasts. Crib. Heat. Phallus. Breasts.
+Crib. Heat. Phallus. Breasts. Crib. Heat. Phallus. Breasts. Crib. Heat.
+Phallus. Breasts. Crib. Heat. Phallus. Breasts. Crib. Heat. Phallus.
+Breasts. Crib. Heat. Phallus. Breasts. Crib. Heat. Phallus. Breasts.
+Crib. Heat. Phallus. Breasts. Crib. Heat. Phallus. Breasts. Crib. Heat.
+Phallus. Breasts. Crib. Heat. Phallus. Breasts. Crib. Heat. Phallus.
+Breasts. Crib. Heat. Phallus. Breasts. Crib. Heat. Phallus. Breasts.
+Crib. Heat.</strong></p>
+<p>The longer you engage in the ballet, the more erotic the images seem to
+become. The red was no longer dizzying because of the violence of its
+fury, but rather it was hot, like silk sheets rolling in mad passion in
+on themselves. The prison ceased to be a prison but mutated into a crib.
+No longer had hardened looking criminals fill it, but jovial infants.
+The orchard was no longer ripe with oranges, apples, pomegranates, and
+more, but budding breasts hung from their branches. Then there was the
+obelisk. That object of affection and devotion had slowly morphed into
+something phallic in nature during their dance. Further, the people
+beneath it in worship were no mere people, but beautiful visages of
+Venus herself in various incarnations.</p>
+<p>Your eyes couldn't break away, no matter how much you tried. The dance
+was like a ritual. No longer did it feel like the graceful swaying and
+movement of the start, but not it was deep, primal, aggressive, and
+driving. Phallus. Breasts. Crib. Heat. Those movements are a visual
+mantra -- some obtuse incantation that feels wholly unnatural and yet
+comfortably normal. Fear was present, but only for the briefest of
+flashes, like dark lightening flashing across your mind as its storm
+passed and retreated to some foreign place. You can feel the tendrils
+soothing your</p>
+<p>It was unbearably hot. Unconsciously, your arms begin to disrobe
+yourself, almost like you were nothing more than a marionet guided by an
+army of masterful hands. Each muscle, strung up to the thousand hands of
+an invisible genius. Your sweat pools and coalesces as beads on your
+skin, running like passionate rivers along the topography of your form.
+Each new crescendo of those roiling waves of red brought a new heat
+wave. Hotter and hotter. You can feel seeping into your bones and an
+arousal ignites with fury deep within. The color oozed eroticism. You
+can feel your mind drowning in it. Then, drowning became saturation,
+which in turn became a marinade.</p>
+<p>Yet, each time that red wave would hit, your eyes would gasp for fresh
+air only to take in the obelisk-turned-phallus before you. It was an
+object to be adored, worshipped. Your jaw unlocks and drool begins to
+form. A foreign yearning from that arousing flame flares up from deep
+within. You long to be one of the women in the painting, deep within the
+throes of her phallus worship. Wanton lust wells up inside you like
+spring, waiting to explode forth as a geyser just like the incarnations
+before you.</p>
+<p>To behold the obelisk was to being the tribal dance once more. The
+breasts ballooned before you. They were the fruits of these vines -- of
+various shapes, sizes, and forms -- each pleasantly delightful and
+desirable. Oh, to be one of the trees, presenting your own fruits for
+adoration and consumption. Your hands move once more, the invisible
+strings still exerting their perfect skill. They had removed your
+clothing long ago and now they found your chest. It was already soft
+from the dereliction of the past year, but now they had at least felt
+good.</p>
+<p>The puppet master guided your hands and fingers with exquisite detail
+while your eyes remained fix, prisoners of the dance. Your fingers
+caress your chest, rolling with gentle and deft grace, dragging across
+each pectoral in their own supporting dance. You feel your nipples for
+the first time, hardened and stiff, a silent, seemingly impossible
+breeze pirouettes across them. It feels delightful, as if it is the
+first time they've partaken of touch, like the sense had been denied to
+them for their entire existence.</p>
+<p>Your hands continue their graceful movements, yet still rigid in their
+adherence to the unknowable choreography woven by your invisible master.
+Now your fingers join the pirouettes and take a brief moment to seize
+and twist your newly discovered sensory center. Each tweak presents a
+brief, seamless lift and then a resulting drop that leaves a slight
+ripple on your chest as you feel the weight shift.</p>
+<p>And so the dance of your hands continues. They grace the curvature of
+what you know for certain are breasts forming, those feminine features
+that that woman you knew had been so envious of. Your hands sashay back
+and forth, giving a deep embrace of the flesh before lifting into the
+air and plunging with precision to your new breasts sensitive tips. They
+tweak, twist, lift, drop, and the ripple. Embrace. Sashay. Lift. Plunge.
+Tweak, Twist. Lift. Drop. Ripple.</p>
+<p>Embrace. Sashay. Lift. Plunge. Tweak, Twist. Lift. Drop. Ripple.</p>
+<p>The ripple feels heavier this time. You can't see what happening, but it
+feels meaningful. It is no longer the brief jiggle of your previously
+masculine accumulations, but something delightfully satisfying.</p>
+<p>Embrace. Sashay. Lift. Plunge. Tweak, Twist. Lift. Drop. Ripple.</p>
+<p>Embrace. Sashay. Lift. Plunge. Tweak, Twist. Lift. Drop. Ripple.</p>
+<p>Embrace. Sashay. Lift. Plunge. Tweak, Twist. Lift. Drop. Ripple.</p>
+<p>Embrace. Sashay. Lift. Plunge. Tweak, Twist. Lift. Drop. Ripple.</p>
+<p>Bigger this time. Fuller. More satisfying is that ripple. You can feel
+it tug on you, like a gentle anchor.</p>
+<p>Embrace. Sashay. Lift. Plunge. Tweak, Twist. Lift. Drop. Ripple.</p>
+<p>Embrace. Sashay. Lift. Plunge. Tweak, Twist. Lift. Drop. Ripple.</p>
+<p>Embrace. Sashay. Lift. Plunge. Tweak, Twist. Lift. Drop. Ripple.</p>
+<p>The tweak feels exponentially more satisfying this time. Your vocal
+chords emit a soft moan. Your voice is no longer what it was. It oozes a
+sweet smokiness. Strawberries enveloped by campfire. The ripple pulls
+harder.</p>
+<p>Embrace. Sashay. Lift. Plunge. Tweak, Twist. Lift. Drop. Ripple.</p>
+<p>Embrace. Sashay. Lift. Plunge. Tweak, Twist. Lift. Drop. Sway.</p>
+<p>The changes feel as if they are gaining momentum, just your breasts are.
+The ripple has become a jiggling, a swaying, like individuals on a
+pendulum granted some freedom to move. Each tweak elicits a deeper, more
+primal moan. The images of the painting come in and out of focus, yet
+they progression is still there. Obelisk. Orchard. Prison. Red. Phallus.
+Breasts. Crib. Heat.</p>
+<p>Embrace. Sashay. Lift. Plunge. Tweak, Twist. Lift. Drop. Sway.</p>
+<p>Embrace. Heft. Sashay. Lift. Plunge. Tweak, Twist. Lift. Drop. Sway.</p>
+<p>Embrace. Heft. Sashay. Lift. Plunge. Tweak, Twist. Lift. Drop. Sway.</p>
+<p>Embrace. Heft. Sashay. Lift. Plunge. Tweak, Twist. Lift. Drop. Sway.</p>
+<p>Embrace. Heft. Sashay. Lift. Plunge. Tweak, Twist. Lift. Drop. Sway.</p>
+<p>They feel enormous now, shaming that girl you used to know. You have yet
+to drink in what your chest has become, but it feels wonderful,
+powerful, feminine. They were easily armfuls, their weight pulled on
+your back. Yet, as the thought of back pain crept to the forefront of
+your mind, the tendrils seized your shoulders and back, rubbing them,
+massaging them, and then retreating, leaving behind strengthened and
+reinforced mounds to assist in proudly presenting your billboard sign of
+your new sex.</p>
+<p>The blur of the images came back into focus on the crib. Children.
+Reproduction. Were you meant to breed? You couldn't help but ponder the
+thought as you continued your dance. To have a babe nursing from you, to
+lactate, to take the aesthetic of your chest and also make it
+functional. But then the was the act beginning the reproduction process.
+The seduction of a male, the worship of his obelisk and letting it
+explore the fruits of your orchard and the probe your innermost being.</p>
+<p>The heat only exacerbates the feelings within you. Your hands change
+their movement, one slithers slowly down your stomach -- taut, flat, no
+smooth mountains like that other, but a gentle valley down the middle
+pointing to a land overflowing with honey. Your hand discovers that
+wondrous land and your form is rewarded with a surge of energy, it
+pulsates through you, crackling at the tips of your breasts where the
+puppet master promptly brings your opposite hand to. Now, your fingers,
+guided by their sightless strings engage in a deep massage, a new dance
+of your flesh.</p>
+<p>Sensation courses over you, the sights have sounds and begin to allegro,
+picking up in pace and fury. The honey land is being tilled furiously by
+your hand while its opposite nurtures your breasts, giving the crackling
+points of energy a moment of release. Your sweetly smokey moans join the
+bass line of the orchestra. Faster and faster they move until you feel
+the waters recede from the shore, a tsunami of pleasure is on the
+horizon.</p>
+<p>For a moment, you realize the strings are gone and your eyes are closed,
+you've been given autonomy only to become ensnared with the pleasure.
+You can't stop. You won't stop. The wave looms large, you can feel it
+coming. It crashes and sweeps away everything of what was with it. You
+are this now. A goddess. There are but ruins left of who came before and
+they tell little of who he was. As the waters of pleasure overwhelm you,
+the tendrils release their grip. Your eyes come back into focus.</p>
+<p>You behold the masterpiece once more. The minor details are still there,
+deeply erotic and embedded within the bark of the tree. Yet, the
+moderate, human like shapes that the roots, branches, and vines made are
+now clearer and you rest on one, rather two.</p>
+<p>She is there, beatify and you recognize her has you. Her ass itself is
+far larger than that girl you used to know. She is on her knees,
+presenting her backside to the viewer, letting them drink in her
+feminine folds. Following her up the backside, her hair is long, braided
+in a long French braid. You immediately become aware of your own hair,
+pulled tight on your scalp and hanging long down your back, touching the
+incline that goes on to make up your rear. You instinctively know that
+this is your leash, for the man to pull you with and you grant you mind
+a moment to wander in lust.</p>
+<p>Your eyes return to the depiction of you within the masterpiece. You
+look up to your lover, that same look of worship and desire that the
+patrons of the phallic obelisk had in their tiny eyes. Your tongue runs
+along the ridges of his member, taking time to inhale his scent. As you
+continue your ascension up the image, behold your lover. Masculinity
+embodied in the flesh. Enormous, powerful, strong, rough, and yet gentle
+and loyal. The tree makes out the details and he is gorgeous, a demigod
+to match your own feminine pseudo-divinity.</p>
+<p>Slowly, you can sense reality begin to bleed back in like ink on water;
+it globs and wisps back into focus and there he stands, your
+counterpart. You finally feel free of the masterpiece, but you yearn
+deep inside for him to possess and ensnare you. The desire propels you
+to embrace him, to run your smooth, delicate hands against the wonders
+of the topography of his muscles. They cut sharply, steeply incline and
+decline, they are simply wondrous. Your eyes drink him in. His chest is
+large, like a grand mountain face that exudes strength. His core
+something to behold, a collection of small canyons with rivulets that
+guide your eyes to the object of your desire. Its enormous, thick, and
+semi ready. Your hand caresses his testes, your mouth drools.</p>
+<p>The touch of his hands stirs you from the spell he unknowingly put you
+under. Your eyes shoot to his. Piercing pale blue eyes, deep cerulean
+pools that convey a deep hot passion for you. They break for you to take
+in your form and you seize the opportunity to finally inventory
+yourself. And yet, there isn't much to see -- your enormous breasts,
+each easily as large has his head, capable of smoothing him in the great
+canyon that is your cleavage, obscure the rest of you. Looking through
+the deep crevasse between your breasts, you can catch a glimpse of your
+perfectly smooth stomach and the ridge line where your new sex resides.</p>
+<p>His hands handle your bosom with gentle, yet firm care. His mouth finds
+your nipples and you let out a gasp before forcing your hand to the back
+of his head. His tongue swirls, its own little dance that kindles that
+red hot fire deep within your loins. Your spare hand quickly finds its
+home and begins its attentive care to your sex. You bring your mouth
+next to his ear, exhale deeply next to and let out a slow, low moan
+which he promptly returns with a grunt before breaking free of your
+hand.</p>
+<p>He looks at you briefly, your dear husband Marcus, as he pushes you
+gently on the shoulders. You bite your lower lip, shooting him an erotic
+grin. You don't resist, you have wanted this since you saw him towering
+over you in the masterpiece. He is enormous and you take a moment to be
+thankful for such a gift that you get to enjoy regularly. As your hand
+continues to care for your own loins, your other finds his quickly
+hardening shaft and rubs it. You take in its soft strength, you feel it
+get harder and stronger in your hands.</p>
+<p>You present it over your face, looking up deeply at him, smiling for a
+moment for letting your tongue free and running it his full length.
+Easily eight inches and satisfyingly thick. Your nose drinks in his
+musk, allowing it to drive you even more mad with heat. As your tongue
+approaches the tip, your mouth unlocks and takes him in, tongue dancing
+on the tip. He lets out an appreciative, and pleasure filled moan. His
+hand finds the back of your head and push you further down.</p>
+<p>Your throat relaxes, allowing him more access to your mouth, tongue
+continuing its dance down his shaft. No longer needing to stroke him,
+your hand moves to massage the delicate fruit hanging from his obelisk.
+Soon, he let you free and your mouth took over for your hand, tongue
+massage, tasting, salivating over the fruit that would soon fill you.
+And again, you brought your tongue back up the shaft, mouth enclosing on
+him and moving back and forth. You can feel your chest move with your
+head, swaying gently and with mass as you show him your devotion. And he
+is very much appreciative of your service.</p>
+<p>But soon, he breaks free from your mouth and you know the next. You heft
+your enormous breasts, presenting them as an offering to him. You spit
+and prepare your chest for his enormous erection. He wastes no time and
+plunges deep into the canyon of your titflesh. The head of his obelisk
+appears every now and then, you reward it with a quick lick before
+furiously running your breasts up and down his shaft. You let them drop
+and take him back in your mouth again, loving the taste.</p>
+<p>He has other ideas and grabs your leash, pulling you up to him. He
+guides you to the couch where he lays down and presents himself to you.
+You mount him, looking at him. He drinks in your chest, hands exploring
+and massaging them. You swear you feel them get even larger as he
+smothers his face between them. Each breast dwarfing his head. For a
+moment, he is lost in your chest and your confident he is in a kind of
+bliss, high on your femininity.</p>
+<p>You seize your opportunity, grabbing his manhood and positioning your
+womanhood above it, slowly descending, feeling it stretch you in the
+most satisfying of ways. You moan once more, eyes closed, biting lower
+lip, as you take him in. Slowly, you begin to move your hips, rising and
+falling on him. You can feel your ass quake with each downward thrust,
+you take pleasure in how erotic you must look in that moment.</p>
+<p>As you move up and down, you keep him smother in your chest. His tongue
+blindly explores the exteriors of your breasts. His moans send a
+pleasurable vibration as his rough hands massage the soft flesh. Yet,
+none of it compares to the feeling of impaling yourself on him. You can
+feel yourself get lost in the haze of pleasure. You relent your hold on
+his head for but a moment and he takes the opportunity to counter you
+and take control.</p>
+<p>You first feel his hands seize your ass, digging deeply into the soft
+flesh. Now he is guiding you, hefting you up and down, ramming himself
+into you. You can't help but let out even louder moans as you fall
+forward, breasts collapsing on his face. He quickly takes you, pushing
+your hands around his shoulders to his neck as he swings his weight
+forward, standing up, with himself still buried deep within you and he
+pumps furiously.</p>
+<p>You're getting fucked and you love it. You squeeze him tight, hanging on
+as his legs furious thrust into you. You can feel your enormous chest
+attempt to ooze out from the sides of your embrace, unable to compress
+themselves any further. All you can do is moan and whisper, 'Fuck yes,'
+into his ear.</p>
+<p>He then deftly handles you. In that moment, you are aware of how small
+you are compared to him. He pops you off of him and spins you. Your head
+comes face to face with his member once more and you waste no time in
+claiming your prize. It tastes decadent. His tongue brilliantly
+navigates your feminine folds, driving you even more mad with lust.</p>
+<p>You don't know how long you're suspended like that. It may have been
+moments, or minutes, you can't tell. You were too busy pleasing him to
+care about anything else. But he moved you once more, bending you over
+that dining room table. Your chest spills across its smooth, cold
+surface driving you mad. You can feel your ass on display, a billboard
+advertising to your loving what to do next. Your juices march down your
+legs which already feel weak from the pleasure. He teases you at first,
+his manhood running between the canyon formed by your enormous ass. Then
+the tip would appear for a moment, rubbing its way over your soft mound,
+taking in your juices. It would slightly enter, and then dart back out.</p>
+<p>'Fuck me,' is all you can breathe out. He teases no longer and plunges
+himself in you. Your eyes go wide at the sensation, feeling stretched
+again, in a whole new way. His hand takes your leash and pulls you back,
+your head raised. He keeps pulling until your tits, yes, your tits on
+full display, bouncing madly as he keeps thrusting into you. His fingers
+find your mouth and you instinctively suck on them, desperately wanting
+the real thing, but satisfied with the substitute while he continues his
+lovemaking with.</p>
+<p>Every now and then, those fingers would leave your mouth and smack you
+from behind, you gasp, whimper, and moan at the pain, relishing in his
+strength and your submissiveness. And he fucks you like for what feels
+like a blissful entirety. Your chest bouncing wildly, his free hand
+roaming your form, mouth, ass, chest, pussy, sowing wonderfully
+maddening pleasure with each new visit.</p>
+<p>Again, you feel the waters recede, farther this time than last time. The
+wave is on the horizon, a behemoth. You don't even know if you'll
+survive when it hits, but you're willing to risk it. You lean into him
+even harder, matching his thrusts. One of your hands paws at your chest,
+massaging the nipple, anything to make the wave hit harder and faster.</p>
+<p>Then it hits and washes everything away with it. You scream out, 'Fuck
+yes!' as your legs shake and buckle. He keeps you upright as he
+passionately continues. You feel your vaginal lips clamp down on him and
+erupt in their own torrent, that well spring of lust deep within you
+finally breaking free. You pant, the pleasure taking an unforeseen toll
+on you.</p>
+<p>And then you hear him grunt as you continue to push back on him. 'Fill
+me,' is all you can moan out. Your hand continues to massage your chest
+as his thrusts pick up pace. He finishes, and you can feel the seed of
+those delicate fruits fill you. The visage of the crib flashes across
+your mind and you know what this one means. It has finally happened, and
+you wouldn't have it any other way.</p>
+<p>You feel weak and he carries you back to the couch, to hold you. You
+gaze over to the masterpiece once more. You can now see yourself and
+your husband in all the different positions on the tree. Whatever it
+was, when he brought it home, it drove you mad with lust. Perhaps
+because he was doing interior decorating for you? You don't know why,
+but you are thoroughly satisfied.</p>
+<p>He stirs and gets up, turns off the cameras. You just now noticed them.
+You were so busy in your lovemaking that you had forgotten all about
+them. When you lost your job, you decided to film yourself and then each
+other. He loved the idea and the money you made was insane. You both
+found ways to thrive while being trapped inside. They were there when he
+took you while making dinner, those times in the shower, the morning
+wake up sex, and now the most passionate sex you have ever had. They'll
+be there when your pregnant and horny, when you chest gets even bigger,
+and when your enormous. You smile, excited for what the future holds.</p>
+<p>But for now, you rest, satisfied as you wait for the seed to take hold
+and blossom within you. And, as that happens, Marcus will continue to
+renovate the house. You can't wait to have guests over again and shoe
+them that wonderful masterpiece.</p>
+</body>
+</html>

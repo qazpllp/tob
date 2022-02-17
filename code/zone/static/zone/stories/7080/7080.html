@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Boosted Confidence</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>﻿Boosted Confidence</p>
+<p>By Max</p>
+<p>Author Note: The Goddess of Transformation is property of Morpheus. Many thanks for letting me include her in this story.</p>
+<p>“It should be good by now. It has been an hour since the entry time” I said as I nervously fixed my glasses and dress before knocking on the door of John’s office.</p>
+<p>“Come in” he said from inside. </p>
+<p>“Good morning Mr. Warren. I came to work on the presentation for tomorrow” I said stepping in.</p>
+<p>“Oh yes… of course Natalie. Please take a seat” he said standing from behind his desk and walking to a nearby table. “Can I offer you a cup of tea or coffee?” he asked</p>
+<p>“Tea is ok” I thanked him as he nodded his head and started to prepare a cup of coffee for himself as well. Taking advantage that he wasn’t seeing me, I couldn’t avoid biting my lip as I looked at him with strong desire. Being in the same office with him really got me quite shy but excited.</p>
+<p>It was no secret that John Warren was one of the most handsome executives of the company. He was 5’ 11” feet tall, he liked to work out keeping his body in shape and was less than 30 years old. But what was the most important thing of all was that he was single. </p>
+<p>I won't deny I have a crush on him that goes back to high school. He was the captain of the football team surrounded by cheerleaders and the most popular girls in the school, making it impossible for ordinary girls like me to get close to him.</p>
+<p>"Hope you don't mind low in sugar" he said, giving me a cup of tea.</p>
+<p>"That is ok" I smiled at him as I felt our fingers touch when I grabbed the cup.</p>
+<p>"Now, I got some ideas for the presentation, but I'm curious to know yours. I heard good things about your creativity" he said.</p>
+<p>'OMG Does he really know about me?' I thought avoiding giggling like a teenager while hiding my blushing cheeks as I pulled my laptop from my bag. "I already have been working on a few ideas you may like" I said.</p>
+<p>"Oh. Not only creative, but with initiative. I like that" he said. "You can plug your laptop to the proyector on the desk over there while I close the window to see better what you have prepared" he said with a gentle smile on his face.</p>
+<p>I nodded and rushed toward the end of the room with my heart pounding hard against my chest. I had managed to impress him with my dedication. Now it was time to mesmerize him with my intellect.</p>
+<p>With the proyector on, I opened the presentation I worked on last night. But, as I was explaining my ideas, two women got into the office without even knocking. </p>
+<p>"John. You have delayed too much our date. Let's have lunch today" Lisa said, using her impressive height of  6' 2" boosted by her heels to make more than 6 inches of difference between her and John.</p>
+<p>"That’s not fair John. I was counting to have lunch with you today. I even picked this blouse specially for you" Jane said, making sure to press her arms against her bust to show a lot of cleavage.</p>
+<p>I could only sigh in depression as even I knew something like this would happen, I didn't expect it so soon. Still, I feel like an idiot for considering things could have gone differently.</p>
+<p>"Ladies, please. While I'm flattered by your attention, I don't like to be interrupted while I'm working. Besides, I already invited Natalie to lunch as we must dedicate all our efforts in this presentation, right Natalie?" He said.</p>
+<p>Suddenly the gazes of Lisa and Jane were all over me. Scanning every inch of my body looking for a potential thread. When they didn't find any, they returned their attention to John, laying their arms on his desk to continue flirting with him and ignoring me completely. Such acts of superiority really pissed me off.</p>
+<p>I was quite aware that I may not be a competition to them, but I didn't sell myself short. I was 5' 6" and while my body had modest curves, the full body dress I was wearing was designed to show off most of them. Besided, my sparkling green eyes and cute button nose were good enough to catch some attention. Unfortunately, the presence of those girls made me wonder if John was attracted to tall curvaceous women. Such thought really undermined what little confidence I had. </p>
+<p>"Well, let's see if this really works" I said, seeing the small cookie with the shape of a butterfly I brought with me. "I can use a boost right now" I said, eating the cookie with some tea while closing my eyes to recall the events that led me to it.</p>
+<p>Early in the morning...</p>
+<p>During the bus trip toward the office, my mind couldn't stop thinking about me working side by side with my teenager crush for the whole day. The idea of the two of us being alone made me quite nervous as I definitely wanted him to notice me. "What am I going to do?" I sighed.</p>
+<p>"Something bothers you child?" A voice said.</p>
+<p>I almost jumped from my seat as I noticed an old woman sitting next to me when I could have swore the seat next to the window was empty when I sat. "Sorry to disturb you. It's that I wish to have more confidence in myself" I said, feeling my anxiety melting as her presence made me feel safe and warm.</p>
+<p>"Interesting. Please, tell me more" she said.</p>
+<p>Back to the present in John’s office...</p>
+<p>A pleasant tingling suddenly zapped me back from my memories. "What the…" I whispered as I felt the bottom part of my dress crawling up from my knees as every bone inside me got bigger and longer . I found myself seeing how Lisa, Jane and John were shrinking before me. Well, not only them, the whole office was as I grew up like a weed. </p>
+<p>Passing from looking up to look down at them steer a deep emotion inside me, but before I could appreciate it, there was a different kind of growth calling for my attention.</p>
+<p>"If this is a dream, I don't want to wake up" I whispered, biting my lips as my bra’s straps were digging into my shoulders. I suppressed the cries of joy at the sight of my modest bust swelling and filling out my dress in such a provocative way. “Oh my… don’t stop now” I begged.</p>
+<p>As my growth continued, I felt my confidence getting stronger than ever.  Soon, the women before me didn’t look so intimidating and because of that, I found myself ready to strike back..</p>
+<p>"Lisa, Jane" I started saying as I walked toward them. Their attention was on John and I planned to change that. "You heard Mr. Warren. He invited me to lunch because we have work to do. Work you two are delaying by the way" I said standing next to Lisa.</p>
+<p>"Sorry little girl" Lisa said while standing up. "I barely heard you from…" she was saying until she stood full height and gasped to see down at my recently expanded bust instead of my face. She slowly raised her vision and gasped again to see my lips at the same level of her eyes. When she finally had to crack up her neck to see me into the eyes, the shock in hers was simply delightful. </p>
+<p>“... down below, you mean” I said with a grin on my face that I barely could contain. “I can understand that” I said letting Lisa get a hold of herself. She quickly looked down at my feet and once again gasped to see I was wearing flats. “Are you hyperventilating? You are gasping a lot” I said trying my best to fake concern about her.</p>
+<p>“No. I…” she muttered trying to compose herself. “Sorry… what did you say?” she finally said.</p>
+<p>“I said that you were delaying the work Mr. Warren and I are doing” I said, enjoying the visible defeat in Lisa’s eyes. “And that goes for you too Jane” I said placing my hands on my hips to thrust my chest out. “If you excuse us, we need to return to the presentation”.</p>
+<p>“Yeah. Whatever you say Natalie” Jane said closing her jacket to hide her cleavage. There was no doubt she didn’t want people to notice who had the better rack. </p>
+<p>Seeing Lisa and Jane leaving the office felt like an injection of adrenaline. I never felt so powerful, sexy and above all confident in my entire life. Having finally been able to get even with women who underestimated me was the best feeling in the world. I felt like a goddess.</p>
+<p>“You handled them quite well Natalie” John said bursting the bubble I was in. Suddenly, I was back into my shyness mode in a blink of an eye. “You demonstrated your superiority without being arrogant. I like that on a woman” he said quite serious before returning his attention to the presentation I left displayed. That was a good thing as he didn’t notice how red my face got due his comment. </p>
+<p>“Before we continue, will you mind if I go to the restroom?” I said becoming aware of the tightness of my bra. When John nodded, I left his office and got locked into the bathroom.</p>
+<p>“No way!!” I said as low as possible as I grabbed my bigger breasts. “I have to see them” I said, pulling my dress down and quickly unhooking my strained bra. “Oh my… how big am I? They are definitely at least twice bigger than they were in the morning. Perhaps a D? DDs?” I wondered seeing my profile from one side and enjoying how far the curve of my bust was from my chest. But of course, that wasn’t the only thing I needed to worry in the moment.</p>
+<p>Taking a moment to process the new size of my breasts, there was also the new size of my body to take into consideration. I didn’t notice it at first, but certainly everything looked smaller. The fact that I was unconsciously crouching to see my reflection didn’t ring any alarms until now. “This is incredible. I feel like a giantess” I gasped standing upwards and realizing that I could only see the bottom part of my face in the mirror. “Ok, that is better” I grinned while taking a few steps backwards to see the whole me. “Not even Lisa and her high heels were match for me”</p>
+<p>My last words made me realize something. If Lisa with her heels on was around 6’ 6’, that meant I was even taller than that. “Holly crap!” I gasped realizing that I had just grown more than a foot in height. “How is that even possible?” I said as my mind focused on the conversation I had with the old lady who gave me the butterfly cookie.</p>
+<p>Early in the morning during the bus trip...</p>
+<p>“Well, it’s that there is this guy who I like since always and there is nothing I can do to make him pay attention to me” I said to the woman after she asked about my problem.</p>
+<p>“Oh. So you need confidence to ask him out? Is that what you need?” she tenderly asked.</p>
+<p>“Not only that” I sighed “You see. He was very popular in high school and was always surrounded by beautiful women. Some of them had attributes that would be hard to ignore for a young man if you know what I mean” I said placing her hands far away from her chest. </p>
+<p>“So you feel insecure around other women that can be more developed than you?” she said.</p>
+<p>“You can say. It would be good not to have to worry about my attributes don’t be enough to call John attention each time I compare myself to another woman” I mentioned.</p>
+<p>“Interesting” the woman said for the second time before pulling from her purse a bag of cookies with the shape of butterflies. “Take one of these my child. Next time you need a boost in your confidence, eat the cookie and I promise you, you won’t have to worry about anything for the rest of the day. Use it wisely” she smiled at me as I put my hand in the bag.</p>
+<p>When I retrieve my hand, I was mesmerized by how beautiful and well crafted the cookie was. It was always as it was ready to fly. “You are very kind” I said but nobody listened. The seat next to the window was as empty as I thought it was when I seated. Looking at my hand, the butterfly cookie was still there so I knew I hadn’t dreamed of my encounter with the elder woman.</p>
+<p>Back to the present in the office’s bathroom...</p>
+<p>“So she was not only real, but magical” I gasped looking at the busty amazon that had my face reflected in the mirror. “So the cookie gives me more confidence by making me better than any woman I feel insecure about” I smiled knowing I was definitely taller than Lisa and due Jane's reaction, I should be bustier than her too. “I not only got the best traits they had to seduce John, but developed them even further. I can get used to this" I grinned cupping my larger breasts and wondering what else I could get; after all the good lady said I wouldn't need to worry about my insecurity for the rest of the day.</p>
+<p>"Thinking it better, nobody reacted to my sudden growth. Lisa seemed to recall how small I was compared to her, but when she noticed how big I was she didn't question it. Even John seemed to believe I have been like this before facing Lisa and Jane" I said scratching my chin "Perhaps the cookie makes people accept my changes as normal?" I shrugged my shoulders. "Well, it doesn't too far fetched if I consider how good my body had developed in a blink of an eye"</p>
+<p>Once I managed to get the straps of my bra loose to the limits, I put my dress on and discovered it barely covered the upper part of my thighs. "Fortunately, I chose a long dress, otherwise I will have outgrown it due to my recent growth spurt" I said, feeling quite daring and sexy.</p>
+<p>After having fixed my dress, I returned to the office just to find Carol talking with John. "Oh, hi Natalie. I know you two are working, so I leave you alone" she said not before being sure to flip her long hair in her way out.</p>
+<p>Seeing how John raised an eyebrow to her gesture was enough to make me feel insecure and suddenly my hair grew longer. While Carol's covers only half of her back, my hair length surpassed by reaching my waist. I casually tried to grab my hair and watched in awe as it simply slided from between my fingers. 'Oh my… I obtained her perfect condition too?' I thought in delight as I knew Carol has the most perfect straight hair in the office. Of course, due the magic working in me, my hair was like silk. I was willing to bet it will be impossible for it to be tangled ever again making me the envy of any woman that has participated in a shampoo commercial.</p>
+<p>I couldn't avoid grinning when I noticed John watching me playing with my hair and even though it was quite a sight, its length could be a problem. "Do you have a rubber band you can lend me?" I said, realizing I just talked to John in a casual way. Thankfully, he didn't seem to mind and pulled from his desk the item I asked.</p>
+<p>"Thank you. It can be a bit problematic to have hair as long as mine sometimes" I said smiling at him while I did a nice ponytail on my head. "Does it look good?" I flirted with him as I waved my ponytail from side to side. My confidence was on the roof and I was going to give it a good use.</p>
+<p>"It suits you well" he said in approval. "The rubbed band just reminds me of a classmate from high school that used the same for her ponytail. She was quite a joyful girl too. I wonder what would have been of her" he sighed deeply "Oh well, enough nostalgia. we better go back to work".</p>
+<p>I quickly turned around as my great confidence was washed off from me. 'He wasn't talking about me right? I mean, I wasn't the only girl that used ponytails in her class, but who besides me used rubbed bands' I thought trying to think of any classmate that did the same while I returned to my laptop and continued my presentation.</p>
+<p>The following hours were truly a blast. John and I had such synergy. He supported my ideas and had such great comments. His feedback made me more creative and at the same time I inspired him with new concepts. By the time the lunch break was almost upon us, we had finished most of the work. A few more details to polish and the work will be done. Of course, working with him wasn’t the only thing that went better than I expected.</p>
+<p>Locked back into the bathroom, I took the time to appreciate the latest developments I experienced due the casual visits of some female workmates to John’s office seeking his attention. “You are becoming quite irresistible babe, aren’t you Natalie?” I purred using the improved sultry voice I acquired from Beatrice. A whisper of her in John’s ear was all I needed to assure a better melodic voice than her. Now, each time I use it, I can see John trembling in his chair. </p>
+<p>“What a wonderful gift Beatrice…” I said rubbing my throat. “Almost on pair with Porcia and Mery’s most desirable features” I grinned enjoying how sparkling and white my teeth looked like entrapped between my new fuller sexy lips. “They are so soft and kissable now” I said enjoying with my finger the exquisite texture my lips were given. “Those in combination with my green eyes and cute nose has made me the most beautiful woman in the office for sure” I said quite please how attractive my face has become. “And just not forget about Erika. She takes good care of her skin and thanks to that, mine has just become so soft and alluring” I grinned.</p>
+<p>After cataloging my newest improvements, I mentally checked a few things I discovered about the conditions that need to happen for the magic to work. As the woman said, if I feel inferior to a woman I get an improved version of her traits, but this only happens if those called John attention. I proved that when I tried to obtain from Karen the cute freckles on her face. The magic didn’t work letting me know John wasn’t interested in freckles.</p>
+<p>Another thing I learned is that the opposite also works as I got a bit jealous about how John talked to Holly. I couldn’t find anything on her that could call his attention or that made me feel less than her. So, if I’m not aware of what John finds attractive in a woman, I can’t gain it.</p>
+<p>Just as I walked back to my desk, I passed by the office of Trisha. A devilish thought crossed my mind and I decided to step in. “Hello Trisha. Are you busy?” I asked.</p>
+<p>“Hi Natalie. No. I was just getting ready to go out to lunch. Anything you need?” she asked.</p>
+<p>“I’m working with Jo… Mr. Warren and we could use some info from the last 3 main projects we worked on two years ago. Do you have the stats?” I asked.</p>
+<p>“Yeah. Sure. I will get them for you” she said standing up and walking to her file drawers. Then, as I expected, the archives of two years ago were at the bottom drawer making Trisha bend over and let me appreciate in all its glory the great ass she has. But even though I was quite jealous of Trisha’s derriere, the magic didn’t work. ‘Could it be that John is a breast man?’ I wondered.</p>
+<p>Just then, I got a text from John wondering why I was taking so long. “Oh fuck” I said slapping my face. I had spent so much time in the bathroom that I forgot that I told him I will be back in 10 minutes. “Sorry. I’m in Trisha’s office picking some documents for our presentation. Give me 10 more” I typed back and breathed in relief when I noticed he read my message.</p>
+<p>Then, as he was typing me back, I gasped as I felt my dress crawling up from my thighs. The reason for that brought a wide grin on my face as the fabric was being pushed further by my bulging buttcheecks. When it was over, the bottom of my dress was dangerously reaching the level of a mini skirt, but to be honest, I couldn’t mind less. ‘Oh yes. Trisha mighty ass is all mine’ I moaned feeling the delightful extra padding my new round and massive butt had obtained. If Trisha’s could stop traffic with hers, mine could definitely stop hearts if I bent over.</p>
+<p>“Here are the files you asked for” Trisha said, giving me the info I asked.</p>
+<p>“Thank you Trisha… for everything” I said, really meaning it.</p>
+<p>With the files at hand, I walked over to my desk still wondering what happened. Why was my change delayed? Why didn't I acquire Trisha’s butt the second I got jealous of her?. What triggered it?. It was then I recalled my message to John. “I let him know I was with Trisha and that must have made him think about her ass. That’s it. In order to gain the traits, John must be at least thinking on those” I said, discovering another rule the magical butterfly cookie has.</p>
+<p>“Oh. Due to my sudden improvement I forgot completely about John's reply” I said looking into my cell phone. His reply made my face pale. “Oh no.. no.. no…” I said rushing back to my desk as I learned John was going to my desk to pick me out.</p>
+<p>As I was approaching my cubicle, I was glad to see only Cristine and Debby waiting for me. While I wouldn't mind trying out those shapely long legs Cristine showed off with her small skirt, it was Debbie's particular features what worried me the most.</p>
+<p>"Hey girls. Did you miss me?" I joked blasting them with my impressive smile as I let them see my magnificent body. I even give a little spin to give them a good look at ass Trisha helped me to grow. </p>
+<p>Unfortunately, my good humor didn't last long because when I was about to reach them, a familiar tingle invaded my body. But why?</p>
+<p>"You look great Natalie" Cristine said while cracking even higher her neck. Unknown to her my legs were getting longer and shapelier than her adding at least three more inches to my already amazonian height.</p>
+<p>"Are you ready for your date?" Debbie giggled with a high pitched voice. Her excited state was visible due how hard her plump nipples looked through her shirt when they became aroused. Such a feature was something I secretly envied from her but would never voice it aloud. To my bad luck, the magic in me knew me too well and I bit my lips because while my small nipples were enlarging and poking through my bra and dress a bit obscenely, their sensibility was increased tenfold. Debbie always boasted about being quite erogenous and it was true.</p>
+<p>“It’s not a date. I’m going to have lunch only… but how do you know it?” I said already anticipating the next change that was about to come.</p>
+<p>“I told them about it” John said.</p>
+<p>My eyes almost popped out of my face as I realized John was just sitting on my chair. Even though I was tall enough to look over my cubicle, I didn't and the timing couldn’t be worse as the blatant camel toe Debbie displayed behind her tight leggings started to manifest in me. The pleasure I was feeling was incredible as my lower lips got fuller and more alive; even my mound swelled more prominent and its rubbing against my panties pushed me too fast to the edge. Without other thing to do, I got a hold of my cubicle wall and shuddered as I enjoyed my first spontaneous orgasm.</p>
+<p>“Are you feeling alright?” Debbie asked.</p>
+<p>‘Not thanks to you’ I mentally replied. “Yes. I was just surprised to see Jo… Mr. Warren here"</p>
+<p>"I told you I was going to pick you up. Are you ready?" he asked.</p>
+<p>"Sure" I said, placing the files I picked from Trisha on my desk and taking out my purse. </p>
+<p>Even though we have been working in the same office, I never stand next to John after my first growth. Looking down at him was the most empowering and tendering feeling I have felt in my life. Due Cristine latest donation I was close to being almost a foot taller than him. Having his head so close to my bust level really sent me the right chills through my whole body. ‘With the right heels I can get him to the level of my nipples. Umm… will he like that?’ I thought gasping as my nipples responded to my thoughts. ‘Calm down girls. I don’t need to make another scene’ I mentally commanded them trying to avoid a second unwanted orgasm in public.</p>
+<p>“I have a particular place where I go every day. Do you mind indulging me on this, or will you prefer to eat somewhere else?” he asked me.</p>
+<p>“You are the one inviting me John. Wherever you say is fine by me” I said quite happily to finally say his name in public. Well, when nobody was around, but that was progress right?</p>
+<p>“Perfect” he smiled.</p>
+<p>Walking toward the elevator, I saw Porcia again standing next to it. She was flashing her great smile and while I was tempted to blinded her using my improved one, I noticed she had very nice eyelashes. She was batting them at John while smiling. Her attitude made me feel uneasy, but still the magic didn’t go active. It was only when we were a few feet away from her that I felt my eyelashes being enhanced. In that moment I understood why I didn’t get Cristine and Debbie’s traits the moment I saw them even though John was aware of them. The old woman must have considered I didn’t want to feel insecure around other women when she gave the cookie. If that is so, I need to be close to the source of my insecurity for the magic to work.</p>
+<p>When we reached the elevator, John nodded his head to Porcia as greetings. I contained myself and just smiled with my lips sealed. After all, she has been of great help. I not only learn about the distance rule, but also that I could take more than one trait from a person. ‘Well, I guess I did that with Debbie too’ I thought, considering the two intimate gifts she granted me.</p>
+<p>Just then, the elevator doors opened and I saw Nora standing there. While any other day I will have been offended to be close to her, today was totally different. “This is going to be good” I whispered while gently pushing John into the elevator to be as close as Nora as possible.</p>
+<p>When the elevator doors opened, Nora stepped out first calling the attention of all men. That was something I always wished to be able to do and today was my day. As I stepped out, my new height and beauty should have brought some attention to me. A casual smile with my new bright teeth and sexy lips plus a flick of my longer hair would have caught the attention of most. But either of them truly mattered as their eyes got glued, as mops to flame, to my incredible prominent bosom that I was sure to shake and bounce with each step. </p>
+<p>I bet Nora wasn't used to men ignoring her, as she quickly turned around to see. The shocking expression in her eyes as she found herself looking directly to my larger bust, even if it lasted less than a second before getting caught in the magic effect, was something that will put a smile on my face every night for the rest of my life.</p>
+<p>Of course, dethroning the boob queen of the company wouldn't have been possible without sacrifices. In my case, breathing.</p>
+<p>While in the elevator, at first I was in pure ecstasy as my breasts increased their size for the second time in the day. My new sensitive was driving me crazy and I could have laughed like a maniac watching how my bust was trying to outgrow Nora's legendary double Es, if I haven’t found myself not being able to breath properly.</p>
+<p>With each pound of breast flesh my bust gained, the tightness of my inadequate bra increased accordingly crushing my ribs. Getting desperate, I took a deep breath thrusting my chest out and gasped in relief as the hooks of my bra snapped violently allowing me to breathe again. With my underwear broken, my breasts were free to swell past grapefruits until became ripped cantaloupes which stretched my dress even more giving me the jutting provocative profile of a femme fatale I always desired.</p>
+<p>Faking not to pay attention, I passed next to Nora on my way out of the building, letting her eyes feast on my voluptuous body shape. Her envy was visible as she saw my bountiful tits wobbling and shaking at mere inches from her face. I had to restraint myself to not push her out with my big knockers, but being literally able to rub them on her face brought me great satisfaction.</p>
+<p>Once I was outside the building, my presence didn’t go unnoticed as I had been used. Men turned their heads around and even women looked at me with envy and desire. It brought me mixed feelings as I knew how sad it feels to be shadowed by other women, but at the same time I couldn’t avoid enjoying the attention I received. ‘Is this the power trip curvaceous women get in public? No wonder why some are quite bitches. It’s intoxicating’ I thought trying to hold myself.</p>
+<p>“Are you alright Natalie? You seem happier than usual” John asked me while taking my hand.</p>
+<p>Feeling his hand wrapping mine put me in an even better mood. “I’m better than ever in more ways that you can imagine” I smiled at him with my brighter smile while blinking an eye to show him my improved eyelashes. “So, how far is this mysterious place of yours? Do we call a cab?”</p>
+<p>“No. It is just around the corner. It’s run by a good friend of my mom” he said.</p>
+<p>“Interesting. Let the way” I cheered him up.</p>
+<p>The place John referred was a small establishment hidden between buildings. Away from the streets and the noise of the traffic, it gave a sense of privacy and calm that definitely suits quite well for a relaxing lunch.</p>
+<p>When we went in, a woman in her 50s greeted John with great joy. “Hello Johnny. I was hoping you arrived before this” she said showing that most tables were already occupied. “But don’t worry, I saved a table for you next to the garden” she said.</p>
+<p>“Thanks aunt Irina. By the way, let me introduce you to my friend Natalie. She and I are working together in a presentation” John explained.</p>
+<p>“Oh… you only talk about work. I was hoping this fine lady was the reason why you got late” Irina smiled, making John blushed deeply. “Hello Natalie. It’s good to have you here” she said extending her hand. Her strong handshake made me realize the bulging muscle on her arm..</p>
+<p>"Wow Mrs. Irina. I don't want to sound irrespectful, but do you work out?" I blurred out surprised.</p>
+<p>"For a woman my age you mean?" Irina laughed letting me know my question didn't offend her. "Yeah, I have worked out at least 2 hours a day for the last 30 years. That is what keeps me strong and agile" she laughed quite proud as she flexed her arm to show off her nice bicep.</p>
+<p>After seeing John mesmerized by such display of power, I felt every muscle on my body on fire. Even though I was sure I didn’t want to be that muscular, I couldn’t deny my insecurity and if John was attracted to muscles, I’m going to give him quite a load of them.</p>
+<p>My body trembled as my muscles contracted, expanded, and hardened. It was like if all workouts Irina had accumulated over her lifetime were injected into them at once. The shapely legs I obtained from Cristine were powered up as my calves muscled up and my swelling thighs felt like marble. Next, Trisha’s fantastic ass became even better as my buttchecks tensed and firmed up into buns of steel eliminating any possible wrinkle my dress could have. Then, the dormant biceps and triceps in my arms woke up with such fury that the bulge of my muscles were notable even though I wasn’t flexing at all. To my surprise, I felt my breasts pushing forward once more as my pectoral muscles developed. The extra muscle felt quite good as my breasts became perkier than ever. Finally, my belly got tight and compacted as any trace of fat on it melted away. When it was over, my whole body ached terribly, but it was worth it. I just developed the shape of a dedicated fitness woman without even stepping in a gym and the raw strength I felt pumping my arms and legs could be very useful for a big girl like me. </p>
+<p>“I totally understand you. Feeling your body after a good workout feels very good” I said flexing my arm too and while I knew my bicep would be bigger than Irina, seeing the shock on John’s face after witnessing that was priceless. But, even I was truly curious how strong I had become, there were other businesses I needed to attend. “By the way, where is the bathroom?” I asked.</p>
+<p>“It seems I’m spending a lot of my time in the bathrooms today” I sighed as I locked myself in again. “This is unbelievable. I’m so ripped and buffed” I gasped seeing my muscular arms and legs. “If someone could make muscle look sexy, it should be you girl” I said, blowing myself a kiss. “Now, let’s see if I can fix the damage on my bra” I said, pulling down my dress just to be granted the vision of an abundant and lustful cleavage. “Holly cows. This is a rack!!” I said cupping my breasts but when I saw the image in the mirror I couldn’t avoid laughing quite hard. </p>
+<p>“Are you alright in there Natalie?” I heard Irina outside the door.</p>
+<p>“Yeah. Just a second” I replied trying to compose myself after seeing my reflection for the second time. After outgrowing Nora’s bust, my breasts had spilled out from the tiny cups of my bra. In fact, the cups looked more like a pair of nipple covers over my stiff raspberries. Grinning, I grabbed the garment and rubbed it over my sensitive nipples while feeling the new weight on my chest. “Such a heavy burden, and it’s all mine” I moaned as I quickly got stimulated.</p>
+<p>After calming myself, I managed to hook my bra again by using the rubber band that tied my hair. As a result, my breasts jutted out more which was perfectly fine by me. Then, when I was about to pull my dress up, I noticed the upper part of my abs. “Do I have a six pack?” I wondered pulling further down my dress and gasped as my abs seemed to be carved in stone. They were so hard and impressive that I couldn’t avoid getting aroused myself. “What people will do to have abs and muscles like this… and I got them without sweating” I laughed.</p>
+<p>Once I got out, Irina took me to the table where John was waiting for me. As a gentleman, he pulled my seat for me to sit down. “Thank you John” I said as he returned to his seat. “This place is lovely Mrs Irina. I’m glad John shared with me his secret place” I honestly said.</p>
+<p>“A fine and educated lady. You better don’t let her get away” Irina said making John even more embarrassed “Now, here is the menu for today. Take your time decide” she said.</p>
+<p>Once Irina took our orders, she left us to talk alone. “I can’t believe this place exists so close to the office” I said taking off my glasses to twitch my nose a bit as it was itching me</p>
+<p>“Oh my… How I didn’t notice it before. That is why you look familiar. You are Natalie Evergreen. I didn’t notice until you twitch your nose. It was adorable” John laughed feeling a bit stupid </p>
+<p>Hearing him say my name and learning he remembered me stirred my feelings for him. I gave him a tender smile. "Glad you realized who I was. I didn't know how to tell you" I said.</p>
+<p>“Then, it’s my mistake so let me repay you. After we are done with the presentation, I would like to go out with you and have some drinks. I bet we have a lot to catch up” he said with a look in his eyes that he wanted more than that and while I’m not a girl that have sex in the first date, I can’t argue that I hardly am the same girl I was in the morning and due Debbie’s contribution the idea of sleeping with him got me so aroused, that I used my arms to hide my hardening nipples.</p>
+<p>After finishing our lunch, I felt a change of clothes was in order. Even, I was positive there was no woman in the office that could compete with my attributes, I should get a proper bra and clothes as I felt the bottom of my dress will expose my great buttchecks if I bend over. </p>
+<p>During our walk to the cloth store, John and I talked a bit about our lives after finishing college. He didn’t know I had been on date for his activities and achievements, but I prefer that he tells those things before he considered me a stalker or worse. </p>
+<p>While talking was good, I never got my eyes distracted from the price. As soon as I noticed John’s eyes wandered away from my impressive body, I quickly located the source of his distraction. Thanks to that, I managed to obtain a small waist, from a woman wearing a corset, and ample hips from a short woman. Those two combined with my large breasts and butt gave me an irresistible hourglass shape. But of course, I didn’t let John do all the work to improve me.</p>
+<p>I moaned in pleasure as my pelvis shifted after casually redirecting John’s attention to the woman walking across the street. She was walking with a sexy strut even though she wasn’t bottom heavy. Once the change was over, the swing of my hips and ondulation of my butt made people tripped over and I enjoyed it. But I was naive enough to hope all could go as planned </p>
+<p>When we reached the cloth store a female biker with a great ass came out. Even though she was quite big, she was no challenge to Trisha’s muscled up butt. But everything changed when she put her helmet on and mounted her bike. Once she bent over to drive, her butt swelled absurdly huge, stretching quite erotically her leather tight pants. Soon my derriere accepted the challenge and I moaned feeling my panties sliding down into my crack as my rock-hard cheeks were swelling massively. The hem of my dress crept up beyond my powerful thighs and ended exposing less than half of my enormous ass after shooting several inches further. The pull of my underwear over my sensitive sex was driving me crazy, but the embarrasement of possible having my engorded mound being exposed as well made me able to control it. Without saying a word, I dashed into the store to avoid police could arrest me for being dressed so scantily.</p>
+<p>“So tell me again. Why are we here?” John asked as he looked around in the store.</p>
+<p>“I just want to nail the presentation with the perfect outfit. Can you help me choose something sexy and professional that can highlight my best attributes? It's hard for me to choose clothes that fit this big body of mine” I flirted with him as I waved my hands over my prominent curves.</p>
+<p>It took him a few seconds for his mind to register my question. It was busy trying to cope with the manificiency my body has become. "Clothes… yeah…" he said as his brain seemed to be working again. "What about a black skirt and a white blouse? The classics never die" he said.</p>
+<p>"Black and white will be" I said blinking an eye to him before letting enjoy my enhanced erotical strut with half of my bare ass exposed since my cheeks had swallowed my panties. Before getting into the changing room, I turned around one last time being sure to thrust my chest out to show him my jutted profile. The visible raging hard in his pants told me he was mine to take.</p>
+<p>Once inside the dressing both, I took off my dress and fondled it with care. “You have passed for a lot and thank you for resisting so much” I said sensing how worn off the fabric had gotten after being stretched more than it was designed for. “At least my panties are intact, but they are more like a thong now” I said pulling up the material from between my cheeks. By doing it, I could see how much my pussy had changed. My mound was bigger, my clit engorged and my lower lips fuller, but above they felt so alive. My swollen sex had never felt so wonderful and I was dying to take if for a test drive. After having my button clit being so overstimulated with the constant rub of my underwear, a short massage on it was all I needed to trigger an overwhelming orgasm. “Oh my… Debbie! Your reputation is well earned" I said gasping for air. “Thank you for these incredible feelings and ultra sensitivity!!” I said without forgetting about my plump and erogenous nipples. "Be sure I will put your gifts to good use tonight" I said finally releasing my panties which go back with a slash sending multiple sparks to fire up my drained body.</p>
+<p>“Now, that biker did quite a job in my ass. I bet I can balance a giant tv with these massive buns” I said while slapping my generous cheeks. “They look almost as big as my breasts. I do wonder what size I am now” I said, removing the rubber band that kept my worn out bra in place. Once I took it off, I watched proudly how the muscular pecs I got from Irina’s workouts kept pert and in shape the heavy breasts Nora unwillingly helped to develop. Then, for the first time, I was able to see the change in my nipples after Debbie’s contribution. “They had been so flat this morning, and now they are so impressively larger that I can’t resist the idea of sucking on them” I grinned.</p>
+<p>Once I was done playing, I decided to look for professional help if I want to know what size of bra I will be wearing from now on. When I heard someone coming, I peeked out the door and saw a saleswoman with a box walking my way. “Excuse me miss, I had a late growth spurt and now all my bras are useless. Could I get my bust measured? I don’t know what bra size I need”</p>
+<p>“There is no problem , but could you wait a few minutes to finish with a client?” she asked me.</p>
+<p>“Sure. Take your time” I said returning to my booth and the woman continued her way.</p>
+<p>As I was about to try my new clothes, I heard the saleswoman talking to a woman that must be in a booth nearby. “Here is the J-cup bra you pre ordered miss Judith” she said.</p>
+<p>“J-cups?” I choked after hearing such incredible size. My curiosity got the best of me and, being very stealthy, I peeked through the crack of my door. ‘Oh my… that girl is packing such big knockers!!’ I thought seeing a woman in her early twenties looking in the hall mirror how a sequin bra fit her huge breasts. ‘She must be a kind of stripper that got her boobs done recently. That is why she pre ordered her bra that will fit her after having her implants for sure”’</p>
+<p>For a moment, I wondered if the magic of the cookie could work on implants, but then I realized that I had developed traits that have been enhanced. I became taller than Lisa including her heels. My hair, besides Carol’s natural length, got the care and effort she put on it. The same went for the muscles I got from Irina and not forget about the bulged ass of the biker. “Assuming it works, I need to be close to her when John sees her. How can I do that?” I whispered.</p>
+<p>The answer to my dilemma was a voyeur snapshot I took of the woman with my cellphone.. “I could go to jail for doing something like this” I whispered as my heart was pounding fast against my chest. “Hope this works” I said, sending the pic to John with the text ‘I love this bra. Hope they have for my size’. After all, I needed a reason to send him such a pic. It would have looked weird if I had typed ‘She has some big breasts, don’t you think?’ to the guy I want to date.</p>
+<p>My fingers trembled as I waited for him to read my message. “Come on John. You are a breast man. Don’t keep me waiting. We can’t lose the chance to secure such a bounty” I said desperately imagining those woman’s luscious, round, swollen boobs on my own chest. Then, as if he had heard me, the message got read and my breasts started tingling. “Oh yes… my breasts are growing again and it feels wonderful" I moaned enjoying how good the strain of my skin felt as my breasts filled up more and more with every breath I took. "Let’s see how big Judith’s inflated chest can make me” I grinned fondling my breasts and cherished how they were getting larger and heavier.</p>
+<p>When my breasts became so big that my hands couldn’t even grip much of them and started to be pushed apart by their wonderful growth, I squeezed myself just to find my hands practically vanishing into the softness of my still expanding breast flesh. “I’m getting so big… so big” I moaned feeling an incredible weight sitting squarely on my chest as my breasts were jutting out bigger than two fleshy cantaloupes. I looked down at them and gasped at the overflowing valley of cleavage I was trying to hold. Then, as my bust continued raising and ballooning upward, I catched a glimpse of my feet before they disappeared under it. After that, my smile became as wide as my bust.</p>
+<p>Feeling the magic behind my boob job fading, I couldn’t avoid squeezing my swollen new pumpkins, digging into my ample bosom until getting a strong hold on my stimulated hard nipples. That proved to be a big mistake. I had to cover my mouth to silence a howling moan, as I brought myself to an explosive, powerful orgasm. “Damn Debbie. I should be more careful with your sensitivity, but I won’t deny I love it” I sighed enjoying the afterglow engulfing my body..</p>
+<p>Once I recovered my senses, I got a good view of how enormous my bust had become. My breasts had swollen into huge orbs of jiggling flesh. Certainly, large boobs like these couldn’t be as firm as I would like. “At least nobody will say my boobs are fake” I said, shaking my massive breasts and admiring their hypnotical wobble and jiggle. “John will go crazy after seeing me with these!” I grinned just to feel a bit down knowing he won’t notice a thing do the magic. “Unless…” </p>
+<p>Twenty minutes later, I walked out of the dressing room completely dressed to kill. I bought a couple of high heels to bring my height to an impressive 7 feet tall. The black skirt snuggled tightly against my abundant derriere and ample hips, leaving my fabulous long legs being seen in all their toned up glory. My remarkable waist accentuated perfectly my almost inhuman hourglass shape. Finally, the long sleeves of my blouse were a bit tight around my biceps accentuating my strength and power, but where my blouse really was losing the fight was across my chest. The fabric around that area was all stretched and warped due the enormous mounds beneath it, even though they were contained in a huge and well reinforced K-cup bra.</p>
+<p>“I can’t even button the blouse all the way over these monsters” I grinned, feeling quite sexy to show off several inches of deep cleavage. “It’s like I stuffed two volleyballs in my bra. Two large and heavy ones” I smiled as each step I took I felt my buttcheeks ondulated and firmed up while my breasts bounced and shaked showing off their heaviness. “Who needs implants when you have magic” I laughed being glad that I took Judith’s picture and gained her stripper’s breasts.</p>
+<p>Towering over everyone, it was easy to spot at John waiting for me. He was standing backwards and that was exactly what I wanted. I approached silently as a cat ready to jump on its prey. I gently tapped his shoulder, making him turn around just to have his face slap on my breasts.</p>
+<p>“What the…?” John said before his eyes got wide open realizing what his head had bumped into. He rose his head and saw my beautiful and entrancing smile looking down at him.</p>
+<p>“Watch out John. They are quite sensitive” I purred while massaging where his head had hit. “I bet you aren’t used to being around women whose breasts are at your eye level” I said bracing my arms behind my back to thrust my chest out and proudly displayed my amplified assets. The stupefied look on his face was priceless.</p>
+<p>“I… I…” he babbled for a moment as the magic was kicking in and his stupor was changing into confusion. ‘Oh well. It was fun while it lasted’ I thought as John was regaining his composure.</p>
+<p>“Sorry Natalie. I didn’t mean to do it” he said all blushed up, but still with his eyes on my chest.</p>
+<p>“Don’t worry John I didn’t mind at all if you want to do it again” I aggressively flirted with him. ‘I know I got what you desire. No need to hold yourself’ I thought and was about to voice it out when I realized there was a woman standing next to him. As if I was hit by a bucket of ice water, my great confidence dropped below the 0 degrees. “I’m sorry John. Did I interrupt you?” I said.</p>
+<p>“Ah?” he said as his mind tried to think something besides my spectacular breasts. “Oh yes. Sorry. I don’t know if you recall Kelly from highschool. We just bump… I mean, find each other in the store” he said clearly remembering what he just experienced.</p>
+<p>“Kelly?” I said trying to visualize the woman in my memories. “Oh my… Kelly Mcbee. It has been ages” I said totally in awe as she was one of the most sexy girls in highschool. Unlike the other girls that were total bitches, Kelly was very kind and had a good heart. She has been one of the girlfriends John had and if she had ended with him, I would have totally forgiven her.</p>
+<p>“It’s good to see you too Natalie and I must add you look amazing. I don’t know how you keep that body so well hidden during our days in school, but dammit girl, even I managed to get more curves on me, yours are making me jealous” Kelly said with a genuine smile on her face.</p>
+<p>“Thank you Kelly. All I can say is that I got a late growth spurt… a massive one” I said patting her shoulder but not too roughly. ‘And to think I was the one jealous of your curves until this morning, but now, even though you possess bigger curves, I don’t feel intimidated. Still, I wonder…’ I thought before saying aloud. “But now that you mention it, yeah, I can see you curvier than before, still you are not fat at all. What is your secret?” I asked quite intrigued.</p>
+<p>“Well, I had my first child a few months ago and while I managed to get rid of the extra fat pregnancy usually brings with it, I kept some of it in all the right places. Specially here” she said cupping her breasts. “Since I’m lactating, my breasts have grown 2 cups due to all the milk I produce” she smiled quite proudly. “Still, it is not enough to compete against you” she smirked.</p>
+<p>“Oh. Don’t say that Kelly. There is no lie to say Natalie has impressive curves, but your motherly ones suit you very good” he laughed.</p>
+<p>‘Pregnancy ah? That is another way to expand your curves. Pity Kelly's newest MILF status didn’t make her curvier than me, because I will have love to bring a piece of her with me' I thought before feeling my body tingling. ‘The magic became active, but why? What are you trying to give me from her? There is no way you can mimic the outcomes of being a mother, right?’ I wondered.</p>
+<p>Apparently, the magic in me could as the hormones and changes brought by motherhood suddenly slammed into my already highly developed curvaceous form. The seams of my skirt began to split over as my hips were inching wider, my muscular thighs got thicker and juicer and my buttcheeks swelled even more massively. My blouse got quite tight across my chest as my breasts pumped up outwards stuffing it to the max. I could feel the buttons buckling and there was nothing I could do to avoid the inevitable. “Please, don’t look” I was all I managed to say before a button ricocheted out my blouse and impacted on John's shocked face. </p>
+<p>Without the button, my strained blouse was given the space it needed to let my breasts swelled from their already giant size to what felt like N-cups; and while such enlargement felt incredible, an overwhelming pressure building inside my titanic breasts indicated me another important motherly trait was becoming part me too. </p>
+<p>'I can't believe it. I must have gained Kelly's ability to lactate too' I thought, astonished feeling what should be mother’s milk dribbling out of my erect nipples. ‘All of those MILF’s features John seemed so interested in are being given to me, turning me into an Uber-MILF’ I grinned as the arousal my erogenous nipples provided was mind blowing.</p>
+<p>“Natalie, you need to be more careful,” Kelly said as she looked inside her purse. “I didn’t know you were also lactating. Good thing I carry some extras with me” she said giving me a pair of nursing pads. “I bet you don’t want to make them look bigger. I mean, they are already huge, but it’s better than stain your clothes with milk”</p>
+<p>“Thank you” I said quite embarrassed as my body finished integrating Kelly's motherhood gains. I felt like a fertility goddess made flesh blessed with breasts full of divine milk.. “My latest growth spurt caused some hormonal disbalances in my body. I’m still adapting” I smiled as Kelly still was as generous as ever. “I better change these clothes too. The outfit seems a bit small” I said, enjoying how John didn’t speak a word and his attention was fixated on me and me alone.</p>
+<p>After getting myself larger clothes and a bigger bra, John and I let Kelly do her shoppings while we rushed to get back to work. “I can't believe Kelly became a mother already. Have you even thought of the idea of having kids John? So far I have been so focused on my career to even consider it in my plans. It sounds so surreal” I said shaking my head in disbelief.</p>
+<p>“Well, I haven’t considered it lately to be honest” John said. “But I do remember the time I did. I always imagined having a little daughter running around and looking at me with her big green…” he suddenly realized what he was saying and blushed deeply. “Nevermind. Forget what I said”</p>
+<p>My heart was pounding quite hard against my chest after hearing his words. “No. I don’t want to forget it” I said taking his hands into mine. “Please, tell me the truth. You imagined your daughter having my eyes, right? Why?” I asked him without containing the convincing power the sultry and melodious voice I got from Beatrice’s could offer me. “Please, tell me?” I begged.</p>
+<p>“Because I had a crush on you Natalie” John confessed. “I was so in love that I couldn’t avoid imagining marrying you and having kids with you thrilled me with excitement” </p>
+<p>“But… but… why didn't you let me know your feelings? You dated so many women in highschool, why didn't you ask me out?” I asked, almost angered. </p>
+<p>“Because you were so joyful and such a great friend that I didn’t want to ruin our friendship. When I was with Kelly, the fact that other women were after me, kissed me or sent me ‘intimate’ presents was too much for her to handle and that is why we broke up. I didn’t want you to experience the same and the only way to keep me from a massive horde of hunting women was to be with some of them. That is why I had a lot of girlfriends, but none of them cared for me after a while or couldn’t handle the pressure of the women after me” he sighed. “I must sound quite pathetic, but it’s the truth. Those teen years weren’t the most mentally stable of our lives”</p>
+<p>“I totally agree” I sighed recalling my turbulent teenhood. “So, you have a crush on me, ah?” I said teasing him. “Good thing you have found me after all those years and even better you did after I developed such a provocative body. Quite a convenient time to reveal your feelings , don’t you think? Could you be trying to seduce me and make me one more of your conquests?” </p>
+<p>“No.. not at all” he said blushing intensely. “I’m honest. I really liked you for who you were?”</p>
+<p>“Liked? You mean, you don’t like me now that I have grown up and matured so much” I pouted while bending over and crossing my arms under my breasts and pressing them together to empathize my words. “If you like how I was before, why wouldn't now that I became a teenager wet dream?” I grinned seeing how shy John was becoming under my womanly charms. </p>
+<p>“You are such a teaser Natalie. I didn’t know you have it in you” John said, recovering his senses. “But if you want to know, yeah, I still like you and the fact you have developed such a remarkable body is a pleasant bonus” he grinned “And what about you? what is your excuse?”</p>
+<p>“My excuse?” I asked, raising an eyebrow, truly surprised by his question.</p>
+<p>“Oh! You want me to spell it for you? Alright” John said as he looked up into my eyes. “Even you try not to be obvious, the tone in your voice made evident you weren’t happy about the fact I didn’t ask you out, but…, the most important thing you I got was why it should matter that I didn’t express my feelings for you” he said searching for any doubt in my eyes. Dammit, he was good.</p>
+<p>“Alright. You got me. I do have a crush on you!" I said letting his macho ego take the win. "And now that our feelings are in the open, what do you plan to do?" I said kicking the ball to his field.</p>
+<p>"What about after we finish the presentation, I invite you to dinner and…" he was saying when I put my finger on his lips.</p>
+<p>"If we are going to have dinner, I will prepare it. I won't let you spoil me with a fancy restaurant" I said. "What about having some beers? I know a quiet bar where we can talk and relax"</p>
+<p>"Beer sounds good" he said. "Alright then, it's a date"</p>
+<p>I closed my eyes and gave a long sight. There was no doubt I was more than he could handle, but seeing him so confident and up for the challenge made me want him even more. He really had gotten me and I loved it.</p>
+<p>The walk from the building's entrance until John's office was the most thrilling experience in my life. If I could feel before the intense stares that men were giving me after combining Nora´s and Trisha’s prominent attributes in my body, what I felt after lunch was pure and simple animal lust coming not only from men, but also from a number of women and who couldn’t blame them. Standing at 7 feet tall with my heels on, I could be seen among a crowd of people. My buff body not only made me feel as strong as an ox but impose total respect in those that saw me  And while the insane curves of my body seemed like have been taken out from an erotic manga, they were spiced with the allure and tenderness of motherhood. I was impossible to resist and seeing John getting jealous of all the attention I was getting was the delicious cherry on top.</p>
+<p>When we got back to work in his office, I was not surprised to find that the number of girls stepping into his office looking for him for trivial reasons had reduced to zero. I could imagine that none of them was mentally prepared to stand next to me and be compared. Certainly, I understand the feeling of being intimidated by others, and because of it, I did my best to make the girls that did talk to him feel comfortable and see a friend in me rather than an enemy.</p>
+<p>For what I wasn’t prepared for was the number of guys that got into his office to look at me. I knew my new statuesque body would call their attention, but I underestimated my new power of attraction. They stepped in to talk with John, but their eyes were on me all the time. Even a few of them were boldy enough to flirt with me, making John quite uncomfortable. The funny thing is none of them would have given me the time of the day in the morning. The power of big boobs.</p>
+<p>After spending almost two hours working on the presentation, I started to feel sad as during all that time I haven’t improved like I did in the morning. Due to my overdeveloped form, the limited number of women entering into the office didn’t have anything to offer. That was until Samantha, the young intern working in the mail department brought a letter for John. She possessed great charisma and an envious stamina to move around the building quite fast during the whole day. </p>
+<p>Fortunately, John was aware of those attributes as I felt an incredible energy invading my body. It was like I had gulped down a dozen of energy drinks and they were flowing through my veins. Then, I noticed an interesting shift in Samantha’s attitude as she seemed enthralled by me. The same I could sense in John as he seemed more attracted to me than usual. Seeing them like that made me feel more confident, sexy and womanly. Having Kelly’s MILF glamour combined with Samantha’s raw magnetism made my pheromones sexually powerful . Even it was a far fetched idea, I grinned imagining me slaving people with just the simple odor of my skin </p>
+<p>When the presentation was completed, John and I reviewed it trying to find something to correct. “It seems pretty solid to me Natalie. You did an amazing job” John said quite happy with our work together. “I don’t think we can improve it more than it is” he added.</p>
+<p>Hearing his words triggered my mind. “That is John! ‘We’ can’t, but what about if we let at  Hellen and Sophia take a look at the presentation. I bet their unique talents can bring a lot of improvements… to me” I whispered the last words envisioning how their gifts will benefit me. </p>
+<p>“That's a good idea. We can send them the presentation by mail and…”</p>
+<p>“NO!” I said too aloud, fearing to lose such opportunity. “Sorry for yelling, it wasn’t my intention. I just got too excited to show how good we can work together. You won’t mind calling them to your office to see the presentation with us right?” I said to John in a very low, husky whisper.</p>
+<p>“No. Of course not” John said as his trembling hands tried to reach the phone. </p>
+<p>“Here. Let me help you” I said walking behind him and bending over to guide his hand. But, by doing that, I let my hanging breasts rest over each of his shoulders on purpose to make him feel the warm embrace of the best airline neck pillow he could have enjoyed in his entire life.</p>
+<p>I chuckle a bit as John’s trembling got even worse. Having him in such close proximity to my  irresistible sexuality overwhelmed his senses and he ended fainting. Perhaps I went too far?</p>
+<p>Feeling extremely embarrassed for my actions, I carefully withdraw myself from John letting him rest on his chair. Then, standing at a good distance away  from him, I called him “John?”</p>
+<p>John woke up at the sound of my voice. “What happened?” he said, realizing he was out.</p>
+<p>“We were discussing having Hellen and Sophia here and see if they can come up with new ideas for the presentation. You were about to call them when you dozed off” I laid hoping he won’t remember.</p>
+<p>“Yeah… right” he blushed indicating he did remember but chose not to say a word about it. "But you know they don't work well together. Do you feel confident enough to deal with them?" he warned me.</p>
+<p>"No… and that is the idea" I grinned trembling with excitement.</p>
+<p>The first to arrive was Hellen and as soon as she got in my magic range I felt my head tingling warmly. Suddenly everything became so much easier to think of. My thoughts were faster and my comprehension rate became higher. I hid my smile enjoying the fantastic liberation brought by my brain power rushing to overcome Hellen's high intellect. She was known for being a borderline genius, which meant my rising IQ points will push me into genius levels. </p>
+<p>My intelligence hadn't finished increasing, when Sophia arrived and with her, a massive explosion took place in my mind. Soon, my brain expanded to new horizons as new ideas came to life and new ways to see things opened for me. I knew Sophia had a great imagination, so my limited one didn't foresee how powerful it would feel to unleash my own creativity potential. </p>
+<p>When John mentioned Hellen and Sophia didn’t work well together, he referred to their different points of view. While Hellen was more methodical and analytical, Sophia prefered to think outside the box and be innovative. These two different attributes were colliding inside my head, refusing to cooperate, making me fear that I won’t be able handle them as John prophesied. </p>
+<p>I grabbed my head sensing what should be the beginning of a terrible headache. ‘No! I don’t need any tribal disturbance in my mind. You two are part of me now, so obey me!’ I yelled inside my head while using all my willpower to force them to merge into one magnificent quality. ‘Oh yes! Oh yes! That’s it! Keep going!’ I moaned enjoying how Hellen’s intelligence and Sophia’s imagination were slowly blending together. As this happened every synapse in my brain lit up brighter and brighter. When the fusion was completed, my brain lighted up like a christmas tree due all the mighty power bestowed upon it. ‘Now I know how Da Vinci must have felt’ I grinned.</p>
+<p>“Natalie, are you alright?” John said worried that I still was holding my head.</p>
+<p>“Better than ever” I smiled feeling myself in complete control of my new capabilities. “Well girls. We call you to assist us in a presentation. It’s completed, but we think there is still room for improvement and you two are perfect for the job” I said confidently to Hellen and Sophia as my mind was already sparking with new ideas on its own thanks to their unknown collaboration.</p>
+<p>Even though I have become better than Hellen and Sophia in their respective traits, I was aware that intelligence and creativity were as good as the knowledge supporting them. Both women experienced things I didn't, so they could come up with ideas I won't be able to think on my own.</p>
+<p>During the next hour, the girls and I had the most productive teamwork John could have ever witnessed. Knowing perfectly how each of them see things, allowed me to guide the collective brainstorm supporting the opinions of one of them with examples the other could empathize. That way, Hellen didn’t discard Sophia’s unorthodox concepts and Sophia accepted Hellen’s tedious recommendations.  </p>
+<p>"Great work girls. I'm astonished" John said. "Your advice was very useful and I'm glad that Sophia spotted the small mistake in one of the slides. You have a great eye for details" he said the Sophia.</p>
+<p>"Indeed. What a wonderful eyesight" I smiled placing my glasses on the desk as they became useless for me. I blinked my eyes a few times adjusting to what should be a 4K vision. I could not only see things with a great definition of details, but even the colors were brighter.</p>
+<p>"And Hellen, I didn't know you have a photographic memory. I bet you won't forget the great work we did today" John added.</p>
+<p>"I won't forget it either" I grinned recalling every word and image I was exposed to after we discovered her hidden talent. Then, as Hellen and Sophia were thanking John for calling them, my new imagination conceived a crazy idea. One that I couldn’t resist trying out.</p>
+<p>Picking up one of the reports Trisha gave me, I quickly moved through pages. My improved eyesight let me see perfectly the contents of the sheets even those were in movement. Then, after taking a quick look at the clock in John’s office, I closed my eyes and tried to use my memory to recall what I had seen. To my surprise the pages of the report appeared before me as clear as they have been scanned in high resolution. I quickly put my enhanced brain power to process the information and I gasped as I was understanding and more importantly, remembering it. Once I fully grasped the content of the report, I opened my eyes and noticed that barely a minute had passed. ‘I read and comprehend more than 20 pages in less than a minute. That is insane!’ I thought feeling a bit scared of the amazing power my mind had gained. </p>
+<p>‘There is no doubt that the effort I made to fuse and integrate their gifts inside me was beyond worthy. Their combined abilities will be quite useful to gain and accumulate lots of new knowledge to feed my new abilities. Just imagined all I could learn by spending a full day in a library. I will be the sexiest bookworm ever, digesting heavy big tomes and encyclopedias in hours’ I mentally laughed to avoid John and the girls looked at me as I could be crazy.</p>
+<p>“Hellen, Sophia. Working together as a team has been the most enlightening experience in my life. Thank you for sharing so much of yourselves with me” I said as we walked out of the office.</p>
+<p>The girls looked at each other for a moment, confused by my choice of words, Then, at unison shrugged their shoulders being Hellen the first to talk. “We are also glad that you invite us to participate in your presentation Natalie. We appreciate your assistance to help us work together. We know, we aren’t the best team members when the time comes” she said sincerely.</p>
+<p>“But now that is in the past” Sophia said as she placed her hand on Hellen’s shoulder. “Thanks to you, we came to understand each other more and we are already planning to continue joining forces, so you can expect great things from us in the future” Sophia said, a bit excited..</p>
+<p>“I will look forward to seeing what the two of you can come up with. Hope we can work together again soon” I said feeling quite happy for them as they walked away. I knew first hand the great things they could achieve if they cooperate. I was sure there was still more to learn from them.</p>
+<p>“Well, with the presentation over, how about we get some of your promised beers to celebrate?” John asked as he was already grabbing his belongings to close the office.</p>
+<p>“Sure. Let me grab my things and see you in the entrance” I said, giving my heels a nice tap to sway my incredible ass even more provocatively. The stronger my strut was, the sexier I felt . </p>
+<p>After a short cab trip, we reached our destination. “I thought you said we will be visiting a bar” John said standing at the entrance of the most popular club in town. The people lined up outside seemed endless as everybody will love to get in due the reputation of the place.</p>
+<p>“Let’s say two girls changed my mind” I giggled as such affirmation could refer to Hellen and Sophia, but I was referring to Cristine and Debbie. I closed my eyes as I used my perfected memory to recall the conversation we had when I arrived at my desk to pick up my things.</p>
+<p>“Hey girl. Are you going out on a date with John?” Cristine said while hitting my abs with her elbow. I smiled with nostalgia as she used to that with my ribs, but I became too tall for that. </p>
+<p>“Yep. And not only that, he admitted he has a crush on me too” I whispered before the two of us giggled like teenagers. “I can’t believe my dream is becoming true and in what a wonderful way. I not only told him that I like him, but I learned he likes me too. Pinch me to know I’m awake”</p>
+<p>“Oh no. I don’t want to break a nail” Debbie said as she stepped in. “Your muscles are quite hard and I don’t want to ruin my manicure” she said, blowing her nails to dry the paint on them.</p>
+<p>Just seeing Debbie made me remember all the embarrassing moments I experienced due to her particular contribution. Still, if I had to go over all over again, I wouldn’t change a thing as these wonderful feelings are amazing once you learned to have them under control. “Well, wish me luck girls. Let’s hope the bar isn’t too…” I couldn’t finish the sentence as Debbie stopped me.</p>
+<p>“Hold on a second! A bar?” Debbie asked, very annoyed. “John Warren, one of the hottest executives of this company, is taking you to a bar? What is he thinking? That is cheap” she said.</p>
+<p>“Don’t say that. The bar was my idea. He wanted to take me to a restaurant, but I don’t want him to spoil me. Besides, what’s wrong with two classmates catching up in a bar?” I asked.</p>
+<p>“What’s wrong? Everything!!” Debbie yelled. “You should show him that you too can spoil him”</p>
+<p>“Sorry Natalie, but I’m with Debbie here. You should try to go somewhere else. Something more exclusive. It’s good that you took the initiative and didn’t let him decide where to go, but this is a good opportunity to show John that you are up for the challenge” Cristine said very seriously.</p>
+<p>“Exclusive… that is!” Debbie said. “You should take him to that fancy club in the main street”</p>
+<p>“Are you crazy? That place is way too exclusive. It’s the favorite spot for fashion models and artists. Without a recommendation, it will be almost impossible to get in” Cristine said. </p>
+<p>“And what? Natalie has the height of a model and the curves of a porn star. She will easily get in” Debbie said, making me choke at her comment. I haven’t considered myself as being such a combination, but the more I think about it, the more I like it. “I bet that it will only take her a wink of her eye to get into the club. Natalie has nothing to envy of those super models” she said.</p>
+<p>“I wouldn’t be so sure of that” I grinned at the idea of having a place full of beautiful women just waiting to have their blossomed traits ready to be harvested. If I have this amazing magic still going for the rest of the day, it will be a waste not to make the best of it. Without losing time, I used my great intelligence and imagination to review the limitations and conditions the magic has and considered scenarios I could use while trying to keep John not aware of what I’m doing.</p>
+<p>“I know this place. I don’t think we can get it” John said, bringing my attention to the present. </p>
+<p>“Don’t worry about that John. I wouldn’t invite you here otherwise” I said wrapping my arm under his and pulled him to move toward the entrance. He nodded and started walking with me at his side. As he did, I could feel through his arm how nervous he felt, but his experience as an executive allowed him not to show it. “Relax John. I got this” I said putting my plan in motion.</p>
+<p>Certainly, a body like mine brought the attention of many of the people waiting in line, but when we started walking as we owned the place, brought out a lot more envy and lust. I quickly fed on those emotions to strengthen my confidence and determination. ‘This shouldn’t be so hard’ I whispered, feeling my allure and charisma at their peak. Using my enthralling strut combined with the soft bounce of my massive breasts, I managed to get the attention of the boulder man guarding the entrance. When I got close to him, even though he was quite tall, he was forced to look up to me. Seeing my shadow engulfing such an imposing guy made me feel incredibly powerful. “My friend and I are on the list. Can you let us in, please?” I said using my hypnotic voice without being rude. After all, there was no reason not to be.</p>
+<p>“But of course... Enjoy...” he said, opening quickly the door for us to walk such an exclusive club without even checking if what I had said was true, which wasn’t by the way. </p>
+<p>“I’m impressed, Natalie. How did you get a recommendation?” John said, truly surprised.</p>
+<p>“I’m the owner of many qualities” I said. ‘And hopefully several more by the end of the day’</p>
+<p>Samantha’s charisma proved to be useful again as it got me a nice discount to obtain one of the VIP boxes. It really took a chunk of my savings, but I looked at it as an investment. The VIP section was elevated from the ground allowing their users to see the whole crowd even if they were standing. Also, the one I chose was on a corner, allowing us a peripheral vision over a large number of the VIP boxes nearby giving me the possibility to be in close range of potential resources. With my new HQ secured, it was time to move to the next part of my ambitious plan.</p>
+<p>“What would you like to drink?” a waitress asked us once we seated in the box.</p>
+<p>“A couple of beers suddenly doesn’t sound too fitting for a place like this” John said to me scratching his chin.  “Are you up for something a little bit stronger?” he asked.</p>
+<p>The volume of the music made it a bit hard to understand what John was saying even we were quite close to each other. I knew he was trying to be discrete, so I got even closer to him.</p>
+<p>“If you allow me, we have a nice selection of whisky” she said offering us a list to choose from.</p>
+<p>“Whoa. You have a nice hearing young lady. Thank you” John said accepting the list. He reviewed it for a moment before giving it to me. “Anything you would like to try Natalie?” he said, then lowering his voice he added “I’m inviting, so don’t worry about the price alright?”</p>
+<p>“Don’t worry John, I got you loud and clear” I smiled as my ears finished integrating the waitress' amazing hearing into them. He didn’t notice, but while he was checking the list, I got quite dizzy due to all the noise that I was receiving, but slowly I focused on some of the sounds allowing me to filter them. Having two of my senses enhanced really gave me a new grasp on things around me and made me wonder how I would perceive things if the rest of them were improved.</p>
+<p>With the liquor list on my hands, I decided that the best course of action was quantity instead of quality. While having a very expensive whiskey could help John’s ego, I needed him to be a bit drunk for my plan to work, so I decided for two less expensive ones but with higher alcohol content. “I will like two bottles of this one here,” I said. The waiters nodded and left.</p>
+<p>Reconnecting with John was incredible. Talking about our past, we recalled all the funny things we did and experienced during our school days. We ended discussing how stupid both of us were for having silence the feelings we were having for each other. Fortunately, in his mind I still looked like I did, otherwise he wouldn’t have believed I didn’t approach him because I didn’t feel sexy enough to be with him. But with that problem in the past, I finally let him know my feelings.</p>
+<p>When it was time for John to confess his feelings for me, I felt transported to the time we were classmates. I looked into his eyes and let the sound of his voice enthralled me. He got into his so well Romeo’s pose but this time it was for me and me alone. He got my hands and I got his as he guided me to the dance floor when a slow song started playing. Then, as we were surrounded by the dancing couples, he gently grabbed my waist and pulled me close to him. I did my best to hide the pleasure I felt as his face gently rubbed the curve of my breasts when he let his head rest over my bust. Sensing how my whole body engulfed him as we danced, let me feel so womanly and full of confidence that I raised his chin so our lips could be very close. </p>
+<p>Hearing how his heart was accelerating gave me the courage I needed to finally take the initiative and kissed the man of my dreams with softness and desire. Then, I found myself having to strengthen my embrace on him as he literally melted in my arms due my raging pheromones overloading his senses. He surrendered before me and I loved it. When I broke the kiss, John found himself breathing for air with a grin from side to side on his face.</p>
+<p>Suddenly, the slow song ended and with a fast one starting. “I love this song”’ I quickly said as I felt him ready to leave. “Would you like to dance with me a bit more?” I said bathing my eyelashes while puckering my lips. He sighed and nodded not being able to resist my cuteness.</p>
+<p>Dancing had never been a problem for me before, but becoming so tall and curvy made my dance moves quite dorky and I found myself bumping with other people while I move around. This embarrassed me a lot and I quickly thought of a way to solve it before the song ended.</p>
+<p>.</p>
+<p>“John, do you see the brunette with the white top dancing over there?” I whispered John in his ear so he could hear me well. “She moves with great agility and grace, won’t you think?” I said trying to make John focus his attention on that woman’s particular skill for me to gain it.</p>
+<p>“Oh! I know her” John said with a sad expression on his face. “Her name is Elissa and we dated for a short time. The reason she moves like that is the same for us breaking up. You see, she has an obsession with ballet. She has taken classes since she was little and even has won a few competitions due her great effort and dedication. The problem was that she worked so hard that we had very little time to be together and while we like each other it was difficult to be in a relationship like that so we ended it on good terms. At least she seems happy now” he sighed.</p>
+<p>I stopped listening to John as I felt my body tingling like crazy. Then, as it happened with Irina, I moaned in pleasure as the sum of all Elissa’s hard work slammed into my clumsy being at once, rewriting it at a fast rate. Soon, I felt my physical coordination improving along with my grace and posture and I could enjoy the rest of the song moving with the grace of a beautiful swan.</p>
+<p>Feeling how elegant my movement had become, I realized how lucky I had been. I tried to gain the agility from a random girl and I ended up choosing a ballet champion. The fact, she had been John’s ex just made my improvement more delightful. Still, he made obvious her dedication to ballet wasn’t what attracted him to her, so I did wonder what it was.   </p>
+<p>Then, John realized I wasn’t paying attention to him, so he quickly said “I’m sorry, we just shared our first kiss and I’m so stupid to talk about one of my ex girlfriends. Women hate that”</p>
+<p>“That is true, but today is special so I don’t mind it at all” I said very pleased that he has shared such rewarding information about Elissa. “In fact, just for tonight, if you see another of your past girlfriends around, don’t hesitate and let me know. I would really like to know about them. Specially what attracted you to them” I said hoping it wasn’t too soon to say something like that. My original plan was to get him a bit drunk before suggesting something like that, but with all the dancing, I was the one starting to feel the effects of the alcohol and I let my tongue slip.</p>
+<p>“If you really want to know...” he whispered, “... the depth of her eyes” he said sincerely..</p>
+<p>I smiled as I closed my eyes letting out my insecurity to triggest the magic in me. When I felt the tingle in my eyes gone, I lowered myself to John’s face level and with a low and seducing voice, I said “Are they deeper than mine?”. After saying that, I opened my eyes and watched how John's face changed into pure devotion as he got lost into the deepness of my beautiful eyes.</p>
+<p>“No.. Your eyes are like radiant emeralds pulling my soul into their divine brightness” he said.</p>
+<p>“This could be quite useful” I said sensing how mesmerized John was. It was like he was in trance ready to follow any of my commands. ‘If only I could feel sober enough to give them’ I said, regretting my low alcohol resistance. But then, that was also something I could fix easily.</p>
+<p>Returning to our box, we passed close to a group of party women. They were drinking a lot, but one of them looked quite sober even though she has been drinking as much as her friends. “Hey John. Don’t you think it’s great drinking so much and not get drunk by doing it?” I said.</p>
+<p>It seemed John realized what I was saying as my boozy state was gone with the wind, Then, once I got the alcohol effects under control, it was time to move to the next part of my plan.</p>
+<p>Having a superior brain power had allowed me to multitask with great efficiency, so even though I greatly enjoyed my conversation with John, I had been using, since we arrived, my enhanced vision to spot several women whose traits I will like to add to my collection. With us back to our box, several of them were in close range, so I decided to put my new hypnotical power to the test. I let John look into my eyes as I drew his will and let him be susceptible to my voice. </p>
+<p>“John. Do you think I’m pretty?” I said to him with my seducing voice.</p>
+<p>“Sure Natalie. You are very, very pretty” he said mesmerized once more by my eyes.</p>
+<p>“You are so flattering” I giggled with extreme cuteness making him blush “but you have dated other beautiful women in the past, so I wonder about what do you find attractive in a woman? With so many sexy women around, it will be easy to figure it out, don't you think? And remember that I won't get mad if you say another girl has more alluring attributes than mine. In fact…" I said while moving next to him. By doing that, I was sure to rub my thick thighs and heavy breasts against his body. “... if you are truly honest with me...” I came closer to his ear and whispered with almost moist breath “... we could end having sex tonight”</p>
+<p>John only nodded to my suggestion with a visible erection in his pants. I passionately kissed him while placing my hand close to his manhood to enforce my control over his desires. That way if there was a trait I wanted and he wasn't interested in, I could influence his feelings to obtain it and improve myself further.</p>
+<p>Two hours later, I found myself back to the entrance of my apartment building. John never stopped being a gentleman even when it was obvious he was quite drunk. He opened the cab's door for me and helped me to get out. In that moment people walking on the street alongsimple with the traffic simply stopped moving as my presence seemed to freeze time.</p>
+<p>The sight of my long shapely toned up legs was the first thing that captured people's attention. Then, they were in awe at the size of my prominent bust barely fitting through the cab door frame. Finally, when my face was revealed, people looked at me with disbelief and many seemed to forget breathing as they became too enthralled by how beautiful and dazzling I was. </p>
+<p>John stood next to me and I gave him a half smile just to avoid overloading his senses. I clearly could hear his accelerated heart beating just for being so close to me. He was doing his best to hold his desire, but just because I asked him to do it. I improved so much my body with the qualities he lusted for that it was impossible for him to resist me. He wanted to have right in the club, but told him that if he behaved, he could have me the way he wanted in my apartment. His excitement was so great that his fingers blurred as he typed my address in his cab app and offered to the driver to multiply the rate for every minute saved from the estimated time.</p>
+<p>The click of my heels was the only sound that could be heard as we walked toward the building. Once I reached the door, I heard the driver say to himself "That is one lucky bastard". I grinned at his stamment and said "He sure is" as I closed the door and the street's noise returned as the cars moved again while the pedestrian remembered they needed to breath.</p>
+<p>Judging by the reactions of people, I knew I should be quite beautiful, but didn't have the opportunity to see how much I had changed. Once we were inside the elevator, my eyes got wide open as I noticed the facegirl of an angel seeing back to me. 'Oh my… Is that me?' I thought, admiring my reflection. While I had been quite eye-catching by combining an improved version of the best facial features from the women who flirted with John in the office, there were several women in the club whose traits were far superior.</p>
+<p>While Mery's lips had been great, my new lips were so plush and entrancing thanks to combining the volume and shape of two different girls. My natural green eyes, blessed with the deepness of John's ex girlfriend Elissa, looked particularly alluring each time I blink slowly the amazing lashes I got from a rich girl, replacing the ones Portia's gave me. Another thing I changed from her donations was her smile as there was a famous model known by it. Now my smile has become so irresistible that it could stupefy people at the sight of it. Finally, hair condition I inherited from Carol was enhanced by the best volume, shininess, and elasticity I could find in others. Such additions made my hair flow with a divine grace difficult to ignore.</p>
+<p>Besides replacing the attributes I got from the women of the office, John let me know a few others he likes in a woman’s face. For example he pointed out two girls with a particular shape of their cheekbones, one was sultry and the other elegant, so I took both enhancing my beauty even more. Then, he showed me a girl with quite stylized eyebrows. After hearing that, mine raised and shifted into thin arching ones. But of course, what makes great a face is that it should be free from impurities and imperfections. To achieve that, I showed John an asian girl with the most hydrated and perfect skin I had seen. As a result, mine became so flawless that even babies will feel envy of it. ‘Even the best models with photoshop can’t look like this’ I grinned.</p>
+<p>When we were reaching my apartment door, I was surprised to find that my neighbor next door, Sara, was walking out into the hall wearing only in a nightie. “Why took you so long?” she said before realizing who she was talking too. “Oh.. hi Natalie” she said, becoming quite embarrassed and trying in vain to cover her almost nudeness. “I thought it was Richie. He was coming tonight” she said as her eyes could stop seeing me first with curiosity and then with desire. “I wouldn’t mind some company while I wait if you are interested?” she said trying to act brave while displaying her body in a seductive way… was she trying to hit on me?</p>
+<p>It was obvious that Sara felt intimidated by my presence. I knew her long enough to know she really enjoys sex and is quite confident her body can awake men desires, she had to admit that not only my sexiness made her feel insecure, but aroused her to the point to try to be with me.</p>
+<p>“I’m sorry Sara. I have a date tonight” I said stepping back, so she could notice John who had been eclipsed by standing next to me.</p>
+<p>“Oh crap…” Sara blushed in embarrassment and rushed into her apartment closing the door. </p>
+<p>“Nice to see you Sara” John said, a bit drunk, making me laugh at his small mistake. </p>
+<p>“I better serve you a nice cup of coffee, otherwise you will fall asleep at any moment” I said after opening the door and letting John step into my home. ‘Good thing I cleaned last night’ I sighed.</p>
+<p>“Nice apartment Nicole. Quite cozy” John said looking around my small home. The central area was mostly the living / dining room separated from the kitchen by a bar. Then there were 3 doors. One was my bedroom, the other my study and finally the bathroom for the guests..</p>
+<p>“I lived alone so I don’t need too much space anyway” I said trying to sound honest, but the truth was that I couldn’t afford something bigger. At least, he appreciated what I tried to do to make the place feel warm and welcoming. Feeling happy with his comment, I turned off the coffee machine and loaded it with water. “It will be a few minutes before the coffee is ready. You can wait on the sofa while I change into something more comfortable” I said, winking an eye at him and making him get an instant erection. “Sorry for that” I chuckled a bit. “I will reward you later, so be patient” I whispered while lowering myself giving him a nice view of my massive tits.</p>
+<p>“I may use your bathroom, please” he said, swallowing hard. My presence was truly intoxicating.</p>
+<p>“The second door on the right,” I said. As he stood up, I walked toward my bedroom saying. “Try to save some for me for later, ok?” I grinned, being sure to extra swing my pronounced derriere. When I turned around to see his reaction, I almost exploded in laughs as I saw him disappear inside the bathroom. “I have become such a bad girl” I purred feeling great to be so confident.</p>
+<p>Once I was alone in my bedroom, it was time to appreciate the rest of the changes in my body. While the improvement of my face was the most radical one, I managed to enhance a bit more what I already have. Stripping off my blouse, I watched how my enormous breasts perfectly filled the huge cups of my bra. “Moment of truth” I sighed, unhooking my underwear and with care, pulled it down. Soon, my humongous boobs felt the pull of gravity but then, they bounced back proudly on my chest throwing out the nursery pads that covered my sensitive nipples.. </p>
+<p>“Oh my… it worked. It truly worked!!” I exclaimed in total awe as despite their size and weight, they kept a delightful round shape. “I won’t need to buy expensive bras to support you” I laughed caressing my ripped pumpkins and feeling the incredible firmness they obtained from a drunk woman that removed her shirt and exposed her perky ample breasts for everyone to see them, including John. “They couldn’t be more perfect” I said, shaking my great knockers and admiring how perky and sexy they looked on me. My nipples started to stiffen at the stimulation and decided to stop right there before Debbie’s overpowering sensitivity blinded my judgment.</p>
+<p>After removing my skirt, I watched pleased how my voluminous ass had also firmed up and had a more sculpted jutting shape after seeing a dancing girl with an obviously operated butt. I decided to take that unnatural outline and forced it to benefit my abundant rear. Now, my espectacular posterior seemed like it was wearing an invisible booty lifting leggings all the time. </p>
+<p>Taking a moment to admire my toned up muscles, made me recall some of the changes that took place inside my body thanks to the fortunate presence of Stephany, another of John's ex girlfriends, and two of her closest friends. While none of them had visible traits that could improve my beauty, his knowledge about their inner strengths proved to be most useful to me. Touching my abs, I felt how harder they had become after integrating Stephany's fast metabolism into my body. He commented how he really liked how she was able to eat a lot and not get worried about her weight. I couldn't agree more as what little fat left by Irina's workouts was burned away and I felt more than ready to try out an expensive all-you-can-eat buffet.</p>
+<p>Regarding the friends, Alexia and Janet, John mentioned the first one was a runner who wakes up full of energy and enjoys jogging every morning . Her efforts became mine and my already muscular legs turned even more powerful due her focalized training. After that, he talked about Janet and what he revealed was too good to be true.</p>
+<p>While Janet was quite petite and had a slender build, her body hid an incredible secret. John mentioned she was very strong for her size. She even arm wrestled him and won, confessing she had never trained in her life. I doubted such claimings, but after he sighed mentioning he would have dated her if it wasn't for Stephany was all the encouragement I needed. By that moment, I was quite sure John was very interested in strong women, and if he wanted to be with one that could overpower him, he would have more than he could handle.</p>
+<p>I looked into the mirror and flexed my muscles. While they weren't any bigger after my encounter with Irina, they definitely packed an incredible strength nobody could see. I bit my fleshy lips with desire as I remembered how good I felt when the magic in me tap into the herculean power hidden in Janet and emulated in me irradiating my body with so much strength that I orgasmed of the pleasure. </p>
+<p>"I never tested how strong I became. Let's see if my theory was right" I said, turning around and walking toward my dresser Grinning, I placed my two hands under it and pulled it up. My biceps quickly bulked up and with some effort I was able to lift it fully loaded. "Holly sh… I did it"' I said fascinated as I lifted it at least one foot from the ground before lowering it again. "I bet John won't be able to even move it" I said kissing my biceps. "Thanks to my wonderful mind, I imagined that if Janet was so strong while being small and untrained, her gift would not only be enhanced by the magic, but due my amazonian height and muscles. "If she was stronger than John, I should be at least 4 times more" I grinned imagining the look in John's face when he discovers how weak he is compared to me.</p>
+<p>Hearing John leaving the bathroom was my signal to hurry up and return to his side. I rushed through my drawers trying to find something that will fit me, but that was an impossible task. I grabbed my most oversized shirt and found it quite hard to pull over my huge breasts. It was hard work, but after the material gave away at the seams, I was able to at least fully cover my aroused nipples. Still, my firm round orbs poked out of the bottom, and the tore off fabric left a slight display of luscious side-boob to each side. “Not bad. He can get aroused at the sight of my incredible abs too” I laughed, starting to enjoy how kinky and arousing my old boring loose shirt looked so tight in my new overdeveloped female form.</p>
+<p>Knowing that any shorts or skirt could be pulled around my more than generous ass and mighty hips, I decided to improvise something to wear. Grabbing a blanket, I wrapped it around my small waist and what I thought should be enough to cover me, I found that most of the material was quite stretched around my impressive curves barely managing to cover my decency. “Oh well. It’s not that I will spend too much time being dressed” I seductively smiled to the mirror getting horny of how pitiful my outfit looked in its poor effort to cover my voluptuous silhouette.</p>
+<p>I left my room and I saw John waiting for me on the sofa as I told him to do. For a moment, I blushed recalling what I told him before he disappeared inside the bathroom. I never would have ever imagined saying something as bold as that before, but I wasn't the same naive woman I was… well, technically I'm, but with a better body… yeah, that's right, a sexier body eager to be touched and be loved.</p>
+<p>"Sorry about the outfit. It's laundry day so I had to improvise. Hope you approve" I said as John's eyes popped out at the erotical vision my body was displaying. I was sure that besides my impressive breasts and butt, he could enjoy the hard muscles printed in my arms and legs, without forgetting my rock-hard abdomen.</p>
+<p>"It looks great Natalie. I don't think there can be an outfit that won't suit you well" John said trying in vain to sound cool and relaxed. Due to my enhanced senses, I clearly heard his elevated heartbeats and noticed the drops of sweat in his forehead; ynot to mention feel his intense stare devouring every inch of my exposed skin.  </p>
+<p>"That is a pity" I sighed while serving the cups of coffee? "Would you like some milk?" I asked.</p>
+<p>"Sure, but why it will be a pity?" He asked as I disappeared from his sight as the refrigerator door was opened.</p>
+<p>"If I'm fully honest, I was hoping you will give me an excuse to remove it" I said quite slowly, trying to dissimulate the low moans escaping my lips while gently squeezing my nipples and shooting white streams of breastmilk into his coffee. "But this outfit is kind of growing on me" I said happily of how easy it was to cover up my nipple before closing the refrigerator.</p>
+<p>"But if you allow me, I can help you with that when the time comes" John said.</p>
+<p>"Oh! And when that will be?" I said, giving him his cup.</p>
+<p>"After I finish this coffee perhaps?" He suggested with a kinky smile on his face.</p>
+<p>"Try your coffee and then we will see" I said drinking my cup while keeping my eyes on him.</p>
+<p>As soon as he tasted it, he back off surprised. "Oh wow. This must be the tastiest milk i have ever tried" he said taking a good sip of his coffee. "I bet you only buy fresh natural milk right? You better tell me where" he said as he gulped down the rest of coffee and licked his lips.</p>
+<p>"Indeed, it's fresh milk and if you want to know from where I get it…" I said while taking a sip of my coffee. After that, I put the cup down and grinning, I added "... it's homemade"</p>
+<p>John looked confused for a moment until he noticed a spreading dark patch on the left side of my shirt, right where my plump stimulated nipple was poking through. His thoughts quickly became so blaunt obvious, that I knew what to do.</p>
+<p>"And you were right. It's quite fresh…" I said rubbing gently the exposed lower part of my left breast. "... if you are so eager to taste it again, i may let you drink it from the faucet..." I added, lifting slowly my shirt to reveal my leaking nipple on top of my giant tit. "... Only you must promise me to be super gentle as I'm very sensitive" I said stretching my hands toward his face. He never said a word, only nodded his head and let me guide his mouth toward my bosom. Once his lips locked on my nipple, I moaned with ashamed pleasure as John fed on me, forging an intimate bond between us that both came to enjoy greatly.</p>
+<p>With his belly full to his heart's content, John rested his head over my lap while I fondled my breasts prolonging a bit more the wonderful sensations he left in them. "Sorry if it was too much. I felt these big milk jugs of mine could compete against a cow in production and win" I sighed feeling quite satisfied and pleased.</p>
+<p>"Don't worry about it. After learning in the clothes store that you were lactating, the idea of being breastfeed by you got way deep into my mind. I will confess that when you offered me a meal, I wished something like this, so when you spike my coffee with your milk I simply lost my mind" he laughed. "I mean, the nice girl I had a crush on for so long not only returned to my life transformed into a strong amazon to not only say that she loves me, but to offer me her breasts, bigger than my head, blessed with hyperlactation. How lucky I can be" he said quite excited.</p>
+<p>"Yeah. Sounds like fate" I smiled at him while combing his hair as it sounded way better than said I got jealous of Kelly and infused her lactation ability into the bigger breasts an inflated stripper shared with me. "That reminds me… I have another surprise for you" I said standing up. </p>
+<p>"Why don't show you the inside of my bedroom. It's a bit small, but I think we can fit on my bed if you sleep on me" I grinned.</p>
+<p>"I won't be too heavy for you?" John asked, a bit concerned.</p>
+<p>"Don't be silly. I can handle it" I grinned as I slipped my arms under his back and legs and pulled him up from the sofa.</p>
+<p>"Oh my…" John gasped, feeling very aroused that he had been carried as an weightless infant. </p>
+<p>"Shhhh. It's time to show you this muscles are not only for show" I said carrying John toward my bedroom as I close his face to mine to share a passionate kiss. The visible bulge on his pants proved he was more than ready to take our relationship at the next level. Unfortunately our moment was interrupted when I opened the door.of the bedroom and moans of pleasures could be heard coming from my bathroom. </p>
+<p>"I guess Richie finally arrived" I said frustated as it wasn't the first time I had heard Sara had sex. "Sorry John. Sara likes to scream a lot when she fakes her orgasms" I said placing John in the bed. Then, as if by quote, Sara screamed quite loud indicating an powerful orgasm, but then, she kept moaning and screaming of pleasure. "See? No woman can come that fast, that hard, and keep going. She is just pushing the guys buttons. Let me close the bathroom door first so we can enjoy our time together in privacy. I want that the only moans you hear come from me" I grinned as I walked toward the bathroom.</p>
+<p>"Oh Sara. Even after all these years, you still are as hungry as usual" John laughed.</p>
+<p>Hearing that, made me recall how John saluted Sara. He wasn't mistaken. I was.</p>
+<p>"You know her, don't you?" I asked, holding the knob of the bathroom door but not pulling it. I turned around and looked at the clock on my stand. It was 11:20pm. There was still time. "Tell me John, how do you know she isn't faking?" I said, feeling quite excited to hear the answer.</p>
+<p>"You must have realized by now that she is a nymphomaniac. She has great appetite for sex" he said. Even though such quality sounded exciting, I didn't feel the magic getting active. If a man wasn't interested in a woman with a high sex need, perhaps it was better not to acquire it. "She was obsese with sex. So much, that she practiced yoga not to dissipate her needs but to make her body flexible and even gained a way to control the muscles of her sex to power up her orgasms. Don't ask me how she did it" he said.</p>
+<p>"I won't" I said as I didn't need to do it. John must have enjoyed for sure such technique in the past as the magic in me was making me, besides being more flexible than Sara, feel a strong connection to my vaginal muscles allowing me to tense and rub them a bit. As usual, I forgot about Debbie's sensitivity and I ended bitting my lips hard to avoid screaming as the most powerful orgasm that I had experienced rocked my body. Unfortunately, or fortunately perhaps, in my predicament, I closed my hand too hard and the sound of metal being slightly twisted hid any involuntary moan that I couldn't contain.</p>
+<p>"What was that?" John asked.</p>
+<p>"Perhaps they hit something with their rough sex" I said releasing the knob and noticing the print of my fingers dug into it. "But if what you say is right, her orgasm should be quite draining. How she is she able to continue having sex?" I asked.</p>
+<p>"She is multiorgasmic. The stronger her orgasm is, the eager she is to achieve the next one" he said. "I won't deny I enjoyed that, but I didn't like when she only care about her needs"</p>
+<p>"That is good to know. I will be sure not to make the same mistake" I grinned feeling a pleasant tingling as Sara’s orgasmic condition was engraved into my sex core.  As I heard my neighbor screaming her second orgasm, I got a kinky idea. “Let’s see who has more and better orgasms, shall we?” I whispered leaving the bathroom with the door wide open.</p>
+<p>Looking at John waiting so eager for me made me feel so desired. Thee idea of finally have his total attention, devotion and body just for me were getting me so wet. Having gained such sexual qualities from Sarah got my libido so high, that I was more than ready to put her gifts and Debbie's into good use. "Are you ready for the first night of the rest of your life?" I said while letting my blanket slide down my hips before removing my torn off shirt to reveal my massive breasts.</p>
+<p>John only nodded and I moved as a predator ready to pound my prey. As soon as I gave him my virginity, I became more wild and savage. It was my first time and the sensations my new body provided were making me lose control. John did his best to fondle the complete extension of my gigantic and very erogenous breasts. They were so large that we couldn't see each other unless I tilt forward and smashed them on his chest. With my new flexibility I was able to move and spin my pelvis in circles while thrusting my hips up and down. I started slow at first but soon found out that increasing my speed got me going quite quickly and before I knew it John was groaning as I slapped my generous ass over his legs over and over. The faster I went, the more force I applied on him, so I distracted him using the skills I obtained from Sara. It didn't take long for his groans changed into moans as my sex gave a strong massage at his making him feel very good. I just hoped my love making wouldn't leave too many bruises on him.</p>
+<p>Having a woman like me on top shouldn't be easy but John handled it like a real man. Still, I couldn't avoid feeling aroused by the fact that even with both of his hands he couldn't fully grasp one of my breasts. I felt so big, so powerful, so right, that his moans of pleasure, even though I was causing him pain, were stimulating me even more. Being able to dominate John both, physically and mentally, was truly pushing me to the edge. My legs trembled and fearing that I could crush some of his bones, I leant forward and grabbed his face from behind, I pulled her toward my chest burying his face between my boobs until his head vanished into my cleavage.. </p>
+<p>"Bear with me" I moaned, increasing my rhythm. I was too close and both knew it, still John moved his hands to slap both of my buttcheeks while he tried to pull his head out to breath. After taking a big gulp of air, he quickly moved his mouth and locked it into one of my nipples. "Oh fuck!" I gasped as that was the extra stimulation I needed. My sex locked for a second and later exploded with violence as an earth shaking orgasm rocked my whole body and making me scream like a banshee. John couldn't hold himself any longer and came too inside me. Feeling him filling me aroused me so much that triggered another orgasm, and then another and another until I lost count and passed out in pure bliss.</p>
+<p>It was five minutes before 5:00 when I woke up full of energy to start a new day. I turned around and saw John sleeping peacefully next to me. “You really did a great job last night John. You deserve to sleep some more” I whispered to him while I gently played with his hair. He disturbed a bit turning around before continuing sleeping. “You better recover your energies, but I will like to repeat what we did last night before lunch” I giggled as I pushed the sheets off and stood up.</p>
+<p>I walked into my bathroom and while I considered taking a bubble bath, a shower should be faster. I needed to do a lot of things so I pampered myself later. I opened the shower and let the water wash out my smooth skin. I soaped my defined muscles and paid extra attention washing my ample breasts. Each one was the size of soccer balls and so firm and sensitive that it was impossible not to love them. They were just perfect and most important, they were all mine.</p>
+<p>I applied just shampoo on my hair, as it really didn't need any conditioner, and when I washed it, I purred feeling the foam of the shampoo slipping between my thick buttcheeks. It was amusing how a simple shower could bring me so much pleasure due to my high sensitivity and I felt bad for all the women that can’t enjoy how erogenous this experience can really feel. </p>
+<p>After drying my body, I walked into my drawer and picked up a sports bra and a pair of yoga pants. I dressed in front of the large mirror I kept in the room and admired my great beauty to boost my confidence. Forcing the sport bra to capsule my huge breasts was truly a challenge almost compared to having my pants slide around my hips and ass. Still, the image reflected in the mirror was my motivation and after being properly dressed, I grabbed a rubber band and tied my hair into a ponytail. Now, I felt ready to start my day.</p>
+<p>“Time to stretch these long legs of mine” I said but before leaving the room, I turned around and looked at the left side of it and softly said. “Now, you remain asleep and mommy promised to return with a warm breakfast” I said in a motherly tone, sensing my nipples already getting hard.</p>
+<p>As soon as I left my bedroom I grabbed my bluetooth earphone resting in the desk nearby and put it on . “Good morning Alice. What wonders do you have for me today?” I said while I walked down the stairs to step into my large living room.</p>
+<p>“Good morning Natalie. Starting morning protocol” Alice spoked to me and the curtains on my windows rolled up letting the sun bathe me. Soon the speakers around the living room filled the place with relaxation music, but still I could hear the coffee machine and the toaster turning on in the far away kitchen. “Do you want me to review your inbox and social media for updates?” she asked me even though I knew she had already done it.</p>
+<p>“Before you do that, disconnect the coffee maker. John will be sleeping for a while” I said.</p>
+<p>“As you wish Nicole” she said and it was done.</p>
+<p>“Thanks Nicole, now, about my updates? Did I get more than 100k messages in a day?” I wondered intrigued as I stepped in the middle of the room and started to stretch my limbs. </p>
+<p>“Indeed. You crashed the internet last night. You and John having fun in the club last night were the big news. Several people broadcast live how you were dancing and people seemed not get enough of the famous Nicole Warren after being out of the reflectors for the last couple of months” Alice said in a way that if she would have a face, she should be grinning by now.</p>
+<p>“Now, now, is that sarcasm? I don’t recall programing that in your routine” I said splitting my legs getting into my own yoga-ballet morning routine. “But it suits you well,” I said tilting my torso to the sides to touch my feet.  </p>
+<p>“You should. I learn from you” Alice said. “Anyway, thanks for upgrading my programing. I should be honored that one of the most recognized genius and innovators in the industry works on me during her free time. I enjoy this ‘more human’ routine you installed in me. It makes so easy to understand human behavior and interact with other people as if I was a real person”</p>
+<p>“Your welcome” I said, lifting one of my legs and managing to place it behind my neck. “Now, how about my email? Anything I should be aware of?” I said moving the other legs.</p>
+<p>“Yeah, right” Alice said. “From the 542 messages received in your professional inbox, there are a few that need your review and consideration. I classified the top 5. Three of them are from major cosmetic companies that are interested in your services to announce their new products. One is from a software symposium that will like you as a speaker. The last one is from a fashion company that wants to put a new line of clothing focused on curvaceous women” she said.</p>
+<p>“Oh! I like the last one. Perhaps I can get a new line of clothing and not have to spend so much money making clothes that fit me” I said wondering what kind of ideas they could have. “Please reply to the last one and inform them that I would like to see their outfits before I make a decision. About the symposium, having a bunch of nerds drooling at my presence isn’t really my idea of fun, but perhaps I can meet some people and spark new ideas to tinker you” I said.</p>
+<p>“Now, that could be fun indeed” Alice said.</p>
+<p>“Glad you see it that way” I laughed as I started to walk on my tip toes before taking a forward jump that propelled me several feet away. “Remind me, how long before the next ballet competition?” I asked snapping my fingers, indicating Alice to switch music into a ballet one.</p>
+<p>“Next week and your rival Elissa has been training really hard. She is quite confident that she will win this time” Alice said.</p>
+<p>“She is a great dancer. If she wasn’t that obsessive, we could have been great friends” I sighed.</p>
+<p>“Yes Nicole. She could have” Alice said. “Do you want me to tell me about your social media?”</p>
+<p>“Like I could stop you” I laughed spinning on my feet before rolling back with such flexibility that I arched my back and bent my knees doing a bridge pose in the most unorthodox possible way.</p>
+<p>Thirty minutes later, I walked upstairs and noticed John was still sleeping. Without making noise, I removed my sports bra and let my breast bounce heavily on my chest. “Ready or not, here comes mommy to feed you” I said walking to the left side of the bedroom and as I expected as soon as my voice was heard, my twin baby girls woke up and stirred into their cradle.</p>
+<p>They were less than two months old, but both of them were truly angels. WIth adorable smiles and piercing green eyes like their mother. “Hope you two are thirsty because mommy is very full” I whispered as I lifted my babies and taking a seat at the edge of the bed I started to breastfeed the two of them at the same time. “There, there, I have plenty for both of you” I laughed as they greedily sucked on me giving me a lot of pleasure while doing it.</p>
+<p>“Try to save some for me for later, ok?” John said from behind as my nursing woke him up.</p>
+<p>“What did you just say?” I asked, sensing a kind of deja vu. My prodigious mind seemed for a moment to grasp something buried deep into my mind, but as soon as I was aware that it was it, it vanished. I shocked my head as a strange dizziness filled my mind. “Nevermind. It’s not important…” I said, “... what 's important is that you mister are late for work. Now, the fact you work for me, doesn’t mean you will be late. I made you CEO for your great abilities not by how good you are in bed” I said with a grin on my face. “But, I think we can review the later together”.</p>
+<p>“And when I thought that I was just more than a trophy hubby, you go and say those words that made me feel the luckiest of all,” John said with a big smile as he approached to kiss me.</p>
+<p>“You indeed are so lucky to have me” I said, feeling quite proud of myself. “But I’m lucky too to have such a wonderful man that not only completes me as a woman, but that gave me two beautiful baby girls making me the happiest mother in the whole world” I said kissing him back.</p>
+<p>“Well, proud mamma. You better hurry…” he said, taking the twins in his arms. “... Irina should be waiting for you at 8am and you haven’t jogged yet” he said preoccupied.</p>
+<p>“Don’t worry. Irina will understand. We haven’t gone out to a party since the last months of my pregnancy. Good thing she offered to watch out for the babies while we were out” I said.</p>
+<p>“I think she is looking forward to being called ‘aunt grandma’ in a near future,” he joked.</p>
+<p>“I bet she does” I smiled as I kissed John one more time before standing up and taking out of the closet my sports bag. “I think I will jog at the gym this morning and take a shower there” I said, grabbing a pair of leggings, a shirt that fit me more like a top and when I picked up my underwear I couldn’t avoid smiling looking into my nice collection of personalized bras. All had massive cups to properly hold my most beloved possessions. The labels on they said Nat-cups referring to my size and name. “Sometimes I wonder what would have happened if I was named Tiffany or Zoe” I laughed feeling quite lucky to have a bra size fitting the initial of my name. </p>
+<p>A few minutes later, I was jogging through the streets enjoying the breeze on my face. I could see how some people were just getting ready to go to work, while others were out jogging like me. Still, no matter what they did, they always stopped to see me pass by and admire my voluptuous olympian body, especially the bounce of my ample breasts barely contained in my sport bra. "Good thing there isn't much traffic at this time or I could cause it an accident" I giggled as I decided to detour into a large park.</p>
+<p>While feeling the power of my legs when I job like this, I must admit that the way my breasts smashed and rubbed against each other was what love the most. They were so sensitive and the cold morning breeze was really hardening my nipples making them poked through my bra quite obscenely. I would have loved to stop by and play with them some, but I couldn't afford to be distracted. Instead, I pulled the straps of my sport bag that I was carrying on my bag just to remind me it was there. I was quite strong even for my bulked shape, so carrying a fully loaded bag on my back  didn't produce any discomfort or slow down my pace. "I must admit this body is a blessing from the gods" I said.</p>
+<p>"From a goddess to be correct" I heard a female voice said. "Over here Jugs. Let's have a talk" </p>
+<p>I turned around and saw a kind of punk young woman sitting on a bench. She had a foot over it while she blew the smoke of her cigarette. Even her body was covered in tattoos and piercings, there was something in her that felt particularly familiar. "I'm sorry, but I don't recall you and I never forget a face" I said walking toward her. "Have we met before?" I asked.</p>
+<p>"Yes, we did, but not in this form" she said, blowing more smoke. "Before you ask, yeah, I did say form because I'm a goddess and I change my form from day to day as you change clothes" she explained to me. "When I do, my personality changes with it and while one day I can be very nice, the next one I can be quite cruel. Lucky you I'm in a rebel phase, so I don't care much. Still, it won't be wise to piss me off" she said.</p>
+<p>"You mentioned we met yesterday, so the only place it could happen was in the club where my husband and I were. Even though we consumed lots of alcohol, I don't get drunk easily so I wouldn't forget your face" I explained. "Now about this shape shifting goddess you claim to be. Let's say I believe you, so why a goddess like you wants to talk with someone like me?" I asked.</p>
+<p>"Because yesterday I was a very supportive and compassionate person that felt sad for you and lent you some of my power. You used it to get that incredible body but you changed so many things in your body, more than any other person that has used my power in the past, that when your life was rewritten, you forget about me. That has never happened before, so I must be careful it won’t happen again” she sighed frustrated. “Anyway, that is pretty much the reason why I’m here, to remain with you who gave you everything you are now, so you can thank me for how cool and awesome I am" she said with a smug face..</p>
+<p>"Sorry, but I don't want to play this anymore. Certainly you must be smoking some kind of drugs to believe all of that, but I don't have anything to thank you except for making me lose my time" I said ready to resume my jogging.</p>
+<p>"Ungrateful child" she said standing up and throwing her cigarette into the ground. "I told you not to piss me off. I gave you my power and if you are not thankful, I won't let you keep it" she said waving her hand. </p>
+<p>Suddenly, I felt like butterflies swirling in my stomach and before I knew it, I was coughing dozens of blue tiny ones. All of them flew toward the punk woman’s hand covering it completely. "Each one of these represents a gift you obtain from another woman to boost your confidence. Since you are not thankful for them…" she said smashing her hand with all the butterflies against her arm. When she removed it, a tattoo of a sparking blue butterfly was printed on her skin. "... I will keep them for myself" she mischievously grinned.</p>
+<p>I gasped as I felt my body tingling in a sickening way. Soon, I felt my mighty strength leaving me as I felt quite weak. I saw with disbelief as my worked up muscles got soft and soon everything was growing bigger as I started to shrink. “No… no… no…” I gasped as my mind was getting dizzy. All the great knowledge I accumulated during years was turning into nonsense. I felt my body getting rigid and tensed as my flexibility simply vanished. Then, I felt my provocative hips contract and get flatter as my waist wided up making me lose my word famous hourglass, but my changes didn’t stop there. When I sensed my mighty asscheeks deflating into flat pancakes, I quickly worried about my breasts and embraced them in an attempt to protect them.</p>
+<p>“Please not my breasts, please no” I begged as they began to tremble. To my horror, I found my hands were losing their grip on them. Their outstanding fullness was slowly diminishing as well as the tightness on my bra. The cups of my bra collapsed as their legendary size was imploding,  moving away from their porn stars measurements to ones that could be found in normal bra stores. From ripen pumpkins to mere melons, my breasts kept reducing more of them. </p>
+<p>When my breasts finally stopped shrinking, I fell on my knees devastated to see what had become of them. They couldn’t be bigger than a B-cup and my once tight sports bra, that moments before wasn’t big enough to hold my chest, looked sad as its huge cups were not even covering my tiny nipples. “They are gone. My wonderful breasts are gone!” I cried.</p>
+<p>“No. They are not gone” the punk girl said with a more melodic voice than before.</p>
+<p>As I raised my gaze toward her, I gasped to see at first, her lengthening legs as they were rapidly developing toned muscles. Then, a ripping sound called my attention and I looked up to see the seams of her skirt being burst open as her hips widened and her ass bulged considerably. Her shirt soon raised up revealing her was shrinking and exposing her hardening abdomen. Finally, I saw that the reason for her shirt lifting was due to her ballooning breasts which swelled constantly, gaining all the mass that had been mine moments ago and stretching her shirt to its limits. Soon, it became so tight it was visible the outline of her erect nipples.</p>
+<p>“Told you they weren't gone. They are becoming part of me” she smiled thrusting out her growing orbs while flashing me the sparkling teeth I was used to seeing when I looked at myself in the mirror. “This form feels wonderful. I’m going to enjoy it very much” she laughed.</p>
+<p>“Are you taking my beauty too?” I gasped as her face was changing, becoming more and more alluring. Her skin was becoming flawless and that was all I could see as my vision blurred.</p>
+<p>When the draining feeling ceased on my body, a terrible headache hit me. Suddenly, a set of memories of an alter life became as clear as water. I wasn’t a top model computer genius with great genes. I was a simple office worker. "Oh my… I remember now. The butterfly cookie!! It was you" I said standing up. "You give me that cookie and with it I finally seduced John" I said recalling John wasn’t my husband or employee, he was a senior executive. "I'm so sorry. I didn't mean to disrespect you. My apologies for having forgotten about you goddess after all the joy you bring me. I will endure the punishment you consider I deserve but please, if you restore reality don't take my babies away. I don’t want to lose them. Please” I begged in tears.".  </p>
+<p>"Jezz, Chill out. I'm not going to do that. I only want some recognition, that's all" she said, grabbing her arm and then touching my chest. "Just remember me and we are going to be fine"</p>
+<p>I gasped as I woke up in my bed. I turned around to see the clock and it was 4:55 am. I quickly lifted the sheets and watched pleased the sight of my heavy breasts resting peacefully on my chest. "It was all a dream" I sighed seeing John sleeping next to me. "Was it?" I wondered about the words of the punk girl. With curiosity, I made an effort to part my breasts aside and gasped to see deep into my cleavage was a blue butterfly tattoo with its wings spreaded across each side of my breasts. It was in a place where only I could see it and while my photographic memory remembered every detail of my new life, there was none about when or where I got it..</p>
+<p>Recalling her warning words, I looked into my tattoo and said "Thank you goddess for your wonderful gift. Thanks for helping me get this great body and for letting me live the life I always dreamed" I said and gasped as the butterfly sparked and seemed to come to live in response.</p>
+<p>Happy that the goddess seemed pleased, I woke up and restarted my day appreciating everything around me and watching the things around my new home as it was the first time. </p>
+<p>The first thing I checked were my baby twins. They were sleeping peacefully on their cradle. I hold myself to pick them and embrace them, but there will be time for that later. "I can't believe I'm a mother… or a wife" I said, taking the time to appreciate some of the many changes in my new life. "I better enjoy them" I said walking out of my bedroom to use my bluetooth earphone.</p>
+<p>Feeling like a kid, I spoke with excitement. "Good morning Alice. Are you there?"</p>
+<p>"Good morning Natalie. Starting morning protocols" she replied but soon I stopped her.</p>
+<p>"No. I will remain in bed a bit longer... In fact, I will be home the whole day, so cancel all my appointments and report to the office that John will also remain at home. Can you do that?"</p>
+<p>"It's already done" Alice said. "Due the excitement in your voice, I must assume you have plans involving Mr. Warren. Do you want me to order food for lunch? Some condoms perhaps?” she said. If Alice will have been a hologram, I bet she will be smirking right now.</p>
+<p>"Oh you…" I said, finding it frustrating and flattering that it was me who programmed her like that. "Well, since you are so helpful this morning, from my top 5 emails, accept the invitation for the symposion and inform the fashion firm to send the outfit designs for my review" I said.</p>
+<p>"How the heck did you know about those emails?" Alice asked in shock.</p>
+<p>“Figure it out, smartass” I grinned while removing the earphone to return to my bedroom.</p>
+<p>Once inside, I took a long look at myself in the large mirror in my bedroom. Thanks to the attributes of dozens of women that were combined and enhanced into my body, I have become quite sexy and irresistible and while I could clearly remember from who each trait was picked, what I haven’t explored yet is how they had reshaped this new reality. Closing my eyes, I used my improved memory to explore my past. I moved back in time and returned to my school days.</p>
+<p>On those, I wasn’t a shy and average girl anymore. My curves were half way of what they were today giving plenty boobage and ass than any female teacher in the school. Due to my curves and beauty, I was the captain of the cheerleaders so me and John being a couple was quite obvious. Still, in this new reality there were several attempts to remove him from being captain as other men wanted to date me, so he had to work very hard to keep his body in shape and I really appreciate it as our relationship progressed. “So many memories” I sighed reviving our first date, our first kiss, our first sex night. Definitely this reality was way better than the previous one.</p>
+<p>But I wasn’t only boobs and booty. Due to my great intellect, I was able to master software programming to the point that even hackers fear to mess with me. That really helped me to impulse my career as a model once I became old enough and from there I made millions in beauty campaigns, publicity contracts, covers on magazines and even fitness and ballet competitions. Once I got enough money, I decided to buy the company were John worked and named him CEO. It was a stab in his macho ego, but he knew very well to accept my gift. He proved to be quite worthy as the company value duplicate in just two years.</p>
+<p>Then, of course, was my wedding. We got married last year and it was more beautiful that I could have wished for. We were so into each other that I got pregnant during our honeymoon. “I wonder if Kelly could be responsible for that?” I said looking at my baby twins. “She had one child and I two, so perhaps I got an enhanced version of her pregnancy too?” I said with a smile. </p>
+<p>Just then, John stirred in the bed. “Good morning beautiful. Did you sleep well?” he asked with a grin on his face as he stood up from the bed, making me gasped to see his ripped body. Being with me has rubbed some of my training to him and now he was just too good to resist. </p>
+<p>“Last night was truly great. I must be the luckiest man alive for being married to the sexiest genius on the planet” he said, patting my left buttcheek while kissing gently my left breast.  </p>
+<p>“Do you mean that John?” I said looking down into his eyes with my entrancing ones. “I know that you must be happy to be married to a woman like me, but do you really love me? Tell me honestly” I said forcing all my seductive power on him while I pressed my amazon naked body into his engulfing him completely “Tell me John. Do I make you happy?” I asked.</p>
+<p>In the previous reality, John confessed to me that he had always had a crush on me even though she dated other women. In this one things were different. I had been his first and only girlfriend so I imagined he really likes me, but I need to be sure.</p>
+<p>Seeing the doubts in my eyes, John stretched his arms to grab my face and pull it down to his eye level. “I don’t know why you are asking me that Nicole. You are the most spectacular woman I have ever met, and I’m not referring only to your body. You are generous, honest, hard worker, and among all, quite funny. The fact that your body can put any stripper in shame is just a nice bonus” he smiled touching gently my nipple.</p>
+<p>“Oh fuck!” I moaned as his fingers knew perfectly how to bring the most pleasure on my nipples without forcing an orgasm on me. ‘When did he learn to do that?’ I thought as I haven’t dominated my sensitivity yet, but he seemed to have mastered it perfectly. Then, I grinned, understanding that his deep knowledge about me was the result of his dedicated attention and devotion toward me. The years we spent together in this reality, he used them to know me in such an intimate way proving he not only loved me, but cared for me and wanted to please me.</p>
+<p>“I love you Natalie. Take that for granted” John said as he kissed me in the lips.</p>
+<p>“I plan to take more than that” I said, grabbing his arms and lifting him into the air. “Today, your only work is to satisfy your horny wife and believe me, I’m very, very horny” I said tossing him into the air. He landed on the bed totally surprised at how easily I did such a feast of strength. </p>
+<p>“I will do what I can,” he said as he noticed me paying attention to his bulging hard on.</p>
+<p>“You better be. I have waited too long for this” I said, getting into the bed to kiss him passionately before getting our eager bodies covered under the sheets.</p>
+<p>The End</p>
+</body>
+</html>

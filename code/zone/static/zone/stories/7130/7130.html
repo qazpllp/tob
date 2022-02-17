@@ -1,0 +1,1220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Attack Of The Sand Squid</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>Attack of the Sand Squid</p>
+<p>by The Preve</p>
+<p>Based on the picture "Sand Squid" by Synthean</p>
+<p>Sand Squid by Synthean can be found on Hentai Foundry.</p>
+<p>Thanks to Todger 65 for the edit.</p>
+<p>Bernard Heuvelmans <strong>(10 October 1916 -- 22 August 2001)</strong>, "The Father
+of Cryptozoology," pioneered the modern study of cryptids, animals
+considered myths by the majority of his colleagues. Such studies were
+cause for great derision, and the destruction of his professional
+reputation among the scientific community.</p>
+<p>The body of work and literature, <em>On the Track of Unknown Animals, In
+the Wake of the Sea-Serpents,</em> are akin to the Bible for his followers.</p>
+<p>Upon his death in 2001, assertions arose among his fans of unfinished
+work and research. An unprinted chapter from his book on colossal squid;
+rumors of an unpublished book detailing creatures far fetched even by
+the standards of his most fervent believers.</p>
+<p>Searches of his papers produced few results, most of which were
+dismissed as forgeries or pranks, perhaps by Heuvelmans himself. A few
+brief notes concerning a creature referred to as the Pacific Sand Squid
+were among the scoffed.</p>
+<p>The events said to have befallen the individuals described in this
+record, are alleged to have occurred during the summer of 199__. Some
+of the record might be considered rumor and conspiracy theory, the rest
+pure speculation . . . or not, depending on the fervency of the
+reader\'s beliefs.</p>
+<p><strong>****</strong></p>
+<p>"Sue! Get your ass in here and help with the luggage!"</p>
+<p>"Good grief Aunt Ethel! Why\'d you have to bring all that?!"</p>
+<p>"What? An old broad like me ain\'t allowed to get some exercise?"</p>
+<p>Susan Brown sighed, half exasperated, half amused. Her aunt was only 43,
+just under a decade older than herself. That may as well be 30 these
+days. She was more big sister than aunt. <em>"An eccentric, crazy big
+sis,"</em> she smiled, <em>"Only she would bring barbells on vacation."</em></p>
+<p>It was good, though, Aunt Ethel could come to Boracay Malit. Sue loved
+her aunt. She was tough, boisterous, outgoing, and earthy; not a person
+to be messed with.</p>
+<p>Ethel Martha Brown lived the crazy life Sue\'s father would envy, if he
+weren\'t so dull. His little sister was the black sheep of his
+straight-laced, conservative family. In her lifetime, her professions
+included roller derby star (Martha "The Mauler" using her middle name),
+wrestling ("Brunhilde Brown), and bodybuilding. Susan idolized her.</p>
+<p>Susan never tried to copy her aunt\'s eccentricities but did take
+inspiration from her life. It manifested in her childhood and teen years
+as a form of adventurism, and some assertiveness in college.</p>
+<p>Aunt Ethel rarely visited during Sue\'s early childhood. Her parents
+were quiet and evasive when Sue first asked about the large, loud girl
+who stormed through the door one day, twirled through the house like a
+tornado, and left the next morning, leaving an exasperated Mr. and Mrs.
+Brown, and an awestruck Susan.</p>
+<p>When Sue was twelve, her grandmother asked her parents to store some
+old, and some not so old, junk in their attic. Sue couldn\'t resist
+rummaging while her parents were out. She found a box full of fliers and
+clippings.</p>
+<p>The coltish, skin-kneed, tomboy read through the clippings with growing
+fascination. Aunt Ethel was in her roller derby phase, "Martha the
+Mauler," young but already a star. Sue convinced, actually badgered, her
+dad to take her to one of Aunt Ethel\'s tournaments. She went to the
+stadium a curious girl, and left with a new idol.</p>
+<p>A few years of teenage problems tempered the idol worship. Her
+admiration for the tough, earthy, bawdy Amazon never waned, however.</p>
+<p>Sue\'s staid parents tried to steer their daughter away from her aunt\'s
+influence, limiting her visits, forbidding Sue from pursuing roller
+derby, to partial success. While she didn\'t exactly follow her aunt\'s
+path, Sue did enthusiastically pursue athletics, mostly volleyball and
+swimming, excelling at both.</p>
+<p>A problem, two actually, appeared in her late teens when her breasts,
+formerly B-cup and manageable, blew up to double D pillows. Her breast
+expansion was further complicated by her ass plumping to two round
+bubbles, and a thickening of her torso.</p>
+<p>The body changes caused some insecurity. Sue began a phase of dieting
+which got out of control. Her aunt\'s intervention put her back on the
+right track.</p>
+<p>"Fuck starving!" she yelled to Sue in her blunt, earthy manner. "Put
+some grub in ya, and lift some weights girl. Look at me. You think I
+worry about my looks? You think I give a fuck what some supermodel
+wannabe thinks on some PC? I told myself not to be a stick, and you damn
+well won\'t be either."</p>
+<p>Susan went back to swimming, and began to lift weights like her aunt.
+She never became a muscle Amazon but her regimen allowed Sue to maintain
+a curvy, toned body.</p>
+<p>The older and freer Sue grew, the more she hung with her aunt; often
+attending her wrestling and bodybuilding competitions. She would help
+her aunt train, spotting for her on weights. Her work as a production
+assistant allowed her to cast Aunt Ethel as an extra in a few movies and
+TV shows.</p>
+<p>While Aunt Ethel did well on the roller derby, wrestling, and
+bodybuilding circuits, she displayed no real desire for major fame. It
+was adventure which interested her. She took the occasional acting role
+as a favor to her niece. Some agents did take notice, and she scored a
+few more roles but barely rose above C-level status, appearing as an
+extra here, a henchwoman to a secondary villain there. The extra money
+was good, at least.</p>
+<p>Extra money especially came in handy for bargain vacations. Cheap
+resorts or spas abounded on the web. The difficulty came from separating
+the bad from the good, whose affordability stemmed from lesser amenities
+than the high end places.</p>
+<p>Susan heard of Boracay Malcit from a co-worker who\'d spent a nice,
+quiet vacation on the island with her husband. "It\'s quiet, out of the
+way. You can rent a small bungalow on the beach. Not many go there so
+you have tons of privacy. It\'s the best kept secret in the Philippines.
+The beach is clothing optional though, so it pays to keep an open mind."</p>
+<p>Open mindedness wasn\'t a problem for Aunt Ethel. Susan, initially more
+reserved in her youth, opened up under her aunt\'s influence.</p>
+<p>A few more checks brought up no red flags except one, which Sue skimmed
+briefly before laughing. Some anonymous reviewer with a story best
+described as, "UFO\'s, Bigfoot, and conspiracy crap."</p>
+<p>Sue and her aunt prepared for the trip with new bikinis and a trip to
+the salon for hair removal.</p>
+<p>"Let\'s go full smooth," Ethel suggested, "I\'ll spring for the laser."</p>
+<p>Sue usually liked to keep a little landing strip but decided to follow
+her aunt\'s lead for this trip. A fifteen hour flight to Manila, a short
+hop to Boracay Resorts, followed by a short ferry ride to the smaller,
+cheaper island, and they were in the bungalow, arguing over barbells.</p>
+<p>"We\'re here to relax Aunt, not lift weights."</p>
+<p>"Hey! You relax your way, I\'ll relax mine."</p>
+<p>Susan blew another exasperated sigh and helped her aunt with the
+luggage. The bungalow turned out to be well-kept and maintained. The
+resort, for all its economy, kept good standards.</p>
+<p>The women were less concerned with immediate enjoyment; between
+unpacking and jet lag, they agreed dinner and sleep were the best
+options for the first day.</p>
+<p>The small bistro at the main building served excellent Filipino cuisine.
+The decided on a chicken adobo, pancit, and lumpia. They ate, and
+chatted with the other guests at the bistro.</p>
+<p>The other guests present were a couple of pensioners from Glasgow, the
+Campbells, a jolly red-faced couple enjoying a cheap vacation like them.
+A married couple and their teenage son from St. Paul, Minnesota, the
+Maitlands. The kid gaped in wonder at Ethel. The parents recognized her
+from her wrestling years. Sue hid a chuckle at the boy\'s fascination.
+Aunt Ethel always impressed with her size.</p>
+<p>The final couple were a pair of surfers from Brisbane, Barrett Winford
+and Rob Drummond, college grads celebrating with a windsurfing trip.
+They were cute. Sue glanced suggestively at Ethel. "Some possibilities
+here," hovered in the air, unspoken. The boys were just starting their
+vacations too. Sue and Ethel were pleased. They had two weeks to explore
+those possibilities. Tonight, for now, was for food and sleep.</p>
+<p>Sue yawned, "Yep, that jet lag\'s hitting me pretty hard."</p>
+<p>"I\'m feeling it too," Ethel agreed, "Later boys?"</p>
+<p>"We\'ll be doing some windsurfing \'tween here and the main island," the
+tow-haired one, Barrett, grinned, "but we can hook up later this week?"</p>
+<p>"I\'d like that," Sue smiled back.</p>
+<p>The two women settled into bed. Sue just had time to anticipate the
+coming days before the jet lag took over. The women were out for twelve
+hours.</p>
+<p>****</p>
+<p>The creature glided through the ocean. Its motion exemplified all the
+strength and grace evolution gave it and its kind. Its appearance would
+send orgasms through the scientists, Teuthologists who specialized in
+its study.</p>
+<p>The creature\'s species, by no means rare, spent the bulk of their lives
+in deep, dark places, barely accessible to humans, if at all.</p>
+<p>Only a few knew of these creatures; fewer still could claim they saw
+one. None were believed.</p>
+<p>Its purpose was an act according to its nature. It happened among its
+kind only rarely but with biological clockwork. The time window for what
+it needed was narrow, only a week or two.</p>
+<p>The island had changed since its last visit. New dwellings dotted the
+shore. The new development didn\'t please the creature, as it meant more
+of the apes lived on the island. It increased the danger of discovery.</p>
+<p>It chose a deserted stretch of beach. The creature liked this area. It
+used this place before. The apes, in times past, used to beach their
+fishing logs here. It was perfect, reasonably isolated. The increased
+number of dwellings, while dangerous, meant an ape was more like to
+wander by.</p>
+<p>The creature swam to a position close to the shoreline and used its
+tentacles to burrow into the sand.</p>
+<p>The creature dug until most of its body was concealed, leaving its eyes
+just above the water. It extended its tentacles under the sand to the
+shore.</p>
+<p>The tentacles, honed by millions of years of evolution, moved with an
+ease akin to flowing through liquid. Observers would be stunned; a study
+of the tentacles would revolutionize drilling, if ever such a creature
+were captured.</p>
+<p>Chromatophoric camouflage allowed the creature to blend effortlessly
+into the sand. Tiny hairs on its body acted as motion detectors. All it
+needed was to settle in for a light sleep . . . and wait.</p>
+<p>****</p>
+<p>"So Sue, what\'d you think of the towhead?"</p>
+<p>"Kind of cute but I like the red-haired guy better."</p>
+<p>"I like him too and don\'t Aussies have the best accents?"</p>
+<p>"It was fun listening to them talk."</p>
+<p>The women walked along Pearl Beach, an isolated area, and talked about
+last night. The sleep did them good. They\'d woken, showered, exercised
+(at Ethel\'s insistence. Some curls on her part, Pilates crunches for
+both), and breakfasted in the main building. The surfers were off on
+their trip. The pensioners and the family left for the larger island.</p>
+<p>"I guess we have the island to ourselves for the day," Ethel said.</p>
+<p>The concierge suggested Pearl Beach, a small strip on the west shore.
+"Just a short walk through the tunnels, past the pool. It\'s a good
+place to sunbathe, and good for privacy."</p>
+<p>The women carried the bare minimum. Sue wore a yellow and red
+polka-dotted bikini. Ethel, a light blue and white one piece. The suits
+looked painted on their respective figures. A pair of beach blankets, a
+pack of wine coolers, and a bottle of suntan oil completed the pack.</p>
+<p>"This beach is so beautiful," remarked Ethel, and Sue agreed.</p>
+<p>Pristine sands, near white in the sun, darkened to beige at the surf.
+The beach was a curved bowl, ringed by ancient lava cliffs and lush
+jungle. The sea gleamed like an azure jewel. Sue rarely gazed upon such
+beauty.</p>
+<p>"This looks like a good spot, Sue."</p>
+<p>"As good as any."</p>
+<p>The spot was the middle arc of the bowl, with the beach curved
+equidistant on either side. The pair spread the blankets, set down the
+other gear, and prepared to lay out. Ethel stopped and looked around.</p>
+<p>"Something wrong Aunt Ethel?"</p>
+<p>"No, just wondering."</p>
+<p>"Wondering what?"</p>
+<p>"Why are we wearing the suits?"</p>
+<p>Sue cocked an eyebrow, "Is that a serious question?"</p>
+<p>"It\'s a clothing optional resort, most everybody\'s off the island, the
+beach is isolated. We waxed and lasered our bodies for a reason, Sue.
+I\'m not shy, you know that, and how often do we get an opportunity for
+an all-over tan?"</p>
+<p>"Makes sense," Sue agreed, noting how just a few years earlier, she
+would be more hesitant. <em>"Aunt\'s influence; Mom and Dad would have
+strokes."</em></p>
+<p>Ethel peeled off her suit, baring her muscular body to the tropical sun.
+She wasn\'t really bulky like some of her other body building friends,
+Sue noted. Ethel preferred a more streamlined look. She confided to
+Susan, once, she disdained some of her colleagues attempts to become,
+"Female Schwartzeneggers, \'sniff!\' Yes, we should build and show our
+muscles, but we should still be women. Getting too large is just
+excess."</p>
+<p>Aunt Ethel, with her hair pulled back and her strong features, evoked
+the classic Amazons of myth. <em>"And she\'s one for real,"</em> admired Sue.</p>
+<p>Sue untied her top and bottoms, and tossed them to the sand. Ethel
+privately admired her niece\'s curvy, toned body. <em>"All that exercise
+did her good."</em> She didn\'t have her aunt\'s muscles but sure her body
+was fit. <em>"She\'s perfect for the cover of Fitness, if not Playboy,"</em>
+thought Ethel, <em>"The Brown women always looked good."</em></p>
+<p>Ethel also liked the Brown women\'s tendencies toward large breasts and
+asses, an ample voluptuousness extending back generations. She estimated
+Sue\'s breasts as a cup size larger than her own.</p>
+<p>After standing in the warm tropical sun for several minutes, the women
+started with the suntan oil. They made sure to slather their bodies and
+got each others\' backs.</p>
+<p>"Damn! Those two surfers would blow their pipes if they saw us like
+this," Ethel grinned.</p>
+<p>"Heh! Any red-blooded male would, and probably a couple of actresses I
+know, too."</p>
+<p>The two Browns shined with oil, muscles and curves defined in the
+sunlight.</p>
+<p>"Well, let\'s get to it," Ethel said, "A half hour per side maybe?"</p>
+<p>"Seems okay."</p>
+<p>They spread the blankets and prepared to lay down, Ethel on her back,
+Sue on her front.</p>
+<p>"Sue, what\'s that?"</p>
+<p>"Huh?"</p>
+<p>"There. That thing in the water."</p>
+<p>Sue turned and looked. It was just at the water\'s edge. The surf rolled
+back and forth around it. "Is that a flower?"</p>
+<p>It stood at a slight droop in the wet sand. Its color was red, like a
+ruby, and mottled with gold. The petals resembled fingers, unmoving.</p>
+<p>"It doesn\'t look like a flower. Hey! Maybe it\'s an anemone," Ethel
+suggested. She strode towards it.</p>
+<p>"I thought anemones stayed around coral reefs," Sue said.</p>
+<p>"So did I. Maybe it\'s a new species. Hey! We might get famous, ha!"</p>
+<p>"Well careful. It might be poisonous."</p>
+<p>"You\'re talking about jellyfish, Sue," Ethel knelt down to touch it.</p>
+<p>It happened with such split second speed, the women had no time for
+surprise; an explosion of sand and water, as if a land mine went off.</p>
+<p>Ethel gasped and drew back, bringing her arms up to cover her eyes . . .
+or at least she tried. "What . . .?!" Something held down her arms. She
+blinked; a long, thick, red rope was wrapped tight around her hands,
+binding them. The end of the rope, the "anemone," revealed itself as an
+undulating tentacle, the "petals" actually four smaller tentacles,
+studded with tiny suckers. They writhed like the fingers of a fidgety
+child, and ringed a tiny mouth which closed and opened menacingly.</p>
+<p>The other end of the tentacle terminated in the sand next to her left
+foot, just under the surf.</p>
+<p>Ethel was too stunned to feel fear. Sue didn\'t move, paralyzed by
+shock. Silence and menace hung in the air. Ethel turned her head,
+slowly, towards her niece. "Uh, Sue?" Tentacles exploded from the sand.</p>
+<p>"What the fuck!" yelled Ethel.</p>
+<p>"Shit!" cried Sue.</p>
+<p>Ethel tried to pull back again, flexing her arms to free her wrists. The
+tentacle was wrapped tight.</p>
+<p>"Sue! A little help he . . . gasp! Ugh! Fucking shit!"</p>
+<p>Ethel\'s gasp, grunt, and following profanity originated from shock and
+outrage. The said emotions stemmed from four simultaneous actions by the
+attacking tentacles.</p>
+<p>The first tentacle, twined around her leg and wrists, planted its
+fingered tip squarely on her melon. It\'s twin, simultaneously, covered
+the other one. The creature\'s mouths fit almost perfect to her nipples.
+The fingers flexed and began to pump. The mouths opened and began to
+suck.</p>
+<p>Under different circumstances, such molestation would result in
+immediate and horrific injuries, accompanied by excruciating agony, to
+the offender. The broken limbs and crushed testicles of the occasional
+unfortunate male, who\'d dared take such liberties on Ethel "Martha the
+Mauler" Brown bore testament to their folly.</p>
+<p>Ethel, at the moment, ignored the tentacle boob grope. Her current
+attention focused on the lower outrage. Two tentacles, rising from the
+sand, had deep dived into her pussy and ass. Ethel "Martha The Mauler"
+Brown, former star roller girl, aka Brunhilde Brown, former Women\'s
+Wrestling Federation champion, expectorated the typical response.</p>
+<p>"Rrrraaaarrrgh! Get the fuck out of me you tentacled monster freaks!
+Sue! Get your fucking ass over here! Sue!"</p>
+<p>"I can\'t Aunt Ethel! They got me too!"</p>
+<p>When Sue saw the tentacles attack her aunt, she immediately got off her
+towel. <em>"Aunt needs help!"</em> She hadn\'t noticed the tentacle around her
+arm, until it wrenched her body back. "Wha . . . fuck?!"</p>
+<p>She turned to deal with the offender. Another tentacle burst up to plant
+its "hand" on her left double D.</p>
+<p>"Yaaahhh!" Sue grasped the molester and tugged frantically. Boof!
+Another tentacle erupted from the sand and fastened to her other breast.
+"Fuuuuck!" Something probed at her pussy, with a finger entering her
+bunghole. "Oh no you fucking don\'t!"</p>
+<p>She reached back to remove the violating appendage. Two new tentacles
+burst, one entrapped her free arm, the other bound her free leg. Sue was
+on her hands and knees, arms and legs bound, boobs pumped, and ass and
+pussy plumbed.</p>
+<p>"Oh! Fuck! I\'m trapped Aunt Ethel! It\'s in my pussy! Oh! God! It\'s .
+. . aaaarrgh! It\'s . . . Oh! . . . On my clit! Aaaaahhh!"</p>
+<p>"I\'m . . . uuughn . . . not in . . . a good spot . . . oh . . . fuck!
+Myself . . . Sue!"</p>
+<p>Ethel stood, with her legs widespread by the tentacles. The two invaders
+penetrated deep between her crack and into her flower. They pumped and
+plumbed, causing gasps of outrage and horror. Ethel\'s breasts morphed
+with each squeeze, accompanied by soft sucking sounds.</p>
+<p>She gasped and growled, frustrated, unable to free her bound wrists.
+Strong as Ethel was, she couldn\'t compete against a creature used to
+swimming long distances, at crushing depths. The creature, by its
+standards, was gentle. Its tentacles could crush cars.</p>
+<p>Ethel\'s struggling body gleamed in the sun. Her muscles tense and
+defined in the sweat and oil of her exertions. Her frustration reflected
+by the mortified look etched on her face, with healthy doses of rage.</p>
+<p>Ethel\'s muscles, from groin to torso, rippled. She\'d fucked enough men
+in her life to know what that meant. She growled and shook her head,
+trying to force it back. Her eyes lit upon the thing in the water.
+"F-f-fuck . . . Sue! It\'s . . . a squid!"</p>
+<p>"W-w-what? Aunt . . . Ethel?! Oh! Ugh! Oh f-f-fuck! I\'m . . .
+f-f-fucking wet! It\'s playing . . . with my clit! Aaauugh!"</p>
+<p>"I . . . said it\'s . . . a squid, Sue!"</p>
+<p>Ethel hissed through gritted teeth. She glared at the creature. It was
+only partially out of the water, so she had little sense of its size.
+What she saw looked to be the size of a small boat.</p>
+<p>Two huge eyes, possibly larger than her head, even though only their top
+arc jutted out of the water, rose from what Ethel took to be a large
+flat body. The eyes were set within thick sockets crowned by bony
+growths. Nictitating membranes covered their yellow-ringed deep black
+irises. The furious Ethel traded baleful stares with the creature.</p>
+<p>Sue gaped at the creature, albeit her shock battled with her
+distraction. The creature\'s tentacles looped in arcs, in and out of the
+sand. An image appeared to Sue, of the sandworms from Tim Burton\'s
+Beetlejuice. She counted four tentacles wrapped around Ethel. One looped
+around her leg and wrists, terminating at one breast. The another
+wrapped around her other leg ending at the other breast. Two final
+tentacles undulated in her aunt\'s nethers.</p>
+<p>Ethel continued to struggle but her exhaustion became evident. Sue found
+the sight of her aunt strangely erotic. The combination of sweat and oil
+on her skin, the flexed, tense muscles of her body, and the fierce look
+on her face, lent Aunt Ethel an Amazonian appeal that so drew Sue years
+ago.</p>
+<p>Ethel looked back on her niece. The tentacle on Sue\'s pussy slowly
+moved inward. The "fingers" disappeared between Sue\'s wet slit,
+followed by the gold mottled hose.</p>
+<p>Sue\'s eyes widened, her mouth parted, and a gasp hissed out. "Oh! Fuck!
+What . . . kind of . . . squid . . . is this?!"</p>
+<p>"I . . . ugh . . . I . . . don\'t know! Squids . . . uuughn . . . squids
+aren\'t supposed to . . . to do this!"</p>
+<p>"Oh God! It\'s going deeper! Oh! Uuunnghn!"</p>
+<p>Sue\'s body quaked. Her muscles rippled, and spasms raced through her
+torso. A squirt of cream spritzed out from her pussy. "Fuck! I just
+came!"</p>
+<p>Ethel, feeling an orgasm build herself, acknowledged with a grunt.</p>
+<p>It pleased the creature to find not one, but two apes on the beach. They
+were both promising, the larger one more so, albeit her strength
+exceeded most. The creature found it fun, in its long life, to play with
+these smaller mammals. It loved the feel of soft, warm flesh around its
+tentacles.</p>
+<p>The taste of the fluids these apes produced was ambrosia; of course, in
+order to draw fluids out, something needed to be pumped in. Plus, the
+problem of keeping apes like these docile and responsive factored. A
+massage of their erogenous zones worked, but only so far. More needed to
+be done.</p>
+<p>Unbeknownst to Sue and Ethel, the placement of tentacles in their
+intimate areas served a purpose. The blood vessels were closer to the
+surface, allowing introduction of various chemicals via tiny stingers on
+the "fingers".</p>
+<p>Said chemicals would cause chemists, scientists, biologists, and
+corporate pharmacists to stroke out with excitement, were they ever to
+analyze them.</p>
+<p>Sue and Ethel received the benefit of millions of years of evolution, as
+their bodies flooded with aphrodisiacs and mutagens, used upon countless
+creatures, from dinosaurs to mammals (including more than a few species
+of primates).</p>
+<p>The milfs moaned in unison as arousal overcame fear and outrage. Ethel,
+a woman accustomed to making paramours work for her orgasm, shuddered,
+moaned, and squirted cum onto the sand. The irony of a squid drawing a
+climax from her hard body was a brief flash, drowned under a wave of
+lust.</p>
+<p>Tentacles weaved in and around the women. Sue gasped as another tentacle
+dove into her ass.</p>
+<p>The "fingers" on the women\'s melons, with the generous help of
+specialized chemicals for increased sensitivity and milk production,
+drew delicious white nectar into the squid\'s mouths. Lust-flooded Ethel
+vaguely wondered why the creature kept rolling it\'s eyes.</p>
+<p>The scene on the beach was thus: a beautiful, partly cloudy day. A soft,
+warm breeze. The pleasant sounds of the surf. The golden sand. The
+ululating moans and rhythmic grunts of two nude and smooth women, shiny
+and wet, held by ruby red gold-mottled tentacles around their limbs,
+milking their melons, and deep-diving into their moist flowers.</p>
+<p>"Ooooo!"</p>
+<p>"Uuuungh!"</p>
+<p>"Mmmmnngh!"</p>
+<p>"Ohhhh!"</p>
+<p>"Ugh! Ugh! Ugh!"</p>
+<p>"Aaaahhh!"</p>
+<p>The sand squid would have loved to play with these apes some more, but
+it came to this beach for a reason. After all, she had fertilized eggs
+to deposit, and these two incubators were just about ready.</p>
+<p>Ethel was the first to see the lumps. "Oh . . . shit! Sue!"</p>
+<p>"Wha . . . what?!"</p>
+<p>Ethel, exhausted, even for her, by the struggle with the sand squid, and
+the overlapping orgasms, had stopped fighting. The reason she stayed
+upright came from the enormous strength of the squid\'s tentacles. She
+could, as such, only watch, helpless, as a train of round lumps made
+their way through the tentacle, and into her wide, wet pussy.</p>
+<p>Sue, recovering from her latest orgasm, felt her tunnel stretch, as if a
+ball were rolling through its passage. "Ah! Oh . . . fuck! It\'s . . .
+putting something . . . inside me!"</p>
+<p>"I . . . think . . . uuunnnghn . . . I think it\'s . . . eggs Sue!"</p>
+<p>"Uuuurrrgh! Ugh! Oh fuck! There\'s more!"</p>
+<p>New sensations of soft balls entering her pussy, one by one, squeezing
+through her tunnel, and entering her womb, brought out a string of
+grunts and moans from the younger Brown.</p>
+<p>The beautiful tropical day crept on. The milfs\' bellies grew round and
+bloated. Milf bodies quivered and quaked; milf mouths moaned and
+grunted. Sue and Ethel gave up all attempts, and pretense, at
+resistance. The tentacles were too strong, their bodies buried in
+orgasms, and their minds drowned in lust.</p>
+<p>The older milf, out of the corner of her eye, noticed some tentacle
+activity in the sand. "Are they digging?"</p>
+<p>The sand squid pumped the last of her eggs into the two apes. Once
+satisfied the women were properly filled, it took steps to protect its
+investment.</p>
+<p>The troughs dug in the sand were filled with a cushion of mucus. Sue and
+Ethel, their docile bodies flooded with soporifics, were lifted and
+deposited in the troughs. The sand squid then covered them in a layer of
+mucus, followed by a layer of sand, to protect them from the sun.</p>
+<p>Its task done, the squid settled back just offshore, to keep a watchful
+eye. The chemicals lowered the women\'s metabolism, to keep hunger and
+thirst at bay. The whole incubation should take one or two days; three
+at the most.</p>
+<p>****</p>
+<p>Barrett and Rob, both young, handsome, and twenty-one, walked along
+Pearl Beach. The windsurfing trip, from yesterday, went near perfect.
+They\'d had a fine \'ol time but returned to the island completely
+bushed; too knackered to hook up with the Yank milfs who\'d flirted with
+them two days ago.</p>
+<p>Barrett and Rob agreed: those two were hot. Sure one was at least ten
+years older, and the other nearly twice their age but, man, they still
+had the goods.</p>
+<p>"And they\'re probably more experienced too," Barrett said.</p>
+<p>"I looked up the older one on the web," Rob added, "She used to be some
+wrestler and body builder. Used to roller derby too."</p>
+<p>"Bloody hell! Damn these Yanks! And they were hot for us!"</p>
+<p>The two grads agreed: soon as they rested from the trip, they\'d find
+these milfs and see what came.</p>
+<p>They didn\'t see the women at the bistro but the manager suggested the
+beach. His reminder of the beach\'s status as clothing optional brought
+grins to their faces. "Naked milfs!"</p>
+<p>Barrett and Rob were best mates since childhood. Most thought, on
+looking at them, the two youths were brothers. They had similar builds,
+slender and athletic. They both sported long, narrow noses, wide mouths
+with full lips, and broad jaws. The men\'s heads were crowned by mops of
+slightly curly hair, albeit Barrett was a towhead while Rob identified
+as a deep-red ginger.</p>
+<p>"You think they\'re here?" asked Rob.</p>
+<p>"Not much to do here \'cept swim, surf, and sunbathe."</p>
+<p>They continued on, looking for any sign of the women. The beauty of the
+beach wasn\'t lost on the two youths, but they\'d surfed other beaches
+just as scenic.</p>
+<p>"Hey Barrett, what\'s that?"</p>
+<p>"Huh?"</p>
+<p>"Those big lumps up ahead?"</p>
+<p>They sat near the shore, two large lumps of sand.</p>
+<p>"Looks like a couple of tourists buried in the sand," Barrett said.</p>
+<p>"You think it\'s them?"</p>
+<p>"We could check, but it\'s probably that Yank clan from Minnesota."</p>
+<p>The two men jogged over to the small sand hills. They immediately
+noticed something amiss.</p>
+<p>Clothes, a bikini, a one-piece, and a towel were scattered haphazardly
+around the beach; tossed as if the women had stripped off for a skinny
+dip.</p>
+<p>Barrett and Rob might be encouraged by the women\'s adventurousness,
+except the two in question were half-buried in the sand before them.</p>
+<p>"What the bloody fuck is that?" Rob whispered.</p>
+<p>Barrett crept to the younger milf. Only her face was visible. A crust of
+sand covered the rest of her half-buried body.</p>
+<p>The reason for the men\'s apprehension lay in the sculpture-like nature
+of the sight. This wasn\'t some woman playfully buried by a child or
+lover. It was a woman\'s nude body, covered by a crusted shell of sand,
+adhering to the curves and contours of her gravid form.</p>
+<p>Barrett noted the center of her breasts, larger than he remembered from
+two days ago. The area around her nipples was darker, more moist than
+the rest of her body. A closer look revealed beads of milk seeping
+through the crust.</p>
+<p>The milf\'s gravid belly and swollen breasts, along with her face, were
+the most prominent parts rising from the sand. Her legs and arms were
+only faintly visible.</p>
+<p>Her face was free of sand but covered with a layer of, it seemed to
+Barrett, a thick oily or greasy substance, like sunscreen, or Vaseline.
+Her eyes were closed. Her breasts rose and fell softly.</p>
+<p>Barrett shuddered. "This is bloody weird as fuck, mate."</p>
+<p>"Damn straight. The big one\'s the same way."</p>
+<p>"What the fuck happened here, Rob? Women don\'t get like this in just
+two days."</p>
+<p>"Don\'t know mate. I just know I\'m getting the fuck off this beach and
+finding some help; preferably a doctor, and the Philippine Army."</p>
+<p>"That\'s a bloody fucking good plan, Rob."</p>
+<p>Unfortunately, the boys only managed to take a few steps before a forest
+of tentacles erupted around them.</p>
+<p>"Wha . . .?!" Rob gasped just before his body was entangled, along with
+Barrett. They were both lifted off the beach to view, spreadeagled, a
+monstrosity out of H.P. Lovecraft.</p>
+<p>"Crikey bloody fuck man!" screamed Barrett.</p>
+<p>The sand squid held these two intruders above her body, examining them.
+A quick tug of her "fingers" stripped the scant coverings from their
+bodies. Ah! Males! How fortuitous!</p>
+<p>Rob and Barrett shared looks of mortification to see their boardies
+stripped and tossed. Their foot sandals were an afterthought. Sue and
+Ethel, meanwhile, slept oblivious to the boys\' screams, in a state of
+semi-blissful suspended animation.</p>
+<p>The squid looked the young apes over. They were useless as incubators
+but could serve as playthings until her eggs hatched. Their back
+openings were fun to bury tentacles into, and male semen was very tasty.</p>
+<p>"Gaaah! What the fuck they doing?" Rob yelled. The squid\'s fingers
+planted on and stroked his cock and balls. Unlike earlier encounters,
+usually with women, if not self-pleasuring, he wasn\'t happy to see his
+donga plump.</p>
+<p>"What\'s it look like, fuckwit?!" Barrett snarled, undergoing similar
+ministration. "Aaahh! Fucking hell!" Something rammed up his arse. "This
+thing\'s buggering us!"</p>
+<p>The boys helplessly watched their stroked rigid cocks slowly slide into
+the tentacle mouths. As with the women, aphrodisiacs flooded their
+bodies, and the men soon were overwhelmed in arousal.</p>
+<p>Sue and Ethel slept peacefully on, as the men\'s screams turned to
+gasps, moans, and rhythmic grunts. Sometimes one or the other moaned
+faintly, perhaps in response to the sounds offshore, or some twinge from
+within their wombs. The mollusk-driven carnal fest would carry on
+through the rest of the day, and well into the night.</p>
+<p><strong>****</strong></p>
+<p>Early the next morning, the golden rays of the rising Pacific sun shone
+upon an unusual sight: the nude and unconscious bodies of two young men,
+laying curled on the sand between two equally nude, but sand-covered,
+women.</p>
+<p>None of the quartet made a sound. All quietly slept, dreamless.</p>
+<p>The placid silence of the morning broke. It began with soft, but
+increasing in intensity, breaths from the two women. A rising chorus of
+moans ululated next.</p>
+<p>"Mmmm!"</p>
+<p>"Ohhhh!"</p>
+<p>"Uunnngh!"</p>
+<p>"Aaaahh!"</p>
+<p>The two youths slept, oblivious, between the laborious milfs.</p>
+<p>The sand shell on the women\'s bellies cracked. Beneath the sand layer,
+under the mucus coat, Sue and Ethel\'s bellies rippled. Their moans
+slowly turned to grunts and gasps.</p>
+<p>"Huff! Huff!"</p>
+<p>"Ugh! Uck!"</p>
+<p>Suddenly, the sand near the milfs\' parted legs grew wet. First Ethel
+and then Sue\'s slits gushed water and mucus. Two pussies parted;
+arrow-shaped creatures, light pink in color and writhing with tentacles,
+slowly slithered through the slits, onto the sand. Larger tentacles
+gently picked them up and placed them in the water. Another pair of
+squidlings squeezed through, and another, and another . . .</p>
+<p>The sand squid was pleased. Things had turned out near perfectly, with
+the exception of the intruding males, and that sorted out well enough.</p>
+<p>Ordinarily, a seal or a dolphin, or even a blue whale would suffice for
+hosting. The water births were easier on the infants (not orcas or sperm
+whales though, too dangerous).</p>
+<p>Dolphins, seals, and blue whales were hard to come by these days. The
+dolphins wised up, seals were too close to humans, and the whales too
+hunted. Islands, like this one, containing too few apes to make trouble,
+offered many opportunities, so long as she could keep a few near the
+shore.</p>
+<p>The moaning milfs birthed ten squid babies each, and expelled the
+gelatinous remnants of the eggs that housed them.</p>
+<p>The sand squid waited until all the squidlets were accounted for, then
+swam away. The babies dispersed into the ocean. Not all would survive to
+adulthood. Seals, orca, sperm whales, and sharks lay in the future for
+many of them. Plus other squid, sand or other species, and the
+undiscovered horrors and wonders of the deep ocean. The survivors would,
+like their mother, know instinctively the duties written into their DNA.</p>
+<p>As for the mother, it felt no concern for her progeny, nor fear of
+discovery; millions of years of safeguards were present in the chemicals
+pumped into the apes. They kept other apes from caution, in case another
+opportunity arose for her or her children. The remarkable properties of
+the mucus, for example, would cause heart attacks in biologists,
+chemists, and cosmeticians had they the opportunity to examine it.</p>
+<p>Sue and Ethel returned to unconsciousness, and slept as their bellies
+smoothed, and the stretch marks vanished. The mucus gave added benefits
+of removing minor cuts, scars, moles, and other small blemishes (not
+noticeable before really, if one didn\'t look closely) from the women\'s
+bodies.</p>
+<p>The four slept on. The sun climbed higher. Morning slowly brightened
+towards midday. They lay undisturbed, even by the Scottish pensioners,
+who stumbled across the sleepers while exploring the beach. Upon seeing
+the sleeping figures, they quickly scarpered off with knowing smiles on
+their faces. "The young bucks had some party last night."</p>
+<p>Barrett woke first; he woke slowly. Aches and pains pulsed through his
+body. His ass hurt from the squid reaming. His cock and balls throbbed
+from the tentacle vacuum pump. His throat hurt from the continuous moans
+and grunts, and his muscles ached from the overlapping orgasms of
+yesterday.</p>
+<p>Even unconsciousness offered no escape, at first. During the ordeal
+he\'d black out, wake to cum, then black out again. It sucked, fucked,
+and squeezed cum and climaxes from his body until he went comatose.</p>
+<p>He opened his eyes. Rob lay across from him, curled and unconscious.
+"Fuck, is he dead?" He crawled to his friend and placed two fingers on
+his neck; a faint pulse. "Wake up Rob," he whispered, shaking his
+shoulder, "Come on."</p>
+<p>Rob\'s eyes snapped open, "What?! Oh! Ohhh! Bloody hell!" He turned,
+slowly, on his back and put his hands to his face. "Fuck Barrett! What
+happened?"</p>
+<p>"We got raped by a giant squid, Rob."</p>
+<p>There were no other words to describe it. It seemed silly to say, "I
+don\'t know."</p>
+<p>"Bloody fuck! It really happened didn\'t it?"</p>
+<p>"Yes Rob, it did."</p>
+<p>The two young men sat, Rob laying on his back, Barrett kneeling beside
+him.</p>
+<p>"Crikey! The Yanks!" Rob started.</p>
+<p>"Oh."</p>
+<p>The women were still on their backs, unconscious and covered in sand.</p>
+<p>"You wake the big one," Barrett said.</p>
+<p>Sue dreamed she and her aunt were in that sushi restaurant in Monterrey,
+stuffing their pussies with calamari, when one tiny octopus shouted,
+"Wake up Yank!"</p>
+<p>"Gah! Squid billies!" She popped open her eyes to see the worried face
+of the young Aussie boy gazing at her. In years to come she would look
+back on that moment. <em>"Considering what happened, that\'s a nice sight
+to wake up to."</em> Her first thought, however, was "Aunt Ethel!"</p>
+<p>"She\'s okay, I think. Rob\'s looking after her."</p>
+<p>Sue tried to rise, and immediately fell back down. "Ohhh! I fucking ache
+everywhere."</p>
+<p>"You\'re not the only one."</p>
+<p>Barrett and Sue helped each other to stand. Sue\'s sand crust sloughed
+off her body like a cracked egg shell.</p>
+<p>"Leave it kid. Look, just go help your friend," Ethel snapped.</p>
+<p>Sue couldn\'t resist a soft chuckle. Her aunt\'s dismissal of Rob was
+not surprising. Ethel stood awkwardly. The sand fell off the same as
+Sue. The two milfs stood, nude and shiny with clear mucus. There were no
+embarrassed attempts to cover up. Modesty seemed silly at this stage.
+Sue and Ethel noticed something with the boys, however.</p>
+<p>"Um, Barrett? Look down," Sue said, "You too, Rod."</p>
+<p>"What? Oh."</p>
+<p>The boys had woodies; big ones. Both blushed. "Uh, sorry," Rob
+apologized.</p>
+<p>"I think they were there when we woke," Barrett added.</p>
+<p>"Well, I\'m not standing here with this gunk on me while you two stay
+hard. Where\'s the shower?" Aunt Ethel frowned, "And it better be away
+from the shore."</p>
+<p>Beach showers were for swimmers and surfers, to rinse off salt water and
+sand. Pearl Beach had several near a boardwalk at the southern arc.</p>
+<p>Sue and Ethel had reasons, other than the obvious, to get away from the
+shore. Their nipples were hard, their pussies wet and, somehow, their
+arousal didn\'t seem completely related to Barrett and Rob\'s presence.</p>
+<p>They found the showers soon enough. During the walk, no one mentioned
+the past two days.</p>
+<p>The water was cool. It felt good to wash away the sand and salt. Sue and
+Ethel helped each other with the mucus. Rob and Barrett rinsed off next
+to the women. The subsequent occurrence was something none of them could
+understand. It just happened.</p>
+<p>It was something unlikely, given the recent harrowing events; the last
+act the four should have thought, much less perform.</p>
+<p>Sue, Ethel, Rob, and Barrett could not have known the potency of the
+chemicals still coursing through their bodies. Nor of their long-lasting
+effects. As such, their libidos were boosted into overdrive.</p>
+<p>No one knew what started it. The sight of water cascading down nude, wet
+bodies; virile young men on one side, mature sexy women on the other.
+The white hot sexual tension charging up the shower.</p>
+<p>Hands, male and female, touched each other\'s bodies, washing at first,
+rendering some assistance to remove sand, salt, and slime. They moved to
+breasts and torsos, and then lower. Soon lips were pressed together,
+with tongues in opposite mouths. The lips slipped to nipples, the hands
+to breasts. Soon cocks entered pussies, then mouths, then anuses, and
+then pussies again.</p>
+<p>The squid-inspired orgy moved from the showers to the women\'s bungalow,
+where it continued for the next two weeks, with breaks for breakfast,
+lunch, dinner, and occasional sunbathing.</p>
+<p>The guests, maids, manager, and caretakers understood, remembering the
+attraction among the group at the bistro. By the time the squid\'s
+chemicals fully cycled through, and libidos and minds returned to
+relative normalcy (not completely, Sue, Ethel, Rob, and Barrett would be
+noted for active sex lives afterwards), the relationship between aunt
+and niece, and best mates respectively, had changed considerably.</p>
+<p>****</p>
+<p>Two days after returning home, toned and tanned from assuredly the
+strangest, most insane vacation of her life, Sue was at work, sorting
+through script corrections.</p>
+<p>A coworker, an annoying idiot Susan disliked, noticed her pensive,
+distracted look, and began to badger her with questions.</p>
+<p>"So, that must have been a wild one. How was it?" he finally asked.</p>
+<p>Sue looked at him without emotion. "We got raped and impregnated by a
+giant squid and fucked two Aussie boys for two weeks."</p>
+<p>The man blinked, "Uh . . . okay," and left.</p>
+<p>****</p>
+<p><strong>Author\'s note:</strong> the record is based upon a series of interviews
+given with the four individuals, and is consistent with rumored earlier
+encounters with the mysterious creature, or creatures, colloquially
+referred as the <strong>South Pacific Sand Squid</strong>.</p>
+<p>The increased sex drive of the individuals, relative absence of
+psychological trauma, altered sexual orientation (<strong>further note:</strong>
+bisexual orientation was most likely present prior to said encounter but
+expressed due to erosion of psychological barriers by possibly chemical
+or biological means) remains consistent with follow up interviews with
+previous victims.</p>
+<p>As no other sightings of said creature have occurred, nor any further
+evidence of physical or psychological trauma to Barrett Winford, his
+husband Rob Drummond, or Sue and Martha Brown, nor any manifestation of
+physical effects on their sons, also named Barrett and Rob, further
+inquiries are not recommended at this time.</p>
+<p><strong>Record Ends.</strong></p>
+<p>\</p>
+</body>
+</html>

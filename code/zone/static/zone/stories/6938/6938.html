@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Two Scoops for a Good Time</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p><strong>[Two Scoops for a Good Time]{.underline}</strong></p>
+<p><strong>By:</strong> ThatNewShoeSmell</p>
+<p><em><strong>Standard Disclaimer:</strong> This story contains sexually oriented adult
+themes, specifically breast expansion. If you are not of legal age to be
+reading such material or if breast expansion is not your thing, then
+this story is not for you.</em></p>
+<p>Jessica slammed the front door behind her and tossed her bag on the
+floor. Leaning her head back, she sighed.</p>
+<p><em>Man, work sucked today,</em> she thought to herself. <em>The office was
+fucking insane for a Friday. I swear, if I hear one more goddamn phone
+ring I'm gonna...gonna...ah, fuck it. At least it's the weekend.</em></p>
+<p>"Hannah! I'm back!" Jessica hollered out to her roommate as she kicked
+off her shoes into their designated corner and undid her hair bun,
+letting dark brunette hair flow onto her shoulders. "Hannah? You here?"</p>
+<p><em>Huh, I guess not. Oh! That's right! She's staying with her boyfriend,
+Josh...or was it Jake? Anyways, she probably won't be back till Sunday!
+Which means...</em></p>
+<p>"I get to have a little...'Me Time,'" Jessica grinned to herself,
+realizing that she now had much more time to unwind from the day's
+stressful events than she had previously thought. She quickly
+double-checked their apartment to make sure the coast was clear, then
+rushed to her room.</p>
+<p>Wasting no time, Jessica undid the buttons on her work blouse and then
+removed the white camisole underneath, flinging both into her laundry
+pile. Eager hands caressed her bra-clad bosom as she beamed down at the
+inches of exposed cleavage that now greeted her. Jessica had always been
+a bit on the busty side, currently finding herself to be on the larger
+end of an E-cup. Her round breasts more than filled her hands like plump
+oranges and on other occasions had filled the hands of lovers as well.</p>
+<p>"Oh, we're gonna have <em>fun</em> tonight! Aren't we, girls?" Little pencil
+eraser nubs hardened and poked into Jessica's palms through her bra. Her
+heartrate quickened with eager anticipation of what was to come. Only
+taking a moment to bounce her goods a couple of times, Jessica soon
+added the bra to the laundry pile and dove into her closet to find her
+"special" clothes.</p>
+<p>It didn't take long for the topless woman to find what she was looking
+for: A seemingly simple, black bra with a front clasp and a
+long-sleeved, white blouse with buttons that Jessica had sown back on
+more times than she'd cared to admit. Jessica pulled on the bra and was
+mildly frustrated (though not at all surprised) to find that it hung a
+tad loose on her thin frame.</p>
+<p><em>Damn, another one's gotten stretched out. Guess, I'll have to replace
+it sometime.</em></p>
+<p>Stepping in front of the body-length mirror on her closet door, Jessica
+fiddled with her bra in an attempt to tighten it up some. Despite her
+rather robust bosom, Jessica had a decidedly sleek, athletic frame; a
+feature that she had worked hard to maintain. She was quite proud of how
+well she had kept in shape over the years. Though, occasionally she
+yearned for a just a bit more junk in the trunk to balance out her
+curves more. Regardless, she had to admit that being so slim had made
+her boobs look just that much bigger and had no complaints there.</p>
+<p><em>Eh, good enough. It's not like I'll be wearing it for long.</em></p>
+<p>More or less satisfied with the adjustments to the aging bra, Jessica
+slipped her blouse over her shoulders and reached under her bed to
+retrieve what appeared to be a large plastic jar of protein powder.
+Tucking the jar under one arm, Jessica headed to the kitchen, fumbling
+with her blouse buttons along the way.</p>
+<p>Setting the jar down on the kitchen counter, Jessica hastily fastened
+the remaining buttons, leaving the top two open to display about an inch
+of cleavage. Like the bra, her shirt also appeared to be stretched out
+some in the chest area. Though it proved to still be form-fitting across
+her waist and was soon tucked into her slacks. Jessica's attention was
+no longer on her shirt, however, as she had already thrown open the
+refrigerator door.</p>
+<p>A mostly full jug of whole milk joined the protein powder on the
+counter, soon followed by an electric blender and a large cup. Jessica
+dropped some ice cubes into the blender's pitcher and poured milk into
+it until she was satisfied. She then popped open the jar and began to
+scoop the powder into the mix.</p>
+<p><em>Alright, one scoop. Two. Thre-*RIIING*RIIING*</em></p>
+<p>"Fuck!" Jessica jumped a little, nearly dropping the spoon into the
+blender. "Goddamnit! Who the fuck is calling me now?"</p>
+<p>Fuming, she left to get her phone which still lay in her bag by the
+door. Upon answering the call, she immediately hung up and took a second
+to block the number.</p>
+<p>"Goddamn Chinese telemarketers," Jessica grumbled under her breath. "Why
+can't they call someone else?" Her phone was switched to silent and was
+tucked into her pants pocket.</p>
+<p>She returned the task at hand and stared blankly at the concoction on
+the counter. "Shit. I lost count," she mumbled to herself.</p>
+<p><em>Two scoops for a good time. Three for a great time.</em> She silently
+reminded herself.</p>
+<p>Jessica dropped two more scoops of powder into the blender.</p>
+<p><em>But four scoops?</em> Her heart fluttered at the thought. <em>Four for a
+fuckin' grand time!</em></p>
+<p>She scooped up one last, heaping spoonful of powder to top off the
+mixture and stirred it in a little. The overeager smoothie alchemist
+stuck the spoon in her mouth and started the blender.</p>
+<p>As the blender whirred to life, Jessica sucked on the spoon
+thoughtfully. <em>It's been a bitch of a day, so it's time for one hell of
+a pick-me-up!</em></p>
+<p>After a few seconds, Jessica stopped the blender and set the spoon down
+on the counter. She pulled the pitcher off the blender and started to
+tilt it into the cup, but stopped short before any of the smoothie could
+pour out. She paused for moment, as if in thought. She looked at the
+pitcher, then at the cup, and then back at the pitcher.</p>
+<p><em>Fuck it.</em></p>
+<p>Jessica threw her head back and started to chug down her milkshake
+straight from the source. After a few solid gulps, she stopped to catch
+her breath and made a face at her concoction.</p>
+<p><em>Damn, that's really chalky for just one extra scoop. Oh well, I didn't
+make this for the taste.</em></p>
+<p>Jessica lifted the pitcher to her lips again but paused as she suddenly
+felt very warm, particularly in her chest. Lowering the pitcher, she
+placed her free hand to a breast just as a subtle tingling sensation
+began to emanate from deep within her hefty handfuls.</p>
+<p><em>Whoa, that kicked in fast!</em></p>
+<p>The tingling in her breasts intensified, signaling the activation of her
+milk glands and the start of a process that she was all too familiar
+with. That protein powder was, in actuality, a supplement designed to
+temporarily aid milk production in lactating mothers. However, there
+were some unintended side effects that caused it find use in other,
+kinkier circles.</p>
+<p>"Mmmm...yesss," Jessica cooed with contentment at her ample bosom. "I
+can feel it already."</p>
+<p>Subtly, at first, her breasts began to change; firming up some in her
+hand as the tingling intensified and spread outward towards her
+rock-hard nipples. When the tingling had spread throughout her breasts,
+Jessica could feel a slight pressure push out from within; gradually
+increasing as though they were filling up. Moments later, she could feel
+her soft flesh push back against her hand. Her already ample bosom was
+growing larger before her eyes!</p>
+<p>Even through her clothes, Jessica's breasts felt almost hot to the
+touch. Beads of sweat formed upon her skin; the tops of her breasts
+glistened with it as they leisurely pressed into each other and pushed
+up towards her neck. It didn't take long for the ill-fitting bra that
+she had wrestled with earlier to be pulled snug across her chest.
+Wrinkles smoothed out across her blouse as her globes pressed into the
+silk like cushiony balloons, filling the formally loose fitting garment
+until it looked tailored to her curves.</p>
+<p>"<em>Ooooh yeah</em>," Jessica moaned under her breath. "Keep going!"</p>
+<p>Arching her back slightly, Jessica could feel her bra band pull taut
+across her back and its straps began to dig into her shoulders. As she
+watched herself grow, she could feel her boobs push her bra cups out and
+away from her torso, filling in the space between. Like soft dough, her
+mounds began to slowly bulge over the edges of her bra, having filled it
+to capacity.</p>
+<p><em>Mmmm, getting kinda tight! Time to take this to my room while I still
+can!</em> Memories flashed through her head of the times Hannah came back
+early to find her in some rather compromising positions. Her roommate
+never would let her live those down.</p>
+<p>Jessica quickly downed another mouthful of the growth-inducing milkshake
+before carrying it back to her room. Even at this early stage in her
+growth, she could feel a slight change in her equilibrium from the added
+weight up top and an extra bounce in her chest did not go unnoticed. In
+fact, Jessica actively encouraged it by taking heavier steps than usual
+as she walked. She was enjoying every aspect of growing bigger and
+planned on milking it for all it was worth.</p>
+<p>Just as Jessica closed the bedroom door behind her, she could feel a
+wave of heat roll over her as the latest dose of milkshake caught up
+with her. Swooning slightly, she placed a hand on the door to brace
+herself as she felt the swelling intensify some.</p>
+<p>"<em>Uungh!</em>" she gasped. "These are hitting fast!"</p>
+<p>Setting the pitcher down on the dresser next to her bedroom door,
+Jessica stumbled almost drunkenly towards the mirror on her closet door.</p>
+<p>"Ooh yeah! Now this is more like it!" She struck a pose in the mirror
+and gauged that she had gained at least two or three cup sizes just in
+the past few minutes. "I must be a G or an H already!" She giggled,
+setting off a miniature earthquake in her chest. "Free drinks here I
+come!"</p>
+<p>Jessica thought back to some of her attempts to go out after giving
+herself a "modest boost." Those nights would always start off well, with
+free drinks abound, but it never took long for things get out of hand.
+It's all fun and games until someone ruins their wardrobe.</p>
+<p>Her ripening fruits were running out of room in her clothes, surpassing
+grapefruits and racing towards coconuts in size. Stress lines had formed
+across her blouse, its buttons straining to hold back the oncoming tide
+of flesh that pressed relentlessly onward towards escape. Silk was
+pulled tight across Jessica's toned back like a second skin,
+accentuating her every feature, from her feminine shoulder blades down
+to the subtle ridge of her spine. Most noticeable was the deep indent of
+her bra band being pulled ever tighter by the bloating masses that
+dominated her frame and were becoming noticeably wider than her torso.</p>
+<p>With little space left to grow outward, breast flesh oozed its way out
+in any direction it could. Like rising dough, Jessica's boobs had
+bubbled over, under, and around her overtaxed bra. Little booby puffs
+bulged out of her neckline towards her chin while a massive amount of
+underboob creeped its way down her torso. All the while, the hem of her
+blouse was pulling itself ever so slowly out of her slacks to make more
+room to grow. The sensation of the soft silk sliding over her skin as
+her body demanded more and more of the fabric was an experience that
+Jessica always relished.</p>
+<p>Not content to stand still, Jessica continued to change stances and
+strike poses, intent to witness her transformation from every angle
+possible. She leaned forward to peer down her neckline and appraise her
+deepening cleavage.</p>
+<p>"Damn, you could lose a hand in there," she mused. "Heh, maybe two!"</p>
+<p>As she straightened back up, her clothes creaked in protest. The buttons
+on Jessica's blouse were being pulled so tight across her burgeoning
+bustline that little diamond shaped holes were forming between them,
+offering voyeuristic glimpses into her cleavage. Her bra was still
+tightening around her chest like an anaconda trying to crush the breath
+out of her. Pleasure aside, Jessica was becoming increasingly
+uncomfortable and found each breath to be shallower than the last.
+Something had to give soon.</p>
+<p><em>*Creeeeaaak*pop-pop!*</em></p>
+<p>Jessica's chest shifted outward slightly as a couple of stiches popped
+somewhere in her creaking bra.</p>
+<p>"Oh-shit!" Her hands instinctively went to her chest, as if to catch her
+boobs. Designed to hold mangos but instead containing cantaloupes, flesh
+had engulfed the poor brassiere. Feeling the end was near for the
+outmatched bra, Jessica smirked. "Christ, it's tight! <em>Nngh!</em>" she
+winced. "Feels like *<em>nngh*</em> I'm caught in a beartrap! Time to
+<em>*ah*</em> bust it!"</p>
+<p>A chorus of popping stitches and creaking threads was music to Jessica's
+ears as she rolled her shoulders back, breathed in as deeply as she
+could, and thrust out her chest.</p>
+<p>*<em>Snap-pop-pop-poppoppop*CRACK!*</em></p>
+<p>The front clasp of the beleaguered bra finally gave up the ghost, having
+been weakened beforehand by Jessica for just this occasion. She knew
+from past experience just how sturdy a well-built bra could be, so she
+would always keep at least one "special" bra with a tampered clasp for
+nights like these.</p>
+<p>Like a burst dam, the useless cups released a wave of flesh outward into
+an already straining shirt. "<em>Ooooff!"</em> Jessica stumbled forward, the
+weight of her humongous hooters pulling her down with them as they fell.
+The hem of her blouse was yanked the rest of the way out of her
+waistline, revealing her slim stomach.</p>
+<p>*<em>POP*tick-tick-tick*</em></p>
+<p>Bloating out to a more naturally rounded shape, Jessica's melon-sized
+tits popped a button off the front of her blouse near widest point of
+her bust. The button was sent ricocheting off the mirror and into some
+unseen corner of the room. Creamy flesh bulged through the fist-sized
+gap that now opened like a window into her cleavage. One more button
+remained fastened above it, though it was also gaping wider and wider as
+Jessica grew ever more buxom.</p>
+<p>Catching herself before she could fall, Jessica laughed as she cupped
+her boobs to help calm their quaking masses. "Holy shit! They're as big
+as my head!" she laughed. "I'm surprised that bra lasted as long as it
+did."</p>
+<p>Still hot to the touch, Jessica's melons continued to bloat even as she
+held them. They absolutely overwhelmed her hands, spilling around them
+as much as her tight shirt would allow. Nipples like pinky tips jutted
+out into her palms and she could feel a warm wetness spread out from
+around them. She pulled her hands away to reveal the soft pink of her
+nipples through the growing wet patches that had turned those parts of
+her shirt translucent.</p>
+<p>"I was wondering when I'd start leaking," she said to herself. "About
+time, too! I'm getting thirsty!"</p>
+<p>Hands returning to her nipples, Jessica decided to speed things up a
+little. As soon as she squeezed her little pink nubs, what almost felt
+like a bolt of electricity shot straight down between her thighs as if
+her nipples were wired to her pussy. It seemed that her shirt wasn't the
+only part of her clothing getting damp. Determined fingers continued to
+work at her milk taps. The warm, creamy liquid ran down her front and
+dripped from her hands. It didn't take long for her to trigger a
+letdown.</p>
+<p>"<em>Uuuuuunnngh!"</em> Jessica moaned with closed eyes as a surge of pleasure
+took hold of her. The floodgates had been opened for the first time that
+evening, releasing a torrent of milk from her nipples. The force of her
+release was strong enough to spray through the soaked fabric of her
+shirt and spatter on the mirror that was a few feet in front of her.</p>
+<p>Such a forceful letdown reaction was usually unheard of in most women,
+but the supplement in her milkshake was working as intended. Jessica's
+milk production was being boosted many times beyond what a normal
+lactating mother would put out, even at the peak of her production. Her
+breasts tingled pleasurably as milk continued to well up inside of them,
+pushing out from within to fill their increasingly swollen forms.</p>
+<p>"<em>Ooooh, God! More!"</em></p>
+<p>More came as Jessica's tits filled her blouse to capacity. The creases
+across her chest had turned into deep folds and her buttons were hanging
+on by threads, the diamond shaped gaps between them pulled wide and
+short. Her breasts had craved so much space that fabric was being
+stretched over her shoulders and out from her sleeves, pulling her arms
+forward. Cool air tickled Jessica's stomach as her shirt had been pushed
+up and away from her body by the watermelon sized jugs that jutted out
+from her chest.</p>
+<p>*<em>Shhriip-POP*POP*tick-tick-tick*</em></p>
+<p>Finally unable to take any more, the top button of Jessica's blouse
+exploded off her chest and shot to some far corner of her room. Twin
+loaves of doughy boobage burst out of the new opening, wedging her
+blouse open further and bulging over the sides. Nearly a foot of
+cleavage greeted Jessica's startled eyes as she stared down into its
+depths.</p>
+<p>"Holy shit! Were'd it even go?" Jessica's eyes failed to track where her
+button sailed off to. "Guess I'll have to buy more buttons again," she
+laughed, her mammoth mammaries jiggling uncontrollably.</p>
+<p>The jiggling of her tits catching her eye, Jessica looked back down at
+the massive mounds that dominated her view and grinned like an idiot.
+Holding the bottoms of her breasts, she shoved them up into her face and
+motorboated herself. Cleavage swallowed her face and smooshed around her
+features like memory foam. Holding this position, Jessica felt herself
+slowly swelling around her head and swore she could almost hear the
+faint gurgling of milk brewing in her chest. The warmth from her bosom
+could have put her to sleep if she didn't need to breath, though she
+could feel it beginning to taper off as the milkshake had almost run its
+course.</p>
+<p>Pulling out for air, Jessica released her breasts, letting them drop
+down and bounce on her chest. Then she grabbed the sides of her blouse
+and pulled. All of the remaining buttons were torn off in a zip line,
+ricocheting off her mirror before peppering the floor.</p>
+<p>If anyone thought Jessica was large chested before, then they would have
+thought she was gargantuan now. She had started the evening with E-cups,
+but the breasts that flopped out of her blouse had bloated and swelled
+larger than her head. What were once large oranges were now large
+watermelons. Her tits absolutely dominated her slender frame, sticking
+out more than a foot in front of her and reaching about a hands-width
+past her sides. They were remarkably firm and round due to the milky
+pressure that had built up within them. Creamy milk dribbled out of her
+slightly domed teats and ran down the curved slopes of her udders,
+dripping onto the floor from their bottoms.</p>
+<p>Enormous as they were, Jessica's breasts were still visibly swelling
+larger. Though, Jessica could feel them gradually slowing. Licking her
+lips, she hefted one of the leaking milk tanks to her parched mouth and
+began to suckle from her own nipple. Milk flowed freely from her teat,
+filling her mouth again and again with each gulp.</p>
+<p>Jessica was in pure ecstasy as she felt the pressure subside within her
+breast as she sucked more and more milk from her hyper sensitive nipple.
+Even as it was being emptied, her boob was still slowly growing in her
+hands, pressing further into her face with each passing second.</p>
+<p>Sensing her other breast becoming fuller, Jessica switched sides and
+began to drain the other one instead. While her mouth was being flooded
+with milk, her mind and body were becoming flooded with pleasure. If she
+didn't need both hands to hold her breast up to her face, one hand would
+almost certainly be tucked down the front of her pants.</p>
+<p>Unable to resist her urges any more, Jessica backed up until she felt
+the edge of her bed bump her legs. Lips still locked around her swollen
+nipple, she let herself fall backwards onto the queen sized bed that
+stuck out into the middle of her room. Her overgrown watermelon tits
+sloshed upwards into her face like huge water balloons before settling
+on top of her chest. Boob flesh spread out to cover her entire ribcage
+and then some, oozing around her arms.</p>
+<p>One hand shot down to the crotch of her pants and frantically worked to
+undo the button and zipper while her other hand continued to hold her
+teat to her mouth. Jessica's enormous breasts hadn't stopped growing
+since she laid down and now threatened to suffocate her as she drank
+relentlessly from one.</p>
+<p>After some fumbling, Jessica managed to get her pants open. Slipping a
+hand down her panties, desperate fingers went to town massaging her
+clit. Mind foggy with overwhelming lust, Jessica groaned in ecstasy,
+nearly drowning in her own milk.</p>
+<p>As her incredible boob growth finally slowed to a halt, she climaxed.
+She arched her back, causing her tits to slosh down over her face while
+milk erupted out of her nipples like fountains. Milk soaked Jessica's
+hair, clothes, and the bedsheets she was laying on.</p>
+<p>After about half a minute of constant, milky orgasm, Jessica finally
+started to come down from her high. Still trying to catch her breath,
+she removed her hand from between her thighs and felt up a pair of
+breasts that had miraculously grown to be nearly twice the size of her
+head.</p>
+<p>Before she had heard about the supplement powder, Jessica never would
+have believed that something like this was possible. She had always
+liked being busty and had often desired to be bigger. But this? This was
+beyond any of her old fantasies.</p>
+<p>With this lactation supplement, she could grow as big as she desired or
+larger without much in the way of repercussions. All she had to worry
+about was the cleanup afterward and to make sure she had time to let her
+breasts shrink back down. She just had to be careful not to go
+overboard; which, unbeknownst to her, she was dangerously close to
+doing.</p>
+<p>Gently playing with her new, giant tits, Jessica glimpsed something out
+of the corner of her eye. She looked over and saw the pitcher sitting
+atop her dresser as if it were some sort of holy boob altar. Of greater
+interest to her was the fact that there was still more than half of the
+growth inducing milkshake left. Naughty thoughts filled her mind at the
+sight of the blessed thing.</p>
+<p>Biting her lip, she briefly tried to measure how big she had already
+gotten with what was left in the pitcher. Finally, she smirked and said
+"I think it's time to turn things up to eleven."</p>
+<p>With some difficulty, Jessica heaved herself up and found that she was
+significantly heavier than she was when she walked into her room, with
+all of the added weight localized solely on her chest. Now sitting on
+the edge of her bed, she slipped off her pants and tossed them aside
+along with the remains of her blouse. Now clad only in a damp pair of
+black panties, Jessica attempted to stand up only to nearly fall flat on
+her face due to how front heavy she had become.</p>
+<p>"<em>Hnnngh!</em> Holy fuck, these are heavy!" Jessica said as she saved her
+footing.</p>
+<p>Breasts like dumbbells hung off her front, trying to pull her down to
+with them. Putting all those years of exercise to good use, Jessica
+slowly straightened up and lurched towards her dresser. Armfuls of boob
+jiggled and sloshed with each step as she slowly approached her goal.</p>
+<p>Every step was an effort with two prize-winning watermelon sized boobs
+weighing Jessica down. Her eyes were fixed on the prize, though; and an
+overpowering desire to drink every last drop of the boobshake drove her
+forward.</p>
+<p>After what felt like a mile, Jessica finally crossed the short distance
+to her dresser. Having had enough of carrying her burdensome breasts,
+she heaved them up and slammed them down on top of the dresser.
+Fortunately, the top of the old wooden dresser sat just below chest
+height for Jessica. Unfortunately, the force of her massive mammaries
+being dropped down on it caused the old hunk of wood to rock forward on
+its short legs.</p>
+<p>Scrambling for the milkshake pitcher, Jessica managed to snatch it
+before it could topple over and spill its contents. She leaned her
+weight forward and stabilized the wobbling dresser. Her humongous hills
+sloshed like jello atop the dresser before slowly coming to rest before
+her.</p>
+<p>Even flattened under their own weight, Jessica's breasts sat well over a
+foot tall on her dresser. They were so large that they actually blocked
+a good percentage of her vision from where they sat. Setting the pitcher
+atop a soft mountain, Jessica took one last appraising squeeze of her
+overgrown assets before they got any bigger.</p>
+<p>Hands shaking with anticipation, Jessica tilted the pitcher to her eager
+lips and chugged like her life depended on it. After a few seconds of
+gulping down the thick shake, she stopped to catch her breath and
+immediately winced from the onset of brain freeze.</p>
+<p>"Ow, fuck!" she said, rubbing a temple with her free hand. "Can't stop.
+I've gotta keep going!"</p>
+<p>As she returned to the milkshake, Jessica could already feel the first
+stirrings of growth muster within her gargantuan fun bags. A thin sheen
+of sweat returned to her brow as her body worked to process the influx
+of formula, heating her up again as it did so. At last, the tops of her
+breasts began to rise once more, soon becoming level with her shoulders
+as they reached up towards her chin.</p>
+<p>*<em>gurrrgle*</em></p>
+<p>Something bubbled and churned briefly within Jessica's milkmakers as
+they surged outward in size by more than an inch in mere seconds.</p>
+<p>"<em>Mmmph!"</em> Jessica nearly choked on the shake, momentarily overwhelmed
+by the unexpected burst of growth. "<em>Nnngh-ah!</em> The fuck?" Her free hand
+cautiously explored her volatile chest, having returned to its slower
+pace of growth.</p>
+<p>*<em>Guuurrrrggle*</em></p>
+<p><em>"Uungh! Oh god!"</em> Jessica's knees went weak as she was hit with another
+wave of growth. Stumbling forward into the dresser, Jessica leaned face
+first into her rapidly bloating bosom with her arms sinking inches into
+her flesh. Milk squirted from her swollen nipples onto the wall from the
+added pressure.</p>
+<p>The surge of growth subsided as quickly as it came, leaving Jessica
+gasping for air after being smothered by her own breasts. "<em>Ooooh</em>,
+fuck," she muttered to herself as she extracted her face from her
+cleavage. Tits nearing the size of pumpkins greeted her eyes as she
+finally realized just how much larger she had become in such a short
+time. They pushed up into her neck and now sat level with her chin.
+"Ooh, fuck! Now we're getting somewhere!"</p>
+<p>While Jessica's breasts were still gently swelling, something felt
+different. It was almost as if they were trembling slightly, maybe
+quivering. The feeling was gradually getting stronger and more
+noticeable as her arms rested upon their rounding bulks. Eventually, the
+trembling grew within her chest until it became a low rumbling.</p>
+<p>*<em>Guurrggglrglrglrgl!*</em></p>
+<p><em>"Uuuuuunnnnnghh!"</em> Jessica moaned as milk could actually be heard
+churning and bubbling within her rumbling bosom. Her incredible growth
+reached a new peak as her former melons ripened and swelled into full
+pumpkins within seconds. Leaking nipples met with the wall as creamy
+mounds of boob flesh spread out further and further across the top of
+the dresser. With nowhere left to grow forward, Jessica's breasts pushed
+back against her and soon began to hang over the edge.</p>
+<p>"Whoa!" Jessica felt herself grow off balance and began to stumble
+backwards. Outmatched arms tried vainly to contain the pillowy masses
+that overwhelmed her thin frame. Her gargantuan growing tits pushed
+themselves off the dresser, their weight sending Jessica tumbling
+backwards across the room and back over the end of her bed.</p>
+<p>The old wood creaked and groaned angrily from where Jessica had nailed
+and glued the bed frame back together after having broken it one
+overzealous evening. A tide of flesh rolled across her chest and over
+her face.</p>
+<p>"<em>Mmmph!"</em> A muffled moan emanated from under Jessica's tidal wave of
+tit before they flowed back off her face. They jiggled and sloshed like
+gelatin atop her chest until they finally came to a gurgling rest
+several feet above her.</p>
+<p>"<em>Unnnngh!</em>" she moaned. "Why's it so strong? I only put one extra
+scoop..." Her eyes went wide with a sudden realization. Biting her lip,
+she watched as her massive milk machines gurgled and groaned ever
+larger. A rising swell of milky flesh rolled ever further over her body,
+covering more of her torso until their beach ball sized masses began to
+brush her hips and cheeks.</p>
+<p><em>Oh fuck! I lost count when the phone rang. This is gonna be a lot
+messier than I'd planned.</em> <em>I don't think I've had this much since the
+first night I tried this stuff!</em></p>
+<p>Trapped beneath a pair of leaking tits that were becoming wider than her
+arms could reach and were pinning her body from her shoulders down to
+her hips, Jessica tried not to panic as she realized she might be
+growing out of control. Her mind and body were becoming overwhelmed with
+sensations and she began to feel herself wash away with the swelling
+tide of pleasure. The entire top half of Jessica's body, save for her
+head, was buried under two massive erogenous zones. Just the feeling of
+her seething breasts pushing down on her from their own weight alone was
+enough to drive her crazy.</p>
+<p>No longer able to ignore the growing pressure within her rumbling
+mountains, Jessica knew she had to milk herself. She attempted to
+wriggle her arms free from under her cumbersome bust. Her squirming
+efforts caused their massive bulks to slosh back and forth like giant,
+leaking water balloons. After some effort, Jessica freed her arms from
+under their cushiony prison and shot them up towards her leaking
+nipples.</p>
+<p>Her draining milk taps sat atop rising peaks that had grown so wide and
+tall that Jessica had to strain her arms just to brush the soft mounds
+of her areola. Meanwhile, she could feel the outer edges of her breasts
+spread further across her bed and creep down her body, soon spreading
+over the tops of her thighs as they encased more of her body like warm
+memory foam.</p>
+<p>"Come on! <em>Ungh!</em> Just...a little...further!"</p>
+<p>Straining fingers searched desperately for the thumb-sized beacons
+calling to them from above. Jessica tried to lean forward as far as her
+burdensome bosom would allow in an attempt to finally grasp her elusive
+nipples, but to no avail. Even as she increased her efforts to reach
+higher, her breasts continued their unrelenting growth in all
+directions, pushing her goals further beyond her reach. Eventually,
+Jessica finally came to realize the obvious.</p>
+<p>"Oh my god," Jessica said. "I can't reach my nipples anymore. I'm <em>so
+fucking huge</em> that I can't even reach my own nipples! <em>A-Aaaahh</em>!"</p>
+<p>A sudden zing shot through Jessica from that revelation, causing her to
+orgasm for the second time that night. Milk erupted from her teats
+straight into the air, some of it reaching the ceiling before coming
+pattering down like a creamy rain upon her bedroom. Her body quaked from
+the orgasm and her overgrown bosom quickly bloated up further beyond her
+feeble reach.</p>
+<p>"<em>MMMMPH!"</em> Breast flesh pushed up over Jessica's face, covering her
+mouth as if to silence her. No longer able to restrain herself any
+further, one arm snaked its way back under her breasts and between her
+thighs while the other tried to push the growing wall of boob away from
+her face so she could breath.</p>
+<p>Milk continued to erupt from Mount Jessica as she pleasured herself to
+her heart's content. Rumbling ever larger, her colossal tits would
+sporadically surge in size in response to her eager fingers'
+ministrations. Each surge of growth sent a rush of endorphins through
+her body, creating a feedback loop of pleasure and growth that was
+quickly changing her into more breast than woman. Jessica was out of
+control and loving every second of it.</p>
+<p>Together, Jessica's breasts had now become at least as wide as she was
+tall, if not larger. Her aging bed began to groan under her tremendous
+weight as her tits had finally grown to such a size that they had begun
+to spill over the edges of the mattress. If someone had walked in on her
+at that moment, they would have only seen a pair of legs sticking out
+from under two overfilled, fleshy beanbag chairs.</p>
+<p>*<em>Creeeaaakkk*Ck-Crack!*</em></p>
+<p>Jessica felt her mattress shift somewhat as the bedframe began to fail.
+Old wounds became known again as wood splintered around the shoddy
+repairs that Jessica had made to the compromised rails some months
+before.</p>
+<p>*<em>C-C-CRACCKK!!!*SLAM!*</em></p>
+<p>The bed finally gave in to the overwhelming force of boobs that pressed
+down upon it. The entire front part of the bed broke off and slammed
+down on the floor while the rest of the bed fell forward with nothing to
+support it. Now laying on something like a ramp, Jessica's round breasts
+rolled forward, taking Jessica with them.</p>
+<p>"<em>Whoah!"</em> Jessica's arms shot out in front of her as her rolling
+boulders carried her up and over their bloated bulks. Her hands met with
+her dresser as she was almost slammed headfirst into it. Covering most
+of the space between the broken bed and the dresser, Jessica's
+astonishingly huge breasts sloshed like waterbeds with her body riding
+atop them like a boat on the sea. In a reversal of roles, she was more
+attached to her breasts than they were to her and was completely at
+their mercy.</p>
+<p>"I-I'm so huge!" Jessica stammered. "I'm more boob than woman!"</p>
+<p>Jessica's entire body rested atop her waterbed boobs, not even her toes
+could touch the floor anymore. Despite being so glutted with milk, her
+breasts still retained some softness as her body had sunk into them as
+if they were pillows. As her gurgling tits grew ever larger, she found
+herself being lifted higher off the floor.</p>
+<p>"<em>Mmmpph!</em> I'm still growing!? How --<em>nngh-</em> h-how big am I gonna..."
+Stopping short, Jessica saw something that short-circuited her brain.
+"How...big..."</p>
+<p>Just out of arms reach was the blender jug, still sitting atop the
+dresser where Jessica left it. What had derailed her train of thought,
+though, was that there was still some milkshake left in it. Not much,
+but enough to put her far beyond any size she had ever grown to before
+if she were to finish it.</p>
+<p>"How...big..." <em>I'm already as big as I was when I broke the bed the
+first time. Do I really need to get too big for my room, too?</em>
+"B-big..."</p>
+<p>As Jessica's internal struggle between her carnal urges and her rational
+mind raged on, her steadily growing breasts kept on lifting her up
+closer to that holy altar of boobs and milk. It was as if they were
+nudging her towards the growth shake, wanting to grow as big as
+possible.</p>
+<p>"How big...<em>can</em> I get!?" Finally resolving to listen to the devil on
+her shoulder, Jessica beamed with a newfound determination and reached
+up for the pitcher's handle. Her fingers could only just barely brush
+the clear glass of the handle.</p>
+<p>Unwilling to be defeated with her goal so near, Jessica's other hand
+returned to its place between her thighs and went to town.</p>
+<p>"Just...a little...<em>bigger!"</em></p>
+<p>Having already worked up a sweat from her previous orgasm, it didn't
+take long for Jessica to turn up the heat again. Her breasts responded
+by surging larger a few more inches, lifting her just high enough to
+grasp the pitcher's handle.</p>
+<p>Once again, Jessica found herself staring into her milky concoction, her
+eyes filled with booby greed and horny desperation. All that was left of
+the shake was a half-melted slush that lolled around in the bottom of
+the pitcher. Licking her lips, Jessica poured the last of the slurry
+down her throat and slammed the empty pitcher on a boob in triumph.</p>
+<p>*<em>grrglrrrl-Guuurrgle-GUURRGLEGRRGLL!*</em></p>
+<p>Jessica's breasts churned and rumbled, sending waves of pleasure
+sweeping over Jessica as her growth kicked into overdrive. She could
+feel her breasts press harder into her dresser and spread wider across
+the floor. The defeated remains of her bed began to be swallowed by her
+tits as they swelled back over them. She could feel every contour of the
+broken furniture as breast flesh pressed into it like putty.</p>
+<p>"<em>Ooohh, fuuuck yeeesss!"</em> The empty pitcher fell from her hand and
+tumbled to the floor, its purpose fulfilled. "I've never been this big
+before! <em>Oooh, it feels amazing!"</em></p>
+<p>No longer able or willing to restrain herself, Jessica yanked her soaked
+panties as far down as she could from this angle and let herself go. Her
+mind took a backseat to her libido as she ravaged herself with a carnal
+fury that probably would have scared her if she wasn't hornier than a
+wild animal in heat.</p>
+<p>With each passing moment, her armchair sized breasts rapidly swelled
+larger and larger, overtaking more and more of her bedroom. The old
+dresser rocked back on its legs as Jessica's mountains pressed into it,
+soon dwarfing it in size. Every surge of growth wracked her body with
+pleasure and lifted her higher into the air. She soon found herself
+overlooking the top of the dresser that was out of reach just a short
+while ago.</p>
+<p>Meanwhile, Jessica's lactation rate had surged far beyond what should be
+humanly possible to the point where her tits were practically exploding
+with milk. Nipples that poked out from beneath her giant boobs sprayed
+fervently out into the room. However, they were unable to keep up with
+the impossible amount of milk being brewed within and her breasts
+bloated and rounded out from the building pressure. White pools grew out
+from around Jessica's gurgling milk factories, soaking her carpet.</p>
+<p>"<em>Nnnngh! More!"</em> she gasped. "Keep *<em>ah*</em> keep growing! *<em>Nngh!*
+BIGGER!"</em></p>
+<p>Orgasm after orgasm racked Jessica's body, causing her goliath gazongas
+to expand outward at an alarming rate while gallons of milk boiled up
+within and exploded out from her teats. By this point, her breasts had
+nearly surpassed her own height and each one could have been used for a
+bed. Any previous size record she may have claimed had been left in the
+dust.</p>
+<p>"I'm *<em>hnngh*</em> fucking <em>huge!</em>" Gasping between breaths, Jessica urged
+her breasts onwards. "How much *<em>ah*</em> bigger can they get? *<em>Nnngh*</em>
+Keep growing!"</p>
+<p>Exhaustion was beginning to set in and Jessica could feel herself
+reaching her limit, but she was determined to see this through to the
+end. Her mind reeled trying to comprehend breasts that were much larger
+than the rest of her body. She could feel the dresser trapped between
+her boobs and the wall and sensed other pieces of furniture being pushed
+around the room by her growing masses. It almost felt as if the room and
+everything in it had grown smaller instead of her growing larger.</p>
+<p>Finally, Jessica could sense her growth slowing down and pushed for one
+last orgasm. As she worked her hand faster between her thighs, she tried
+vainly to squeeze her breast with her other arm to eke out every last
+bit of stimulation she could. Sure enough, she pushed her needle to the
+red and her tits surged outwards in one final burst of orgasmic growth.</p>
+<p>Though she could no longer see how far her breasts had spread, Jessica
+could feel them starting to brush the side walls of her room. This sent
+her over the edge into the longest, hardest orgasm of her life. Milk
+practically flooded what parts of her room weren't already filled with
+boob and she screamed in pure ecstasy.</p>
+<p>The gurgling quieted down until only the sounds of running milk and
+heavy breathing were audible. Her breasts had finally come to a halt;
+nearly a foot taller than she was and pressing against all but the rear
+wall of her bedroom. Milk dribbled lazily out of teats the size of soda
+cans and dripped into the inch deep puddle that was slowing draining out
+into the hall.</p>
+<p>A dull ringing filled Jessica's ears and the light in the room seemed to
+dwindle. Her body had finally reached its limit with that last orgasm
+and she slipped into a peaceful slumber. Eventually, her milk would dry
+up and her breasts would reduce in size. The cleanup, however, was going
+to be hell.</p>
+</body>
+</html>

@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>The Girl in the Wood</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>The Girl in the Wood - Chapter 1</p>
+<p>By Treehunter1</p>
+<p>This story contains adult themes and should not be read by minors.</p>
+<p>Ispin Fada looked over the tilled and planted rows of his small field and smiled at the feeling of accomplishment he got from a job well done.  Leaning on his hoe he took a swig from the leather water bag on his belt.  Slowly he surveyed the farm surrounding him.  He beheld a neat cottage with whitewashed daub walls and thatch roof.  Smoke rose lazily from the chimney stack above where his stew simmered in a cast iron pot.</p>
+<p>Across the tidy yard was a longhouse style barn holding stables for his goats and roosts for his chickens. Wiping the sweat from his brow, he walked across the yard to throw fodder from the hay mow to his animals.  Then he spread some crushed corn about the yard for the cackling chickens to eat. He had the goats milked in short order and collected six eggs from the brood boxes at the back of the barn.</p>
+<p>Throughout the rest of the afternoon Ispin spent his time performing chores around his homestead. Occasionally he would stop and look pensively at the thick wood at the edge of his stead. The Duke had ceded him twenty acres when he retired from the army last year. So far he had managed, through hard, steady labor to build these two structures and plant his field and a small vegetable garden. Most of his land was still covered by the thick woods he had spent so much time clearing off his current settlement.</p>
+<p>The land was a generous allowance from the lord for ten years of service in his army. It was also a cheap way for him to extend the civilized portion of his lands and increase his tax revenue. The clearing of the dense old growth woods provided lumber for his mills  and decrease the habitat for magical creatures that might prey on his subjects.  Everyone benefitted from the Duke’s largesse, including him.</p>
+<p>When the light began to fade, Ispin went inside and ate his stew. After cleaning  his bowl, he threw some vegetables in the pot to simmer for tomorrow’s meal. Walking to the stream , he stripped to the waist and  began to wash the sweat from his body.  Feeling eyes upon him, he paused, his hand sliding to the knife sheath. Relying on senses honed in years of war, he crouched and looked slowly around himself into the woods. When he heard a slight rustle, he whipped his head about and saw a tilted pair of brown eyes above an upturned nose and freckled cheeks within the brush at creek’s edge.</p>
+<p>Who are you and what are you doing out in these woods so late? It’s not safe so close to the woods at night. The girl’s eyes widened in surprise at being found out. Bleating in distress, she turned quickly and dashed into the woods. Ispin ran after her for a short time but she was fleet and incredibly nimble. He had no chance of catching her. He couldn’t be sure in this failing light but he was almost certain she had worn no shirt, only fur pants. The girls figure was slim and busty. Ispin was greatly intrigued. He knew of no one living this far from town and was familiar with all the attractive young women of the village. He didn’t recognize this girl at all.</p>
+<p>Shaking off his surprise, he quickly finished his ablutions and returned to the cottage. Grabbing an ax and loosening his knife in the sheath, he began the short walk to the village.  Three miles later, night had truly fallen.  Ispin had spent the entire walk hyper alert to every sound around him. Several times, he had the feeling of being watched but had seen and heard nothing out of the ordinary. He reached the edge of the village and breathed a sigh of relief upon reaching the inn doors. </p>
+<p>Entering, he greeted Bindo, the innkeeper and ordered an ale. Upon receiving it, he sat at the long table with some other local farmers. They all hulloed loudly and welcomed him. Ispin spent a few minutes catching up with the men, some of whom he had served in the wars with. Eventually talk turned to women and  the men began teasing Ispin about his lack of success with the local women. Have you had any luck getting Andra to take a walk with you Ispin? asked  Lanse. Ispin blushed and  shook his head.  No, seems Bettel told everyone what happened and now none of the village girls will give me the time of day. Lanse laughed uproariously along with the rest. What a problem to have, too good looking to ignore packing  a dick too big for any local girl to take on. They all laughed again as Ispin sputtered and fumed.  It wasn’t as if he could argue.  </p>
+<p>When he first came to the village all the eligible women were after him like flies on shit.  A day didn’t go by that one or more of them didn’t wander out to his homestead to flirt and drop off a bit of produce or bread.  The large, muscular, young soldier with his craggy features and even smile was an intriguing opportunity for women who had known every available man around their whole lives. He was equally interested in them.  One of his goals was to find a wife to share his life with.  He’d thought he had a good chance originally.  </p>
+<p>Unfortunately, when he and one of the village girls, Bettel, got frisky, she had felt the gigantic bulge in his trousers when he got excited.  She accused him of stuffing his shorts. Bettel was a buxom wench, pale and short with a big ass and large creamy breasts.  She wasn’t beautiful but she was soft, warm and a great cook. When Bettel accused him of faking the size of his manhood, he thought she was urging him on. He was so excited by that time, he just shucked off his pants, not realizing she wasn’t excited, she was scared. When his fifteen inch dick popped into view, she paled and backed away slowly. There isn’t a chance in hell that monster is coming anywhere near my little pussy! With that she pulled her blouse back over her head and left his farm.</p>
+<p>After that the number of visits to his farm dropped off pretty drastically. A few women showed up after that and he was happy to see them but invariably, they tried to get him excited to see for themselves that his equipment was as advertised. When he realized this, he turned them away gently but firmly. Eventually, his visitors stopped coming by completely.</p>
+<p>Since then none of the girls in the village would go walking with him.</p>
+<p>Recovering his composure, Ispin brought up his encounter earlier that evening. The men discussed who the woman may have been but no one could think of anyone matching her description. After a few more ales, he paid up and walked back to his house in the woods, the moon lighting his path. A half mile from his cottage,  a shadowy form leaped onto the wooded path in front of him. Ispin’s hand leapt to the knife sheath at his side but he quickly realized the thing in the path was the same woman he had seen earlier by the stream.</p>
+<p>The moonlight through the leaves illuminated her beautiful body in a mottled pattern of shadow and light. She was stunning. The girl’s hair cascaded down her back, a glorious tangle of curls. Her lips were full and sensual, her waist slim. She still did not wear a blouse, only the fur pants she had on earlier.  She was petite, not over 4’-10. She had wide shoulders that narrowed to a thin waist above wide luscious hips. The girl’s breasts were heavy, riding high on her chest with little sag but projecting far beyond her chest. Ispin’s eyes were drawn to them as she swayed before him, her nipples and dark areole moving in and out of shadow.</p>
+<p>Quietly, Ispin asked Who are you? Do you need help? Again his voice, quiet as it had been, seemed to spook the girl and she began to back away. Don’t go, he implored. Stay. Let me help. There was concern in his voice but also desire. She was the most beautiful woman he had ever seen. Her presence made his heart beat and his pants tighten. She cocked her head, his tone making her hesitate. Then with a leap she was back in the woods as suddenly as she had left it.</p>
+<p>With a frustrated sigh Ispin walked again toward his home, alert but dejected by missing his chance to talk to that sexy little goddess from the trail.  When he reached home, he checked on his animals and went into his cottage.  After a bit of thought, he heated some grain mush and added a pinch of his precious sugar to the top. He left it on a high windowsill outside the house.  Then he went in and closed the door.</p>
+<p>Lying in bed Ispin couldn’t keep the vision of her shadow dappled form from his mind. His cock hardened and throbbed as he lay tossing and turning in his cot. Eventually he gave up the effort to sleep and lit a candle. Standing naked in his cottage, he looked down at his red angry dick. The apple sized head pointed resolutely at the sky, slapping him between his pecs as he walked to the mantle and pulled down a muslin covered bowl and scooped out a bit of rendered lard. Spreading it on his palms and dick, he began to run his hands up and down his thick shaft. The vision he had witnessed tonight was painted on the inside of his eyelids. Faster and faster, until his hands were a blur, fingers locked and pumping his giant tool, he jerked his cock to thoughts of that beautiful mystery woman. Suddenly, his face froze in a rictus of passion and he cried out as ropes of cum raced up his shaft and into the air. His orgasm was so intense; he fell to his knees as he milked out the last spurts of seed onto the dirt floor. Sated, he stumbled back to his cot and fell deeply asleep.</p>
+<p>The next morning, when he woke, Ispin made a face at the smeared dirt and grease on his crotch, hands and bedsheets. Stripping the linen, he wiped his hands and dick on them and threw them in a ball on the floor to wash in the stream later. He quickly ate some grain mush to break his fast and pulled on his trousers.  Walking outside, he glanced at the windowsill and noticed the bowl was empty of food. He wondered if the girl had eaten it but thought it more likely some nocturnal rodent had eaten the grain. Smiling at the thought, he walked to the barn and fed the animals. </p>
+<p>Three of the goats were coming in heat so he penned them in the paddock with the billy goat. The buck obviously knew why they were there.  He had been very restive the last couple of days and got right to work breeding his does. Ispin continued his chores, mucking the barn, releasing the chickens, and leading the rest of the goats to the paddock by the creek. Pulling two buckets of water from the deep pool, he carried them to the breeding goats and set them inside the enclosure.</p>
+<p>Sweat glistened on his bare back as he grabbed his hoe and shovel.  He walked to the field and began the back breaking work of digging another row for planting. He hoped to finish three more rows today. After a few hours, he took a break for some cheese and drank water from the stream. As he ate, he lounged against a boulder and surveyed his surroundings. When he looked down the stream, he noticed a movement and focused. </p>
+<p>The girl leaned over the stream two hundred yards away. Slowly she cupped water in her hands and brought it to her mouth over and over. Her thirst seemed prodigious. Ispin froze and watched her, afraid to scare her off. She was a long way off but something seemed odd. Even though he had seen her in the shadows yesterday, she seemed different. He puzzled at the mystery for a bit, and then realized, her chest was larger. Her already large breasts no longer held tight to her ribs, they hung nearly a foot below her as she leaned over the water. They seemed monstrously big on her tiny frame. </p>
+<p>Also, he noticed there might be something odd about her legs. They seemed to bend the wrong way. A wave of pity and shame came over him to think he had been lusting after a poor crippled girl. It wasn’t as if she didn’t have enough problems of her own without some cheese for brains dolt trying to get in her pants. Overcome by remorse and wanting to offer his help in some way, Ispin stood and began walking toward the girl. She quickly noticed him and stood, uncertain for a moment, she gazed at him consideringly, then turned and loped into the woods. She was still quick but not nearly as fast as yesterday morning. Her gigantic breasts swung about pulling her with them as she moved, making her slower as she dealt with their momentum. Ispin was again hit by a wave of lust. Unfortunate cripple or not he lusted after this sexy little woman.</p>
+<p>As Ispin came to his senses, he realized the girl moved very well for someone with damaged legs.  As he ruminated on it, he realized her legs were built just like an animal’s, like his goats. Ispin began to wonder of this little forest temptress was even a human being. Shaking his head to clear it of such strange thoughts, he went back to work wondering off and on throughout the day about the mysterious girl.</p>
+<p>That night, Ispin once again set grain mush on the windowsill. Snuffing out his candle, he lay in his cot, listening to the night sounds. Sleep eluded him even though exhaustion from a long day of work pulled his eyes closed and he nodded off for short amounts of time.  Suddenly he heard a quiet snuffling at his window and was instantly alert. Silently, he rose from his cot in the darkened room and moved to the window opening. Peering through the shutter crack, he looked to see what might be getting at the mush. To his delight, the girl stood just outside the window, shoveling the mush into her mouth with her hand.  She seemed to relish the food, licking the bowl clean with a long agile tongue when she had emptied as much as she could with her fingers.</p>
+<p>Without the shadow of trees, the moon cast her form in high relief. She was even more beautiful than he had thought yesterday evening, her torso and face, still naked and luscious. Her breasts were even more bountiful than that afternoon. Her movements were slower, more deliberate, as she negotiated the enormous weight on her chest. Ispin was instantly harder than he had ever been in his life, even as a young boy with his first hard on. When his eyes traveled to her legs though, his eyes widened. He had not been mistaken. She had the legs of a goat. She wasn’t wearing fur covered pants. It was her own pelt covering her legs. His surprise made him gasp and the sound was loud in the dark night. Instantly the girl dropped the bowl, and headed toward the wood. Her pace was much slowed now by her gigantic endowments but she soon disappeared into the woods.</p>
+<p>Again, Ispin was overcome by lust. Three times that night, he pulled his cock to completion before sleep overcame him. The next morning he awoke with the dawn, bleary eyed and tired. He stumbled through his chores. He removed the does from the buck’s pen and placed them back with the others. He worked in the field for a short time, working up a hard sweat. After, he stripped and washed in the stream. Naked, he lay down under a tree to dry and slept like the dead for several hours. </p>
+<p>He woke slowly to the sound of splashing water. Opening his eyes he saw before him the object of all his thoughts lately. She stood in the stream only yards from him drinking water like she was dying of thirst. She crouched in the pool, her breasts too large to bend without them upsetting her balance. They had to be nearly twice the size they were yesterday afternoon. Her back was to him and he watched without moving. He noticed her ass, wide and covered in soft fur, had a short tail at its’ base. What made his eyes widen though was that her pussy was red and swollen.  She was obviously in heat.</p>
+<p>She looked over her shoulder at him. He quickly closed his eyes to slits but she smiled, obviously not fooled. She rose slowly. Her breasts’ weight so enormous she could hardly stand.  They hung to her thighs, gigantic and full. They spread to either side of her narrow body by several inches and when she turned sideways toward him he breathed deeply in surprise at how far they projected beyond her.  How did she stand at all carrying those around? How had they grown so big?</p>
+<p>His erection was impossible to hide in his naked state. It rose nearly a foot and a half above his hips, thick and throbbing. She glanced at it and smiled again. He could have sworn she shook her hips a little as she began to walk slowly away.  She shuffled to the bank and attempted to climb onto the grass. However, the verge was too high for her to pull her enormous endowments beyond.</p>
+<p>Instantly concerned that she would hurt herself, Ispin rose slowly and sidled to the bank. She stopped trying to climb out and watched him, wary but unafraid.  He kneeled at the edge of the water and extended his hand toward her. She looked at his hand for a moment, utterly still. Slowly, she reached for him. With a grunt and a heave, he pulled her from the water. Instantly, he let her go, wary she would panic. She looked at him almost coquettishly for a moment and turned toward the woods. She walked a short distance, stopped and looked over her shoulder toward him, her ass pointed in his direction and her heated love pot dripped from the stream or from her season.</p>
+<p>Ispin took as step toward her and then another. She took a few more steps and stopped, again glancing over her shoulder at him. This time she smiled in his direction. Taking this as an invitation, Ispin walked more quickly toward her, his hard cock bobbing in front of him.  She laughed then and began to shuffle faster toward the wood.  He too laughed and picked up his speed till he caught her at the edge of the trees.  She breathed heavily, smiling but with intensity in her eyes he could not mistake.</p>
+<p>She bent before him almost double.  Her breasts reached the ground before her hands. She stayed that way, her gigantic tits spreading on the ground like over proofed dough. Breathing fast and bleating softly, she swayed her ass at him. He looked at her displayed before him. Her pussy quivered and flexed, inviting him in. The scent of the juices running down her thighs, definitely not water, inflamed his senses and made his already hard dick, an iron rod. Suddenly, he could stand it no longer and he grabbed the cheeks of her ass. Kneeling on the ground behind her he licked  and sucked on her pussy, trying to drink and taste as much of this amazing musk as he could manage.</p>
+<p>Her bleats became loud and insistent. The goats in the barn began to answer her calls and the buck goat tried to climb the fence. He too showed his lust below him. Ispin could wait no longer and he stood, lining up his giant dick behind her. He had only ever been with camp whores during the wars and even those loose pussied women complained. They only ever let him come back if he brought twice their usual fee.  He was afraid of the pain he would cause this magical wonder but he couldn’t wait any more.</p>
+<p>His bulbous head pushed at the swollen entrance to her cunt and the lips stretched wider to accommodate his size. There was resistance then but it was not the width but her hymen that impeded his progress momentarily. She bleated loudly once and blood ran around his dick but quickly she pushed against him, urging him on.  The tunnel of her pussy milked and pulled at the first five inches of his dick. He pulled out a couple inches and she pushed back at him in alarm. This happened to coincide with him thrusting toward her and five more inches slid into her warm center.  Her breath quickened then and she  began thrusting back at him wildly. Her ass bobbed in front of him with no rhythm, only need. Her breasts undulated in flowing waves like the giant water bags they were. He grabbed her shaking hips then and began sliding in and out of her soaking pussy.  To his surprise, he didn’t find the back of her tunnel till he was nearly buried to the hilt. When he had all but a bit of himself inside her  sliding and driving, pushing and pulling at her wide hips, he reached the entrance to her womb. At this she went absolutely wild.  Her urgent thrusts backward toppled him onto his ass and her on top of him. As she landed a second after him, his dick entered her womb. With a piercing shriek, her eyes rolled back in her head and she began practically vibrating on top of him. </p>
+<p>Ispin could take no more and he came with a yell, gripping her waist and sealing her ass to his stomach as he shot load after load directly into her hot gripping pussy. She also pressed against him, not allowing him an inch of retreat as his seed flowed into her and she came and came and came. They stayed like this for minutes or hours then both collapsed on their sides in the grass, gasping and sweating.</p>
+<p>Afterword, she could not move from the spot. Exhaustion and the weight of her hugely bloated chest bound her to the spot. Ispin lifted her, though not easily. She struggled for a second, then relaxed and closed her eyes, snuggling into his chest. He carried her to the farm and began to enter the house but she would have none of it.  Her eyes would go wide and she would struggle in earnest if he turned toward a building.  Finally, he set her at the base of a tree in the yard and carried some hay from the barn for a bed. Grabbing a wool cover from the house, he threw it over the pile and sat her in it.</p>
+<p>She bounced a time or two and, seeming delighted, curled up in a beautiful ball of sexy tits and fur. Ispin went into the house and made two bowls of oat mush, bringing her one, and then giving her the rest of his after she devoured it before he was half finished. When he returned from washing the bowls, he crouched beside the hay pile, looking and wondering and the amazing creature beside him. Her eyes opened a slit and she reached languidly toward him. Quickly and smoothly he crawled behind her and spooned her tiny body till he too fell asleep.</p>
+</body>
+</html>

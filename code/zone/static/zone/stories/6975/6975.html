@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Master PC: The Coffeeshop</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>Author's note: I've had the idea for this story in mind for over a decade, so I'm glad to finally be 
+getting it down on (digital) paper. My sincere thanks to JRParz for allowing so many to explore 
+their own ideas within his brilliant Master PC universe. This story is most heavily inspired by 
+William Pratt's fantastic “Master PC: Wing Girls”. Standard disclaimer applies: this story 
+contains graphic depictions of nonconsensual sex, so if it's illegal or immoral for you to be 
+reading this, stop now! All characters and situations are entirely fictional, and any resemblance 
+to any real-life individuals or situations is entirely coincidental. Copyright Fidget, 2020. All 
+rights reserved. Thanks for reading! </p>
+<p>Master PC: The Coffeeshop </p>
+<p>by Fidget </p>
+<p>"Amy!" the barista called out. </p>
+<p>Amy walked over, grabbed her decaf latte, sat down at a table that would give her a nice view of 
+the entire shop, and pulled out her laptop. She opened the program that her brother had sent her 
+for her birthday last week, eager to see if it was all that he claimed it was. "Master PC" briefly 
+flashed across the screen, and was then replaced with a text box. “Welcome to the Master 
+Command Center... where the Master allows you to become a virtual god to the people around 
+you... Now, you possess the power to bend their reality to your specifications. You are the 
+Master’s representative.” Weird, she thought, still skeptical that it could change reality like her 
+brother had claimed. </p>
+<p>She typed her own name in when prompted to enter a user, and then again when prompted to 
+enter a subject. Suddenly, she was surprised to find a naked image of herself spinning on the 
+screen, with multiple sliders for adjusting various physical and mental characteristics. Not 
+wanting anyone looking over her shoulder to notice any naked pictures of herself or of the the 
+coffeeshop's other patrons, she decided to input all of her instructions through the program's 
+command line interface, instead of using the GUI. After making the change and familiarizing 
+herself with the syntax of the commands, she figured she'd start off with a small test. </p>
+<p>[Subject's nails always look perfectly manicured], she typed. She braced herself, hit Enter, and 
+was delighted to see that her usually chipped nails now looked as though they were fresh out of 
+the salon! The program works! she thought gleefully, before sobering up at the implications of 
+what she had just done. The program worked. She had changed reality. She now had the ability 
+to change anything she wanted about anyone in this coffeeshop, including herself. </p>
+<p>She briefly considered deleting the program altogether, feeling that this was entirely too much 
+power for one person to wield. But then she remembered why she had come here in the first 
+place, and assured herself that she didn't really want that much from the program after all. </p>
+<p>Amy was lonely. It had been two years since she'd even been on a date. She wasn't unattractive, 
+but she felt that her quiet nature, lack of confidence, and conservative clothing choices, in 
+combination with her utter lack of curves, prevented her from getting any attention from men. 
+She felt plain looking and unwanted, and wished that just once an attractive stranger would strike 
+up a flirty conversation with her at a coffeeshop. That's all. If that conversation developed into a 
+second date down the line, then great, but if not, at least she would have the experience to look 
+back on. And now, thanks to Master PC, Amy could finally make that simple conversation a 
+reality. </p>
+<p>She looked around the shop, and finally settled on an attractive guy in a business suit typing 
+busily on his own laptop at a table across from her. She secretly snapped a pic of him with her 
+phone, and put it through Master PC's image recognition program. A few seconds later the 
+program identified him as Michael. She activated his profile and glanced at some of his physical 
+values. Seeing that his penis was seven inches fully erect, she flushed with embarrassed and 
+navigated back to the command line. </p>
+<p>[Subject finds themselves slightly physically attracted to user], she wrote, and was about to hit 
+Enter, when she noticed that a checkbox called "Subject will be aware of any modifications" was 
+checked. Oh, so by default the subject would notice the changes too, in addition to the user. She 
+recalled that she had noticed her new nails immediately, and didn't know how he'd react if he 
+discovered that he was spontaneously changing, so she unchecked the box and hit Enter, feeling 
+slightly guilty about changing him without his knowledge but excited nevertheless. </p>
+<p>A few seconds later, he looked up, glanced over at her, gave her the briefest of smiles, and 
+returned to work. Amy flushed with pleasure and embarrassment at the attention, and thought 
+about her next instruction for the program. </p>
+<p>She realized that she didn't know how long he planned to be there, and she didn't want him 
+leaving before she'd finished her fun. The command subject will stay in this coffeeshop until the 
+user leaves quickly took care of that worry, however, and Amy giggled at just how easy it was to 
+change things with the program. She noticed that there was another check box by her cursor, 
+which said "Everyone will be aware of any modifications". This box was unchecked, which, 
+along with the other checkbox, Amy interpreted to mean that none of the changes she was 
+making would be noticed by anyone other than herself at this point, since she was the user. That 
+was exactly the way she wanted it, so she left both boxes blank, and looked back over at 
+Michael. </p>
+<p>She noticed that he had glanced up from his computer, and was sad to see that he was looking at 
+one of the baristas instead of at her. Amy looked the pretty barista up and down, and decided that 
+her own dull brown eyes couldn't compare to the other girl's bright blue ones, so she decided to 
+do her one better. Switching back to her profile, she typed, [Subject now has striking green eyes.] 
+There, let's see Ms. Flirty Barista deal with that, she thought with satisfaction, before pressing 
+Enter. </p>
+<p>She reflected on how typical it was for him to look at the barista instead of her. All her life men 
+had passed her over in favor of prettier and more outgoing girls like the barista, even if Amy had 
+been the one the men were initially focused on.  </p>
+<p>With a magic computer program I still can't keep a guy's interest for more than ten seconds, she 
+thought bitterly. Well, she knew how to get him back for ignoring her, especially now that he 
+was at least sightly attracted to her, thanks to the program. </p>
+<p>[Subject will become more sexually aroused whenever Michael and Amy lock eyes], she typed, 
+and hit Enter. Now every time he looked at her, he'd want her more. That would teach him to 
+look at other women. </p>
+<p>She waited until he looked up and caught her eye again, and felt herself flush slightly at the 
+knowledge that he would get more turned on each time he did so. It would only be a matter of 
+time before that building arousal of his drove him to act, she thought with a smile. </p>
+<p>Amy decided to make it a bit easier for him to find the courage to come over and talk to her. 
+[Subject's inhibitions are reduced. Subject is compelled to give in to their desires and act on their 
+thoughts.] Enter. </p>
+<p>I have to remember to change that back before he leaves the shop. It wouldn't be right to leave 
+him with a compulsion to do everything that occurred to him. That could easily ruin his life, she 
+thought, wondering not for the last time whether she had gone too far. </p>
+<p>After he went back to typing on his laptop, she looked him up and down once more. She 
+certainly enjoyed the view, but it occurred to her just how easily she could make improvements 
+to what she saw with the program. Heck, he was already practically a model - might as well take 
+him the rest of the way there. Not to mention she could undo it before they left the shop. It 
+wouldn't be so terrible to improve him, just a bit. </p>
+<p>[Subject has the body of an ideal cover model from a dirty magazine], she typed naughtily. She 
+was surprised by her own audacity, and reminded herself that she was only here to have a fun, 
+flirty conversation. She even considered deleting the command, but ultimately convinced herself 
+that it was temporary and harmless, and hit Enter. </p>
+<p>She examined him closely, and thought she could see his jawline become a bit more chiseled, 
+and his muscles grow a bit more defined, but it was hard to tell with them being hidden under his 
+tailored suit. Plus, he's already so attractive that maybe there's not much the program can do to 
+improve him, she giggled to herself. </p>
+<p>He glanced back up at her, and she flushed with arousal at the thought of him getting hornier as 
+they locked eyes. He immediately broke eye contact again, however, frustrating her. Here she 
+was getting all turned on thinking about how much he would want her, and he still wouldn't give 
+her the time of day. </p>
+<p>She looked back down at the keyboard, past her large, jiggly boobs, and thought about how 
+badly she wanted him to notice her. Maybe he was just so shy that it never even occurred to him 
+to come over and talk to her, despite his attraction to her and his increasing arousal. I can relate, 
+she thought, remembering her own shyness, and thinking about how tied to her own self-image it 
+was. </p>
+<p>She decided that a change in wardrobe might make him more outgoing. She loved looking at him 
+in his suit, but maybe it was making him feel stuffy and repressed. </p>
+<p>[Subject is now wearing a sexy outfit], she typed, and hit Enter. She looked back up at him, eager 
+to see what clothes Master PC had decided on, but was surprised to see him in the exact same 
+suit. Of course! she thought, nearly facepalming. What outfit could a guy like him possibly look 
+sexier in than a tailored suit? Of course it hadn't changed. She thought she could see a bit more 
+appealing tightness in the suit's slim fit, though. </p>
+<p>She glanced back up at him, and caught him checking out her tits. Their eyes met briefly, his 
+cheeks reddened, and he made a show of looking back down at his laptop busily. Finally! Amy 
+thought, starting to feel legitimately horny now that his resolve was finally cracking and he was 
+letting his increasing attraction for her show. It wouldn't be long now before he got turned on 
+enough to come over and talk to her, she thought, squirming a bit herself at the idea. </p>
+<p>Still though, he sure was taking his sweet time about it. [Subject gets turned on by the idea of 
+hitting on people at a coffee shop], she typed, and pressed Enter. There, that'll light a fire under 
+his ass, she thought. Now he'd be turned on whenever he looked at her, and whenever he thought 
+about coming over to talk to her. Heck, I might have hit on him myself if I didn't specifically 
+come here to be hit on. What was taking him so long? </p>
+<p>Well, in the meantime she might as well improve her view again. She briefly worried that she 
+might be taking this a bit too far, and that her growing horniness was clouding her judgment. She 
+again reassured herself that this was all only temporary, and that she'd reverse all of the changes 
+once he came over and flirted with her for a bit. Plus, she really wanted to do it. Ok, here goes 
+nothing. </p>
+<p>[Subject has a strong desire to show off their sexy body.] Enter. </p>
+<p>She looked up expectantly, waiting for him to take his jacket off, or loosen his tie and unbutton a 
+button, or something, but he just sat there, typing away on his laptop. Ah, there! He... pulled at 
+his tie a bit. Wow, either this guys is really repressed, or this program is a lot weaker than my 
+brother led me to believe, she thought. Still though, society can be pretty prudish. It's not that 
+surprising that he wants to stay professional in public. She pulled the low neckline of her tight 
+crop top down a bit further, hoping his view of her impressive cleavage would encourage him to 
+loosen up a bit. </p>
+<p>Maybe his work was too important? After all, she'd only said that he had a desire to show off his 
+body, not that he had to. He should still be pretty aroused by now from my earlier commands, 
+though, she thought as she slid her short, pleated skirt up a bit to show him some more thigh. </p>
+<p>Something else then occurred to her. Maybe he's gay? Could that mean her commands to find 
+her attractive weren't working? That made sense, and even though she could change his 
+orientation with the program, she'd feel pretty guilty at messing with his sexuality too much. 
+Hmm... </p>
+<p>[Subject's unnaturally strong sexual desire for women is limited to the women currently in this 
+coffeeshop.] There. That would ensure that he'd come flirt with her whether or not he was gay, 
+but if he was he'd still be gay afterwards. Enter. </p>
+<p>She briefly wondered about the ethics of the command she'd just entered. Was it more ok to 
+change someone's orientation temporarily than permanently? Also, from the way she'd worded it, 
+he would be attracted to the women in here forever if she didn't undo the command at some 
+point. Did it make it more acceptable if he enjoyed his new attractions (which he would now, of 
+course)? In the end, she supposed it didn't really matter, since she'd return him to normal at some 
+point today. </p>
+<p>By now Amy had finished her latte, so she got up to go order another. She enjoyed the way 
+Michael's eyes now bounced between the firm ass under her short skirt and the full breasts on 
+display in her low-cut crop top as she walked up to the counter and ordered, making sure to bend 
+over a bit to give Michael a nice view of the pink thong peeking out from her thigh gap. On the 
+way back to her chair, she met Michael's eyes above his flushed cheeks, and got even hornier. </p>
+<p>I may not be able to hold myself to just a conversation with him at this rate, Amy thought as she 
+sat down down. Her toned legs drifted apart slightly and she dropped one hand to stealthily press 
+on herself a little, to take the edge off. While she was down there, it occurred to her that she 
+should pull her skirt up a bit higher, so she did. Hopefully that would tease Michael into finally 
+coming over. </p>
+<p>A few minutes later, as the blue-eyed barista bent over to deliver a cappuccino to the table next 
+to her, Amy noticed how cute her butt was and began to understand why Michael had been so 
+focused on her earlier. Feeling devilish, Amy impulsively snapped a pic of her and fed it into the 
+Master PC image detector. There was plenty of time to work on Michael later, she thought. She 
+wanted to have some fun with, uh... she checked the name on the new profile that had just 
+popped up ...Jill now. She deserved it anyway for distracting Michael from Amy. </p>
+<p>[Subject has big tits.] Enter. Jill's tits were suddenly large, jiggly D cups. Amy giggled at her 
+own impulsive audacity, appreciating how hot they looked on Jill's slim, athletic frame. Amy 
+briefly wondered which way she swung. Where did that idea come from, she thought, surprised, 
+but then continued to check out Jill's new assets in spite of herself. </p>
+<p>When she finally turned her gaze back to Michael, however, she noticed that his attention had 
+been drawn to Jill's prominent chest as well. At least the command to find the women in here 
+attractive worked, she thought, her bright green eyes filling with envy. Well, that was easily 
+fixed. </p>
+<p>[Subject is strongly sexually attracted to user], she typed quickly, and then hit Enter in a huff. </p>
+<p>She looked up in satisfaction, but was surprised to notice Michael's gaze still firmly fixated on 
+Jill's bouncing bosom. With how passive Michael had been through all of this, Amy was starting 
+to think that Master PC was only selectively applying her commands, but then she noticed that 
+Jill's gaze was firmly fixated on her own, her cheeks pink with arousal. Amy was confused for a 
+second, before figuring out what had happened. Of course, I forgot to switch back to Michael's 
+profile, and the command to find me attractive affected Jill instead! She's totally got the hots for 
+me! she giggled.  </p>
+<p>She found herself enjoying the attention (for once, she thought despondently), so she decided 
+that leaving Jill attracted to her for now wasn't really hurting anything. Plus, she's pretty easy on 
+the eyes too, Amy thought while Jill leaned over the bar toward her, tank top and apron pulled 
+dangerously low. After enjoying her view of the creamy boobs on display, Amy glanced over, 
+meeting Michael's eyes, and felt herself getting even hornier. The thought of hitting on Jill here 
+in the coffeeshop to turn Michael on briefly flitted through Amy's mind, and she felt the heat in 
+her crotch flame into a burning fire. It was time to up the ante a bit. </p>
+<p>[Subject feels a strong desire to physically flirt with user], she typed, and hit Enter. Killing two 
+birds with one stone, she thought. This way, she'd get some more fun, lighthearted attention from 
+Jill, all the while hopefully getting Michael interested enough to actually come talk to her. </p>
+<p>Bringing Amy's order over a few minutes later, Jill ran her hand across Amy's shoulder and 
+leaned around to her right, resting her pillowy tits on Amy's arm as she placed the coffee down in 
+front of her. "Is there anything else I can get you?" she asked breathily, her blue eyes sparkling 
+with arousal and excitement only a few inches away from Amy's. Completely taken by surprise, 
+Amy was captivated by the pretty barista and couldn't resist leaning in to briefly taste the 
+brunette's luscious lips, enjoying the sensation of Jill's boobs pressing into her side. </p>
+<p>When Amy finally broke the kiss, breathless, she glanced around the shop to see if anyone had 
+seen. Michael, of course, was staring right at them, but quickly looked down again after meeting 
+her gaze. Feeling a fresh surge of arousal, Amy squirmed in her seat as Jill whispered "let me 
+know if there's anything else I can help you with" into her ear, and then she slowly let go and 
+walked back behind the counter. </p>
+<p>Maybe Michael, Jill, and I could enjoy some three-way flirting, Amy thought, suddenly 
+significantly more interested in Jill's attentions than she had been. She decided that Jill could 
+benefit from some of the enhancements that she had made to Michael. </p>
+<p>[Subject loves to show off their sexy body.] Enter. Jill absentmindedly pulled her top and apron 
+even lower, and rubbed her hands across her tight jeans as though she suddenly wished she were 
+wearing something else. [Subject is strongly sexually attracted to Michael in addition to user.] 
+Jill's bright eyes bounced between Michael and Amy as her cheeks got even pinker, and her 
+delicious cleavage reddened. [Subject has a shaved pussy], Amy added naughtily, on a whim. </p>
+<p>Hmm, that might not be so bad a change for me either, Amy thought, and once that appealing 
+idea was in her head, she felt practically compelled to switch over to her own profile to retype 
+the command. [Subject has a shaved pussy.] Enter. </p>
+<p>When she looked back up, she noticed that Jill had gone over to Michael and was sensually 
+whispering something into his ear as she ran her fingers up his arm. Michael glanced at Amy 
+with raised eyebrows, and Jill walked back behind the counter, smiling impishly. </p>
+<p>What had Jill said to Michael? Was she trying to set up something for the three of them? Or was 
+she trying to steal Michael for herself? Maybe it had been a mistake to make Jill so interested in 
+Michael, Amy thought. She didn't want to have her prey poached from her, especially this close 
+to getting what she had come here for. </p>
+<p>Perhaps one more small change to Jill could fix that. She switched back over to Jill's profile. She 
+would look awfully cute as an empty-headed bimbo, and that would keep her from being so 
+devious as well, Amy thought. She ultimately decided that would be a step too far, however, 
+especially since she had no evidence that Jill was trying to undermine her, but for some reason 
+the idea of turning Jill into a bimbo was becoming more and more appealing in spite of herself. </p>
+<p>[Subject is now a cute, slutty bimbo.] Enter. </p>
+<p>Well, now it was done, for better or worse. Amy knew all too well how impulsive she was - once 
+she got an idea into her head, it was nearly impossible for her to resist the urge to act on it. I 
+never should have thought about making her a bimbo in the first place, she thought glumly. Oh 
+well, it was too late now. She might as well enjoy the show. </p>
+<p>She looked back over at Jill, and saw that she was leaning over the counter, cheerfully bouncing 
+her tits back and forth between her hands as she smiled playfully at Amy with her bright, 
+unfocused eyes. </p>
+<p>Wow, Jill looks so happy! And the program turned her cuteness up to 11 - I can hardly stand it! I 
+wonder what it would be like to feel like that: a sexy piece of eye candy without a care in the 
+world, she reflected with jealous curiosity, as she absentmindedly pulled her top down until the 
+tops of her rosy nipples were showing. Too late, she realized what she was thinking about and 
+attempted to snap out of her careless reverie. </p>
+<p>Now that the possibility of trying out being a bimbo herself was in her head, of course, it didn't 
+seem to want to leave. Amy knew it was a terrible idea, especially with all the power of Master 
+PC at her disposal, but now that she had considered it she knew it was already too late to stop 
+herself. </p>
+<p>Amy couldn't help switching back over to her own profile and beginning to type. She was just 
+too impulsive. Driven by her accursed need to put all of her thoughts into action, she watched in 
+horror and excitement as her fingers finished inputting the command and decisively hit Enter... </p>
+<p>... and suddenly she couldn't remember what she had been worried about. Oh well, it probably 
+hadn't been important. What was important was how good she felt all of a sudden! Good and 
+horny, she thought, looking around the room and giggling. She saw Michael, and when he met 
+her glance, she squirmed in her seat as she felt her soaked pussy grow even wetter with need. </p>
+<p>Oh yeah, he's the one I'm here to fuck! she thought to herself. She pulled up her skirt, slid her 
+thong to the side, and began absentmindedly playing with herself, oblivious to the fact that she 
+was giving Michael an appetizing eyeful of her lovely honeypot all the while, or the fact that Jill 
+was watching her masturbate with keen interest. </p>
+<p>Glancing over at Jill, Amy noticed that her arm was now working furiously behind the counter. 
+Amy couldn't tell what her hand was doing, but whatever it was, it must have been important, 
+because Jill had a look of deep focus on her beautiful face. </p>
+<p>I wish Jill would show me her tits! Amy thought suddenly. That would be so great! Wait, I can 
+make Jill show me her tits! I just have to type it into this box thingy! [Jill flashes her tits!] She 
+pressed Enter, but nothing happened. </p>
+<p>Amy was confused. Why hadn't it worked? Oh yeah! I have to say "Subject"! She typed [Subject 
+flashes her tits!] and pressed Enter. </p>
+<p>Nothing happened again! Amy thought dejectedly, as she pulled her top down to flash her perky 
+tits at the delighted Jill. Michael nearly spit out his coffee and stared in awe at Amy's glorious 
+rack, while Jill's face became even redder as her arm picked up speed with whatever it was doing 
+behind the counter. </p>
+<p>Why didn't that work? Oh, it says my name at the top up here! That means the program will 
+make me do the thing! That's silly! She switched over to Jill's profile, re-entered her command, 
+and pressed Enter. </p>
+<p>Amy looked back over at Jill as she - and Michael, and most of the other customers in the shop - 
+was rewarded with the sight of Jill's bare boobs resting softly on top of the countertop, jiggling 
+pleasantly along with the frantic movements of her arm. Amy ogled Jill's naked titties and 
+clapped her hands gleefully. She had made the computer work! And Jill's titties were so hot! 
+Maybe Amy should fuck her and Michael! </p>
+<p>But Michael still didn't seem to want to fuck her like Jill did, she reflected sadly. Well maybe she 
+should just fuck him instead, she thought, and, proud of her smart idea, she switched back over to 
+her own profile to enter one final command. </p>
+<p>[Subject totally goes and fucks Jill and Michael!] Amy typed, and then impatiently pressed 
+Enter. </p>
+<p>Two minutes later Amy and Jill walked out of the coffeeshop together, hanging off the arms of a 
+very confused but very eager Michael, happy as clams. Clams about to get stuffed, Amy giggled 
+to herself, and as they walked down the street to Michael's nearby apartment, she rubbed her tits 
+on Michael's arm and enjoyed the feeling of Jill's hand up her miniskirt playing with her needy 
+pussy. </p>
+<p>Author's Note: Thanks for reading! If you have any feedback, comments, or questions, I'd love 
+to hear from you at fidget1@protonmail.com. If you enjoyed this story so much you'd like to 
+support my work on Patreon, you can find me at www.patreon.com/fidget1. Patrons get early 
+access to my stories, input into which stories I write, and some fun other perks. </p>
+</body>
+</html>

@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Danger Noodle</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>Author’s Note: If you are under 18 turn back now! This is NOT for you. </p>
+<p>And now for something completely different! I actually had a lot of fun putting this together. I 
+hope you like it! Feel free to follow me on deviantart at a-spooky-ghost, which coincidentally is 
+also the best place to contact me. </p>
+<p>Danger Noodle </p>
+<p>Kassandra, or Kas to her friends, had been working nonstop for thirteen hours. As a volunteer at 
+her local zoo, she knew very well that no money was coming for her efforts, either. Just the year 
+previous, she had graduated university with a master’s degree in zoology with a double major in 
+animal behavior and animal science. Between working a full-time job outside of volunteering 
+and her student loans she was a consistent bundle of nerves. </p>
+<p>All of those worries, however, melted away when Kas was working in the reptile exhibit. Even 
+coming to the end of an exhausting day left her feeling exhilarated. Best of all on that particular 
+day she got her first chance to work with the zoo’s snakes. Rearranging the smaller snakes’ 
+vivariums was easy but the serpentariums that the larger constrictors lived in could take upwards 
+of an hour. </p>
+<p>The hard work was worth it. Kas found snakes adorable, moreso than any puppy or kitten. When 
+she had the chance to feed the snakes a few of the smaller ones would shimmy around on her 
+hands. Some of the older handlers warned of the occasional bite, and bite they did. Luckily the 
+constrictors lacked the fangs to do much damage but one of them had tried to grapple her legs. </p>
+<p>At 5'2" Kas could hardly boast that she was the tallest volunteer at the zoo. Furthermore, her 
+chest sat at the lower range of an A-cup. Much as she tried to be happy with what she had, a 
+small part of her fantasized about being more than she was. </p>
+<p>“Oh, to be a snake,” Kas would muse. </p>
+<p>When Kas retired from her shift to return home, nursing her right hand which had taken the brunt 
+of the biting. She failed to adequately notice that something about the air tasted funny. Upon 
+arriving home, she let her curly black hair out of the tight bun in which it had been bound for the 
+preceding thirteen hours. Glancing around her tiny studio apartment a shiver ran up her spine. 
+Even with the heater running she felt like she was going to freeze. </p>
+<p>Some quality of the cold compounded with the long shift sent Kas right into her bed. In an 
+instant she passed out. Dreams of hanging in tree branches, lounging on a rough with her tail in 
+the water and hunting prey played out as she slept. A splitting headache tore Kas from her restful 
+slumber. Upon waking she noticed she was no longer in bed. </p>
+<p>Kas had, at some point, taken her pillow and comforter and curled up next to the radiator. Slowly 
+but surely, she unsteadily rose to her feet. The brown-skinned woman started her morning 
+routine; she made it as far as getting out of the shower before truly catching herself in a mirror. </p>
+<p>“Oh! Oh, my goodness!” Kas exclaimed gleefully. For twenty-five years she had become 
+accustomed to staring into the reflection of her soft blue eyes. Instead, brilliant orange serpentine 
+eyes stared back at her. She brought up her still-wet hands to touch and tug at the skin around her 
+eyes. When she thought to blink no eyelids came down to do so. </p>
+<p>“I’ve either been assaulted by a renegade plastic surgeon,” Kas mused aloud, “or one of those 
+snakes was radioactive!” </p>
+<p>As Kas finished drying off and changing she felt absolutely giddy. Every few minutes she turned 
+on her phone’s camera to marvel at her transformed eyes again. A rumble in her stomach tore her 
+away from her literal self-reflection. She strode over to the fridge thinking she would maybe 
+prepare a breakfast shake before heading out. Upon opening it, however, she caught sight of the 
+uncooked tuna steak sitting on the top shelf. Before Kas knew it she had set it on the counter. </p>
+<p>The back of Kas’ mind was trying to connect the dots between her sudden urge to eat raw fish 
+and her serpentine eyes. However, the smell and taste of the uncooked steak weighed heavily in 
+the air. She took in a deep breath and went about unwrapping the tuna. </p>
+<p>“I’m not just going to eat this with my bare hands!” Kas remarked glibly. Still at the counter, she 
+managed to transfer the tuna onto a plate she had set out, alongside a knife and fork. </p>
+<p>With a deep breath, Kas cut herself a portion of the raw fish and took a bite. Her instincts seemed 
+split in two: one team favored just eating the fish, while the other was certain she wasn’t 
+supposed to eat any raw meat. When she began chewing all thoughts to the contrary melted 
+away. Kas’ tastebuds felt like they were about to burst. </p>
+<p>Every part of Kas’ body tingled with delight as she savored the meat. She became so enthused 
+with the tuna’s incredible taste that she did a little dance in place, rocking back and forth on her 
+heels. For a moment she was standing entirely on her toes before coming back down. Kas didn’t 
+notice that her head remained at the same extended height despite now being flat on her feet. </p>
+<p>Now humming to herself, Kas took another, larger bite of the tuna. Her body began to stretch 
+upward in short, pulsing spurts for each passing second that she spent chewing. Even though her 
+clothing was beginning to feel restrictive she paid it no mind. Her blue denim jeans began rising 
+over her ankles as her t-shirt slowly became a tank top. </p>
+<p>Kas soon noticed that in little time she had gone through half of the tuna. She swallowed the 
+piece she was chewing and felt the need to stretch. That her fingers brushed the ceiling did not 
+escape her notice. What did, briefly, elude her notice was her breasts beginning to surge outward, 
+distending her shirt somewhat. Having finished her stretch, she looked back down at the 
+unfinished tuna steak. </p>
+<p>“This…” Kas found herself grasping her newly-developed breasts, “is amazing!” </p>
+<p>Furtively, Kas looked herself up and down as she replayed the past few minutes in her head. 
+Instantly she ruled out that she was entirely gaining snake powers. Not one species of snake that 
+she knew of, and she was quite familiar with snakes, grew larger when it ate. Still deep in 
+thought, her bifurcated tongue briefly whipped out of her mouth before drawing back in. The 
+taste of the tuna was still heavy on the air, drawing her attention back to it. </p>
+<p>Kas absentmindedly reached down to grab the tuna and took a bite out of it as one might eat an 
+apple. Her curly black hair began straightening itself out and extending further down toward her 
+lower back. Unbeknownst to her, orange scales began spreading from the base of her feet up 
+toward her ankles. As she took another bite her breasts began pouring outward non-stop until she 
+swallowed the chunk. Feeling the ever-constricting bra rub against her sensitive nipples elicited 
+an aroused moan from between her lips. </p>
+<p>As soon as Kas opened her mouth again she saw her forked tongue whip out to taste the air once 
+more. Immediately, she squealed giddily at the sight of her transformation. She realized, 
+however, that the taste of tuna had vanished from the air. Sure enough, there was nothing left in 
+her hand to eat. Immediately, she felt the need to seek out more food in place of any other 
+directive the day had previously. </p>
+<p>A few minutes of broken speed limits later Kas arrived at the zoo. Passing comments from 
+onlookers and coworkers alike fell beneath her notice. She could hear people were 
+complimenting her “cool new contact lenses,” or saying “her shirt was inappropriately small.” 
+Kas hadn’t bothered to take stock of the fact that she had grown nearly eight inches and three cup 
+sizes. The only alteration she’d made to her outfit was to remove her insufficient bra. </p>
+<p>Chaos erupted throughout the zoo in the moments following Kas arriving at the serpentarium. 
+Witnesses had seen her climbing in and approaching that section’s main attraction: a sixteen-foot 
+reticulated python. The massive serpent was an albino specimen; rather than an intricate pattern 
+it sported a consistent layer of bright orange scales from head to tail. </p>
+<p>Reports that the python had escaped overtook the zoo like a wildfire. Both the zoo’s own 
+security, city police and animal control were all called to the scene. A swarm of the armed 
+enforcers descended on the last known whereabouts of the python: the shoebill exhibit. One 
+particularly enterprising officer split from the others to pursue the animal directly. </p>
+<p>When the fellow officers caught up, they came upon the sight of the python curled around 
+something in the middle of the exhibit. The golden tail seemed to have doubled in girth from the 
+average python. As the serpent unfurled her head was raised aloft. </p>
+<p>Kas began closing her previously-unhinged mouth. From within, an object vaguely resembling 
+the top of a man’s head could be seen descending. The formerly mousy woman regarded the 
+agents with a crooked smile. What had previously been a reticulated python now somehow only 
+existed in the form of a tail. </p>
+<p>Kas was recognizably human from her head down to her thighs, having retained her buttocks and 
+vagina. Orange scales had formed as high up as her stomach, becoming denser until meeting the 
+very bottom of her thighs wherein the snake tail began. As she continued rising it was clear that 
+her tail alone reached a length of around four feet. Including her torso, she boasted a maximum 
+height of around ten feet of scaly, supple flesh. She had cast off her clothing and ‘stood’ before 
+her panicking audience utterly naked. </p>
+<p>Warmth spread throughout Kas’ body as the fruits of her conquest began manifesting. She 
+instinctively placed her hands on her already-sizeable breasts. Her tits began to push outward 
+into her eager palms. All the officers that had arrived to handle the escaped animal watched, 
+slack-jawed, as her boobs inflated larger and larger. Soon, Kas’ hands were overwhelmed by her 
+breasts which commanded more space with each passing second. Though still firm, her swelling 
+mounds drooped just enough that they would hang an inch above her belly button. </p>
+<p>As Kas gave one of her nipples a tweak a startled yelp rang out from one of the officers. Her 
+breasts had ceased their conquest of her torso. However, her head was gradually reaching even 
+higher. Her tail squirmed as it, too, swelled in size to keep up with the rest of her. A long, forked 
+tongue whipped out from her soft, plump lips long enough to taste fear in the air. </p>
+<p>Kas moaned softly as she caressed her enlarging figure. What remained of her thighs and 
+buttocks had gained a few inches of mass, too. As her growth slowly came to an end, she 
+towered over the officers at around fifteen feet tall. Her breasts defied cup size but swayed and 
+jiggled gently on her chest as she surveyed her improved body. </p>
+<p>Just then, the sound of a gunshot rang throughout the exhibit. One of the police held his smoking 
+gun, hands shaking in preparation to let off another shot. Not one person had identified 
+themselves or given so much as a verbal warning. Enough humanity remained in Kas that she 
+was afraid of the gun until she felt an impotent impact in her tail. A predatory smile infected her 
+face as she eyed the one that had shot her. </p>
+<p>“A snake isn’t a funny noodle like the internet would have you believe,” Kas said venomously. 
+She slowly slithered toward the officer while lowering herself enough to look him directly in the 
+eye. </p>
+<p>“You are the food,” the lamia stated, “and I am the hunter.” </p>
+<p>In that instant all those in the area attempted to flee. Kas lunged forward, surrounding and 
+constricting the offending officer. The struggle ended as quickly as it began, just as it had before, 
+with the officer being wholly consumed. Then, she set about taking her leave of the zoo entirely. 
+Along her way she felt herself growing once again. </p>
+<p>The shimmying movements of Kas’ tail caused her breasts to sway back and forth. Each time her 
+tits bounced to one side they returned slightly larger than before. The rest of her body grew in 
+tandem with her breasts this time. Her hair grew further out, too, until it was long enough to 
+touch the top of her tail. Her lips began to plump and soften each time her tongue whipped out to </p>
+<p>taste the air. It seemed that the further she made her way the further her tail extended; the more 
+her hips and ass expanded.  </p>
+<p>While Kas’ body remained soft, the innate power within that stopped the bullet seemed to 
+increase. Moving her body was effortless—her enormous breasts created no strain for her back, 
+and her tail had no problem raising her torso aloft as she moved. By the time she had reached the 
+exit her growth slowed to a stop. Once exposed to the outside air she stretched upward as far as 
+she could reach. The enormous lamia extended to no less than thirty feet tall, sporting jaw-
+dropping breasts that both needed no support and covered her belly button. Her enormous brown 
+nipples held stiff as a slight breeze blew over her. </p>
+<p>A short, blond-haired woman approach the titan with a clipboard clutched tightly in her hands. </p>
+<p>“Excuse me!” the woman called out. Kas had tasted the woman’s perfume before she arrived, but 
+hadn’t expected to actually be approached. In one movement she lowered herself until she was 
+laying directly on the concrete. The speed and heft of the movement created a sudden burst of air 
+pressure that nearly knocked the blond woman over. </p>
+<p>Squished onto the ground, Kas was able to comfortably rest her chin on just one of her enormous 
+tits. A calm expression had made its way onto her flawlessly beautiful face. </p>
+<p>“Hey there,” Kas offered the blond woman a pinky nearly the size of her body, “I’m Kas!” </p>
+<p>The blond woman was clearly frazzled, and the paper on the clipboard had been blown away in 
+the commotion. Still, she brushed herself off and did her best to shake the lamia’s extended 
+pinky. </p>
+<p>“Glad we can talk. I’d like to extend to you an exciting and unique offer!” the blond woman 
+beamed, “I’m our company’s recruiter. You can call me Trudy.” </p>
+</body>
+</html>

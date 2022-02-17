@@ -1,0 +1,1805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Ripe n Ready</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>Questions, comments, or commissions? Send me an email at the.be.engineer@gmail.com or message me on Discord at BE Engineer#2306</p>
+<p>1</p>
+<p>Ride N’ Ready</p>
+<p>2</p>
+<p>“Hey, stranger! Fancy meeting you in a place like this!”
+Ron glanced up from his chemistry equipment. Being so focused, he had failed to notice
+night’s arrival through the windows. Kayla’s appearance was a shock to his system in more ways
+than one. He blinked several times on his trip back to reality from concentration, as well as to
+snap a couple mental images of his uniform-clad friend. It was difficult to make a blouse and
+skirt look bad on a girl, but on Kayla, the combination was always pulse-pounding. With a short
+stature, glistening eyes, and neck-length black hair, Ron believed she easily fell into the category
+of adorable.</p>
+<p>“Don’t act so surprised,” he smiled.
+Kayla approached the table in the middle of the otherwise abandoned chemistry lab. A</p>
+<p>bookbag was thrown onto the floor in a huff and she arched her back to stretch. The action
+accentuated her C-cup breasts into her taut blouse. It was a habit of hers Ron was glad she
+owned.</p>
+<p>Groaning with relief, she leaned forward. Several beakers of purplish liquid sat next to a
+pot boiling on high. It smelled better than any of Ron’s experiment Kayla had ever seen. Several
+projects populated the lab’s tables. A particularly impressive glass capsule containing a plant sat
+in the darkness across the room. It didn’t look as exciting as whatever commanded Ron’s focus.
+“Whatcha workin’ on? Have a project due?”</p>
+<p>“No… I finished that.” Ron took a beaker and held it in the air to swirl it around and test</p>
+<p>the viscosity. “This is just a little side project. You know I’ve always loved chemistry?”
+“Ever since you killed part of my lawn when we were kids,” Kayla reminisced.
+Ron chuckled at his early days of unsupervised experimentation. “I’ve gotten better since
+then! But aside from chemistry, I’ve always had this childish dream of being a candy maker, too.
+You could say I’m trying to combine the two.”</p>
+<p>“You’re making your own candy??” The sugary smell of fruit in the air now made sense</p>
+<p>and Kayla’s mouth began salivating.</p>
+<p>“Trying to at least! I’m coming up with this process to concentrate the flavors and--”
+SLAM!
+“Heeeeey, Ron!”
+The lab door flung open causing Kayla to jump and an annoyed sigh to fall from her</p>
+<p>friend. “Hey Taylor,” he mumbled.</p>
+<p>A blonde marched up to the friends. From the looks of things, her manicured hands had</p>
+<p>worked a curling iron more than a pencil recently. “I’ve been looking all over campus for you! Is
+our presentation ready for tomorrow??”</p>
+<p>Ron huffed and wished he could concentrate on the sugars in front of him. “It’s ready to</p>
+<p>go… I finished it this morning.”</p>
+<p>3</p>
+<p>“Good! I can’t get anything lower than a ninety percent on this. Do you think we’re</p>
+<p>good?” Taylor played with a curl on her head and inspected it for split ends. A stripe of bright
+pink highlighting the blonde’s head never failed to aggravate Kayla.</p>
+<p>Kayla mumbled under her breath, “Shouldn’t you know?”
+“What was that?”
+“Nothing! Ron showed me the project earlier. It looks soooo good.”
+“Gorgeous!” Taylor bounced on her heels with far more force than necessary. It was an</p>
+<p>obvious ploy to bring attention to her chest. “Thanks for handling so much of it, Ron… I’ve just
+been so busy with family stuff.”
+“No problem.”
+Taylor smiled triumphantly while Ron maintained focus on his project.  Kayla stared</p>
+<p>back, feeling unexplainably defensive.</p>
+<p>to. I’ll see you in class tomorrow, Ron. Byyye!”</p>
+<p>Sensing security in her group project, Taylor proclaimed, “Well, I have a yoga class to get</p>
+<p>“See ya.”
+The click-clack of her short heels bounced around the lab until the door closed behind</p>
+<p>“Gaaaah!” Kayla inhaled loudly. “I can breathe again! I swear I could smell her lip gloss</p>
+<p>The reaction made Ron chuckle. “What was it today? Strawberry-peach birthday cake?”
+“God only knows… Be honest, how much of that project did she actually do?”
+“She put her name on it. Or she will, at least.”
+“Wow. What a bitch. I can’t believe she gets away with the stuff she pulls. Amazing what</p>
+<p>some guys will do for a big rack and a short skirt, huh?” An elbow nudged Ron in the side.</p>
+<p>“It’s not like that! I just trust myself to do the work the correct way a lot more than I trust</p>
+<p>Kayla pushed her teasing further. “So you didn’t stare at all when she gave that cutesy
+little bounce? Not even a little? She had one of the bigger chests in high school if I remember
+right. Even in college she’s a big player!”</p>
+<p>Ron shrugged and looked Kayla in the eyes. “I guess I’m after more than just a pair of</p>
+<p>boobs. I don’t think I could stand to be around her for more than a few minutes.” Smiling
+warmly, he added, “I like people I can talk to.”</p>
+<p>His answer made Kayla’s heart flutter. There was always a certain tension between them</p>
+<p>since high school. Whether it was romantic, physical, or just flirtatious, Kayla couldn’t say.
+Perhaps it was a combination of the three. It was times like this she grew more confident Ron felt
+the same. Ron being who he was, however, she knew if there was ever going to be a move, it
+would have to be from her.</p>
+<p>her.</p>
+<p>from here!”</p>
+<p>her.”</p>
+<p>4</p>
+<p>Warm and fuzzy, she stepped closer and leaned on the table. “Soooo what were you</p>
+<p>saying before? Tell me about these candies of yours.”</p>
+<p>Ron’s eyes lit up. “I’m reducing berry juice over and over again to make this thick goop!”</p>
+<p>He held up a beaker with pride, its contents viscous and slow. Dipping a small dowel into the
+mixture, he withdrew a blob and held it over a container of water. It fell with a hiss, where the
+dime-sized drop hardened into a sphere. “Then I drop it into the water and the rapid cooling
+helps squeeze the entire thing together! Packs in the molecular structure and jams it with flavor!”
+Kayla’s ogled the candy when he pulled it from the water and set it on a paper towel. “So</p>
+<p>it’s done??” The blue sphere sparkled like a gem.</p>
+<p>“Maybe, I haven’t tested this batch yet. I tried to engineer it in such a way that when the</p>
+<p>crystals come into contact with saliva, the chemical reaction will produce more juice as you
+chew.”</p>
+<p>“Like a gusher!”
+Ron snorted. “Just like a gusher.”
+“My mouth is watering just thinking about it… I love blueberries.” She didn’t know how</p>
+<p>she could be more obvious in her desires.
+“You want to try some?”
+“Duh!!”
+Kayla watched like a child when he gathered several candies and folded them into a</p>
+<p>paper towel. “Here, you can have these. Give them a little while to cool off and harden all the
+way through, though. At least a couple hours.”</p>
+<p>“Thanks!” Kayla took the small package with delight. Regardless of what it was, she was</p>
+<p>just happy to share in Ron’s creation. “I can’t wait to try them.”</p>
+<p>“You can be my first customer!”
+“It’s so cool how you’re doing stuff like this in college… You’re great at chemistry and</p>
+<p>you’re going into the candy business.”
+“I wouldn’t really go that far.”
+“Still! You just have it all figured out. You know what you want to do with your life.”</p>
+<p>Kayla pouted slightly. “Then I’m sitting here still undecided in my major. Nothing sounds fun. I
+don’t know what I want to do with my future and I don’t have any earth-shattering ideas to make
+money after college.”</p>
+<p>Dropping another blob of blueberry mixture into the water, Ron pushed Kayla with his</p>
+<p>shoulder. “You’ll figure something out. Everyone has a purpose! You’ll know it when it hits
+you.”</p>
+<p>“Yea, I guess…” Kayla squeezed the candies in her hand. It was getting late and Ron was</p>
+<p>known to work into the night. “I think I should be heading home. I still have homework to do.”
+“Thanks for saying hi! I didn’t even realize it was dark out until you came by.”</p>
+<p>5</p>
+<p>Kayla giggled, glad he was happy to see her. On her way to the door, she turned back and</p>
+<p>called, “Good luck with Taylor tomorrow! And thanks for letting me try your candy!”</p>
+<p>Ron waved. “Let me know how you like them!”</p>
+<p>( . Y . )   ( . Y . )   ( . Y . )   ( . Y . )   ( . Y . )</p>
+<p>The next morning came all too soon after a night of studying.
+“Nnngh… Staying up late to do homework was a bad idea…” Kayla moaned, rolling over</p>
+<p>in bed. “It’s only my undetermined future… Can’t it wait?”</p>
+<p>The alarm wasn’t having it. No matter how many times she pressed snooze, the</p>
+<p>obnoxious ranting of the local radio DJ always returned five minutes later.</p>
+<p>“Fiiiine…”
+Kayla rolled out of bed with all the freshness of a day-old sock. A quick shower helped a
+little, but she remained weary while picking out her clothes. Releasing a yawn, she grabbed her
+bookbag and prepared for her ten-o’clock class.</p>
+<p>“Ahhhh, so EARLY! Maybe I should get some coffee or--”
+A folded piece of paper towel on the nightstand caught her eye. “Ron’s candy!” she</p>
+<p>gasped, reminded of the gifted treat. Opening the pouch, she found three candies rolling in her
+hand. “They have to be ready to eat by now, right?” she wondered. The bright blue hue alone
+was enough to invigorate her, but after popping one into her mouth, she felt a spark of life in her
+mouth.</p>
+<p>“M-MMMM!! Wow those pack a punch!!” she moaned, savoring the extreme juiciness</p>
+<p>gushing over her tongue. “It really does seem like it makes its own juice!!”</p>
+<p>Kayla swooned and crunched the candy to a fine powder to dissolve on her tongue. It
+vanished without a farewell, leaving her wanting more. The zap of sharp fruit flavor remained
+and traveled down her throat before settling in her sternum like a fruity aura. Kayla couldn’t
+recall the last time she’d felt so awake in the morning. It made her chest tingle from her torso to
+her nipples with butterflies alight in her belly.</p>
+<p>The remaining candies rolled in her palm. “Mmmm I want to eat them…” she whined.
+Electing for self-control, she refolded the paper towel and put it in her pocket for a future treat.
+“Those things are better than caffeine!”</p>
+<p>Kayla absentmindedly itched a nipple through her bra while stooping to grab her</p>
+<p>backpack. The padding was extra itchy against her chest this morning. After the candy-based
+rejuvenation, however, she didn’t really mind; she welcomed the playfulness residing in her
+breasts.</p>
+<p>“I have got to get more of those,” she decided. “And invest in them if I can! Ron is going</p>
+<p>to be rich!”</p>
+<p>6</p>
+<p>Nothing could phase Kayla. With energy seeping from every pore, even the most
+mundane of her classes flew by in a blur. But the increased discomfort of her usual bra continued
+to itch at the back of her mind and around her bust. All told, it only became worse as the hours
+wore on. By two-o’clock, as Kayla was leaving the lunchroom, she had the distinct feeling her
+bra was three sizes too small. She felt as though everyone around her could tell as well; wearing
+only a button-up blouse as cover, it wasn’t difficult to see when a girl had outgrown her
+wardrobe.</p>
+<p>Kayla frowned at the thought of spending money on new clothes. “I thought those days
+were over…” As far as puberty seemed in her rear-view mirror, the amount of cleavage she felt
+fighting for space between her bra cups was undeniable. If she knew any better, she would have
+thought her boobs were bulging around every side of her cups. “I haven’t felt a bra strap digging
+into my chest since high school…!”</p>
+<p>Even more peculiar was their movement. Within the last two hours, Kayla found her</p>
+<p>footsteps amplified across her bosom. Every step sent a fluid-like heave intent on yanking her
+blouse out of her skirt’s waistband. The uncontrollable nature of her chest was enough to make
+her change her gait completely and walk by rolling her feet gently from heel to toe. She was
+aware that a bigger cup size meant more weight, but the mass stuffed into her bra felt far heavier
+than what she guessed from her size. It had enough momentum to lead her if she wasn’t paying
+attention.</p>
+<p>“I’m going to have to be careful in PE. If my sports bra can’t hold me, I might have to sit
+today out. I don’t know if the bra I have is big enough!” Kayla blushed. She couldn’t believe she
+was considering such options. 30C had been her bra size for years; the idea of such a drastic
+change occurring overnight was utterly ridiculous. However, the tightness in her cups and the
+jostling weight couldn’t be ignored.
+Then there was the sloshing.
+Kayla couldn’t make heads or tails of the muffled sound of jostling fluid following her</p>
+<p>for the last hour. Wherever she walked, it was there. Leaning back in her chair, it was there.
+Stopping suddenly to avoid running into someone coming around a corner, it was there. Several
+times she checked her backpack for a half-full water bottle only to find books and
+hastily-scribbled notes. The sloshing remained like a ghostly haunt, just out of sight but always
+audible with her every motion.</p>
+<p>“Maybe Ron laced his candies and I’m hallucinating my boobs getting bigger,” she</p>
+<p>considered with a light laugh, “That would explain why the first one was free!”</p>
+<p>The university’s gym loomed before her. Changing into her gym clothes would be a good</p>
+<p>chance to inspect the situation. Kayla found it hard to believe she could have actually grown as
+much as she felt. Such things just didn’t happen in the span of several hours.</p>
+<p>“Hey, Kayla!” a friend called when she entered the women’s locker room.</p>
+<p>7</p>
+<p>“Hi, Ann!” She placed her bag on a bench within a group of three girls. “Any idea what</p>
+<p>Another girl, Jesse, responded as she pulled on a pair of shorts. “Uhhh I think we might</p>
+<p>we’re doing today in class?”</p>
+<p>be on the tennis courts…”</p>
+<p>“Greeaaat… Lots of running.”
+Kayla’s heart was pounding when she reached to undo a button. It wasn’t difficult until</p>
+<p>she neared those holding across her chest. Slight windows to taut cleavage made her fingers
+tremble. “Eep!” she squeaked, finding flesh overflowing her padding when the shirt sprang open.
+Ok, this is a pretty big jump in size.</p>
+<p>Ann glanced over in time to see Kayla slip the shirt down her arms. The sight of a chest
+twice too large for its bra caused a double-take. “Holy crap, Kayla! Are your breasts bigger??”
+The sudden sexual question pulled the attention of every nearby girl and Kayla blushed</p>
+<p>under their gaze. “I definitely feel bigger…”</p>
+<p>“Jesus… Where did those come from?!” Jesse gawked.
+Ann was incredulous. “You feel bigger? Those things are huge on you! Kayla you’re</p>
+<p>spilling out of your bra!”</p>
+<p>The third girl, Melanie, was the most certain of their size. “Those have got to be G-cups.</p>
+<p>You look as big as my sister, and she’s nursing!”</p>
+<p>Kayla laughed nervously and inspected her own bra-bulging mammaries. “No… I’m a</p>
+<p>C-cup! My bra must have just--Mmm!!”</p>
+<p>Ann sank a finger into a heap of flesh overflowing from the side of her bra. “God they’re</p>
+<p>so firm!”</p>
+<p>“Well yea, cause she’s stuffed herself into a cheap push-up bra.” The four girls glanced
+down the lockers to find Taylor tossing her gym bag away. She came pre-dressed for gym class
+as always, wearing a tennis skirt and a designer spandex top. “Probably wearing it to impress that
+guy from the lab last night. Or are you jealous he was looking at me?”</p>
+<p>Kayla knew better than to let Taylor’s remarks get to her, but that didn’t make the task</p>
+<p>any easier. “I’m not wearing a push-up bra, Taylor. And what Ron and I do is none of--”</p>
+<p>“Hey it’s all right! You don’t need to hide it, we’re all women here. Sometimes the girls</p>
+<p>just need a boost, am I right?” Taylor laughed more than she should have. “I mean mine never
+do. I don’t think they even make push-up bras in my size! But you can wear whatever you want!
+Personally I don’t think false advertising is any way to get a guy, though. It just leads to
+heartbreak.” Taylor pulled her shirt taut. “Can’t compete with the real thing.”</p>
+<p>“It’s not a push-up bra!!” Kayla yelled. Taylor’s words had gotten to her more than usual,</p>
+<p>perhaps because she had the nerve to bring Ron into the mix. The pink highlight diving around
+the back of her head and into a ponytail was more frustrating than ever. “This bra fit this
+morning! I just...outgrew it, I think...”</p>
+<p>8</p>
+<p>“No judgment here! I might suggest a larger size, though. You’re spilling out all over the
+place. It’s not a good look.” Taylor turned away towards the exit. “See you on the court, ladies!”</p>
+<p>The girls stood in silence.
+“Wow… I think I hate her,” Melanie confessed.
+Ann nodded. “It’s best to ignore her. She’s only here because she’s riding daddy’s money
+train. All that high and mighty talk about push-up bras is pretty gutsy coming from someone who
+wears black bras under a white blouse. She’s only threatened because your boobs can actually
+give hers a run for their money now! How much attention can you possibly crave?”</p>
+<p>“I don’t know… She’s a total narcissist.” Kayla reached around her back to unclasp her</p>
+<p>bra. The relief of pressure was instant and several pounds hung from her petite torso as she
+grabbed her sports bra. “Ron was partnered with her for a project and she made him do all the
+work.”</p>
+<p>“I thi--” Jesse was about to respond but her mouth stopped mid-word. The other girls’ did</p>
+<p>as well, their eyes wide and chests stiff with caught breath.</p>
+<p>“What?” Kayla asked, looking at her zombie-eyed friends.
+“K-Kayla…” Ann stammered, staring directly at her friend’s breasts. “Kayla your nipples</p>
+<p>are blue!”</p>
+<p>“What are you--oh my God!!” Kayla looked down and gasped in terror, stumbling back
+against a locker and groping her breasts. Her previously pink nubs were now turned plump and
+dark blue. Swollen areolas faded from azure to her skin tone. They lifted the thimble-sized
+nipples off her bloated chest. Having more than tripled in size, Kayla’s nipples felt monstrous
+and thick. “W-What the hell??”</p>
+<p>“Kayla your nipples are fucking BLUE!!” Jesse repeated.
+“I know!! I can see that, Jesse!!” Kayla was hyperventilating. Every breath made her</p>
+<p>chest squeeze into her shaking hands. They tingled with deep internal pleasure, forcing her
+nipples even larger and firmer. “M-Mmmm!!”</p>
+<p>Kayla couldn’t help it. In her fright, she accidentally pinched a nipple between two
+fingers. A warmth rushed from the center of her breast and through her nipple. It made her
+freeze. Her friends paused as well, their jaws collectively dropping.</p>
+<p>Warm juice was flowing over her hand and chest before trailing across her bare stomach.</p>
+<p>It was blue in color and thick to the touch, leaving stickiness in its wake.</p>
+<p>“U-U-Uh… Kayla…” Melanie squeaked. “You’re… I-I think you’re leaking.”
+Nobody said a word. Feeling the fluid coat her hand, Kayla removed it from her chest and</p>
+<p>lifted it close to her face. Confused eyes watched as she sniffed the juice. It tingled her senses
+with energy and made her mouth water with unheard-of desire. Kayla couldn’t stop herself. As if
+licking a frozen pole, she extended her tongue and slowly approached a droplet hanging off the
+end of a finger.</p>
+<p>9</p>
+<p>“Mmm….” Kayla swallowed, the taste better than anything else to pass between her lips.</p>
+<p>“M-MmmmMMM!! I-It’s JUICE! What the hell is coming out of my chest?!”</p>
+<p>“It’s juice?!” Jesse made a face. “Well don’t lick it! You probably have some sort of</p>
+<p>disea--”</p>
+<p>“IT TASTES INCREDIBLE!!”
+Kayla’s friends watched as she pinched her nipple once more. “Nnnnghh!!” Blue juice
+squirted onto the floor and pooled in a hand. She eagerly licked it clean, reveling in the tangy
+majesty. “It...mmmmm...I-It’s like the ripest...most sweet...blueberry juice...I-I’ve ever...tasted…”</p>
+<p>How she expected her friend to react to such a raving review was unknown.
+“Can I try??” Ann asked, stepping forward. “If it’s that good, I have to try it!”
+Melanie crowded into her. “Me too!!”
+“You can’t describe it like that and not expect us to want some!”
+“W-Wait!! Guys hang on!!” Kayla was forced against the lockers as her friends reached</p>
+<p>for her nipples. “G-Guys!! Be careful!! Don’t pull so--NNGH!! O-OOOHH!!”</p>
+<p>Juice sprayed their faces like a blue mist. Coating their waiting tongues, her friends</p>
+<p>swooned at the taste of Kayla’s juice.</p>
+<p>like--Melanie!!”</p>
+<p>“Holy shit that’s amazing!” Ann moaned, licking her lips. “I’ve never tasted anything</p>
+<p>“A-AHH!!!” Kayla screamed when Melanie jumped at her chest and latched onto a</p>
+<p>bloated nipple. Greedy with thirst, her face squished into Kayla’s swollen tit as she sucked the
+juice from its depths. “C-Careful!! Melanie you’re...nnnGHMMM!! Melanie you’re sucking too
+hard!! A-Ahh!! Oooohhh my BOOBS!!”</p>
+<p>“Don’t hog it all!!”
+“J-Jesse wait!! I can barely handle--MMM!! Ahhh!!”
+The cold metal of the lockers pressed into Kayla’s back when both nipples were claimed</p>
+<p>by moist lips. Her friends couldn’t get enough, sucking vigorously until the final drops passed
+over their tongues.
+POP!
+POP!
+“N-NNGH!!” Kayla groaned when they released her, their lips and chins stained blue.
+“I couldn’t get anymore…” Melanie moaned, her belly warm with juice.
+“I hardly got any,” Ann complained.
+Breathing as if just finishing a race, Kayla looked at her chest. “Huh??” It was back to its</p>
+<p>regular size, her nipples fading back to their natural pink hue.</p>
+<p>“Awww, they’re going back to the way they were…” Jesse pouted.
+Kayla was relieved. “Good! Did you see me?? I had blue nipples! Juice was coming out</p>
+<p>of my boobs like some kind of weird fetish story!” Deep inside, she wished she had enjoyed it
+more. The added size was enjoyable in its own right, but the juice was sheer bliss on her lips.</p>
+<p>10</p>
+<p>Ann wiped her mouth. “Gotta say, Kayla, if you still don’t know what you can do for</p>
+<p>money, I think I might have an idea now.”</p>
+<p>“How did you do it??” Jesse demanded. “You had to have done something!”
+“I-I didn’t do anything! I ate a burger for lunch!! I--” Kayla stopped. “The candy…” she</p>
+<p>whispered.</p>
+<p>“What candy?”
+Kayla jumped into her locker to find her pants. In the back pocket she found the napkin
+containing the two remaining candies. “It was this! Ron was making some special candies as an
+experiment! I-I guess they were a little too powerful or something…” The thought of such a little
+candy doing this to her chest was tantalizing.</p>
+<p>Ann didn’t believe her. “Wait wait wait… So you ate some of those candies--”
+“One of them,” Kayla corrected.
+“ONE of those candies, your tits doubled in size, and you got that sweet nectar out of</p>
+<p>it?!”</p>
+<p>“I-I-I guess… I know it sounds weird, but--”
+“I want some!” her friends all exclaimed in unison.
+Kayla suddenly felt very small against the eagerness. “I only have these two!! And we</p>
+<p>don’t know what else they might cause!! What if it was a fluke??”</p>
+<p>Melanie stepped forward and lifted her shirt. “I’m a B-cup; if these are going to make me</p>
+<p>a freakin’ D-cup, I’m all in!”</p>
+<p>“Or bigger…” Jesse said, eyes wide.
+Ann, usually the voice of reason, stepped closer. “I wouldn’t mind trying it either, Kayla.</p>
+<p>I’ve lost a little weight, and not in the right places.”</p>
+<p>Their hands reached for the remaining candies but Kayla snatched them away. “I only</p>
+<p>have these two! I-I can’t give you all one!”</p>
+<p>And you filled up with juice! How hot is that??”</p>
+<p>Melanie was desperate. “Well then can you get more?? You saw how big it made you!</p>
+<p>“I guess I could ask Ron for more… But he might not--”
+“Do it!! Whatever it takes!! I have money!”
+“Calm down, Melanie…” Ann soothed her friend. “Do you think you can get more,</p>
+<p>Thinking against a racing pulse and covered in dried juice, Kayla nodded. “I’ll get some</p>
+<p>Kayla?”</p>
+<p>more.”</p>
+<p>Several hours passed and twilight was setting on the campus. Kayla couldn’t believe what
+she was doing, but the thrill of her juicy expansion was too great to ignore. Her friends had to try
+it, and the two candies in her back pocket would never be enough to satisfy the sexual cravings
+now seeded in her own mind. Kayla realized she wanted to feel her breasts fill again. And again,
+and again.</p>
+<p>11</p>
+<p>Her timing was perfect. An engineering student was knocking off after a late night of</p>
+<p>studying and exiting the building just as she approached. A sweaty palm grabbed the door before
+it closed and any non-engineering students out for the night.</p>
+<p>“Ok… Ok ok ok…” Kayla muttered, walking through the deserted halls. Based on what</p>
+<p>she knew about his schedule, Ron shouldn’t be in the lab. Her skin itched with anxiety all the
+same. Turning a corner, she found the lab dark and empty through a row of windows. Sitting on a
+shelf next to several pieces of Ron’s equipment was a small mason jar of candies. It was a
+blueberry treasure trove worthy of making Kayla’s mouth water.</p>
+<p>She was in and out in minutes.
+“He won’t miss a couple of them,” she assured herself. In her hand was clutched a plastic</p>
+<p>bag containing half of Ron’s candy stash. “I’ll apologize to him later; I don’t think Ann and the
+others can wait any longer.”</p>
+<p>Like a collection of pearls, Kayla held them close and slipped out a back exit. Her friends</p>
+<p>should be waiting, just as they’d planned. When she stepped out into the night, however, Kayla
+realized she hadn’t accounted for her friends’ inability to keep a secret.</p>
+<p>“Who are all these people??” Kayla hissed, finding a group over ten large crowded at the</p>
+<p>lab’s back exit. “I said I would share them with you guys! Only you guys!”</p>
+<p>Jesse showed little remorse. “You didn’t really expect me to keep this a secret, did you??</p>
+<p>I thought you were kidding!”</p>
+<p>An upperclassman pushed her way through the crowd. “This is a joke, right? It has to be.</p>
+<p>I’m a biology major, and I can tell you without a doubt, the story I heard cannot be true.”</p>
+<p>“It’s true! I saw it!” Melanie chimed.
+Jesse licked her lips and stared at Kayla’s chest. “Mmmm and I tasted it. I can tell you</p>
+<p>without a doubt that it was very real.”</p>
+<p>The biology major remained dubious. “Boobs don’t fill up with juice! They’re not</p>
+<p>balloons! They have milk glands that fill up with milk when you lactate.” Staring at Kayla’s
+chest, she demanded, “Show me your nipples. Jesse said they were blue.”</p>
+<p>Kayla was flustered at the request and hugged her arms into her chest. “N-No! I mean</p>
+<p>they were, but they’re back to normal now!”</p>
+<p>“Riiiight, after your three friends sucked you dry in the girl’s locker room?”
+Another girl piped up from the back and giggled, “Kind of sounds like someone just had</p>
+<p>some really good drugs!”</p>
+<p>“Yea! I’ll take some of those too if you have any!”
+Kayla was excited to see the dubious biology girl’s reaction. “Why don’t you have one
+then? Let me know how it goes tomorrow.” The bag was held open in front of her. Despite her
+strong scholarly convictions, the student was hesitant to pluck a candy from the trove. Under the
+twenty pairs of eyes, she removed a piece and put it in her mouth with a crunch.
+“I-It is good…” she admitted. “Mmm, really good. How is it so juicy??”</p>
+<p>12</p>
+<p>“I want some!” The girls started to swarm.
+“Hey!” Ann held several back. “Us first, we’re the ones that even told you about them.”
+Hands dove into the bag, removing several candies at a time until none remained. Kayla</p>
+<p>was sad to see no extras to add to her stash, but she knew where to get more.</p>
+<p>The biology major itched the side of her chest without noticing. “So how long does this</p>
+<p>take to kick in? Not that I believe it, but I have a date tonight and if I can fill out my dress the
+same way I heard you filled out your bra, I wouldn’t mind. Not that I believe any of it…”</p>
+<p>Kayla watched the girl’s itching slowly turn into a massaging motion. It was already</p>
+<p>starting. “It didn’t take long. Mine felt full after three or four hours.”</p>
+<p>“I’m eating two!”
+“I’m an A-cup, I’m taking all three!”
+“I’ll take one, but I want to save the others just in case something does happen…”
+Even under the fantastical pretense, the girls were eager to jump at the opportunity for</p>
+<p>larger breasts. Hearing some of them so quick to jump to ingesting several candies, Kayla grew
+worried. “Wait! I’m not sure what taking more than one will do!”</p>
+<p>One of them laughed after swallowing and patting her chest. “I guess I’m going to find</p>
+<p>out!”</p>
+<p>( . Y . )   ( . Y . )   ( . Y . )   ( . Y . )   ( . Y . )</p>
+<p>Kayla didn’t know what she expected to find the following day. Somehow, like a fad</p>
+<p>running rampant in high school, the candies had managed to spread from the small group to a
+sizeable community. Kayla hadn’t realized just how many she’d taken from Ron until walking
+through the main hall on her way to class. The school was buzzing with talk of mammaries and
+the air smelled of freshly-squeezed blueberries. It was all Kayla heard. The unbelievable
+conversations were everywhere.</p>
+<p>“I’m telling you! My boyfriend LOVED it!! I took one before I went to his place to study</p>
+<p>and I felt full before I even walked in the door! Pretty sure he thought I was bigger, but by the
+time I was really bulging into my sweater, he couldn’t take it anymore and just ripped my top
+off! The blue nipples weirded him out at first… I was freaked out too, really… But when I
+started leaking and he tasted my juice I couldn’t keep the guy off me! I don’t think his lips left
+my boobs for the rest of the night!”</p>
+<p>“Mine too! I’ve never seen such sad puppy-dog eyes as when my juice ran out… He was</p>
+<p>so thirsty he went down on me for at least an hour afterward. Poor guy probably has the worst
+chapped lips today.” She paused upon seeing Kayla walk by. “Oh! Hey, thanks for the candy!
+Can I get some more later?? I can pay you!”</p>
+<p>Kayla recognized her as the biology girl from the day before. Strange how quick her</p>
+<p>mind was to change. “O-Oh! Yea I’ll see what I can do!” One juicy conversation led to another.</p>
+<p>13</p>
+<p>“I made the mistake of falling asleep before seeing the final product… All I had was a set</p>
+<p>of stained sheets when I woke up. The dreams I had were incredible though.”</p>
+<p>“You must have overflowed! I took two before bed thinking they needed a few hours, but</p>
+<p>I woke up feeling like I was ready to pop! I’ve never seen my nipples so big! Eight hours was
+waaaay too long to go without juicing apparently. I spent an hour tugging on my nipples just to
+get them small enough I could fit into my clothes for school! I’m still half full.”</p>
+<p>“Carly you’re huge!! Did you take one again this morning??”
+“You bet I did! After what I did to my top last night? You know I had to take these</p>
+<p>puppies out for a spin through all my classes!”</p>
+<p>Kayla couldn’t help but feel partially responsible for the state of the female student body.</p>
+<p>The stories of blueberry-induced sex and mistakes were around every corner. Cheesy grins
+flashed from her friend when they saw her approaching from down the hall.</p>
+<p>“There she is!” Jesse hollered. “The girl of the hour! The girl with the magic titty-filling</p>
+<p>candy!”</p>
+<p>“Shhh!!” Kayla hushed her friend. She couldn’t help but notice Jesse was wearing a</p>
+<p>low-cut shirt with an extreme amount of cleavage. The faintest pair of blue spots were soaking
+through her uniform. “Keep it down!”</p>
+<p>Ann disagreed. “Why? It’s all anyone can talk about.” Glancing down, she noticed</p>
+<p>Kayla’s regular-sized chest. “You didn’t want to fill yourself up??”</p>
+<p>“I…” Kayla didn’t want to admit she felt guilty for stealing them from Ron without his</p>
+<p>permission. Until she apologized, she didn’t think she could enjoy her remaining two. “I-I’m
+saving--”</p>
+<p>A passing student snorted with amusement. Kayla should have heard the loud click of her</p>
+<p>heels from a mile away. “Saving yourself?” Taylor teased in passing, “Funny coming from you
+after what I saw in the locker room yesterday. Guess you just like to tease guys, huh? No wonder
+you’re still single for all these years. All you do is lead them on with a slutty show of cleavage.”
+Fuming, Kayla stared at her attacker. Hefty breasts bulging through an unbuttoned blouse</p>
+<p>only fueled her fire. “It was an accident! I didn’t know--”
+Ann put a hand on her shoulder. “It’s not worth it.”
+Taylor was hardly paying attention. Flipping her hair over her shoulder, she left Kayla</p>
+<p>and her friends.</p>
+<p>“She’s always attacking me…” Kayla growled. “What did I ever do to her??”
+“Taylor just likes to pick fights. She always has.” Jesse rolled her eyes. “More</p>
+<p>importantly, did anyone notice her cleavage?”</p>
+<p>Kayla moaned. “Are you trying to make me feel better?”
+“No!” Jesse grinned. “I’m talking about how it looks like someone is wearing a push-up</p>
+<p>bra today…”</p>
+<p>The group’s eyes collectively bulged.</p>
+<p>14</p>
+<p>“Oh my God, you’re right!” Kayla laughed.
+“She must have seen all the other girls suddenly out doing her! Must have been terrible</p>
+<p>coming to school and finding all your classmates’ boobs suddenly bigger than your own. Nobody
+would have given her one of the candies; she probably keeps a spare push-up bra in her car just
+in case. Her appearance is all she has.”</p>
+<p>“Wow… That’s kind of sad…” Melanie admitted.
+“But also really funny. Even Lucy is bigger than her, and she’s on track and field!”
+“Pretty sure Lucy ate three candies last night,” Kayla whispered.
+Ann’s giggled. “Well that explains her melons! I wonder how she’s feeling. I took two</p>
+<p>and I round and plenty full after only two hours. My skin was stretching by the time I took a
+shower. A drain was just what I needed.” Her eyes fluttered as if recalling a life-changing sexual
+experience. “I’m saving my last one for a special occasion.”</p>
+<p>Melanie was somber. “It’s too bad the growth isn’t permanent… I really liked having</p>
+<p>breasts as big as my head.”</p>
+<p>no self-control!”</p>
+<p>Jesse chuckled. “Please, knowing you, you would go double that if you could. You have</p>
+<p>“Yea, you’re probably right,” Melanie blushed.
+“So can we have some more??”
+“Please?!”
+Kayla didn’t hear them. Two guys were walking down the hall. Watching their mouths
+move as they spoke to each other, Kayla noticed their lips, tongue, and teeth were stained blue.
+Knowing some girls out there had just been emptied of their juice was oddly arousing.</p>
+<p>I wonder if Ron would like my juice...
+“Kayla!”
+“S-Sorry! What? What is it??”
+Ann glared at her. “Can you get more candy?? I have a test tomorrow and my math</p>
+<p>teacher goes easy on girls with a lot of cleavage.”</p>
+<p>“Uhhh… I-I can…” Two girls walked past, dribbles of blue liquid staining their blouses</p>
+<p>and skirts. “I can try! But maybe we shouldn’t be passing them out like last night. I don’t want to
+get in trouble. Teachers might notice is everybody suddenly starts popping out of their shirts.”</p>
+<p>“Sure, sure! It can be just between us girls!”
+“So when do you think you can get them?”
+“M-Maybe--” A saving grace appeared. From out of the juice-happy throngs of students,</p>
+<p>Ron’s face shown through. “Ron!” Kayla called.</p>
+<p>“Hey, Kayla!” he smiled, joining the group. His curious eyes flitted between the
+enhanced sets of cleavage for only a moment before settling on her. “How’s it going?”</p>
+<p>“Good! Listen, I gotta get to class. Want to walk me there?”
+“Uhhh sure!”</p>
+<p>15</p>
+<p>Executing her escape plan, Kayla turned to her friends. “Bye, guys!”
+The frustration on their faces was immense.
+“You can’t hide!” Jesse declared as she left.
+Melanie looked desperate. “We know you have more!”
+“That’s a weird way to say goodbye,” Ron chuckled.
+Kayla nodded. “Jesse has always been a bit odd. How have things been? Make any</p>
+<p>progress on your candy?”</p>
+<p>half of it was gone.”</p>
+<p>“Yea! I filled a whole mason jar, actually! I went to the lad this morning though and like</p>
+<p>“That is so weird.”
+“I’m wondering if some of the other chemistry students have been digging around my</p>
+<p>stuff. I might need to see if I can take a look at the security cameras.”</p>
+<p>“I’m sure the janitor just--”
+A girl came walking up, her body clearly not used to the volleyball-sized breasts straining</p>
+<p>her blouse. Saying a prayer, Kayla hoped she wasn’t going to ask what she feared.</p>
+<p>“Kayla! Do you have any more of those blueberry candies?? My sister doesn’t believe me</p>
+<p>and I want to prank her tonight.”</p>
+<p>Maybe later!”</p>
+<p>Face red as Ron turned towards her, Kayla stammered, “S-Sorry! I’m all out right now!</p>
+<p>Disappointed, the girl withered. “Aww… Ok… Let me know when you get some, all</p>
+<p>right??” Grabbing Kayla’s hand, she scribbled with a pen. “Here’s my number! Text me
+anytime.”</p>
+<p>“W-Will do!”
+She bounced away, leaving Kayla to Ron’s logic.
+“Blueberry candy, huh? You wouldn’t happen to know who took mine, would you?”
+Giggling with guilt, Kayla tried to shrink into herself. “Yea! Whoops… Funny thing… I</p>
+<p>might have really enjoyed the ones you gave me and...maybe stole a few for some friends?”</p>
+<p>“Wow, they were good enough to steal!” Ron laughed. “That’s a compliment if I’ve ever</p>
+<p>gotten one!”</p>
+<p>Kayla blushed, remembering the juice swelling her tits to over double their size. “They’re</p>
+<p>really, REALLY good, Ron.” Inside, Kayla was conflicted.</p>
+<p>You have to tell him. He CAN’T give these out not knowing what they do to women! He</p>
+<p>could get arrested if he gives it to the wrong person! Kayla gulped, her mind running wild.
+Maybe he’ll want proof. Would he want me to be his helper? I’m his best female friend; who else
+would he feel comfortable with about this?? It’s only FAIR that I tell him! He deserves to know!</p>
+<p>Ron was beaming. “I’m glad you think so! I was going to make more tonight and--”
+“T-They do things, Ron.”</p>
+<p>16</p>
+<p>His expression changed as he went into science mode. “Like what? Did you get the juicy</p>
+<p>effect? I was sure I had worked out.”</p>
+<p>“Oh yea! Yea yea! I definitely got it!” Kayla couldn’t nod fast enough. Pulling him aside,</p>
+<p>she lowered her voice. The halls were starting to clear as students went to class. “I mean...they
+make something happen… Something I’m pretty sure you didn’t intend…”</p>
+<p>Ron pushed up his glasses, somewhat concerned. “You’re going to have to be more clear.</p>
+<p>Did you get sick? An aftertaste?”</p>
+<p>“No! I… I don’t know how to say this.” Kayla shuffled her feet and whispered as quietly</p>
+<p>as a mouse, “T-They made my boobs fill up with juice.”</p>
+<p>Ron was silent.
+“I know it sounds crazy! I can’t believe it either honestly! B-But I took one yesterday
+morning and they were twice their size and leaking blueberry juice by lunch! I stole some and
+gave them to my friends, and then they passed them out, and now two dozen girls on campus
+have juice-filled tits and guys are walking around with their mouths dyed and… Does this make
+sense?? Am I crazy?! I promise I’m not making this--”</p>
+<p>Kayla looked at Ron’s face. He was staring at the students around them and some of the
+girls’ overstuffed blouses. The scent of berries in the air suddenly made sense. Eyes wide with
+stunned realization, he muttered, “The oxytocin…”</p>
+<p>“The what?”
+Ron licked his lips, thinking a mile a minute. “I chemically designed the candies to
+stimulate the brain to release a tiny bit of oxytocin when you eat them. To increase enjoyment! I
+didn’t even think…” Turning to Kayla, then to her chest, he confessed, “I didn’t even think about
+the increased role of oxytocin in women.”</p>
+<p>His eyes had never lingered on her breasts for so long. It made Kayla weak in the knees.</p>
+<p>“What...What does oxytocin do…?” she asked, subconsciously arching her back to present a
+better view.</p>
+<p>“Induces lactation.” Kayla was surprised there wasn’t smoke coming out of Ron’s ears.</p>
+<p>“Remember how I said the candy is supposed to react to saliva to act like it’s making more juice?
+My candy must have spiked your oxytocin, which overly stimulated your breasts, and then my
+formula reacting to your increased hormones caused your milk glands to produce
+juice…i-instead of milk…”</p>
+<p>Ron wasn’t sure how to react to the news. On the one hand, the scientific implications</p>
+<p>were enormous. On the other, he had just caused one of his best friends, and several other
+classmates, to lactate blueberry juice and blow out of their bras.</p>
+<p>“Kayla,” he said immediately, “I am SO sorry. I had no idea! I-If I had known, I never</p>
+<p>would have given them to you! I swear, I didn’t mean for--”</p>
+<p>Kayla blushed. “It’s ok, Ron… Really, I’m fine…!” Looking at her feet, she added, “It</p>
+<p>felt sort of good if I’m being honest.”</p>
+<p>17</p>
+<p>“It felt good?”
+Neither of them could believe the subject of their conversation. How things had taken</p>
+<p>such an intimate, sexual turn towards Kayla’s chest was unbelievable.</p>
+<p>“Y-Yea! My boobs got kind of tight and felt really full… Hearing all that juice sloshing
+around, and then the looks on my friends’ faces when they tasted it and started sucking on my
+nipples in the locker room--”</p>
+<p>“You could hear the juice??”
+Kayla was shocked that was what Ron had attached to. “There was a muffled sloshing</p>
+<p>whenever I moved, mostly when they were really full.”</p>
+<p>“Wow… Oh my God…” Ron gawked. His mind was calculating scenario after scenario.</p>
+<p>This opportunity was too great to pass up and too crazy to bring to anyone else. “Kayla,” he
+asked, looking around.
+“Yea?”
+“If you wouldn’t mind, I would like to see it first hand.”
+Her heart thumped at the outlandish request. What exactly did Ron mean? “Y-You what?”
+“If this is true, it could change a lot about what we know of biochemistry and human
+anatomy. But you’re the only one I trust with it right now. I know it might be too much and
+inappropriate for me to ask this of you, but if I would watch this happen, I would owe you big
+time.”</p>
+<p>“You want to...watch my chest grow and fill up with juice?”
+“Purely for scientific reasons! You will need to be topless, so if you’re uncomfortable</p>
+<p>with the idea I totally understand, but--”</p>
+<p>“Yes!! I’ll do it!!” Kayla’s hands were clammy with excitement. Even if it started out for</p>
+<p>scientific reasons, what might come of Ron studying her chest up close was heart throbbing.
+Being alone with him without a shirt could only lead to good things. “Of course I’ll do it!”</p>
+<p>Ron was ecstatic. “Oh thank you! I can’t tell you how much this means to me! If this is</p>
+<p>real…” He could hardly keep from shaking. “I can’t even imagine! Meet me in the science
+building tonight at eight o’clock. Can you do that?? I’ll reserve a private lab; no one should
+bother us.”</p>
+<p>Kayla nodded. The last few minutes had been a flurry of emotional development and it</p>
+<p>could only accelerate. “I’ll be there!”</p>
+<p>( . Y . )   ( . Y . )   ( . Y . )   ( . Y . )   ( . Y . )</p>
+<p>The dark halls of the science buildings were electric with Kayla’s sexual tension. She</p>
+<p>couldn’t believe what she intended to do, but if there was anyone she wanted measuring,
+watching, and recording her bare breasts as they swelled like ripe fruits, it was Ron. He may had</p>
+<p>18</p>
+<p>assured her it was for scientific purposes only, but science was the furthest thing from her mind.
+She only hoped the same urges were hiding in the back of his mind as well.</p>
+<p>A wing meant for only the most advanced science majors waited before her. At the end of</p>
+<p>the hall was a door frame illuminated by light from the other side. Nothing could be seen inside
+due to a shade drawn across the door’s slender window. As Ron had promised, they were in
+complete privacy.</p>
+<p>Kayla knocked lightly before opening the door. “Hello? Ron?”
+“Come on in!”
+The inside was bright with fluorescent light. A table supported the entirety of Ron’s
+candy project. He had moved every piece just for this occasion. Kayla couldn’t have felt happier
+to be his helper.</p>
+<p>“Thank you so much for doing this,” he expressed. “I know it won’t be easy.”
+“Really, it’s no trouble at all!” Kayla giggled. “I’m actually a little excited. I’ll be your</p>
+<p>little science experiment...”</p>
+<p>She froze the instant after the flirty words slipped from her lips. The last thing she wanted</p>
+<p>was to push Ron too far. Color rushed to her face as she waited for a response.</p>
+<p>Ron chuckled. “I’ll try not to probe you too much then.”
+Holy shit. Either Ron doesn’t know what flirting is, or he’s just as into this as I am.
+Looking his partner over, he nodded at the baggy zip-up covering her torso. A small bowl
+of candies was set on the table next to a notebook and a lockable tape measure. “All right, I think
+we’re ready to start.”</p>
+<p>Kayla slapped her hands against her hips. “What should I do?”
+Ron grabbed the tape measure from the table. “If you’re still comfortable, go ahead and</p>
+<p>take off your jacket.”</p>
+<p>A zipper had never been so easy to remove. Hoping he didn’t see her hard nipples as a</p>
+<p>form of overexcitement, Kayla stood in front of her friend awkwardly shuffling her arms across
+her stomach before letting them fall to her side. She had been naked in front of guys before, but
+in this lab environment, her C-cups had never felt so exposed. She wondered if they were all Ron
+had imagined them to be, if at all.</p>
+<p>“Very nice,” Ron said, taking her jacket.
+“Oh how the compliments flow!”
+“I meant about your--” Ron paused and stared at Kayla’s naked chest.
+It was one of the few times she’d seen such a reaction. Kayla poured on her best aura of
+cuteness and timidly brought her biceps into her chest, pushing them together. “You’re blushing,
+Mr. Science…”</p>
+<p>“Sorry! Sorry, first time doing something like this.” Unraveling the tape, he made sure to</p>
+<p>maintain eye contact as he stepped forward. “Arms up?”</p>
+<p>19</p>
+<p>Kayla lifted her arms over her head and memories of pubescent fitting rooms rushed</p>
+<p>back. “W-What’s this for?”</p>
+<p>The tape pressed into her nipples and hugged her soft skin before being pulled tight just</p>
+<p>enough to cause her flesh to bulge. It clicked in place, holding firm around her chest.</p>
+<p>“I’ll need a before and after measurement, and this tape will snap to new sizes along with</p>
+<p>your breasts as they grow. Assuming they grow at all.”</p>
+<p>“L-Let’s hope they do.”
+Kayla was self-conscious as he leaned in and read a number hugging her bare side.
+“Eighty-four centimeters…” Ron jotted the number down. “Good, any change in size should be
+pretty obvious.”</p>
+<p>“What is that supposed to mean?!”
+“Oh! I-I didn’t mean anything by it!! I only meant--”
+Kayla replaced her arms at her side. “Honestly, Ron, if this is how you treat all of your</p>
+<p>naked female experiments, I’m surprised you haven’t been beaten to a pulp.” A sly smile let him
+know she was only kidding. “All right, I’m all taped up. What next?”</p>
+<p>“Now we begin.” Ron held a bowl of candies to her. “How many did you eat the first</p>
+<p>time?”</p>
+<p>The sight of them made her mouth water. “Just one…”
+“I suppose we should start small, maybe--”
+CRUNCH
+“Kayla!”
+She looked at him with guilty eyes, three candies crushed to delicious powder in her</p>
+<p>mouth. “What?? I thought we wanted to experiment!”</p>
+<p>“That doesn’t mean you triple your original dosage! We don’t know what could happen!”
+“But they’re just so good…” she whimpered. “I’m sure it’ll be fine.”
+Defeated, Ron watched her swallow. “I guess we’ll see.”
+“Besides, if my boobs start going wild, I’m sure you’ll take care of me.” Arousal was</p>
+<p>already mounting in Kayla. “All you gotta do it grab my nipples and--Nnnngh!!”</p>
+<p>She stumbled back, grasping each breast in her hands. Their surfaces were taut and firm,</p>
+<p>swelling evident.</p>
+<p>“Are you all right?? What do you feel??” Ron rushed to her, helping Kayla sit in a chair.
+“I...I’m fine… It just hit so hard…” she swooned, massaging her chest. “It took an hour</p>
+<p>before I felt anything last time…”</p>
+<p>primed to lactate!”</p>
+<p>“Well you just took a much higher concentration! And your body may have already been</p>
+<p>Kayla’s breathing was becoming faster. Every inhale pushed her mammaries into the</p>
+<p>secured tape. “O-Ooohhhh. Mmmmmmm God something is happening…” she moaned.</p>
+<p>20</p>
+<p>Sweat glistened on her skin and reflected the fluorescent lights from her cleavage. Ron
+was writing notes furiously. “You’re sure you’re all right? You’re not in pain? I have lotion. It
+might help your skin if I rub some into--”</p>
+<p>“Mmm!!”
+CLICK!
+“A-Ahh!!”
+The tape measure jumped up a size, forced larger by Kayla’s breasts. Just the thought of</p>
+<p>Ron rubbing lotion into her chest had a pronounced effect. “O-Ooohh it’s starting… I can
+feel...something in my chest!” She gulped, the taste of blueberry still saturating her mouth.
+“R-Ron… Ohhhhhh my tits!”</p>
+<p>CLICK!!
+CLICK!!
+“Oh they’re blowing up!!! Ron there’s juice in there!! GOD I FEEL SO SWOLLEN</p>
+<p>ALREADY!!”</p>
+<p>Ron stepped back to take in the full view. “Interesting,” he observed, watching the tape
+tremble. “It seems your mood has a direct impact on the growth! The less you control yourself,
+the faster the juice develops!”</p>
+<p>Leaning back in her chair, Kayla’s breasts hung off her torso like growing melons. Every</p>
+<p>snap of the tape meant another cup size had come to overflow her body.</p>
+<p>“This… This is incredible!” Ron exclaimed, snapping pictures and taking notes.
+“Y-You’re really going to photograph me...like this??” Kayla giggled, “Those better just</p>
+<p>be for scientific purposes, mister! You better not--”</p>
+<p>CLICK!!
+“M-MMM!! Nnnghh!! I’m already over twice my normal size!! It took me hours to get</p>
+<p>this big yesterday!!” Kayla stared at the volleyballs wobbling on her body. As full as she felt of
+the pumping juice, her nipples were still as pink as ever.</p>
+<p>“I never imagined the enhancement would be so pronounced!” Ron studied. Leaning</p>
+<p>closer, he stared at her chest from inches away. “You’ve drastically increased in size! This could
+disrupt several industries!”</p>
+<p>CLICK!!
+“D-Did you think I was...nnngh...lying??”
+“Of course not! But sometimes our perspective can magnify a small--”
+CLICK!!
+CLICK!!
+CLICK!!
+“Mmmph!!” Hot bulging skin surged at Ron and smashed into his face. The force sent</p>
+<p>him backward onto his butt with stunned eyes.</p>
+<p>21</p>
+<p>Kayla couldn’t contain her laughter. “How was that perspective?? You should see your</p>
+<p>face! You look like--”
+CLICK!!
+CLICK!!
+CLICK!!
+CLICK!!
+CLICK!!
+“MMMMNNNGHH!!!! Ooooohhh GOD THAT WAS A LOT OF JUICE ALL OF THE</p>
+<p>SUDDEN!!!” Kayla was heaving for breath. Flesh was pushing into her biceps and the armrests.
+Nearing the size of well-grown watermelons, their weight was becoming a burden. “O-Ohhhh
+they’re heavy… Ron they’re getting so heavy! A-All this...blueberry juice! Maybe I shouldn’t
+have done three of them!”
+CLICK!!
+SLLSH
+CLICK!!
+SLLLSH
+“T-There’s the sloshing!! Mmmm can you hear it?? They sound like freaking water</p>
+<p>balloons! The fluid is moving around in my tits!”</p>
+<p>Skin pulled taut around Kayla’s shoulders. Supporting such a fluid mass was proving</p>
+<p>more difficult on her petite body every second. With flesh creeping lower down her abdomen and
+up to her collarbones, Ron watched the girl transform into more breast than student.</p>
+<p>“O-Oohhh my God… Oh God they’re getting MASSIVE!! Ron!! Look at my TITS!!”
+Kayla squirmed in her seat. The motions filled the room with sloshing and loud bubbles
+of settling juice. Ron would have thought a fifty-gallon drum was being shaken had he not seen
+the beach ball udders wobble in front of him.</p>
+<p>CLICK!!
+CLICK!!
+CLICK!!
+CLICK!!
+“M-My nipples!!! GOD WHY AM I SO BIG?? I FEEL...SO PLUMP AND FULL!! I didn’t</p>
+<p>think three of them would go THIS far!! My chest...just keeps pumping up!”</p>
+<p>“The effect must multiply onto itself!” Ron hadn’t blinked for the past several minutes.
+Watching her chest make contact with her trembling thighs, he wondered how far Kayla’s chest
+could possibly bloat.</p>
+<p>“Oooohhhhh they’re full… God I’m so ENGORGED!! Everything is streeeetching!!” Her</p>
+<p>head rolled back and she gasped, feeling sweat rubbing between her cleavage and fluid between
+her thighs. “I-I-I...I think I’m ripe!! Ron, I’m full!! MMMM I LOVE IT!!”</p>
+<p>CLICK!!</p>
+<p>22</p>
+<p>CLICK!!
+CLICK!!
+“H-How can your breasts do this?! This shouldn’t be scientifically possible! Even the</p>
+<p>heaviest lactating women don’t engorge nearly this--”</p>
+<p>CLICK!!
+CLICK!!
+CLICK!!
+“AHHH I DON’T THINK THOSE WOMEN HAVE EVER FILLED WITH JUICE!!”
+CLICK!!
+SNAP
+The sound of plastic coming together rang out in the room. Kayla’s eyes bulged when she</p>
+<p>felt the tape starting to pull into her ever-widening chest. Pressure was rising and her chest was
+constricted across the front. “R-R-Roooon!!” she gasped, “I-I think the tape...i-is too small!! It’s
+not clicking anymore!”</p>
+<p>Ron wanted to react but he was too busy staring at Kayla’s pink, mounded areolas</p>
+<p>engulfing the tape. A blue tinge was overpowering their natural color it was spreading across
+their surfaces.</p>
+<p>CREEEAAAAK
+“Y-You can’t just...watch, Ron!! This thing is getting too small! I-I’m getting too BIG!</p>
+<p>There’s too much juice inside of me!!” Kayla groaned at the overwhelming stimulation assaulting
+her body.</p>
+<p>CRREEEEAAAAAAK
+The tape measure vibrated inside her chest, hidden between folds of bulging flesh. Ron</p>
+<p>blinked, watching her coaster-sized nipples bloat and turn dark blue. Rubbing her thighs together,
+Kayla fought an approaching orgasm. Sitting in front of Ron’s staring eyes, the last thing she
+wanted to do was come. Nipples full and tight, she whimpered with effort.</p>
+<p>“R-RON!! GET THIS THING OFF MY BOOBS BEFORE I FILL UP ANYMORE!!</p>
+<p>Ooohhh please they’re so SENSITIVE! M-MMM!!!”</p>
+<p>Her exasperated cry shook him out of it. Jumping to his feet, Ron ran forward and
+wrapped his arms around Kayla’s torso. Juice-filled mammaries the size of car tires pressed into
+him.</p>
+<p>“Ahhhh hurry hurry HUUURRYY!! T-The juice!!! There’s...SO MUCH PRESSURE!!”
+CREEAAAAAAAAAAA--
+CHA-CRACK!!!
+The press of a release button allowed the tape to explode open, releasing Kayla’s
+chair-overflowing chest. It sloshed across her lap and would have brought her to the floor had
+Ron not been there to catch her shoulders.</p>
+<p>“A-AHH!!” she cried out, feeling her contents swirling and stretching her skin.</p>
+<p>23</p>
+<p>Steadied by his hand, Ron looked at her chest filling her lap. She bulged into his hips and</p>
+<p>thighs. “I’m sorry! Kayla you’re massive! Are you all right??”</p>
+<p>“I’m…” Kayla swooned, the sight of her chest blown so large was making her dizzy.</p>
+<p>“I-I’m fine… But my chest… It feels so...mmmm...BLOATED. I feel like there is so much juice
+inside of me, t-that I could--”</p>
+<p>“That was the most incredible thing I’ve ever seen.”
+She looked up into Ron’s sparkling eyes. “H-Huh?”
+“You were amazing!” he yelled, “Look at what you accomplished!! This is
+groundbreaking! I’ve never seen anything like it! There is so much juice, yet your breasts
+continued to stretch and fill!! Kayla… You’re wondrous!”</p>
+<p>Her heartbeat sent minuscule waves across her chest. Her face inches from his, they</p>
+<p>stared at each other amid the rising heat of her cleavage. Kayla could feel juice leaking into his
+pant legs.</p>
+<p>“R-Ron…” she whispered, noticing him looking down at her lips. “I’m glad you asked</p>
+<p>me to help you…”</p>
+<p>His eyes were flitting between her eyes and lips. “I-I’m happy you agreed. Watching you</p>
+<p>grow like this was… I couldn’t take my eyes off you. It was beautiful…”</p>
+<p>Kayla opened her mouth. Ron looked thirsty and the scent of juice was thick in the air.</p>
+<p>“Do...Do you want to try some of it?”
+“You mean, taste your juice?”
+Kayla shivered. “M-Mhm…”
+Ron leaned closer, their faces an inch apart. “I would love to…”
+Slowly, as Ron leaned into her chest, their lips approached until--
+BANG BANG BANG!!
+“HEY!! Ron!! Are you in there?!”
+They both looked at the door in horror.
+Ron tried to react. “Please wait a moment! Don’t come in--”
+It was useless. Against all odds, Taylor had managed to interrupt them once again.
+Blowing the door open, the blonde stormed into the private lab with a grading rubric flapping in
+her hand.</p>
+<p>“We got a B?! We got a fucking B, Ron!!”
+Ron tried to stay as calm as possible and usher her back through the door. “Taylor,</p>
+<p>please! I’m busy right now! I reserved this lab for important work and--”</p>
+<p>“I know! I’ve been looking for you for an hour! I thought you said we were fine!! I</p>
+<p>needed this A! What am I going to tell my pare--” Taylor stopped when she saw the mortified
+Kayla sitting in a chair overflowing with her own breasts. Juice ran over her body in thick sugary
+rivulets.</p>
+<p>24</p>
+<p>“Dammit, Taylor!!” Kayla swore, grabbing frantically for her jacket. It draped over her
+chest like a mini tablecloth but provided modesty only until her nipples began leaking through.
+“Get out of here!!”</p>
+<p>Taylor snorted, an amused grin spreading on her face. “Wow… So this is what goes on in</p>
+<p>these labs. And those must be the famous blueberry boobs I’ve been hearing so much about. I
+gotta say, I didn’t believe it until a friend showed me her gross blue nipples! Some girls will do
+anything to be big, won’t they? We can’t all be so well endowed.” Watching Kayla struggle to
+cover herself was a glorious spectacle and brought Taylor to laughter. “I think you might have
+overdone it, though! Your body could barely handle them the other day, your back is likely to
+give out with those bloated things!”</p>
+<p>Turning to Ron, Taylor gave him a knowing snicker. “I’m sure you loved every second of</p>
+<p>it, huh? No wonder your attention is so hard to grab; you’re into freakish things like this!”
+Laughing and wiping a tear from her face, Taylor managed to say, “You two are perfect for each
+other.”</p>
+<p>Ron wasn’t any happier than Kayla. “Taylor, please! Can you leave??”
+The reason for her visit came rushing back. Shoving the rubric in Ron’s face, she</p>
+<p>demanded, “Not until I get an explanation! Why did we get a B on our project?!”</p>
+<p>With all the self-righteous energy he could manage, Ron jabbed a finger at the bottom of</p>
+<p>the page where their professor had written notes. “You spelled your name wrong on the cover
+page. Professor Kall marks down a letter grade for grade-school errors like that.”</p>
+<p>Taylor stared at the new-to-her note before giggling. “Whoops! I must have been tired.”
+The lack of responsibility was burning Kayla up inside. “Can you go now?!”
+“Yes, now that it all figured out!” Taylor turned to leave but gave Kayla one final glance.
+“You can go back to whoring your boobs out now. But some womanly advice; put some clothes
+on. You’ll look much better with those unnatural things covered up. Or just get implants like a
+normal self-conscious woman. I would if I had boobs like yours.”</p>
+<p>Kayla’s jaw dropped and rage flared in her chest. “HOW DARE--”
+Ron was quick to step in. Pushing into Taylor’s back, he forced her through the door.</p>
+<p>“Ok, see you in class!”</p>
+<p>“H-Hey! Don’t push me!” she yelled, stumbling into the hall. “These labs are as much</p>
+<p>mine as they are yours! I could reserve all of these! Where would you do your perverted
+experiments then?!”</p>
+<p>The door closed before she could scream any more. Sighing, Ron pushed a chair against</p>
+<p>the door and sat down. “I’m so sorry…”</p>
+<p>“It’s ok,” Kayla growled, still burning from anger. “Taylor has a way of ruining anything.</p>
+<p>In her mind can do nothing wrong.”</p>
+<p>“Except spell her name. She can do that very wrong.”</p>
+<p>25</p>
+<p>They were silent. It amazed Kayla how the mood could go from so perfect to something</p>
+<p>so stressful and flooded with anger. The juice pushing against her skin wasn’t as pleasurable
+anymore with the moment gone. Now she just felt tight and angry.</p>
+<p>“Can you get me a bucket? I think I should just go home…”
+Ron pointed to the middle of the floor. “There’s a drain...”
+“Fine by me.”
+The sound of juice spattered onto the floor echoed in their ears when Kayla began
+tugging on her nipples. She’ll never know where the night could have gone with such incredible
+breasts had Taylor not barged in. Such a waste had never been seen.</p>
+<p>“Do you need help?” Ron asked.
+“No thanks… Maybe we can try again some other time if you need more notes.”
+“I wouldn’t mind.”
+The air was awkward but nothing was going to salvage the night at this point.
+“Hey, Ron…” she asked.
+“Hmm?”
+“What do you think would happen if someone ate a lot of your candies? Like eight or</p>
+<p>ten?”</p>
+<p>His eyes bulged and his cheeks puffed out with a strong contemplative exhale. “Hard to</p>
+<p>say. Based on your reaction to three of them, though, it could be incapacitating. Messing with
+hormones can lead to permanent changes, though. Honestly I have no clue. Why?”</p>
+<p>Kayla grunted as she tugged a nipple that should have been in Ron’s mouth. Taylor’s</p>
+<p>laughter rang in her head. “No reason.”</p>
+<p>( . Y . )   ( . Y . )   ( . Y . )   ( . Y . )   ( . Y . )</p>
+<p>“Taylor! Taylor wait up!”
+Looking up from her phone, Taylor turned around in the bustling college hallway. It was</p>
+<p>surprising to find Kayla walking towards her.</p>
+<p>“I’m glad I caught you,” Kayla huffed, “I thought we had classes in the same building on</p>
+<p>Thursdays!”</p>
+<p>“Oh my, you’re looking much smaller this morning!” Taylor scoffed. “I really hope</p>
+<p>you’re not all stretched out or anything. Having granny boobs so young would be a shame…”</p>
+<p>Kayla’s eye twitched as she fought to ignore Taylor’s exaggerated pouty lip. Extending a</p>
+<p>hand, she presented a fresh cup of coffee from the local campus shop. “Here, this is for you.”</p>
+<p>Taylor’s eyes lit up. “For me?”
+“I felt bad about yelling at you last night. Both Ron and I did. We wanted to make it up to
+you. He said he was sorry about not double-checking your name on the project.” Every word out
+of Kayla’s mouth was a lie, but it would be worth it.</p>
+<p>26</p>
+<p>The confession softened Taylor’s apprehension. “You guys did yell at me pretty harshly. I</p>
+<p>just wanted to know why we didn’t get an A and you basically threw me out of the room! Ron
+pushed me really hard. I could have gotten really hurt.”</p>
+<p>You got a B because you’re an idiot who can’t spell her own name.
+“Like I said, we’re sorry.” Kayla held the coffee out. “Here, enjoy! It’s hazelnut!”
+“Ooooh!” Taylor took the gift without a second thought but noticed the size. “Aww, you</p>
+<p>got me a small…”</p>
+<p>Kayla ground her teeth. “Yea they were all out of larges.”
+It warmed Taylor’s hands and lips as she tested a sip. “It’s so sweet though! Almost</p>
+<p>The proud display of cleavage between Taylor’s half-unbuttoned blouse almost made</p>
+<p>Kayla sorry she would miss the show.</p>
+<p>Go ahead, drink up. I was THIS close to FINALLY kissing Ron last night and you ruined</p>
+<p>“I put a little honey in it,” Kayla whispered, “Old family secret.”
+“I love it! Thanks, Taylorta, this is going to get me through my morning classes.”
+“U-Uh, it’s actually Kay--You know what never mind. I gotta get to class. Have a good</p>
+<p>fruity!”</p>
+<p>everything!</p>
+<p>day!”</p>
+<p>“You too!” Taylor waved before drinking heartily. The drink spread heat across her chest</p>
+<p>in waves, giving her a sense of rising fullness. “Mmmm, I’m going to have to remember that
+honey trick…” she told herself, continuing on.</p>
+<p>The coffee was gone before she reached her class. Every sip made her crave another until</p>
+<p>the cup was hollow and devoid of the treat. “Really wish she had bought me a large,” Taylor
+huffed, tossing it in a trashcan before entering the classroom. During her trek to the back of the
+classroom, she felt a pang of pressure from her bra. Sitting down and out of sight from the
+teacher and majority of the class, Taylor nonchalantly tugged at the band. Claiming a seat in the
+back corner of the room by a window was always useful for getting away with prohibited actions
+during class, most often her phone.</p>
+<p>“N-Ngh, kinda tight…” she muttered, pulling the bra again before it jumped out of her</p>
+<p>fingers and snapped against her ribcage. “Eep!”</p>
+<p>GRRRWWWLL
+A rumble vibrated Taylor’s belly. Placing her hands across her abdomen, she glanced</p>
+<p>down as a tingling pressure moved upward before settling in her chest. Heat was rising from her
+exposed cleavage like a fleshy radiator. The black of her bra showed through the white blouse as
+clear as day, as if the fabric were stretched.</p>
+<p>“I-I don’t feel...right…” Taylor groaned. A hardened tingling in her nipples was as</p>
+<p>titillating as it was worrisome. This wasn’t like anything else she’d felt in her bra before.</p>
+<p>“You ok?”</p>
+<p>27</p>
+<p>Taylor glanced to the right. A guy, one of the campus potheads, was following her gaze to</p>
+<p>her chest. “Excuse me?”</p>
+<p>“You’re starin’ at your boobs like they’re talking to you! What are they saying?”
+“Fuck off, perv! I was looking at the desk, not my--N-Nggh!” Taylor shivered. If she</p>
+<p>wasn’t mistaken, her underwire had just lifted away from her torso. Sensations of heavy bloating
+were coursing through her breasts. Taylor was used to minor swelled every now and then, but
+this could hardly be considered minor.</p>
+<p>“Whooaaaaa. Did your boobs just gr--”
+Frantic, Taylor leaned forward to hide what felt like several added cup sizes. As</p>
+<p>ridiculous as it seemed, her shirt looked fit to overflow. “I said fuck off! If you keep staring at me
+I’m going to tell the...mmm...t-teacher!”</p>
+<p>“Ok, fine, jeeeez. You just looked a little swollen is all…”
+“I’m not… I-I’m not…” Taylor couldn’t focus. Every breath made her bra increasingly
+taut. She could feel stress lines cutting into her back from her tightening blouse. “Oohhh I feel
+bigger…” she whined, trying to keep her voice down and grinding her heels into the floor.
+“M-My boobs...feel so swollen!”</p>
+<p>CREEAAK
+“Nngh!!”
+Taylor was forced upward an inch when her chest plumped into her desk. Despite her best</p>
+<p>efforts, it wasn’t going to let her keep her added girth hidden. Flinging her arms to the sides of
+her knockers, she hugged them for added privacy.</p>
+<p>“What’s happening to me??” she whimpered. A glance downward made her heart skip a</p>
+<p>beat. Flesh was rising from her blouse like expanding marshmallows. At twice the size of her
+usual F-cups, Taylor’s uniform could only take so much before her developments became too
+obvious to hide.</p>
+<p>The professor glanced across the room at those present. “All right, I think we can get</p>
+<p>started. Open your books to page fifty-four.”</p>
+<p>More than anything, Taylor wished she could distract herself with the lecture. Normally
+she would look at her phone through class, but something told her she wouldn’t be able to see in
+her lap anymore right now.</p>
+<p>“Today we’ll be discussing the works of the Renaissance.”
+Taylor couldn’t have cared less. Her mind was focused solely on the iron-hard nipples</p>
+<p>fighting inside her bra. “N-NNGH!! They’re so sensitive!!” she grunted through pursed lips. They
+pushed further into the desk, giving her the impression she was leaning on two volleyballs.</p>
+<p>“Whoa… No wonder you were starin’ at them !”
+“S-Shut up!!” It didn’t matter what she said to him now; the pothead’s eyes were glued to
+her bloating tits and there was no way to hide them. “O-Ooohhhhh… Oooohhh what’s happening</p>
+<p>28</p>
+<p>to me?? Why am I blowing up?! Why do I feel...so...full?! I-I was big enough!! These are bigger
+than my own head!”
+SCREECH!!
+SLLSH!!
+“M-MMM!!!”
+The student in front of her pushed his chair back, slamming it into Taylor’s desk. The
+force caused a bounce to jostle her chest and emanate a muffled slosh from its depths. Such a
+sound from her bust made her eyes bulge and a whimper pass through her lips.
+“Everything good back there, Ms. Wolf?” the professor asked.
+Taylor had never been so glad to be sitting in the back of the class. Leaning on her</p>
+<p>bloated jugs, she replied, “Y-Yup!”</p>
+<p>in the Sistine Chapel.”</p>
+<p>“Please try and keep it down. As I was saying, Michelangelo is best known for his work</p>
+<p>His voice faded away among the rolling sloshes of Taylor’s udders. The inside of her bra
+was warm and sticky, its padding soaked with an unknown fluid. As she continued to balloon, it
+was impossible for her to lean on them any further. Back straight, Taylor heaved for breath as
+breasts like basketballs sat round and heavy on her desk.</p>
+<p>“Nnnnghh what’s inside my tits?? There’s something...swirling around!! They feel tight!!”
+Sinking her hands into their sides, Taylor could feel her bra changing their shape. It was taut as a
+cable.</p>
+<p>The pothead’s eyes widened to saucers. Unseen by Taylor, splotches of dark blue were</p>
+<p>soaking through her blouse. “Duuuuude!! You’re pretty daring to be juicing during class! That’s
+hot! Where did you get the candy?? I saw some girls that took some yesterday that looked--”</p>
+<p>“Juicing? The hell are you talking about?!”
+“Blueberry juice!” he chuckled.
+“Keep it down, please,” the professor warned once more.
+He lowered his voice. “Everyone has been talking about these magic candies that make</p>
+<p>your tits leak juice! It’s awesome!”</p>
+<p>CREEEAAAK
+“A-Ahh!!” Taylor shuddered at the breaking stitches in her bra. “You moron! I didn’t eat</p>
+<p>any of those damn candies! I was big enough already! I didn’t need them! Why would I need
+to--”</p>
+<p>Taylor froze. In sync, hers and the pothead’s eyes turned into moons. A blue hue was</p>
+<p>creeping out of Taylor’s cleavage like water across her skin. It crept up and out, spreading over
+the surface of her breasts. Slowly it turned darker and more rich until her skin was tinged enough
+to show through the white of her blouse. Continuing to the base of her chest, the blue color
+inched up her bust before fading back to her skin tone at her collarbones.</p>
+<p>29</p>
+<p>“WHOA, dude!! You must be REALLY full if your tits are turning blue! I thought just your</p>
+<p>nipples changed!” The pothead chuckled. “They look like a couple of blueberries!”</p>
+<p>Taylor squirmed in her seat. The pressure under her clothes, as well as inside her chest,</p>
+<p>was immense. “I-I didn’t!! I didn’t eat any!! Why am I filling up with--”</p>
+<p>PING!!
+“Ow!!” The student in front of her grabbed his head where a button had struck. Turning</p>
+<p>back, he was intercepted by the pothead.</p>
+<p>“Sorry, man. My bad.”
+Taylor didn’t care. At the rate she was swelling, her clothes wouldn’t last much longer.</p>
+<p>Bulging blue skin was heaving into the open at every seam. Thinking hard, she realized her fate.
+“The coffee,” she snarled. “That bitch spiked my coffee with--”</p>
+<p>SNAP!!
+“A-AHHMMM!!!” A shockwave raced across her tits.
+“Ms. WOLF!!” The professor scolded. “I’ve been lenient with you all year. I allow you to</p>
+<p>be on your phone because it doesn’t disturb the students who come here to actually learn, but I
+will not tolerate outbursts! If you can’t handle this, then I suggest you leave. Do I make myself
+clear??”</p>
+<p>“Y-Yes, sir!” Taylor squeaked. The effect of her bra snapping in half was still ricocheting</p>
+<p>through her body. Free of duty, the bra cups snapped back to the sides of her chest where they
+were stuck between her shirt and flesh. Juice came flowing out seconds later from released
+nipples. Against her blue skin, her nipples shown dark and purple like large fruits pushing
+against her blouse.</p>
+<p>“M-Mmmm… Nnnnghhh…!” Taylor whimpered. “They’re not stopping!!”
+The pothead inched back in his seat. “Hey, I think you might be ripe!” he offered. “How</p>
+<p>many did you take??”</p>
+<p>“I don’t know I don’t know! I-I...ooohhhh God they feel full! T-This juice is stretching</p>
+<p>me...so tight!! Dammit, my blouse can’t--”</p>
+<p>PING!!
+“MMM!!”
+Another button burst off. Granted the extra space, Taylor’s juicy udders squeezed through</p>
+<p>the opening and stretched her blouse enough for her nipples to squish into the open. No longer
+inhibited by taut fabric, they began oozing thick juice over her chest and onto the desk. Their
+appearance reminded Taylor of blueberry popsicles. Squeezing their sides with her hands, she
+did what she could to help relieve the pressure but the swelling only continued. Juice ran over
+her desk and pooled around her chest. Thick like syrup, Taylor could feel it gluing her in place.
+The constant expansion of her cleavage pulled her juice-stuck skin apart every time she breathed.
+A trembling finger traced around a puffy areola and found it to be as large as a teacup. Too
+shocked to react, Taylor could only sink her arms into her sides and stare in horror.</p>
+<p>30</p>
+<p>Taylor’s mind flew. She knew at this rate it wouldn’t be long until she couldn’t act.</p>
+<p>Standing with her current size might already be a challenge, much less walking. Fate may have
+been on her side, however. Her one hope of avoiding humiliation was the classroom’s second
+exit. The door waited behind her desk. A simple escape, if she could manage her weight.</p>
+<p>“I-I...I gotta get out of...here!” she moaned, the flow of juice increasing. If her shirt were
+to burst, she feared there would be nothing left to keep her chest from engorging at full force. “I
+need to juice my boobs!! They’re...They’re full!!”</p>
+<p>SNAP!
+The pothead grinned at the photo on his phone.
+“Are you serious?!”
+“What?? You look ready to flood this classroom!”
+“DELETE THAT PHOTO OR I’LL--”
+GLUB-GLUB-GLUB-GLUB
+Taylor froze. Something had bubbled inside her chest, like blueberry lava building in a</p>
+<p>volcano. Whatever was happening, it was only just beginning.</p>
+<p>STTTRRRRTTTCHH</p>
+<p>31</p>
+<p>SHRRIIIP!!
+“A-Ahh!! Shit!!” A seam opened on the side of her blouse when her boobs surged. Ready</p>
+<p>to blow her top, Taylor knew she had only moments to react. “N-No no no!! Please just wait!!”
+Hugging her chest as gently as she could while supporting their double beach ball weight, she
+spun out of her chair and rushed for the door. The class jolted and stared at her back when it
+slammed open and she rushed into the hall.</p>
+<p>“What in the world?” the professor gawked. Two splotches of blue fluid were running</p>
+<p>down the door. “Was she all right? Where is she going??”</p>
+<p>The pothead chuckled. “Yea, I think she just decided she couldn’t handle it anymore.”
+Meanwhile, on her way back from the bathroom, Kayla caught the distinct scent of</p>
+<p>blueberries in the hall. It became overwhelming as she followed the trail.</p>
+<p>“W-Whoa!!” Flailing her arms, she stabilized herself on the slippery floor. At her feet was</p>
+<p>a trail of blue fluid coming around the corner. One end led to a classroom, while the other
+stretched down the hall and around a bend. It didn’t take much for Kayla to reach a conclusion.</p>
+<p>“Uh oh.”
+With worried, and guilty, haste, she followed the trail of blue spatters. The longer she</p>
+<p>followed, the larger the trail became. Several spots were disturbed as if slipped in or the source
+had stumbled. Smears marked the walls like cave drawings.</p>
+<p>After following the struggling trail down a flight of stairs, as well as finding several</p>
+<p>puddles where Kayla assumed breaks had been taken, she found herself standing at the entrance
+to the school’s old women’s locker room.</p>
+<p>“A-Ahh!! Ahhhh!! Nnngh!! Come on!”
+Moans and strained cries drifted from the tiled room. Kayla knew she could have left. It</p>
+<p>would have been easy; Taylor would do the same to her. Curiosity was overpowering her,
+however, as well as her conscience. Even if only a peek, Kayla had to see the fruits of her
+payback.</p>
+<p>She tiptoed into the locker room and followed the sounds of Taylor’s gasps to the</p>
+<p>community showers. Peeking her head into the doorway, she wasn’t prepared for the scene.</p>
+<p>Juice covered the shower floor in thick waves. It gurgled as it ran down the drain but the
+source never ceased. Following the blue rivers, Kayla’s eyes fell upon a pair of breasts engorged
+far beyond any natural size. Each reaching three feet in height, Taylor’s bust was monumental
+and dyed a dark blue. On the other side of the wobbling mounds was their owner. Her head was
+cradled in her own cleavage as her arms sank into their sides desperately. Backed against the
+wall, she had nowhere else to go.</p>
+<p>“Oh my God!!” Kayla yelled, taken aback by the sheer size.
+Taylor looked up from her surging chest. “N-No!! Get away from me!!”
+Kayla wasn’t having it. Running forward, and nearly slipping several times in the stray</p>
+<p>juice, she rushed for a fist-sized nipple.</p>
+<p>32</p>
+<p>“D-Don’t touch me you freak!! Don’t you dare touch me!!”
+“You need to be juiced!! Look at yourself! Your entire chest is swollen blue with the</p>
+<p>stuff!!”</p>
+<p>“No!! I don’t want--N-NNGH!!”
+Kayla gripped a nipple as if she were strangling someone. The warmth and pressure of</p>
+<p>her touch sent cascading ripples across Taylor’s body. It canceled out any will to drive her away;
+the pleasure of another’s touch on her overly-swollen tits was too great.</p>
+<p>“Ahh!! A-Ack!!” Kayla coughed. Blueberry juice gushed into her face like a rogue fire</p>
+<p>hydrant. No inch of her uniform was left untouched and her black hair hung with sugary weight.
+Taylor’s juice was sour on her tongue, a far cry from her own.</p>
+<p>“D-Don’t… Mmmmmm GOD!! G-Get the juice out of me!!” Taylor begged after the</p>
+<p>sudden release. “Hurry I’m still filling up!!”</p>
+<p>So this is what ten candies will do to a girl. The caffeine from the coffee probably isn’t</p>
+<p>helping either, Kayla thought.</p>
+<p>purple cylinders.</p>
+<p>Extending her arms to reach both nipples, her fingers slid in an effort to grip the slippery</p>
+<p>“Ahhhh just press on them!! Do anything!! Please I feel so FULL!!”
+Kayla applied her full palms and followed the blonde’s request. Giving her full weight to</p>
+<p>the task, she pressed her hands into Taylor’s nipples.</p>
+<p>SWWWWSSHHHH
+“AAHHHMMM!!! I CAN FEEL IT FLOWING OUT OF ME!!”
+Kayla could barely breathe against the torrent beating into her body. As much as she</p>
+<p>released from the girl, more juice was always in its place. Swirling pressure fought back against
+her hands even as they sank over a foot into her skin. Behind her, the drain gurgled with the juicy
+runoff.</p>
+<p>“Oh my God. Oh my GOD!! How am I so fucking big?!” Taylor moaned. Sweat poured</p>
+<p>down her face. “I can feel them stretching!! Where is all this juice coming from?!”</p>
+<p>“Y-Your boobs are producing it!!” Kayla tried to explain. “Like milk!”
+“EEWWW! GROSS!! I look like a freak!!”
+Kayla glanced between her cleavage. As much as she hated Taylor’s pink highlight, she</p>
+<p>had to admit it worked a lot better when the rest of her hair was dyed blue.</p>
+<p>Taylor caught her gaze and growled. “Don’t look at me!! J-Just</p>
+<p>keep...mmmmmmMMMM...getting this disgusting stuff out of my tits!! THEY’RE NOT
+STOPPING!!”</p>
+<p>“You need to calm down! They grow faster when you can’t control yourself!”
+Kayla pushed harder and juice reached far enough to strike the opposite wall. She didn’t</p>
+<p>need to turn around to know the locker room looked like a juice-covered crime scene. Despite
+Taylor’s cries of pressure, however, they were making headway. The size of her breasts had</p>
+<p>33</p>
+<p>diminished considerably, bringing each one to the size of a yoga ball. Slowly Taylor’s legs were
+revealed from under her breasts. In the darkness between then, Kayla could see Taylor’s hips. A
+skirt was askew and bunched around her hips, while a vicious hand flailed inside a pair of black
+panties. Kayla knew Taylor was masturbating to her own juicing. The thought of holding so
+much was enough to make Kayla’s own mind go wild.</p>
+<p>“Mmmmm!! M-MMMMMNNGHH!! Make it stoooop!!”
+“Relax!” Kayla instructed, “You freaking out isn’t helping! Your emotions are releasing</p>
+<p>more hormones! You’re getting smaller, all right?? Look, you’ve gone down a lot already!”</p>
+<p>“Did you just call me hormonal?! And I’m still way too big!! I can’t go out like this!!”
+Taylor wasn’t trying to help. Even with one hand occupied between her legs, she still had
+another free to help squeeze and massage. Kayla saw no such action, instead the entire chore was
+left to her.</p>
+<p>“G-Gah!” Kayla coughed, swallowing more juice.
+“Eeewww don’t drink it you pervert!!”
+“Like I want to! Your juice tastes terrible!” Taylor’s nipples were small enough to grab
+with one hand now. Taking each in a fist, Kayla pulled on them as if Taylor were a selfish cow.
+“A-AHHH!!! Careful!!” Regardless of what she said, Kayla could still see Taylor’s hand
+attacking her pussy. Taylor was three fingers and three knuckles deep, from the looks of things.
+“D-Don’t… OooohHHH don’t pull so hard!! T-They’re sensitive!! You’re...NNGH!! You’re
+gonna make me… Ahh!!”</p>
+<p>Juice flowed like never before. The effect of a proper milking technique worked wonders.</p>
+<p>Within minutes, Taylor’s breasts managed to fit in her lap before shrinking further.</p>
+<p>“Ahh!! I-I’m...gonna come!!! D-Don’t make me...come in a</p>
+<p>place...mmmmmmnnnghhh!!...l-like this!!”</p>
+<p>Slipping onto her back, Taylor’s breasts slipped from Kayla’s grasp. Volleyball udders
+wobbled on her shaking body, the pleasure of a mounting orgasm forcing the rest of the juice
+from her body.</p>
+<p>“AaaaAAAHHHHH!!!!”
+Kayla stepped back. Her entire body tensing, Taylor’s hand froze between her splayed</p>
+<p>thighs as her tits erupted their remaining contents like geysers. Juice sprayed the ceiling for
+several seconds amid her screams before her pressure died down and her chest was left at its
+previous size. Empty and exhausted, Taylor laid on the shower floor. Her entire body was
+covered in blue, but as she sat up and wiped the fluid from her face, Kayla could see a normal
+skin tone was hidden beneath.</p>
+<p>Gasping for breath, Kayla asked, “Feel...Feel better?”
+Taylor inspected her body with eyes full of disgust. A shredded blouse and a snapped bra
+remained around her shoulders. “I’m a MESS!! Look what you did to me, you bitch!! What did I</p>
+<p>34</p>
+<p>ever do to you?! And you pulled way too hard on my nipples! They’re sore now! I should call the
+cops for sexual assault!”</p>
+<p>“Taylor, I-I’m sorry, I didn’t--” Kayla paused, as did Taylor.
+Frantic hands rubbed across Taylor’s front. Pale skin was revealed beneath the juice,</p>
+<p>except for her breasts. A distinct blue hue remained, as did her purple nipples.</p>
+<p>“Are you all right?” Kayla inquired.
+“N-No! My boobs are...nngh...still blue!!! A-A-And they’re still...all tingly!!” Taylor’s</p>
+<p>eyes bulged when her chest suddenly swelled several cup sizes in her hands. “Ahhh!! T-They’re
+filling up again!! Aren’t they supposed to stop?!”</p>
+<p>“Let me help! The must just not have been done!” Kayla made to help Taylor’s release,</p>
+<p>but she was kicked away.</p>
+<p>“Not a chance you damn pervert! Stay away from my chest!! You and that weird, geeky
+friend of yours! I know you put something in my coffee this morning!! I never would have taken
+those candies!! I was big enough! Only girls desperate for attention would need them!! LIKE
+YOU!!”</p>
+<p>Taken aback and angry, Kayla stood over the bloating student. Her moans were louder</p>
+<p>than ever and juice was refilling her bosom with increased vigor. “W-Why am I still growing?? I
+wasn’t even empty for a second!!”</p>
+<p>Kayla fully understood now what so many candies would do to a girl’s body. It was
+obvious from watching Taylor’s blue mammaries swell larger than watermelons as she tugged on
+her own nipples.</p>
+<p>The juice isn’t going to stop. She’s had so much of the candy, her body has permanently</p>
+<p>changed! She’s never going to stop filling up, especially not when she keeps freaking out!</p>
+<p>Worry filled Taylor’s face as she sank her arms into her chest trying to reach her nipples.</p>
+<p>“Ooohhhh they’re growing even faster!!” Glancing up with anger in her eyes, Taylor snarled,
+“Would you get the hell out of here?! You’ve done enough damage!!”</p>
+<p>Kayla’s mind was elsewhere. Her chest isn’t going to stop… The juice is just going to</p>
+<p>keep coming… Something in the back of her mind sparked. That gives me an idea.</p>
+<p>Shrugging, Kayla relented. “Ok.” She turned to leave.
+Bubbling echoed from Taylor’s chest. Expanding at an unprecedented rate, she was</p>
+<p>forced to release her hold as they overflowed her lap. Within seconds, her chest was halfway to
+the size Kayla had found it.</p>
+<p>“Ahhhhh oh GOD!! T-They’re getting too big again!!!” Taylor pleaded. Desperate against</p>
+<p>her filling jugs, she pressed into their sides to no avail. Trapped once more under their weight,
+she was helpless to the whim of her breasts. “W-Wait! I need your help!”</p>
+<p>“Naaaaw, you’ve got this!” Kayla waved a hand over her shoulder.
+“U-Uhhh… Nnnnghh!!!” Taylor watched her bust expand. Skin slid across the floor.</p>
+<p>Their speed was enough to flood the shower room, leaving her among a sea of overbearing blue</p>
+<p>35</p>
+<p>flesh. The cold walls pressed into their sides, each udder rivaling the mass of a small car. “Come
+back!! I-I’m too big!!”</p>
+<p>“You don’t need my help, remember?” Kayla turned around and saw Taylor’s frantic</p>
+<p>expression just before it was engulfed by cleavage rising like a tide. “Have fuuuun!”</p>
+<p>“Please wait!! I-I can’t reach my nipples!! This room isn’t going to be big enough!!
+Ooohhhh when are they going to stop swelling?! I-I FEEL...RIPE!! MY BOOBS ARE SO FULL!!
+Please I can feel them starting to squeeze for room!”</p>
+<p>SQUEAK SQUEEAAAAK!!
+A sound made Kayla take one last look. The last thing she saw before fleeing the locker</p>
+<p>room was a pair of breasts approaching titanic sizes and bulging out of the shower doorway.
+Each fifteen feet across, they were packed into the brick room at high pressure. Nipples like car
+tires trembled and sprayed angrily at Kayla. Somewhere on the other side, Taylor’s muffled
+moans could be heard. A crack across down the wall signaled it was time to leave.</p>
+<p>Kayla knew what she had to do. She knew what she wanted to do. As troublesome as
+Taylor had been, she had her to thank for the idea. Walking with purpose, Kayla left the main
+campus building and headed for the science center. Any glance from another student at her
+juice-soaked uniform was ignored. She didn’t care. Her future had just fallen into place.</p>
+<p>Ron was in his lab, as expected. It brought her nipples to attention catching him by</p>
+<p>surprise as he was staring at a picture of her bloated self from the night before.</p>
+<p>“K-Kayla!” he stammered, quickly hiding his phone under his notes. “Don’t you have a</p>
+<p>class right now?” Confidence poured off her and Ron was shocked at the state of her appearance.
+Gulping at the outline of her bra showing through a drenched blouse, he asked, “What...uh...what
+happened? You’re soaked! Are you ok?!”</p>
+<p>“I’m perfectly fine; I’ve got some big things on my mind.”
+Kayla’s hand reached to the table and scooped into a bowl of Ron’s blueberry candies.</p>
+<p>More than a dozen were shoved in her mouth before Ron could react. His jaw dropped and a
+pencil fell from his hand. “What are you doing?! You saw what three of them did to you last
+night! Eating that many could--”</p>
+<p>“Oh I know exactly what it’s going to do to me.” Feeling her heart flutter, Kayla glanced</p>
+<p>at her rising chest. Juice was already engorging her C-cups. Ron’s eyes widened when her soaked
+blouse tightened and billowed to contain the melons. Kayla’s bra was strained to contain such
+fluid-filled masses and cleavage shown through her buttons. A spreading blue color on her
+visible cleavage made Ron gulp. Taking a deep breath, the flow ceased but the strain of
+controlling herself was evident on Kayla’s face.</p>
+<p>“Your...Your chest is turning...blue…” Ron breathed.
+“Is it now?” Kayla glanced down and smiled. Juice was leaking through her shirt and bra.</p>
+<p>Pressing a finger into a hidden nipple, she brought it back coated in her sugary sweetness. It</p>
+<p>36</p>
+<p>popped cleanly out of her mouth a moment later with a moan. “Mmmmm… God that’s good...”
+The taste was divine.</p>
+<p>Stepping close to Ron, she drenched her finger once more. “Open your mouth.”
+Ron did as he was told. Several drops of her busty contents were placed on his tongue. It</p>
+<p>made his eyes wide with delight.</p>
+<p>I’ve ever tasted.”</p>
+<p>“I don’t know about you,” Kayla said in a heated tone. “But that is some of the best stuff</p>
+<p>Power was radiating inside of her. She could feel the candy-induced changes in her</p>
+<p>breasts. Never again would they be empty. Juice was her eternal burden, and she welcomed it
+with open arms.</p>
+<p>She pressed her chest into Ron. “I know what I want to do with my life now.” Grabbing</p>
+<p>him by his shirt collar, she pulled him down. Their lips locked, each tongue eager to taste the
+juice on the others.</p>
+<p>PING!
+“M-Mmm!!” Kayla moaned, losing control momentarily of her chest. A button had burst
+off when she ballooned larger than her own head. A bulge in Ron’s pants was tempting her to let
+her chest run wild but she knew better.</p>
+<p>She pulled herself away and stared into Ron’s bewitched eyes. Her future was delicious,</p>
+<p>bright, and ripe for the taking. She could feel it swirling within herself. Smiling and pressing
+herself into him, she offered, “Hey, Mr. Scientist… How would you like to be a part of a very
+exciting business opportunity?”</p>
+</body>
+</html>

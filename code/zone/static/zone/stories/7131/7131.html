@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Ichthyrotica</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>Ichthyrotica</p>
+<p>Conclusion</p>
+<p>By The Preve</p>
+<p>Thanks to Todger 65 for the edit.</p>
+<p>Black faded to indigo, indigo to silvery gray. Amanda and her captors
+swam upward, cumming as one entity. When they broke the surface she
+barely noticed, lost in her heat.</p>
+<p>Her two captors parted from her with the same sudden surprise of her
+capture. Tongue and cocks slid out of her body. The two men disappeared
+with nary a ripple. Amanda was alone, gasping, confused, treading water
+and leaking cum.</p>
+<p>"What?! Who?! What the...?! Who were those men?! And where the fuck am
+I?!"</p>
+<p>The water was unfamiliar; for all she knew it was the middle of the
+ocean. Her first impulse was to curse, "Those bastards!" And then she
+saw the moon, "?! God!"</p>
+<p>At least she thought it was the moon, or a moon. When she dove into the
+ocean the moon's position, ripe and full, was as it had always been: a
+silver disc, half dollar or tea saucer oft exaggerated by poets and
+romantics.</p>
+<p>This moon was ten times as large and so close, every mare on its surface
+stood in detail. Amanda could almost reach out and touch it.
+"Impossible!" she gasped.</p>
+<p>The silver glow it cast over the ocean was fairytale beautiful, akin to
+etching chrome across obsidian. "I'm not in the cove...or am I?" A
+silvery line of beach, brighter than any seen before, beckoned. Beyond
+the beach, silhouetted against the dark starry sky, was a shadow line of
+cliffs, unfamiliar and forbidding.</p>
+<p>Amanda glanced around. "It's the only land in sight girl. I better go in
+before those....men come back." The thought of their return brought out
+strange feelings. Amanda was shocked at the ambiguity of her thoughts.
+She was outraged, violated, had every intention of finding the nearest
+cop once ashore, yet, "Why am I still wet?"</p>
+<p>She strode ashore onto the soft, white sand and saw a sight that brought
+a gasp to her lips. The sound disturbed her for the fact that only part
+came from fear. The other feeling was something undefined but
+unsettling. "They're here!"</p>
+<p>Two sets of footprints led away from the sea. The soft surf was slowly
+erasing them. Amanda saw they tracked across the sand to a cleft between
+two black rocks.</p>
+<p>Common sense offered advice, "Head down the beach, find a way to
+civilization, and get the cops. Maybe they can track the footprints
+before the tide comes in." But someone else also spoke in her ear. She
+didn't know who; Mister Reckless, Mister Curiosity, Mister Foolish, or
+(she didn't want to admit it) Miss Lust but that someone said, "Follow
+the prints yourself, see were they go, and then find the cops."</p>
+<p>Amanda debated the two options before making a decision. "If I'm careful
+and they don't see me, I might find where they're staying." Then she
+giggled, "I feel like Nancy Drew."</p>
+<p>Following the tracks was easy. Amanda, however, was struck by the odd
+shape of the footprints. She didn't see any indication of toes in the
+imprints. "So they wore flippers." It didn't surprise her. "Maybe they
+came from the yacht. They watched me dive and came after me."</p>
+<p>Mr. Dull did mention he did occasional skin diving but gave it up as too
+dangerous. Amanda dismissed him as a culprit. "Too bold and audacious
+for him. He may be dull but I'll give him his decency."</p>
+<p>The cleft in the rocks revealed itself as a cave. "No, not a cave," she
+thought. "It looks like a tunnel, maybe a passage."</p>
+<p>The cave vaulted high above her head. The walls seemed made of pure
+obsidian. Soft, white sand made up the floor. At the end of the tunnel,
+a faint glow reflected off the walls. Amanda was fascinated. The nearly
+magical effect converted her from Nancy Drew to Alice.</p>
+<p>She crept along the tunnel, following the glow, hoping not to catch up
+to her assailants...or so she convinced herself. The glow maintained a
+low glimmer as she approached, drawing her as a moth.</p>
+<p>Amanda became aware of a scent, musky, wet, faint at first, growing
+stronger as she continued through the tunnel. The scent brought forth
+hidden feelings. She started to breathe heavily. Warm sweat beaded on
+her skin, moisture between her legs. "Something's odd," she thought. "I
+better turn back, let the cops handle it." But her legs continued to
+move forward.</p>
+<p>She put her hand against her breast, feeling the heartbeat. "Are my
+nipples hard?" she asked. Her tit indented the palm of her hand. Closer
+to the end of the tunnel she came. The tunnel curved until it stopped at
+the entrance. A boulder, created from volcanic glass, partially blocked
+the way. Amanda padded up and peered over, and saw the source of the
+glow.</p>
+<p>The tunnel opened into a circular vault, open to the sky. The bright
+moon and stars shone upon the snow white sand floor. High stone walls of
+black obsidian rose into the jeweled night.</p>
+<p>Set within the white sand was a circular pool resembling a shallow bowl.
+Black water sat within the bowl, mirroring the stars with such
+perfection as if a piece of the sky rested before her.</p>
+<p>Amanda marveled at the sheer otherworldly beauty of this natural
+formation. A place this wondrous could not be secret. People had to
+know. "So why have I never heard of it?" she wondered.</p>
+<p>Tempting as it was to explore further, Amanda knew the time was past to
+look for the authorities, but when she turned the path was blocked.</p>
+<p>They'd crept behind her, soundless. Amanda gasped, startled. There were
+five. The shadowed tunnel hid most of their features but Amanda knew
+these men were companions to her kidnappers. "My God! Their eyes!
+They're so....blue!"</p>
+<p>The astounding feature was the only detail standing out on their faces.
+Amanda could not discern noses, mouths, or ears. Five pairs of glowing
+blue eyes, blue as china saucers, bluer than Elijah Wood, gazed at her.</p>
+<p>Amanda was surrounded quickly. They gave her no time to pick up a rock
+to defend herself. Two grasped her arms with the same strength as her
+assailants. The other three pushed the rock from the tunnel entrance.
+Amanda, struggling, was dragged into the vault.</p>
+<p>In the glowing moonlight, Amanda finally saw her captors in full detail.
+Years later, she would recall that moment, never understanding why the
+sight did not cause her to scream.</p>
+<p>"Gasp! You're not human!"</p>
+<p>****</p>
+<p>Years ago, when Amanda was in college, she watched a movie; a low
+budget, ugly thing about a seaside community terrorized by mutant
+fishmen, who killed the men and raped the women. Amanda hated it and
+quickly grew to hate the soon-to-be ex-boyfriend who\'d dragged her to
+the trashy theater. <em>I guess I\'m in the movie now.</em></p>
+<p>They stood tall, like sculpted statues of black marble; so they looked
+in the moonlight. Amanda later found their color to be a sleek dark
+green. The "men" displayed an otherworldly beauty which drew another
+soft gasp from Amanda; not that they could be recognized as human.</p>
+<p>Other than ethereally blue eyes, their faces displayed few manlike
+features: no noses but small bumps with two near indiscernible slits for
+air; a suggestion of a mouth with lip-like impressions, wide but flat,
+like a tattoo against the skin.</p>
+<p>Their ears were small, like seashells, flat against their heads. Their
+bodies were hairless, as Amanda noted earlier. Their skin glowed, smooth
+and slick, whether from sweat, seawater, or a strange body oil Amanda
+knew not.</p>
+<p>They were well-formed with streamlined muscular bodies. <em>Swimmer\'s
+bodies!</em> Amanda realized, shocked, but their cut forms shamed many of
+the male swimmers she used to ogle and admire in her competitive years.
+She also came to the realization these creatures\' bodies were built, in
+literal terms, for swimming, from the smooth, dolphin-like skin to the
+sleek shapes with little variance. <em>The lack of a nose, the flat ears .
+. . everything is meant to enhance speed underwater,</em> Amanda marveled.</p>
+<p>Feelings clashed within her mind. The two who kidnapped her to this
+world, and it was most definitely another world given its impossibly
+large moon, were among these "men".</p>
+<p><em>But how did they do it? And what do they want me for?</em></p>
+<p>Along with the questions came fear. <em>What will they do to me when
+they\'re done? What will they do period?</em></p>
+<p>Unbidden, a thought slithered into her head; thoughts of sharks,
+piranhas, man-eating sea monsters from B-movies, blood in the water. She
+shook her head. <em>If they\'d wanted, they\'d have eaten me in the ocean.</em></p>
+<p>Lingering traces of outrage walked through her head as well. The
+circumstances of her abduction could not be ignored. Along with the
+outrage, though, marched a compelling curiosity.</p>
+<p>The otherworldly beauty of the creatures\' sculpted bodies was
+fascinating but a persistent question remained. <em>How big are they?</em></p>
+<p>Her experience in the ocean only presented a hint of her captors\' cock
+size but Amanda had not seen them in full. Her eyes panned down to a
+sight which brought forth another, "Gasp! Fuck!"</p>
+<p>Amanda\'s dating life, like many other women her age, was reasonably
+active if not spectacular. She could count the number of long-term
+relationships on the fingers of one hand, plus a couple of one-nighters.</p>
+<p>As such, she\'d experienced her share of cocks, of varying lengths and
+girths. The longest she\'d ever seen, for example, was on a business
+major she\'d dated for all of two seconds in college: eight inches at
+full mast, three inches thick. It felt good between her thighs and the
+boyfriend performed well enough. Unfortunately, the man\'s character was
+not up to his sexual prowess. She had enough problems making the Olympic
+team than dealing with a controlling, braggadocio, cheating, egomaniac.</p>
+<p>The memory of the ex\'s cock was a brief flash as it, along with her
+eyes, took in the almost impossible display dangling from the "man"
+before her. Amanda\'s memory took one look, put its hands between its
+legs, and scampered away, emasculated, into a deep dark corner, never to
+be seen again.</p>
+<p><em>Oh! Fuck! I\'ve never seen one so . . . so . . . It\'s impossible!</em></p>
+<p>It was difficult to accept two of those things had recently been inside
+her. The cocks these creatures sported looked too long and thick to fit.
+The feel of them against the walls of her front and back tunnels, while
+they stretched, did not imply the thickness on display. Such cock flesh
+shamed porn stars.</p>
+<p>They were as perfect in shape and form as a sculptor could carve
+erotically. They hung from their hairless groins, patterned with
+throbbing, pulsing veins. Their testicle sacs were smooth and round like
+ripe peaches. The ends were rounded like mushroom caps.</p>
+<p>Such erotic perfection fascinated Amanda but the lengths proved more
+shocking; the smallest easily came to the knees. The size of the men
+themselves made their natural endowments even more impressive.</p>
+<p>The one standing before her, Amanda estimated at a six foot height, <em>6.1
+maybe.</em> The other to his side looked slightly taller by three or four
+inches. The two who held her arms were taller still. The fifth man
+established to Amanda a general height of six plus feet among all. She
+had to call these creatures men.</p>
+<p>They exuded an aura overwhelmingly male, from their bodies\' chiseled
+perfection to the strength displayed holding her captive. She even
+detected a faint musk, a near cliche from an Old Spice commercial.</p>
+<p>Amanda prided herself on her own strength. She was a former competitive
+swimmer who exercised regularly; her old stamina was still intact. She
+could handle herself against overbearing men. She\'d done so in the past
+without trouble.</p>
+<p>The present circumstances altered her paradigm. Amanda knew, from her
+own experience, that the two kidnappers displayed considerable strength
+bringing her here. The young swimmer could be forgiven in deciding not
+to struggle. <em>They are too strong and too many.</em> Besides, a deep, hidden
+curiosity lurked as to their motives.</p>
+<p>One of the men let go of her arm and stepped aside. Another immediately
+grabbed both of her arms and twined his around them. Amanda\'s arms were
+wrenched behind her body. The quick, forceful action drew a startled
+grunt from her mouth.</p>
+<p>The man wrapped his legs around Amanda\'s and wrenched them apart. Her
+body was forced against his. Once again, a slick groin ground flush
+against Amanda\'s ass. The man\'s tuberous cock slid like a snake over
+her crack. Her body, from the nape of her neck, through the curve of her
+spine, down to her round ass, molded into every contour of his body.</p>
+<p>The man\'s warm, rubbery, slickness triggered a reaction in Amanda\'s
+pussy, still filled with memory from the oceanic encounter. <em>Oh God! I
+can\'t be getting wet, can I?</em> The earlier encounter was not entirely
+consensual but her body reacted differently.</p>
+<p>"I think, in hindsight, the sea men\'s body oils might have had
+something to do with it," she told the Stranger. "With everything that
+came after, I always felt triggered when they touched me. I couldn\'t
+think of any other explanation. Really I couldn\'t think at all."</p>
+<p>Her mind conflicted with the yearnings of her body . . . and it was
+losing. <em>I should be screaming no but what if they don\'t understand
+me?</em></p>
+<p>Amanda\'s bondage took a stranger turn as her captor performed an act of
+such amazing strength and flexibility, Amanda, looking back, could
+scarce believe it, even as she related it to the Stranger.</p>
+<p>The man bent back . . . back . . . and back, until both leaned at a
+forty-five degree angle.</p>
+<p>Amanda was astonished. <em>God! Such . . . strength!</em></p>
+<p>She was against the man\'s body, displayed as if on a living platform.
+Her body glowed faintly in the moonlight with sweat and lingering
+moisture. Her breasts quivered, her belly trembled with fear and, deep
+in her mind, some anticipation.</p>
+<p>Something was about to happen; something was going to happen. The
+strange position caused the muscles in her body to tense, lending an
+erotic athleticism to her sight. Her position also seemed to spread her
+legs, and the rose between them, wider.</p>
+<p>The sea man before her stepped close; its long cock undulated sinuously.
+Amanda watched, eyes wide, open and curious. She had no questions; it
+seemed useless to ask his purpose. It only remained to see.</p>
+<p>The sea man placed his webbed hands on her thighs; his touch
+surprisingly warm. He ran his hands over her inner thighs, where the
+legs met the torso, and then across her quivering groin.</p>
+<p>His touch stimulated strong erotic feelings within Amanda. It wasn\'t a
+tickle. It was a stroke, a caress which sent mild shock waves across her
+warm, moist skin. "Nnnnghn," Amanda moaned faintly.</p>
+<p>She experienced mild frustration, wishing for something, anything, to
+happen, acutely aware of her captor pressing his moist, slick body into
+hers. "Mmmm," she moaned a second time.</p>
+<p>The hands moved down, down to her pink rose. Amanda saw over her heaving
+breasts, her wet heat, gleaming pink and swollen against the dark
+fingers stroking her petal. The fingers cycled around her vulva,
+creating a spasm through her body, and a gasp from her lips.</p>
+<p>Her ass clenched, grinding against the groin behind her. The sea man\'s
+cock pulsed against her crack and slid along the crevice. He made nary a
+ripple, otherwise.</p>
+<p>Amanda took no notice of her captor\'s extraordinary physical
+discipline, focused as she was upon her opposite\'s hands, whose fingers
+now found her clit. Her bud, swollen and sensitive, reacted as a trigger
+to a gun. The subsequent orgasm, while not as intense as expected, was,
+at the least, greater than the brief earlier climax.</p>
+<p>It manifested as a clench of her groin, a ripple through her belly
+reaching her quaking breasts, and it exited her throat as a soft
+"Uuuunnngh!"</p>
+<p>She allowed herself a brief moment of wonder, afterwards. No male had
+ever made her cum with just a mere touch. He was not human, yet had
+brought her further than any other. Amanda wondered what it said about
+human men and their imaginations.</p>
+<p>The sea man stopped and drew back. Amanda responded with a yearning
+moan, not quite able to bring herself to beg. She was still mindful of
+her captivity but a lust had awakened, and she wanted more.</p>
+<p>The sea man was preparing her for something. It felt like that. Her
+pussy was wet, ready, and spread open.</p>
+<p>"I knew they were about to enter me," she told the Stranger, "I didn\'t
+expect what happened next."</p>
+<p>In her years of dating, Amanda had seen her share of erections. Her
+reactions ranged from unimpressed to moderately so. The size of the sea
+men\'s cocks promised erections to shame a horse. She wasn\'t
+disappointed.</p>
+<p>The sea man\'s cock, however, performed acts demonstrating the
+otherworldly nature of himself and his kind.</p>
+<p>He placed his webbed hands on her hips, watching her impassively. His
+cock lengthened until its tip nearly touched the sandy floor. The cock
+then raised itself, sinuously, to hover near Amanda\'s groin. It swayed
+and undulated like a boa. Amanda watched, mesmerized.</p>
+<p>Nothing ramrod characterized this cock; no stiff wooden pole with
+throbbing veins. It was fluid and limber; its resemblance to human
+penises only in the mushroom shape of its glans or faint ivy pattern of
+veins along its length.</p>
+<p>It gleamed with moisture in the moonlight, and other small details were
+discerned through a moonlit reflection here or there.</p>
+<p>Its tip, cock hole beaded with pre-cum, hovered bare millimeters above
+her lower groin. It slid down to her bud, leaving a thin, syrupy trail
+on her sweat-slick skin. Amanda\'s wide open eyes stared, fascinated, at
+this impossible organ. A vague query, <em>Will it fit?, </em>surfaced briefly,
+but vanished, dismissed as an intrusion upon the magic wonder of the
+moment.</p>
+<p>The cock tip lingered at her rose; both were moist and ready for the
+other. The glans came directly against her mons, an almost perfect ring
+of flesh against her vulva. Its touch, similar to cocks from other
+lover, yet different. Amanda uttered a soft moan.</p>
+<p>There was a sensitivity in her quim she\'d never felt before; not a
+tickle but smooth, like silk against her pussy. The alienness of the
+cock itself seemed to arouse a lust stunning in its intensity. <em>I\'m
+horny for this thing?</em></p>
+<p>The head pushed in, wetly. Amanda\'s vulva briefly widened to engulf the
+mushroom. Her soft flesh enclosed the glans and its band of flesh, then
+formed a circle around the rest of his cock. Thin, vein flesh, slick
+with cum and natural oils, slid against each other.</p>
+<p>Amanda\'s tunnel flooded with moisture. Her swollen clit licked the
+cock\'s underside, spasming when a throbbing vein or pulsing artery
+glided over it. Sensitive nerve endings transmitted shocks into
+Amanda\'s groin and her belly. She bit her lower lip, grimacing, and
+rattled a low, "Uuunnngh!" The bulge in her groin, traveling upward, was
+barely noticed.</p>
+<p>Muscles in her ass, groin, and belly clenched and relaxed. Orgasms burst
+through her body. Amanda moved her hips against the sea man\'s fingers
+and ground her ass into the other\'s crotch.</p>
+<p>The sea man plunged further into Amanda\'s hungry pussy, which devoured
+its length as if swallowing a thick snake. Her toes curled at her feet.
+She clenched and relaxed her hands in cycles. She alternated biting her
+lower lip and flicking her tongue across her upper one.</p>
+<p>Amanda wasn\'t the type for loud, hard sex; no screaming, no profane
+utterances. She preferred her sex quiet. Quiet, she noticed, was the
+atmosphere surrounding herself; the soft sounds of the surf, the faint,
+wet "slurp" of the sea man\'s flesh winding through her tunnel, and the
+low, continuous moans lowing from her mouth.</p>
+<p>None of the creatures made a sound; neither the one holding her captive,
+nor the one plumbing her rose, nor the three standing sentry. They stood
+impassive, noiselessly watching with almost ritualistic attentiveness.</p>
+<p>Amanda took in her sea man\'s stillness. His hips did not move or thrust
+as a lover\'s would. The only motion was his impossibly long penis
+plunging deeper into her body. Amanda, still processing the unique
+experience, marveled, briefly, at the Herculean stamina of her other
+captor. The angle he held her at should be impossible to sustain, even
+for a short minute. Yet, he was stiff as a plank, molded and curved into
+the contours of her back, and she, flat against him, her knees bent with
+his.</p>
+<p>The bulge in her groin inched slowly upward. Amanda moaned, grunting as
+punctation. "Uuuunnngh! Mmmmnnn! Uk . . . uk . . . uk!"</p>
+<p>Her moist pussy bulged around the dark cock, both streaked with
+moon-shined silver cum.</p>
+<p>"It was like I lost everything that made me in control of myself," she
+told the Stranger. "I was a competitive swimmer once. Everything was
+about control, of myself, of my body. I was held captive by these . . .
+men. I was entered and cumming, and not wanting to stop. I couldn\'t
+recognize myself . . . and it happened in such a short time."</p>
+<p>The sea man\'s glans reached her cervix. It didn\'t enter but Amanda
+felt it right at the entrance. The sea mans testicles began to pulse.
+The peach-sized ball sacs assumed a pumping motion, like a respirator or
+balloon. In other circumstances, Amanda would laugh at the sight.
+Instead she quivered with another orgasm.</p>
+<p>The cock expanded inside her. The strain on her pussy caused another
+moan, "Uuuunnngh!"</p>
+<p>Throbbing, pulsating veins on the creature\'s cock stood in stark relief
+against its black skin. <em>He\'s going to flood me.</em></p>
+<p>Liquid heat filled her womb. Amanda tilted back her head, eyes rolled to
+the whites, and ululated loud and long. Her body convulsed and her belly
+rippled. It curved outward, smoothing out the bulge from the sea man\'s
+cock. She felt no pain, only a mild tickle, like water filling a sack.</p>
+<p>"Ooohhhh . . . uck . . . uck . . . gasp!" Amanda grunted before her body
+settled.</p>
+<p>She rested, lost in an erotic daze. A sliding touch to her back alerted
+the woman to her captor\'s cock. It slid backwards until his tip touched
+her back end. * Oh,* she thought, knowing what was to happen.</p>
+<p>It\'s oil slickened tip slid between her buns with the same ease as
+under the water. Her subsequent moans followed the voyage of the
+prehensile cock as it slid inward and upward. They faded to a soft hiss,
+tiny drops of spit expectorating between her gritted teeth. Sweat poured
+from her body; her skin gleamed in the moonlight. The two sea men
+penetrated deeper into her body than any before, human or otherwise.</p>
+<p>Amanda\'s body shocked her with its reaction. The intense, convulsive
+orgasms surpassed her previous experience.</p>
+<p>"I felt like a porn star," she later told the Stranger. "My whole body
+was in complete convulsion. I couldn\'t think. It was like I was made of
+jelly and then, what they did next . . . I still can\'t believe it."</p>
+<p>The sea man\'s cock reached the door to her large intestine. It could
+have delved further in but flexed and expanded instead, anchoring
+against the sides of her rectum like a balloon. It caused no small
+amount of pain but not intolerable. Amanda grit her teeth and hissed a
+small moan. She barely noticed her captors repositioning their bodies.</p>
+<p>The sea man at her back straightened upright, moving her closer to the
+one facing her. He let go of her arms briefly before grasping her hips
+in an iron grip.</p>
+<p>Amanda\'s body, held in place with the sea men\'s cocks acting as poles,
+slid against the back sea man as she came closer to the other. The shift
+in position lifted her body upward. She admitted to the Stranger, "My
+arms were free. I could have fought, I think. I wasn\'t quite as
+captive, at least from the waist up, but I didn\'t know what they\'d do
+if I did. I didn\'t think I was on Earth anymore, really. Plus I was
+kind of curious what would happen next. So I put my hands on the other
+sea man\'s shoulders, so my body wouldn\'t bear down on the cocks inside
+me. I didn\'t need much help, really. The other sea man held me by my
+hips. It was strange, my actions after what came before."</p>
+<p>Amanda moved closer, watching the sea man. Her lips were parted, teeth
+gritted, breath hissing through. <em>This how I sound when I fuck?</em> she
+asked with detachment. The other three watched, dark statues in the
+tunnel.</p>
+<p>The two sea men moved together, Amanda between them, until the trio
+stood flesh to flesh. The sea men\'s cocks and bodies held her off the
+ground. The sea man at her front buried his head between her breasts.
+The one to her back, between her shoulder blades. As with the ocean, the
+sea men molded their bodies to Amanda\'s curves.</p>
+<p>Once the young swimmer was properly fitted between them, the fucking
+commenced. The sea men ground their bodies, flexed their hips, and
+pistoned into her simultaneously. Amanda responded with grunts and
+moans, running her hands across her opposite\'s back. She embraced the
+moment, closing her eyes while her body came over and over. She stayed
+unaware of any other motion until the trio moved towards the pool.</p>
+<p>The other sea men moved the boulder blocking the entrance. The sea men
+bracing Amanda fucked her while bearing her to the pool.</p>
+<p>"I don\'t know how they did it. They walked and thrust at the same time.
+So strong . . . I barely noticed my surroundings. I didn\'t know there
+were others, except for the other three."</p>
+<p>The interior was circular, like an arena, with the pool at the center.
+Amanda was reminded of the Colosseum in Rome. The entire area seemed
+made of obsidian, open to a starry sky, more stars than she\'d seen in
+her life, with white sand at the bottom.</p>
+<p>Caves and tunnels were set in the rock, and eyes, hundreds of blue,
+glowing eyes, watched them from the dark shadows. Amanda spared only a
+couple of seconds\' wonder. Her overlapping orgasms distracted and cum
+soaked her inner thighs, running down her legs.</p>
+<p>The eyes resolved into dozens of dark bodies emerging from the caves,
+and climbing down ledges and steps set in the stone walls. They flowed
+like a black wave, converging on the pool.</p>
+<p>"I stopped counting after twenty. There were just so many, and everyone
+of them were male."</p>
+<p>Amanda noticed no youngsters among the crowd. <em>No women, no children.
+Something happened here. </em>She looked at the sea man before her.</p>
+<p>"They were all going to fuck me. I knew. It was impossible. I\'d die
+just from these five alone but, I thought, it doesn\'t really make
+sense. Why drag me to this strange place just to, well, fuck me to
+death?"</p>
+<p>There really wasn\'t anything Amanda could do to resist. Instinct told
+her a hidden purpose was involved. All she needed do was brace her body
+and find it.</p>
+<p>The experience, in the following days, exceeded her wildest fantasies.
+They didn\'t fuck her to death, of course, but the marathon brought her
+close. The days were uncountable, experienced as vague perceptions of
+starry, moonlit nights and overcast days. Most of her attention was
+taken with cock, cum, and orgasms; her pussy, mouth, and bung constantly
+stuffed, her belly and womb full of seed.</p>
+<p>The sea men took turns; one withdrawing from one hole, replaced
+immediately by another. They let her rest, sleep, recover, and then
+repeated the cycle. They fed her strange fishes and seaweed, comparable
+to sushi. They cleaned her frequently and took her to areas where she
+could relieve herself among other ablutions.</p>
+<p>The majority of her time was spent fucking, and fucking, and fucking
+with slick, smooth bodies sliding against her, and prehensile cocks
+delving deep into her cavities, her body bathed in sweat and cum. Each
+day they fucked her to exhaustion.</p>
+<p>"It was like a drug den, like I was always high. Everything felt
+mechanical, automatic; eating, fucking, pissing, shitting . . . I did
+everything they wanted, without question. They never spoke, never made a
+sound and yet, I just knew. If there was a cock in front of me, I opened
+my mouth. If they entered me, I spread my legs wider. I\'d never been
+like this before . . . with anyone. I\'d fucked a few boyfriends before
+but never like this . . . orgy."</p>
+<p>Time blended; night and day it was eat, sleep, fuck. Amanda\'s awareness
+faded to a soft, erotic haze. The miasma of smooth, moist skin and
+fucking so much her existence, her confusion was genuine when, after a
+warm, wet body-encased sleep, she awoke to soft cotton sheets, a dry,
+firm hospital bed, and Harry and her family asleep on chairs next to it,
+keeping vigil.</p>
+<p>Harry woke first. His burst of questions woke her parents. The ensuing
+cacophony helped her confusion but little.</p>
+<p>"It took forever for things to sort out. They said I was missing for a
+month but it felt longer. Harry called the police when he didn\'t find
+me at the house. He thought someone snatched me on the beach. They
+questioned him, the party guests, my boyfriend, the locals . . . Then
+search and rescue got involved. They thought it was a shark, even though
+attacks were rare here. It became a recovery after a week. People said
+it was a shark or riptide. Some local guy looking for clams found me in
+a pile of seaweed. He thought I was a corpse. The police were shocked I
+was alive.</p>
+<p>Everybody asked questions but what could I say? That I was kidnapped by
+alien fishmen? I wasn\'t sure it actually happened myself. I didn\'t
+remember them taking me back to the beach. The whole thing seemed like a
+crazy erotic hallucination. So I told them I couldn\'t remember a thing.
+That I was swimming towards the shore, thought I heard a splash, felt a
+tug, and the next thing I knew, I was in the hospital.</p>
+<p>The doctors and police speculated I might have been raped. They saw
+bruising around my hips and groin and ran a test. \'Inconclusive but
+suggested intense and prolonged sexual activity,\' they said.</p>
+<p>The police, doctors, my parents, Harry, reporters, they all questioned
+me. The police even arrested a few local men with records. They brought
+me in to look at the line up. I didn\'t I.D anyone. They had me see a
+rape counselor, and my parents asked me to see a psychotherapist. I
+think the counselor and therapist knew I wasn\'t telling the whole truth
+about my amnesia. Then people, a few cops, some reporters, suggested my
+\'disappearance\' was a hoax. It got bad for a few months.</p>
+<p>Some people, supporters I guess, did point out I didn\'t want to talk to
+the police or reporters really. Hoaxers usually want attention.
+Everything got confused after that, which is how I wanted it, I guess.</p>
+<p>I left the hospital, the frenzy died down, I went back home, and things
+went back to normal for a while, and then I puked up my dinner, and took
+a pee test."</p>
+<p>"Hmmm," said the Traveler. "A most remarkable story. You opted not to
+have an abortion. Is there a reason?"</p>
+<p>"Well," Amanda was pensive, "That was my first thought but . . . I
+thought back to that . . . strange experience, and how I didn\'t see any
+women or children, and how maybe the reason they snatched me had
+something to do with it. I don\'t know . . . it\'s just a feeling I\'m
+supposed to do this."</p>
+<p>"Ah, hmmm, and perhaps returning to this beach is related to this . . .
+feeling?"</p>
+<p>Amanda thought again, "I think so. Once I decided to have . . . them,
+I\'ve been dreaming of this place. They became more frequent the bigger
+I grew. I took a sabbatical from my job and moved back into the beach
+house four months ago. Harry and my parents were good about it, sort of.
+They didn\'t understand but supported me overall. The media and the cops
+had moved on, and the locals are good about my privacy. Strange things
+happen on the beach, they say, so they\'re not too curious. It\'s just
+waiting now."</p>
+<p>"Yes, I guess it is, isn\'t it? I\'ve collected stories from across the
+worlds. You\'re not the first who\'ve forged connections with Others;
+certain \'people\' I\'ve found are subtle."</p>
+<p>"I think maybe less subtle. My dreams of them have been more frequent
+for the past month, and the babies are stirring more often these days.
+So I think I\'m . . . unnngh!"</p>
+<p>The Traveler looked down; fluid was gushing between Amanda\'s legs.</p>
+<p>"Close," she gasped.</p>
+<p>"Oh! Do you want me to get a . . .?"</p>
+<p>"No," Amanda said, laying on her back.</p>
+<p>"Would you like me to stay?"</p>
+<p>"Mmmm . . . I think you should move back a distance. I don\'t think
+they\'ll want you here."</p>
+<p>The Traveler was sorely tempted to stay, mainly out of curiosity. He
+obeyed Amanda\'s wish but decided to stay close enough, to observe, and
+act in case she needed aid. He sat down some distance off, close enough
+to hear her moans and grunts, far enough so as not to pose a threat, if
+such beings made an appearance.</p>
+<p>"Such sensuality," he thought, in Amanda\'s strain. In the way her large
+breasts and belly wobbled and vibrated, like gelatin. The way her hands
+stroked over her curves and valleys. The sweaty strain on her face,
+moans and hisses aspirating through her slightly parted lips. The gleam
+of her wet, golden skin in the overcast light of the afternoon.</p>
+<p>The Traveler had seen women give birth on his journeys; a painful,
+agonizing experience for which he marveled at women. He saw little of
+the sensual in those moments but something here separated it from the
+others. He made sure to inscribe the scene in his mind, observing every
+detail: the beach, the sky, the sea, and her. He paid close attention to
+his own feelings, and the ethereal, erotic atmosphere surrounding the
+woman.</p>
+<p>They emerged from the sea with nary a ripple: tall, dark, sleek,
+hairless, and beautiful. He scrolled through his memories, seeking the
+race to which they might belong. They did not seem selkie or fae,
+possibly some branch of merfolk, or an extradimensional race resembling
+such. This beach had thin walls; any manner of beings could come
+through.</p>
+<p>They looked neither malevolent nor the opposite; emotions were difficult
+to read on their faces. They didn\'t seem the progeny of the Great Old
+Ones either.</p>
+<p>The sea men numbered seven; six to kneel on each side of her, one to
+kneel between her legs. They glanced at him briefly, without interest,
+before tending to Amanda.</p>
+<p>Their hands joined the young swimmer in smoothing over her curves,
+whether to comfort, or massage, the Traveler knew not. The seventh
+stayed between Amanda\'s legs, his actions obscured, partially, by her
+gravid belly.</p>
+<p>The young swimmer continued to moan and grunt, and then gave a brief
+sharp gasp. The seventh moved, briefly, from between her legs, bearing a
+small, dark object which he placed against Amanda\'s left breast. The
+Traveler could see, faintly, the baby\'s umbilical cord leading back
+over the belly.</p>
+<p>Amanda began another series of moans. She gasped again, and another baby
+was brought to her right breast.</p>
+<p>The day drifted on with soft sounds and sensual heat; the quiets sighs
+and gasps from Amanda, the soft, warm breeze over the water, the gentle
+lap of the surf.</p>
+<p>The sea men caressed Amanda\'s belly, pressing gently every other
+stroke. Amanda gave soft gasps or grunts, each time producing a baby.
+One sea man or another would stop to replace a baby at her breast,
+allowing each new one to nurse. The Traveler watched rapt, until she
+produced six children.</p>
+<p>The sea men\'s hands moved rhythmically, massaging her belly, changing
+out the infants. The Traveler took note of Amanda\'s semi-conscious
+state, punctuated by an occasional moan. He found the synchronized
+motions of these strange creatures entrancing. When they shifted
+positions and lifted the unresisting swimmer, the choreographed movement
+rivaled the best dancers.</p>
+<p>"Indicative of a race living in complete harmony with one another,"
+thought the Traveler.</p>
+<p>The sea men kept Amanda suspended between their two groups, with the
+seventh holding her legs under his arms. Their bodies were packed close
+together, their arms linked under Amanda\'s body. The babies lay on top
+of her torso, held there by the umbilical cords and the sea men ringing
+her.</p>
+<p>They moved as one, striding into the water, carrying the semi-conscious
+woman. The Traveler marveled at the near complete unity in their
+movements, almost as a single entity. Their skill in causing almost no
+disturbance in the water was remarkable.</p>
+<p>They quickly disappeared; one placed his mouth on Amanda\'s before they
+went under. The Traveler sat on the sand, watching the blue water,
+pondering over the day.</p>
+<p>"Most interesting new people and a story for my journal," he mused out
+loud. "Somebody most know information about these beings."</p>
+<p>He resolved to write on this encounter in his journal at the hotel.</p>
+<p>The Traveler lingered in town for several more days, in case the woman
+returned. He questioned a few of the locals as to the nature of the
+beach and surrounding waters. A few were suspicious, initially, not
+happy with the earlier attention Amanda\'s disappearance brought to the
+town.</p>
+<p>"We couldn\'t blame the sheriff," one said. "He had to go through the
+motions, but those reporters and outsiders . . . they don\'t know the
+cove."</p>
+<p>"The cove takes people and sometimes gives them back," another said,
+"But it never really lets you go. None of us were surprised when she
+came back."</p>
+<p>The Traveler, after several days, and deciding Amanda would not be back
+in the near future, left the Vanderdecken Town with a good story,
+pleased with the experience of meeting an intriguing woman. He set off
+for California, to investigate rumors of satyrs at an old estate near
+San Francisco.</p>
+<p>****</p>
+<p>She can still be seen sometimes, swimming on some moonlit night, or
+sunning herself on the beach. She comes to the town but rarely. The
+townsfolk respect and treat her kindly; most know to leave her alone.</p>
+<p>Very rarely, some tourist or backpacker would try to see her, intrigued
+by her beauty. Some were extraordinarily rude, like the drunken fratboys
+who blew into town one summer and followed her to the beach house.
+Nothing more was heard of them after that.</p>
+<p>Some visitors she received, like her parents or her friend Harry. Most
+stayed away. The locals knew; she was watched over.</p>
+<p>One day, while swimming, she noticed a man on the beach. She recognized
+him. He was away off from the shore, with a small backpack, passing
+through.</p>
+<p>She swam close and stood, a nude sea nymph in the summer air. The man\'s
+face held a question. She smiled and mouthed, "Six girls," and waved.</p>
+<p>The man smiled back, nodded, waved, and strode away. The woman turned
+and dove back into the warm, mystical waters of Vanderdecken Cove, with
+nary a ripple to mark her presence.</p>
+<p><strong>The End.</strong></p>
+</body>
+</html>

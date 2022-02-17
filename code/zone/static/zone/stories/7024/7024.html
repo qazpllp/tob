@@ -1,0 +1,2472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Commission - Milk Magic Part 2</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>Questions, comments, or commissions? Send me an email at </p>
+<p>the.be.engineer@gmail.com</p>
+<p>or message me on Discord at BE Engineer#2306 </p>
+<p>1 </p>
+<p>Milk Magic Part 2 </p>
+<p>“Dean Amae…?” Kara called out. 
+No response came from the woman. The silence wasn’t helping to unravel Kara’s nerves </p>
+<p>and confusion. Since her arrival at Bron-Regence Academy, her world had been turned upside 
+down. Nothing made sense and those around her seemed fueled by nothing more than pure lust. 
+Milk magic dominated their every waking thought, and as she was finding out, it was doing the 
+same to her. Kara never imagined developing a large pair of milk-bearing breasts would lead to 
+such a drastic shift to her lifestyle. </p>
+<p>The events from the dining hall could hardly be contemplated without a part of her </p>
+<p>considering them no more than a dream. Girls leaping across the tables at one another? Fingers 
+delving and wiggling in each and every hole? Milk spraying from nipples like fountains of dairy 
+mounted upon overbearing breasts? Any of these things on their own would constitute a major 
+shift in reality, and yet, as Kara walked behind BRA’s dean while carrying her own bloated 
+chest, she was forced to accept the tenderness and residual moisture from multiple tongues on 
+her skin as fact.  </p>
+<p>“D-Dean Amae!” Kara panted. It was hard enough maintaining a standing position with 
+her boulder-like breasts. Walking at a brisk pace to keep up with the dean was another challenge 
+altogether, one which nearly caused her to fall forward onto her jiggling flesh more than once. 
+Still there came no answer. Ahead of her, Amae continued down the stone hallway with 
+no regard for her newest apprentice. Heaps of rounded skin protruded from the sides of her bare 
+torso. As large as Kara felt, Amae was clearly bigger. Her bust extending below her navel in two 
+massive pale teardrops. She audibly sloshed with the reservoirs of magic-laden milk hidden 
+inside. Somehow, despite being far larger than Kara, Amae had no trouble walking as if her chest 
+was lighter than air. </p>
+<p>It was harder to speak with every wobbling step. Kara puffed, “C-Can you teach me how </p>
+<p>to do that?” </p>
+<p>Amae finally responded though she didn’t look back. “Do what?” 
+“Use magic to...
+SPLLCH!! 
+A particularly heavy footfall stimulated Kara’s breasts enough to engorge with milk and </p>
+<p>...carry your breasts… Mine are so big I can hardly--
+nnngh
+​</p>
+<p>” 
+Nngh!!
+​</p>
+<p>spurt the hallway in front of her. The back of Amae’a legs dripped from the surprise release. 
+“S-Sorry, Dean Amae!” Kara apologized, blushing intensely. “They’re very full! I’m 
+having trouble controlling them…” She shifted her weight when Amae turned around. Kara 
+whined, “</p>
+<p>” 
+T-They’re heavy…
+​</p>
+<p>Amae’s reaction to the warm milk drenching her skirt and calves was surprising. There </p>
+<p>was no annoyance, rather amusement and latent giddiness. Amae wiped her legs clean and 
+continued down the hallway. </p>
+<p>​
+​
+​
+​
+​
+ </p>
+<p>2 </p>
+<p>Kara was relieved when Amae continued her response. “I understand your plight. When </p>
+<p>my milk first came in, it was rare for me to find strength enough to stand. There were days I 
+feared I may live beneath their girth for the rest of my life. But learning to carry the burden of 
+your blessed milk is a rite of passage: a gift from the Goddess. Few trials can give you such an 
+appreciation for the great magic welling within us. Our magic is as heavy as it is powerful. 
+Carrying them through your own effort is rewarding.” </p>
+<p>Adjusting an arm as it began slipping from the underside of her bust, Kara wasn’t so sure. </p>
+<p>“But I’ll still learn how to carry them with magic soon, right??” </p>
+<p>“As my apprentice, you will learn that and far more.” Amae then turned her head back to </p>
+<p>pass Kara a smile, warm but with a chilly breeze dwelling beneath. “There is much potential in 
+you, Kara. Under my direction, you could become one of the greatest milkmages Bron-Regence 
+has ever produced. You’ve attended my fine academy for hardly an hour and yet I’ve never 
+tasted such potent magic.” </p>
+<p>Kara didn’t know what to say. Such praising compliments had never been heaped upon </p>
+<p>her in such a way. A few days ago nobody would have given her the time of day. Now she had to 
+cradle her breasts, fight off other girls like bears to honey, and the head of the most prestigious 
+milkmage academy was showering her with praise.  </p>
+<p>“T-Thank you!” Kara stammered, looking for anything to continue her sentence. “I </p>
+<p>wasn’t sure I would fit in here, but--”  </p>
+<p>Amae interrupted as if not hearing a word of Kara’s gratitude. “The effects your milk </p>
+<p>produced in your fellow apprentices was astounding.” </p>
+<p>This made Kara shiver with ecstasy. She could still feel Melanie, Stella, and Kim’s 
+tongues and hands sliding across, and in, her body. Their uncontrollable lust and ravenous 
+suckling was overwhelming in every way yet Kara couldn’t think of anything she wanted more 
+at this moment. Jumping back into their milky, saliva-coated embraces sounded as welcoming as 
+reentering a hot spring during a winter storm. Juices of desire ran down her thighs after being 
+pulled away from the orgy too soon. </p>
+<p>Amae continued. “Tell me again, you’re certain you have never practiced milk magic </p>
+<p>before?” </p>
+<p>“I don’t know how I could have… I only started lactating a few days ago. My breasts 
+were flat and then…” Thinking about them rounding off her body like fruits made her moan. 
+Back at home, her shredded tunic still sat in the corner of her bedroom. It never stood a chance 
+against her sudden enlargement. “</p>
+<p>T-They just 
+Mmmm… 
+​
+This information pleased Amae in a way Kara couldn’t understand. “Highly unusual.” 
+Looking ahead at her dean, moreso out of thirst and desire at this point, Kara stared at 
+Amae’s breasts. There were larger than she recalled when they met at the academy’s entrance. </p>
+<p>.” 
+grew
+​</p>
+<p>“Did my milk do something to you?” Kara wondered. How the thought of her milk 
+causing a change in Amae’s body made her feel so lustful was curious. Her dairy made this </p>
+<p>​
+​
+ </p>
+<p>3 </p>
+<p>grown woman’s breasts break out of their ornate embraces of jewels and gold. “After 
+my...</p>
+<p>...it seemed like you were surprised when they grew.” 
+entrance exam
+​</p>
+<p>Amae ran a loving hand along the outside of her right breast. “It did catch me off guard. I </p>
+<p>wasn’t expecting such...</p>
+<p>...
+mmm
+​</p>
+<p>” 
+energy.
+​</p>
+<p>“A-Are you all right?” Kara was certain the dean’s chest appeared fuller and taut. 
+“I assure you, it’s nothing my bosom can’t handle. This is a matter for another time, </p>
+<p>however; there are things we must discuss in the privacy of my quarters.” </p>
+<p>Kara hadn’t realized how far she’d been led into the castle. During their talk, dinner had 
+ended and students were returning to their usual business. More and more well-endowed women 
+met them on their path. The students had a habit of arching their back to puff their chests towards 
+the woman, while teachers and other faculty members greeted her with a simple flourish of their 
+skirts. Kara never considered using one’s breasts as a form of polite greeting. </p>
+<p>Far more interesting was the storm of random orgasmic screams ringing down the stone 
+walls. Most were so intense it was difficult for Kara to follow Amae rather than rushing towards 
+their sources and joining in the fun. Lucky for her, the numerous rooms they passed on their way 
+to Amae’s office were open to anybody walking by. The sights made Kara’s nipples perk up like 
+excited puppies. </p>
+<p>Every room made Kara question what kind of magical world she’d stumbled into more </p>
+<p>than the last. In one, a girl was seen sitting against a wall with her breasts in her lap. The size 
+was fairly normal given what Kara had seen up until now, but it was the sheer girth and length of 
+her nipples that made Kara’s heart race. They were long and thick, like two massive pink 
+pythons slinking across the floor from the girl’s tits. Another student had a tape measure in hand 
+and busied herself taking note of the nipples’ impossible length and thickness. </p>
+<p>“</p>
+<p>” the girl with the overgrown nipples pleaded as the other wrapped the tape 
+C-Careful!
+​</p>
+<p>tightly around a pink serpent, “</p>
+<p>” 
+Do you know how sensitive they are right--NnnnghhMMM!!!
+​</p>
+<p>“Well quit getting longer and I’ll stop measuring!” 
+S-Stop measuring them and they’ll stop growing!! You keep wrapping that tape around 
+“</p>
+<p>” 
+them and--
+​
+SNAP!! 
+The measuring tape broke in half when her nipple thickened like a tree stump. 
+” the measuring tape’s owner complained. 
+Hey!
+“
+​
+“
+” 
+I...I-I tried to warn you!!
+​
+The sound of gushing fluid in an approaching room stole Kara’s attention before she </p>
+<p>could witness anymore. From the next room, a pool of milk was encroaching into the hallway. 
+Amae stepped over the creeping puddle without a second thought as if it were as common as a 
+rain puddle. </p>
+<p>” 
+Aaack!! Christa!!! Stop it!!
+“
+​
+A sputtering student held her hands in front of her face to guard against a never-ending </p>
+<p>deluge of dairy. It came at her as a wall of white, threatening to push her backward on the </p>
+<p>​
+​
+​
+​
+​
+​
+​
+​
+​
+ </p>
+<p>4 </p>
+<p>slippery floor. Writhing against the opposite wall was another girl clearly lost to the sensation of 
+the monumental release. Her face was red with arousal and the effort it took to breathe was made 
+Kara envious.<br />
+“</p>
+<p>Y-YOU THINK I’M TRYING TO LACTATE THIS MU--NNNGHH!!! AAAHHH IT’S </p>
+<p>” 
+NOT STOOOOPING!!! THE MILK WON’T STOP!!!
+​</p>
+<p>She sat with her arms flung over the top of her chest. It swelled, looming dangerously </p>
+<p>larger than its owner. </p>
+<p>“Let that be an early lesson to you,” Amae said softly, sensing Kara’s amazement, “It can 
+easy to lose oneself to milk magic. Just know whatever mess you make, you will be 
+very 
+​</p>
+<p>be 
+forced to clean as well. The janitors are not here to clean up your spilled milk.” </p>
+<p>“Yes, Dean…” Kara whispered. Her eyes lingered on the girl until her breasts eclipsed </p>
+<p>her in every way and her friend was blown back by the increasing milk. </p>
+<p>“</p>
+<p>” the downed girl coughed against the milk. “
+CHRISTA!!
+​</p>
+<p>Stop!! It’s going to take us all </p>
+<p>” 
+night to clean this up!!
+​</p>
+<p>A new, very loud, voice echoed then. “
+A heaving plea from further down the hall sounded more normal than anything Kara had </p>
+<p>” 
+Mmmmmmm!!!! B-Bigger!!
+​</p>
+<p>heard thus far. Surely it was only another student wishing her chest larger. Following Amae, 
+Kara found the reality to be anything but. </p>
+<p>A larger classroom with a pair of double doors brought Kara to pause. Inside was a girl 
+grown to gigantic proportions. Her limbs sprawled from wall to wall and her neck craned to fit 
+her head against the ceiling. Each breast was large enough to be a bed, yet was proportional to 
+the girl’s titanic frame and would have been average-sized in a normal encounter. Cowering 
+between her spread legs was a fellow student. Her tiny hands were wrapped around a clit the size 
+of her own head, massaging it as if testing a melon for ripeness. </p>
+<p>“</p>
+<p>” the giant girl pleaded in a booming voice. Lust-fueled juices 
+Bigger!! Plleeeaaase!
+​</p>
+<p>were leaving a puddle under her massive rear. </p>
+<p>Her friend was drenched from head to toe. Thick locks of hair clung to her face and her 
+clothes hugged her body like paint. The possibilities of where she could have been to encounter 
+such moisture made Kara squeak and her thighs tremble with tremendous curiosity. Just 
+ of the giant girl had she 
+much
+​</p>
+<p>?<br />
+explored
+​</p>
+<p>how </p>
+<p>“Thalsa, I </p>
+<p>” the girl panted from the supposed effort to magically induce such 
+can’t!!
+​</p>
+<p>growth in her friend’s body. Her nipples were incredibly swollen and leaking what little milk she 
+had left. “</p>
+<p>” 
+I don’t even think I have the magic to shrink you back to normal size!
+​</p>
+<p>“</p>
+<p>” The giant twisted in the room and grabbed her 
+Mmmm!!! Just a little moooore!!
+​</p>
+<p>friend in a single hand to squeeze her between her mountainous breasts. </p>
+<p>“</p>
+<p>” She hugged a giant tit with her entire 
+Y-You’re squishing me!! Thalsa, calm down!!!
+​</p>
+<p>body and still could not compete with its size. </p>
+<p>This was something Kara knew she had to try. If the act of her breasts swelling to such </p>
+<p>proportions was so exhilarating, then having her body grow into the realm of a giantess must be </p>
+<p>​
+​
+​
+​
+​
+​
+​
+​
+​
+​
+​
+​
+ </p>
+<p>5 </p>
+<p>beyond orgasmic. The thought alone of her clothes tightening across every inch of her body 
+before stitches popped and seams blew open to release-- 
+“Kara?” Amae was waiting further down the hall. 
+Lagging a dozen meters behind, Kara snapped to attention with a red face. “Y-Yes!!” 
+“This way.” 
+A door waited by Amae at the end of the hall. At her motion, after catching up, Kara was 
+ushered up a short staircase with Amae close behind. A short corridor was found at the top. The 
+atmosphere was rich with expensive oils. The closest door was opened and Kara herded inside. 
+“This is my private study,” Amae announced, “You’ll often find me here when I’m not </p>
+<p>teaching or seeing to my other responsibilities around the academy.” </p>
+<p>Kara wasn’t sure how to respond. There were too many items to focus on any one object </p>
+<p>in particular. “It’s very nice…” </p>
+<p>“Thank you. Please take a seat and make yourself comfortable. I shall return shortly.” 
+Amae left without another word. The silent click of the door locking didn’t help to put </p>
+<p>Kara at ease. The contents of the dean’s private study, however, gave Kara’s imagination plenty 
+to ponder. </p>
+<p>In the center of the room was a large, ornate wooden desk. Each corner had a pair of 
+handcuffs dangling in the air. Along its sides were carvings of engorged women lost in the throes 
+of ecstasy. Piles of books and aging tomes helped keep the fantastical piece of furniture 
+grounded. </p>
+<p>Behind the desk were two glass tanks of white fluid reaching to the ceiling. From the 
+smell, Kara could tell they contained only the freshest and most potent milk. The sight alone 
+made her mouth water. For a moment, she was tempted to wrap her lips around one of the 
+spigots at their bases and drink from the massive milky wellspring, but the other contents of the 
+walls were too interesting to ignore. </p>
+<p>One wall was laden with a series of portraits depicting proud women. Kara recognized 
+Amae in the painting furthest down the line and assumed each portrait displayed a past dean of 
+the academy. Each had their bust proudly in view as the painting’s focus. Kara was intrigued at 
+the amount of swelling afflicting each woman as the paintings progressed; each dean was more 
+endowed and adept at milk magic than the last. Amae’s breasts were leagues larger than the 
+academy’s first dean, who appeared small even by Kara’s standards. </p>
+<p>One corner contained a collection of jeweled breast decorations glimmered with obvious </p>
+<p>pride. Resting on a velvet cloth were the remains of the golden circlet Kara had broken when 
+Amae proctored her entrance exam. She blushed when confronted with the shattered gems and 
+bent gold. They had snapped like twigs around her nipples. </p>
+<p>The rest of the office walls were decorated in an assortment of arousal-tingling </p>
+<p>sensations. Kara could only assume them to be the most devilish of sex toys. Some were obvious 
+as to their purpose and where they were meant to be applied. Some had springs or clamps. Others 
+had glass bulbs or seemed to be used in conjunction with one of the nearby potions. Then some </p>
+<p>6 </p>
+<p>contained so many twists, curves, and nodules that Kara couldn’t fathom what use they could 
+possibly serve for the female body. It didn’t stop her imagination from trying. </p>
+<p>Timid, Kara stepped towards one of the closer objects: a large jar containing a pink </p>
+<p>creature. It was as long as her forearm and just as thick. Sliming about the glass container with 
+no apparent sensory organs, it somehow managed to follow her movements as if eager to make 
+contact. </p>
+<p>Somehow, Kara could sense coming into contact with the creature would paralyze her </p>
+<p>with orgasmic bliss beyond her understanding. From the way it followed her back and forth, 
+almost trying to break free of the glass, she had a good idea of where it might head on her body if 
+given the chance. </p>
+<p>Torchlight flickered off an object on a nearby shelf. Moving closer while keeping an 
+untrusting eye on the creature, Kara found an oval-shaped cup with a spout leading from one 
+end. It was obviously meant to be placed between her legs where her nethers would sit 
+comfortably in the cup, but beyond this Kara could glean nothing. Running a finger along its 
+curved metal surface, and glancing back at the squiggling pink creature, Kara wondered what 
+purposes these items could possibly serve. She shivered as well, both in trepidation of finding 
+out and from excitement for the same reason. There was so much she did not know about the art 
+of milk magic. </p>
+<p>The office door clicked open and Kara pulled her hand away from the toy in fright. </p>
+<p>“Sorry, Dean Amae! I didn’t mean to--” </p>
+<p>Amae didn’t enter the office. Rather, it was an older girl Kara hadn’t seen before. She 
+was tall and boasted an air of dignity similar to Amae’s. Long black hair reached beyond her 
+shoulder blades in straight lines. Blue eyes fell upon Kara immediately. 
+“Careful with that engorger, they’re not easy to craft.” 
+“I-I was only curious!” 
+The excuse meant nothing. “So 
+She was nothing if not intimidating. Though she still wore her pants, Kara felt as though </p>
+<p>her new apprentice, huh?” the girl huffed. 
+you’re 
+​</p>
+<p>she were being examined in the nude. “I-I suppose… I’m Kara.” </p>
+<p>“Prilla.” 
+The girl’s abrupt answers put Kara on edge. There was an overbearing mentality about </p>
+<p>the girl, as if she already knew what Kara would say before the words had even crossed her 
+mind. Still she tried to be friendly. “That’s a pretty name! Are you one of Dean Amae’s 
+apprentices too??” </p>
+<p>Prilla’s blue eyes flashed and she glared at Kara in annoyance. “</p>
+<p>,” she growled, “I’m 
+No
+​
+not… The dean hasn’t taken an apprentice in over a century. I’m one of her senior student staff 
+members. You could say I’m on the student council.” </p>
+<p>The contempt in Prilla’s voice was inescapable, as was her lingering inspections of 
+Kara’s breasts. She wrapped her arms across her nipples, uncertain if she liked the girl staring at </p>
+<p>​
+​
+ </p>
+<p>7 </p>
+<p>her. “O-Oh… Well it’s nice to meet you. Dean Amae told me to wait here for her. Do you know 
+when she’ll be back?” </p>
+<p>“Hmmm… Not for a while.” Prilla closed the office door behind her. The lock fell back </p>
+<p>into place with a click to make Kara’s heart thump. She stepped towards Kara. “Or sooner, if you 
+behave.” </p>
+<p>“W-What do you mea--” 
+Prilla came closer. Bringing a hand to her left breast, she circled a plump nipple until 
+milk leaked free. It ran over Prilla’s hands and released an intoxicating scent. “We’ve got the 
+place to ourselves for a little bit.” </p>
+<p>milk onto her face. “</p>
+<p>Kara was about to say something until a hand like a flash of lightning flung droplets of 
+” she cried out, stumbling back as the warmth ran down her cheeks.<br />
+Ahh!
+​</p>
+<p>Grinning, Prilla came breast-to-breast with Kara. “And you’re all mine for every second </p>
+<p>of it.” </p>
+<p>Kara couldn’t explain it, but a cloud was coming over her mind. The heat from Prilla’s 
+milk against her face radiated through her body. “Why...Why did you do that?” She could feel 
+her breasts pushing against Prilla’s. Kara’s were bigger, but Prilla’s won by unseen authority. 
+Prilla’s bust was as stern as her blue eyes. </p>
+<p>“You could also say I’m one of the top users of mind-control magic at the academy.” </p>
+<p>Prilla moaned. “One of Amae’s top students, even.” </p>
+<p>“I… I… </p>
+<p>…” Kara was swooning. She would gladly listen to every word from 
+Mmmnngh
+​</p>
+<p>Prilla’s lips. Suck every drop of milk from her nipples. Follow any request. “
+whimpered, color flushing her cheeks as she grabbed the girl’s chest like a hungry child. </p>
+<p>…” Kara 
+P-Prilla
+​</p>
+<p>“Oh you were too easy,” Prilla chuckled. Taking Kara in her arms, she spun her around to </p>
+<p>bring Kara’s back against her breasts. She set her chin on Kara’s shoulder and spoke into her 
+willing ear. “I’m not sure what Amae is after in that head of yours, but I’ll give her everything 
+that you’re hiding.” Running her hands down Kara’s front until they sank into the underside of 
+her enlarged breasts, she delivered a generous squeeze. </p>
+<p>” Kara cried out when her milk flourished.<br />
+A-Ahhm!!
+“
+​
+Prilla couldn’t help herself. “Should we have a little fun before we get down to </p>
+<p>business…?” </p>
+<p>Her eyes scanned the walls of sex toys. The eagerness of the pink slime creature </p>
+<p>squirming in Kara’s direction made her laugh. “That void explorer seems 
+get into you!” Running a palm down Kara’s back, Prilla slipped her hands down her pants and 
+over her petite butt before delving between the back of the thighs. A sopping pussy met with two 
+penetrating fingers. “Oooh so 
+more...</p>
+<p>Maybe we should start you off with something a little 
+tight! 
+​</p>
+<p>manageable.
+” 
+​
+Prilla was confident in her choice when she reached for a long, curved artifact. It was </p>
+<p>excited to 
+aaaaawfully 
+​</p>
+<p>about a foot in length and had one end clanging with two handcuffs. The opposite end flexed up </p>
+<p>​
+​
+​
+​
+​
+​
+​
+ </p>
+<p>8 </p>
+<p>and down like a finger beckoning someone to come closer. Two leather straps were attached near 
+the handcuffs. </p>
+<p>.” 
+Bend over
+​</p>
+<p>“This will do 
+,” Prilla cooed. “
+nicely
+​
+” 
+M-Mmmmhhmm…
+“
+​
+Doing as her mind-controlling master commanded, Kara whimpered and bent at the hips 
+until her nipples brushed against the stone floor. Her pants slipped down to her knees moments 
+later when Prilla stepped behind her. Licking her hand, she massaged Kara’s presented pussy and 
+coated it in a mixture of their fluids. </p>
+<p>The curved toy was positioned between her legs, its end pressing into her crotch. 
+“Something tells me you’re going to enjoy this as much as I am…” Applying pressure, </p>
+<p>Prilla penetrated Kara’s trembling body. </p>
+<p>“</p>
+<p>” Kara cried out and felt her chest tighten. Under Prilla’s spell, her 
+Ahhh!!! Nnngh!!!!
+​
+sensitivity was heightened. Such a thick, elongated object had never stretched her loins before. 
+She could feel every inch stretching her body from the inside. “
+moaning as Prilla slid the toy deeper until it stopped. </p>
+<p>” she continued 
+Ahhhmmm!!!
+​</p>
+<p>“There we go…” She stared at the pierced girl and rubbed Kara’s ass. Cinching the </p>
+<p>leather straps around both thighs to keep the toy in place made Prilla sweat; Kara’s soft flesh 
+bulged lusciously over the bands.<br />
+” 
+M-M-Mmmm!!
+“
+​
+“Now give me your hands.” 
+Bringing her wrists together, Kara presented them at the base of her back. Metal rings </p>
+<p>snapped around them soon enough to bind her to the toy. 
+“You’re ready to go!” Prilla announced. 
+Kara tugged gently at the cuffs. “</p>
+<p>” Hot bolts of pleasure shot through her navel. 
+AHHH!!!!
+​</p>
+<p>Even the tiniest tension applied to the handcuffs caused the toy to squirm and writhe inside her 
+pussy. Its location was too centered on her G-spot to be a coincidence. Glancing at her belly, 
+Kara could see the toy’s head moving as a bulge under her skin below her belly button. Its 
+flexing was controlled by the tension in the handcuffs. </p>
+<p>“I </p>
+<p>you would love it.” Prilla’s voice seeped with the lust of dominating control. 
+knew
+​
+“Now turn around and kneel.” </p>
+<p>“</p>
+<p>” Any movement caused intense pleasure in Kara’s body. With how 
+Ngh… N-Nnngh…!
+​</p>
+<p>tight the cuffs were clasped around her wrists, there was no hope to escape activating the toy. 
+” 
+Yes, Mistress…
+“
+​</p>
+<p>Her enlarging bust dragged across the floor when she turned. Heavy sloshing was music 
+to Prilla’s ears when Kara fell to her knees, sinking partially into her chest. Sweat poured off the 
+newest apprentice’s face and her cleavage shone bright and misty. Kara’s panting was heavy 
+enough to heat Prilla’s exposed stomach. </p>
+<p>GUUURGLE </p>
+<p>​
+​
+​
+​
+​
+​
+​
+​
+​
+​
+ </p>
+<p>9 </p>
+<p>Kara’s flesh bulged, inching across the stone floor. It had been a long time since Prilla </p>
+<p>had seen nipples so ready to burst with milk. The signs were all there; something inside Kara was 
+resisting her mind-control magic. Overcoming her spell would be a fool’s errand for such an 
+inexperienced milkmage, though. Prilla was confident in her abilities. </p>
+<p>Prilla was also ready to have more fun. “Let’s give you a taste of a little air magic, shall </p>
+<p>we?” </p>
+<p>Bending at the hips she came face to face with a gasping, cloudy-eyed Kara. A deep 
+breath filled Prilla’s lungs to their fullest. Taking Kara’s chin between her thumb and finger, 
+Prilla lifted her lips toward her own. They met in a lengthy, lustful kiss before Prilla released the 
+pressure stored in her chest. </p>
+<p>FWOOOOOSH 
+” Kara’s foggy eyes bulged when airy sensations bubbled in her 
+Mmm! M-Mmmph!!!
+“
+​</p>
+<p>chest. Her tits tightened against her body and rounded in shape. Tiny bubbles tickled against her 
+areolas. Like a breath caught in the center of her chest, Prilla’s air sat and refused to leave. </p>
+<p>Prilla pulled back and snickered. “Now now, be a good little apprentice and let me blow 
+ the difference a little bit of air can make in a woman’s 
+loooove
+​</p>
+<p>your tits up nice and full. You’ll 
+body.” </p>
+<p>Kara had no choice. Again, Prilla inhaled before locking her lips with Kara’s. They </p>
+<p>enjoyed a wet, tongue-filled session before air puffed Kara’s cheeks. </p>
+<p>FWOOOOSH 
+“
+”<br />
+Mmmmmmm… Mmmmmmmm…!!
+​
+FWOOOOSH 
+” Kara’s hands clenched into fists against her breasts. This was a far cry 
+M-MMM!!!
+“
+​</p>
+<p>from what she’d experienced up to this point. Engorging with milk was full and heavy. It carried 
+demanding weight with warm, relaxing temperatures. Now, as Prilla’s air rushed into her 
+mammaries, Kara was confronted with sensations of tight, stretching inflation. Air tickled under 
+her skin and bubbled through her milk. It caused her to tighten and firm as if she were a balloon. </p>
+<p>FWOOOOOSH 
+“
+” 
+Mmmph!!
+​
+Her breasts rounded fuller. Against the airy pressure her areolas domed outward. Already 
+being full with milk, the added content caused her chest to pressurize its dairy. Milk beat against 
+her skin and nipples for escape. As she grew full and round, her breasts bulged around Prilla’s 
+legs. </p>
+<p>Kara was desperate for any kind of release. Her hands shook and pulled against the 
+handcuffs but it only drove spikes of bliss deep inside her crotch when the toy bucked. The 
+devilish toy knew no mercy, nor did the apprentice who had so eagerly inserted it. </p>
+<p>FWOOOOSH 
+” 
+M-MMPH!!
+“
+​</p>
+<p>​
+​
+​
+​
+​
+​
+ </p>
+<p>10 </p>
+<p>Kara’s breasts were growing taller. They lifted Prilla’s own chest like a shelf, pushing 
+them back into her body. A waterfall of juices ran down the toy and Kara’s inner thighs. In the 
+back of her barely-conscious mind, she pleaded for relief. Something had to go. Whether it was 
+the raging pressure inside her chest or the inferno exploding between her thighs, she didn’t care. 
+She couldn’t possibly bear much more of this torture. </p>
+<p>Prilla stepped back then and wiped her lips dry with a finger. She took a moment to 
+admire her handiwork. Kara had been reduced to little more than a trembling girl slave to her lust 
+and her inflated breasts. Skin squeaked against itself in shiny tightness.  </p>
+<p>“Look at you… You’re panting like a horny balloon!!” Prilla scoffed. “Some apprentice </p>
+<p>you got here, Amae; she couldn’t even </p>
+<p>to defend herself against--” 
+try
+​</p>
+<p>GUUUURGLE 
+An angry bubbling gave Prilla pause. Looking down, she noticed Kara’s nipples were </p>
+<p>trembling. A faint silver glow outlined their features before enveloping the quivering pink forms 
+in dull white light. It spread to the rest of her chest to illuminate Kara like two full moons. </p>
+<p>Prilla took a step back. “What the--” 
+GUUUURGLE 
+Kara couldn’t take it any longer. Under Prilla’s magic, a force was fighting back. It raged </p>
+<p>within Kara’s chest like a tiger about to break free of a trap. Kara’s milk did not enjoy falling 
+prey to Prilla’s control. 
+“
+” Kara screamed out. 
+A-AAHHHH!!
+​
+FWOOOOOSH!!! 
+A massive ejection of air and milk erupted from Kara’s glowing nipples. The full force of </p>
+<p>the release caught Prilla off guard and sent her several meters through the air before she landed 
+across the room in a soaking heap. Coughing up Kara’s dairy, she attempted to stand on wobbly 
+legs. An intense tingling was spreading across her breasts where the fluid had coated her. She 
+glared at Kara in anger. </p>
+<p>“
+” 
+What...W-What do you...think you’re...nnngh…
+…” Prilla stumbled. “
+Hey!! What
+​
+​
+Cloudiness was falling over her vision. Dizzy with what she knew all too well to be 
+high-level mind-control magic, her shrinking consciousness raced to counteract the effects. 
+There was no time. Falling to the floor on top of her enlarging breasts, the last thing Prilla would 
+consciously see was Kara standing over her with the dripping toy clenched firmly in her hand. 
+Prilla couldn't imagine how an inexperienced milkmage like Kara could manage to extricate 
+herself from the handcuffs. The necessary magic alone would challenge any of the academy's top 
+professors. </p>
+<p>“</p>
+<p>” Prilla whimpered softly. Far more powerful magic was emanating 
+D-Dean Amae...!
+​
+from Kara than she could possibly know how to deal with. Her mind fogged over when Kara 
+stepped behind between her legs and lifted her flowing white garment. </p>
+<p>“</p>
+<p>” Prilla howled. 
+AuuuUUGH!!!
+​</p>
+<p>​
+​
+​
+​
+​
+​
+ </p>
+<p>11 </p>
+<p>Outside the study, Amae stood waiting for over an hour for Prilla’s return. An annoyed </p>
+<p>tapping foot sent jiggles through her bosom. Screams of pleasure had been gushing from her 
+office nonstop. “Honestly… What is taking her so long? It was a simple task. The girl shouldn’t 
+have posed any challenge. Probing her mind should be child’s play for a student of Prilla’s 
+caliber.” </p>
+<p>Knowing the girl’s tendencies too well, Amae considered the possibility of Prilla losing 
+herself to her own lustful urges. It certainly wouldn’t have been the first time it happened when 
+she was left alone with a subject. A monstrous power complex was Prilla’s greatest shortcoming. 
+Deciding to call it quits, Amae unlocked her study. </p>
+<p>The scene inside was stunning. What books had previously covered her desk were now 
+strewn about the floor soaking in a pool of milk. Spread eagle on the desk was Prilla, her naked 
+body slick and shiny. Each wrist and ankle sat cuffed at a corner. A massive pair of mammaries 
+heaved on her form from extended magic usage, threatening to overflow the desk itself. </p>
+<p>Prilla’s head extended beyond the desk and craned backward. Straddling her thrashing 
+tongue was Kara’s crotch. Each thigh rested on either side of Prilla’s head to cradle it in their 
+dual softness. Smaller than Amae recalled, Kara’s breasts pushed into Prilla’s like watermelons 
+and leaked milk in thick curtains. </p>
+<p>“</p>
+<p>” Kara demanded, howling with pure bliss. “
+O-Ooohhh YES!! DEEPER!!
+​</p>
+<p>” 
+MMMMM!!!
+​
+In her grasp was Prilla’s old skirt. It dove between the prisoner’s breasts before emerging at her 
+belly where it was tied to a pair of handcuffs. Amae recognized the writhing toy very well as 
+Kara tugged on the makeshift reins and made it thrash within Prilla’s body. It was a wonder the 
+girl hadn’t fainted from overstimulation. 
+The dean was in shock. “
+” 
+GIRLS!!!
+​
+Kara’s eyes snapped open as if a trance had been broken. Finding Amae standing there, </p>
+<p>as well as finding herself in such a situation, was beyond bizarre. “</p>
+<p>” 
+O-Oh my Goddess!!
+​</p>
+<p>“
+” 
+MMMPH...!
+​
+Prilla’s tongue slithered between her thighs. Heart skipping a beat in sexual shame, Kara </p>
+<p>fell backward off the mind controller’s face. Fluid dripped from her hair and she gasped for 
+breath. The fog had lifted from her mind as suddenly as Kara’s.  </p>
+<p>” Kara cried out, scrambling on the floor to cover herself. “
+W-What happened??
+​</p>
+<p>“
+Where 
+” Looking up, she saw Prilla struggling and bound to Amae’s desk. There were 
+are my clothes?!
+​
+so many juices running down her face it made Kara wish they could continue. “
+Prilla what did I 
+” 
+do??
+​</p>
+<p>The student gave no response aside from eager moans. Prilla was having a difficult time </p>
+<p>escaping her backfired magic. </p>
+<p>A sigh fell from the dean and Kara cowered on the floor, certain a punishment was </p>
+<p>approaching. Amae stood over her desk. “Honestly, Prilla… I sent you to handle one little task 
+and you let yourself get overpowered. 
+dean turned to her then with a curious expression. “Or perhaps I should be impressed.” </p>
+<p>” Kara tried to shrink into herself when the 
+Disappointing.
+​</p>
+<p>​
+​
+​
+​
+​
+​
+​
+​
+​
+ </p>
+<p>12 </p>
+<p>Amae raised a hand. 
+SNAP! 
+With a flick of her fingers, Prilla’s consciousness returned. “</p>
+<p>H-Huh?? What the hell </p>
+<p>” She struggled against the cuffs. “Amae! I-I--” 
+happened to me?!
+​</p>
+<p>“Stay still.” Amae waved her hand over Prilla’s bust. “You’re leaking all over my desk.” 
+” Prilla arched her back as her chest started to buck and heave as if being 
+Nnnngh!!!!
+“
+​</p>
+<p>handled by giant hands. Loud sloshing filled the room amidst her screams until-- </p>
+<p>SPLLCHH!!! 
+“
+” 
+NNGHHAAAAHHH!!!
+​
+The entirety of Prilla’s milk was pulled from her nipples in a continuous stream. Under </p>
+<p>Amae’s direction, it flowed through the air and into the holding tanks behind the desk. </p>
+<p>“
+” 
+D-Dean Amae! Please!! I-It’s too fast!! They’re...so swollen!!
+​
+There was no reaction from Amae. “Hush. Consider this your punishment.” 
+” The orgasms rocking Prilla’s body drove her to teeter on the cliff of 
+Aaauuugh!!!
+“
+​</p>
+<p>fainting. Kara’s eyes bulged from below, watching the scene unfold and fluid gush from around 
+the toy between her legs. </p>
+<p>Finally, as the last of her milk left in floating droplets and Prilla’s screams turned into 
+recovering moans, Amae released the handcuffs with another snap. “You may handle the toy 
+lodged between your thighs on your own. I expect it washed before you return it to my 
+possession.” </p>
+<p>“Y-Yes...Dean…” Prilla panted, finally able to hug her chest. Despite her best efforts, </p>
+<p>even the slightest twitch of the toy made her body tremor. “</p>
+<p>” 
+Mmmnngh!!
+​
+Kara moved to grab her pants and find any amount of modesty. 
+“Leave them,” Amae commanded, “They won’t be needed anymore.”<br />
+“O-Of course!” Kara tossed them aside and stood to her feet. A hand was clasped across </p>
+<p>her exposed privates while her other arm cradled her chest from below. </p>
+<p>“
+” Prilla wailed in desperation, unable to grasp the toy let alone remove it. 
+M-Mmmngh!!
+​
+Amae rolled her eyes. “For Goddess’s sake, Prilla. Remove that silly thing; it’s time for </p>
+<p>my bath.” </p>
+<p>“
+” 
+Y-Y-Yes, Dean!
+​
+SLORP! 
+” Milk sprayed from Prilla’s nipples when the toy was removed and a final 
+Ahhugh!!
+“
+​</p>
+<p>orgasm shattered her worn-out mind. “
+the desk. Kara didn’t understand the new urgency after Amae mentioned her bath. </p>
+<p>” Dripping in sweat, she sat on the edge of 
+MMMMM!!!
+​</p>
+<p>Satisfied, Amae turned to exit her study and head down the hall. “You shall be joining me </p>
+<p>as well, Kara.” </p>
+<p>Glancing at Prilla, Kara received an angry glare in response. Whatever had happened </p>
+<p>between them in the study, Kara knew it had done nothing to further their relationship. How she </p>
+<p>​
+​
+​
+​
+​
+​
+​
+​
+​
+​
+ </p>
+<p>13 </p>
+<p>could have wound up in such a position with Prilla was a mystery in and of itself. The past hour 
+was a blur and her crotch tingled from Prilla’s ravenous mouth. </p>
+<p>“Stay away from me,” Prilla hissed. Her feet were weak beneath her. 
+“S-Sorry, Prilla,” Kara said softly. 
+“Now, girls!” Amae called from down the hall. 
+Both responded with haste. “Coming!” </p>
+<p>( . Y . )   ( . Y . )   ( . Y . )   ( . Y . )   ( . Y . ) </p>
+<p>Amae’s private baths were beyond anything Kara could have prepared herself for. 
+“As my apprentice, you shall bathe here with me every morning and every night from </p>
+<p>here on out. Is that clear, Kara?” </p>
+<p>Slack-jawed at the pristine bath chambers, Kara nodded. “Yes, Dean…” She was too </p>
+<p>busy taking in the ornate detail to respond with anything more meaningful. </p>
+<p>The room was vaporous and larger than her house. Everywhere she looked was either </p>
+<p>formed from gold or white marble. Taking up the majority of the room was a circular ankle-deep 
+pool of crystal water spanning twenty meters across. At various points around the bath were 
+statues of busty women in risque positions. Each had two streams of hot water falling from their 
+nipples to keep the bathwater circulating.  </p>
+<p>Amae casually walked into the middle of the pool. Ripples spread from her feet in all 
+directions. The steam had seeped through her skirt enough to reveal every bit of her womanly 
+form hiding below. As she sighed and slipped the garment down her hips and thighs, Kara held 
+her breath; Amae was the picture of femininity. </p>
+<p>“Ahhhh…” Amae moaned, stooping down into the water and reclining on her back. It </p>
+<p>lapped over her body and chin, her face just able to stay above the waterline. Each of her breasts 
+jutted from the water’s surface like fleshy bergs. They bounced and wobbled against each other 
+with fantastical buoyancy.  </p>
+<p>“Please don’t make me wait,” Amae called impatiently. 
+Prilla sprang to life at Kara’s side. “Coming, Dean Amae!” Leaving her skirt at the pool’s </p>
+<p>edge, she waded into the water with a bundle of towels and oils. </p>
+<p>Amae’s voice came from the other side of her bust. “You as well, Kara. 
+“R-Right away!” Watching Amae slip into the nude in such a wonderful setting had been 
+oddly tantalizing. Being invited to caress such a graceful form felt like a blessing. Kara stepped 
+into the water. It was cleaner than any water she’d ever drunk at home. </p>
+<p>.” 
+Wash me
+​</p>
+<p>She approached Amae and Prilla to stand over the woman. Amae was like a serene lady 
+of the lake beckoning Kara to enjoy her beauty. A long leg lifted from the water with a splash. 
+The academy’s dean had no reservations in exposing even her most private regions to the girls.  </p>
+<p>​
+ </p>
+<p>14 </p>
+<p>“Prilla, you shall wash my legs tonight.” Excitedly, Prilla took the leg in her grasp as if it </p>
+<p>were a trophy. She reached for a rag. Wringing out the excess water, she was about to put it to 
+Amae’s skin until the dean added, “I’m craving a more </p>
+<p>touch...” 
+delicate
+​</p>
+<p>Prilla’s face gained a fair amount of color. Not all of it was from the rising steam. “O-Of </p>
+<p>course!” </p>
+<p>Dropping the now useless rag, Prilla delicately brought herself towards Amae’s extended 
+calf. Kara was shocked to see her mouth open to release a dripping tongue. It ran across Amae’s 
+leg and explored its gentle curves before ultimately gliding across her foot. Clearly not her first 
+time, Prilla set herself between Amae’s legs and used her shoulder to support the calf possessing 
+her focus. Her tongue worked on cleaning every inch of Amae’s leg while her hands massaged 
+her thighs with rich oils. </p>
+<p>Kara swallowed while watching Prilla’s mouth explore Amae’s body. A foot had never </p>
+<p>looked so appetizing, something she was certain she’d never find herself thinking. </p>
+<p>“Kara,” Amae called. Her hands gently rubbed the sides of her floating bust. “You will be </p>
+<p>washing my breasts. Please make sure to give extra attention to my nipples; they’re 
+extraordinarily sensitive today and have been crying for attention. I fear I’ve let myself become a 
+tad engorged…” </p>
+<p>“Dean Amae!” Prilla gasped, “This is only her first day at the academy! </p>
+<p>haven’t even 
+I
+​</p>
+<p>had the honor! Surely you can’t trust her to--” </p>
+<p>“</p>
+<p>” Prilla whimpered when Amae snapped at her and her breasts wobbled. “Kara 
+Silence!
+​</p>
+<p>is my apprentice and she will be treated with respect.” Amae turned to Kara, staring down her 
+her swollen duties with wide eyes. “Kara, you may proceed.” </p>
+<p>Mouth dry, Kara knelt at Amae’s side. A two-foot-tall breast heaved in front of her like a </p>
+<p>jiggly boulder. “W-W-With my tongue…?” </p>
+<p>Amae leaned her head back and closed her eyes. “Perhaps another time. I would like you </p>
+<p>to use your breasts. Prolonged contact between two milkmage’s busts is highly beneficial for 
+both parties. It strengthens not only their magic temporarily, but their bond as well. As my 
+apprentice, it is essential for our connection to be as strong as possible. In time, you will find that 
+every inch of my body will become familiar to you, and vice versa.” </p>
+<p>Prilla grumbled with envy but did not let it distract from her task. 
+A part of Kara was disappointed her tongue was not requested for the job. Though using </p>
+<p>her breasts in such a way was enticing as well. Placing her hands under her mammaries, Kara 
+lifted them onto Amae’s chest. The water coating their bodies made for an exceptionally-slick 
+lubricant and they slid with ease. It proved challenging for Kara to control their movements 
+without losing control. </p>
+<p>“
+…” 
+How full I am tonight
+” Amae moaned. “
+Mmmmmm…
+​
+​
+Kneeling over her, Kara was astounded at how tight and firm the dean’s bust felt against </p>
+<p>her own. Their breasts fought with swollen, bulbous might. </p>
+<p>“</p>
+<p>” 
+Harder.
+​</p>
+<p>​
+​
+​
+​
+​
+​
+ </p>
+<p>15 </p>
+<p>…” 
+N-Nngh
+“
+​
+Kara applied more of her weight. Her chest bulged from under her body and squished </p>
+<p>against her guiding arms. Slippery lathers of soap and oil brought her skin to shine brilliantly and 
+reflect the gold surrounding them. The heat emanating from Amae’s chest was incredible. It 
+mixed with the steam of the bath to make Kara pant. Sweat ran down her face in large droplets.  </p>
+<p>“
+” Amae praised, “You should be proud.” 
+Your breasts are so firm…
+​
+Kara couldn’t agree more. “T-Thank you.” Under such usage, her breasts had begun 
+engorging with milk. The sexual tension of the bath caused her to bloat several cup sizes at a 
+time. It was a relief; the excess milk would help apply more weight to the busty task at hand. 
+Now losing herself to her work, Kara explored more of Amae’s breasts. She dared to </p>
+<p>venture close to her nipples. Each protruded several inches and quivered with a girth rivaling her 
+wrist. The taut firmness of her areolas pressed into her breasts when she circled them around the 
+dean’s nipples. Well aware of how much milk sat beneath them, Kara was cautious to keep her 
+face from drifting too close; a spray of dairy was likely to happen given the taut sloshing. </p>
+<p>“
+” 
+Mmmmm… That’s it… Remember my nipples, please.
+​
+Amae had no reservations hiding her arousal. To Kara’s amazement, her nipples firmed 
+and grew against her breasts. The pink knobs jutted with enough force to indent her milk-laden 
+chest. A deep-rooted desire to feel their hardened, elongated forms slip between her cleavage 
+overtook the girl. As she lifted her breasts and pressed them together, she lowered them onto a 
+bloated nipple. The envy in Prilla’s eyes burned the back of Kara’s head. </p>
+<p>“</p>
+<p>” The pressure of Amae’s nipple sliding into her cleavage was divine. It 
+A-Ahhh!
+​</p>
+<p>penetrated the fleshy chasm and caused her milk to shift. Blistering tingles spread over the girl’s 
+hard-working bosom. “</p>
+<p>” 
+They’re...mmmm! Dean Amae, your nipples are so hard!
+​
+The act made their milk flourish. Tightness swelled under her skin until white streams </p>
+<p>trickled down Kara’s breasts. It washed down Amae’s curves and coated her in cream. Likewise, 
+Kara could feel Amae’s nipple quivering somewhere between her tits. The other breast’s 
+unattended nipple had begun spraying like a fountain; she only wondered what was happening 
+between her breasts. The tightness was increasing with every stroke and Amae’s breasts looked 
+slightly uneven. Kara hoped she wasn’t blocking the dean’s lactation. </p>
+<p>“</p>
+<p>” Amae moaned loudly. The water shifted between her legs as Prilla changed 
+Nnngh!!
+​</p>
+<p>positions. Lying on her back, she hugged one of the dean’s legs between her breasts and caressed 
+her foot with her tongue. Prilla’s adventurous toe explored the area between Amae’s spread 
+thighs. A waiting pussy was the obvious destination. Amae was more than happy to return the 
+favor, massaging Prilla’s groin with the sole of her foot. </p>
+<p>“</p>
+<p>” Kara whined. Committing such an act was becoming more than 
+I-I’m getting full…!
+​</p>
+<p>she could bear. Her hands wanted to fly between her legs and provide her with the attention she 
+so desperately needed but Amae’s bust demanded further washing. Milk leaked from her 
+cleavage in heavy gushes. She knew Amae’s nipple was losing control. The pressure was rising. 
+How much her cleavage could handle was a mystery. </p>
+<p>​
+​
+​
+​
+​
+​
+​
+ </p>
+<p>16 </p>
+<p>Kara’s breasts grew to overgrown watermelons. The larger they became, the more they </p>
+<p>indented Amae’s chest. Fleshy, rounded mounds rubbing across one another was a recipe for 
+moisture on Kara’s thighs.  </p>
+<p>“</p>
+<p>” Her nipple-washing strokes grew more intense. Every fall felt as 
+Mmmm! Mmmmmm!!
+​</p>
+<p>though Amae’s nipples pierced her cleavage further, until finally, Kara was shocked to see a 
+bright pink object spread the tops of her breasts apart. “</p>
+<p>” 
+O-OH!
+​</p>
+<p>SPLLLUURRCCHH 
+Amae’s nipple sprang free from Kara’s cleavage. Milk sprayed into the air as if it had </p>
+<p>“</p>
+<p>been trapped for ages before pooling between the girl’s breasts. Beyond thirsty, Kara lost control 
+and plunged her head into her cleavage. 
+” Amae squirmed at the eager lips locking around her 
+Ahhh! Careful, my apprentice!!
+​</p>
+<p>engorged nipple. Kara’s suction pulled it deep into her mouth while she continued working her 
+breasts to wash Amae. Feeling them squish against her cheeks as she sucked and swallowed was 
+becoming more than she could take. </p>
+<p>“</p>
+<p>” Prilla groaned and dug her nails into Amae’s thigh. In her excitement, the 
+NNNGHH!!!
+​</p>
+<p>dean had plunged her toe deep into Prilla’s pussy. It pumped her chest with milk. </p>
+<p>The water around the milkmages was turning a foggy white. With every passing second, </p>
+<p>their chests heaved larger and larger. </p>
+<p>” Amae pleaded. “
+S-Suck harder!
+“
+​
+” 
+thought!
+​
+Kara happily doubled down. Gurgling vibrations reached her ears. Amae’s breasts </p>
+<p>I-I seem to have...Mmmmmnngh...grown fuller than I </p>
+<p>expanded outward, pushing into her body like milky pillows. If her growth continued much 
+longer, Kara feared she may have to stand in order to continue attending to her nipple. Or better 
+yet, lay across a massive udder and hug a nipple into her mouth. </p>
+<p>“</p>
+<p>” A surprised tone tinged Amae’s voice. “
+Aaahhh!! O-Ohh!!
+​</p>
+<p>What...What’s </p>
+<p>” 
+happening??
+​</p>
+<p>NNNGH!! MMMMMM!!!
+” 
+“
+​
+” 
+MMPHH!!
+“
+​
+They were lost to their own oceans of pleasure. Amae’s flow was quickly becoming too 
+much for Kara to handle alone. Milk sprayed from her lips and her cheeks puffed outward with 
+pressure. Pinned under Amae’s leg, Prilla was paralyzed as all of Amae’s horny wrath was taken 
+out on her helpless pussy. Slick throbbing sounds slipped from where her toes thrust themselves 
+in and out od her crotch at accelerating speeds and strength. </p>
+<p>“</p>
+<p>” Prilla cried out, fearful the milkmage may soon thrust the first 
+Dean!! D-Dean Amae!!
+​</p>
+<p>half of her foot into her body. 
+M-MMMPH!!
+” Kara coughed when milk forced its way down her throat. 
+​
+” Amae cried out. An overbearing weight loomed from the 
+Apprentice!! Nnngahhh!!
+​</p>
+<p>Kara!! That’s… O-Ooohh, Goddess!! That’s enough! Something is...Something is </p>
+<p>“
+“
+girl’s breasts. “
+”<br />
+going to--
+​</p>
+<p>​
+​
+​
+​
+​
+​
+​
+​
+​
+​
+​
+​
+​
+​
+ </p>
+<p>17 </p>
+<p>GUUURGLE 
+” Kara gagged, her eyes opening when Amae’s chest heaved like a volcano 
+MMMPH!!!!
+“
+​
+about to erupt. </p>
+<p>The dean threw her head back. “
+SPLUUURRRCH!!!! 
+A massive release of dairy threw itself into the air. The force was enough to blow Kara’s </p>
+<p>” 
+AAHHH!!!
+​</p>
+<p>mouth off the dean’s flagon-sized nipple. Both she and Prilla were bathed in a rich torrent of 
+falling cream. It was enough to turn the entire bath an opaque white by the time Amae’s let-down 
+was finished. The mixture of heated water and magic milk tickled Kara’s pussy to the point of 
+making her release an orgasmic whimper and clench her own bloated breasts. One hand clamped 
+itself over her crotch to protect it from the heated pool; even coming into contact with the 
+mixture of milk and water was enough to make it spasm with need. </p>
+<p>” Amae screamed under her six-foot udders. 
+OH GODDESS!!!
+“
+​
+When it was over, Amae breathed a sigh of nervous relief. Both of the young milkmages </p>
+<p>sat wracked with unsatisfied arousal while she rose to her feet. Amae’s skin glistened with a 
+royal glow only a bath in milk and washing from eager tongues could produce. Residual milk left 
+her breasts swollen and full. Their size was no longer an issue, but Kara was certain she saw 
+embarrassment in the woman’s eyes. </p>
+<p>“W-Well done, girls,” Amae stammered uncharacteristically. There was a shakiness in </p>
+<p>the dean’s voice, and an obvious effort to avoid eye contact with Kara. Somehow she didn’t feel 
+like the dean had been expecting to lose control in such a way. It made her swell with pride that 
+she could cause such an effect in the experienced milkmage.  </p>
+<p>Amae made her way to the bath’s edge on wobbly legs. Certain haste in her leave wasn’t </p>
+<p>lost on Kara. “I’d hoped to talk, Kara, but--
+experiencing an orgasmic aftershock and sudden spray of milk. “
+We shall reconvene tomorrow morning. Until then, Prilla will show you to your quarters.” </p>
+<p>” Amae trembled and doubled over, 
+Nnngh!
+​</p>
+<p>B-But...the night has grown old! </p>
+<p>The dean reached for the door, though not before glancing back at the two swollen girls </p>
+<p>in her bath. Kara was having a difficult time keeping herself from becoming pinned under her 
+breasts. Prilla had given herself to such a fate long ago. </p>
+<p>“Y-You may pleasure and empty yourselves as you see fit before leaving!” 
+Kara was about to say something before the door slammed shut. Amae was gone in a </p>
+<p>mysterious hurry. The reasons couldn’t have mattered less to the young milkmage; all she 
+wanted to focus on were the tits pressing into her thighs and the remaining taste of Amae’s milk 
+in her mouth. Sharing the bath with Prilla, their cries of masturbating delight echoed around the 
+marble walls until the air was thick with their sexual release and panting recovery. For a time, 
+they were not enemies, but sisters in the joy of masturbation. </p>
+<p>( . Y . )   ( . Y . )   ( . Y . )   ( . Y . )   ( . Y . ) </p>
+<p>​
+​
+​
+​
+​
+ </p>
+<p>18 </p>
+<p>Prilla’s movements through the academy halls were slow and sleepy. After having her </p>
+<p>own mind-control magic backfire, followed by joining Amae for her bath, her sexual energy was 
+spent. For Kara, the thought of lying in a bed after such a grueling day of intense pleasure 
+sounded like pure bliss. The academy was far from what she had been expecting, but it never 
+lacked a dull moment. </p>
+<p>In time, with their hair still dripping, Prilla stopped at a door. “You’ll sleep here with the </p>
+<p>other </p>
+<p>apprentices. They should be inside.” 
+low-rank
+​</p>
+<p>Kara had yet to dress after their bath due to Amae’s banning of her pants. A hand 
+remained clasp over her navel to provide some form of modesty. “Does that happen every 
+night?” </p>
+<p>Annoyance flashed in Prilla’s eyes. “What?” 
+“The bath with Dean Amae! It was…” Kara shivered from more than her nakedness. “It </p>
+<p>was </p>
+<p>. She made you lick her clean like a cat!” 
+ecstasy
+​</p>
+<p>“And I relish the taste!” Prilla huffed. “We should count ourselves lucky to be in such a </p>
+<p>private setting with as powerful and respected milkmage as Dean Amae.” The image of Kara 
+rubbing her breasts over the dean’s was still fresh in her memory. “Some of us had to </p>
+<p>it.” 
+earn 
+​
+Kara got the sense Prilla wanted an apology, but she had no clue what for. “I-I was just </p>
+<p>doing what she--” </p>
+<p>Amae’s helper threw the door open. A gruff hand pushed Kara into a room of wide-eyed </p>
+<p>girls. “Your fellow apprentices will show you to your bed. Good night.” </p>
+<p>“W-Wait! What about my clothes! I don’t have anything to--” 
+SLAM! 
+Prilla closed the wooden door and left before Kara could say anything more. 
+“--wear…” 
+Color rushed to her face. Turning slowly, Kara faced her roommates in all her swollen 
+nudity. The leftover milk from her bath had left her breasts full and plump. Her skin had never 
+felt so smooth. </p>
+<p>The room was fairly spacious and housed several beds. Each occupant had a small space 
+to call their own, but the bedroom was shared between them with no privacy. It was a welcome 
+relief when the excited faces staring back were familiar; she could never forget them after the 
+scene in the dining hall. Melanie, Kim, and Stella stood as if they’d been waiting for Kara’s 
+arrival for hours. They were still visibly engorged after drinking so much of Kara’s milk. </p>
+<p>“</p>
+<p>” Melanie yelled, jumping off her bed. Arms were flung around her bare body in 
+Kara!!
+​
+an embrace. “You’re still wet!” She turned to her friends and laughed. “I told you Amae would 
+make her give her a bath!” </p>
+<p>Kim giggled and ran her eyes over Kara’s exposed frame. “Looks like she had a fun time </p>
+<p>doing it, too. Not to mention she smells better than any of us on our best day!” </p>
+<p>​
+​
+​
+​
+ </p>
+<p>19 </p>
+<p>It was nice to be among other girls she was semi-familiar with, but Kara was far from </p>
+<p>being comfortable in her birthday suit. Her legs shifted uncomfortably while scanning the room. 
+“Do any of you know where I can find some clothes?? Amae took everything I arrived with!” 
+Lying on her stomach in bed, Stella hummed. “She’s probably burned them by now. If 
+it’s not a flowing white skirt with easy access, it’s not accepted here. Your uniform is on your 
+bed!” </p>
+<p>Kara’s feet padded across the stone floor to reach her bed. Looming over it was a tall </p>
+<p>window overlooking the countryside below. It was shrouded in darkness. Kara wondered what 
+was happening back home with her sisters. The village was too far away to see any of its torches. </p>
+<p>Waiting on her mattress was a neatly-folded garment. Lifting it up, she sighed at what </p>
+<p>qualified as her new uniform: a single white skirt completely see-through in the right light. 
+Stepping into it, she found it reached her ankles and sat angled on her waist to reveal a healthy 
+view of her pubic area. The top creases of her hip joints left an exceptionally-teasing image. </p>
+<p>“It’s supposed to sit like that,” Kim laughed. “Takes a little to get used to, but you learn </p>
+<p>to love it. It’s the traditional uniform for a milkmage.” </p>
+<p>Somehow Kara felt more exposed in the silken garment than when she was naked. There </p>
+<p>was nothing left to the imagination to any pair of eyes willing to wander enough. Still it was 
+better than nothing. She wondered how long it would be until she could decorate her nipples with 
+gorgeous gems like Amae’s. </p>
+<p>A thought popped into Kara’s head then. “Oh Goddess! I-I hope I didn’t get all of you in </p>
+<p>trouble at dinner!” </p>
+<p>Stella licked her lips. Kara could still feel her tongue writhing against her pussy through </p>
+<p>the bench’s holes. “Are you kidding?? That was the best meal I’ve had in a 
+blushed bright red at the compliment and knew she wasn’t talking about their food. </p>
+<p>time.” Kara 
+long
+​</p>
+<p>Melanie provided better assurance. “That sort of stuff actually happens more than you 
+think. You put that many milkmages in one room together, somebody is going to lose control. 
+It’s part of the Bron-Regence Academy experience.” </p>
+<p>“I’ve </p>
+<p>had someone’s milk affect me like that before, though.” Kim lifted her 
+neeeever
+​</p>
+<p>chest in her hands. “Mine </p>
+<p>haven’t gone down!” 
+still
+​</p>
+<p>Melanie nodded with excited agreement. “I felt ready to pop if I didn’t let-down soon! It </p>
+<p>was the fullest I’ve been in a long time…” Arousal brought color to the girl’s cheeks as she 
+spoke. “Kara… Your milk was </p>
+<p>.” 
+delicious
+​</p>
+<p>“O-Oh… Thank you! I never thought people would say something like that about my--” 
+Kara paused when the torches on the walls flickered and dimmed in unison. Shadows </p>
+<p>lengthened over the floor. “What’s going on??” </p>
+<p>Stella grumbled and rolled onto her back towards her pillow. “It’s just time for bed. The </p>
+<p>hall monitors are turning down all the fires…” </p>
+<p>Sleep would be a treasure. Just the diminished brightness of their room was enough to </p>
+<p>make Kara yawn. The last several hours had been filled with more sexual adventure than the rest </p>
+<p>​
+​
+​
+​
+ </p>
+<p>20 </p>
+<p>of her life combined. Following the other girls’ leads, she climbed into bed as the remaining 
+torches died away to glowing red embers in the darkness. </p>
+<p>Considering all she’d been through, Kara was shocked to find her mind too awake to </p>
+<p>accept her body’s exhaustion. Tossing and turning several times amid the sloshing of her breasts, 
+she determined lying on her back was going to be the new norm. Her soft curves overflowed 
+onto her biceps as she lay staring at the ceiling. The window overhead filled the room with the 
+sounds of the night. </p>
+<p>Her mind would find no rest. 
+It was all too much to take in. How had a pair of simple breasts brought her from living 
+the life of a peasant, to claiming one of the most respected positions in society? Kara pondered 
+the question. Before her milk, she was nobody. Now with her chest engorged to the point of 
+overflowing and even dwarfing her body at its fullest, there seemed to be no escape from the 
+attention her dairy wrought. What was worse, Kara didn’t understand anything she’d been 
+presented with. Magic remained a mystery and there were no boundaries between her and her 
+fellow students or the dean of the academy for that matter. At any moment, some naked girl 
+could cling to her gushing with lust. Fingers could find their way into her body. Tongues could 
+wash over her skin. Mouths could latch on her breasts for hours until their owner felt satisfied. 
+Horny eyes could ogle her from across the dining table before leaping through her food where 
+their lips would meet in passion. A part of her wondered if her hair would ever be dry of milk 
+again. </p>
+<p>“
+…” 
+M-Mmmm
+​
+Kara shivered. These thoughts were stirring sensations in her core. Under the warm </p>
+<p>blankets, one of her hands gently explored across her belly until falling between her thighs. Her 
+breasts were hot and plump. Their nipples tented the covers. Even the act of feeling her breasts’ 
+weight shift as she breathed was enough to make her horny. Her size had grown by leaps and 
+bounds, but her sensitivity had increased far more. </p>
+<p>As confusing as her new situation had become, Kara knew one thing; it all felt incredible. 
+She’d never been so alive. She’d never seen so much of the female body, nor appreciated what it 
+was capable of. Indecent urges wandered into her thoughts.  </p>
+<p>GUUURGLE 
+” 
+Mmmm…
+“
+​
+Kara closed her eyes and moaned. Milk bubbled in her chest to lift the covers to remind </p>
+<p>her of its ever-present existence. </p>
+<p>More mysterious than anything was the creamy content of her breasts. The power it </p>
+<p>commanded came without reason or explanation. Feeling her skin bloat, Kara relished as her 
+arousal kicked off a new cycle of lactation. She had no idea what milk magic was, but Kara felt 
+as though it was constantly ready to overflow and burst from her body the longer she pondered 
+such lustful thoughts. Giving into these urges only made her milk swell further and her chest </p>
+<p>​
+​
+ </p>
+<p>21 </p>
+<p>bloat. Was there a limit to how large she could become? How much milk her breasts could hold? 
+Gasping silently in the dark room, Kara’s mind flew at the thoughts. </p>
+<p>“
+” 
+Shh! Shhhh!!
+​
+Kara froze. There were giggles coming from the darkness. Hushes drifted through the air </p>
+<p>to calm them. </p>
+<p>DRIP DRIP DRIP 
+The sound of liquid falling against stone rang out. Anxiety set in when the sound drew </p>
+<p>closer and closer to her bed. Heart pounding and praying the lump of her hand under the covers 
+between her legs wasn’t too obvious, Kara opened her eyes. </p>
+<p>The other girls were standing around her bed in the darkness. Much of their features were </p>
+<p>hidden but the moon revealed playful smiles cracking their faces. Leaking milk reflected the 
+moon glow when it fell through the air. It was very clear none of them were wearing any 
+clothing. The outlines of their labia between their thighs called for attention. </p>
+<p>“G-Guys?” Kara whimpered. 
+Stella was the first to speak. “Melanie, tie her down.” 
+” Melanie groped her chest. Her thighs clamped together as 
+Mmmmm… With pleasure.
+“
+​
+she moaned with increasing milk. A glow filled the bed and Kara noticed rings of light twisting 
+around her wrists and ankles. They moved to the corners of the mattress to spread her eagle and 
+helpless with only her covers for protection. </p>
+<p>“W-What are you doing??” Kara squeaked while pulling at the magical bonds. The area 
+between her thighs throbbed when Kim playfully pulled at the bottom of her blanket. It slipped 
+from her body to fall in a heap on the floor. Kara was helpless against her fellow students’ 
+wishes as they bore down upon her. </p>
+<p>Stella’s hands slipped under Kara’s skirt to caress her calves. “This is your initiation…” 
+she moaned, inching her hands higher. They passed Kara’s knees to sink into her supple curves. </p>
+<p>“Every new girl has to go through it…” Melanie leaned over Kara’s face. Their lips </p>
+<p>quivered before locking together. </p>
+<p>” Kara shivered with Melanie’s tongue on hers. 
+M-Mmmm…
+“
+​
+Stella’s hands moved teasingly across Kara’s navel. Only the most gentle of finger </p>
+<p>brushes would graze the outskirts of her groin. Eager to dive deeper, she lifted Kara’s skirt and 
+bunched it on top of her stomach.  </p>
+<p>“</p>
+<p>” Kara cried out, squirming to save some of her dignity. Her legs were spread 
+S-Stella!
+​</p>
+<p>too far for her thighs to come together. There was no hiding her glistening pink flesh. </p>
+<p>The frisky girl paid no mind to her embarrassment. Glanced behind her, she said, “Go </p>
+<p>ahead and get started, Kim; we’ll get her all ready to go up here.” </p>
+<p>“Don’t take too long,” Kim breathed. A hand sank into her chest as she knelt to the floor. </p>
+<p>“You know how I get…” </p>
+<p>“Wait! W-Wait! What are you going to do to--</p>
+<p>” 
+Mmmnghh!!
+​</p>
+<p>​
+​
+​
+​
+​
+ </p>
+<p>22 </p>
+<p>Melanie and Stella attacked. Their chests pressing together, Melanie’s tongue made 
+circles around Kara’s nipple before latching. Sweet milk gushed free to the pleasure of both 
+students. The massaging delivered by Melanie’s hands to either side of Kara’s breasts only 
+accelerated the arousing process. </p>
+<p>“</p>
+<p>Melanie! D-Don’t… Aaahhhh! Ooohhh don’t suck so hard!! I’ve given so much milk </p>
+<p>” 
+today already!! Please you’re going...g-going to make my breasts grow aga--AHHH!!!
+​</p>
+<p>Two fingers spread her pussy to make way for a slithering tongue. Stella’s efforts were as </p>
+<p>energetic as ever. She zapped Kara’s body with electricity, knowing exactly where to apply 
+pressure. A swollen clit sang with sensitivity and heat. It felt as swollen as a plump grape, but 
+Kara knew better. At least she hoped she did; with magic in the equation, there was no telling 
+what could happen to her body. </p>
+<p>“</p>
+<p>” Kim groaned on her knees. From what little Kara could see of her, it looked 
+Nnngh!!!
+​</p>
+<p>as though her breasts were swelling by the second. Already they flowed over her lap and sloshed 
+with thick fluid. “</p>
+<p>” Kim panted, hair clinging to her face. “I-I’m...almost there…!” 
+Guys…
+​</p>
+<p>“Well slow down!” Stella grinned from between Kara’s thighs. “We’re not ready yet.” 
+” Kara arched her back. Melanie’s hungry suckling knew no limits. 
+Ready for what??
+“
+​</p>
+<p>The stimulation was already driving her mammaries to bloat to the point of spraying dairy. Quick 
+spurts arched through the air before falling upon the pile of naked girls. “
+M-Melanie stop! You’re 
+” 
+making me….f-fill up!! Goddess how are you so thirsty?!
+​</p>
+<p>Melanie’s and Stella’s breasts had begun swelling from the excitement. At their current 
+rate, it wouldn’t be long until there was no room left on the bed. Stella’s tongue wiggled inside 
+Kara’s body. Between her thumb and index finger, she tenderly massaged her clit. </p>
+<p>“</p>
+<p>” Kara bucked her hips. The pleasure was becoming too 
+N-No!! Oooh stop please stop!!!
+​</p>
+<p>much to endure. Every inch of her being felt ready to burst from the pent-up sexual energy. At 
+this rate she was going to need another bath. “</p>
+<p>” 
+Y-You’re going to make me COME!!
+​</p>
+<p>“Look how </p>
+<p>you are…!” Stella admired. Pulling her head back, a string of natural 
+wet
+​</p>
+<p>lubrication mixed with saliva stretched from her bottom lip to Kara’s pussy. “I could take a bath 
+between your legs, Kara.” </p>
+<p>“
+“</p>
+<p>MMMMM!!!
+” Kara panted at the crude comment. “
+​
+” Kim warned. Her size had come to rival giant pumpkins. 
+Nnnnghhhh guuuuuys!!!
+​
+Spilling onto the floor, her breasts dwarfed her body. “I-I can’t get much bigger than this!!” </p>
+<p>” 
+D-Don’t...Don’t say that!!
+​</p>
+<p>“You need to learn how to slow it down!” Stella sighed. “All right… Melanie, I think </p>
+<p>she’s had enough.” 
+POP!! 
+” Kara cried out when her nipple sprang free of the girl’s lips. In the 
+Nngggahhh!!
+“
+​</p>
+<p>moonlight, she could see it had swelled to twice the size of its pink sister due to the constant 
+suction. Kara’s eyes widened watching it quiver and shake in the moonlight and she whispered, 
+“I-It’s so puffy...” </p>
+<p>Melanie stepped away and wiped her mouth. </p>
+<p>​
+​
+​
+​
+​
+​
+​
+​
+​
+​
+​
+​
+ </p>
+<p>23 </p>
+<p>“Wait… Wait, where are you going??” Kara missed her mouth latched onto her tit. </p>
+<p>“Someone is enjoying themselves,” Melanie giggled. “Don’t worry; we’re not done with </p>
+<p>“C-Come...</p>
+<p>...back!” 
+mmmm
+​</p>
+<p>you.” </p>
+<p>Stella’s hands slapped into the sides of Kara’s hips to grasp her firmly. 
+“
+” 
+Ahh!
+​
+Stella moaned with rising anticipation. “We just have a little spell to cast before we move </p>
+<p>on to the big finale.” </p>
+<p>“A...A-A spell?” The thought of more magic taking a toll on her body made Kara weak. 
+“My own special little invention.” Reaching towards her chest, Stella pinched a nipple to </p>
+<p>stimulate a mini let-down. Milk covered the tips of her fingers and she brought them to meet 
+with Kara’s pussy.  </p>
+<p>“</p>
+<p>” The thick warmth against her lower lips tingled with energy. Kara 
+Ooooohhhhhh…!!
+​</p>
+<p>writhed at the milky massage. </p>
+<p>“You like that?” Stella cooed, rubbing her pussy in circular motions. “Just wait.” She </p>
+<p>leaned between Kara’s thighs. With tender lips, she kissed Kara in several places before licking 
+the full length of her crotch from bottom to top. </p>
+<p>“</p>
+<p>” Kara’s body tensed. Every nerve in her groin was on fire. 
+Aahhh… A-Aaaahhhh!!
+​</p>
+<p>Building desire wanted to explode from her clit. “
+” 
+GODDESS THAT FEELS GOOD!!! WHAT’S HAPPENING TO ME?!
+​</p>
+<p>W-What did you do?!?! Aaaahhhh OH </p>
+<p>Melanie took pleasure in Kara’s reaction. Grabbing the bound girl’s chest, she spread her </p>
+<p>cleavage apart to allow her a view down her abdomen. “See for yourself!” 
+“
+” 
+O-OH HOLY GODDESS!!!
+​
+Stella’s lustful eyes sat behind her hips. Their gaze was fixed on the soft tissue between </p>
+<p>Kara’s thighs. With heavy pulsing, her flower shook and quivered from flowing magic. A mound 
+was rising between her legs. </p>
+<p>Puffing and engorging, Kara’s pussy was growing in size. Its lips thickened and mashed 
+together in plump writhing. Taut and pink, it rose from between her thighs like a small balloon. 
+Kara’s hips bucked at the intensity. She could feel it sliding against itself with smooth bulges. 
+Both labia grew like magical fruits until they pushed against her inner thighs. As large as a 
+grapefruit, Kara’s enhanced pussy quivered on her hips like a bowl of pudding.  </p>
+<p>“
+with wide eyes. “</p>
+<p>” Kara stared 
+What did you do?! M-My...My...Nnnngh!!! Ohhhh I can hardly stand it!!!
+​</p>
+<p>” 
+I-It JIGGLES!! It’s like a giant pink peach!!
+​</p>
+<p>From within its puffy depths, she could feet something stirring. Gasping louder and </p>
+<p>louder with excited breaths, Kara squirmed and clenched her fists. Her clit was engorging like a 
+balloon. Engorging and stretching, the bulb of extreme pleasure grew like a berry until it was 
+large enough to part her pink crease. Kara’s eyes bulged. </p>
+<p>​
+​
+​
+​
+​
+​
+​
+​
+ </p>
+<p>24 </p>
+<p>“</p>
+<p>” she yelled. What was once no bigger than a bean had grown to 
+I-I-It’s getting so BIG!!
+​
+a ripe strawberry. Her chest heaved with quick breaths at the incredibly personal transformation. 
+” 
+It’s still going!!
+“
+​</p>
+<p>The bulb grew and grew. Blooming from the top of her crotch, Kara’s skin stretched </p>
+<p>around its base. Its pink color became intense and deep. Sensitivity shot through Kara’s hips like 
+bolts of lightning. Soon it became as large as her fist before coming to stop its magical swelling. 
+Kara stared in utter shock at what had become of her femininity. There were no words she could 
+find. </p>
+<p>“</p>
+<p>, what do you think?” Stella chuckled and ran a finger between the bloated lips. 
+Mmmmm
+​</p>
+<p>It sank to her last knuckle with ease without penetration. Sliding it out at an angle to strike her 
+apple-sized clit, it sent Kara’s groin into a fit of engorged wobbling. </p>
+<p>“</p>
+<p>” Kara shrieked. Her clitoris shook with monumental sensitivity. Her 
+AHHUUUGH!!!
+​
+” 
+N-N-No, please!!
+eyes watered when Stella’s hand opened above it. “
+​
+Stella grabbed her clit and squeezed. 
+“
+” 
+A-A-A-A-AAAAHHHH OH MY DEAR GODDESS!!!!!!
+​
+SPLEEELCH!!! 
+Fluid squirted from Kara’s pussy in a thick curtain. It doused her mattress and Stella’s </p>
+<p>face with thick lubrication. Kara could hardly breathe from the over-sensitized sex organ’s 
+power. </p>
+<p>“</p>
+<p>!” Stella laughed, giggling at the giant clit and feeling it squish between 
+Nice and plump
+​</p>
+<p>her fingers. “She’s readyyyyy!” she sang. </p>
+<p>“</p>
+<p>” Kim bellowed. “I-I can’t hold this much longer!” 
+MMMM!!! Thank the Goddess!
+​</p>
+<p>Nipples as big around as her fist and twice as long were squished in her hands. Visible pressure 
+had drawn her skin taut and shiny with milk. “I-I’m going to need some help getting up!” </p>
+<p>The illusory bonds vanished from Kara’s limbs when Melanie and Stella went to Kim’s </p>
+<p>aid. She couldn’t resist the urge to sink a hand into her enlarged loins. It squished against her 
+palm and coated her hand in fluid. She could have lost all her fingers in its swollen depths. She 
+didn’t have the courage to come near her clit; it squeezed between her legs like a bomb ready to 
+explode. Hot, bleary eyes glanced up from the sight when the three girls approached the side of 
+her bed. </p>
+<p>“Kim is going to need to be on her back,” Stella advised. Kim’s breasts extended past her </p>
+<p>hips as massive droplets. </p>
+<p>Not wanting to fight whatever was happening, Kara moved out of the way. Walking </p>
+<p>proved more orgasmic than ever with the soft object between her thighs. </p>
+<p>“
+” 
+Nnnngh!!!
+​
+CREEEAAAAK 
+The bed heaved when Kim sank into Kara’s mattress. Under a pile of flesh, she was </p>
+<p>pinned until something could be done with her milk. One-third of the bed had been claimed by </p>
+<p>​
+​
+​
+​
+​
+​
+​
+​
+​
+ </p>
+<p>25 </p>
+<p>her bust. Kara was mesmerized by the sight. Almost three feet tall, Kim’s mounds groaned with 
+fluid. Her towering nipples alone were large enough to knock someone out. </p>
+<p>Stella was at Kara’s back with surprising swiftness. “
+” 
+W-What?!
+“
+​
+” Stella whispered like a devil. How did she know what Kara was 
+Accept Kim’s nipple,
+“
+​</p>
+<p>,” she whispered in her ear. 
+Sit on it
+​</p>
+<p>thinking? </p>
+<p>free. </p>
+<p>Mouth dry and thighs drenched, Kara joined Kim on the bed. 
+CREEEAAAAK 
+” Kim moaned, arms draping over her chest to keep her head 
+O-Ooohhhh they’re so full!
+“
+​</p>
+<p>“Are you sure about this??” Kara ogled. The breast was much larger up close. 
+Helpful hands grabbed Kara’s thighs. Pushing her onto a mound-like tit, Kara’s knees </p>
+<p>and feet sank into Kim’s right breast as she fought to balance herself. </p>
+<p>SLOOOSH SLOOOOSH SLOOOOOOSH 
+Kim screamed from her weight. “
+The heat of her eight-inch nipple emanated only inches from Kara’s pussy. The girl was </p>
+<p>” 
+OOOHHHH GODDESS!!!
+​</p>
+<p>afraid to lower her hips onto the throbbing pink beast. </p>
+<p>SPLLLUUURCH!! 
+” 
+AAHHMMM!!!
+“
+​
+Milk sprayed up her legs as if in warning.<br />
+“W-Wait…!” Kara panicked, “If I sit on it, it’s going to--” 
+SQUEAK!! 
+BWOOOMPHH 
+“
+” 
+AHHHUUGGHHHH!!!!
+​
+Covering in slippery milk, Kara’s knees lost their grip on the sides of Kim’s breast. Her </p>
+<p>hips fell. Colliding with the monstrous nipple, her swollen pussy mashed into the fleshy cylinder. 
+It spread its lips apart and doused the nipple in lubrication. In one swift motion, Kim’s nipple 
+plunged deep into Kara’s body. They both screamed in sheer delight with a sound that rang 
+through the night. Stretching to fit her fellow apprentice, Kara’s groin ached and throbbed 
+around the milky nozzle. </p>
+<p>“</p>
+<p>” It was an incredible sensation to grow accustomed to. 
+M-MMM!!! MMMNNGHHHH!!!
+​
+Arching her back, Kara thrust her breasts into the air. The open window above her bed displayed 
+a night sky as expansive as her pleasure. She wondered if her sisters might hear her screaming. 
+Leaning forward, she placed her hands on Kim’s breast for support. Her hips gyrated as they 
+started to hump and grind. 
+SLOORP 
+SLOORP 
+” Kim grabbed the mattress. With Kara’s entire 
+K-Kara!!! Nnnghhh take it easy!!!
+“
+​</p>
+<p>weight resting on a single tit, every motion sent her milky mass heaving back and forth. </p>
+<p>​
+​
+​
+​
+​
+​
+​
+​
+​
+ </p>
+<p>26 </p>
+<p>“</p>
+<p>” Kara humped, hardly able to slide up and down 
+It’s...so big!! Ooohhh it’s so THICK!!
+​</p>
+<p>the nipple. “</p>
+<p>” 
+I can...barely keep it in!!
+​</p>
+<p>GUUURGLE 
+Kara’s eyes bulged. She froze, straightening her back and pressing her hands into the </p>
+<p>bottom of her belly. It rumbled with an emanating heat and pressure. </p>
+<p>GUUURRGLE 
+” 
+N-Nnngh!!!
+“
+​
+The pressure rose. Deep inside of her, Kim’s nipple was engorging with milk.<br />
+” Kara gasped, “
+Your milk…!!
+“
+​
+” 
+going directly into my body!!
+​</p>
+<p>It’s...pumping into me!! Kim your milk is...o-oooohh...it’s </p>
+<p>She grasped at her navel. Somewhere inside of her, she could feel the nipple releasing </p>
+<p>more and more milk. Already the base of her navel was rounding out with pressure. The fear of 
+being at the mercy of Kim’s nipple was impossibly erotic. </p>
+<p>“
+” Kara panicked. 
+I-It’s going to fill me up!!
+​
+“All that milk has to go somewhere,” Stella confessed. “Don’t worry; I think you’ll like </p>
+<p>where it ends up.” </p>
+<p>“
+” 
+What do you mean?! I’m ALREADY full from her nipple being inside of--
+​
+GRRUUMMMBLE 
+Kara stared at her breasts. They were growing at an alarming rate. The familiar sensation 
+of her own lactation was there, but it was accompanied by another presence. Additional heat was 
+flowing into her chest from below. Grabbing their bottoms, Kara squeaked when they ballooned. </p>
+<p>” 
+My breasts!! YOUR MILK IS GOING INTO MY BREASTS!!
+“
+​
+“What better place to keep it?” Melanie licked her lips. 
+Turning her head back and forth, Kara stared at her bloating bosom. Melanie and Stella </p>
+<p>stood on each side of the bed. Thirsty eyes ogled her strawberry nipples. </p>
+<p>you get </p>
+<p>“Don’t worry,” Stella assured while climbing onto the overfilled mattress, “We won’t let 
+too
+ big.” 
+​
+Melanie joined them. “Just big enough that you can’t stand it.” 
+Kara was helpless but to hold her breasts aloft while they leaned towards her nipples. 
+“
+” 
+NNNGH!!!!
+​
+The two girls clamped down. A gush of milk immediately followed to overflow their </p>
+<p>cheeks.  </p>
+<p>GUUURGLE 
+Kim’s milk flowed at a greater rate. Given the view from behind of Stella and Melanie’s </p>
+<p>rears, her arousal reached new peaks. </p>
+<p>“
+” 
+A-Aaahh!!! Ohhh milk me!! Please suck the milk out!!!
+​
+It was too much stimulation for one girl. At every erogenous zone, something was </p>
+<p>assaulting her sanity. Whether it be lips, tongues, or a giant throbbing nipple, the pleasure was 
+mounting beyond what Kara could handle. Slamming her hips up and down into Kim’s breast, </p>
+<p>​
+​
+​
+​
+​
+​
+​
+​
+​
+​
+​
+ </p>
+<p>27 </p>
+<p>she began to feel as if she were ready to launch into space. “
+” 
+FULL!!
+​
+She swelled larger with Kim’s milk and her own. Too large for her own arms, her chest </p>
+<p>OOHHHH I’M GETTING SO </p>
+<p>required the help of her friends to hold it aloft for their thirsty mouths.  </p>
+<p>“
+” 
+Please milk me! Milk me MILK ME!!
+​
+SLOOSH SLOOOSH SLOOOSH 
+She rocked on her mount. 
+“
+” Kim gasped in shock. “
+K-Kara, careful!!
+​
+” 
+heavy!!
+​
+It was true. Kara could feel her knees and feet sinking deeper into Kim’s udder. But she </p>
+<p>I got as big as I could!! You’re getting </p>
+<p>wanted more. She wanted to be bigger. She wanted Kim to be bigger between her legs. She 
+wanted Kim’s nipple to double in size inside of her, then triple. She wanted Stella and Melanie to 
+have enough milk for a lifetime. </p>
+<p>As her chest bloated into her suckling friends’ mouths and Kim’s tit heaved under her </p>
+<p>inertia, she stared through the open window.  </p>
+<p>In the distance the clouds drifted through the open sky. Silvery illumination fell upon the </p>
+<p>land when a full moon revealed itself. Kara stared at its swollen form as if it were as ready to 
+overflow as she was. </p>
+<p>A wave of lustful magic spiked in the back of her mind. Heat pierced her nipples like </p>
+<p>coals. </p>
+<p>“</p>
+<p>” Melanie and Stella paused. Looking down, they noticed a silver glow 
+H-Hmmm?
+​</p>
+<p>shining through their cheeks. Kara’s nipples swelled with power. </p>
+<p>“</p>
+<p>” Kara said nothing. Throwing both hands between her 
+MMMMMM!!!!
+MMMMMM
+​
+​</p>
+<p>legs, she bent forward with all her weight until they sank up to her wrists into Kim’s breast. </p>
+<p>GRUUUUUMMMBLE 
+” Kim asked, growing nervous. Heat was traveling through her milk glands. 
+K-Kara??
+“
+​</p>
+<p>“</p>
+<p>When her chest started to swell and rise, her eyes opened wide. Magic was pouring into her from 
+” 
+Kara what are you doing?! D-Don’t make me bigger!!
+Kara’s buried hands. “
+​</p>
+<p>” Stella struggled against an influx of milk. The glow spread across Kara’s 
+MMPH!!
+​</p>
+<p>chest in front of her face. As frightening as it was, she couldn’t bring herself to release her 
+liplock. 
+“</p>
+<p>” Kara demanded, bearing down heavier on 
+Mmmm!!! MMMMMM!!! MORE MILK!!!
+​</p>
+<p>Kim. Magic rushed through her breasts in a torrent. Her legs spread wider to accompany the 
+growing mound of flesh. </p>
+<p>“</p>
+<p>” Kim yelled. Rounded 
+K-KARA STOP!! Oooohhh I’ve never been this big befooorre!!!
+​</p>
+<p>globes loomed over her on the bed. They bulged over the edges of the mattress, Kara now 
+perched four feet in the air. </p>
+<p>​
+​
+​
+​
+​
+​
+​
+​
+​
+​
+​
+ </p>
+<p>28 </p>
+<p>“</p>
+<p>” Melanie gagged. The milk was beyond delicious. Along with Stella, she 
+M-MMPH!!
+​</p>
+<p>was forced back on the bed by Kim’s expanding breasts. Their backs pressed into the wall, 
+pinned there by Kara’s own expanding bust. In their mouths her nipples pulsed with dairy. 
+” 
+K-Kara!! Slow down!! Your magic!!
+“
+​
+Milk sprayed from Kara’s pussy. At such a rate, her body couldn’t take in the full amount </p>
+<p>of Kim’s leakage. Together with her own lactation it was driving her bust to mammoth 
+proportions. </p>
+<p>“</p>
+<p>” Stella waved her hands. Pink flesh was overflowing from 
+MMMMPH!! M-Mmmph!!
+​</p>
+<p>around her mouth. Pure magic gushed down her throat with the taste of honey. She and Melanie 
+ogled the wall of skin inching towards their faces. Below, Kim’s head was becoming drenched in 
+their orgasmic releases. The heat between her immobilizing chest and her friends’ bodies was 
+dizzying. 
+“</p>
+<p>” Kara threw her head back. The ceiling wasn’t far away. Kim’s nipple felt 
+AAHHHH!!!!
+​</p>
+<p>as big around as her own thigh. Gallons of milk rushed from it every second. “
+” 
+CONTROL MYSELF!!!
+​</p>
+<p>I-I...I CAN’T </p>
+<p>” Kim howled. “
+I’m so FUUUULL!!
+“
+​
+Something in Kara’s core was reaching a breaking point. With her breasts larger than </p>
+<p>” 
+F-FUCK MY NIPPLE!!
+​</p>
+<p>Kim’s and more than enough to overflow an entire bed, she dug her legs into her friend’s breast 
+as if she were riding a horse. Milk was forced into her pussy from the pressure. </p>
+<p>“</p>
+<p>” Kara shrieked. Light coated 
+AAUUUGHH!!!! O-OOOHHHHHHH GODDESSSSSS!!!!
+​
+her body. She could feel her nipples ready to escape from their prisons. Between her legs, Kim’s 
+nipple had grown so large it was forcing itself out of her pussy. She sat on it, halfway removed, 
+like a giant pink pillow. </p>
+<p>“
+“</p>
+<p>MMPH!!! 
+” 
+MMMMPH!!!
+​
+​
+” Kim clenched her body, 
+KARA NO MOOORE!!! AHHHH I CAN’T TAKE IIIITTT!!!
+​</p>
+<p>knowing what would come if she were to orgasm. </p>
+<p>Kara ignored her. In the final seconds before her mind-rending release, Kara released </p>
+<p>what remained of her magical surge. </p>
+<p>“</p>
+<p>” Kara exclaimed, every inch of her body strained to 
+I’M GOING TO EXPLOOODE!!!!
+​</p>
+<p>the limits of sexual pleasure. Unable to take it, she reached between her legs and grabbed her 
+magma-hot clit with both hands and squeezed. </p>
+<p>SPLUUUURCCCHH!!!!!! 
+Milk release from the girls as their dams broke simultaneously. Atop a six-foot mound of </p>
+<p>milky flesh, Kara was blown off Kim’s nipple like a cork when her nipple erupted in a geyser. 
+Likewise, Melanie and Stella were thrown across the room by a sweeping let-down striking them 
+at point-blank range. Kara fell to the floor and landed upon her breasts where they cushioned her 
+with enough girth to keep her feet from touching the ground. </p>
+<p>​
+​
+​
+​
+​
+​
+​
+​
+​
+​
+​
+ </p>
+<p>29 </p>
+<p>For an entire minute, the dorm room was a collection of girls writhing under the 
+shattering ecstasy of the monumental release. The scent of sex filled the air alongside their milk. 
+Dairy whitewashed the ceiling and walls. Nothing was safe from their orgasmic wrath. </p>
+<p>Upon coming down from the sexual high, the girls observed their surroundings. The beds </p>
+<p>were nowhere near their original positions. Blankets lay in a soaking pile in one corner. One 
+mattress was completely missing, presumed washed away through an open window. Sopping 
+clothes torn from their wardrobes covered the floor in a squishy layer. The only thing left 
+unmoved was Kara's bed, now split in half under Kim’s girth. </p>
+<p>Resting in the middle of the chaos was Kara, her body partially engulfed in her own </p>
+<p>cleavage. Her breasts extended several meters in every direction. Kim’s came to rest at half her 
+size, while Melanie and Stella sat against the wall with busts large enough to hide their legs. 
+Milk drained from their throats as they coughed.  </p>
+<p>It was hard enough to catch their breath, much less find something to say. 
+Stella was the first to find her voice. “
+” 
+What...WHAT HAPPENED?!
+​
+” Kim moaned from the bed, her nipples far too sensitive for the breeze 
+Nnnnnnghhh!!
+“
+​</p>
+<p>I don’t 
+entering through the window. The moon was hidden behind the clouds once more. “
+know! Kara just started glowing and...a-and I can’t explain it!! My magic went haywire!! I 
+” 
+didn’t think it was possible for me to get this big!!
+​
+Melanie agreed. “I’ve never felt so much magic flowing through me in all my life!!” 
+“What did you do to us, Kara??” Stella demanded with excitement. 
+Kara blushed atop her chest. Struggling to find balance and not sink between her 
+mammaries, she admitted, “I don’t know!! I-I just saw the full moon come out from the clouds 
+and I completely lost control! I--</p>
+<p>” 
+W-Whoa!!
+​</p>
+<p>BWOOMPH!! 
+Gravity taking over, Kara sank into her cleavage. Her arms flailed from the front of her 
+chest until she managed to free her head and gasp for air. “
+…” Staring out at the sight 
+Whoops
+​
+her milk had created, Kara could tell her friends were enduring the same tingling sensation of 
+residual magic inside their breasts. Whatever happened to drive their lactations to such heights, it 
+was clearly not normal.<br />
+GUURUUUGLE 
+” Kara whimpered when her chest bulged around her ever so slightly. A sliver 
+A-Ahhh!!
+“
+​
+of moon glow flashed in the room before clouds hid it from sight once again. Doing her best to 
+control her heightening urges as her friends stared in awe, Kara pondered all that had happened 
+in the several hours since arriving at the academy. Overwhelmed and trapped in her cleavage, 
+she confessed, “This might take some getting used to…” </p>
+<p>​
+​
+​
+​
+​
+​
+</p>
+</body>
+</html>

@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Shiny Breeding 3</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>Shiny Breeding 3 </p>
+<p>Karla’s Need </p>
+<p>Karla watched as her daughters went with their father to be raised safely. She was more than </p>
+<p>happy to let her Reshiram family go as it was safer for her, and them. Being among the few anthro 
+Legendary pokémon out there. The human turned shiny Glaceon anthro gently rubbed her arms trying 
+to think of what she wanted to do now. Now twenty four years old, still very well built for either 
+modeling, or breeding like a Loppuny. She finds her need to do more in her life might have been just a 
+passing thought. </p>
+<p>She walked around the breeding center for a little bit thinking about what she could do now. Karla had 
+spent nearly four years just breeding with Storm, her shiny Glaceon. However he had taken to being a 
+very dominate alpha, so she let him stay as part of the breeding program. He loved his harem too big to 
+move with pups. She didn’t really want to be that big again, or have much else done to her. Well, if she 
+had a say in it she didn’t really mind. Maybe it was time to make a pick of her own for some fun, and 
+went to find Eva. </p>
+<p>A Month Later </p>
+<p>Karla has spent the last month going over papers, and having a few things moved into her home. She got 
+a small breeding setup in her house for just her and a lucky guy. What this lead to was the shiny Glaceon 
+woman having a bit more freedom in her pleasures. It also lead to her now having to pick a guy for the 
+first full run of her new bedroom, and she got a surprise. A shiny Umbreon male was wanting to help her 
+out. </p>
+<p>The buff looking Umbreon, named John, helped Karla wash the dishes after a lovely meal. She hadn’t 
+thought he would be so gentle, or friendly. </p>
+<p>“So, John?” Karla asked taking the only clothing she had on off. A large t-shirt she only wore when 
+cooking. “You ready to test me bed out with me?” </p>
+<p>John just chuckled as he stood there nude. He’s six foot three inch body towered some over the woman. 
+“Of course, Karla. I hope it works like you want it.” He said in a gentle voice as he gently picked her up in 
+his arms, and carried her to the bedroom. </p>
+<p>She blushed some out how he treated her almost like she was royalty. It was really nice as they enter 
+the room through a double door. Karla wanted to be easy to walk out after a good breeding after all. 
+The large double queen size bed took up the room, and was covered in red velvet that could take a 
+rough night. </p>
+<p>“It had better. It took a month to get it and the house ready for this.” Karla said as she was gently placed 
+on the bed. She looked up at John as he crawled over her as he nudged her legs open with his knees. 
+“How about we start off without the booster? I’d like to see how you do before we play around.” </p>
+<p>He just grinned as his cock was already at full length, and pushed it into her pussy. “I don’t think we 
+need them always.” John teased as he gently thrusts into her tight tunnel. “I’ll make a request later, 
+love.” </p>
+<p>She didn’t get to say much more as they made slow love. The woman panted softly as she climaxed 
+gently a few times, but let out a gasp when John filled her. He climaxed with enough seed that her filled 
+her womb, and gave her a small pot belly. It left her feeling stuffed, horny, and eager for a few more 
+rounds. Which John was happy to give with a some lovely kisses as well.  </p>
+<p>John grunted as he gave his hips a good thrust as he climaxed again, and filled her womb till she looked 
+pregnant. He gently rubbed her belly as he stood there with her laid on the bed, and knotted to him. 
+“Now about that request, love.” </p>
+<p>Karla looked up at John with blurry eyes. “Y-yes?” </p>
+<p>“Could you be a milk maid for me? I’ll give you pups if you give me milk.” He said with a gentle smile. </p>
+<p>She squeezed her breasts thinking it over for a moment, and shrugged. “I can do that for my gentle 
+stud.” The shiny Glaceon said with a soft blush. “It sounds like it might be fun.” </p>
+<p>He chuckled as he laid on the bed with her and kissed her. “In the morning. I think you need to be clear 
+minded for this.” John hugged her close as the two fell asleep. </p>
+<p>In the morning Karla and John took a shower to get ready for the day. Karla had to take a little longer as 
+she had to empty her womb some. She went to get a lactation booster for what John asked for as she 
+dried off her hair. So far it was the only thing he had asked for, and she liked that about him. Even back 
+at the breeding center he was gentle with her. </p>
+<p>She dropped the towel in the hamper next to the bedroom door, and got a small needle out. Next she 
+got a bottle from the cabinet next to the bed. Slowly she filled the needle with lactation booster before 
+filling a second needle, and putting the bottle back. Karla put a shot into each breast with a needle and 
+held in a groan. She threw the needles away and went to let John know she was going to be giving milk 
+by evening. </p>
+<p>For the rest of the day John massaged, kissed, and played with her breasts to make sure she was going 
+to lactate. It made Karla horny for most of the day even as she started to give milk. It was a small 
+amount but John didn’t mind. He treated her gently and requested if he could give her more lactation 
+booster at a later time. She gave the okay, but only if she set the amount. </p>
+<p>One week later </p>
+<p>John sucked on Karla’s nipples as he gently fucked her on the couch. She was sitting on his lap as he 
+drank from her DD-cup tits. He loved how cool her milk was as he got his fill and grunted stuffing his 
+mate with seed. </p>
+<p>Karla took to wearing cow print sleeves and stockings to with being John’s milk maid. It was oddly more 
+of a turn on for her, and moaned feeling her belly swell with hot seed. For the past week she didn’t let 
+John give her a booster for her milk, and it showed well. He would fill her every night with his seed, and 
+got all the milk he wanted as the week went on. Karla hugged him tightly as she enjoyed the afterglow 
+of being filled. </p>
+<p>“You still want to give me a milk booster, love?” Karla whispered in his ear. He answered with a nod as 
+he kept gulping her milk. “You can use it on me tonight. I want a full breeding this time.” </p>
+<p>He pulled back licking his lips. “Of course. Did you already set the needles out?” </p>
+<p>“Yes, and you’ll like the amount for me.”  She purred as he stood up with her still on his cock, and took 
+her to the bedroom. “We might need the milking machine after tonight.” </p>
+<p>John smiled as he walked into the room and saw the two large needles filled to the max. He grabbed 
+them and laid his mate on the bed for a moment. He flinched a little draining each needle into her tits as 
+she flinched as well. Once the needles were in the trash he started to roughly fuck Karla to give her as 
+many pups as he could. </p>
+<p>Over the course of the next two weeks, and small fertility booster for the ice vixen that left Karla in heat. 
+John was having his fun with his mate as he gently thrusts into her. He pats her back as her belly looked 
+to stay at full term in size now, and that was thanks to his breeding. Her breasts rested on the bed with 
+her belly when she’s on all fours, and hooked up to the milking machine. She was enjoying the feeling of 
+being both milked and bred by John. </p>
+<p>Three Months Later </p>
+<p>Karla had a belly that reached halfway to her knees with breasts leaking milk all the time now. She was 
+thinking of letting John have control for a bit, but he kindly turned it down. He kept to his requests that 
+didn’t really range far from making sure she was giving milk. </p>
+<p>“John, is my milk really that good?” Karla asked resting on the floor as he rubbed her belly. </p>
+<p>“Yes, and we’re getting paid for what I can’t drink.” He said with a grin, giving her breasts a gentle 
+squeeze. “Besides, I don’t think you need anything like what Storm did.” </p>
+<p>She gave a snort. “Okay, you win only because of that point.” The Glaceon said pulling the cow print 
+gloves off. “I’d like to request at least one night of no limits, please.” Karla said with a wink. </p>
+<p>John didn’t need any more of hints as he picked her up and went to the bedroom. </p>
+<p>Fifth Month </p>
+<p>Sixth Month </p>
+<p>Karla was kind of regretting the no limits night, but it was worth it. Even if she was holding her belly that 
+now reached past her knees and tits the size of small beach balls. John loved it as he helped her walk 
+around before needing to use a harness that hooked to a track in the ceiling. At least she was able to 
+move when John went shopping. </p>
+<p>The heavily pregnant Glaceon anthro purred as John feed her ice cream and rubbed her belly. The 
+Umbreon was treating his mate with gentle care. He did kind of overdo it a little, but she didn’t mind. 
+Even if at the moment she was on her fifth tub of ice cream, and snacks. John waited on her for the 
+most part without making requests. After all she was his mate now more than a milk maid. </p>
+<p>She sighed looking at herself as she rested on the bed after finishing the cold snack. “John, are you doing 
+alright? You haven’t asked for anything for awhile now.” </p>
+<p>“Not much left to ask for, love. I have a lovely mate, all the milk I want, and a large family to come.” John 
+said helping Karla lay on the bed. He made sure she was on her belly to make it easier to sleep. “Nothing 
+more could make this better.” </p>
+<p>She sighed wanting to say something, but didn’t want to force it on him. The Glaceon wanted to be 
+breed like the world was ending. However, she loved John too much by now to force that on him. 
+Maybe after she gave birth they could go wild with protection. Karla didn’t want to have to large a 
+family after all the pups she had already. </p>
+<p>Karla was huge now, and ready to birth any day now. The woman’s belly covered the whole double 
+queen bed now, and her breasts rested in harnesses as they were milked. She loved being so big and 
+almost didn’t want to give birth. It was a thing she talked with John about while they waited for the 
+doctor to show up. It didn’t help she felt the pups kicking around more as she felt her water break. </p>
+<p>Ninth Month </p>
+<p>A Month after Birth </p>
+<p>John was rough breeding Karla again with protection, and it was no limits. She had talked him into it by 
+setting aside a day once a month. It was still a wild event as she felt her belly swell with his seed past her 
+knees, and milk streamed from her nipples. The shiny Glaceon panted loudly as the cow bell on her 
+collar rang with each hard thrust of her mate. Maybe they could start having this fun without the 
+protection and keep going for a large litter. What she didn’t feel was John giving her another milk 
+booster as they both climaxed. Hey it was no limits night after all. </p>
+</body>
+</html>

@@ -1,0 +1,1662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Printing Dreams Part 3</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>Questions, comments, or commissions? Send me an email at </p>
+<p>the.be.engineer@gmail.com</p>
+<p>or message me on Discord at BE Engineer#2306 </p>
+<p>1 </p>
+<p>Printing Dreams Part 3 </p>
+<p>​
+​
+ </p>
+<p>2 </p>
+<p>The library’s basement was dreary and devoid of sunlight as always. The only indication 
+of time, aside from the clock on the wall, were the strangled rays of a dying winter’s day filtering 
+through the window wells of the offices opposite Dave’s work station. Being across the room 
+and over several rows of aging bookshelves, they did little to adjust the dull ambiance of the 
+fluorescent lights overhead. Dave’s best guess told him his Wednesday night was nearing five 
+o’clock; possibly the longest hour of the week. </p>
+<p>He tapped his fingers on the counter. Time would fly faster if the university would let </p>
+<p>him play games on the computer, but these low-traffic times were better spent studying. Or so he 
+was told; Dave would fall asleep if he dared open a textbook. Working the IT desk after classes 
+helped with tuition but it wasn’t much for amusement. The occasional cough or humorous sneeze 
+from a secluded student studying in the library’s basement served as his entertainment. </p>
+<p>Footsteps echoed down wooden stairs in dire need of repair. Dave straightened up, </p>
+<p>expecting a student in need of IT assistance but slouched back onto the support of his elbow 
+when his boss appeared. A large box was cradled in his arms and he struggled to see over the top 
+while making his way to the IT desk. </p>
+<p>“Hey, Dave,” his boss, Regi, greeted. It was about time for him to close IT up for the day </p>
+<p>and sign off on Dave’s hours. “How’s the tech problems?” </p>
+<p>“Oh, you know…” Dave looked around the near-deserted basement and darkened halls of </p>
+<p>bookshelves. A student coughed somewhere hunched over a table. “Pretty busy for a 
+Wednesday.” </p>
+<p>Regi set the box on a back table. “Just gotta get this unloaded and we can close up for the </p>
+<p>day.” </p>
+<p>Anything was better than watching the shadows get longer. “What’s in it?” 
+“No clue, it’s a donation to the university from a local business.” 
+Dave rolled his eyes. A donation box was just a comfy term used by offices getting rid of </p>
+<p>old beat-up technology in the name of tax benefits. More often than not, they contained 
+peripherals requiring cords no longer in production. These cords were never in the box. The 
+distinct yellowing of decades-old white plastic from the 90s never failed to make Dave feel the 
+need to wash his hands. </p>
+<p>A sticker sealing the cardboard flaps read the name of the company: Textile Accounting. 
+“Wait, wasn’t this place on the news recently??” Dave asked, the name ringing a bell. 
+“I think so. I remember driving by the office on my lunch break and traffic was at a </p>
+<p>standstill. The FBI had the place surrounded like some kind of movie. Totally ambushed the 
+owner and his wife.” </p>
+<p>“Yea, yea! I remember! It was the biggest money-laundering scandals in the state since 
+the 70s!” Dave whistled. “The guy’s wife looked like a supermodel! If I owned a company and 
+had someone like that working next to me, I would probably think I could get away with 
+anything too. Her body must be worth millions.” </p>
+<p>Regi shrugged. “I don’t know… Based on the pictures I saw, it didn’t look like a plastic 
+surgeon had ever touched her. Some women are just God’s gift to the world...” Dave’s boss was </p>
+<p>3 </p>
+<p>quick to change the sexual subject and slide a box opener over the tape. “Repo company must 
+have had no use for the stuff they collected from his office. Let’s see what we’ve got in today’s 
+junk lottery.” </p>
+<p>The smell immediately filling the IT area was horrendous. Both workers stumbled away </p>
+<p>from the box, holding their noses at the stench before braving the contents once more. 
+“Holy crap! They send us their fridge contents or something??” Dave coughed. 
+Only Regi dared pull anything out. “Couple random cords… HDMI; always useful… </p>
+<p>Bulb for a projector; surprisingly not burned out… Two large and--” Regi dropped them back in 
+the box, wiping his hands on his shirt, “--​very
+ sticky binder clips… An eighteen-inch VGA-only 
+​
+monitor… Aaaaand a printer. This thing looks like it’s seen plenty of use and better da--​oh 
+” 
+God!
+​</p>
+<p>Regi couldn’t set the printer down fast enough. 
+“I think we found the source of the stink,” Dave said backing away. Such a combination </p>
+<p>of scents was never encountered before. “That thing smells like old milk and sex,” he decided. 
+“Someone must have spilled something on it ages ago. Thing might not even turn on.” 
+Regi held his breath and lugged it over to the front IT desk, plugging it into an outlet. A small 
+screen blinked to life. “Well, it’s a trooper if nothing else,” he sighed. “Still has plenty of ink, 
+too.” </p>
+<p>Dave snorted, staying far away. “What poor corner of the library is getting stuck with that </p>
+<p>thing?” </p>
+<p>clothes!” </p>
+<p>Scratching his head, Regi replied, “None. This printer is meant for light home-office use; </p>
+<p>it wouldn’t last a day with the torture the students here produce. You want it?” </p>
+<p>to throw it as far away as possible! I’m going to have to burn my 
+it? I ​want
+“Do I ​want 
+​
+​</p>
+<p>“The smell isn’t anything a Clorox wipe wouldn’t fix! And you’re always complaining </p>
+<p>about having to come all the way to the library to print out your homework, aren’t you?” </p>
+<p>“Well...yea, but--” 
+“So take it! I’m just going to throw it out otherwise. Clean it up a little and it wouldn’t be 
+any worse than a cheap printer you’ll find at Best Buy. I’ll bet the ink will last you to the end of 
+the school year even.” </p>
+<p>Dave groaned but relented. Waking up early to print his homework was the bane of his </p>
+<p>existence. “Fine, I’ll take it. Thanks for the smelly printer…” </p>
+<p>Laughing, Regi suggested, “Run a couple dryer sheets through it, you’ll never notice it.” 
+“I’m a student; do you think I can afford something like dryer sheets?? My car has been </p>
+<p>on empty for the last week and--” </p>
+<p>Hurried steps tapping down the stairs caught Dave’s attention. The first sign of yoga 
+pants lifted his spirits but seeing the face of his friend Maria helped push his attitude into the 
+stratosphere. The two of them had known each other since early high school and by pure chance 
+had taken the same college path. Dave couldn’t say he took the same academic roadmap, but 
+going to the same school was just as good. Maria was always leaps and bounds ahead of him in </p>
+<p>4 </p>
+<p>their studies. One of the smartest girls he knew, she strived for perfection in every action and 
+never took a step towards her future without having the next ten planned out. When she finished 
+law school, Dave was certain the world would never see a more clever, or attractive, lawyer. 
+“Oh thank goodness you’re still open!” she exclaimed, coming down the steps to see </p>
+<p>Dave still behind the IT desk. A laptop was clutched in her arms across her chest as she 
+approached. Skinny thighs strode towards him wrapped in spandex. Dave assumed she must 
+have come from a yoga class. </p>
+<p>The device was placed in front of his willing hands and Maria leaned on her elbows to 
+catch her breath. “Sorry…” she breathed, “I ran here from the gym after yoga ran long.” Soft 
+hands reached up and pulled a hair tie from her ponytail, releasing a thick wave of black hair to 
+tumble around her shoulders. Maria ran her hands through it, letting her worry wash away before 
+looking into Dave’s eyes. “God, what a day… My laptop won’t connect to the WIFI anymore. 
+Can you take a look? I know it’s almost five o’clock, but just real quick? Please?” </p>
+<p>She knew what she was doing with her eyes. Maria always knew. Every move she made 
+was calculated and had a purpose. Nothing was on accident and these puppy-dog eyes were no 
+exception. There would be no complaints from Dave; he could stare into their blue depths for 
+ages. Part of him wished Maria still wore her glasses. They added an air of stern eroticism to her 
+gaze. They were just as mesmerizing with contacts, though. </p>
+<p>Dave glanced behind him at Regi, who shrugged. “It’s up to you,” he said, “If you think </p>
+<p>you can fix it without the other computers go for it. I’m locking up, though.” </p>
+<p>?” Maria begged. “I have an online assignment 
+Maria’s laptop sat in front of him. “​Please
+​</p>
+<p>to do tonight…” She leaned forward on her elbows, letting her loose t-shirt fall forward and 
+display a teasing view of sports bra-created cleavage. Every move was calculated. Maria didn’t 
+own the most womanly curves, but Dave couldn’t resist the temptation of her petite vanilla cups 
+and she knew it. Too many nights he’d lay awake daydreaming about her body. He would jump 
+at the opportunity to date Maria, but unfortunately no such intentions had ever been mirrored. </p>
+<p>“I can take a look,” he nodded, reaching for the computer. 
+Maria sprang up, her teasing view gone. “Oh thank you, Dave! You’re a lifesaver. I don’t </p>
+<p>know how many times you’ve fixed my technology issues since high--” She stopped, her nose 
+” 
+scrunching as she inhaled. “​What is that smell??
+​
+“Oh, it’s that donated printer…” Dave explained, pointing to the device to their side. 
+Curious, Maria reached a hand out to press some of its buttons. “It smells like </p>
+<p>someone--” </p>
+<p>KZZAP! 
+“​OW!!
+” 
+​
+“What happened?? Are you all right??” Dave asked, seeing Maria recoil as if bitten. 
+“That damn thing shocked me!” she growled, glaring at the printer. 
+“Maybe it has a short,” Regi suggested, listening to their conversation. 
+“I’ll see if it even works when I get home,” Dave sighed. Already the printer was more </p>
+<p>trouble than it was worth. </p>
+<p>5 </p>
+<p>“Be better thrown in the dumpster,” Maria said shaking her hand out. “The trash might </p>
+<p>actually make it smell better too.” </p>
+<p>“Ok, all fixed,” Dave announced. 
+“What? Already??” 
+He shrugged. “I just had to reset the network adapter.” 
+Maria’s eyes sparkled. “No wonder they have you behind that desk…!” The laptop </p>
+<p>slapped closed and she stuffed it inside a backpack. More relaxed with a working computer, 
+Maria sighed before asking, “Are we still on for studying this Friday night?” </p>
+<p>“Pretty sure it’s going to be more like you tutoring me, but I’ll be here! I’ll snag that table </p>
+<p>just for us,” he indicated, pointing to a table on the other side of the room next to some 
+bookshelves. “Should be quiet down here.” </p>
+<p>on Friday night,” 
+“Oh yes, because the library is so often such a noisy place, ​especially
+​</p>
+<p>Maria teased.  </p>
+<p>“Some of us non-geniuses need quiet if we want any hope of understanding calculus!” </p>
+<p>Dave couldn’t admit he would enjoy having Maria completely to himself either. She was 
+lightyears out of his league, but it was fun to dream nonetheless. </p>
+<p>“I understand.” Maria got ready to leave. “I’ll see you tomorrow in class!” Eyeing the </p>
+<p>printer with resentment, she added, “And take that thing out of here before they have to burn the 
+library.” </p>
+<p>“Will do.” Watching Maria leave in yoga pants was almost as mesmerizing as her </p>
+<p>puppy-dog eyes, even if there wasn’t much to fill the spandex. </p>
+<p>“Nice work,” Regi said. “Now grab your fancy new printer and let’s lock-up. There’s a </p>
+<p>lasagna waiting at home for me.” </p>
+<p>shoulders. </p>
+<p>With some reluctance, Dave grabbed the printer after slinging his backpack over his </p>
+<p>“Have fun!” Regi called out before exiting through the back door. 
+The open winter air did wonders for keeping the printer’s smell away from his nose. </p>
+<p>Dave feared he may still have to burn his shirt afterward, though. The smell was obvious as ever 
+once it was brought into his small apartment bedroom. It was even worse in close quarters. 
+Before changing clothes, Dave set about wiping the machine down and cleaning any mechanism 
+he could reach. </p>
+<p>“Ok… Not so bad,” he breathed, much of the smell transferred to the wet rags. “I guess </p>
+<p>the last owner really did just spill something on it.” </p>
+<p>The freedom of owning a personal printer was setting in. Such a thing was like gold in 
+the college world. No longer would he have to walk to campus at eleven o’clock at night. No 
+longer would he have to pay ten cents for every page, or wait in line, or wonder which printer his 
+essay was sent to. Dave swallowed, realizing another freedom he had just acquired; he could 
+print whatever he wanted, from homework to personal items, some crossing into the erotic. </p>
+<p>6 </p>
+<p>Plugging it in proved it still worked and it wasn’t difficult finding the correct driver 
+online. Dave sat at his desk, pondering his next action. “What should I test this printer with…” A 
+very familiar tightness in his chest stemming from arousal told him he already knew. </p>
+<p>Photoshop was a hobby of Dave’s. Nothing professional, but enough to satisfy some of 
+his deeper urges lying in the realm of fantasy. After Maria’s tease at the IT desk, he knew what 
+he wanted. A quick flip through Facebook revealed the perfect image; a picture of Maria from 
+last summer sunbathing in a bikini. The angle was perfect and the amount of skin on display was 
+to die for. </p>
+<p>The act itself of manipulating Maria’s body was part of Dave’s foreplay. As perverted as </p>
+<p>it sounded, he enjoyed working over her frame with the cursor. It was as close as he could ever 
+come to touching her intimate parts. This session was concentrated solely on her bust and the 
+B-cups stashed within the bikini. </p>
+<p>Dave was careful not to let himself run wild. Several minor tweaks were all it ever took </p>
+<p>to add an incredible amount of transformation to someone’s body. Too much and his skill would 
+fall apart, defeating the purpose and the illusion. With gentle mouse strokes, Dave brushed 
+between Maria’s cleavage and plumped her breasts, bringing them together as if she were 
+growing within her swimsuit. The slightest tug on their sides gave the impression of bulging 
+skin. Dave couldn’t help but admire his handiwork, bringing Maria to what he believed to be a 
+D-cup. The image could never compare to the real thing, but it was plenty for his imagination. </p>
+<p>“All right, printer,” he nodded, ready to take his creation into the bathroom before </p>
+<p>showering. “Make yourself useful.” </p>
+<p>It whirred to life like a golem brought back after eons of slumber. Printing in color was a </p>
+<p>slow process, but before too long a page shot out from its feeder and landed in Dave’s waiting 
+hands. Maria was cast in ink in all her Photoshopped glory, breasts overflowing her bikini and 
+suiting Dave’s fantasy. “Next best thing to real life,” he grinned, closing his laptop before taking 
+the photo with him to the shower. </p>
+<hr />
+<p>Dave trudged to class the next morning through a winter chill. The excitement of his </p>
+<p>new-to-him printer had gotten the better of him and even after his shower, he found a rekindled 
+love for strengthening his photo-manipulation skills. Just thinking about how late he stayed up 
+made him yawn. The only redeeming aspect of having to get up for an eight a.m. calculus class 
+was the opportunity to see Maria. She was leaps and bounds ahead of him in understanding the 
+content and sat front and center, but she never failed to smile when their eyes met. He was lucky 
+to have her as a study partner. </p>
+<p>“I’m so not ready for the test on Monday…” he groaned to himself, walking into the </p>
+<p>classroom. The homework was difficult enough with an entire night to work on it; the content 
+wouldn’t be any easier under a time constraint. “At least the next two classes are for review.” </p>
+<p>7 </p>
+<p>Dave collapsed into his chair on the edge of the room with sleepy eyes. Most other </p>
+<p>students were in a similar mental state, either dozing off or sipping morning coffees. Tangible 
+energy flowed through the room, however, when Maria entered. Waves of black hair flowed in 
+her wake. Dave’s eyes, as well as several other guys’, sprang open at the sight. </p>
+<p>As always, Maria was devastatingly gorgeous. Her outfit was a pair of simple skinny 
+jeans and a soft white sweater. It contrasted her hair like a raven in the snow. The hair wasn’t 
+what drew the attention, though; it was the contents of her sweater. He knew this sweater well 
+and it had never been this tight on her frame before. The fabric was pulled taut across gentle 
+bubbles of flesh. Such rounded curves of white were devastating on Maria’s body and Dave 
+watched her cross the room to her desk. Those were not the masses of B-cups. </p>
+<p>“Hey, Dave!” she waved, her arm striking the edge of her chest. “Thanks for fixing my </p>
+<p>computer! It’s working great!” </p>
+<p>The thought of Maria wearing a push-up bra with so much padding as to double her </p>
+<p>breast size was mind-boggling. Staring at them head-on when she turned towards him was like 
+staring at the sun and he knew he had gawked plenty. “You’re welcome!” he said too loudly, 
+snapping his gaze upward to knowing eyes. Maria had to have known how her sweater looked. 
+The difference her clothes made to her appearance was far too obvious for it not to be on 
+purpose. Dave had never thought of Maria’s chest as sweater puppies, but this morning, her top 
+was barking. </p>
+<p>“Maria! I ​love
+ your sweater!” one of her girlfriends chimed. “Is it new?” 
+​
+“Nope, I got it for Christmas a few years back. Super comfy!” 
+From where he sat, Dave had a clear view of Maria’s profile. The rounding mound of her 
+left breast arching over the top of the desk was beauty to behold. Covering in the soft white, her 
+bust looked like a luxury pillow. A pair of mammaries had never made him so sleepy. Needless 
+to say, Dave failed to pay much attention to the review session. </p>
+<p>The rest of his classes were just as fruitless. Even without Maria in sight, the image of her 
+enlarged chest was impossible to keep from Dave’s mind. Recalling the cleavage she bribed him 
+with at the IT desk, it just didn’t match with what was hidden under her sweater. </p>
+<p>she wasn’t wearing a deluxe push-up bra or something…” he assured 
+ ​way
+“There’s ​no
+​
+​
+himself. Facing such a reality was the only way he could keep his mind from slipping into the 
+abyss of imagining Maria experiencing actual growth; he didn’t dare get his hopes up. Dave 
+didn’t have many fetishes, but the few inhabiting the far reaches of his mind were powerful. 
+Fighting his imagination was a chore in itself until he returned to his apartment after his classes 
+and collapsed on his bed. 
+GRRRRR 
+His stomach growled. Dave had been hungry since the sight of Maria’s chest. It was time 
+for a late lunch. Hoping food might distract him, he rose to his feet, stopping only when catching 
+sight of the photoshopped picture sitting on his desk. Dave stared at it for far longer than he 
+cared to admit, gears churning in his head as he compared the image to reality. </p>
+<p>8 </p>
+<p>“No…” He shook his head. “No no no…” Dave tried to leave his room but stepped to the </p>
+<p>picture instead. “I’m insane to even think something like that,” he told himself. </p>
+<p>Looking closer, Dave examined his photoshop. The resemblance was impossible to deny; </p>
+<p>the contents of Maria’s sweater were eerily similar in size to his fantastical enhancement. Too 
+close in size for Dave to immediately shrug off as a coincidence. As long as he’d known her, 
+Maria hadn’t been one to wear a push-up bra; there wasn’t much to push in the first place. 
+ to be 
+His palms were sweaty while he looked between the picture and the printer. “I ​have
+​</p>
+<p>insane,” he snorted. A part of him would give his right arm for his ridiculous suspicions to be 
+true. Looking around an apartment he knew to be empty, Dave sat at his desk. He couldn’t 
+believe what he was about to do. </p>
+<p>“I can just throw the page out,” he assured himself, “No one will ever know how utterly </p>
+<p>stupid I’m about to make myself look.” A word processor opened and a blanking cursor 
+that magic exists…” 
+screamed at him for his idiocy. “But...if there’s even a ​chance 
+​</p>
+<p>Given the absurdity of the scene, Dave’s hands trembled while typing. </p>
+<p>Maria has a blue highlight in her hair and wears a blouse with a lot of 
+cleavage to class tomorrow </p>
+<p>The printer’s jolting sounded like laughter when he clicked print. “God, I’m stupid,” he </p>
+<p>scolded himself, already regretting wasting a piece of paper for such an experiment. The likeness 
+of Maria’s body to his photoshop was too similar to ignore, however. Not testing his theory, no 
+matter how farfetched, would have kept him up at night. Even as the page left the printer and he 
+stared at his work, Dave knew he would find no sleep regardless. </p>
+<p>Reality-altering devices were a common staple of his erotic fantasies. Years of growing </p>
+<p>up playing fantasy games and reading magic-filled books had steeped his mind in wonder. In the 
+end, the same elements had ingrained themselves into his sexual desires. The amount of fun 
+Dave could have shaping the world, and women, around him knew no bounds. </p>
+<p>Reading over the printer’s product, Dave had never felt more ridiculous. The paper was </p>
+<p>crumpled into a ball and thrown into the trash without hesitation. Closure was as relieving as 
+anything else. As the rest of his day drew on, however, Dave knew he wouldn’t find definite 
+peace until he saw Maria in class tomorrow. </p>
+<hr />
+<p>Dave was ashamed to admit he actually lost sleep to his overactive imagination. Despite 
+his lack of rest, he was quick to rise from bed with more energy than ever before to head to his 
+early Friday class. </p>
+<p>“I’ll see her and it will all be settled! She’ll be normal as always!” Dave was doing </p>
+<p>anything in his power not to raise his hopes. “I must be delusional for even jumping to such a 
+conclusion in the first place. The idea alone is laughable.” </p>
+<p>9 </p>
+<p>The anxiety could be seen pouring off Dave in waves. Just one glimpse of Maria was all 
+he needed to lay his imagination to rest and focus on his studies. “Dealing with my attraction to 
+her normally is hard enough,” he breathed into the cold air. “It’s another thing to add this kind of 
+daydreaming onto something like--” </p>
+<p>Dave’s feet refused to move another step. Several yards ahead of him, standing under a </p>
+<p>barren tree was a group of three girls. Maria was among them. A turn of her head as she waved at 
+a passing friend was all he needed to feel the stress of immense, child-like wonder. Perhaps 
+magic did exist. </p>
+<p>Blazing down the side of her head like a neon waterfall was a bright streak of blue. The </p>
+<p>sharp color cut through Maria’s midnight hair and Dave watched as she brushed it behind her 
+ear. Their conversation made Dave’s pulse skip necessary beats. </p>
+<p>your 
+“I just can’t believe how good it looks!” one of the girls complimented. “Blue is ​so
+​</p>
+<p>“I just felt like changing it up a little, you know?” Maria shrugged and pulled a lock of 
+her hair in front of her face to inspect the highlight. “It’s a new year, I wanted to try something 
+new.” </p>
+<p>“That explains the cleavage,” the other girl chuckled. “I didn’t peg you for the push-up </p>
+<p>color!” </p>
+<p>type!” </p>
+<p>“I’m not!” Maria glanced down. “That’s all me, honestly… I think the new yoga class is </p>
+<p>helping lift them or something. I’ve been doing more chest workouts at the gym, too.” </p>
+<p>“Maybe I should join the yoga class… Is there room?” 
+” 
+“Yea! There’s plenty of spots ope--​brrr!!
+​
+The wind blew around the girls and they shivered, shuffling in place to stay warm. Dave </p>
+<p>was petrified when one girl moved to the side and exposed Maria’s outfit. A frilly long-sleeve 
+blouse hugged her torso even better than he imagined. The top four buttons were undone, her 
+collar flared open as the fabric strained to close across the center of her bust. Cleavage like Dave 
+had never seen on Maria was exposed to the open air, soft breasts pushing together in the 
+too-small shirt. From the looks of it, Maria couldn’t have buttoned the blouse if she tried. </p>
+<p>“Aww, your new boobs cold?” her friend teased.<br />
+“You could try buttoning up! Unless there’s some guy you’re showing off for…!” 
+Maria ignored their remarks. “You know I’m too busy to date. And it’s nothing like that; 
+the third button just fell off when I got out of my car this morning. It looked silly to button all the 
+others and have this gaping hole across my chest.” </p>
+<p>“So you thought you would show off your new goods! Good excuse. You should </p>
+<p>remember that when you’re a lawyer. You won’t lose a single case if you’re on display like 
+that.” </p>
+<p>“Oh shut up!” Maria pulled her shirt against the cold but it did nothing to cover her 
+exposed bosom. Over the top of her friend’s head, her eyes met Dave’s. “Hey, study partner! We 
+still on for tonight? I hope you’ve been listening in class!” </p>
+<p>10 </p>
+<p>Dave didn’t hear her; he was too busy fighting every shred of logic in his mind. There </p>
+<p>was no conceivable way Maria’s appearance was a coincidence and just happened to match the 
+words he printed. The thought of a printer actually affecting something other than paper was 
+ludicrous.  </p>
+<p>“Dave? Helloooo?” 
+“U-Uh…” He knew he had to say something. “I… I like your hair.” 
+“Oh! Thanks, I did it last night. Should we get to class? It’s about to start.” 
+There was no time for class. Class was for students without magic printers. Possibilities </p>
+<p>exploding in Dave’s mind, he took a step back. “I’m actually not feeling so hot. I’ll see you 
+tonight!” </p>
+<p>He was jogging back to his dorm before Maria could respond.<br />
+” he repeated over and over, climbing the steps to his 
+“Holy shit… ​Hoooooly shit!!
+​</p>
+<p>apartment. “There’s no other way!! The chances of Maria dying her hair and wearing a shirt like 
+that are too small!” </p>
+<p>The printer was the only answer. School was canceled for the day. Nothing else mattered </p>
+<p>except for the fairy tail wonder sitting on his desk.  </p>
+<p>“And she completely explained it all away! Like everything was by pure chance or the </p>
+<p>result of her own free will!” Dave was ranting now, pacing back and forth in his room. Too many 
+?? Is there a 
+questions existed without answers. “Does it only affect Maria? Can it affect ​anything
+​
+limit?” Dave felt like a babbling madman. </p>
+<p>Patches of sweat doused his shirt when he finally sat at his computer. The only way to </p>
+<p>learn more was to experiment. For the time being, he decided to leave Maria out of his tests for 
+her own sake. This was a time for exploration and discovering the printer’s limits of power. 
+Several pages fell from its tray over the next hour. </p>
+<p>I am five inches taller </p>
+<p>My gas tank is full </p>
+<p>The sky is green </p>
+<p>Vegetables taste good </p>
+<p>Dave has no student loans </p>
+<p>My dick always makes women orgasm </p>
+<p>Dave would be the first to admit some of his tests were more self-indulgent than others. </p>
+<p>In the end, however, none proved to have any effect on reality. Despite his best measuring, Dave 
+remained the same height, broccoli still tasted terrible, and his student loan account had the same 
+number of zeros. His manhood would have to wait to test, but he had a feeling it remained as 
+effective as ever. </p>
+<p>11 </p>
+<p>“Ok…” he mused, discovering more about the printer. “Looks like it only affects Maria, </p>
+<p>it actually affects her at all and I’m not losing my mind. I might belong in an asylum.” 
+if
+​</p>
+<p>It wouldn’t have been hard to test something at that moment. If he was right, Dave could </p>
+<p>have made Maria appear at his apartment within minutes, possibly stark naked and begging for 
+sex. The idea was tempting for more than a moment, but he knew there would be time for such 
+shenanigans later. Right now, his time was best spent preparing for his study session later that 
+night. </p>
+<p>Ignoring all of his classes, Dave sat hunched over his computer for the next several hours 
+putting his shaky IT and coding skills to use. At a quarter to seven, Dave had a rudimentary app 
+running on his phone. A single text field and a button could send his request to his computer, 
+where it would print his every wish. The app was simple and ugly, showing only a scrolling list 
+of past commands aside from the input. It wasn’t much, but for the time he spent on it and what 
+it was for, Dave was more than pleased. His hard-on hadn’t retreated since seeing Maria before 
+class. </p>
+<p>“Crap, it’s almost time to meet!” he panicked, noticing the time. It was unclear how far </p>
+<p>Maria’s mind would go to gloss over the printer’s effects on her life. “Time to put it to the test.” 
+The system’s first command to affect Maria was quick to manifest and was sent to the printer 
+with a flurry of fingers. Dave held onto his memories of their high school uniform fondly. </p>
+<p>Maria is dressed as a schoolgirl with a black push-up bra and her glasses. 
+The blue highlight is gone. </p>
+<p>This was doing more than just testing the printer’s effects; it was testing the machine’s </p>
+<p>ability to recognize Dave’s intentions. A schoolgirl outfit was fairly open-ended but he had a 
+very specific image in mind. Time would tell his fortune soon enough. Grabbing his bag and 
+command-ready phone, Dave rushed to the library with countless erotic experiments for the rest 
+of the night. </p>
+<hr />
+<p>The library was dead. Only students like Maria would consider spending time in such a </p>
+<p>place on a Friday night, and even then, none would think it necessary to make the trek to the 
+lower floors. Being alone in the library basement was unnerving for Dave, especially with the 
+darkness looming outside. The air had a sense of tension as if one wrong step could easily land 
+him in a horror movie. </p>
+<p>Light tapping coming down the old stairs snapped his attention. It was Maria, it had to be 
+Maria. No one else in their right mind would be coming down right now. Dave’s heart threatened 
+to burst with excitement when the footsteps neared the corner before coming into view. Every 
+fantasy he had ever had was riding on this moment. </p>
+<p>12 </p>
+<p>Maria turned the corner. “There you are,” she sighed with relief. “I’m so sorry I’m late; I </p>
+<p>was getting in my car and some jerk drove through a pile of slush! I was soaked! Can you 
+believe some people? I got dirt in my contacts from it too. It was time to order new ones anyway, 
+I guess.” </p>
+<p>It was too much to take in. Dave’s mouth was dry watching Maria approach. Every inch 
+of her appearance was a schoolgirl miracle. Legs hugged by white thigh-high stockings slid into 
+small black shoes. A plaid skirt swished around Maria’s hips and upper thighs, its waistband 
+covering the bottom hem of a white button-up blouse. Although it was buttoned to her neck, the 
+obvious girth of her enlarged breasts enhanced by padding was obvious and stretched the shirt to 
+the point of creating stress wrinkles when Maria inhaled. Black lace showed through the blouse 
+in stark contrast to highlight her curves. Like the icing on a cake, a pair of black-rimmed glasses 
+sat on the bridge of her nose. Maria was every bit of his perfect schoolgirl and more; Dave was 
+speechless at the printer’s ability to read his mind. </p>
+<p>“Nice… Uh… That’s…” He gulped, watching Maria’s skinny thighs move back and </p>
+<p>forth under the cover of her skirt. “That’s some outfit…” </p>
+<p>Maria glanced down. “Oh, right. Like we’re back in high school, right? I started a load of </p>
+<p>laundry right before coming over so everything I could have changed into was soaking wet. It 
+was either this or sweat pants and a t-shirt. You can be ​sure
+ I’m not getting caught dead in 
+​
+sweatpants on campus.” </p>
+<p>The printer was truly amazing. Total control of Maria’s reality was in Dave’s hands and 
+she was none the wiser. Regardless of what he caused, there was always something to explain it 
+away. Dave’s fingers itched to turn on his phone and begin his fun. For the moment, however, 
+his eyes were glued on Maria as she sat in a chair adjacent to his. It was clear her blouse was still 
+meant for her high school bra size. </p>
+<p>“Should we get started?” Maria asked, pulling out her calculus book. “You definitely </p>
+<p>need to study and I can’t stay too late; I have an exam in my Saturday lab tomorrow morning.” 
+Only Maria would give up her Saturday for the sake of her school work. Dave admired </p>
+<p>her drive and intelligence, but at the moment he admired his newfound power more. “Right! Yea, 
+let’s get started!” </p>
+<p>Maria looked through her notes. “So where are you having the most trouble? Integrals?” 
+How Dave was supposed to pay attention was beyond him. He was more focused on what 
+to send to the printer first. There were so many possibilities it was hard to choose. ​Start small
+, he 
+​
+decided. With expertly-honed texting skills, he turned on his phone under the table. </p>
+<p>was painful. </p>
+<p>with them at first too.” </p>
+<p>Maria’s nipples are fully erect and engorged </p>
+<p>Dave knew it would take a moment for the message to go through and print. The wait </p>
+<p>“I know all the rules can be a little difficult to grasp,” Maria admitted. “I...had trouble </p>
+<p>13 </p>
+<p>There was little reaction. Aside from a slight pause, Maria showed no signs that anything 
+had changed on her body and the bra was much too thick to show the state of her nipples. ​Ok, we 
+need a little more
+. 
+, Dave decided, ​something obvious
+​
+​</p>
+<p>Maria feels intense bursts of pleasure whenever I say the word ‘equation’ </p>
+<p>“Are you paying attention?” Maria asked, “There’s a lot for us to cover tonight.” 
+“I am!” Dave felt enough time had passed for the printer to do its work. Pointing to his </p>
+<p>book, he started to say, “So if I had an equation like--” </p>
+<p>” Maria gasped loudly, falling forward as color rushed to her cheeks and she 
+“​Nngh!
+​
+opened her mouth to breathe. </p>
+<p>“You all right?” Dave asked, barely able to contain his own excitement. 
+She was visibly flustered. “Y-Yea, sorry, just a tickle in my throat. What were you </p>
+<p>saying?” </p>
+<p>better.  </p>
+<p>cock-throbbing sight.  </p>
+<p>“Oh, I was wondering about this equation. Is it--” 
+” 
+“​N-Nnnngh!!
+​
+Watching Maria shudder and try to contain the spontaneous bolt of pleasure was a </p>
+<p>“What’s wrong??” 
+“Nothing! I just...keep having this bad itch.” She scratched her knee but Dave knew </p>
+<p>“As I was saying, this equation--” 
+” The glasses sat askew on Maria’s nose when she gripped the 
+“​Nnnngahh!! H-Haahhh…!
+​</p>
+<p>table. Lips clamps between her teeth were unable to stifle her groan. Hair fell into her face from 
+the rapid jolts of ecstasy, giving Maria a rare disheveled appearance. </p>
+<p>“This equation says--” 
+“​Ahh!! A-Ahhh!!
+” 
+​
+“The equation--” 
+” Maria’s forehead was shiny with perspiration under the lights. It 
+“​NNNGGGH SHIT!!
+​</p>
+<p>was surprising there weren’t dents in the table where her hands were gripping so tightly. </p>
+<p>“Equation--” 
+Her hand flew to her hips, only to freeze in the gentle cushion of her thighs in a trembling </p>
+<p>fist. It was a battle to keep from touching herself. “​GAH!! MMMM!!!
+” Panting loudly, she sat 
+​
+back in her chair and tried to compose herself, letting her head roll back as she closed her eyes. 
+.” 
+“Maybe...M-Maybe we should look at something else aside from equa--​those things
+​</p>
+<p>The sight of Maria leaning back and arching her chest into the air was magical. Never </p>
+<p>before had Dave wanted to shout ‘equation’ at the top of his lungs so badly. </p>
+<p>Every second makes it harder for Maria not to touch herself </p>
+<p>14 </p>
+<p>She sat forward, her hands twitching on the table with an expression like she forgot to </p>
+<p>turn off the oven. “How about t-the quotient rule? That can be tricky to memorize.” 
+“I don’t think I can even come close to touching it,” Dave admitted. 
+“You just…” One of Maria’s hand slid towards her chest before she stopped herself. </p>
+<p>Dave wasn’t sure how much more difficult it would become for her every second, but from the 
+looks of it, they were adding up. “Y-You just...uh…” Maria scooted her chair closer to the table 
+until the edge touched her stomach. The sound of her bouncing foot was rhythmic. “It’s not bad, 
+...remember the jingle!” 
+you just n-need to...​nngh
+​</p>
+<p>“There’s a jingle?” 
+Maria couldn’t to breathe without using her mouth now; the level of arousal was too high. 
+From the way her hands were fidgeting with paper and her pencil, it looked like she was fighting 
+for dear life. “Yea, i-it goes like…” </p>
+<p>SHRRRIIP 
+“Whoops!” In her efforts to resist the mounting urge, Maria tore a section of her </p>
+<p>notebook when a hand tried to make a break for her body.  </p>
+<p>“Are you feeling ok? You’re acting weird,” Dave acted. 
+“Just fine! T-These old clothes must be itchy is all,” she explained. Seizing the </p>
+<p>opportunity, she allowed her nails to scratch her abdomen just below her chest. The look of 
+fleeting relief was like erotic art. A gentle moan escaped her lips from the scratch alone. </p>
+<p>“So what’s the jingle?” 
+“O-Oh, it’s ‘low D high, l-less high D low…’” Dave noticed one of Maria’s hands </p>
+<p>quietly slip under the table into her lap. The redness in her cheeks said it all. 
+...we go…!’ 
+...bottom squared...​mmm o-ooohh
+“‘O-O-Over...​nnngh
+​
+​</p>
+<p>“I have heard that before! So I would use that on the equations--” 
+” 
+“​NNNGGH  GOD!!!
+​
+Maria clamped her hands over her gaping mouth to muffle her labored gasps for air. Eyes </p>
+<p>watery from pleasurable torture stared back. “I-I’m ​so sorry
+, Dave,” she blushed. One of her 
+​
+hands was already slipping lower, the urge now risen so high it had a mind of its own. “I-I don’t 
+...o-outbursts!” 
+know what’s coming over me. I-I’m having these...​mm
+​</p>
+<p>One of Maria’s fingers was slipping between the buttons on her blouse. Unable to look </p>
+<p>away, Dave saw her gently rubbing the soft inside of her cleavage between her bra cups. Her 
+gaze followed his until she saw with horrified eyes what her hand was doing. </p>
+<p>I-I-I’m sorry! I was distracted! Please don’t take that the wrong way! I-I’m not 
+“​Ah! 
+​</p>
+<p>feeling quite myself… It feels like my hands h-have restless leg syndrome!” </p>
+<p>Maria can control herself impulses to touch herself </p>
+<p>Maria’s breasts swell </p>
+<p>15 </p>
+<p>Dave was having too much fun to stop. It was time for the real show now, as well as to </p>
+<p>see something he’s only been able to imagine until now. </p>
+<p>Visible relief came over Maria. The twitching vanished from her hands and she breathed 
+with new calmness. “Oh, hmm,” she hummed to herself while rubbing her hands together. “I’m 
+starting to feel...a little better actually… Sorry, we really haven’t accomplished much yet, have 
+w--” </p>
+<p>Maria’s face froze, her mouth stopped midword. A sensation like she’d never felt before </p>
+<p>was occurring inside her bra: rising pressure. The already-packed cups drew tight against her 
+breasts and her skin plumped similar to her cheeks filling with water. She could feel her skin 
+bulging over the brim of her undergarment, as well as cleavage being forced together in the 
+confined space. Each nipple rubbed across the inner cotton with intense sensitivity before 
+coming to a halt just as the flesh below her collarbones pushed into the bra’s shoulder straps. </p>
+<p>“Maria?” Dave asked, watching her blouse tighten. “What’s wrong?” 
+She blinked, unable to make sense of the new tightness inside her shirt. “Sorry…” Maria </p>
+<p>coughed, patting her sternum with flushed cheeks. “I had a...tickle in my chest… What...What 
+was I saying?” </p>
+<p>Maria grabs my cock </p>
+<p>“You were talking about the quotient rule.” 
+“R-Right.” Maria’s train of thought was completely gone after her spontaneous </p>
+<p>engorgement. Leaning around the table to point in Dave’s textbook while taking noticeably 
+” 
+shorter breaths, she pointed out, “We use the quotient rule when--​whoa!
+​</p>
+<p>The edge of the table slipped from her sweaty grip and Maria’s palm fell into Dave’s 
+crotch. Grasping for support, her hand latched firmly onto Dave’s hardened shaft through his 
+pants. Her grip held for several seconds before her hand flew back to her own body, horrified. </p>
+<p>sorry! I-I slipped! I swear! I didn’t mean to… I would ​never!! I 
+“D-D-Dave, I am so, ​SO
+​</p>
+<p>” 
+don’t think of you that way!
+​</p>
+<p>“It’s fine,” he accepted, the sting of the friendzone real. “I know it was an accident.” 
+“I swear I didn’t feel a thing! I’ll be more careful.” Maria looked like she was losing her </p>
+<p>mind. </p>
+<p>“Don’t worry about it! Already forgotten.” </p>
+<p>Maria’s cleavage pops a button </p>
+<p>Maria was an over-aroused mess. “Maybe we should study another night. I don’t quite 
+feel like myself and we’ve wasted so much time already…” Maria stretched her arms overhead 
+and leaned back in her chair, groaning with dissatisfaction for their progress. The blouse strained 
+tight and firm across her chest as her spine arched, Dave’s expectant eyes unwavering until-- </p>
+<p>POP!!! </p>
+<p>16 </p>
+<p>Maria’s eyes shot open and stared at the ceiling, too terrified to look down. The sound of 
+a piece of plastic bouncing across the table echoed in the library basement for an eternity. All the 
+while, Dave enjoyed a scenic view of Maria’s arching cleavage bulging out of her shirt. The 
+black edge of her bra cups were swallowed by her swollen bust like a taut valley of engulfing 
+skin rising from her torso. </p>
+<p>Finally, she found the courage to slowly look down. 
+” Maria worked in a flurry to cover the opening, trying to pull the blouse 
+“​S-Shit! Shit!
+​</p>
+<p>back together. “I knew this shirt was too small!” Wrapping her arms across her body, she started 
+gathering her things. “I’m sorry, Dave, I think we might need to postpone our study session. We 
+can pick it up tomorrow after my class, I promise. I-I really need to go, though.” </p>
+<p>Instead of leaving, Maria strips naked and </p>
+<p>SLAM!!! 
+The sound of a dumpster lid closing just outside a window above them in a parking lot </p>
+<p>startled the two students. Jumping at the shock, Dave’s phone tumbled from his grip and 
+clattered to the floor between Maria’s feet. </p>
+<p>Not wanting him to go below the table while she wore a skirt, she reached down and 
+grabbed his phone. “That thing scared the living daylights out of me,” she confessed. “Here, 
+looks like it got you pretty good t--” </p>
+<p>She stopped, catching sight of her name on the phone’s screen. For a split second, Dave </p>
+<p>contemplated snatching his phone and sprinting outside before she could react. Instead he 
+watched her eyes grow wide before she abruptly stood up, toppling her chair to the floor. 
+’... And 
+“Dave… What the hell is this?! ‘Instead of leaving, Maria ​strips naked and
+​</p>
+<p>what?? What the fuck is this?!” </p>
+<p>“I-I… It’s a…” There was no excuse. Any excuse he could come up with was far more </p>
+<p>outlandish than the truth. Fear gripped him when Maria’s thumb started to scroll through the 
+history. </p>
+<p>“Cleavage pops a button… Grabs my ​COCK?!  TOUCH HERSELF?! NIPPLES </p>
+<p>” 
+” Rage burned in the schoolgirl’s eyes. “​WHAT THE FUCK, DAVE?!
+ERECT?!
+​
+​</p>
+<p>“I can explain! It’s--” 
+“What kind of pervy app is this?! Are you keeping a journal of what I do or how you </p>
+<p>out of line!” 
+think I’m acting?! This is ​WAY
+​</p>
+<p>There was no escape. The only way forward was for Dave to tell the truth. Any lie would 
+only implode. Above all, he wanted to keep her friendship. It may have been a lost cause already. 
+“It’s...It’s the printer.” 
+?” 
+“The ​what
+​
+“The printer, from the other day!” Sighing, he put his head on the table in shame. </p>
+<p>“Anything I print on it about you comes true.” </p>
+<p>17 </p>
+<p>Maria had no words. There was no reaction to such a moronic story. Scrolling through </p>
+<p>the printer’s history, however, it was hard for her to deny how accurate it matched her experience 
+thus far. “Dressed as a schoolgirl…” she muttered, reaching the top. The similarities were 
+undeniable. </p>
+<p>“I swear it’s true,” Dave grumbled, not looking up. “I’m sorry I took it so far. I was just </p>
+<p>so excited and it’s everything I’ve ever wanted and--” </p>
+<p>“Shut up.” Maria was one step away from beating him with the phone, but the printer’s </p>
+<p>history was too accurate to ignore. “You have one chance. ​One 
+chance to prove your fucking 
+​
+story. Got it? If I’m not convinced, I’m calling campus security and then the cops.” </p>
+<p>Dave looked up; Maria’s eyes meant business. She was far too angry to try and cover her </p>
+<p>exposed cleavage, but he didn’t dare glance down. “I-I’ll need my phone.” </p>
+<p>“​Here
+” 
+.” It was slammed on the table next to him. “​One. Chance.
+​
+​
+“W-What should I do?” 
+“Anything too unbelievable to happen otherwise.” 
+“Like--” 
+” 
+“​Aside from me getting naked.
+​
+“Then I don’t know!” 
+Maria scowled, crossing her arms. “Fine. I have a test result from my Advanced Law </p>
+<p>class that’s supposed to be posted tonight and I don’t think I did so well.” </p>
+<p>“B-But you’re so smar--” 
+ I got questions wrong. Now 
+“Shut up. I want an A. A full, one-hundred percent. I ​know
+​</p>
+<p>show change it.” </p>
+<p>“Uhh, o-ok. Let me try.” Dave prayed the printer’s power could extend so far. </p>
+<p>Maria gets 100% on her last law exam </p>
+<p>“Well?” she asked, looking around. 
+“It’s done. I-It might take a while for it to become obvious though!” 
+,” she sneered. “How convenient! You’re lucky I don’t knock 
+“​Ooooh, of course it wiiiiill
+​</p>
+<p>your teeth out here and--” </p>
+<p>DING! 
+A notification on Maria’s phone made her stop. Her eyes widened at the sight of it. “It’s 
+from my professor…” she whispered. The email was read aloud. “Maria, I was grading the class 
+exams and noticed yours was missing from the pile. I certainly recall you in class, so this is 
+clearly an error on my end. As per university policy you will see a 100% mark as your score, 
+however the option to retake the exam is open should you like. Sincerely, Professor Yerron…”<br />
+Maria’s voice trailed off reading the closing words. Standing in place, her arms dropped </p>
+<p>to her side and she stared forward. “Y-Yerron is such a hard-ass… He would ​never
+ lose an 
+​
+exam…” she whispered. </p>
+<p>“M-Maria? Do you believe me? I’m sorry for how I used it, really! I won’t do it again!” </p>
+<p>18 </p>
+<p>“Ok… Ok…” There was a sparkle igniting in Maria’s calculating eyes and her tone was </p>
+<p>changing. A grin spread slowly across her face. “Dave, I believe you.” </p>
+<p>“Oh thank God,” he sighed. “I’ll go home and throw the printer out right now and--” 
+” 
+“So you can change anything about my reality? ​Anything?
+​
+“I-I--” Dave was shocked at her change of emotion. 
+“What else can it do? Is there a limit??” 
+“I’m not really sure, I haven’t done--” 
+“Could it change ​me?
+ Like physically??” 
+​
+Dave was silent, staring at the exposed portion of her cleavage. 
+something to me?!” 
+Maria’s eyes widened and her jaw dropped. “Have you already ​done 
+​
+“I-It’s in the history,” he squeaked. “I made your boobs swell up… A-And grow a few </p>
+<p>sizes the other day… That was an accident though!” </p>
+<p>He saw the realization hit her as Maria looked down at her missing button. “You changed </p>
+<p>to me…” 
+ body… The one thing ​private
+my body… ​My
+​
+​</p>
+<p>Dave didn’t know if her eyes were full of anger or wonder. 
+ they were bigger!! Nothing fit anymore!! My bras have 
+She suddenly exclaimed. “I ​knew
+​</p>
+<p>been squeezing the air out of me for two days! I can ​barely breathe right now!
+” 
+​
+“I can put them back!! I swear! Just give me a second and--” 
+“Uh uh. I want them bigger.” 
+Dave was sure he was having a stroke. How he wasn’t already beaten within an inch of </p>
+<p>” 
+his life was beyond him. “​What?
+​</p>
+<p>actually.” </p>
+<p>“I want my boobs bigger. There are a couple of things I want to change about my body, </p>
+<p>Dave was beyond confused. “But… But you’re already attractive! Y-You’re hot!” 
+“Awwww…” Maria cooed, blushing. “You’re sweet… But seriously, there’s some stuff I </p>
+<p>want done. Every girl has a list and I have the once in a lifetime opportunity to have mine 
+fulfilled.” </p>
+<p>“I don’t know… This feels like it could get out of hand,” Dave said in a worried tone. 
+“Dave, you just spent the last hour ​making me touch myself, making my chest swollen, 
+forcing mini-orgasms, AND you were about to make me strip naked in a library
+. You’re in no 
+​
+me after what you pulled tonight.” 
+position to deny me. You ​owe 
+​</p>
+<p>He was cornered. As long as she wasn’t mad, he counted himself lucky. “O-Ok, that’s </p>
+<p>fair,” Dave accepted, looking to the ground. </p>
+<p>“Don’t act so glum!” Maria leaned in. “I’ll make a deal with you. You can do whatever </p>
+<p>want. How does that sound?” 
+ always get what ​I 
+ want to me, so long as ​I
+you
+​
+​
+​</p>
+<p>Dave nearly soiled the front of his pants. “Are...Are you ​serious
+??” 
+​
+ The 
+Maria leaned further, pushing cleavage through her broken shirt. “​Dead serious.
+​
+thought of being at someone’s mercy is exciting… I’ll never know what’s going to happen to 
+me… A girl ​likes
+ feeling helpless sometimes.” She straightened up and put her hands on her 
+​
+hips. “This printer is some kind of miracle. I could do anything. Student loans?? ​HA! So much </p>
+<p>19 </p>
+<p>. You can have your 
+” Her eyes flashed with cold calculation. “This printer is ​everything
+for them!
+​
+​
+Plus, I trust you not to take it too far.” 
+fun so long as I can have mine.​ 
+​</p>
+<p>After what I just did?” As surprising as her words were, Maria had a point. Even 
+“​Really?
+​</p>
+<p>with this power, Dave knew he could never bring himself to brainwash her or turn her into a 
+complete sex slave. They were still long-time friends; it wouldn’t feel right. </p>
+<p>have just totally taken advantage of me. Instead you went for a bit of 
+“Ehhh, you ​could
+​</p>
+<p>about it. You’re really a 
+cleavage and got me horny. That’s fairly tame, now that I actually ​know
+​
+good guy; that’s part of why I’ve always kind of liked you.” </p>
+<p>“You’ve ​liked 
+me?? Since when?!” 
+​
+“Why wouldn’t I? You’re a catch! Unless you were cute enough to use that thing to make 
+me like you while you were making my little boobs grow...” Maria teased. A sly smile crept over 
+her face then. “But after this, feel free to take your printer fun up a notch… We have a deal?” </p>
+<p>” 
+Dave blinked several times, unable to believe his luck. “​OK!! DEAL!
+​
+“Great! Now as for my list.” Noticing Dave was still staring at her, she motioned to his </p>
+<p>phone. “Well come on! We don’t have all night!” </p>
+<p>“S-Sorry!” Dave fumbled his phone, hands sweaty with anxiety. The situation’s turn was </p>
+<p>one he never would have predicted. Most of all, he was happy to not be talking to campus 
+security. “Ok, ready,” he nodded, looking over Maria’s body. He had no clue what she could 
+possibly want to change. </p>
+<p>Craning her neck and inspecting various portions of her body, Maria decided where to </p>
+<p>start. “First I want a bigger butt.” </p>
+<p>This girl was in line to become one of the state’s top lawyers and she was asking for a </p>
+<p>bigger ass. The backwardness was logic-defying. “R...Really?” </p>
+<p>“Yes, really!” Her hands smoothed her skirt over her backside. “It’s always been a little 
+flat. Most everything about my figure is lacking a certain womanly charm, I think. You’re going 
+to fix it unless you want me reporting you.” </p>
+<p>“No, no I understand! No need to twist my arm… How much bigger do you want it?” 
+Maria considered the question, staring behind her as best she could. “The wording 
+probably matters…” she muttered, brain ten steps ahead. “How about ten percent fuller?” </p>
+<p>Maria’s butt fills out by 10% </p>
+<p>“Ok, that should do it.” 
+” 
+They waited in silence and Maria tapped her foot. “How long is it supposed to--​Oh!!
+​
+Her hands shot to her rear, cupping each cheek as the toned flesh rounded out under her skirt. 
+The plaid’s ruffles flattened across the rising curve and Dave watched as the hem drew up ever 
+so slightly across her thighs before stopping. </p>
+<p>” Maria gasped, her body tingling with her new awareness. “I don’t know ​how 
+“​W-Whoa!
+​
+I missed something like that before!” Eager fingers squeezed her new ass, only taunting Dave’s </p>
+<p>20 </p>
+<p>returning arousal. Maria snickered, looking at her new hips. “Ehhh you know what, go another 
+ten percent.” </p>
+<p>Maria’s butt fills out by 10% </p>
+<p>” Maria hollered. Dave had never seen a girl grope her 
+“​O-Oh! God this is incredible!!
+​
+own ass so much. The skirt hung unevenly around her legs now, the back lifted higher atop a 
+shelf of firm flesh. “All right now my thighs!” </p>
+<p>“What? I like your thighs…” Dave frowned. 
+“Awww. Again, you’re sweet, but my body isn’t here for you. Except after this when you </p>
+<p>have free reign of that printer…” Maria winked. “I’ve had chopstick legs my whole life. I could 
+somersault through my thigh gap. I want it closed, or just barely. I’m not going for thick, but I 
+want some meat on my bones.” </p>
+<p>Hearing Maria speak about her self in such a way was beyond comprehension. She was </p>
+<p>always so proper and refined, more concerned with her grades than sexual needs. “I think I 
+understand.” </p>
+<p>Maria’s thighs plump to her satisfaction </p>
+<p>The printer’s ability to deliver his exact request was without equal. Dave stared ahead, </p>
+<p>ready to watch the scene unfold within seconds. </p>
+<p>” Maria’s legs gyrated to rub her 
+“H-Here we go! ​Mmmmmm I can feel them tingling!!
+​</p>
+<p>inner thighs against themselves. A light tap of her heel sent a gasp of delight from her lips. “​Ahh! 
+” 
+I-I can feel them getting big enough to jiggle!
+​</p>
+<p>To his utter pleasure, Maria lifted the bottom of her skirt enough to show the majority of </p>
+<p>her thighs. Pale skin was filling her stockings to the point of bulging over the elastic. A space 
+never-before filled was quickly overtaken by supple skin worthy to be called a pillow. A flash of 
+black panty lace shown as her hands trembled but Maria regained enough composure to keep 
+from giving Dave an eyeful. </p>
+<p>… A-Almost...there…” she moaned, delighted in the sight of her own legs 
+“​Nnngh
+​</p>
+<p>” 
+thickening. “God this is hot! ​I-I think I can...mmmm...feel them p-pushing on my...m-my...pussy!
+​
+This was not the Maria Dave knew, but he was more than happy to witness her birth. Her 
+legs plumped for another second before their growth ended amid pleased gasps from their owner. 
+Unable to resist, she pressed a hand into her right leg and watched its supple form mold to her 
+fingers. </p>
+<p>“Equation.” 
+” Maria shrieked, flinging her hand to her lace-covered 
+“​G-GahhHHHH!!! D-DAVE!!!
+​</p>
+<p>crotch at a lightning strike of ecstasy while falling to her knees. A face red with restrained 
+...funny. I forgot you had that set.” 
+release glared at the cause. “V-Very...​nnnghmmmmm
+​
+“I enjoyed it!” The cheeky grin on Dave’s face wouldn’t disappear anytime soon. </p>
+<p>21 </p>
+<p>“You can have...your fun later,” she breathed, returning to her feet. The skirt no longer fit </p>
+<p>in any conceivable fashion outside of an erotic student’s fantasy. Maria recovered quickly. “All 
+right, now I want to be taller.” </p>
+<p>“Uhhh, how tall?” 
+She strode to where Dave sat and stood behind him, running hands over his shoulders and </p>
+<p>down his chest before whispering in his ear, “​Tall.
+” Her breath burned when she added, “​Make 
+​
+.” 
+me fill this room
+​</p>
+<p>The image made Dave’s eyes bulge. “I-Is that even physically possible?? That kind of </p>
+<p>. I’ll be your ​personal 
+“Only one way to find out… Go ahead, make my entire body ​grow
+​</p>
+<p>Dave’s core temperature skyrocketed at the thought. Growing to such a size would spell </p>
+<p>disaster for her clothes, leaving him along with a naked, giant-sized Maria. A single nipple 
+would dwarf his head. Without a second thought, he began typing. </p>
+<p>thing sounds…” </p>
+<p>.”<br />
+bouncy castle
+​</p>
+<p>Maria grows to 50 feet ta </p>
+<p>“Oh my God!! You were actually going to do it!!” Maria interrupted him with a howl </p>
+<p>with laughter, stepping away from his chair. </p>
+<p>Dave felt like his heart was going to explode. “You...You don’t really want it?” 
+can you even imagine?? What would you even do with a girl that big? You 
+“​No! God, 
+​
+should have seen the look on your face!” Laughter dying down, her eyes narrowed themselves 
+and she grew serious. “Something like that is off the table for your own fun, by the way. No 
+destruction of property. I don’t need that on my record.” Maria winked. “Get me stranded in the 
+middle of the woods if you want to do something like that to me…” </p>
+<p>Dave’s brain couldn’t handle much more of this. There hadn’t been blood in his head for </p>
+<p>an hour. “So you don’t want to be taller?” </p>
+<p>out of reach 
+“I do! Just a few inches, though. There’s a shelf in my apartment that’s ​just
+​</p>
+<p>and I’m tired of getting the step stool.” </p>
+<p>“How’s five sound?” 
+” 
+“​Perfect.
+​</p>
+<p>Maria grows five inches taller </p>
+<p>A creaking sound came from Maria’s shoes before anything. “S-Shit!” she swore, </p>
+<p>realizing her mistake. Trying to kneel down, she found the motion too complex as her entire 
+body began its changes. Going for the safer route, she stood up straight and watched as the floor 
+slowly inched away. </p>
+<p>“How does it feel??” Dave asked, her expression alien. </p>
+<p>22 </p>
+<p>...stings in some places, like growing 
+“B-Better than...I thought it would! It kind of...​ow
+​
+pains…” Her eyes bulged watching her arms stretch in front of her, elongating and sliding from 
+her blouse’s sleeves. Dave was more than happy to watch her skirt pull up her legs, but it stopped 
+just before the big reveal. </p>
+<p>is 
+“Wow,” she awed, flailing her arms to find her body’s new sense of balance. “So ​this
+​
+what it feels to be six feet tall, huh?” Taking a step was like watching a newborn colt. Maria 
+caught on fast, extending her legs and stretching her new frame. “Glad my shoes didn’t break! I 
+just got them and I don’t think the store would believe me if I told them my feet burst out of 
+them.” </p>
+<p>“Anything else?” Dave gawked. Maria was beautiful before, but what her transformation </p>
+<p>was bordering on angelic. </p>
+<p>chest, poking the soft overflowing flesh. </p>
+<p>“Almost done! I have a feeling you already know...” A finger pointed to the side of her </p>
+<p>“Oh, yea, sorry… I can make them smaller.” 
+“Uh uh. Wrong way, Dave.” 
+??” By his best guess, Maria must have already doubled 
+“You want your breasts ​bigger
+​
+her original size after his meddling. An E-cup fit her well but did seem a bit small on her new 
+height. Especially compared to the butt lifting her skirt.  </p>
+<p>“Always have. B-cups were soooo small… I couldn’t do anything with them! A girl can’t </p>
+<p>have a nice rack? Nature is cruel. You’re going to fix it now, though.” 
+be smart ​and
+​</p>
+<p>Dave’s mouth was dry. Much bigger and Maria’s blouse wouldn’t hold. “How big do you </p>
+<p>want to be?” </p>
+<p>Peering down the cleavage exposed from the blown button, Maria’s answer was quick. “I </p>
+<p>must be about an...E-cup, right now? Somewhere around there?” Her eyes flashed. “Let’s go 
+. That’s a strong letter. Double me up! I want to be so big I need to wear two sports 
+with a ​J-cup
+​
+bras at the gym! I want boobs as big as my head, like some of those porn stars!” </p>
+<p>A fainting spell was on the horizon, Dave could feel it. Maria’s lifetime of small assets </p>
+<p>had left her greedy and ready to overcorrect. But if this was a trick like her giantess ploy, he 
+wasn’t going to waste time waiting for it to play out. His fingers flew like the wind.  </p>
+<p>dream come true. </p>
+<p>Maria’s breasts grow bigger than her head </p>
+<p>Dave sent the request and stared forward, refusing to blink until it was over. This was a </p>
+<p>…” Maria groaned, shivering from a passing chill. Her hands pulled her blouse 
+“​N-Nngh
+​</p>
+<p>...like the show!” 
+tight across her stomach, accentuating her chest. “Hope you...​mmmm!!
+​</p>
+<p>It looked like Maria was inhaling, trying to fill her lungs to the limit. But when her chest </p>
+<p>continued to rise, Dave noticed she was actually holding her breath.  </p>
+<p>23 </p>
+<p>” she cried out, the pleasure far more intense than 
+“Oh my God… ​O-Oooohhhh my God!
+​
+she imagined. “My boobs are...Dave my breasts are ​growing!! I-I can feel them...stretching!! It’s 
+” 
+like puberty in seconds!
+​</p>
+<p>The buttons started to spread wide and tight on her blouse, stress wrinkles sinking into </p>
+<p>Maria’s bulging skin and tortured bra. With her nipples fully erect for the last hour, every 
+movement against the bra’s insides was a shock of delight. </p>
+<p>“​Oooohhhh, OOHHHH they’re just growing and growing and GROWING!! Dave this is </p>
+<p>” 
+AMAZING!!
+​</p>
+<p>The outline of her push-up bra deformed the blouse. Every line of her overflowing flesh 
+stood out in obvious curves as cleavage, inside her sleeves, and emerging from under her bra. It 
+gave a disgruntled groan, the stitching reluctant to contain such masses. </p>
+<p>” Maria whimpered, 
+“This is… ​God I’ve always wanted this…! Look at them!! M-MMM!!
+​
+the bra cutting into her torso like a rope. Her expansion was relentless, driving her into the throes 
+of orgasmic pleasure. Dave’s gaze switched between her engorging tits and the glistening 
+moisture coating her exposed inner thighs. </p>
+<p>PING!! 
+“​MMMGH!!
+” 
+​
+PING PING!! 
+” 
+“​FUUUCK!!
+​
+Buttons burst from Maria’s body, pelting dave in the face. He would have taken a 
+thousand of the blouse’s shots if it meant the show could continue. As they stared at her bloating 
+cleavage, however, Maria’s chest came to a tightly-packed, jiggling halt. Each mammary settled 
+at a hefty girth larger around than her head. Even with her new height, they were incredibly large 
+on her frame and stole one’s gaze away from all else. </p>
+<p>Dave could still hear her gasps echoing in the library. Eyes wide, Maria brought her </p>
+<p>hands to her new assets and groped with greed, forcing flesh to squish from her broken shirt. 
+Slowly each hand traveled lower over her body, caressing her widened hips and grasping her 
+thighs. Such an hourglass figure would have been impossible by normal forces of nature. </p>
+<p>“​I’m gorgeous!!
+” she exclaimed. 
+​
+A picture of divine feminine beauty stood before Dave. Clad in a schoolgirl’s uniform far </p>
+<p>too small for such curves, the sight alone threatened to make him come. </p>
+<p>“​Thank you, Dave! Thank you!
+” she swooned, in love with her new form. “Ooohhh I love 
+​
+it!! ​This
+ is how I want to go every time. And you 
+ is my new body. Whatever you do to me, ​this
+​
+​
+know what?” </p>
+<p>Dave tried to respond but could only manage a dry rasp. 
+. Take that printer and do whatever your heart desires 
+Maria giggled. “I’m ​all yours now
+​</p>
+<p>with me.” </p>
+<p>“I...I can do ​anything
+?” 
+​
+ crazy when I’m not alone... I’ve still got 
+ After a wink, she amended, “Try not to go ​too
+​
+.” 
+my career to think about. But my body is ​at your command
+​</p>
+<p>24 </p>
+<p>Numb to anything except the throbbing in his pants, Dave glanced down to his phone. </p>
+<p>Shaking hands refused to type what he wanted. Finally he managed to get his point across. </p>
+<p>Maria strips naked and </p>
+<p>…” a sultry voice called out, interrupting him before he could send 
+“Ohhhhh, ​Daaaaaveee
+​</p>
+<p>the request. He glanced up and his eyes almost melted from his head. </p>
+<p>Maria stood before him, her skirt around her ankles with her blouse unbuttoned and </p>
+<p>hanging at her elbows. The overfilled black panties were pulled askew down one side of her hip 
+by a tempting thumb, while her other hand beckoned towards him with a waving index finger. 
+Breasts like ripened melons fought to escape her bra on all sides, the bright pink of erect nipples 
+rising over the brims of its cups. A smooth-shaven navel showed pale in the light, slick with the 
+fluids of extreme arousal. Both of her stockings looked fit to burst around her new thighs. </p>
+<p>“You won’t be needing to send that one to the printer,” she whispered. The stitches in her </p>
+<p>panties popped when she stretched them over her legs. They fell limp and joined the growing 
+pile of clothes on the floor. The blouse slipped from her forearms as Maria relaxed, allowing 
+herself to stand exposed in an overflowing bra. </p>
+<p>25 </p>
+<p>?” she 
+I don’t think it could take much more abuse, ​do you
+“​Mmmm… This bra is so...full! 
+​
+​
+” 
+ I don’t grow anymore… Or it just might...​pop off!
+teased. “I ​hope
+​
+​</p>
+<p>Dave caught her drift. </p>
+<p>Maria’s breasts swell continuously </p>
+<p>CREEAAK 
+“​MmmmmMMMM!!! U-Uhh oh! Theeereee they go again…!
+” 
+​
+Flesh oozed around the cups and slick pleasure lubricated Maria’s thighs. Frozen in </p>
+<p>place, Dave watched Maria walk closer until her naked abdomen stood in front of him. Maria’s 
+pussy was all he’d ever imagined and more, now nestled between two supple thighs like a hidden 
+gem. Only inches away, it made his mouth water. Thighs begging for strong hands bent and 
+creased at her hips, each swinging to either side of his chair as Maria straddled Dave and sat in 
+his lap. </p>
+<p>CREEEAAAK 
+Angry cleavage pushed into Dave’s chin and nipples like thimbles inched higher into the </p>
+<p>open. “​Oohhh they’re getting so big!! They’re stuffed so...TIGHT IN THIS BRA!!
+” Maria 
+​
+groaned. The heat rising from her navel and cleavage was beyond intense. Dave’s cock fought 
+desperately against the front of his pants with the promised land waiting just on the other side of 
+the fabric. </p>
+<p>Still unsure of his freedom, Dave reached a hand towards the ballooning tits. His fingers </p>
+<p>brushed her skin for just a moment, the tightly-packed flesh begging to be groped. An angry 
+shudder came from the bra at his slightest touch. </p>
+<p>” Maria cried out, “This little push-up bra can’t hold much more of me! 
+“​A-Ahh! Careful!
+​</p>
+<p>--” 
+I-It’s going to BLOW AT ANY SECO
+​</p>
+<p>SNAP!!! 
+A set of padded cups exploded off her body and slapped Dave on each cheek. He didn’t 
+flinch, too busy watching a set of mammaries like watermelons fall free into their natural shape. 
+With her new height and sitting on his lap, Maria’s bust came to eye level. They were 
+magnificent in every way, rounded, firm, and resting high on Maria’s body with gentle slope. 
+Each was plenty full to close the gap across her sternum on their own merit. A nipple was close 
+enough for Dave’s heavy breath to moisten its pink surface and make Maria shudder. Every 
+passing moment brought her still-swelling tits closer and closer. </p>
+<p>Bringing her arms under her chest, she lifted them towards Dave’s face like two giant 
+” 
+mounds of sweet ice cream. Maria moaned, “​Nnnnghhh… W-Well? You just going to stare?
+​
+Dave’s consciousness abandoned him long ago. Stupidly, overwhelmed by the night’s </p>
+<p>turn of events, he gulped in the face of his sexual fantasy and asked, “What...What do you want 
+me to do?” </p>
+<p>Maria giggled, sending a heave through her bosom before tapping the phone in his hand. </p>
+<p>.” 
+“Didn’t you hear me earlier? ​Whatever you want
+​</p>
+<p>TO BE (VERY) CONTINUED </p>
+<p>26 </p>
+</body>
+</html>

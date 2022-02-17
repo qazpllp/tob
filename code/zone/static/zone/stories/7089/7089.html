@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>The Domes of Callantha, chapter 1</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>E. N. Dowd </p>
+<p>The Domes of Callantha </p>
+<p>1 </p>
+<p>THE DOMES OF CALLANTHA </p>
+<p>A Breast Expansion Fantasy 
+by E. N. Dowd </p>
+<p>This story contains descriptions of nudity, body modification, sexual acts, 
+and ridiculously huge breasts. Don’t say you weren’t warned. </p>
+<p>Comments? Compliments? Complaints? Email the author at: storiesbyendowd@gmail.com </p>
+<p>Chapter 1 
+THE COUNTESS </p>
+<p>As the procession came within earshot of the village, Kavro trotted ahead of Elira’s </p>
+<p>litter, flourishing his silver-tipped baton. He announced his mistress’s coming at full 
+bellow, until his face was redder than his thick mustache: “Make way! Way for the Lady 
+Elira, Countess of Melgarad! Way for the lady in waiting to the Queen’s grace of 
+Callantha! Make way!” </p>
+<p>Elira smiled to herself. She was not, in fact, a countess, and there was no such place 
+as Melgarad, though the name sounded suitably Callanthan. A real countess would have a 
+bigger entourage, a bigger litter to travel in—bigger everything. She looked down at the 
+deep canyon of her cleavage, patted a heavy breast with one delicate white hand. How 
+small her hands looked by comparison! Yes, her girls were fattening up nicely. They 
+were considerably bigger than her head now; big enough to touch her lap if she didn’t sit 
+up straight. But not nearly big enough for the part she was playing. She could still walk, 
+if she didn’t mind a bit of backache. A real Callanthan noblewoman couldn’t stand up 
+without help. </p>
+<p>Not that these yokels would know that. She was hundreds of miles from home, and 
+had not begun to put on her act until she was well outside the borders. In the larger towns 
+there was a risk of meeting other Callanthans, who might give her away. It was only in 
+the countryside that she dared to play the spoilt aristocrat. She was not yet powerful 
+enough to hunt openly, except in places like this. Goddess, what a sty! </p>
+<p>The settlement ahead was a poor fishing village, a straggling group of thatched huts 
+along the top of a ridge overlooking the sea. Down below was the harbor, where a dozen </p>
+<p>E. N. Dowd </p>
+<p>The Domes of Callantha </p>
+<p>2 </p>
+<p>leaky little trawlers were moored to a decaying wooden wharf. Elira wrinkled her nose. 
+The wind was blowing in off the bay, and she could smell the rotting fish from here. 
+Charming! </p>
+<p>The little procession crept up the winding road to the first huts, where a crowd of 
+fisher folk had gathered to gawk. First came Kavro, still bawling, “Make way! Make 
+way!” Then Elira on her litter, lounging in the shade of the silk canopy. Four muscle-
+bound bearers carried her, their bare backs and chests walnut-brown from the sun. After 
+the litter came six strong ponies loaded with baggage, servants walking alongside, and a 
+two-horse cart bringing up the rear. She snapped her fingers and pointed down: the signal 
+to halt. </p>
+<p>It was obvious that these villagers had never seen anything like her. There were at 
+least fifty of them, the men gaping, the women’s lips pursed in jealous frowns. Their eyes, 
+hungry or lustful or just disbelieving, traced the plunging neckline of her violet dress, the 
+thin silk stretched apart by her ponderous globes, tented in front by her jutting, thumb-
+sized nipples. She tweaked one with her fingers, enjoying the shocked reaction of the 
+crowd almost as much as the thrill of pleasure that ran down to her moistening 
+womanhood. Goddess, it was good to show off! </p>
+<p>Elira suppressed the urge to play and called for Bryony, her right-hand woman and 
+all-purpose maidservant. The flaxen-haired girl came at a half run to stand by the foot of 
+the litter, careful not to obstruct the onlookers’ view. By Callanthan standards, Bryony 
+was dressed demurely. Her skirt came down almost to mid-thigh, and her white blouse 
+was opaque enough to soften the color of her areolas to a pale pink. Like a good servant, 
+she did not look her mistress in the face. Elira suspected that Bryony lowered her gaze 
+chiefly so she could stare at the countess’s breasts. Bryony knew that perfectly well. 
+“Two of each, I think,” Elira said offhandedly. “Sort them out while I settle in.” 
+“Yes, Mistress,” Bryony answered. 
+Elira raised her voice to an imperious holler. “You—boy!” She pointed at a young </p>
+<p>man in a sheepskin jacket. “Is there a guesthouse in this pigsty?” </p>
+<p>“Yes, Ma’am—uh, my lady. Third on the right.” He pointed up the wide, muddy </p>
+<p>track that served the village as a main street. </p>
+<p>Elira snapped her fingers again and pointed forward. “On!” </p>
+<p>As the procession resumed its progress, Bryony stayed to sort through the crowd. The 
+villagers smelled of salt and fish and seaweed, and dressed in homespun rags. None were 
+handsome by Callanthan standards. All that could be fixed. The servant was looking for 
+something in their eyes: part hunger, part natural submissiveness. In a place like this, 
+there were always desperate souls who would sell themselves into slavery for a softer 
+life—or for the other benefits that Elira’s magic could provide. Bryony used to be one, 
+and knew the type. </p>
+<p>E. N. Dowd </p>
+<p>The Domes of Callantha </p>
+<p>3 </p>
+<p>She dismissed most of the crowd with a glance: too old, too young, too prosperous—</p>
+<p>or too plain for the magic to help much. The few who were left could be sorted with a 
+question or two. “You—boy,” she said to the one in the sheepskin jacket. He took a 
+halting step forward. “What’s your excuse for eating?” </p>
+<p>The young man blinked stupidly. “Ma’am?” 
+“Your work, boy. Are you a fisherman?” 
+“Used to be, Ma’am. Now I just mend the nets.” 
+Ah! She thought there was something odd about the way he took that step. Probably a 
+withered leg, poor kid, though it didn’t show with the baggy woolen trousers these people 
+wore. Well, no use taking him. </p>
+<p>Once the litter moved on, the villagers began to go about their business. No matter; 
+the ones who stayed behind were always the ones worth looking at. Bryony picked out a 
+dark-haired girl with a decent figure; a bit thick in the waist, a bit fat in the arms—
+nothing the magic couldn’t fix. After talking with her enough to be sure that she wasn’t 
+an idiot, or worse yet, an independent spirit, Bryony sent her up the street to see her 
+mistress. She was quickly followed by two strapping young men, one a fisherman, one a 
+shepherd from the hill country farther inland. Elira had asked for two of each—two boys, 
+two girls—but the women in this place were pretty poor pickings. </p>
+<p>She stopped short, suddenly confronted by a waifish girl with a desperate look in her </p>
+<p>blue-gray eyes. The girl was too tall for a child, but scrawny as a skinned rabbit, and 
+sadly underdeveloped. Her face might have been pretty if it hadn’t been so badly 
+damaged by sunburn. The kind of girl Elira wanted was soft-skinned and buxom, 
+attractive enough to reflect credit on the wealth and taste of a Callanthan countess. But 
+there was something about this one; something that reminded Bryony of herself years ago, 
+when Elira found her in a village almost as forsaken as this. 
+“What is it, child?” Bryony asked in a bored voice. 
+There was a hint of steel in the girl’s answer. “I think you want to introduce me to </p>
+<p>Her Ladyship.” </p>
+<p>“She’s not looking for a scullion.” 
+“Actually, Ma’am, I’m a pearl diver.” 
+Bryony raised an eyebrow. She hadn’t known there were oyster beds along this coast. </p>
+<p>“Go on!” she scoffed, eyeing the girl’s flat chest. “You haven’t got the lungs for it.” </p>
+<p>“Appearances can be deceiving.” 
+Cheeky little minx! Bryony forced herself to keep a straight face. “Is there anything </p>
+<p>else you can dive for?” </p>
+<p>me.” </p>
+<p>The skinny girl cocked a hand on her hip. “Anything you can, Ma’am.” 
+“I think you need to explain that,” Bryony said with a frown. “Not here. Come with </p>
+<p>They walked briskly away from the last of the gawking villagers, a little way into the </p>
+<p>E. N. Dowd </p>
+<p>The Domes of Callantha </p>
+<p>4 </p>
+<p>open field on the other side of the road. “Go on,” Bryony prompted. </p>
+<p>The girl looked at her coolly. “We’re not all idiots here. I know how Callanthan </p>
+<p>ladies keep control of their slaves.” </p>
+<p>“Oh, yes?” 
+“Yes. I saw you staring at your mistress’s tits like a calf at a cow. I know how that </p>
+<p>kind of magic works.” </p>
+<p>“You’ve done it with girls before?” </p>
+<p>“Then you know the Countess will want you in her bed,” Bryony said bluntly. </p>
+<p>The girl smirked. “I told you I can dive for anything you can. Now, maybe you aren’t </p>
+<p>under her spell as deep as anyone can get. Maybe she hasn’t been using her power to 
+make you more of a woman than nature ever did.” She flicked a glance at Bryony’s chest. 
+“Maybe you’re not in her power at all, and you just stuffed your blouse with a couple of 
+cabbages to make it drape better. But I doubt it.” </p>
+<p>Bryony crossed her arms over her breasts, half angrily, half protectively. “Child, you 
+are as impudent as you are ugly. I should give you a good thrashing and send you away.” </p>
+<p>“Maybe you could, but you won’t. You see, I can tell those others what they’re 
+getting into—and that they’ll never get out. Tell Her Ladyship that she’s taking me, or 
+she isn’t having any of us.” </p>
+<p>Bryony chewed her bottom lip and twisted a lock of her pale hair around her finger. </p>
+<p>“Very well. But if you breathe one word to those others, I’ll skin you alive.” 
+“Don’t worry about that. I want some of what you’ve been getting.” 
+Bryony looked down at her own ripe breasts. They were nothing compared to Elira’s, </p>
+<p>but big enough to attract plenty of attention when the countess was away. Then she 
+glanced contemptuously at the girl’s flat chest. </p>
+<p>“You could certainly use some,” she said. “Have you got a name?” 
+“Call me Tani.” </p>
+<p>The village guesthouse was no more than a hut, though bigger than the others, and the 
+dirt floor was probably crawling with vermin. Elira took one look at it, wrinkled her nose, 
+and ordered Kavro to set up her tent. Her bearers set the litter down and went to unload 
+her pavilion from the cart. It was good Callanthan silk: a countess would not let anything 
+less than silk come between her body and the sun. Scarlet stripes to match Elira’s full, 
+passionate lips, black stripes to match her glossy, waist-length hair. As soon as the tent 
+was up, the servants started filling it with furniture from the cart: cushions, lamps, 
+braziers, incense burners, carpets, knickknacks, and most important of all, a huge, soft 
+feather bed with red silk sheets. She put her arms out to her sides and let her four hulking 
+bearers carry her to the bed. One serving girl undressed her, another brushed her hair, a 
+third began to massage her voluptuous body with scented oils. A Callanthan countess 
+never did anything for herself. She existed to be pampered. </p>
+<p>E. N. Dowd </p>
+<p>The Domes of Callantha </p>
+<p>5 </p>
+<p>“My lady.” Kavro stuck his red face in the tent flap. “The first two villagers are </p>
+<p>ready.” </p>
+<p>“Boys or girls?” 
+“Boys, my lady.” 
+Elira stretched luxuriously, arching her back to thrust her massive breasts out in front </p>
+<p>of her. “Strip them and send them in.” </p>
+<p>When the two young men saw her naked body, they forgot to be embarrassed by their 
+own nudity. Two very promising erections saluted the Countess of Melgarad: hard, eager, 
+throbbing with lust. They were no bigger than average, but that, too, her magic could 
+remedy. “Come here,” she ordered them, and as they climbed onto the bed, she grabbed 
+an erect cock in each hand and drew them closer. </p>
+<p>Such good boys! </p>
+<p>When Tani arrived at the tent, the two “good boys” were leaving with Kavro to 
+collect their belongings. She could see the changes in them already. Their eyes were 
+brighter, their skin glossier and more supple, their muscles just a touch more defined, and 
+their trousers bulged suggestively. If they marched straight away from there and never 
+came back, Tani knew, they would be free to enjoy their new endowments while they 
+lasted, and the village girls would be happy to help them do it. But the look of stupid bliss 
+on their faces showed that they had no intention of doing anything so sensible. No, they 
+would be back, and then they would be the countess’s meat. It was the second dose of the 
+magic that enslaved. </p>
+<p>Tani had no intention of being enslaved. She meant to stop at one dose—unless this </p>
+<p>was the one, the enchantress whose power was strong enough to break her curse. It 
+seemed unlikely, but she was not going to miss the chance. Head high, she strode up to 
+the hulking litter-bearer who stood guard at the tent flap and demanded to see Her 
+Ladyship. </p>
+<p>“Ladyship… busy,” the bearer said slowly. It seemed that Elira’s magic had turned </p>
+<p>his brains into muscle. </p>
+<p>Clearly this was no time for long explanations. “Bryony sent me,” Tani said. 
+The bearer frowned. “You?” 
+Tani put her hands on her hips. “Yes, me. And if you don’t let me in, you can explain </p>
+<p>to Her Ladyship why one of her new girls is missing.” </p>
+<p>The bearer’s eyes began to glaze over at the word if. Decision-making was not his 
+strong point. Slowly, shaking his puzzled head, he stood aside and held the tent flap open 
+to let her in. </p>
+<p>For the moment, Elira was alone. She lay spread-eagled on the bed, staring straight up 
+with a look of sated exhaustion on her face. The scarlet sheets were stained crimson with 
+sweat and love juices, and a thin white trickle of cum was dripping out of her pussy. </p>
+<p>E. N. Dowd </p>
+<p>The Domes of Callantha </p>
+<p>6 </p>
+<p>Tani coughed politely. The countess’s massive breasts heaved and bobbled as she 
+took a deep breath, then lifted her head until she could see over them. “Take off those 
+stupid clothes,” she said firmly, “and let’s have a look at you.” </p>
+<p>Tani stripped, trying not to squirm with self-consciousness. Elira’s hot gaze flicked 
+over her body like a knife, cutting away her defenses, leaving nothing but a mass of flaws. 
+The countess’s rivers of glossy black hair reminded her that her own hair was the same 
+flat, faded yellow as old straw, hacked off at shoulder length, with uncombed wisps 
+sticking out everywhere. Her nose was beaky against her too-thin face, her eyes were 
+tired and colorless. Her body felt like a jumble of ribs and elbows. Too scrawny, too bony, 
+too awkward—too flat! She did have breasts—of a sort—just enough to break the plane 
+of her chest, with prominent pink nipples that belonged on a bust like Elira’s instead. At 
+the moment, her nipples were shrinking into her body, trying desperately to disappear. 
+Tani wished she could do the same. </p>
+<p>“Over here,” said Elira, patting a corner of the bed. She propped herself up with her 
+left elbow on a pile of pillows, long legs trailing languorously over the edge of the feather 
+mattress. “Sit, my pet. I don’t bite unless you want me to.” </p>
+<p>Tani obeyed with a nervous smile. The countess’s right hand reached up to caress her </p>
+<p>cheek. Such a soft hand! No wonder she slept on silk. “Oh, yes,” Elira purred. “We can 
+make something of you. Such perfect bones.” </p>
+<p>Tani’s eyes widened. Nobody had ever called any part of her perfect before. 
+“We’ll have to put some flesh on them, of course. You need a good feeding, my pet. </p>
+<p>Do you have a name?” 
+“Tani, my lady.” 
+“Hmm. It sounds too much like tiny, don’t you think? Not to worry. Nobody’s going </p>
+<p>to think of you as tiny once we’ve made a few changes. You know I can do that?” </p>
+<p>“Yes, my lady.” 
+“But you have to do something for me in return. Bryony sent word that she had found </p>
+<p>me a pearl diver. Is that you, my pet?” Tani nodded. “Then you must be very good at 
+holding your breath. Let’s give it a try.” </p>
+<p>The countess’s soft hand caressed the back of Tani’s neck, pulled her gently down </p>
+<p>into a kiss. Elira’s lips were the softest thing Tani had ever touched, and the most 
+sensuous. She found her own lips parting to admit the moist caress of Elira’s tongue. 
+Suddenly they were kissing passionately, arms locked around each other, Tani’s thin 
+body grinding hard into the billowing softness of Elira’s titanic bosom. She held her 
+breath until her vision began to go dim, prolonging the ecstasy of the kiss as long as she 
+could. Then the countess gave a gentle push and disentangled herself, heavy orbs heaving 
+as she struggled for air. </p>
+<p>“Oh, yes, my pet,” Elira said. “I think you’ll do. Are you ready for a dive? I had a </p>
+<p>couple of visitors just now who left me some lovely pearls.” </p>
+<p>E. N. Dowd </p>
+<p>The Domes of Callantha </p>
+<p>7 </p>
+<p>The voluptuous countess lay back on the pillows and spread her full thighs, pressing 
+down on Tani’s shoulders to guide her down between them. Tani found herself facing a 
+pink, swollen pussy, little white beads of cum still pressed between its lips. The air was 
+heavy with musk and incense, but Tani’s head was light. She felt dizzy, unable to think, 
+but she knew what Elira wanted, and she wanted to obey. She licked at the line of white 
+beads with the teasing tip of her tongue, then licked a little deeper. Elira’s lips parted 
+slightly, and Tani pressed her face in, covering herself with the countess’s juice. </p>
+<p>She licked her way up to the pink jewel that was Elira’s engorged clitoris, blew on it 
+lightly, brushed it with her tongue. “Oh, yes,” the countess moaned, locking her fingers in 
+Tani’s hair and pressing her head in harder. Tani pursed her lips around the throbbing clit 
+and sucked, while her hand wormed its way into the crowded space and thrust into Elira’s 
+pussy, two fingers, then three, then the whole hand up to the wrist. </p>
+<p>Elira ground her hips, thrusting her genitals into Tani’s face so hard that the younger 
+girl had no room to breathe. But she was not a pearl diver for nothing. Holding her breath, 
+she licked and sucked, teased and tormented, while her probing hand thrust in and out, 
+deeper and deeper, seeking out the most secret pleasures in Elira’s stretched and gaping 
+pussy. The countess’s breath was coming in ragged moans now, her hips bucking, her 
+fingers knotting and unknotting in Tani’s hair. Her orgasm tore a scream of furious 
+pleasure out of her throat, her body going rigid while her drooling cunt clamped down on 
+Tani’s hand so hard that the girl thought her bones would break. </p>
+<p>But Tani wasn’t done yet. She lifted her head to suck a deep lungful of air, then dived </p>
+<p>back in to give the countess a second orgasm as intense as the first. And then a third. </p>
+<p>She was about to go in for fourths when Elira tugged hard at her hair and told her to </p>
+<p>stop. “Time for your reward,” she gasped. “Come up here, my pet.” </p>
+<p>Tani wriggled halfway up the countess’s lush torso, kissing her flat belly as she went, </p>
+<p>until her face was nestled between the pale, jiggling globes, each one bigger than her 
+head. “Not there, silly,” Elira laughed. “Here.” </p>
+<p>She shifted her body, turning a little to one side, and pushed a fat red nipple into </p>
+<p>Tani’s face. Tani’s lips clamped down obediently and she began to suck. She was 
+rewarded with a gush of milk, warm and sweet, as thick as heavy cream, so sudden that 
+she almost choked. She swallowed greedily and sucked harder. </p>
+<p>“That’s right, my pet,” Elira sighed. “Oh, you’re good. Suck me dry… suck—” 
+Another orgasm convulsed her body, almost drowning Tani with a sudden gush of hot </p>
+<p>milk. She had never tasted anything so good. She sucked and sucked, swallowed and 
+swallowed, and yet her belly still felt empty. Elira’s milk and all its magic soaked right 
+into her body, saturating her like a sponge. And she could feel the changes beginning. 
+She felt it first in her scalp, a deep tingling that flowed out through the roots of her 
+hair. She could feel it growing, waving like new grass in the breeze, getting thicker and 
+softer. Then the tingling spread. Her skin, chapped by wind and sun and salt water, began </p>
+<p>E. N. Dowd </p>
+<p>The Domes of Callantha </p>
+<p>8 </p>
+<p>to feel smoother, her lips fuller, her whole face rounder. The sensation spread to her neck, 
+her arms, her fingers, her thighs. Her ass seemed to be getting fuller, her thin waist just a 
+little thinner. And then— </p>
+<p>A tantalizing heat settled on her chest, just under the skin. For a moment it was 
+painful, engorged, as if her flesh had been suddenly bruised. Then the pain grew sharper 
+and somehow turned into a thrill of pleasure. Her nipples stood up as if they were 
+sprouting, and she could feel them pushing farther away from her ribs, digging into 
+Elira’s hip. Her small breasts felt like two skin bottles being filled to bursting with new 
+wine, swelling across her chest until they pressed together over her sternum. Oh, Goddess, 
+she had cleavage! She had tits! </p>
+<p>The flow of milk from Elira’s right breast had slowed to a trickle. Tani switched to 
+the left. She seemed to have drunk a whole gallon of rich, sweet cream, and every drop 
+seemed to find the exact spot on her body that needed it most. Her hands were roaming 
+over her own skin now, feeling how silky it was, caressing her new curves. She squeezed 
+her fast-ripening tits to make sure they were really there. Oh, the countess was powerful! 
+Maybe, at long last, Tani had found someone with the sheer sexual energy to break her 
+curse, to turn her from an over-aged waif to the sensuous woman she ached to be. For 
+that, she would happily be a slave. She would drink from Elira’s magic fountains again 
+and again, always greedy for more. One day soon, she would have tits bigger than her 
+head. Her waist and hips and thighs would be a banquet of curves that would leave men 
+drooling and women wild with envy. She wanted it, she needed it, she would die if she 
+didn’t get it. If only she dared to hope— If only— </p>
+<p>The last drop of milk vanished into her body. So much change, so much feeling, 
+overwhelmed her at last, and every fiber of Tani’s flesh convulsed in an orgasm so 
+intense that she felt herself black out. But only for a moment, it seemed, because when 
+she came to, she was still sucking weakly at Elira’s dry nipple, while the countess cradled 
+her in her arms. Elira’s voice was a weak but sated whisper: “Oh, my sweet pet, yes. I’m 
+keeping you.” </p>
+<p>When both women had caught their breath, Elira pushed Tani away, not in a rejecting 
+way, but lovingly, giving her a squeeze on her ample new rump as she stood up off of the 
+bed. Tani’s knees were trembling, and her insides seemed to have turned to jelly. “Over 
+there, pet,” Elira ordered, pointing to a corner of the tent. She wobbled over to face 
+herself in a full-length silver mirror, and gasped in amazement. </p>
+<p>The girl in the mirror was gorgeous! Breasts bigger than ripe apples, overflowing her 
+hands when she tried to cup them. Skin soft and smooth, glowing with health. Plump pink 
+lips, dimpled cheeks, her face rounder than before. Long, dark lashes—were her eyes a 
+little bluer? And that hair! Masses of fine-spun gold cascaded over her shoulders, locks 
+trailing away down her back, one naughty strand clinging to her new cleavage. </p>
+<p>“I—I don’t,” Tani stammered. “Do I? Do I really look like that?” </p>
+<p>E. N. Dowd </p>
+<p>The Domes of Callantha </p>
+<p>9 </p>
+<p>“And better, my pet,” Elira said proudly. “I told you we could make something of you. </p>
+<p>Of course we’ll need to repeat the treatment if you want it to be permanent. You don’t 
+mind that, do you, pet?” </p>
+<p>“I could do it forever,” Tani said truthfully. She turned from the mirror to face the bed. </p>
+<p>There was the countess, actually standing, breasts hanging almost to her navel, but still 
+jutting proudly eight inches in front of her. Her arms were spread wide and welcoming. 
+Tani ran to her, or tried to; her legs were too weak, and she stumbled into the countess’s 
+embrace. Her new breasts were tiny compared to Elira’s monsters, but they were soft and 
+sensitive and real, so real. She could feel them mashing into the yielding mass of those 
+gargantuan pillows, her nipples rubbing hard against those acres of perfect skin. It was 
+almost enough to make her cum again, right there in Elira’s arms. </p>
+<p>“My pet, my perfect pet,” Elira crooned, rocking Tani in her arms. “Stay with me, and </p>
+<p>I’ll make you a goddess.” </p>
+<p>“Oh, yes, my lady,” Tani sighed. 
+But then the countess pushed her away again. She called for one of her servant girls, </p>
+<p>ordered fresh sheets for the bed and a goblet of wine. </p>
+<p>“Not just yet, my pet,” she said kindly. “I still have one more visitor to see, and you 
+need to get your things and say your goodbyes. Meet me back here. We leave at dawn, 
+with or without you.” 
+“Yes, my lady.” 
+What good would it do to tell Elira that she had no one to say goodbye to? She had </p>
+<p>only wandered into this village a few months before, and taken up pearl diving as an 
+alternative to starvation. She had no family here, didn’t really know the villagers. Nobody 
+took much notice of a scrawny girl with hair like old straw, hovering on the edge of 
+things. It would be useless to tell the countess that; useless to tell her about the curse. Oh, 
+if only this time the magic stayed— </p>
+<p>All that evening in her lonely hut, Tani caressed her new curves, felt the softness of </p>
+<p>her skin, the fullness of her bosom. She found that if she bent her head all the way 
+forward, she could just pop her nipples into her mouth. Sucking them was heaven, even 
+without the milk. Goddess knew how it must have felt for Elira. She brought herself to 
+climax after climax until her fears were drowned in exhaustion, and then she slept. </p>
+<p>But when she awoke, the curse was still there. She was only Tani again, the scrawny 
+girl with hair like old straw. Every bit of the magic had gone. Nothing was left but the old, 
+old hurt, too deep and familiar even to make her cry. Still she hunched over and buried 
+her face in her hands, cupped her palms to hold the tears that would no longer come. </p>
+<p>As for Elira, the enchantress who called herself Countess of Melgarad, she had only 
+three new slaves that morning instead of four; but it had been good hunting, well worth </p>
+<p>E. N. Dowd </p>
+<p>The Domes of Callantha </p>
+<p>10 </p>
+<p>the trip. She was genuinely sorry that her pet had not come back. She would have made 
+her a goddess. Maybe the little vixen had gone off to play with the village boys, and was 
+satisfied with that. Served her right! Or maybe she was frightened off by the changes, by 
+the prospect of turning into something so beautiful that she would no longer recognize 
+herself. That sometimes happened, and with the most promising subjects, too. </p>
+<p>Ah, well. Before the tent was packed away on the cart, and her bearers lifted her litter </p>
+<p>back up on their beefy shoulders, Elira’s three new slaves had taken their second drink 
+from her bursting breasts, and now they were hers. Every new slave meant an increase in 
+power, and in the visible signs of that power. When she put on a fresh dress for the day, 
+the weight of her orbs forced the plunging neckline a little wider apart than before. The 
+deep blue silk barely covered her nipples; her scarlet areolas peeked shamelessly out of 
+her bodice. </p>
+<p>Elira hugged her breasts and shivered with delight. She might not be a real countess, 
+but she had three new slaves, and she was bigger. That was enough. In the end, it would 
+be everything. </p>
+<p>“On!” she said, and her bearers took her away from that village to the next hunting </p>
+<p>ground. </p>
+</body>
+</html>

@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>The Balld of Bob</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>Author’s Note: If you are under 18 turn back now! This is NOT for you. </p>
+<p>Who doesn’t love unaware growth? A sequel is planned for this story! I look forward to any and all 
+feedback and suggestions. Feel free to follow me on deviantart at a-spooky-ghost which is the best place 
+to contact me. </p>
+<p>The Ballad of Bob </p>
+<p>My name is Robert and I am the most forgettable man on Earth. We may have even met; not like 
+you’d know. I tried shortening my name to Bob to make it easier for people to remember it. At 
+work, I get Steve, Brett, Trent—any you can think of, somebody’s guessed it’s my name. Except, 
+of course, for Bob or any possible variation. I don’t want to brag, but I’m not a plain-looking 
+guy, either. </p>
+<p>I’m five feet nine inches tall, I keep my brown hair short and parted to the side. I’m at the gym 
+every other day and am what I’d consider pretty muscular! I keep a clean shave; I dress neat and 
+I’m polite. There’s a sea of other men out there that don’t put the kind of effort I do into my 
+appearance. Then again, it’s not like I don’t have a social life. </p>
+<p>I have a wonderful girlfriend named Jenny. She’s a gorgeous red head with a slim figure that 
+makes her C-cup boobs look huge. I love her gorgeous bright red hair; she has beautiful freckles 
+decorating her skin. Best of all though: she loves me! I just have one, teeny, tiny little complaint 
+about her. It really all came to a head today, in many ways. Though I didn’t know at the time, it 
+actually started early this morning. </p>
+<p>I was getting ready to start the day and I couldn’t find my phone. So, naturally, I asked Jenny to 
+give it a call. I was sure I’d recognize my ringtone once it started playing. </p>
+<p>“Sure thing, baby!” Jenny had said sweetly. Every time she flashed a smile, I could feel my heart 
+melt a little. Still, I wished she would have used my name at the time. I was privy to something 
+that I hadn’t seen before, however. I got to see her open up her contacts and scroll through them. 
+I watched as she scrolled past A, and then B which had me a little worried. I presumed she was 
+heading to R for Robert. </p>
+<p>I was wrong, of course. Jenny stopped at H for Honey, started the call and sure enough my phone 
+started ringing. I knew and still know for a fact that it isn’t malicious on her part, but the damage 
+was done. My girlfriend of the past two years doesn’t know my name! It was nice, I guess, that 
+she wasn’t calling me Brett or something. Still, it drives me nuts! Don’t say you wouldn’t feel 
+the same way! </p>
+<p>So, the day went on like any other. It’s a rare Saturday in which we both happen to have the day 
+off. Jenny and I had gone to the local mall to pick up a few things and maybe have lunch, too. I 
+had been pretty quiet the entire day. I was too focused on trying to figure out how to broach the 
+subject that Jenny didn’t know my name without starting an argument. </p>
+<p>“Hey, honey?” Jenny asked and lightly tapped my shoulder. I suddenly realized that we had 
+traveled to the middle of the mall. It was like I had entered a fugue state while buried in my own 
+thoughts. I looked down at Jenny’s smiling face and briefly forgot my frustrations. </p>
+<p>“Let’s check out that antique shop,” Jenny nodded toward the shop’s direction, “I want some 
+knickknacks!” </p>
+<p>I agreed, of course, because I didn’t mind decorating the apartment with weird odds and ends. 
+Usually when we went into these places, I would grab the weirdest mug they had. You’d think 
+that the guy with a cup shaped like a giraffe head or a world map would get name recognition, 
+wouldn’t you? I did, and let me tell you—it doesn’t! </p>
+<p>So, I let Jenny wander off in the store which of course means she made the mistake of letting me 
+on my own. Something caught my eye that nobody could have resisted picking up. Few things 
+are so pervasive throughout western media as the monkey’s paw. I was sold instantly based 
+purely on the idea that nobody would forget about the guy who owned a monkey’s paw. I wasn’t 
+sure if it was real monkey, I kinda hoped it wasn’t, and I decided not to ask. </p>
+<p>Jenny came back with a plate that had a picture of a kraken attacking a pirate ship. We had a 
+good chuckle about the items we’d found and checked out a few minutes later. As we left, I 
+didn’t notice that a vase was set next to the doorway. You guessed it: my elbow went right into it 
+and that thing shattered when it hit the floor. I instinctively grabbed the bag the paw had been 
+placed in, utterly mortified. </p>
+<p>“Oh, shit! I’m so sorry,” I pleaded to the clerk. What I said next was only the first mistake I 
+would make and was perhaps the most destructive, in an insidious way. I don’t know why I 
+thought to vocalize the thought. It just tore out of my throat with little to no forethought. </p>
+<p>“Days like this is what makes me wish that it was my mistakes nobody would remember,” I 
+muttered to myself. Or so I thought. Something in the bag shifted but I hadn’t noticed yet, or 
+maybe I had but I had more important things to look at. In an instant the look of concern 
+vanished from Jenny’s face, and the clerk looked away from the mess. It was like I hadn’t broken 
+the vase, but I certainly had. </p>
+<p>“Is…this going to be okay? Should I pay you?” I questioned the clerk. </p>
+<p>“Honey, you already paid, remember?” Jenny gently patted my back. The clerk looked up at me, 
+bewildered, and nodded along with what Jenny had said. Despite my reservations I allowed us to 
+leave the shop. As we walked, I thought to examine my purchase one more time. I remember my 
+heart jumping in my chest: one of the paw’s fingers was curled. </p>
+<p>I don’t think I mentioned that this was the classic monkey’s paw. It had three fingers, all 
+stretched out and was stiff as a board. I had tried to move the fingers with no success. So, to see 
+one of them had curled sent my mind racing. I couldn’t remember just then what I had said to 
+make it happen. I was certain, however, that I needed to be more careful about what I said. 
+Looking back: I could have been a little more careful. Just maybe. </p>
+<p>I held myself together until we had arrived at a little clothing outlet within the mall. Jenny went 
+off on her own giving me ample time to consider how I should test the paw’s authenticity. A few 
+juvenile fantasies played out in my head. I was thinking so much about the phrase that I managed 
+to make a conscious decision to speak. </p>
+<p>“I just wish that I could see some…bigger women whenever I wanted,” I had thoughtlessly 
+mused. This is the sentence that has permanently changed my life. Should I say ruined? I’ll let 
+you make that decision. I can still feel the blood draining from my face when I saw the second 
+finger curl. Part of me tried to justify that it was some kind of toy with voice-activation for the 
+words “I wish.” I stashed the paw right away. If I was going to be remembered I didn’t want it to 
+be because I was staring at a severed limb in the middle of the women’s clothing section. </p>
+<p>As though on cue a member of the staff approached me. I remember her starting out as an 
+average brunette with cute pink-framed glasses. I was worried she had seen the paw and that I 
+had somehow violated the store’s no monkey paw policy. </p>
+<p>“Excuse me, sir? Do you need help finding anything?” the brunette asked. </p>
+<p>When she’d first walked up, I was certain she was about a head shorter than me. Once she started 
+talking, however, I realized I was mistaken. It appeared that the brunette was only a few inches 
+shorter than me. Moreover, her button-up shirt had the first few buttons open, revealing a hint of 
+cleavage. </p>
+<p>In the moment my eyes darted down to inspect the goods I thought she had just taken a deep 
+breath. Her tits seemed to suddenly bulge out of her shirt. I was shocked but tried to play it cool. 
+I reestablished eye contact with her, directly at eye level. Something seemed off but I just 
+couldn’t place it. </p>
+<p>“Er, no, I’m just waiting for my girlfriend,” I said with a nervous chuckle. The brunette seemed 
+to shift onto her tiptoes. Even looking directly at her face, I could suddenly see the curvature of 
+her breasts at the bottom of my vision. It took me far too long to realize that I was actually 
+looking up at her eyes. I readjusted my head so my eyesight was level, and realized I was making 
+direct eye contact with her cleavage. </p>
+<p>More buttons on her shirt had opened and I could see the bra supporting her boobs poking out. 
+Once more, her breasts seemed to stretch out toward me. All social mores had left my brain as I 
+squinted at her surprisingly large bust. I followed the swell of her tits upward, unsure of just 
+what I was looking at. If I didn’t know any better it seemed like her tits were now spilling out of 
+her shirt, and she was becoming taller with each breath I took. </p>
+<p>“Oh, okie dokie!” the brunette broke the silence, “well, if you need anything, come find me!” </p>
+<p>An eternity had passed between my answer and her response. I couldn’t deny my eyes: this 
+woman might have been seven feet tall with G-cup breasts. I’ve never had problems with </p>
+<p>hallucinations, and I’ve never touched LSD or shrooms. I had watched this woman grow before 
+my eyes. I didn’t make the connection just yet, but I did appreciate the fulfillment. </p>
+<p>I watched her walk away utterly agape. I probably looked ridiculous but can you blame me? I 
+could swear I saw her ass and hips plump up as she left. Heck, she seemed to still be growing 
+because she had to start craning her neck to avoid bumping into the ceiling! </p>
+<p>“Hey, honey…” Jenny seductively purred from behind me, “don’t you wanna tell me how I 
+look?” </p>
+<p>I turned around with every intention to ask Jenny if she had seen anything of the tall woman or 
+her growth spurts. Jenny had wrapped herself in a coat, clutching it closed with both hands. I was 
+all too familiar with this routine and, so, I adjusted my priorities. I smiled, I took her hand, and I 
+followed her back to the dressing room. Her grip seemed to be firmer than normal but I placed 
+the blame on arousal. </p>
+<p>Once inside Jenny daintily removed the coat and placed it on a hangar. She was wearing a lacy 
+red chemise and absolutely nothing else. I was fully erect as I embraced Jenny and kissed her 
+deeply. It wasn’t the first time we had had sex in a changing room and I was sure it wouldn’t be 
+the last. We broke the embrace, both in a state of high arousal. I began to disrobe but not without 
+drinking in the image of my girlfriend wearing the lingerie as I did. </p>
+<p>Something about this particular chemise was doing Jenny’s breasts a huge favor. I said before 
+that her tits looked big on her slender frame but the vision before me was something special. 
+Freckled cleavage was absolutely spilling over the garment’s neckline. Just as I was she, too, was 
+breathing heavily causing her boobs to heave further over the neckline. I wasted no time noticing 
+that as her breasts gently pushed up and over, they did not recede. </p>
+<p>Furthermore, I could tell that the chemise didn’t seem to reach as far down her legs as I first 
+thought. In fact, if I didn’t know any better I would say I was watching Jenny gradually 
+expanding upward. I began to notice the chemise bunching up around her thighs, too. I was 
+undoubtedly watching as soft, freckled flesh poured into her hips. </p>
+<p>I finally managed to get my underwear off in time for my eyes to drift upwards. Jenny’s tits were 
+distorting the chemise to the point of threating to tear it. In fact, the more I looked the more boob 
+there seemed to be. More than that; there was more Jenny the more that I looked. Apparently at 
+the point she couldn’t stand the tension and grabbed me. </p>
+<p>We ravished one another, assuredly making enough noise for just about anybody in the outlet to 
+hear. Each time I fondled or sucked on her breasts; each time I paused to kiss her and, indeed, 
+with each thrust there was more Jenny for me to grasp. I wasn’t in the right state of mind to ask 
+how her chemise could possibly still fit, or how a nine-foot-tall-and-growing woman fit in a 
+small dressing room. </p>
+<p>Finally, Jenny began moaning with aroused abandon, I suddenly took stock of what had 
+happened. I was grasping the thick, juicy thighs of a woman nearly twice my size. The thought </p>
+<p>pushed me over the edge and I came immediately. Jenny let out an orgasmic cry as I collapsed 
+onto her. Both of us were covered in sweat and panting. I could still see her heaving breasts 
+slowly swelling outward. She must have been somewhere in the H-cup range, and still getting 
+larger. </p>
+<p>“Jenny, yo-you’re huge!” I managed to gasp. I remember feeling her body spreading out beneath 
+me. The heavy breathing made it easier to tell what was happening. Her body swelled outward 
+when she breathed in and retained its size when she exhaled. </p>
+<p>“Yeah, baby,” Jenny said between breaths, “isn’t that why you love me?” </p>
+<p>I was too tired to continue the inquiry. I shut my eyes and let myself get carried away on the 
+rhythm of Jenny’s lusty breaths. I awoke, at some point, atop a loudly snoring Jenny. Gazing at 
+her it seemed she was even larger than before. Slowly, the pieces began coming together in my 
+head. When my eyes were shut the feeling of her swelling body had stopped. Just like the 
+brunette employee she had only started growing when he turned to face her. </p>
+<p>“But can you stop growing?” I absentmindedly said. When the swelling apparently stopped, I 
+chalked it up to coincidence. I had only just begun putting the pieces together, and had no idea 
+what was in store for me. </p>
+</body>
+</html>

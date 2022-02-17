@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>A Bookstore In Brighton</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>A Bookstore in Brighton 
+Written by Saint Limey 
+Morph by femalemorphlover </p>
+<p>What did she have that I didn't?  </p>
+<p>I entered an old bookstore and started to browse the romance section. Moving to a new city, the 
+first thing on my to-do list was usually to find the dustiest shelf of books I could. There was a lot 
+that a person could tell about a town by the selection of books in their used book sections. 
+Political leanings, religious backgrounds, social expectations were all reflected in what items 
+were donated to be resold. Titles like ‘How to Start a Vegetable Garden with Minimal Effort’ and 
+‘Everything You Need to Know about Pubic Hair’ spoke for themselves, too.  </p>
+<p>For people who required extra intel before diving into the social network of a new town—people 
+like myself—book shopping was a telling and enjoyable experience.  </p>
+<p>This time was different, though.  </p>
+<p>An embarrassingly public rejection witnessed by people who I’d thought were going to be my 
+new friends had me blitzing from the falafel shop on twelfth street, jogging twenty blocks without </p>
+<p>stopping to the one other place in town that I knew: the bookstore. Before that, I’d thought a lot 
+about relationships, specifically how I wanted one so badly and how moving to Brighton was a 
+chance to experiment, hook up, and remake myself as an open, interesting girl with a lot to 
+offer. Hopes dashed, I concluded that something about my introverted, bookish personality was 
+still too obvious, and that no amount of putting myself out there was enough to put me on par 
+with the legion of other pretty, professional, mid-twenties women that I’d encountered. </p>
+<p>They had money, experience, attention and sex. Me showing up threatened that. And in a 
+competition for those things, Amy from the office, with her above-average cup size, beat me and 
+my C cups every single time. </p>
+<p>Of course, it wasn’t 
+ cup size, but I couldn’t keep my fists from clenching with rage and it was 
+just
+​
+easy to project the indignant fury onto such a conspicuous discrepancy; to be pissed at a girl for 
+having natural boobs twice the size of mine.  </p>
+<p>So, I used books to escape the pressures of social life, not unlike what I had done since the age 
+of five. Becoming ‘New Stephanie’ would have to wait till my blood pressure went down.  </p>
+<p>Half an hour in, and three selections set to the side for personal consideration, I stumbled upon 
+a skinny romance called “Growing Into Her Own”. A woman with brunette hair and a pretty face 
+popped off the hardback cover. Stuffed into her dress was the best looking pair of tits I’d ever 
+seen—the used book prophecy of mine rang true, since I hadn’t seen a single flat-chested girl in 
+Brighton in my week of living here—overflowing a tiny slip gown, clearly alluring, and 
+overly-developed.  </p>
+<p>What did she have that I didn’t? Money, experience, attention, sex. . . and a </p>
+<p>After having normalized, my blood pressure ascended again. 
+what gives with the girls in this town. Who donated this junky book anyway?
+ And it was a 
+​
+trashy-looking read just based on the gratuitous, gaudy flavor text. Yet despite my initial 
+dismissal of the text, I flipped through the first few pages, determined to find something 
+incriminating about her stupid, rounded, fat boobs. I’d feel vindicated if someone in the book 
+called out the girl on the cover for something stupid she did. </p>
+<p>I speed read, blazing through the first chapter, taking a seat on a low bench right there in the 
+book store. I wanted to experience what she did in detail; wanted to find her flaw as a character 
+while feeding the jealous monster within me. Page after page, I scrutinized her exploits. The 
+cover character had been flat chested her whole life, the image of purity at the beginning, but a 
+curse gone wrong had inspired a magical surge of boob growth that had changed her life 
+forever. It was everything I hated, wanted, and was unironically aroused by in a short, succinct 
+book—which, in my current mood, ticked me off even further.  </p>
+<p>I read through it anyway.  </p>
+<p>, I thought. 
+Damned tits
+​</p>
+<p>pair of tits.<br />
+killer
+​</p>
+<p>Seriously, </p>
+<p>​
+​
+​
+​
+ 
+It wasn’t long before my posture made my own bra feel uncomfortable on me. I quickly adjusted 
+myself and kept on reading, both envious and aroused at the depiction of a rampant and wild 
+sex scene between the heroine and a complete stranger. The story made huge boobs sound 
+amazing—made me want them so bad! In short form, it used breasts to invoke feminine power, 
+sexual freedom, and esteem. I would have been sucked in entirely had it not been for my 
+underwire pinching me back into my own body.  As the book continued to develop the romance 
+and sex further, I pulled on my bra strap, trying to situate myself so I could fully escape into the 
+realm of fantasy.  </p>
+<p>It was like my tits were choosing now to stand out. Why couldn’t they have done that earlier 
+today at the falafel shop? Might have saved me some suffering. . . </p>
+<p>I spent several pages just trying to ignore it. Like, if I stayed as still as possible, I wouldn’t have 
+to deal with the sensation of my boobs going one way and my bra going another. But just 
+breathing evoked the feeling after so long, and me pulling my cups down to keep the tufts of 
+underboobage from catching became quite the chore.  </p>
+<p>I even started to pace, holding the book in both hands as I read, trying the opposite approach. It 
+worked a little, but it wasn’t long before my arms got tired and the book had to sink lower and 
+lower. Soon, my chest blocked the bottom of the pages, which was odd. My boobs were sizable. 
+Not Brighton leagues of bodacious and yet not mosquito bites either. I could thank my smaller 
+stature for helping what were average C cups fight in the same ring as D or double D’s on many 
+occasions. Even so, they’d never truly gotten in the way of anything. Nor had they ever felt so 
+present in my bra. What was happening? </p>
+<p>I marked my page with my thumb and closed the book over it. What was wrong with me? My 
+body looked normal. My striped orange top fit me as it had this morning, as did my jeans and 
+sneakers. There was no reason for me to feel so conscious of my body. Yet, standing there, I 
+couldn’t help but start picking at the tighter areas of my top; ribcage, collarbone, tummy, chest. 
+I’d thought I could pull off this look; thought it was flirty and that I’d get some good attention as a 
+result of it. Proudly walking out my door, I had believed that this uncharacteristically tight outfit, 
+combined with wearing my hair down, would have won me a few brownie points with some of 
+the cute locals. It hadn’t. </p>
+<p>That has to be it. I’m self-conscious about what happened. Still. Ugh! </p>
+<p>the hurt of it would leave so quickly wasn’t realistic, though. And I didn’t know what </p>
+<p>Wishing that
+​
+I could do to speed up the healing process. I gave the hem of my top a tug so it covered a little 
+more of my belly and to my surprise my cleavage poked through the neckline. At first, I was 
+tempted to make a fuss over it, but remembered that that urge to fuss was the part of my ego 
+that remained bruised and wrote off my attention to my boobies. </p>
+<p>​
+—. . . ” I said.<br />
+Whoa
+​</p>
+<p>“Just keep enjoying your book,” I told myself, flipping it open and returning to my spot on the 
+nearby bench. “Wait. I’m not enjoying this. It’s research and a distraction. That’s all. Just one 
+more little adjustment here and I can get started. . . Uh. </p>
+<p>I held the book in my right hand while I pushed up my chest with my left. They were heavier 
+than I remembered. Lines of tension were forming over the front and sides of my top. Suddenly, 
+it was like my breath was stopping at my boobs. </p>
+<p>Mind playing tricks on you. You’re grieving. Just read, Stephanie. Enjoy, erm, investigate. And 
+ignore the urge to touch your boobs. </p>
+<p>My focus was to flip through pages as fast as I could; skimming when necessary. A state of flow 
+assisted by speeding the passage of time for what was probably twenty minutes. The plot came 
+to a point where the main heroine was having another growth spurt after discovering the inner 
+workings of the misfired magic curse. She exploited it, discovering that sensitivity grew in 
+tandem with her size. At this point, the sex went crazy. She entertained four or five partners on 
+rotation, male and female, ranging in age from a fresh eighteen year old to wealthy CEOs in 
+their fifties. It was exhilarating and tiring to read, but mostly torturous because sexual 
+descriptors were blasted liberally from the firehose of the author’s imagination and I, the reader, 
+was in a public setting where nothing could be done about the smooth knot of pleasure cinching 
+at the base of my spine.  </p>
+<p>Most impressive was how, after half a dozen encounters, the heroine left each partner sated. 
+Her humongous, ever-growing jugs were enough to satisfy four or five lovers in a variety of 
+ways—god, the ingenuity of the positions and actions. And yet, having all of that sexual 
+dexterity, the melonous, breasty swells were not yet enough to satisfy their wielder.  </p>
+<p>Line after line described her lust for size; how being big and knowing she was the biggest 
+around came with confidence and poise and acceptance. I couldn’t help but relate. Every page I 
+turned, breezing through large percentages of the harlequin romance in a matter of minutes, I 
+could feel the building pressure described in my own chest. My heart began to suffocate under a 
+growing weight, as did my sense of urgency to get to the next paragraph, describing her growth. 
+The character’s expansion had started with her being rather small before blossoming into a 
+legendary L cup by this point in the book—I couldn’t fathom such a size! How huge would a girl 
+have to get to sport an L cup bra? The question itself inspired fantasies and fancies that 
+aroused and excited me.  </p>
+<p>“Hahh, 
+continued flipping through, careful to observe my surroundings, making sure others hadn’t 
+appeared in the store with me, catching sight of me getting hot and bothered between the 
+stacks.  </p>
+<p>,” I started to pant. The fluorescent lights were hotter for whatever reason. I 
+hahh
+​</p>
+<p>​
+​
+. . .I-I—. . .” 
+hahhn
+​</p>
+<p>Pressure mounted inside of me. I felt it grow warm, then hot, then reach a boiling point. I 
+became aware of how much of my tummy was showing and how tight my top was getting. In my 
+mind, I was right beside the woman in the book I was reading, ready to burst from the size of 
+her tits alone.  </p>
+<p>“God, what if I could just be that big—that huge. Hahh, </p>
+<p>Ping! </p>
+<p>I sat erect and let out a squeak. The sound came from behind me but the only thing behind me 
+was a shelf of books. I looked around again, bending at my middle to see if there was anyone 
+down either of the walkways around me. Nobody. Just me, alone, with a copy of “Growing Into 
+Her Own”—the most fetish-heavy, untoward, taboo book I’d ever accidentally pulled from a shelf 
+. In my moving, I felt something slipping under my shirt. This time, I jumped but didn’t 
+anywhere
+​
+make a noise. After the initial panic, I inspected and found that my bra was sagging on me.  </p>
+<p>Wh-what the heck was going on? My bra came off?  </p>
+<p>That was weird. How had I undone it just sitting there reading? </p>
+<p>Was the book somehow cursed or jinxed or. . . haunted? Nah, that’s ridiculous. What sort of 
+horny ghost lives in a book, anyway? </p>
+<p>With no ghoulish company, I placed the book beside me. My boobs had been nothing but 
+trouble today and I was more than ready to go home and dress in something more casual to rid 
+myself of the concern. My hands went around my back to try to pinch my straps together. I 
+found them under my shirt and ignored how hot my skin felt as I reached to secure the hook to 
+the clasp. Again and again, I stretched myself. My bra wouldn’t fit. The strap was stubborn, 
+unwilling to stretch to reach around my back. In fact, it felt like both hooks had been bent 
+straight which explained that </p>
+<p>As far as fit, my bras did run a little small. It was a preference. Feeling the extra support without 
+full coverage was a way to balance security and freedom. But the way my boobs were stuffing 
+my cups now was different. Tufts of my flesh, which I could feel with striking clarity, puffed up 
+beneath my underwire and beside their basins. Looking through my shirt, I could see the plain 
+outline of my boobies as they mashed together to try to fit inside my underwear as I pulled the 
+straps together behind me, simulating how the bra </p>
+<p>It didn’t fit at all! The more I pulled on the straps, straightening my back, hoping that my boobs 
+would cooperate and sit where they had sat for the majority of the day, the more frustration I got 
+in return.  </p>
+<p>but not what had caused this to happen in the first place.<br />
+ping! 
+​</p>
+<p>have fit. 
+should
+​</p>
+<p>​
+​
+​
+“The heck with it,” I said at last, then pulled my straps off my shoulders and pulled the pink bra 
+out from the bottom hem of my shirt. It was a thin one, so I folded it and tucked it into the bag 
+that I brought with me, noticing that it seemed like the tension had alleviated just a little but that 
+my sense of being exposed was five times the usual amount. I was now braless in this book 
+store.  </p>
+<p>“I should go home. What am I doing being all clingy over this book? It isn’t like I don’t have a 
+shelf full of good books at home to read.” I stood as if to do just that, ditching the expanding 
+heroine exactly where I’d left her. Except, I couldn’t just leave myself halfway. I’d made so much 
+progress and was leaving in the middle of what was an awesome scene of the character’s 
+breast engorgement.  </p>
+<p>I paused, heaved a sigh, and sat down with the book again.  </p>
+<p>The pages flew by. I willed myself to crank through the rest as quickly as possible, but soon 
+found I had been absorbed by the fantasy yet again. No sooner than having flipped through 
+three or four pages did the swelling sensation in my breasts resume. They made my breath 
+shallow and I felt the rush of blood to my cheeks. Going braless was not such a great idea, I 
+discovered, especially because now there was nothing to protect my skin from my shirt. For 
+whatever reason, just reaching to turn the page was so exciting that I had to pause to compose 
+myself after I was done.  </p>
+<p>“God. . . the hell, man?” I whispered, having torn through about thirty more pages before the 
+sensation felt too good to continue. “I just feel so. . .” </p>
+<p>Light-headed? Dizzy? 
+. That was it. I needed a break because reading this book was 
+Turned on
+​
+actually making me want to drool. It was as much a reason to stop reading as it was to continue 
+reading. . . which I decided to do after a short bit of respite without stimulation.  </p>
+<p>So much for me willing myself to charge to the end of the book. .. . </p>
+<p>It was at this moment, deciding to take my break, that I started to notice more pronounced 
+changes.  </p>
+<p>I sat the book in my lap, pages down so I wouldn’t lose them. But then, I was having trouble 
+seeing my lap. In fact, more and more of my lap was disappearing. I only really paid attention 
+because it had been one of the key details in the book. The heroine looked down and noticed 
+she couldn’t see any of her thigh anymore. And here I was, too, looking down at my thighs and 
+seeing less and less of them. Instead, there was more and more flesh looking back up at me.  </p>
+<p>“The hell. . . What is. . . </p>
+<p>, my breasts?” 
+Mmmn
+​</p>
+<p>​
+​
+I went for them with my hands, as I might pat my pocket to see if I’d remembered my phone 
+when leaving the house. What were once decently-sized orbs were now much, much more. The 
+weight as my hands tapped the bottoms of them surprised me, as did the zinging sensation of 
+my nipples rubbing against the fabric of my shirt.  </p>
+<p>Speaking of, the orange shirt of mine seemed to have changed somehow. Even more of my 
+stomach was showing. I could feel the cool air of the air-conditioned building rushing above my 
+belly button. So much of the bottom part had ridden up. Then, there was the upper portion; the 
+dipping U in my top. I could have sworn I wore more of a crew neck, but as I looked down, I 
+didn’t see very much of the orange material at all.  </p>
+<p>Instead, I saw tits.  </p>
+<p>I jumped again, just as I had from the ping from earlier—gosh, I was getting jumpy lately. Could 
+I blame myself though? Absolutely not. Before me were boobs. Like, 
+. Enormous, jiggling 
+boobs
+​
+mounds of flesh hanging—though more like standing—on my chest. The jump I’d done earlier 
+had inspired them to move, wobbling seductively around in my shirt like children in a bouncy 
+house. I couldn’t believe how much skin I was showing. It embarrassed me first and foremost. 
+But then, it also made me glow with a sort of pride.  </p>
+<p>“Th-There’s no way they’re real, right? R-</p>
+<p>My patting had been largely investigative. Now, I gently patted myself. My boobs were warm to 
+the touch; smooth under my shirt and silkier as I touched the exposed portions. I could lose an 
+entire finger in my cleavage, I noticed, as my boobs had grown to the size of honeydew melons. 
+I was so inexperienced with chests this size that my instinct to touch them grew larger than 
+anything else.  </p>
+<p>I reassessed just how much I had been missing out on by not being Brighton levels of busty 
+once I had my full jugs in my grasp.   </p>
+<p>I felt the tingle in my boobs as my fingers sought to surround them. I felt the pride in being too 
+big for my own hands, filling out my shirt, having my best assets in front of me. As I groped 
+myself I felt a constant flutter in my stomach, confidence that had only come in the past from 
+having half a beer with friends. It wasn’t a stretch to say that touching my boobs made me a little 
+drunk on them. There is a rhythm to it that, once found, is so addictive and hypnotic that I could 
+have sat in that same spot, unmoving, just watching my nubby fingers moving around over my 
+huge, new boobs and been perfectly content with it.  </p>
+<p>It was a risk, but I couldn’t put up with groping myself over my shirt anymore. My thighs were 
+grinding together, toes curling in my shoes. I needed more—suddenly, all I could think about 
+was how my hands would feel when pressed against my swells with no barriers. Bra already 
+done away with—out of necessity that I now thought was sorta hot; like, literal bra busting </p>
+<p>,” I said.<br />
+Right? Mmmn
+​</p>
+<p>​
+​
+hotness—I started to inch my hands up my thinning shirt. Every centimeter of motion came with 
+anticipation built in, like edging out onto a frozen pond and seeing the cracks in the ice. I was 
+about to break through to something. Those somethings were rising and falling seductively with 
+my quickened breath. </p>
+<p>“Hmm. . .” came a sound. </p>
+<p>And I ripped my hands out of my shirt and picked up the book again.  </p>
+<p>I had forgotten to check my surroundings; too distracted. I searched. Came up with nothing. But 
+it had certainly been a human sound I heard.  </p>
+<p>Unless I’m hallucinating. . . </p>
+<p>Tricks of the mind would have also explained the sudden growth and ramp in sensitivity in my 
+bubble boobs. Maybe there was some credence to it. </p>
+<p>“Hmm. . . Ahh.” </p>
+<p>No, no. I did have company. Of course there was someone else in the store with me, and in all 
+of my attempts at being hazard conscious I hadn’t considered her: the girl at the reception desk. 
+She was doing inventory or something on her computer when I stumbled in. She hadn’t greeted 
+me and I had more or less used the signs to find my way around the store, never having to ask 
+her any questions.  </p>
+<p>What I’d heard was her sighing, probably stretching from being seated too long. Nothing came 
+after, too. No footsteps or shuffling or scratching of her chair across the hardwood flooring. Even 
+though I couldn’t see her, I could tell that she hadn’t moved. At least, I hoped she hadn’t moved.  </p>
+<p>A breath of relief cooled me down a little bit. “What the hell am I doing?” I asked myself. I was 
+sitting in an old bookstore in the town I had just moved to, reading through a book about a girl 
+whose boobs get bigger, thus transforming her entire life. Except, I wasn’t just reading the book 
+anymore. Sure, the book was open but
+chest was double its previous size. With said expansion came a sensitivity update too. Never 
+before had I gotten pleasure from touching my boobs, and that pleasure hadn’t activated some 
+part of me that wanted to do so for hours and hours without stopping.  </p>
+<p>That same part of me was still in motion. It reminded me of what the receptionist looked like and 
+wondered if she noticed me come in or if she would notice me now with tits that were way more 
+pronounced than before. I wondered if she would like my chest like I did, or if she would be 
+interested in knowing how I got them.  </p>
+<p>was the girl having her life changed. Suddenly, my 
+ I 
+​</p>
+<p>​
+ nice to look at, and because I wanted to 
+very
+​</p>
+<p>I looked down at the increased batch of tingles and noticed my nipples going rock hard at the 
+thought. </p>
+<p>Then, a devilish thought came to my head. “Does this book do this to everyone? O-Or just me? 
+Wait. Is it really the book doing it to me?”  </p>
+<p>I couldn’t exactly tell. Thinking back, it was while I was reading it that I started to feel 
+uncomfortable. It was in the midst of her expansion scenes that I myself felt my bra failing, 
+coming off of me with a snap. </p>
+<p>Testing, I started to flip the pages of the book as I might riffle through any book of similar size. I 
+wanted to get a feel for the pages, subconsciously remembering my place in the book for later 
+reference. Expecting something to happen, I did so again after the first time, leafing through 
+page after page like I was hunting for something specific.  </p>
+<p>Nothing happened. My chest contained the same amount of warm, tingly bubbles as before. I 
+monitored them closely—both because they were 
+be sure to catch any amount of change—and came up short.  </p>
+<p>“Okay then, so what about this?”  </p>
+<p>Next, I started to skim, just flecking my eyes over the text starting at the beginning. The scenes I 
+vividly remembered went even faster as I breezed through each and every page like I might 
+cram for an exam I’d forgotten about.  </p>
+<p>That had a lingering effect. It was like my body’s temperature started to rise as familiar images 
+and words flashed in my head, evoking my memory. But there was no growth to be had. I may 
+have used skimming as enough sensation to masturbate to, but not enough to change me as I’d 
+been changed up until now.  </p>
+<p>That left reading. “Okay then. Page 128.” I turned back to where I was, describing a scene of 
+the main protagonist walking down a familiar street and painting a picture of the effect of her 
+tremendous titties on the people passing by. Everyone from the oldest man to the youngest little 
+girl admired her. Her reflections in the windows of the building framed her busty visage. Traffic 
+lights were hotspots as everyone in cars stalled in front of the changing light to see her as she 
+crossed the street, letting her pass out of false courtesy. She knew what they wanted to look at 
+and thanked them by adding an extra spring in her step, all but having a nip slip as a result to 
+reward their flattering interest in her swinging mammaries.  </p>
+<p>The thrill of having that much fun and confidence in her body was everything I had been feeling 
+jealous of all along.  </p>
+<p>​
+.” 
+Whoa
+​</p>
+<p>I was done with ten or so pages before I realized that I had been reading for a purpose. I 
+paused at the break between chapters and checked out my body. Like a kid on Christmas, I 
+examined my presents and found that, while they still felt amazing against me, they hadn’t 
+changed. Hope leaked out of me. Maybe I had done something wrong? Maybe knowing that 
+they were supposed to react was part of why they wouldn’t react to me reading anymore. I’d 
+spoiled myself of the ignorant fun of a free boob job and now I’d ruined it.  </p>
+<p>It was like being cool or confident in an actual public setting. I cared too much about if what I 
+was doing was working and, as a result, it didn’t. I just looked awkward.  </p>
+<p>“Too good to be true. . .” I huffed, disappointed. “I just wanted to see if I could get a little 
+b-bigger. . . </p>
+<p>There. That sensation. That feeling of being filled, floating like soda bubbles from my core to my 
+boobs, swashing behind my nipples.  </p>
+<p>As I looked on, I got to see them growing. My boobs, the ones blooming out of my chest like 
+rockets, were on the move again. It was a steady, slow thing, this growth. It may have taken the 
+span of about five minutes or so and maybe I went up about a cup size. But I could tell they 
+were growing. My shirt was stretching. Their size went fuller and fuller on me, filling any extra 
+space on my body. This growth, in particular, was just enough so that boob flesh began to pile 
+up and peek over the lip of my shirt, doubling up in a quadboob effect. At the same time, the dip 
+in my shirt began to lower. It was part of the magic too! My shirt had begun as a crew neck and 
+was well on its way to being a date night top, top plunging even lower so that my tits wouldn’t 
+threaten another clothing mishap.  </p>
+<p>“H-
+the unique sensation of the stretching of new skin and the addition of new weight. Now, I felt 
+those things and more in earnest. They made me squirm about in my seat. I was so big now 
+that just squeezing my elbows toward each other was enough to feel my boobs press together, 
+kissing one another, rubbing their flesh over and around and under each other in my teeny little 
+top.  </p>
+<p>They were expanding. My chest grew larger and larger with each breath. Again, nothing stark or 
+amazing as I’d only read a small bit of the book before looking, but I could tell from the intensity 
+that me reading had done the trick. I wasn’t just feeling good for being huge anymore. I felt good 
+because I was inflating. Growth was the secret to reaching my personal bliss.  </p>
+<p>It was like discovering buried treasure. I’d discovered something so magical—literally. Reading 
+this book would make me huge.  </p>
+<p>And read I did.  </p>
+<p>, God that feeling.” Somehow, I was blind to it before; numb to myself and 
+Ahhm
+​</p>
+<p>, man. 
+Hahhn
+​</p>
+<p>​
+​
+​
+I no longer wanted to leave the store, gripped by shame and jealousy and negativity. I no longer 
+was looking to escape where I was. For the first time in a long time, I wanted to just be me, in 
+the present moment, reading a book that I enjoyed. I didn’t hate the woman on the cover 
+anymore. After all, that woman was me in a way.  </p>
+<p>So I read and read, digesting each word and sentence and paragraph, learning how they were 
+put together so that I could recall them later; making notes of my favorite descriptions and 
+scenes. This time, instead of examining every few pages, I would let a chapter go by before I 
+took a break to check out how my body was coming.  </p>
+<p>It was hard doing. I started to moan, unable to hold back how my boobs made me feel. They 
+were so hot; made me unbearably horny. They grew and grew, inch by inch, pulling my shirt in 
+all directions around them so that there were wrinkles at the front and along the weakened 
+sides. During one growth fit, I sat the book down, so sad to be nearing the end, and gave myself 
+some mandful squeezes. I was even bigger than the last time I’d pulled on them, and my hands 
+were even smaller by comparison. That realization, in and of itself, was enough to push me to 
+my greatest sexual heights. My core roared to life. My pussy called to be touched and I, 
+throwing abdondon to the wind, unbuttoned the first button of my jeans. I had been smaller just 
+a few minutes ago. Now, I was bigger and my hands couldn’t even hope to contain me. It was 
+like I had the breasts of a woman who weighed fifty pounds more than me.  </p>
+<p>These tits, these melons, they were mine. And they weren’t done expanding for me just yet.  </p>
+<p>I sat there, legs wide as one hand worked fingers down the front of my jeans. My other hand 
+worked my titty. Its weight sloshed around in my top like mad, growing all the grander and 
+heavier as the seconds ticked by. My nipples raged for attention, so hard and sharp they looked 
+like they might tear through my top at any moment. At last, the V of my shirt dipped deep 
+enough for me to feel confident in fishing one of my titties out. The left was the lucky one, 
+breaching in the air before smacking my ribcage when it fell. My boob was so much bigger than 
+my head and perfectly pink. It looked delicious.  </p>
+<p>No thought, just action. My nipple came up and I sucked it into my mouth. My pussy lips gripped 
+around my finger immediately, motivated by the pleasure. My tits had never been so sensitive 
+before; they’d never brought me so much bodily satisfaction before. To think that my body was 
+hiding these feelings from me—these moans, this lusty, fleshy smell, and this experience of 
+self-sufficiency—was so ludicrous. How had such a book just been sitting on a shelf if it did all of 
+this? Maybe the book had been meant for me to find it—I had been born a busty girl in an 
+average girl’s body, then.  </p>
+<p>It felt so good to be in the body I deserved.  </p>
+<p>I worshipped my expanding form, finding a love for myself as I might lust for the body of any 
+other woman. I could have gone for a girl or guy romantically, but that scale was tipping much, </p>
+<p>. . .” 
+there
+​</p>
+<p>. Yea, right 
+mnn
+​</p>
+<p>much further into the female category. How could I turn down a woman anymore knowing that 
+they could appreciate these hulking, body dwarfing tits of mine? How could I deny myself the 
+opportunity to lust after yet another pair of boobs? </p>
+<p>I lusted for my own tits, lusted for the ones I read about—the main heroine had reached her 
+optimal size, and had built a life for herself that conformed to the beauty that so few people 
+really appreciated—and now I wanted more.  </p>
+<p>Charging through the rest of the book, I read over the ‘about the author section’ and found it 
+wanting. There wasn’t a portrait of the woman who I imagined would pen the piece. There 
+wasn’t a picture at all. At the end was a descriptive excerpt about the author and her 
+inspirations.  </p>
+<p>Worse, though, to my disappointment, there were no more books in the series. This one book 
+marked the end of the road for myself and this amazing author. . . for now.  </p>
+<p>“She’s gotta have more stuff. Has to. . .” I thought outloud. “A-And I’ll find it. I’ll find it so that I 
+can—. . . Ooo, </p>
+<p>My pussy was so wet just thinking about a trilogy of books just like this one; stories of other 
+busty characters in other universes swelling so huge and helping me swell as well. My tits could 
+fit in my lap comfortably at this point with just a slight lean forward. I was enormous, my shirt 
+serving more like a sling for my delicious, gigantic mammaries than anything else.  </p>
+<p>Determined, I hefted my boobs up again and began to suck my lengthening nipples, coating 
+each of them in kisses and saliva and gnawing them gently till the anxiety of book lust went 
+away. I escaped into my own body this time, even though I swore on my new boobs that I would 
+find who it was that wrote a magic book that made the reader grow four or five times their 
+original size.  </p>
+<p>I sucked and sucked, stuffing my cheeks with the plenteous quantities of my own titflesh. There 
+was so much love to give boobs of my size; so many areas to explore with my mouth and 
+hands, and favorites that I had already made in just the few minutes since I’d been there, 
+ministering to myself. I looked forward to the time I would spend at home, alone, and the times I 
+would get to spend in public as the main character of the book had.  </p>
+<p>It was this sucking and the catch up growth I experienced from finishing the book, that 
+eventually sent me shivering into a full-body flow of ferocious bliss. It was a storm inside of me 
+that raised me to a level where I felt I couldn’t be touched by plaguing insecurities ever again. 
+All the squishy, soft goodness to be found in my new frame comforted me. My identity as a 
+reader who found the most priceless goods in the deepest, darkest corners of bookstores 
+strengthened me.  </p>
+<p>​
+​
+ man. 
+ahh
+​</p>
+<p>, that felt amazing,” I sighed, still vibrating from the peace that had 
+Mmn
+​</p>
+<p>I was so proud of the woman I was, even if that woman was masturbating in the back of a 
+bookstore with boobs that could replace beach balls as far as huge, round playthings.  </p>
+<p>“Ahh, 
+overtaken my body. I didn’t think I would ever come down fully, and that made me happiest of 
+all.  </p>
+<p>Then, as I looked out of the end of the aisle where I’d first started my search through the 
+romance section, I saw her.  </p>
+<p>Almond hair with matching skin. A knowing, but an innocence too, hiding behind coke bottle 
+glasses and a shocked, circular mouth.  </p>
+<p>It was the assistant at the front desk; the one who hadn’t noticed me when I came in. She 
+noticed me now—could do nothing but notice the stacked brunette sitting on  bench at the end 
+of a stack of books, stroking her pussy with her jeans open and boobs out.  </p>
+<p>This time, I really noticed her too, though. There was an appreciation for her form that hadn’t 
+been there before, and I suddenly had a wealth of amazing ideas about what I wanted to do with 
+her. Instead of making me nervous, though, they just excited me. I thought about how great it 
+would be to share the new woman I was with her as my partner. </p>
+<p>I stood, a little wobbly but able to giggle about that fact. As I rose, my chest followed behind me. 
+Gosh, were they heavy. They slung like weights below me for a long while before I could fill 
+myself with the oxygen and the strength to erect my back. When I did, they went off like bombs. 
+They were mammoth in size and clearly the center of the space I was in. I commanded it. Even 
+if it was just me and one other person, I felt myself so large and dominant in the space that I 
+could think of little else to do than smile and roll my shoulders back.  </p>
+<p>Looking down, I couldn’t see my feet or a fair share of the floor in front of me. For more than a 
+foot in front of my person, all there seemed to be was my soft, waiting flesh. They never seemed 
+to come to a complete halt, so most of my view from above was wobbling, jiggling, bouncing, 
+sloshing flesh, all but pleading to resume what I had just finished.  </p>
+<p>I was instantly turned on by myself. Crazy experience, but not unwelcome.  </p>
+<p>“Uh, hey there,” I said, raising my arm. My hand brushed my boob and I felt the urge to drool as 
+it bobbled around in response. I waved at her.  </p>
+<p>She didn’t seem to be paying attention to civil introductions. “Umm. Oh-Oh. . .” </p>
+<p>“They’re nice, right?” I said, cutting to the meat of the matter. I felt bold and like I could say no 
+wrong. “A little intimidating?” </p>
+<p>​
+​
+ session.” 
+relaxation
+​</p>
+<p>“D-Did you come into the store earlier? Was that you? I-I didn’t notice that you. . . ” </p>
+<p>“Had the biggest boobs you’d ever seen?” </p>
+<p>The girl was quiet, finding my eyes as I said it. I waited for her to cut tail and run or just make a 
+break with reality and go mad. What was before her, between us, was something neither she 
+nor any other girl would have been prepared to witness.  </p>
+<p>But then, she didn’t do any of those things. She took a step into the aisle. Then, she took 
+another. “Are they real?” </p>
+<p>“Very.” I took a step too, coming closer. “But I can understand if you’d like to touch them just to 
+make sure.” </p>
+<p>“You sure?” </p>
+<p>“I’d be lying if I said that I hadn’t already been thinking about you touching them. It’s part of what 
+inspired that, well, that </p>
+<p>The girl looked like I might bite her, but came in close when I went still and slowly extended her 
+hand, touching a naked spot about six inches south of my collar bone. Her hand depressed my 
+skin, flesh bubbling up between her fingers instantly. She smiled at the feeling, then realized I 
+was watching and straightened herself up a bit.  </p>
+<p>“I’m at work, I shouldn’t be doing this. Would you like that one?” she pulled away, gesturing to 
+the magic book that lay closed on the bench behind me.  </p>
+<p>I turned, smacking my tits into a bookshelf so that the precariously arranged volumes jostled in 
+their places. None fell, thank goodness, but even if they had, there was a fair amount of cushion 
+protecting most of my body now. My boobs, at their lowest, eclipsed my hips entirely.  </p>
+<p>“Why yes,” I said, at last. “I’ll be taking it. And any others that you have of that collection would 
+be great.” </p>
+<p>“Don’t know if we do or not. I-I need to check my computer to see. I’ll just meet you at the front 
+desk.” </p>
+<p>“Wait.” </p>
+<p>I asked that she stay when she went nervously away, but the way she spun around—like her tail 
+would be wagging if she had one—told me she had only been overwhelmed with emotion and 
+was happy to hear that I still wanted her around.  </p>
+<p>​
+ 
+“Yes?” she asked, sugar sweet. “C-Can I help you with anything else?” </p>
+<p>I thought on it for a moment, then turned to get the book. As I brought it to her, I made to hand it 
+off, but then tucked it between my boobs, making it disappear all together.  </p>
+<p>“Whoops. Silly me, I must’ve lost it. And it was such a good book too—you’d love it. Is there a 
+way that you could help me find where I misplaced it? I know it’s somewhere around here. . .” I 
+started to massage myself, cleavage bulging up high enough for me to motorboat myself. I 
+settled on kissing my bulging flesh instead, inviting the lovely assistant for a closer look.  </p>
+<p>“I-I shouldn’t. . .” </p>
+<p>“It won’t take long. Just a few minutes and I’m sure we’ll find it. Then, later on, maybe we can 
+get better acquainted. Maybe tonight when you get off from work?” </p>
+<p>As I spoke, I was looking at her body. She had a great hourglass figure and I wondered what it 
+would feel like wrapped around my girls. The same way my nipples hardened at the thought of 
+her earlier, they repeated. Except now my nipples were the length of a palm and thick as bottle 
+caps. There was nothing subtle about them, especially what their alertness was meant to 
+insinuate.  </p>
+<p>“I-I’d love to. I just. . . I can’t believe you’d just choose me like that. People usually don’t notice 
+me. . .” </p>
+<p>I felt my heart pang with that and crossed the distance between us in just a few steps. I made 
+good on my imagination and hugged her close, sure to wrap her in the velvety canyon of my 
+cleavage. There was so much of me that I was sure she didn’t even feel the hard spine of the 
+book tucked near my heart. The embrace was just enough to comfort and more than enough to 
+get the cute little brunette squeezing whatever flesh she could reach with greedy hands.  </p>
+<p>“Trust me, I understand that completely. It’s hard to believe, but I know exactly what that feels 
+like.” </p>
+<p>“You do?” </p>
+<p>I nodded, offering a sad half-smile. “But there’s always hope. I’ve got something I want you to 
+read. . . tonight.” </p>
+<p>“At six,” she replied, blushing. “Don’t forget.” </p>
+<p>“I would never forget you,” I offered. </p>
+<p>She hugged me tight, arms wrapped around my beach balls. “I couldn’t forget a woman like you 
+either.” </p>
+</body>
+</html>

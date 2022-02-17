@@ -1,0 +1,1443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Caregiver</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p><img alt="" src="media/image1.jpeg" />{width="8.49375in" height="3.7555555555555555in"}</p>
+<p><strong>Oh hi there!</strong></p>
+<p>I see you\'ve discovered this new little document bundled with my zip
+downloads. Well due to certain avenues not having places for profiles,
+interactive descriptions, or hyperlinks, and not wanting to make double
+copies of my stories for those that do, this here is just a little one
+pager with a few important Madam Materia links. And maybe some FAQ at a
+later date.</p>
+<p>Anywhore, if you wanna keep up to date with my works, see about
+supporting my craft with a sub or commission, or just in general chat,
+then the following links are your best friend.</p>
+<p><strong>Twitter:</strong> <a href="https://twitter.com/MadamMateria">\@MadamMateria</a></p>
+<p><strong>Discord:</strong> <a href="https://discord.gg/svqa8Z2">The Menagerie Lobby</a></p>
+<p><strong>Reddit AMA:</strong> <a href="https://www.reddit.com/r/overflowingbra/comments/azte2c/ask_the_author_madam_materia/">For public
+questions</a></p>
+<p><strong>Patreon:</strong> <a href="https://www.patreon.com/MadamMateria">Madam Materia</a></p>
+<p><strong>Commissions:</strong> <a href="http://www.furaffinity.net/commissions/madammateria/">Gasp!
+FurAffinity!</a></p>
+<p><strong>[Caregiver]{.underline}</strong></p>
+<p><strong>Warning</strong>: The following is erotic content featuring <em>breast
+expansion, butt expansion, giantess growth,</em> and other minor fetishes.
+You know why you're here, so don't complain to me if it's not your
+thing.</p>
+<p>This story was sponsored by my most generous Patrons: tahu109, Error
+Prone, and MorteGauge</p>
+<ul>
+<li><em>Madam Materia</em></li>
+</ul>
+<p>Jesse let out a heavy sigh, running her fingers through her pitch-black
+hair in the few seconds of relief she was awarded between finishing work
+and returning home. She wished she had a cigarette, so badly she wished
+it, but had started quitting months ago for her girlfriend's health. The
+girl even reflexively fished through her pockets to look for her pack,
+as if maybe she might magically find it despite having thrown out her
+last so long ago.</p>
+<p>The sharp features of her face furrowed, doing her best to fight the
+craving along with the frustrations of the rest of her life. "Fuck," she
+cussed to herself, distracting her hands by fixing the collar of her
+blouse.</p>
+<p>She realized she\'d been jittery, leaving her work clothes hanging
+awkwardly off her decently kept body. Hard to get fat when you're
+constantly on the move, so she was left slim and fit, giving her almost
+a hardened look with her steely blue eyes. Eyes that found themselves
+wandering, hunting for a distraction for her small moment of respite,
+and they found something quite unusual when they did.</p>
+<p>There wasn't a door in this alley before, let alone one so old fashioned
+against the modern façade of the office building it appeared on. Was she
+hallucinating? A closer inspection, stepping up and resting her hand on
+the small brass handle, made such an idea very unlikely. Turning the
+knob in her fingers the girl pushed her way inside, amazed to see a
+sprawling interior of shelves adorned with all variety of odd
+knickknacks.</p>
+<p>Unable to help her curiosity she continued inside the little shop, just
+to have a quick look around before she had to return to her girlfriend
+at home. There was a woman wandering about, her back to Jesse as she
+awkwardly swept with her elbows all the way out to the sides. Long
+golden blonde hair flowed down her back, over the wide swell of her
+plush bottom, and down past her knees. Jesse's own dark locks were only
+past shoulder length, and that was a pain to keep up, so she could only
+imagine how hard it was for the thicker girl to maintain that much hair
+and keep it so perfect. It was far from her only surprise though.</p>
+<p>"Hello," the guest made a vie to perhaps get some service or information
+about this strange place.</p>
+<p>The blonde perked up in shock, turning around to reveal her absolutely
+monstrous bust. No wonder she was holding the broom so strangely, they
+jutted out from her chest by feet, and hung down to her waist in
+perfectly rounded teardrops. How she wasn't tumbling down just from
+their weight the more lean-cut woman had no idea. Maybe only because of
+the size if her rear, balancing her out in an extreme hourglass?</p>
+<p>Jesse was staring wide eyed, though the overly curvy woman didn't seem
+to mind. She simply gave a small giggle. "Oh, a customer," she chirped,
+bouncing on her toes and setting her inhuman proportions into motion.
+"Hold on, I\'ll go fetch Madam."</p>
+<p>She might as well have said nothing the dark-haired woman was so
+distracted. Too busy watching the excitable girl hop off, her tits
+swaying and slapping against each other in the confines of her
+practically painted on dress as she made her way to the back room.</p>
+<p>A moment later she returned with this "Madam". A peculiar redheaded
+woman, wearing a gaudy, wide brimmed witch\'s hat that cast most of her
+face in shadow. It did nothing to diminish the golden hue of her eyes
+however; they shone brightly, seeming to stare right through the guest
+to her little shop.</p>
+<p>"Hello there, welcome to Madam Materia\'s Magical Menagerie," she
+exclaimed proudly, puffing out her chest to show it off. Compared to the
+blonde's explosive size she may as well have had mosquito bites, but
+that didn't mean the large over-handfuls weren't impressive in their own
+right, adding curves to the woman's lithe frame. "I'm the titular Madam
+Materia, though Matty is just fine for customers. My associate Alice
+tells me I can help you find something?" she gestured to the
+hyper-proportioned girl standing next to her, holding her broom
+nervously into her bust as if waiting for something.</p>
+<p>Jesse raised her hands apologetically. "Oh, sorry uh, Madam Matty. I
+wasn't really looking for anything, just kind of browsing."</p>
+<p>The redhead gave a giggle, hiding her darkly painted lips with a
+delicate hand. "We all have something we\'re wishing for Jesse," she
+mused, walking over to the counter of her little store and sitting
+herself down. "Sometimes it's as simple as a smoke."</p>
+<p>How did she know her name? The smoke the trim girl could play off, there
+were enough smokers in the city that was an easy enough assumption to
+guess, but her name. "How-"</p>
+<p>"The \'magical\' part of that introduction I went through earlier
+darling," the witchy Madam finished the thought with a wry smirk.</p>
+<p>There wasn't such a thing, there had to be more to it. At the same time
+though, this was an old-fashioned storefront somehow taking up the first
+floor of an office building. "Okay so, assuming that I believe you,
+what's your deal then?" the black-haired woman questioned, letting her
+blue eyes linger on the woman suspiciously.</p>
+<p>"Like I said, we all have something we\'re wishing for," Matty replied
+with a coy smile, letting her golden gaze drift lovingly to her
+hyper-sized employee. "Mortals don't find the Menagerie unless there's
+something they need that, quote unquote, <em>real life</em> fails to provide
+them."</p>
+<p>That last bit struck a chord, "providing"; it was the whole reason Jesse
+wanted that smoke in the first place. It felt like that was all her life
+was anymore, going to work to make a living, them coming home to take
+care of her girlfriend, Eve. There was no time for herself, it was just
+work and Eve.</p>
+<p>It wasn't that she didn't still love the girl. They had started off as
+friends in high school, both playing that same game all gay teens did:
+pretending your hardest to be straight. Neither really needed more
+excuse to be labeled as outcasts. Jesse had been the typical rebel,
+taking up smoking and secluding herself from everyone to protect
+herself, and Eve was prone to illness. She had a chronic condition that
+could have her suddenly sick, and needing go home for the rest of the
+day. Nobody wanted to hang out with "the sick girl" for all the stigma,
+nobody but the dark-haired loner girl. Maybe because, even back then,
+they could just tell they were lesbians?</p>
+<p>They ended up coming out to one another in senior year, both intending
+to at the same time no less, leading to a cute and awkward exchange that
+sealed the deal for them as a couple. The pair moved in together as soon
+as they could, to get away from the scrutinising eyes of their parents,
+and things seemed good; for a while anyways. They both had jobs until
+Eve\'s condition started to worsen, then she was forced to quit, leaving
+Jesse to take the full burden of supporting their situation.</p>
+<p>Over the past few years, it had drained her, leaving the working woman
+resentful of her partner. Resentful she had to quit smoking, that she
+had to constantly work, and do the shopping, and make dinner. She still
+loved her, but sometimes she just wished maybe she wasn't always the one
+taking care of her; that the tables could be turned and maybe she could
+be the one to lay down and be taken care of for a bit.</p>
+<p>"Ali, why don't you give our fine guest a little shoulder rub?" the
+redhead ordered more than suggested. "There's a lot bothering her."</p>
+<p>The blue-eyed woman perked nervously. "W-what?" she stammered.</p>
+<p>"Yes Madam," the buxom blonde chirped, setting her broom against the
+wall and skipping over to comply with her boss' wishes.</p>
+<p>Redness filled Jesse\'s face, feeling those soft, squishy breasts
+pressing into her back. Alice's hands reached over her orbs to take hold
+of their guest's shoulders, and with expert grace in her dexterous
+hands, she started to knead away the knots and tension.</p>
+<p>Meanwhile the gaudy shopkeeper got to her feet, walking by with clacks
+of her spatted heels against the hard floor as she examined the shelves.
+"Now then, what best to help you with your little problem?" she mused,
+running her fingers along the items she kept on display.</p>
+<p>"I didn't-" the slim girl started to reply, only to have her buxom
+masseuse pull her a little tighter into her cleavage and sink her digits
+deep enough to make her moan.</p>
+<p>Matty gave a playful little laugh. "You didn't have to. Magical,
+remember?" she teased, perking up and plucking a small box off the
+shelf. "Here we are," the witch skipped back to her customer and held
+out the item for her.</p>
+<p>The busty blonde stepped back, letting the befuddled woman focus once
+more and take the offered object. It was like she couldn't help herself,
+the same curiosity that had pulled her into this strange place now had
+her peeking under the lid. She was slow opening it, only a sliver to see
+inside, and found a simple looking metal bracelet within; the kind of
+thing getting peddled in shams all over the web for "wellness".</p>
+<p>A smile cracked the guest\'s lips, and she couldn't help breaking into a
+hearty cackle. "Oh my god, you can't be serious?" she rubbed the
+beginnings of tears out of her eyes, turning them to the charlatan. "I
+knew this was all some sort of con."</p>
+<p>The redhead was unfazed, a grin spreading across her face in reply.
+"Assuming it was a con, how would I know that your girlfriend back home
+was the type of person that might be the target for one of fake
+\'cures\'," she countered, regurgitating one of the girl\'s statements
+from earlier.</p>
+<p>Once more a chill went up Jesse's spine. The question was already
+running through her head of "how", and she already knew the answer. The
+tricky woman was already mouthing it as she was having the thought:
+magical.</p>
+<p>Swallowing thickly, she looked back down at the simple, silver trinket.
+"So, what do I do with it?" she asked.</p>
+<p>"Just give it to your lover," Matty answered, beckoning her curvy
+associate over with her hand and tickling the blonde under the chin. "It
+should take care of the issue, make her a bit more dependable. Like
+Alice here."</p>
+<p>Again, the guest was staring, inciting a small giggle from the
+hyper-proportioned girl that made her blush. More like Alice? She could
+still vividly remember that shoulder rub from earlier, making her flush
+further with a shameless arousal.</p>
+<p>Magic, she said? What was there to lose? "Alright," she relented,
+letting a small amount of something fill her. Maybe it was hope for a
+solution? Or perhaps something darker, a little more selfish in her
+desire for Eve to be better. "How much?"</p>
+<p>The witch simply waved a hand. "We don't take money here," she answered
+with that same grin on her lips. "Seeing the results of my work is
+reward enough."</p>
+<p>Whatever feeling it was inside her, it stayed with Jesse the drive home.
+She wasn't dreading it for once. Able to wear a, potentially malice,
+smile as she pulled down into the underground parking for their
+apartment building.</p>
+<p>After what felt like the longest ride she'd ever taken on an elevator,
+the dark-haired woman arrived on their floor; wasting no time stepping
+out and down the hall to their little home. The telltale rattling of her
+keys would announce her presence, so opening the door Eve was already
+sitting up, waiting from her place on the couch. "Hey Jazz," she greeted
+her lover with a warm smile.</p>
+<p>"Hey Eve," the sharp-featured woman replied with a bit more pep than she
+had the past few weeks, leaving her girlfriend to smile brighter.</p>
+<p>It was clear just from looking at her that Eve was in a rough spot. She
+was thin, bordering on gaunt, a fact most visible in her pale cheeks and
+her wrists. Her auburn hair was currently messy, falling over her
+shoulders in frizzy waves down to her small chest, and framing her
+freckled face. Regardless of her illness however, her light-green eyes
+kept fiercely determined. She wasn't going to give up while she had
+Jesse.</p>
+<p>"You seem pretty happy, was it a good day at work?" the bedridden girl
+asked, shifting to make room for her partner on the sofa.</p>
+<p>Jesse took the invitation, settling down into the offered space and
+getting comfortable. "Something like that," she replied, fetching the
+small box the Madam had given her from her pocket. "I got you a little
+something."</p>
+<p>The sick girl perked up a bit. "Been a while since we did anything like
+gifts," she noted, accepting the tiny package. "What's the occasion?"</p>
+<p>With a smile and a nonchalant shrug, the woman met her girl\'s eyes.
+"None really. Just got thinking of you," she offered.</p>
+<p>Blushing the pale girl turned away. "You didn't have to," she muttered
+shyly, but was still clearly excited for the gift. Opening it up she had
+a similar reaction to her girlfriend, pulling out the simple little
+bracelet with a laugh. "Oh Jazz, you didn't get swindled by something
+like this. You're smarter than that," she teased.</p>
+<p>"I thought it would look cute on you," it wasn't entirely a lie, the
+little silver piece was elegant in its plainness. "If it helps you feel
+better at all then hey, just a cool bonus."</p>
+<p>The red in Eve\'s cheeks deepened. "Thank you love," she leaned forward,
+pressing a kiss to her partner's lips. "That's so much better now that
+you don't taste like cigarettes," she joked, and without further
+dawdling slipped the trinket over her wrist.</p>
+<p>For a brief moment the fit girl\'s steely blues went wide. She felt her
+heart quicken, waiting for the "magic" to happen on the edge of her
+seat. Waiting for it, only for nothing to happen.</p>
+<p>The auburn-haired girl watched her curiously. "Everything okay Jazz?"</p>
+<p>It took a moment for her to snap out of it, the eager anticipation
+she\'d had immediately dashed with a pessimistic emptiness. Why would
+she have expected anything to happen? "Yeah, it's fine," she sank back
+into the couch, holding back a sigh.</p>
+<p>All positivity was drained from the room, lowering both their moods as
+Eve\'s slender shoulders sank. "Okay," she didn't press, going quiet.</p>
+<p>The dark-haired woman rose back up, wandering away without even looking
+at her partner again. "I'm gonna go get changed."</p>
+<p>"Okay," her lover repeated solemnly.</p>
+<p>It was a usual rest of the night. Jesse\'s foul mood left her mostly
+keeping to herself. Eve suggested a movie, but the brooding woman
+rejected it with a simple "I'm not in the mood," so they had a quiet
+dinner at the couch, and went to bed.</p>
+<p>The same thought pestered her all night. Why the hell did she trust that
+witch? Why did she let herself, for a moment, be open to her bullshit?
+She slept restlessly, her back turned to her partner until the early
+hours of the morning.</p>
+<p>When she woke the auburn-haired girl was missing from the sheets,
+something that never happened. Immediately the trim girl jumped to
+worry. "Eve?" she called out softly, pushing herself out of bed in just
+her underwear.</p>
+<p>There was no immediate answer, but as Jesse stepped out of their room,
+she heard something. Something was sizzling. Like a reflex she scented
+the air, proving her other sense correct that something was cooking.
+Following the trail, she wandered through their little one bedroom into
+their kitchen, caught by surprise when she saw her sick girlfriend up
+and about.</p>
+<p>"Oh, morning Jazz, I didn't hear you get up," the pale girl chirped with
+a soft smile.</p>
+<p>Her blue eyes scanned the scene, catching sight of some slightly browned
+scrambled eggs being stirred in their largest pan. "What're you...?" she
+couldn't even complete the thought she was so stunned.</p>
+<p>Eve gave the eggs a dexterous flip, her new bracelet rattling around on
+her thin wrist. "You seemed upset last night," she explained calmly. "I
+was feeling pretty good this morning so I figured maybe I could make you
+breakfast to cheer you up."</p>
+<p>And the surprises just kept on coming. The girl hadn't been well enough
+to do any cooking for... god, her Jesse couldn't even remember. "Um,
+thanks," was all the pitch-haired woman was able to get out of her
+mouth.</p>
+<p>The normally sick girl just smiled warmly, plating up a hearty meal for
+her partner. "I hope you like it."</p>
+<p>Jesse was still collecting herself from the situation, taking the hot
+plate in her hands and staring into it for a moment. The creamy scent of
+the eggs wafted up into her face, making her mouth water in
+anticipation. It was going to be good, but she was still struggling with
+the "how" aspect that all this had happened.</p>
+<p>"You should probably eat it before it gets cold," her green-eyed
+companion noted in tease. "I can't take care of your work for you."</p>
+<p>Just that choice of words reminded the woman of everything, sparking her
+to realization. That stupid wrist band, it had actually worked!</p>
+<p>A grin crossed her lips, and she placed a kiss on her lover\'s cheek as
+she passed her for the kitchen table. "Right," the working girl chirped
+giddily.</p>
+<p>The positive change had Eve beaming along with her, affectionately
+running her slender fingers over the spot her partner's lips had touched
+down. It was good to see her happy, and while the chronically ill wasn't
+going to hold out hope she\'d stay feeling good all day, she was
+certainly going to do her best with the time they had. Scooping up her
+own meal she came over to the table, pulling up a seat so they could eat
+together.</p>
+<p>Despite the gesture however, Jesse's mind was elsewhere. Taking the
+cooking away from her responsibilities was a great thing, her girlfriend
+actually doing even a bit better was a great thing. How far would it go
+though? She was already hopefully imagining that the two of them might
+manage to have a little "fun" tonight.</p>
+<p>Said thoughts lingered in her head through breakfast, until eventually
+the auburn-haired girl had to remind her. "You're going to be late for
+work Jazz."</p>
+<p>"Right," her excited lover got to her feet, laying another kiss upon the
+girl's cheek. "I'll see you tonight!"</p>
+<p>The enthusiasm was infectious. How long had it been since the two had
+worn such smiles? "See you then," the thin girl replied, a tint in her
+cheeks from the repeated shows of affection.</p>
+<p>Hastily dressing, Jesse parted for work, leaving Eve alone in their
+little apartment for the day. It was almost instinctive to want to curl
+up into her little nest on the couch and watch television, but she felt
+good for the first time in what felt like forever. She was up, and she
+wanted to do things.</p>
+<p>Over the course of the morning she did the dishes from breakfast, dusted
+off their shelves and tables, vacuumed, mopped. The auburn-haired girl
+was so full of energy the place was spotless before lunch, and still she
+found herself restless. Where was it all coming from?</p>
+<p>In the end did it matter? She was feeling better; better enough it
+seemed like a right time to do a weigh in. If this lasted, it would be
+good to track her health progress for her doctor.</p>
+<p>Stepping into the bathroom the skinny girl climbed up onto the scale,
+not particularly hopeful, but still eager to get a result. As she looked
+down though she was left in shock.</p>
+<p>"Four pounds?" she knelt down to read it closer, just to make sure her
+eyes weren't playing tricks on her.</p>
+<p>No, it wasn't her eyes. According to the scale, she\'d put on four
+pounds since she last remembered weighing herself. That felt...
+impossible. It had been a while since her last weigh in, but she\'d been
+sick and eating like a bird most of that time, she should have lost
+weight. Stripping to double check it wasn't her clothes or something she
+got a look at herself. Still thin and bony from illness, but there was
+the lightest bit of fat back on her. She could reach up and take hold of
+the squishy little mounds of her breasts; she actually had breasts
+again.</p>
+<p>Without realizing, and with a smile on her face, she lost a solid minute
+to playing with herself. Well, who was she to look a gift horse in the
+mouth? It was a good thing she\'d gained some weight back. Maybe it's
+why she was feeling so peppy? Or maybe, her green eyes drifted to the
+little bauble rolling around her wrist, this had something to do with
+it?</p>
+<p>Whatever it was, luck or a turning of the tides, it was a small
+blessing. Reminding herself not to work to burnout Eve made herself a
+nice hearty lunch with what little they had. Maybe she should text her
+girlfriend to pick some things up on her way home? Tempting as it was to
+try and go herself, she didn't really have anything fresh to wear; plus,
+she wasn't one hundred percent sure about their finances at the moment.</p>
+<p>She could fix the first problem though. Shooting off a text to her
+dark-haired princess to get some things on the way home, she started
+collecting up all their dirty laundry for a load.</p>
+<p>Sitting at her desk, Jesse's mind was anywhere but at work. She actually
+wanted to go home; a fresh feeling that left her positively giddy. When
+she got her girlfriend's text it shook her back to her senses, for a
+moment at least. The sick girl hadn't texted her at work since she\'d
+been laid off, giving even so simple a request as for her to pick up
+some things for dinner leaving her nostalgic.</p>
+<p>Things were on the upswing, and it carried the working girl through her
+day. During the drive home she found herself idly drumming on her
+steering wheel, so busy dreaming of what they were going to do tonight
+she almost forgot to get the groceries. Eve hadn't really given her a
+specific list, so she was left texting back to ask what the girl wanted
+her to get.</p>
+<p><em>"Whatever you\'d like hun,"</em> her partner\'s text came back quickly.
+<em>"I\'ll make it work, just hurry home!"</em></p>
+<p>Excitement was back tingling through her. The sharp-featured woman was
+getting the full treatment, whatever she wanted, and her lover was eager
+to have her home. Maybe the homebound girl's thoughts over the day had
+been similar to her own?</p>
+<p>Who was Jesse to keep her waiting? She got the shopping done in record
+time, and headed back to their apartment laden with bags. As if she knew
+her girlfriend had arrived the auburn-haired girl was waiting for her in
+the hall.</p>
+<p>"Here, let me take those," Eve offered, as she scooped everything off
+the fit woman's arms.</p>
+<p>It had only been a day and you could see the difference in the girl. She
+was up, she\'d taken the time and effort to be dressed, and the wavy
+tangles of her hair from laying down all day were all but gone. Looking
+her over, she was as beautiful as the days they\'d first met in high
+school; maybe a little more?</p>
+<p>As both stood tall, Jesse found steel blue eyes were level with her
+partner's forehead. Maybe it was just she hadn't seen the sick girl
+standing in a long time, but she didn't remember her being this tall.
+Normally above those reddish locks were just under her nose, leaving her
+able to smell her shampoo and hug her into her chest.</p>
+<p>The pair ended up just standing in the hall, until Eve tilted her head
+at her lover's confused staring. "Everything alright Jazz?"</p>
+<p>"Yeah, fine," the dark-haired woman replied, returning to a smile. What
+did a small detail like that matter? "Shall we get inside?" she took her
+girlfriend by the elbow, causing her to flush as they walked arm in arm
+back to the apartment.</p>
+<p>The couple unpacked everything together, Jesse openly making grabs at
+the green-eyed beauty. Cupping her rear, making her squeak, and even
+finding a moment to pull her into her arms and make out with her. The
+fervent kiss was met with a small moan from the shorter girl, as their
+tongues danced, and their hands roamed each other's bodies.</p>
+<p>In the brief moment of a pause between their passions, the auburn-haired
+girl got a chuckle in. "Someone's excited," she teased with that bright,
+optimistic beam on her face.</p>
+<p>"Hard not to be," her girlfriend purred in reply, bringing her lips back
+to her lover\'s mouth. "How about we slip into the bedroom before you
+start dinner?"</p>
+<p>A tempting offer, one that had the pale girl's cheeks turning pink. "It
+has been a while," she noted, breaking their embrace and pulling Jesse
+along with her towards the bedroom.</p>
+<p>And just like that, there was no more room for words. The two girls
+passed through the doorway, picking up where their kissing left off.
+Their hands leapt onto one another, blindly slipping into each other's
+clothing to start undressing, as they stumbled towards the bed. The
+working girl won the race, getting her partner's top off over her head
+first, breaking their snogging long enough to toss the offending garment
+to the edge of the room before getting back to their impassioned
+smooching.</p>
+<p>Side by side they tumbled into the sheets, both knowing where they
+wanted to be and scrambling to kick off the rest of what they were
+wearing. They stayed on top of the blankets, pausing a moment to admire
+one another before they got lost in the heat again. Eve was more
+stunning than Jesse had seen her in a long time. She had a glow about
+her, and her lover's steel-blue eyes were drawn to the curves adorning
+her lithe frame. They were a delicate touch, a light brushing of
+femininity on the thin woman's frame, and they were perfect. Her
+work-hardened hands ran over them, brushing up the beautiful girl\'s
+thigh, over the light swell of her hip, then down the valley of her
+curved waist to end on one of those perky little mounds.</p>
+<p>"So, you noticed too?" the reddish-haired girl teased, scooting herself
+closer to invite more of her partner's touch. "My weight\'s gone back up
+a little."</p>
+<p>"In all the right places," the trim woman replied, giving the breast
+beneath her fingers a squeeze.</p>
+<p>A shy flush tinted the girl's cheeks, and she immediately jumped back
+into the making out. Instinct took her girlfriend, the dark-haired lover
+starting to guide them down to the bed before she was stopped.
+Everything paused, worry filling her sharp features. "What's wrong?"</p>
+<p>Eve\'s blush deepened. "Maybe, I could be on top this time?" she
+suggested nervously.</p>
+<p>That was new, leaving Jesse to process the request before answering with
+an enthusiastic "Sure," and a wide grin.</p>
+<p>With her condition, the green-eyed beauty had always had to be a bit of
+a pillow princess. To have the roles reversed, have her be the one
+giving, there wasn't any reason to argue. It was clear the girl was a
+little green, following what she remembered her partner doing more than
+anything. She guided her pitch-haired princess to the sheets, laying her
+out and taking a moment to crawl herself into position.</p>
+<p>"Just, let me know if I do something wrong?" she requested of the more
+experienced woman.</p>
+<p>Flashing a smile with her steel-blue eyes, Jesse put her at ease.
+"You'll do fine hun, just be careful with your teeth," she instructed.</p>
+<p>The girl took it to heart, wiggling to get comfortable and then dipping
+down to slip her tongue between her companion\'s simmering lips. It was
+ecstasy, the dark-haired woman\'s eyes closing to savour the feeling as
+she let out a loving moan. Her toes curled, her hands looking to find
+purchase where they could let out some of the euphoric heat coursing
+through her. One took hold of the headboard, knuckles going white as her
+clit was tickled by her girlfriend's nose, the other reached down to run
+her fingers through those woody locks.</p>
+<p>At the touch, those light-green eyes peeked up, the girl's mouth not
+stopping its work as she drank in the look on her partner's face. It
+brought a smile to her thin lips, hidden between her lover's legs, and
+she doubled down on her amateur efforts to please, to keep her feeling
+this way. The attempt was rewarded.</p>
+<p>Jesse let out another gasping moan, the hand in her happy cunt muncher's
+hair pressing her in ever so gently. She'd always been delicate with her
+Eve, just because she was on the bottom this time didn't mean that was
+going to change. Just that little extra pressure had the girl's chin
+rubbing up on her, spreading the lower part of her hot box and letting
+her feel all the more stimulation.</p>
+<p>"Fuck," she cussed in a soft murmur, drawing those pale-green eyes up to
+her once more. "This is-" she couldn't even finish, cut off by a
+delighted shudder as things went on.</p>
+<p>She was close, her fingers curling in her girlfriend's locks to hold her
+in. Attempts at words only came out as lewd, babbling moans. Her hips
+were bucking, trying to get the most out of every little lick and
+nuzzle. Then, finally, there was a brief moment where everything went
+blank, and with a bright flash the toned woman arched and came hard.</p>
+<p>The auburn-haired girl kept in place, letting her lover ride out her
+climax until the grip on her head lessened. When she finally rose the
+whole bottom of her face was coated in a slick sheen of girl cum, adding
+a lewd cuteness to her pleased grin. "Was that good?" she asked, already
+making her way up to cuddle in the afterglow.</p>
+<p>Arms wrapping around the girl, Jesse pulled her close, pressing a kiss
+to her forehead. "It was amazing Eve," she cooed, smiling ear to ear.
+Just one day and all this! Breakfast, dinner, sex, plus the place was
+spotless. Things had turned around drastically; like magic.</p>
+<p>Idly her fingers toyed with her girlfriend's bracelet. It was all thanks
+to this little trinket. "Up for another round? After dinner of course,"
+the sharp-featured woman asked.</p>
+<p>Eve met her with a smile. "I might be," she answered coyly.</p>
+<p>After such an active night prior, Eve ended up sleeping in, and missing
+sending her partner off to work; something she sent an apologetic text
+for when she did finally manage to pull herself out of bed. Getting to
+her feet was arduous, leaving her stumbling a few steps on her toes
+until she could brace herself on the wall. Was she dizzy? Getting sick
+again?</p>
+<p>Once her gaze drifted down she got a proper answer to the issue. Her
+green eyes went wide, catching sight of her body and being left confused
+at everything she was seeing. Her boobs were taking up a portion of her
+vision, hanging heavy off her body and trying to pull her to the ground
+with their unfamiliar weight.</p>
+<p>Purely reflexively the girl straightened, feeling that dizziness return,
+and still drinking herself in, she could see why. The floor was further
+away than usual, not that it was easy to see past her tits. Her hands
+were already on those hefty globes, cupping them and feeling them flow
+over the edges of her hands. They were huge! Like what you\'d catch on
+some heavily edited social media model.</p>
+<p>How though? She'd eaten a lot yesterday, much more than normal, but this
+kind of overnight change? And the new height perspective. Eve rushed to
+the get to the scale, stopping dead once she caught sight of herself in
+the bathroom mirror along the way.</p>
+<p>She was gorgeous. If yesterday had been an improvement, today you
+wouldn't even recognize her as the same girl. Her auburn hair was
+healthy, and shiny, the gauntness in her cheeks was all but gone,
+leaving her with a youthful plumpness, and her body. She was still
+wearing her pyjamas, but they hardly fit. Her top was stretched across
+her bust, and the hem was riding up her midriff to show off her slim
+waist. The bottoms that last night had fit her snuggly were now riding
+high over her wide hips and juicy rear, with the cuffs stretching up her
+calves.</p>
+<p>Worry flit through her head, for a very brief moment. Then, she wondered
+why she should be? She felt great, she looked healthier than ever, and
+she didn't have any doubt after last night that Jesse would adore a
+little more of her to enjoy.</p>
+<p>The buxom beauty had come in here to check her weight progress, so
+stepped up onto the scale to check the damage. She had to pull her new
+boobs out of her way to see, but when she did her jaw almost hit the
+floor.</p>
+<p>"Twenty pounds?" it just wasn't possible, but she couldn't deny what
+she\'d seen in the mirror. She had to be a full foot taller than she
+remembered, and put on some serious curves. Twenty might even be low!</p>
+<p>Bending down, her breasts squishing into her knees, she heard her top
+creaking. That wasn't good. She'd need a whole new wardrobe for her new
+proportions, and with Jazz being the only working one in the house how
+would they afford it?</p>
+<p>Maybe it was time to try and get back to work? Drifting out to the
+living room she pulled out her laptop, dusted off her go-to text editor,
+and started whipping up a resume.</p>
+<p>Driving home Jesse shot a text her girlfriend's way, hoping to set the
+mood for another fun evening. Unlike yesterday however, there wasn't an
+immediate reply.</p>
+<p>The fit girl couldn't help a small level of concern. She hadn't checked
+up on Eve that morning, having woken too late and needed to rush to
+work. Could she be mad? Or worse, could whatever spell had given her all
+that energy yesterday have worn off, and she was in bed sick again?</p>
+<p>When she arrived home the dark-haired woman's worries grew. She flung
+open the door to find the apartment empty, her partner's blankets folded
+and laying over the back of the couch, and a note waiting for her on the
+table. Jesse didn't even get her shoes off, rushing in to get it and
+fearing the worst, that perhaps her lover had just left her.</p>
+<p><em>"Hey Jazz! Just leaving this as a precaution,"</em> it read. <em>"I had to go
+out and do a little shopping, sorry about the bill, but I\'ll be able to
+cover it in a couple weeks! I managed to get a new job! Nothing major,
+just waiting tables at a little place. I should be home soon, but just
+in case I made extra lunch and left it in the fridge for you. With love,
+Eve."</em></p>
+<p>A wave of relief washed over the woman, one hand clutching at her still
+hammering heart. A job. That was even more improvement, and could even
+let Jesse take fewer shifts herself. The bill part though? She opened up
+her phone, flipping to her banking app and going pale. Eve had spent
+hundreds! On what? She'd never been one for just binge shopping out of
+nowhere.</p>
+<p>So much for cutting out a few work hours; until their safety net was
+back there\'d be no rest. She'd have to talk to her girlfriend when she
+got home. For now, some home-made food would help her relax.</p>
+<p>It was a good hour later, the majority of the pitch-haired woman\'s
+frustration having petered away, when the rustling of keys announced her
+girlfriend's arrival. The fit woman was lounging on the couch, a show on
+and the empty container from her dinner sitting on the table, but bolted
+up when she remembered they had things to talk about. Her steel-blue
+eyes waited on the door, trying to find the right expression between
+upset and understanding.</p>
+<p>All of that effort went right out the window as Eve walked through the
+door. Fresh heels clicked against the tile to carry her inside, her
+heavy body bouncing in the tight confines of her new work uniform.
+"Sorry I was gone Jazz," she immediately apologized, flashing a perfect
+smile to her lover. "I had to stay a little late, and then transit was
+behind schedule..."</p>
+<p>Her girlfriend was hardly listening, trying to process the sight of her
+buxom beau. She was like a supermodel, squeezed into a slightly too
+small waitress costume. Her breasts were huge, forcing small openings in
+between the buttons, and her skirt was so short Jesse could see the
+lower curve of her rear beneath it. Was this girl even her Eve?</p>
+<p>"Tips were amazing though! I pretty much made back most of my wardrobe
+costs in just one day," the auburn beauty continued on, fishing into her
+apron and hauling out a thick roll of bills.</p>
+<p>Jesse shook herself to her senses. "Yeah," she responded blankly, hoping
+that was an appropriate answer for whatever her companion had been
+talking about.</p>
+<p>With a giggle the waitress kicked off her shoes, striding across the
+room on her long legs and plopping herself down next to her lover.
+"Noticed have you?" she purred.</p>
+<p>Even seated, the curvy girl was nearly a head taller than her
+dark-haired princess, her knees hanging over the edge of the couch,
+practically nudging the table, a good sign she\'d make up the difference
+on her feet. "Yeah," the now shorter woman repeated, drinking in every
+inch of the bombshell.</p>
+<p>Those green eyes sparkled, and their owner leaned down to pull her
+partner into a kiss. She was in control, that same girl who last night
+wanted to top, and it showed in small ways. One hand slipped onto her
+lover\'s lap, the other cupping her cheek to keep her where the beauty
+wanted her. Their distance was quickly closed, letting their bodies
+press against one another through all their layers while they savoured
+the taste of each others' kiss.</p>
+<p>With the fires stoked Eve got up, and without a word pulled Jesse along
+with her. She started for the bedroom, her finely built girlfriend
+offering no objections, and soon things escalated to open groping and
+fondling of one another. Clothes hit the floor, and the auburn Venus was
+laid out bare atop the sheets with an inviting smile.</p>
+<p>The pitch-haired woman complied, crawling up and letting her fingers
+roam over the enhanced form of her Eve. "Yes, touch me more Jazz," the
+buxom woman pleaded, stretching her body out for her.</p>
+<p>Like she would ever deny such a request. Closing her steel-blue eyes she
+explored every new curve of her partner. She laid kisses upon that pale,
+perfect skin, making her way up from hip, to waist, to the bounty of
+those fat tits that now adorned her chest. Even compared to the
+sharp-featured girl's lips they were soft, relenting under the tiniest
+pressure as the woman blindly toyed with them. They felt large as her
+face, squishing around her cheeks as she nuzzled into them with horny
+desire.</p>
+<p>All the while the big girl cooed, breaking into a high-pitched gasp when
+her lover discovered one of her eager nipples. The attention had caused
+them to grow hard, as big round as a fingertip and prodding into her
+girlfriend's angular face whenever she got close; beckoning her towards
+them to lavish them as she was the rest of her body.</p>
+<p>When those lips finally wrapped around her needy bud Eve had to hold
+back a moan, the pent up energy traveling down her body to force her
+legs to grind together. "They're tender," she whimpered under her
+breath, resting a hand in those dark locks to hold her partner in place.</p>
+<p>The fierce woman couldn't ask for better encouragement. Opening her
+mouth, she ran her tongue over the sensitive nub. A hand came up,
+sinking her strong fingers into that pliant titty and kneading it
+lovingly while she suckled its teat with abandon.</p>
+<p>It was a strange sensation to be the shorter of them. She had a breast
+in her mouth, and yet her girlfriend's simmering groin was hovering
+right at her hips; like an open invitation. Her free hand glided up one
+of those thick thighs, eliciting a gasp from the squirming beauty as it
+grew close to her hot box. Jesse's thumb lightly grazed those velvety
+lips, feeling the way the tall girl shuddered in delight at the whole of
+her body being worshipped. The light graze quickly became penetration,
+as the dark-haired top let two keyboard-calloused fingers delve into her
+larger than life girl's hot depths.</p>
+<p>With a sharp moan the curvy woman bucked, unable to form eligible words
+for her pleasure. Her arms came down, wrapping around her girlfriend's
+back and holding her to her larger form.</p>
+<p>"Close," the auburn lover managed to babble out through her ecstasy, as
+the bed creaked beneath them and their increasingly frantic lovemaking.</p>
+<p>That was the only warning she gave, before she hugged her partner
+tightly into her body and came hard for her. They stayed like that for a
+moment, Eve locked in bliss as she rode out the high, with Jesse
+squeezed into her bosom. Then the pair relaxed, the sharp-featured teat
+sucker rising up with a lewd grin. "Have fun?" she teased, moving into a
+snug little cuddled position at the nape of her girlfriend's neck.</p>
+<p>"Yes," the green eyed beauty smiled down at her. "Ready for your turn
+Jazz?"</p>
+<p>The smirk on the tall girl\'s face wasn't one that was going to take a
+no. Not that her pitch-haired lover was going to turn her down. "Hell
+yeah," she replied eagerly.</p>
+<p>After their dinner together, and a round three before bed, the two girls
+passed out practically as soon as they hit the sheets. Another long
+night, and another sound sleep in each other's arms; even as things
+continued to change in drastic ways.</p>
+<p>Once again it was Jesse that woke first, and as her steel-blue eyes
+slowly opened she could already tell something was wrong. She was right
+next to Eve, huddled tightly to her lover\'s body, not by either of
+their grip, but purely by gravity. It was like she was on a hill, or
+falling into a pit towards her girlfriend, making even pushing herself
+up into a seated position a chore. When she did however, her eyes flew
+wide in surprise.</p>
+<p>"Eve," she pushed on her partner to rouse her. "Eve!"</p>
+<p>Hesitantly the girl's pale-green eyes opened, heavy with sleep as she
+took her dark-haired lover in. "What is it Jazz?" she asked, sitting up
+herself.</p>
+<p>Her answer came in the way the bed groaned in protest over so light a
+movement. Her head rose up, and up, towering more than a foot over her
+bedmate, and breasts larger than her head, bigger than Jesse's whole
+torso, rolled into place around her chest to fall and hang just over her
+navel. The gigantic girl couldn't help looking down with shock, seeing
+her body, seeing the way her pyjamas were in tattered shambles. Her legs
+had grown past the footboard as she slept, and were now hanging freely
+in the air, her toes wiggling freely.</p>
+<p>For the first time since all this started, Jesse was truly worried for
+her lover. "Something's wrong," she told her, resting her hands on one
+of the girl\'s long arms.</p>
+<p>The auburn-haired Amazon couldn't be further from that idea. There was a
+grin on her plush lips, as her hands busily went about exploring all the
+new her there was to explore. "There is?" she asked, not even looking
+towards her partner she was so busy fondling herself.</p>
+<p>The woman could hardly believe what she was hearing. "Yes," she
+practically shouted. "Look at you, this isn't normal," no, it was magic.
+That bauble was still hanging over the huge girl\'s wrist, quite tight
+now that its owner was nearly double in size.</p>
+<p>"When have things been <em>normal</em> with me Jazz?" Eve simply joked,
+shifting to lay on her side and show off. "I feel better than I\'ve ever
+been! If it means a little growth spurt, some more of me to love," she
+teased, arching her enormous chest into her partner, the girl going
+flush as she was practically covered in soft breast, "then all's good,
+right?"</p>
+<p>How was she supposed to respond to that? Admit that she'd accepted some
+hex from a witch that was turning her girlfriend into some overstuff
+giantess? Even if it was the truth, just running the idea through her
+head had the dark-haired woman acknowledging how insane it sounded.
+Maybe there was a way to stop it?</p>
+<p>"Right," she murmured her reply, buried in her lover's oversized
+cleavage.</p>
+<p>With a smile the Amazonian beauty offered her lover a peck on the
+forehead. "If it's really bothering, I\'ll stop in at the doctor's after
+work," she promised, releasing her princess and finally getting out of
+bed. On her feet she nearly hit the ceiling, a simple stretch of her
+arms knocking loose flakes of the stucco with her elbows.</p>
+<p>Jesse shot upright, unable to deny her attraction to the perfect
+hourglass her girlfriend demonstrated from behind. "You're still going
+to work?" she questioned, hoping the problem of having something to wear
+would be obvious. There was no way the curved goddess was fitting into
+yesterday's work uniform.</p>
+<p>"Of course," the huge girl didn't even hesitate, coming up with a
+temporary plan and stealing their topmost sheet to wrap around herself.
+"I'm scheduled after all. I'll just pick up a new uniform on the way to
+work."</p>
+<p>With her size, and proportions, that wasn't going to be a simple trip to
+the mall. She'd need custom tailoring, and that could take hours. Not to
+mention the cost of something like that. Eve didn't seem particularly
+discouraged by any of those factors however.</p>
+<p>The trim woman needed something, any sort of idea to try and fix what
+she'd done, and as her gaze settled across her girlfriend's form, there
+was only one thing she could hope for. "Your bracelet\'s looking snug,"
+she commented. "How about I take it in and see about having it resized
+for you?" It was lies within lies, but that thing had started all this,
+maybe taking it away would solve it.</p>
+<p>"I can do it," Eve was quick to reply, almost defensively covering the
+little accessory with her hand.</p>
+<p>"You're already going to be getting new clothes, working the day, and
+visiting the doc's," the dark-haired woman pointed out, counting it all
+out on her fingers before doubling down on her façade. "Plus, I bought
+it remember? How would you take it back to the right place?"</p>
+<p>There was logic to that the bigger girl couldn't really deny. "You could
+tell me," she suggested, only to get a disbelieving look from her lover.
+Reluctantly the woody-haired beauty caved, fidgeting with the clasp to
+remove it. "Alright Jazz."</p>
+<p>She returned the silver piece, already missing it upon her wrist as
+Jesse put it to the side for later. "Try and get it done for today?" the
+curvy giantess pleaded nervously.</p>
+<p>"Sure," the sharp-featured woman replied curtly, her mind elsewhere as
+she plotted what she was going to do.</p>
+<p>There wasn't more time to drive in her request, the blanket-wrapped
+woman needed to get going for work. She offered her partner a quick kiss
+before scurrying off to do what she needed to be ready.</p>
+<p>Calling in sick took a surprising amount of effort from the working
+woman. She hadn't been able to in so long, having to support Eve and
+herself, it was a strange mixture of anxiety followed by elation when
+she was allowed to. It was only too bad she couldn't really enjoy it.</p>
+<p>While she\'d been able to call in, that didn't mean she could just
+relax. She had to figure out what to do with this cursed silver band,
+and the first place she could think to go for answers was where she got
+it; Madam Materia. That unfortunately meant going to the alley next to
+her office, and if she was caught there, she could very well be fired
+for feigning illness. There were more important things to worry about
+though than a stupid job.</p>
+<p>Making sure to keep to the blind spots of the building's windows, and
+dressing as inconspicuously as she could, in one of her girlfriend's
+oversized tops from yesterday, Jesse managed to sneak her way into the
+alley. "Alright," she mumbled to herself, walking up and down across the
+wall and looking for anything to help her find the mysterious door.</p>
+<p>She ran her hands along the smooth concrete, hoping for a crack, or some
+sort of trick that would reveal the magical knickknack shop; nothing.
+Her next attempt was more blunt.</p>
+<p>"Matty!" she called out, not as worried about keeping her voice down as
+she was getting answers. "Madam Materia! Alice!" she continued to holler
+at the wall. Still nothing.</p>
+<p>The dark-haired woman pulled out the bracelet, holding it up high to
+make sure if the witch was watching she saw. "I have a complaint!" she
+barked, feeling frustration greater than that she had from when all this
+started taking her over.</p>
+<p>Her breaths hot and furious she waited, only for, again, nothing to
+happen. Why had she expected anything more from a conwoman? Gritting her
+teeth, Jesse wound back her arm. If she couldn't return it to fix
+things, then maybe she could just cast it away and be done with it.</p>
+<p>As she was about to however, Eve\'s words from that morning echoed in
+her mind. <em>"Try and get it done for today?"</em></p>
+<p>The woman paused, letting the pent-up feelings wash out of her. She
+could still see it in her head, the way, even so large a girl as her
+partner had become, had been meek and protective. Jesse let out a heavy
+sigh, slumping her shoulders and turning her steel-blue eyes to the
+little bauble. Eve liked it, cared about it, and was trusting her to
+bring it back to her fixed and fitting. If she just threw it away, what
+would her lover think?</p>
+<p>All of this had started from these negative feelings she kept on letting
+brew deep inside her. She'd been willing to lie, to take something
+strange from a witch promising a "solution", that had probably
+irreparably changed the woman she loved. And now, she was about to lie
+again, and potentially hurt her more.</p>
+<p>A single warm tear rolled down her angular cheek, and she slipped the
+simple piece back into her pocket. There was a jeweler not far off. If
+Eve hadn't spent too much on a new work uniform, she should be able to
+get it fitted for her larger than life soulmate. Maybe it might break
+whatever spell it cast to modify it.</p>
+<p>Either way though, it was time to tell the truth.</p>
+<p>Ducking her way through the doorway, and needing to compress her huge
+bust in her arms to get through the frame, the auburn-haired beauty
+finally arrived home after a long day. And yet, she wore the best smile
+anyone could expect to manage as she did. "Hey Jazz," she called out to
+her lover.</p>
+<p>Jesse was parked on the couch, still in her girlfriend's borrowed top as
+she turned to face her. It was hard not to match her partner's
+enthusiastic grin, forcing the black-haired girl\'s lips to crack into a
+small curve, but that was all she could manage.</p>
+<p>"Hey Eve," she greeted her back, her tone more somber, heavy with the
+weight of her actions.</p>
+<p>Even custom tailored the big girl\'s new work uniform was tight,
+stretched over her fat tits to the point you could make out the edges of
+her bra. "Worried about what the doctor had to say?" the curvy giantess
+asked, coming over to the couch to comfort her love. Her thick bottom
+dropping down into the cushions left the piece of furniture groaning in
+protest, dipping heavily under her weight. "It's all good," she assured
+her, "she said it looks like a pituitary issue, causing some late life
+gigantism, but other than that I\'m healthier than I\'ve ever been. I\'m
+even getting paid to run a few more tests, since it might be able to
+help others with the condition."</p>
+<p>It was good news, and Eve was ready to give her a nice squishy hug to
+celebrate, but the sloppily-dressed girl refused; holding her hand up,
+unable to meet proper eye contact.</p>
+<p>All of that positivity drained from the auburn optimist, replaced with
+anxious worry. "What's wrong Jazz?"</p>
+<p>Having gotten this far didn't make any of this easier. Jesse could feel
+her heart hammering nervously, and yet her fingertips still felt cold
+and clammy. Fishing through her pocket she got the adjusted bracelet, a
+few extra links on its chain to accommodate her partner's larger form.</p>
+<p>"Oh, my bracelet," some of her giddy excitement returned, but her somber
+lover wasn't done yet, curling her fingers around it to stop it being
+taken.</p>
+<p>Her voice was caught in her throat, but she had to get over it. With a
+deep breath, the office worker steeled herself, building the courage to
+do what needed to be done. "Eve, I haven't been honest with you," she
+admitted, feeling her whole body tighten with shame, and fear. "I knew
+what was causing everything. I got this from a woman in some hokey, back
+alley magic store. I know it's not really believable, but it was real
+magic. It was like she could read my mind, she knew about you, about
+your condition, and she gave me this to make you better," she paused,
+her grip tightening on the bauble. "It wasn't for you though; it was for
+me.</p>
+<p>"I was just so tired, so angry at everything and bottling it up," her
+voice started to crack, leaving each word wavering. "I let it get
+twisted into something wicked, and it led to me accepting something that
+hurt you. That did this," she gestured to the giantess\' wild body, "and
+I don't know if I can fix it. I\'m just so..." the first of her tears
+escaped her eyes, pouring down her face to land across her lap. "I'm so
+sorry Eve."</p>
+<p>The tough girl broke down, quivering as she cried and expecting the
+backlash she rightfully deserved for her actions. She heard the creak of
+the couch as her lover moved, then an arm over her shoulders. Before she
+knew it, Eve\'s warmth was all around her, hugging her as tightly into
+her huge form as she could, and resting her princess' crying face into
+her soft chest.</p>
+<p>"I forgive you Jazz," she whispered softly, her own voice quaking with
+strong emotions.</p>
+<p>Without even needing to think Jesse embraced her, wrapping her arms
+around the one she loved. The pair held one another for minutes,
+expressing their powerful feelings for one another through so simple a
+gesture, until they were ready to move on.</p>
+<p>The dark-haired woman finally withdrew, holding out the bracelet for her
+soulmate once more. "I got it fixed. I was going to throw it away for
+what it did, but you liked it so much," she continued with the truth.
+She owed the big girl that much.</p>
+<p>Eve gave her that same kind of cracked smile, one hiding deeper emotion
+as she started to speak. "I liked it because you gave it to me Jazz,"
+she said, taking hold of her girlfriend's hands. "It had been so long
+since you looked at me with that shimmer in your eyes, and... I knew
+why. That's why I was so happy when I started getting better. I wasn't a
+burden anymore, and I could start taking care of you the way you had
+been me for too long," she gave a small chuckle, fighting back her own
+waterworks. "A part of me knew it was the reason. That's why I was so
+scared to give it up," her grip on the trim girl\'s hands tightened. It
+wasn't the dumb bauble she was afraid to let go; she was afraid Jesse
+might go with it.</p>
+<p>The smaller woman squeezed back, finally looking up into those
+light-green lights on her partner's face. She could tell, as simply as
+the accursed witch could, what her true love was thinking. "I'd never go
+anywhere Eve," she promised. Even if none of this had happened, that
+much was always true. "I love you more than anyone else in the world."</p>
+<p>It was reassuring, enough to make that façade smile genuine, but still
+the huge girl needed a little more. "What if I get sick again without
+the bracelet?" she asked.</p>
+<p>"Who knows if it's even magic anymore, I couldn't exactly take it back
+to a disappearing shop," the pitch-haired woman joked. "Even if you get
+sick again though, I could never stop loving you."</p>
+<p>The auburn beauty brightened, pulling her mate back in for another hug
+into her immense bosom. "I really don't like being sick," she gave her
+own admission.</p>
+<p>"We can keep this aside then," Jesse offered, setting the item down on
+the table. "Maybe just it being around will be enough magic to keep you
+happy and healthy."</p>
+<p>"You're all the 'real' magic I need Jazz," Eve smiled, holding her
+closer. "Can you make me one more promise though?" she inquired.</p>
+<p>The sharp-featured woman smirked, trying her best to read where this was
+going and failing. "What?" she asked back.</p>
+<p>The curvy girl dipped down, pressing her lips to her partners for a
+quick kiss. "No matter how healthy I get, don't start smoking again.
+Kissing you is way better when you don't taste like cigarettes," she
+teased.</p>
+<p>She couldn't help a laugh, hungrily turning her steel-blue eyes at her
+partner. "Promise," she replied, hopping up to wrestle the big girl down
+to the couch for some make up make outs.</p>
+<p>Reclined in a nice soft seat, the witchy Madam Materia pouted at the
+sight unfolding within the orb she held. A quick shake had deep mists
+filling it in, the scene jumping ahead to the massive Eve doing her best
+to squeeze into their shower, Jesse laughing as she tried to help out.
+Another shake, and the pair were getting a new home, adjusted for the
+auburn-haired girl\'s incredible size. A third and she was watching the
+pair at the altar, the oversized girl\'s buxom form squeezed into a
+pristine white dress, as her slim partner wore a crisp suit.</p>
+<p>With an unhappy groan the redhead sank back, her hat displaced by her
+oversized cushions as she let the image of the lesbians cementing their
+marriage with a kiss roll off across the hard floor. Her form began to
+shift, her blonde fox ears popping from between her locks and flicking
+in agitation, twin fluffy tails shooting up through the crest between
+the massive pillows she was resting against, and of course her delicate
+hands morphing into their true form as monstrous claws.</p>
+<p>From behind Alice\'s head sprang up, worry in her adorable face. "What's
+wrong Madam, did I not do good?" she asked, shifting for a better view
+and revealing the whole of what her mistress was laying upon to be her
+bust. Each were larger than her body, pinning her to the floor by their
+sheer size and offering a comfortable seat to the perverted vulpine.</p>
+<p>"No, you did fine darling," she reassured, running one of her thick
+furred paws over the giant bosom laid out for her, making her way to one
+of the girl\'s fist-sized nipples to tease it and distract herself from
+her failure.</p>
+<p>The overstuffed blonde let out a small little squeak, squirming and
+causing her cushioned chest to jiggle. "Then what's wrong? That Eve girl
+got pretty big. Not as big as me of course," Alice bragged, doing her
+best to push her chest out and fluttering her violet eyes for her Madam.</p>
+<p>"Of course, you're my biggest, best girl, my Alice," the redhead cooed,
+laying a kiss on her heaving breast. "And I guess I just miscalculated,
+I won't make that mistake again when someone deserves punishment," she
+explained in the easiest way possible, crawling deeper into her
+plaything\'s cleavage. "A bit bigger Alice, I want to be smothered," she
+ordered.</p>
+<p>The blonde smiled. "Anything for you my Madam," she chirped, her tits
+ballooning out to engulf the sinful vulpine in soft boob for a bit.</p>
+</body>
+</html>

@@ -1,0 +1,2617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Treats at Melanie's</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>Lunch at Melanie’s</p>
+<p>by purplish [email]</p>
+<p>(For adult eyes only: lesbian, lactation, breast/nipple expansion. All characters are 18+) </p>
+<p>Continuing from Breakfast at Melanie’s… </p>
+<p>A burst of magical energy crashed into Katrina. She strained to look beyond the great </p>
+<p>expanse of her roommate Melanie’s breasts, which were resting heavily atop her own swollen </p>
+<p>bosom, restraining her movement and limiting her vision. There could be no mistaking the ﬁgure </p>
+<p>standing in her doorway. She was admittedly a neophyte mage, still early in her studies, but she </p>
+<p>couldn’t fathom how her mistress had found her here. </p>
+<p>Still, her mistress’ timing couldn’t have been better. After a leisurely morning in which she </p>
+<p>shared her ﬁrst kiss — and so much more — with Melanie, her uncontrolled magic had grown their </p>
+<p>breasts so large that they wouldn’t be walking away from her bed anytime soon. At least, not </p>
+<p>without some means of counteracting her rogue spell.</p>
+<p>Melanie was engaged in her own heroic eﬀorts, struggling with the massive weight of her </p>
+<p>breasts, which had grown over and beyond Kat’s to hang over the far edge of her roommate’s </p>
+<p>bed. She twisted to look over her shoulder, matching Kat’s gaze towards their unexpected guest. </p>
+<p>Today she learned that magic was real, as evidenced by her still growing bosom, but she could </p>
+<p>never have imagined the incredible vision standing just outside Kat’s doorway. </p>
+<p>This woman — Mel remembered that Kat had called her “Mistress” — was strikingly </p>
+<p>beautiful. She exuded an aura of calm conﬁdence, her short dark hair and arched eyebrows </p>
+<p>bestowing upon her a severe, commanding air. She wore a ruby red lip coloring, matching the red </p>
+<p>stilettos in which she towered incredibly high, though she’d clearly be very tall even without them. </p>
+<p>Most of her body, however, was hidden from Mel’s view.</p>
+<p>Mistress’ majestic breasts ﬁlled Mel’s vision. They projected several arm-lengths in front of </p>
+<p>her and extended below her knees, but despite their impossibly colossal size, they seemed </p>
+<p>magically perky and didn’t appear to be any burden to her movements. Mel found it diﬃcult to see </p>
+<p>more than brief ﬂashes of Mistress’ body behind them, though she was able to catch a glimpse of </p>
+<p>toned, slender arms and bare legs. Mistress’ expansive chest was obscured behind a curious dark </p>
+<p>cloth covering; it seemed to Mel’s untrained eyes like something between a poncho and a robe. </p>
+<p>1</p>
+<p>She couldn’t imagine how this woman could stand upright, let alone walk in stilettos. She </p>
+<p>received a partial answer a moment later when Mistress stepped into the room, squeezing one </p>
+<p>enormous breast at a time through Kat’s doorway. She could feel waves of energy emanating from </p>
+<p>the titanic bosom just a few feet away. This woman’s magical power was clearly immense.</p>
+<p>She lowered her eyes, peering at the vast undersides of Mistress’ chest, and saw a great </p>
+<p>volume of opaque white liquid dripping through the dark cloth. Kat’s milk-soaked carpet was </p>
+<p>clearly far beyond its absorbency limit, as a growing milky puddle was quickly spreading on the </p>
+<p>ﬂoor from Mistress’ proliﬁc lactation. </p>
+<p>Mistress’ slender toes were held ﬁrmly to her stilettos with strips of red leather. Mel stared </p>
+<p>intently, seeing that Mistress’ delicate feet were soaking wet but not with milk; rather, they were </p>
+<p>slathered in a translucent liquid that seemed to be continuously dripping down her bare legs from </p>
+<p>somewhere above.</p>
+<p>Mel felt her mouth fall open.</p>
+<p>her blushing a crimson red.</p>
+<p>“Mistress is… beautiful!” she gasped. She turned to meet Kat’s eyes, unexpectedly seeing </p>
+<p>“Mistress, I can explain! I was just practicing liquid magic control with Melanie, like you </p>
+<p>taught me…” Kat rushed, clearly mortiﬁed. She nervously brushed a mess of her milk-soaked </p>
+<p>blonde hair behind her ear.</p>
+<p>“No, it was my fault! I shouldn’t have had so much of her milk!” Mel interrupted, turning back </p>
+<p>towards Mistress, feeling compelled to defend her roommate.</p>
+<p>Mistress’ eyes widened for a moment. She allowed herself a smirk, then spoke with low, </p>
+<p>velvety tones.</p>
+<p>“You, girl,” she intoned, staring at Mel. “You drank Katrina’s milk?”</p>
+<p>Mel wasn’t prepared for the intensity of Mistress’ gaze.</p>
+<p>“I… well… yes…” she oﬀered in a weak voice, stammering a reply. </p>
+<p>“Actually, it was most of my breakfast today,” she admitted sheepishly.</p>
+<p>Mistress harrumphed at her.</p>
+<p>“Did you drink straight from her breasts, girl?” she spoke insistently in her sultry voice.</p>
+<p>2</p>
+<p>Mel’s heart dropped, fearing that she’d committed some grave transgression, and her eyes </p>
+<p>widened. That was answer enough for Mistress, who tensed up in reaction to Mel’s silent </p>
+<p>confession. </p>
+<p>Mistress raised a hand and a piercingly loud snap echoed throughout the room. Mel felt her </p>
+<p>legs and taut bottom lifting into the air, leaving the soaked carpet below. Kat had ﬂoated upwards </p>
+<p>as well, and the two roommates shared a long, confused stare as Mel did a slow half-turn in mid-</p>
+<p>air. A moment later, they were gently lowered onto the edge of Kat’s bed next to each other, facing </p>
+<p>towards the doorway, their colossal chests spread before them on the ﬂoor.</p>
+<p>“Now then…” Mistress started, but the full lengths of Mel’s oversized nipples had just come </p>
+<p>into view. Her mouth dropped open and a large gush of her arousal soaked her feet and the carpet </p>
+<p>“Never have I seen such raw talent. Not even on the Archmage herself!” she marveled, her </p>
+<p>Mel’s teats had always been incredibly thick and embarrassingly long, often betraying her </p>
+<p>arousal by tenting great peaks into her shirts. Under the inﬂuence of Kat’s miscast magic earlier </p>
+<p>that morning, they had swollen to an incredible new size. They were easily as thick as her wrist, </p>
+<p>hot and achingly ﬁrm as they stretched even longer than her entire arm. They bounced and </p>
+<p>swayed in the air several feet in front of her colossal breasts, lazily dripping her own milk into the </p>
+<p>growing puddle near Mistress’ feet.</p>
+<p>With Mistress still stunned at Mel’s natural talents, Kat quickly leaned over and Mel felt hot </p>
+<p>“I told Mistress Zara about you after we met at the coﬀee shop. She didn’t believe me! I think </p>
+<p>she does now, though,” Kat whispered, giggling. She poked out her tongue, licking slowly along </p>
+<p>Mel squirmed and turned towards her roommate, their lips meeting in a tender kiss. She </p>
+<p>gently sucked Kat’s tongue into her mouth, but gasped involuntarily a moment later when she felt </p>
+<p>her left nipple being squeezed. She whipped around to see Zara, having regained her composure, </p>
+<p>“You see, girl, magic is most powerful…” Zara said, pausing to make a quarter-turn, swinging </p>
+<p>the huge shelf of her chest to the side. She took a step towards Mel’s colossal milky nipple.</p>
+<p>“… when shared directly… from… the… breast,” she growled, grasping Mel’s teat and </p>
+<p>squeezing ﬁrmly to emphasize each of her last three words.</p>
+<p>3</p>
+<p>between her legs.</p>
+<p>eyes wide.</p>
+<p>breath on her ear.</p>
+<p>Mel’s ear.</p>
+<p>smirking at her.</p>
+<p>Mel’s nipple throbbed urgently in Zara’s hand as it swelled even longer. It started spurting, </p>
+<p>then gushing arcs of her milk across the great expanse of Zara’s cloth-covered bosom. The fabric </p>
+<p>had clearly been treated to resist liquids, Mel marveled, as her proliﬁc milk beaded together in </p>
+<p>great rivers that cascaded down Zara’s enormous breasts.</p>
+<p>Zara took a moment to revel in Mel’s milk spraying on her sensitive breasts, feeling the </p>
+<p>impressive pressure even through the fabric of her covering.</p>
+<p>“That is why you girls are still growing,” she revealed, grinning as the two younger girls both </p>
+<p>blushed crimson red. She felt an intermittent pressure against her other breast, realizing that she </p>
+<p>had stepped into the path of Kat’s spraying milk as well.</p>
+<p>“Only the most powerful magic will be able to reverse this incantation,” she intoned </p>
+<p>dramatically, pausing for eﬀect.</p>
+<p>A large splash of hot liquid suddenly doused Zara’s feet and the bottoms of her breasts, but </p>
+<p>this time she knew it wasn’t her own arousal. She glanced towards Kat, seeing the blonde </p>
+<p>throwing her head back in pleasure. </p>
+<p>“I… oh Mistress Zara!” Kat wailed.</p>
+<p>and further drenching the waterlogged carpet.</p>
+<p>Zara’s expression hardened.</p>
+<p>“It’s my pussy! I can’t stop!” she moaned, feeling herself plunging over the edge. Huge arcing </p>
+<p>sprays of her essence emerged from between her massive breasts, splashing across Zara’s chest </p>
+<p>“Katrina, how many times have I warned you about pussy magic? It is only to be attempted </p>
+<p>under supervision!” she chastised.</p>
+<p>Something warm, ﬁrm, and slippery was suddenly poking against her side. She looked away </p>
+<p>from Kat, leaning over to see that Mel’s monstrous nipple had extended even longer to now rub </p>
+<p>against her hips. She grabbed it and gave it a few long, loving strokes, chuckling despite herself </p>
+<p>as it sprayed milk all over her slender legs.</p>
+<p>“You girls look hungry,” she grinned. “Isn’t it about lunch time?”</p>
+<p>She snapped her ﬁngers. A brilliant ﬂash of light disrupted Kat’s squirting climax, making her </p>
+<p>and Mel ﬂinch and turn away. As the spell faded, they were treated to a glorious sight: Zara now </p>
+<p>stood before them completely nude.</p>
+<p>4</p>
+<p>The massive spheres of Zara’s enormous breasts ﬁlled their vision. Even as large as Mel and </p>
+<p>Kat had grown, Zara’s amazing chest was surely larger still, and in this moment they thought they </p>
+<p>could see it growing even larger…? They reeled with delight, only to realize a moment later that </p>
+<p>Zara had been moving towards them. Her massive right breast slid along Mel’s chest and her </p>
+<p>incredible left breast settled atop Kat’s cleavage.</p>
+<p>They each saw a huge nipple creeping ever nearer. Zara’s milk was dribbling furiously from </p>
+<p>her teats, lubricating a path forward across the tops of their breasts. Mel, thinking suddenly that </p>
+<p>she was awfully thirsty, unconsciously opened her mouth. Kat was grinning widely at the spurting </p>
+<p>teat before her, eagerly anticipating another joyful session at her mistress’ nipples.</p>
+<p>Zara’s milky nipples halted their advance, leaving Kat and Mel tantalizingly close to the </p>
+<p>objects of their desire. Zara’s sultry voice ﬂoated over the curves of her breasts towards them.</p>
+<p>“You girls desperately need to be milked,” she said, teasing them by stating the obvious.</p>
+<p>“Yes, mistress! Please milk me!” Kat called in reply, almost begging.</p>
+<p>Mel shot her roommate a wide-eyed look, then softened, remembering her own dilemma. </p>
+<p>“Please milk me too,” she said quietly.</p>
+<p>“Yes, I believe a most vigorous milking is in order,” Zara chuckled. </p>
+<p>“Katrina, I’ll need your nipples in my mouth,” she commanded, pressing her left index ﬁnger </p>
+<p>and thumb together. </p>
+<p>Kat gasped when her spurting nipples slammed into each other, held in place as her </p>
+<p>mistress’ magic squeezed her engorged breasts together. The gentle magical caress felt wonderful </p>
+<p>on her bare skin, her proliﬁc lactation steadily increasing as her nubs prepared for being milked.</p>
+<p>“And as for you, sweet Melanie,” Zara said, peering over the great swell of her chest at the </p>
+<p>younger brunette. </p>
+<p>“I’ll need your nipples in my pussy,” she ordered, smiling warmly. She exerted her magic </p>
+<p>once more, pressing her right index ﬁnger and thumb together. Mel felt the huge lengths of her </p>
+<p>nipples rubbing together, forming a long, thick pillar of erect ﬂesh longer than she was tall. She </p>
+<p>was burning hotter and riding waves of pleasure, as much from her sensitive teats rubbing </p>
+<p>together as from this impressive display of Zara’s magical ability.</p>
+<p>Kat gasped in indignation.</p>
+<p>“But Mistress, you’ve never allowed me in your pussy. You only just met her!” she protested.</p>
+<p>5</p>
+<p>Zara’s left nipple suddenly lurched towards Kat’s face. It ﬂushed an angry red and greatly </p>
+<p>increased its ﬂow of dripping milk. Without warning, Zara’s giant left breast swung away from her, </p>
+<p>as if possessed by a strange inner mobility, then swung back in the other direction. Kat was awed </p>
+<p>by her mistress’ breasty prowess, realizing far too late that a large pink shape was hurtling towards </p>
+<p>her face.</p>
+<p>Zara’s huge nipple struck Kat’s cheek, dousing her face with a powerful spray of milk. Kat </p>
+<p>reeled from the impact, uninjured but dazed, and slowly licked her lips. She had always loved the </p>
+<p>divine taste of her mistress’ milk and resolved to remember her place, avoiding any further </p>
+<p>embarrassments in front of her roommate.</p>
+<p>“Hush now, girls. It’s time,” Zara said softly. </p>
+<p>“I will take in your milk and my breasts will purify it. You will drink from my nipples and I will </p>
+<p>return your milk to you, restoring you.”</p>
+<p>Mel brightened, her eyes widening in anticipation. Even Kat, rubbing her cheek and smarting </p>
+<p>from being disciplined by her mistress’ nipple, couldn’t help but smile.</p>
+<p>Zara took a step backwards, sliding her enormous breasts clear of the cleavages below </p>
+<p>them, and made a ﬁnal assessment in preparation for her incantation. These two foolish young </p>
+<p>girls had attempted magic far beyond their abilities, resulting in the four colossal mounds before </p>
+<p>her. She gazed down over the great curve of her own breasts, watching each girl in turn.</p>
+<p>Mel had gathered great armfuls of her own swollen chest, hefting each of them in turn, </p>
+<p>squirming in her seat from the delirious sensations of her long nipples sliding together. Her teats </p>
+<p>were still magically attached to one another, but she was grateful for what little relief she could </p>
+<p>derive by stimulating her new lactation, urging her long nubs to spray their milk.</p>
+<p>Kat’s nipples were hardly in the same league as her roommate’s, but her uncontrolled magic </p>
+<p>had still grown them to a tremendous new length. They dribbled milk furiously, casting great peaks </p>
+<p>longer than her handspan as they gloriously strained forwards from the tips of her breasts.</p>
+<p>Their overgrown breasts rose far above the milk-soaked carpet, jiggling in great quivering </p>
+<p>waves, having become so large that Zara could see only the heads and shoulders of the girls </p>
+<p>behind them. They seemed distracted, Zara thought, no doubt acutely aware how their nipples </p>
+<p>were rubbing together in the ﬁrm grip of her magic.</p>
+<p>Zara steeled herself, realizing the monumental challenge of her task. To take within herself </p>
+<p>the excess magical energy from two girls, purify it into a restorative force, and return it to them </p>
+<p>through her breast milk? The Council would no doubt demand several weeks of study before </p>
+<p>6</p>
+<p>attempting such a complex incantation. Even the Archmage herself would surely think twice </p>
+<p>before casting a spell like this unassisted, without a sister mage nearby.</p>
+<p>But there was no time for study and no help to be had. Zara knew that she had to act </p>
+<p>immediately, otherwise these girls would continue growing right through their walls. Besides, ever </p>
+<p>since the misplaced growth potion ﬁasco at last year’s regional magic convention, the Guild really </p>
+<p>didn’t need any more legal action. If anything, she thought, the Guild should appreciate her taking </p>
+<p>initiative.</p>
+<p>An unnatural silence descended. Kat and Mel could hear only their own throbbing </p>
+<p>heartbeats, but after an uncomfortable moment, sound seemed to rush back into the room. They </p>
+<p>could now hear only each other’s excited breaths, though they could feel great waves of energy </p>
+<p>radiating from Zara’s immense bosom.</p>
+<p>With a quick twist of Zara’s ﬁngers, Kat and Mel rotated away from one another, opening a </p>
+<p>large gap on the ﬂoor between their massive bosoms. She lay down on the soaked carpet, her </p>
+<p>head next to Kat’s dripping nipples, and arched her back, sliding her colossal breasts into the </p>
+<p>newly-opened valley before her. She grinned, opening her mouth wide and sucking both of Kat’s </p>
+<p>teats inside.</p>
+<p>Kat yelped, making Mel spin around towards her. Mel had just seen Zara disappear </p>
+<p>somewhere in front of her, beyond the great expanse of her chest, and she soon realized with a </p>
+<p>grin the source of her roommate’s surprise. Her mirth turned to frustration, though, when she </p>
+<p>realized she couldn’t reach either of the huge nipples on Mistress Zara’s breasts. They lay </p>
+<p>tantalizingly out of reach in the space between her and Kat’s bosoms.</p>
+<p>A sudden milky spray from Zara’s teats demanded Mel and Kat’s attention. Mel was amazed </p>
+<p>to see one of Zara’s nipples quickly growing longer, rapidly extending the several feet between it </p>
+<p>and Kat’s beautifully ﬂushed cheeks. Beaming widely, Kat opened her mouth and eagerly sucked </p>
+<p>her mistress’ teat inside. </p>
+<p>Mel felt something ﬁrm pressing against her cheek. She grinned and welcomed Zara’s other </p>
+<p>ﬂeshy teat into her mouth, sucking gently on it. There was no milk forthcoming yet, but she was </p>
+<p>still awfully thirsty, so she gave it her all. She sucked harder on the oversized nub, pressing it ﬁrmly </p>
+<p>between her tongue and the roof of her mouth. Still, the creamy essence she had seen it gushing </p>
+<p>forth only moments earlier was nowhere to be found.</p>
+<p>She glanced over at Kat, seeing her momentarily choking around an unexpectedly large </p>
+<p>stream of milk from the nipple in her mouth. Why wasn’t Zara sharing her bounty with both of </p>
+<p>them? She pondered, wondering how one would politely ask a powerful mage to breastfeed her. If 
+7</p>
+<p>anything, she thought, good manners might help her avoid a thundering nipple slap like the one </p>
+<p>Kat had endured. Although, she had to admit it did look rather enjoyable.</p>
+<p>A moment later she felt her nubs, still magically fastened together, sliding across the milk-</p>
+<p>soaked carpet. Despite their lengths and unyielding ﬁrmness, they were still ﬂexible enough to </p>
+<p>bend slightly, and Mel could feel them curving around a warm, slippery pair of legs. She gasped </p>
+<p>around the nipple in her mouth, overwhelmed with pleasure when she felt her teats plunge into a </p>
+<p>warm, wet center.</p>
+<p>She had known great joy earlier that day by thrusting both of her swollen nipples into Kat’s </p>
+<p>magical pussy, and the incredible sensation of them sliding into Mistress Zara’s pussy brought her </p>
+<p>to an even higher plateau. Over the next few seconds, she felt more and more of them being </p>
+<p>engulfed, and her rational mind couldn’t understand how ﬁrst Kat and now Zara could take so </p>
+<p>much of her within themselves. She resolved to ask Kat later about enhancing her own pussy.</p>
+<p>Her nipples were being squeezed tightly together inside Zara. She felt her milky spray </p>
+<p>increasing beyond what she’d thought possible, and to her great surprise, she could see the great </p>
+<p>swells of her chest gradually shrinking smaller. She turned back towards her roommate, seeing Kat </p>
+<p>still busy with Zara’s milk, and the blonde’s chest also seemed smaller than even a minute earlier. </p>
+<p>She tried mouthing a celebratory exclamation around the nipple in her own mouth, but was </p>
+<p>interrupted a second later when it ﬁnally started spraying milk down her throat. </p>
+<p>She gave her all to swallowing as much of Zara’s milky bounty as she could manage. The </p>
+<p>ﬂow was immense, though, and despite her best eﬀorts she could feel great hot rivers of Zara’s </p>
+<p>proliﬁc lactation seeping out the corners of her mouth, running down her arms and back, and </p>
+<p>soaking into Kat’s bedsheets.</p>
+<p>Over the next long while, Mel and Kat were expertly milked by Zara. They laughed and licked </p>
+<p>around the nipples in their mouths, savoring the incredible taste of Zara’s seemingly unending </p>
+<p>milk. The more they swallowed, the more revitalized and restored they felt, as if after a great </p>
+<p>night’s rest or a particularly strong cup of coﬀee. </p>
+<p>Mel had just given a wet kiss to the tip of Zara’s milky teat when she felt something strange </p>
+<p>happening. Her massive nipples were still squirting her milk deep into Zara’s magical pussy, but </p>
+<p>she now felt a gentle pressure on them, as if something else was spraying liquid back against </p>
+<p>them. She slowly turned towards Kat, rotating around the nipple in her mouth.</p>
+<p>Kat seemed to sense something as well, her eyes widening as she momentarily stopped </p>
+<p>suckling her mistress’ nipple, allowing its milky spray to run out of her mouth. She made eye </p>
+<p>contact with Mel, who stared back wide-eyed.</p>
+<p>8</p>
+<p>Deep inside Zara’s magical pussy, something ﬂeshy and wet was rubbing against the tips of </p>
+<p>Mel’s teats. Somewhere near the back of Zara’s mouth, Kat felt her own nipples sliding along </p>
+<p>something ﬁrm, warm, and very slippery.</p>
+<p>Kat pulled her mistress’ long teat out of her mouth, still staring at Mel.</p>
+<p>“Our nipples are kissing, Mel,” she whispered. “They’re kissing inside her. Oh Mel, isn’t her </p>
+<p>magic amazing?”</p>
+<p>imagined.</p>
+<p>Mel was ﬁghting through a cloudy haze of arousal and needed a few moments to absorb her </p>
+<p>roommate’s wonderment. Her mind twisted around the impossibility of her situation, but that didn’t </p>
+<p>make it any less real. Today she learned how powerful magic could be, more so than she’d ever </p>
+<p>She slowly pulled Zara’s long nipple from her mouth. A wide, silly grin covered her face, and </p>
+<p>she leaned towards Kat, thrilled to share such an intimate moment with the beautiful blonde. Kat </p>
+<p>smiled broadly, leaning back towards her, excited for their ﬁrst kiss since her Mistress’ arrival.</p>
+<p>They met in a torrid embrace, overwhelmed as much by the incredible sensations from their </p>
+<p>breasts and nipples as their newfound aﬀection for each other. In that long moment, they felt </p>
+<p>themselves plunging over the edge, sharing a milky climax while wheezing, gasping, and laughing </p>
+<p>into each other’s mouths at their incredible shared pleasure.</p>
+<p>A powerful magical discharge exploded between them, throwing them backwards. They </p>
+<p>again heard a familiar voice, sourceless and disembodied, but somehow audible all the same.</p>
+<p>“Girls, you must focus! Drink from me and you will be restored,” Zara spoke into their minds.</p>
+<p>They busied themselves with swallowing Zara’s spurting milk as quickly as they could, still </p>
+<p>squirming from the delicious sensations of their nipples rubbing together somewhere inside Zara’s </p>
+<p>body. At one point Mel found herself pondering why her stomach never seemed to ﬁll, despite the </p>
+<p>great volume of liquid she was swallowing. She boggled, mentally adding it to her list of questions </p>
+<p>for Kat, and returned to focus on her milky task.</p>
+<p>A chorus of whimpering, moaning, and loud sucking noises ﬁlled the air for an unknowable </p>
+<p>time. Mel had closed her eyes, her entire existence embodied within two burning hot focal points: </p>
+<p>her squirting nipples inside Zara and the magical milk spraying down her throat. She knew not </p>
+<p>how long she had been ﬂoating on this incredible plateau of pleasure, hoping subconsciously that </p>
+<p>she could go on living this way for all time, perhaps through some twist of magic.</p>
+<p>9</p>
+<p>Mel’s nipples were suddenly cold and exposed, and she sensed them sliding slowly across </p>
+<p>the carpet as they shrunk down from their hyper-extended lengths. She opened her eyes to see </p>
+<p>that her tremendous breasts had returned to their normal size, bouncing lazily below her navel and </p>
+<p>protruding forwards beyond her elbows. She gathered them in her arms and hugged them tightly, </p>
+<p>enjoying their ﬁrmness and warmth. </p>
+<p>Her nipples still felt achingly erect, though, and she tilted her big breasts towards her face to </p>
+<p>inspect them. They were still longer than her handspan, far beyond their normal size and even </p>
+<p>longer than they’d been in the shower that morning under the inﬂuence of Kat’s magic.</p>
+<p>She raised her eyes to see Mistress Zara again standing, her grand naked breasts shimmying </p>
+<p>and swaying below her knees. She was panting and sweaty, but still smirking.</p>
+<p>“Yes Melanie, you’ve noticed that magic can have certain long-lasting eﬀects,” she said.</p>
+<p>Mel’s eyes ran along the huge new lengths of her nipples, still poking lewdly towards her face </p>
+<p>as she hefted her breasts from below. It wasn’t so bad, she thought, having a mage for a </p>
+<p>roommate and an occasional visit from their incredibly sexy mistress. She hoped they’d be willing </p>
+<p>to help her grow her breasts and nipples again.</p>
+<p>She grinned widely, extending her tongue to lick slowly along her left nipple from base to tip, </p>
+<p>reveling in its erotic sensitivity. She repeated the gesture on her other throbbing nub, her eyes </p>
+<p>closing in pleasure as she attended to herself. She felt movement on the bed next to her.</p>
+<p>“Oh Mel!” Kat called softly from her side. “Your new nipples are so beautiful!”</p>
+<p>Kat’s swollen bosom had returned to its normal size, although Mel conﬁrmed with a quick </p>
+<p>glance that her roommate’s incredible breasts were still just as large as the day they’d met in the </p>
+<p>coﬀee shop. They were taut and ﬁrm, projecting far beyond Kat’s knees from her seated position, </p>
+<p>and Mel knew they’d hang well below the girl’s hips while she was standing up. She counted her </p>
+<p>lucky stars that she had met, and now lived with, such a beautiful and busty girl.</p>
+<p>Mel wiggled her toes, unexpectedly ﬁnding the carpet to be completely dry. Magic sure was </p>
+<p>handy even for household chores, she thought, chuckling to herself. </p>
+<p>“A challenge is now before you, Katrina and Melanie,” Zara said, again adopting the </p>
+<p>commanding tone she’d employed before casting her incantation.</p>
+<p>Kat brightened and smiled up at her mistress. Mel tilted her head, then joined her roommate </p>
+<p>in admiring Zara’s impossible ﬁgure.</p>
+<p>10</p>
+<p>“Melanie, your natural talents are immense! Dare you take your ﬁrst steps to joining our </p>
+<p>Guild?” Zara said, watching Mel closely.</p>
+<p>Mel was ﬂoored. She’d experienced such heights of pleasure from exploring magic with her </p>
+<p>roommate and her mistress, but she had never dreamed of performing those feats herself. She </p>
+<p>opened and closed her mouth several times, unsure how to respond.</p>
+<p>Zara seemed amused, then turned her attention to the beautiful blonde on the other side of </p>
+<p>the bed.</p>
+<p>“And you, Katrina. You must endure a trial to regain your standing, after you so recklessly </p>
+<p>invited catastrophe today,” she intoned.</p>
+<p>Mel saw Kat hang her head in shame, looking crestfallen. She frowned, grabbing Kat’s hand </p>
+<p>and squeezing it tightly in solidarity with her friend. Kat was thankful for her roommate’s aﬀection </p>
+<p>and concern, meeting Mel’s eyes and managing a small smile.</p>
+<p>“You must avoid orgasm for one quarter-cycle. No climaxes of any kind,” Zara said, </p>
+<p>enunciating each word.</p>
+<p>“I will return to judge your trial,” she added, then turned away. The colossal teardrops of her </p>
+<p>breasts swung rapidly as she paced towards the door. Mel couldn’t understand how such a simple </p>
+<p>gesture didn’t throw her entirely oﬀ-balance, but she reminded herself that this was one of the less </p>
+<p>outlandish events she’d witnessed so far today.</p>
+<p>Zara paused at Kat’s doorway, frowning. She made another quarter-turn to the side, then </p>
+<p>used both slender arms to heft her colossal breasts through the doorway one at a time.</p>
+<p>Mel was staring lustfully at Zara’s taut bottom and slender legs, which were slick and wet </p>
+<p>with what Mel could now see was Zara’s profuse dripping arousal. It was spurting from her pussy </p>
+<p>in seemingly endless waves, splashing along her legs and rushing down to her toes in her bright </p>
+<p>red stilettos. </p>
+<p>Zara stood in the hallway, her back turned, and snapped her ﬁngers. Her cavernous canvas </p>
+<p>covering, discarded on the ﬂoor near Kat’s bed, leapt into the air and rushed out through the </p>
+<p>doorway before attaching itself around her breasts. She turned to the side, grinning in proﬁle, and </p>
+<p>stepped out of view. Her heels click-clicked down the hallway for only a few steps before going </p>
+<p>quiet, and Mel could sense somehow that their mistress had magically departed.</p>
+<p>Mel fell back onto Kat’s bed, ﬂustered and amazed, and stared up at the ceiling.</p>
+<p>11</p>
+<p>“I just… wow! She was… wow! Did you see how huge my nipples had grown? Your breasts </p>
+<p>were so big and beautiful too, Kat! How did our nipples meet inside of her? And how long is a </p>
+<p>quarter-cycle, anyway?” she said in wonderment, almost babbling.</p>
+<p>A long moment passed without a response, and she grew concerned, sitting up and putting </p>
+<p>an arm around Kat’s shoulders. Leaning in close, she could see Kat staring blankly at her own </p>
+<p>cleavage, almost grimacing.</p>
+<p>“Kat? What’s wrong?” she said, concerned.</p>
+<p>“Mel, it’s just… my breasts get so sensitive when they ﬁll with milk. You saw how I can’t help </p>
+<p>myself!” she remarked, wrapping her arms around her enormous chest. Her outstretched arms </p>
+<p>didn’t come close to reaching her thick nipples, and as she squeezed her chest, the tops of her </p>
+<p>breasts surged upwards and gently collided with the underside of her chin. She ﬂushed and </p>
+<p>quickly released her grasp, ﬁnding herself stymied by her mistress’ challenge.</p>
+<p>“That’s how our magic works, Mel; it’s a balance between power and pleasure. Too much of </p>
+<p>either one can be disastrous, and only together can you guide your spell to your desired eﬀect,” </p>
+<p>she explained. </p>
+<p>“I’m… not so great at that part,” she admitted, frowning.</p>
+<p>Mel grinned widely and squeezed Kat’s hand tightly. Kat brightened, despite herself; she </p>
+<p>couldn’t resist that cute brunette and her incredible nipples.</p>
+<p>“It’s only for about six hours, Mel. We’ll get through it together,” Kat said.</p>
+<p>“C’mon, we’re both a mess. I’m going to take a shower,” she said, then leaned over and </p>
+<p>gave Mel a quick peck on the cheek. She leaned in further, taking care not to be unbalanced by </p>
+<p>temporarily resting her breasts on the bed.</p>
+<p>“Want to join me?” she growled in Mel’s ear, then hopped oﬀ the bed. She walked slowly </p>
+<p>towards the doorway, swinging her hips and bouncing the great ﬂeshy mountains of her breasts, </p>
+<p>easily visible from behind. Mel was thrilled at the sight of Kat’s pert bottom and magically-</p>
+<p>enhanced pussy, which even now was dripping furiously down the insides of her long slender legs. </p>
+<p>Kat paused in the doorway, gently sliding her huge bosom through one at a time, then spun </p>
+<p>around to look back at Mel. She winked and blew a quick kiss, then she was gone.</p>
+<p>Mel laughed at her roommate’s antics, then winced. Her massive new nipples were incredibly </p>
+<p>sensitive, so much so that she thought she could even detect the air currents in the room softly </p>
+<p>12</p>
+<p>caressing them. She couldn’t resist taking another look at their newly-grown magniﬁcence and </p>
+<p>pressed gently upwards on her big chest from below.</p>
+<p>Her nipples throbbed urgently upwards, mere inches away from her face. Not only had they </p>
+<p>achieved a tremendous new length, but she saw they had thickened, too; she had no doubt they </p>
+<p>were every bit as wide as two of her ﬁngers together. They looked positively delicious, ﬂushing an </p>
+<p>angry-looking red and appearing to be completely rigid as they waved slowly in the air.</p>
+<p>She had fantasized that morning about showering with her roommate, and even though that </p>
+<p>prospect was now real, she brushed it aside. Her teat looked too good and she just had to taste it; </p>
+<p>nothing else mattered in this moment.</p>
+<p>She leaned forward, towards the thick tip of her left nipple. It was tantalizingly nearby; she </p>
+<p>could feel its heat radiating across her cheeks and brow. She slowly opened her mouth. She was </p>
+<p>so close, she could almost taste it…</p>
+<p>There was a sudden thunderclap in her ears. She heard Mistress Zara’s voice, but it was </p>
+<p>strained, as if coming from a great distance.</p>
+<p>“Melanie!”</p>
+<p>Staring at her incredible nipple, it seemed to stretch even longer under her gaze, as if </p>
+<p>reaching out towards her. No, Zara was right. She had to resist; for herself and for Kat. </p>
+<p>Frowning, she released her chest, her large breasts bouncing and settling. She squeezed her </p>
+<p>eyes shut, trying to concentrate, though she was still distracted by her hugely erect teats waving </p>
+<p>far in front of her.</p>
+<p>She rose to her feet, feeling a little wobbly, and stumbled to the open doorway. She leaned </p>
+<p>against the doorframe for support and peered into the hallway: the coast was clear. The sound of </p>
+<p>running water came to her ears from the closed bathroom door just a few steps away.</p>
+<p>Her heart was racing. She was mere steps from realizing her fantasy of showering with her </p>
+<p>extremely busty roommate. What frustrating irony it was, though, that they’d have to be careful not </p>
+<p>to get carried away and risk failing Mistress Zara’s trial. Still, she thought, she wouldn’t miss this </p>
+<p>chance for the world.</p>
+<p>She paced down the hallway, pausing in front of the bathroom door, and jumped back in </p>
+<p>surprise when her straining nipples unexpectedly brushed against it. It would take some practice, </p>
+<p>she realized, to learn how to move around with the incredible new lengths of her teats. She bit her </p>
+<p>lip, her nipples throbbing, and swung the door wide open.</p>
+<p>13</p>
+<p>She stepped inside and closed the door ﬁrmly behind her. The air was unnaturally thick with </p>
+<p>steam and extremely humid. Large clouds of dark mist were billowing from the shower stall, </p>
+<p>obscuring her view through the glass, although she could still make out an occasional glimpse of </p>
+<p>movement. This was surely more of Kat’s liquid magic, she realized with a grin; Kat sure did enjoy </p>
+<p>teasing her.</p>
+<p>One of Kat’s enormous breasts suddenly appeared against the glass from within the shower. </p>
+<p>It was wedged tightly into a corner of the stall, her huge nipple bent between the glass and the </p>
+<p>pebbly ﬂesh of her areolae. Kat’s breast was spread across nearly the entire height of their shower </p>
+<p>stall, and combined with the swirling steam, Mel’s hopes of glimpsing the rest of her roommate’s </p>
+<p>body were frustrated.</p>
+<p>Kat’s wet nipple started spurting thick streams of her milk. Angled awkwardly against the </p>
+<p>glass, it sprayed great sheets of milk down an entire wall of the shower. Mel felt herself start </p>
+<p>salivating at the sight of Kat’s proliﬁc lactation; it never failed to impress her.</p>
+<p>Kat’s colossal milky breast disappeared behind a wall of steam just as suddenly as it had </p>
+<p>appeared. Mel frowned; her roommate must have moved to the other side of the shower. After a </p>
+<p>brief moment, the shower door slowly slid open.</p>
+<p>Gazing inside, Mel could only see dense swirling clouds of steam; not even the far wall was </p>
+<p>visible. Kat was clearly inviting her to take another leap of faith.</p>
+<p>“I trust you, Kat,” she said aloud, unsure if Kat could even hear her. She closed her eyes and </p>
+<p>stepped inside the shower. The door quietly slid shut behind her.</p>
+<p>She felt a warm liquid spraying down her side and legs. She paused, confused; wasn’t the </p>
+<p>shower head at the other end of the stall? She opened her eyes, expecting to ﬁnd herself </p>
+<p>magically teleported somewhere, but she could see only the drab tile of the bathroom wall. She </p>
+<p>spun around, towards the source of the warm spraying liquid, to see an incredible vision.</p>
+<p>Kat was leaning with her back against the far wall, her eyes closed as she relaxed under the </p>
+<p>hot water spray. The billowing steam had somehow reversed itself, obscuring her view of the </p>
+<p>bathroom beyond the shower’s glass walls.</p>
+<p>Kat’s huge breasts were squeezed tightly together by the narrow shower walls. Mel’s entire </p>
+<p>view of Kat, from her shoulders to below her knees, was ﬁlled with her blonde roommate’s </p>
+<p>impossible bosom. It thrust forward to occupy more than half the length of the shower, leaving Mel </p>
+<p>standing in a narrow space at the far end.</p>
+<p>14</p>
+<p>Mel ﬂushed red, but not from the hot steam; she was still stunned every time she beheld the </p>
+<p>magniﬁcence of Kat’s breasts. Seeing them now squeezed so awkwardly into their narrow shower, </p>
+<p>stretching out wildly in all directions, had her especially titillated. She conﬁrmed with a grin that the </p>
+<p>warm liquid spraying on her was gushing from Kat’s thick nipples, now dousing the front of her </p>
+<p>chest as she stood facing the beautiful blonde.</p>
+<p>This incredible vision of Kat stuﬀed into their small shower, her breasts surging in all </p>
+<p>directions, had been just what she’d fantasized about earlier that day. She resisted the urge to </p>
+<p>pinch herself; she wasn’t dreaming, was she?</p>
+<p>A warm, soft weight pressed against the tips of her outstretched nipples, making her realize </p>
+<p>that she’d once again forgotten to account for their vastly increased length. Her teats were rubbing </p>
+<p>and sliding across Kat’s mountainous breasts. They held eye contact for a long minute, silently </p>
+<p>enjoying the tender sensations of so delicately caressing each other.</p>
+<p>Kat leaned her head forward, resting her chin atop her colossal left breast, beaming a silly </p>
+<p>grin.</p>
+<p>“Mel, sweetie, can you wash my nipples? I… I can’t reach,” she said, blushing.</p>
+<p>“But gently, please!” she urged. “You know how sensitive I am while I’m milking,” she </p>
+<p>winked, ﬂinging her wet blonde hair over her shoulder. </p>
+<p>Mel reached out, gently grasping one of Kat’s spurting nipples. She pointed it directly at her </p>
+<p>chest, grinning as hot milk sprayed inside her cleavage and dripped down her body. She wrapped </p>
+<p>her ﬁngers around it and stroked it gently, grinning as she felt it throbbing in her hand. She was </p>
+<p>impressed by its size as it poked out through her curled ﬁngers, though it was nowhere near as </p>
+<p>large as her own incredible teats.</p>
+<p>Kat’s other dripping nipple was nearby, rubbing along the tile wall. Mel grabbed it in her other </p>
+<p>hand, bringing it close and twisting it around. It covered its twin in a milky deluge, even as its twin </p>
+<p>continued spraying its own gloriously voluminous milk across her chest. </p>
+<p>Mel pondered for a moment the questionable eﬀectiveness of cleaning Kat with her own </p>
+<p>breast milk, but ﬁgured it was worth a try. After all, she grinned, it certainly wouldn’t be the </p>
+<p>strangest occurrence she’d seen lately.</p>
+<p>She allowed herself a long moment to enjoy her milky shower under Kat’s spurting teat. She </p>
+<p>marveled at her roommate’s incredible production once more, thinking it particularly impressive </p>
+<p>given how much Kat had expressed only a short while earlier under Mistress Zara’s skilled touch. </p>
+<p>15</p>
+<p>Kat moaned softly and opened a peering eye. She couldn’t help but chuckle at the sight of </p>
+<p>her magical milk coating Mel nearly head to toe.</p>
+<p>“Mel, my love, won’t you wash me with your pretty nipples? Especially now that they’re </p>
+<p>growing again!” she said, barely audible over the shower spray.</p>
+<p>Mel was stunned. Kat’s milk — of course! This was hardly the ﬁrst time today that she’d </p>
+<p>encountered her roommate’s magic milk. The tell-tale warmth spreading throughout her chest </p>
+<p>made her ﬂush in anticipation of growing larger once again.</p>
+<p>Her nipples were burning hot and she felt them extending further, even beyond their </p>
+<p>tremendous new lengths. She closed her eyes, focusing on her growing nipples and Kat’s hot milk </p>
+<p>spraying all over her chest.</p>
+<p>She opened her eyes to catch a large reddish mass in the corner of her vision, near the top </p>
+<p>of the shower. Thinking it to be one of Kat’s towels hanging over the shower wall, she quickly </p>
+<p>ﬂicked upwards on it, trying to toss it back over so it might avoid getting wet from water or milk.</p>
+<p>There was suddenly a powerful burning sensation. That was no towel — she’d inadvertently </p>
+<p>struck her own growing teat! Opening her eyes wide and staring at it, she gasped as it seemed to </p>
+<p>thicken and stretch even longer from the contact and the inﬂuence of Kat’s magic milk. Kat must </p>
+<p>have taken a step forward, Mel realized, as the blonde’s vast chest was now pressing tightly </p>
+<p>against hers, forcing her nipples upwards to the point where she had mistaken one of her own big </p>
+<p>nubs for a towel.</p>
+<p>“Your milk is making me so big, Kat! It feels so good!” she gasped. With renewed resolve, </p>
+<p>she grabbed great armfuls of her own chest, hefting and pushing to make her nipples slide all over </p>
+<p>Kat’s expansive bosom. Her teats had once again swollen positively huge, and she was able to </p>
+<p>cover the visible surface area of Kat’s massive bosom with a few sweeping strokes by her lengthy </p>
+<p>nipples.</p>
+<p>They stared deeply into each other’s eyes, lost in a shared aroused haze. Mel was sliding </p>
+<p>both nipples ﬂat against the great front surfaces of Kat’s bosom, giggling softly as her nubs caught </p>
+<p>against Kat’s, then released, caught, and released. </p>
+<p>“Oh Mel, your huge nipples feel so good on mine!” Kat was nearly wailing.</p>
+<p>Mel felt herself cresting higher, her growing teats still stretching longer and becoming ever </p>
+<p>more sensitive. She was approaching her peak when she felt a hand squeezing tightly around both </p>
+<p>nipples. She gasped, teetering on the edge, seeing Kat’s hands wrapped around the halfway point </p>
+<p>of each of her teats, about a foot from their thick tips.</p>
+<p>16</p>
+<p>felt her heart drop.</p>
+<p>the door. </p>
+<p>into the hallway.</p>
+<p>Kat realized that she’d caught Mel teetering on a knife’s edge.</p>
+<p>“Mel, no! Remember what Mistress said!” she urged, her eyes wide.</p>
+<p>Mel recoiled, jumping backwards. She panted heavily, disappointed at herself for </p>
+<p>unknowingly coming so close to failure, endangering not only her own trial but Kat’s as well. She </p>
+<p>“Kat, I’m so sorry! I never meant to… to…” she felt tears welling up in her eyes. She turned </p>
+<p>and slid the shower door open, stepping out and grimacing as she banged both nipples against </p>
+<p>The swirling steam had thankfully dissipated from the bathroom, allowing her to grab two </p>
+<p>nearby towels. She wrapped one around her dark brown hair, wearing it on her head, and fastened </p>
+<p>the other around her waist. She threw open the bathroom door, still sniﬄing, and stormed topless </p>
+<p>“Mel! Mel, wait!” she heard Kat’s voice calling behind her, but she didn’t stop until she was </p>
+<p>safely in her room. She shut the door and leaned back against it.</p>
+<p>She gazed down, seeing her nipples still swollen huge under the inﬂuence of Kat’s magic. </p>
+<p>They were throbbingly erect, each of them nearly the length of her outstretched arm, waving in the </p>
+<p>air far in front of her. </p>
+<p>A heavy burden was settling onto her shoulders, As she reﬂected on her inconsiderate </p>
+<p>behavior, she felt her arousal pushed aside under the weight of shame. Over the next few </p>
+<p>seconds, as she stood frowning, her incredible teats ﬁnally softened.</p>
+<p>She caught her reﬂection in the full-length mirror near her bed and immediately felt her </p>
+<p>shame fading, replaced by the familiar loving admiration she felt for her incredible breasts. Her </p>
+<p>nipples, now completely soft but still at least as thick as her ﬁnger, drooped down from her breasts </p>
+<p>for a distance nearly as long as two of her handspans. </p>
+<p>She laughed with delight; even her best nipple erections before today weren’t as long as her </p>
+<p>ﬂaccid teats were now! She marveled at the incredible power of Kat’s magic, then steeled herself </p>
+<p>once more, resolving to see Mistress Zara’s task through to its end.</p>
+<p>Her old wooden dresser creaked as she yanked a drawer open. She grabbed a pair of pink </p>
+<p>cotton panties, sliding them on unceremoniously, then paused while considering her selection of t-</p>
+<p>shirts. She picked another of her favorite retro cartoon tees, grimacing as she stretched it tightly </p>
+<p>around her ponderous chest.</p>
+<p>17</p>
+<p>Like most of her t-shirts, the artwork was nearly unrecognizable when distorted by the </p>
+<p>incredible volume of her breasts. Today, though, she couldn’t help but beam with pride as she saw </p>
+<p>how her huge ﬂaccid teats were clearly visible in the front of her shirt. Her left nipple was pointing </p>
+<p>upwards, arching backwards up and over the front of her breast, while its twin pointed </p>
+<p>downwards, curling around the bottom of her right breast.</p>
+<p>She heard a momentary shuﬄing in the hallway and Kat’s voice came quietly through her </p>
+<p>door.</p>
+<p>“Mel?”</p>
+<p>A small white puddle emerged from under Mel’s door, slowly spreading across her hardwood </p>
+<p>ﬂoor. Its surface rippled as it grew larger, and Mel knew Kat’s leaky breasts were dripping their </p>
+<p>luscious bounty just outside.</p>
+<p>“Mel, please talk to me,” Kat said through the door.</p>
+<p>Mel stepped over to the door, her toes making small splashes in the puddle of Kat’s breast </p>
+<p>milk. She swung the door open to reveal a concerned-looking and very naked Kat.</p>
+<p>Kat locked eyes with her, shifting her weight and inadvertently squeezing her right breast </p>
+<p>against Mel’s doorframe. Her right nipple surged forwards, spraying milk wildly over Mel’s legs, but </p>
+<p>neither of them seemed to notice.</p>
+<p>“Kat, I’m so sorry –”</p>
+<p>“Mel, please forgive –”</p>
+<p>They realized they had both started talking at the same time, then laughed, and the tension </p>
+<p>between them seemed to fade away.</p>
+<p>“You go ﬁrst,” Mel said, grinning as she squelched around in the milky puddle. Kat smiled </p>
+<p>warmly at her.</p>
+<p>Kat started, then trailed oﬀ.</p>
+<p>“Mel, I’m sorry for grabbing you in the shower! I just felt so good, and I got caught up in it…” </p>
+<p>“It’s okay Kat, I was getting carried away myself! You saved me from going over the edge. </p>
+<p>Please forgive me for teasing you!” she said, forcing a smile.</p>
+<p>Kat sniﬀed, opening her arms wide, and they embraced. Mel stepped forwards, wedging </p>
+<p>herself into the warm, cushioned space between Kat’s breasts. She leaned forward and smiled, </p>
+<p>18</p>
+<p>kissing Kat softly on her lips. Her beautiful blonde roommate brightened, pressing their lips </p>
+<p>together and extending her tongue.</p>
+<p>A loud splashing noise from below startled Mel. Stepping back and glancing down, she saw </p>
+<p>Kat’s nipples were gushing milk at even greater volumes, spreading her essence all over Mel’s </p>
+<p>hardwood ﬂoor.</p>
+<p>“Kat, your nipples! You’re gushing!” Mel marveled.</p>
+<p>“Ooh, and do they need a suck, but we can’t risk it. C’mon, let’s watch some tv. Race ya!” </p>
+<p>Kat said quickly, winking at her, then took oﬀ towards the living room. Mel was amazed at how </p>
+<p>quickly the blonde was able to move, though it came at the cost of milk spraying all over the walls. </p>
+<p>She chuckled, walking after Kat down the hallway.</p>
+<p>She arrived in their living room to see Kat reclining on her back across the entire length of </p>
+<p>their narrow loveseat, her huge naked breasts towering into the air above her. Trickles of milk lazily </p>
+<p>exuded from Kat’s nipples, rolling down the sides of her bosom in great rivers before pooling on </p>
+<p>the leather underneath her or dripping down to the carpet below.</p>
+<p>“Hey, you,” Kat said softly, smiling. </p>
+<p>“Hey yourself,” Mel grinned back at her.</p>
+<p>“Sorry, there’s no more room on the couch. You’ll have to lie down right here!” Kat beamed, </p>
+<p>gently parting her breasts to reveal a vast valley of soft, inviting ﬂesh.</p>
+<p>Mel laughed and walked over to the couch. She lifted a leg over her nude roommate, gently </p>
+<p>lowering herself backwards into Kat’s cavernous cleavage. She came to rest with her left shoulder </p>
+<p>and her face mostly covered by the warm, soft mass of Kat’s left breast. She was awed once </p>
+<p>again by the incredible size of Kat’s chest, which easily most of her torso as well. She found </p>
+<p>herself daydreaming, imagining Kat’s breasts as huge as Mistress Zara’s, or even larger…</p>
+<p>For a long moment she was lost in thought and could see only darkness from her plush </p>
+<p>prison. She sensed Kat rotating around her, and at last there was light. The great wall of Kat’s right </p>
+<p>breast gently rolled away, coming to rest projecting over the edge of their loveseat towards the </p>
+<p>television. Mel rotated herself as well, resting her head atop Kat’s right breast. She sighed </p>
+<p>contentedly as she felt Kat’s other breast gently pressing against her cheek.</p>
+<p>“It’s only a few more hours. We’ll be good, won’t we, Kat?” Mel said, grinning.</p>
+<p>As if in response, a rivulet of hot milk slid down the great curve of Kat’s left breast, pooling </p>
+<p>along Mel’s cheek and running over her lips. It smelled simply divine under her nose, and she </p>
+<p>19</p>
+<p>couldn’t resist, slurping as much of Kat’s milk into her mouth as she could. She could hear Kat </p>
+<p>giggling and felt vibrations rumbling through Kat’s incredible bosom.</p>
+<p>She felt something warm on her collarbone and caught a curious shape in the corner of her </p>
+<p>eye. She glanced down through the open neck of her t-shirt, which had been stretched farther </p>
+<p>open as it struggled to contain the great volume of her chest. It was her own ﬂaccid left nipple, </p>
+<p>peeking out from the collar of her shirt, resting atop her exposed cleavage and poking lewdly at </p>
+<p>the base of her neck.</p>
+<p>It would be so easy to lick it, to suck it into her mouth, to worship its incredible length. But </p>
+<p>she couldn’t, not now; she had to focus. She instead gave a quick kiss to a nearby area of the </p>
+<p>great expanse of Kat’s left breast.</p>
+<p>They made a heroic eﬀort to pay at least some attention to the television, mostly avoiding </p>
+<p>touching themselves or each other. Kat’s milk would drip now and then from her left nipple, down </p>
+<p>the side of her huge breast, and splash onto Mel, whose vision was now partially obscured by the </p>
+<p>gentle warm weight of the breast resting on her. Mel would surreptitiously slurp Kat’s milk into her </p>
+<p>mouth, sighing contentedly at its deliciously sweet taste.</p>
+<p>Kat wielded the remote control with ruthless eﬃciency, ﬁnding a series of sappy romantic </p>
+<p>comedies and chuckling along with them. One of her hands was resting inside her cleavage, lazily </p>
+<p>palming Mel’s shirt over the large protrusion of her slowly lengthening left nipple. She was so far </p>
+<p>successful at resisting her own temptations, and she grinned, enjoying the warmth of Mel’s soft </p>
+<p>teat in her hand.</p>
+<p>Mel could tell her nipple was still poking out her shirt collar, feeling it creeping slowly up her </p>
+<p>cheek as it continued to grow longer. Kat’s milk was clearly having its eﬀect on her teats, she </p>
+<p>thought, although at least they were still soft for now.</p>
+<p>Some hours later the sun was low in the sky, casting long shadows into Mel’s living room. </p>
+<p>Kat was absorbed in her latest romantic comedy, rooting for the cute ﬂorist girl to get together </p>
+<p>with her actress girlfriend already. </p>
+<p>Her ears perked up when the clicking of a pair of stilettos echoed down the hallway into the </p>
+<p>living room. She immediately bolted upright on the loveseat, her huge chest swinging with her </p>
+<p>movement and carrying Mel along for the ride.</p>
+<p>An enormous pair of nude breasts swept into the room, taut and smooth despite their </p>
+<p>incredible size, straining outwards ahead of a familiar beautiful brunette. Mistress Zara paused for </p>
+<p>20</p>
+<p>a moment in the doorway, her colossal chest swaying below her knees as it thrust before her. Mel </p>
+<p>gasped with delight; she never tired of seeing Zara’s incredible ﬁgure in movement.</p>
+<p>Zara stood with her hand on her hip, frowning. She thrust her chest far ahead into the room, </p>
+<p>her erect nipples furiously dripping her milk onto the ﬂoor. She spoke in a harsh tone, then allowed </p>
+<p>a small smirk to show at the corners of her lips.</p>
+<p>“At attention, girls!”</p>
+<p>Mel was sitting upright, wedged tightly inside Kat’s ﬁrm cleavage, and felt a gentle pat on her </p>
+<p>bottom. The fabric of her panties was momentarily stretched away, then snapped back against her </p>
+<p>ﬁrm skin. She leapt to her feet in surprise, hearing Kat giggling behind her. Kat then stood quietly </p>
+<p>by her side.</p>
+<p>Zara’s colossal bosom bounced and leapt, her stilettos clicking on the hardwood ﬂoor as she </p>
+<p>strolled in front of Kat. Each footstep left behind a sizable puddle of translucent liquid, Mel </p>
+<p>observed, her eyes widening as she recalled her intimate encounter with Zara’s magic pussy </p>
+<p>earlier that day. She glimpsed one of Zara’s long, toned legs, seeing it dripping wet with the rivers </p>
+<p>of arousal that she knew were gushing continuously from her mistress’ amazing pussy.</p>
+<p>Zara took a large step forwards, her enormous bosom enveloping Kat’s milky chest and </p>
+<p>making it seem almost small in comparison. Their combined lactation dripped into a large puddle </p>
+<p>that soon grew beyond their feet, spreading rapidly outwards on the hardwood ﬂoor.</p>
+<p>Zara ﬁxated at Kat, pressing herself as close as possible to the shorter blonde girl. She </p>
+<p>leaned over several long feet of their combined cleavage, squeezing their chests harder together </p>
+<p>and forcing them outwards until Mel, standing nearby, felt part of Zara’s breast wrapping around </p>
+<p>her leg like a warm blanket.</p>
+<p>“You have done well, Katrina. Are you prepared to regain your full standing in the Guild?” </p>
+<p>Zara asked.</p>
+<p>inches away.</p>
+<p>whimpering softly.</p>
+<p>“Yes, mistress,” Kat replied, blushing as she felt Zara’s hot breath on her face from mere </p>
+<p>Zara kissed Kat deeply, their lips parting as they lost themselves in their embrace. Mel </p>
+<p>watched her roommate gamely slurp her mistress’ tongue into her mouth, sucking on it and </p>
+<p>Zara’s eyes snapped open and she suddenly withdrew, stepping away from Kat and leaving </p>
+<p>the girl ﬂushed. She swept in front of Mel, then froze in place, her eyes wide.</p>
+<p>21</p>
+<p>Mel had been distracted by her mistress’ embrace with Kat, and although she could sense </p>
+<p>her arousal was somehow still under control, she hadn’t been keeping track of her own unruly </p>
+<p>nipples. Her right nub had fallen out the bottom of her overstretched t-shirt, dangling in the air at </p>
+<p>least two feet below the hem. Her other nipple was still poking up from her shirt collar and resting </p>
+<p>against her cheek, although she hadn’t noticed that it had continued growing until it ﬂopped over </p>
+<p>her ear.</p>
+<p>“You are very talented indeed, sweet Melanie,” Zara said, clearly impressed.</p>
+<p>“Are you prepared to join the sisterhood?” she continued, having recovered enough to </p>
+<p>remember some ceremonial formalities.</p>
+<p>Mel’s eyes swung to meet Kat’s. They grinned widely at each other, overjoyed to evolve their </p>
+<p>relationship further as Mel took her ﬁrst steps into a larger world.</p>
+<p>A thunderous crackling noise suddenly reverberated around the room. The lights ﬂickered </p>
+<p>and the window blinds crashed down, darkening the room. A silence fell as all three girls turned </p>
+<p>towards the hallway door.</p>
+<p>After a long moment, they heard a single click, then another. Mel and Kat tilted their heads, </p>
+<p>confused; it sounded to them almost like… Mistress Zara’s stilettos? Their eyes met Zara’s, and </p>
+<p>their blood ran cold when they saw the color draining from their mistress’ face.</p>
+<p>Two long, pinkish nubs emerged from the hallway door at about waist height. They ﬂoated </p>
+<p>parallel to the ﬂoor, growing longer into the room and swerving towards Mel, who realized in </p>
+<p>amazement that they were in fact the thickest, longest, and most delicious-looking nipples she’d </p>
+<p>ever seen. They closed the remaining distance and wrapped around Mel’s hips, their tips resting </p>
+<p>against her taut bottom, making her squirm from their intense heat on her bare skin.</p>
+<p>The entire room seemed to tilt askew for an instant, then righted itself again. A giant mass </p>
+<p>was suddenly visible in the corner nearest the hallway door. Mel blinked in the dim light, realizing </p>
+<p>that it was actually two distinct masses, ﬂesh-colored and round, an impossibly immense pair of </p>
+<p>breasts covering the ﬂoor and extending far upwards to brush against the ceiling. </p>
+<p>She looked down at the thick nipples wrapped around her waist. Slowly tracing a path with </p>
+<p>her eyes along their incredible lengths, she ended up back at the titanic breasts taking up most of </p>
+<p>her living room.</p>
+<p>“Mistress Archmage?!” Zara gasped, clearly stunned. “You honor us!”</p>
+<p>22</p>
+<p>Mel ran her eyes over the vast majesty of the Archmage’s nude breasts, their grand masses </p>
+<p>ﬁlling at least a third of the volume of her living room. She could see nothing of the woman to </p>
+<p>which they were attached, but the raw magic energy radiating from them was overwhelming, and </p>
+<p>she found herself struggling to remain standing as the Archmage’s power washed over her.</p>
+<p>The prehensile nipples wrapped around her waist throbbed urgently. A lilting, almost sing-</p>
+<p>song voice wafted to her ears from somewhere beyond the wall of breast.</p>
+<p>“I’ve been looking for you, Melanie. You must learn the ways of the Nipple Mages.”</p>
+<p>23</p>
+<p>Breakfast at Melanie’s</p>
+<p>by purplish [email]</p>
+<p>(For adult eyes only: lesbian, lactation, breast/nipple expansion. All characters are 18+)</p>
+<p>Shining rays of late morning sunlight cast a radiant glow onto Melanie’s sleeping form. </p>
+<p>It was a Sunday, and with no urgent responsibilities before her today, she allowed herself </p>
+<p>time to wake slowly and luxuriously. She stretched herself out and smiled as she greeted the </p>
+<p>new day.</p>
+<p>She hopped out of bed, still yawning, and stood before a full-length mirror in one </p>
+<p>corner of her room. Catching her own reﬂection, she frowned at the knotted tangles in her </p>
+<p>long dark hair and grabbed her brush to smooth them out. She had long enjoyed an </p>
+<p>eﬀortless kind of beauty, even without her makeup in these ﬁrst moments after waking. </p>
+<p>Although she was of average height, she was slender, toned, and proud of her body.</p>
+<p>Her most noticeable features were straining forcefully against her overtaxed pajama </p>
+<p>top. Her breasts were immense, hanging below her navel and projecting forwards beyond </p>
+<p>her outstretched elbows. She loved them as a powerful expression of her femininity, despite </p>
+<p>their occasional burden and the lustful glances from other girls around town. As huge as </p>
+<p>they were, lately she’d found herself wondering how sexy she might feel with an even larger </p>
+<p>chest.</p>
+<p>Her huge nipples were making themselves known this morning in their own special </p>
+<p>way, tenting great peaks into the front of her pajama top. Her teats had always been </p>
+<p>extremely long and very prominent, and she took a moment to marvel in loving admiration </p>
+<p>as they throbbed and grew in her tight top. </p>
+<p>They could get long and hard enough to thrust a protrusion longer than her ﬁnger into </p>
+<p>almost any covering. She’d often wear extra tight tops that showed them oﬀ to their fullest, </p>
+<p>knowing that her teats were quite noticeable even while ﬂaccid. Most of her tops seemed </p>
+<p>only to emphasize her huge nipples, which she always ensured were well-presented before </p>
+<p>leaving home.</p>
+<p>1</p>
+<p>She thought her nipples to be glorious, the centerpiece of her love for her breasts, and </p>
+<p>they often featured prominently in her hands and mouth when she demonstrated her </p>
+<p>aﬀection. She happily promised herself that this Sunday morning would be no exception. </p>
+<p>She squirmed for a moment at the rough sensation of her huge teats ﬁghting against </p>
+<p>her tight top for more room to expand. Her thick nubs were still getting longer, spreading the </p>
+<p>fabric in her shirt nearly to its limit as they thrust powerfully against the constricting </p>
+<p>pressure. Her breath caught in her throat, her overextended shirt teetering near its breaking </p>
+<p>point around her nipples, rendering in her mind a restrained yet gloriously erotic ﬂush that </p>
+<p>had her feeling especially hot.</p>
+<p>She put one hand on her panty-covered mound, feeling its burning heat and brieﬂy </p>
+<p>considering making this old pajama top the latest to be torn asunder by her powerful </p>
+<p>nipples. Grinning, she gave her huge right teat a gentle ﬂick through her shirt, biting her lip </p>
+<p>from the amazing sensation.</p>
+<p>Pressing her arms together on either side of her chest, she squeezed slowly inwards </p>
+<p>and smiled as the gentle pressure caused her breasts to swell and surge outwards in all </p>
+<p>directions. A sudden short ripping sound alerted her that this gesture had been almost too </p>
+<p>much for her overstretched top, as several large holes under her arms had torn open to </p>
+<p>reveal the smooth skin and generous swell of her huge bosom. </p>
+<p>She released her chest and extended both arms forward, gently grasping a nipple in </p>
+<p>each hand through her shirt. She wrapped her ﬁngers around their turgid lengths, then </p>
+<p>closed her eyes and held perfectly still. She smiled as her massive nipples throbbed urgently </p>
+<p>in her hands. They expanded insistently against her ﬁngers, swelling ever thicker.</p>
+<p>She couldn’t help but chuckle, reveling in her many delightful experiences of being so </p>
+<p>hugely busty. Her sensitive breasts would have to wait, though, as her next thought was to </p>
+<p>get to the bathroom before her roommate and enjoy a long shower.</p>
+<p>She had been living with Katrina for only two days and was still adjusting to sharing a </p>
+<p>small apartment with someone else. Originally she intended to ﬁnd a roommate to assist </p>
+<p>with the rent and expenses, but never had she expected to meet a girl like Kat.</p>
+<p>Before their ﬁrst meeting, Mel had been digging through her dresser for one of her </p>
+<p>favorite shirts, hoping it would help her make a good ﬁrst impression. Tugging it over her </p>
+<p>shoulders and stretching it tightly around her breasts, she idly wondered if she had grown </p>
+<p>2</p>
+<p>since she wore it last. Her huge ﬂaccid nipples made extremely large protrusions in the snug </p>
+<p>fabric, making her beam with pride. After a moment of consideration though, her courage </p>
+<p>faltered, and she grabbed a large hoodie before strolling out the door.</p>
+<p>They met for the ﬁrst time in a coﬀee shop near her apartment. Mel sat in a corner </p>
+<p>booth, wearing her oversized hoodie with the front unzipped, and tried not to draw any </p>
+<p>attention to herself. She was used to other women around town staring lustfully at her huge </p>
+<p>breasts, and while it was ﬂattering, and sometimes even desirable, she was hoping to </p>
+<p>conduct her roommate interview in relative peace.</p>
+<p>She had taken her eyes oﬀ the door, glancing down at her shirt to ensure her big soft </p>
+<p>nipples were still prominently displayed. Staring at her own teats in admiration, she brieﬂy </p>
+<p>lost track of time until she felt a presence sliding into the booth next to her. It was a girl, tall, </p>
+<p>slender, and stunningly beautiful, smiling and brushing her shoulder-length blonde hair </p>
+<p>behind her ear. She extended a hand, looking at Mel expectantly.</p>
+<p>“Hi! I’m Katrina, but everyone calls me Kat. You must be Melanie. I love your retro </p>
+<p>shirt!” she gushed, grinning broadly.</p>
+<p>Mel glanced down at her own shirt, visible through her open hoodie. It was a simple </p>
+<p>design celebrating an old cartoon, the artwork nearly unrecognizable as the fabric stretched </p>
+<p>around her ponderous breasts. She realized at once that her nipples had started to harden, </p>
+<p>betraying her reaction by tenting obscenely against her shirt. </p>
+<p>They extended to nearly their full lengths in record time, casting peaks longer than her </p>
+<p>palm as they thrust against her tight shirt. The artwork around her throbbing teats became </p>
+<p>nearly transparent, the fabric quickly stretching near its breaking point, and Mel feared she </p>
+<p>was about to tear through her shirt in front of this pretty girl.</p>
+<p>She hunched over to cover herself, worried that Kat might have seen her obvious </p>
+<p>arousal, and accidentally dragged both hard nipples against the edge of the table. A </p>
+<p>mistake, as it left her whimpering softly and grasping for the sides of her open hoodie to </p>
+<p>wrap it closed around her huge chest. The best she could do was stammer out a reply as </p>
+<p>she felt her nipples burning.</p>
+<p>beautiful creature next to her. </p>
+<p>“H-hi, yes, I’m M-Mel,” she said, blushing as she grasped the outstretched hand of the </p>
+<p>3</p>
+<p>Kat leaned in close, wrapping her arms around Mel’s shoulders and giving her a </p>
+<p>friendly hug from the side. Their cheeks pressed together and Mel ﬂushed red, feeling her </p>
+<p>nipples stretching even longer. </p>
+<p>Mel felt a strange kinship with Kat, despite having just met her, and lowering her eyes </p>
+<p>in embarrassment from their sudden embrace, she at once realized why. Her vision was </p>
+<p>ﬁlled by the vast expanse of Kat’s t-shirt, straining against the blonde girl’s impossibly huge </p>
+<p>chest. </p>
+<p>Kat’s enormous breasts completely ﬁlled the space between her seat and the booth’s </p>
+<p>sturdy table. Even that wasn’t nearly enough room, Mel marveled, as Kat’s chest extended </p>
+<p>far forwards above and below the table, rising upwards to the point where Kat’s chin rubbed </p>
+<p>deliciously against the tops of her exposed cleavage.</p>
+<p>“Hi there, M-Melanie,” Kat smiled, playfully imitating Mel’s nervous stammer and </p>
+<p>politely ignoring Mel gazing openly at her chest. She was clearly used to the attention, </p>
+<p>allowing her new acquaintance a long moment to admire her expansive bosom. After a time, </p>
+<p>she softly cleared her throat and Mel ﬂushed red, realizing she’d been caught staring.</p>
+<p>Kat laughed, reaching up and around her massive right breast to ever-so-slowly brush </p>
+<p>Mel’s long brown hair behind her ear. </p>
+<p>“I hope I’m not being too forward, but you’re cute when you blush like that,” Kat </p>
+<p>Mel was burning from embarrassment and hunched forward, again banging both of her </p>
+<p>huge nipples against the table. She bit her lip from the sensation and hoped that Kat didn’t </p>
+<p>grinned.</p>
+<p>notice. </p>
+<p>As she raised her eyes, she was distracted by a curious damp patch in the front of </p>
+<p>Kat’s massively overstuﬀed t-shirt. Instinctively she reached for her coﬀee cup on the table, </p>
+<p>sliding it away from Kat’s stupendous breasts, and found herself apologizing.</p>
+<p>“I’m so sorry Kat! Did I spill some coﬀee on you?” she frowned.</p>
+<p>A ﬂash of concern clouded Kat’s beautiful features and she leaned forward, peering </p>
+<p>over the great curve of her chest. A moment later, she threw her head back and laughed.</p>
+<p>“Oh, it’s just a little breast milk! I guess I hugged you too tightly,” she smiled, seeming </p>
+<p>not to notice the table squeezing her enormous chest.</p>
+<p>4</p>
+<p>Mel was suddenly thankful for the heavy fabric of her hoodie, which helped obscure </p>
+<p>her hard nipples as they stretched even longer at the mention of Kat’s milk. She could feel </p>
+<p>the intense heat of Kat’s enormous breasts next to her, even through several layers of their </p>
+<p>combined clothing. </p>
+<p>She didn’t remember much else from that ﬁrst meeting, having spent most of it staring </p>
+<p>at the slowly spreading wet spots on Kat’s overstuﬀed shirt. Kat politely indulged her, </p>
+<p>carrying most of their conversation, and they found themselves becoming fast friends.</p>
+<p>In the two days since Kat moved in, Mel couldn’t help her own curiosity and had taken </p>
+<p>nearly every opportunity to inquire about her new roommate’s lactation. Kat wasn’t </p>
+<p>expecting and had no children, but beyond that, she found Kat’s answers to be strangely </p>
+<p>evasive and non-speciﬁc. </p>
+<p>There was also the unresolved matter of the quiet rhythmic chanting she heard from </p>
+<p>Kat’s room for the last two nights. She also wondered about the frame around Kat’s </p>
+<p>doorway, which lately seemed to be dripping wet with a curious translucent liquid. Despite </p>
+<p>these mysteries, she was still glad for the company, and she knew her new friend could </p>
+<p>empathize with the unique challenges of being extremely busty and nearly irresistible to </p>
+<p>other women around their town.</p>
+<p>In the late morning sunlight in her room, Melanie gave one last yawning stretch and </p>
+<p>gently patted the sides of her huge chest in her old pajama shirt. She resolved to enjoy a </p>
+<p>long shower before breakfast and paced to her bedroom door, swinging it wide open. She </p>
+<p>had taken only a few steps into the hallway when she collided with a large, soft mass.</p>
+<p>Kat was an early riser and often enjoyed the calm of the dawn hours. She hadn’t yet </p>
+<p>bothered to make herself decent today, wandering shirtless around their apartment and </p>
+<p>hoping she might encounter her roommate in just this way.</p>
+<p>Mel blinked a few times through her sleepy haze. It took her a few moments to realize </p>
+<p>that a topless Kat was in front of her, grinning widely as she pressed her colossal nude </p>
+<p>breasts into Mel’s pajama shirt. Mel knew that Kat’s colossal chest would normally hang </p>
+<p>below her slender hips, but at this moment she could feel its warm softness rubbing against </p>
+<p>her knees as it compressed against her.</p>
+<p>“Good morning, sleepyhead!” Kat said cheerfully, not making any eﬀort to cover </p>
+<p>herself.</p>
+<p>5</p>
+<p>Mel froze in place as she ﬁnally came to grips with the warm weight covering most of </p>
+<p>her front. Kat’s breasts were thrusting into her, their incredible masses large enough to </p>
+<p>envelop most of her own huge chest. The gentle pressure squeezed Kat’s massive chest, </p>
+<p>the tops of her breasts rising upwards into the space between the two girls. </p>
+<p>Kat took a half-step forward, squeezing their chests harder together and sending her </p>
+<p>breasts surging upwards until her chin was obscured from Mel’s view. Mel then realized with </p>
+<p>a start that she had been quite literally coming to grips with this situation, releasing her </p>
+<p>grasp on Kat’s nude breasts after suddenly sensing that she’d been unconsciously kneading </p>
+<p>them with both hands.</p>
+<p>Mel stood in shock, awed by Kat’s incredible breasty prowess and embarrassed for </p>
+<p>having instinctively grabbed at her. A long moment passed as she hesitated uncomfortably, </p>
+<p>but Kat continued beaming at her as their huge chests pressed ﬁrmly together in the narrow </p>
+<p>hall.</p>
+<p>Mel was still trying to wrap her head around the curious sensation of her roommate’s </p>
+<p>chest almost completely enveloping her own. No, she wasn’t dreaming; the impossibly huge </p>
+<p>breasts pressing into her were very hot and very real. In the cool morning air, she felt her </p>
+<p>nipples stretching inexorably longer, nearing their fully erect glory.</p>
+<p>They somehow felt diﬀerent now, impossibly hard, as if they were cut from granite. She </p>
+<p>marveled that she’d never felt them straining quite so erect before. With a ﬂush of pride, she </p>
+<p>was conﬁdent that Kat would be able to feel them thrusting into her chest.</p>
+<p>She was trying to decide whether to apologize ﬁrst for groping Kat’s chest or for the </p>
+<p>rude behavior of her own unruly nipples. Blushing, she glanced down and nervously shook </p>
+<p>her shoulders. This had the unintended eﬀect of dragging her diamond-hard nipples back </p>
+<p>and forth across Kat’s enormous naked breasts.</p>
+<p>She worried she had stumbled into yet another reason to apologize, but paused when </p>
+<p>she felt a curious warm sensation at the front of her chest. A moment later the feeling was </p>
+<p>spreading, and in a ﬁt of confusion she looked down to see that the entire front of her </p>
+<p>pajama top was soaking wet with a strange warm liquid. </p>
+<p>Kat said nothing, still beaming at Mel, seeming not to notice her own nudity nor her </p>
+<p>roommate’s apparent confusion. She could barely suppress a giggle as she watched a </p>
+<p>realization slowly dawning on Mel’s face. Mel gasped and put one hand over her mouth.</p>
+<p>6</p>
+<p>“I’m so sorry for grabbing you, Kat! I didn’t know it would make you…  ah! Sorry!” Mel </p>
+<p>stammered, mortiﬁed, and took a step back.</p>
+<p>Kat pretended to notice her own dripping milk for the ﬁrst time. She reached forward, </p>
+<p>her arms fully outstretched, and made an elaborate show of trying to cover her spurting </p>
+<p>nipples. Tiny rivulets of milk almost immediately ran down her hands, betraying her proliﬁc </p>
+<p>lactation. She wrapped her arms around her incredible bosom and gave Mel a conspiratorial </p>
+<p>smirk.</p>
+<p>“Oops! Sorry Mel, I think I squirted on you a little,” she oﬀered, grinning broadly.</p>
+<p>“I’m… ah… I have to take a shower!” Mel said haltingly, then spun around, </p>
+<p>accidentally kicking aside a small, strangely-colored glass bottle with a cork stopper. She </p>
+<p>didn’t stay to wonder why Kat was always leaving her weird stuﬀ everywhere, instead </p>
+<p>dashing into the bathroom. She shut the door behind her, her heart racing.</p>
+<p>One look in the bathroom mirror conﬁrmed that her shirt was damp, even wet, with </p>
+<p>what she now knew to be Kat’s hot breast milk. Still shocked, she tugged on her </p>
+<p>overstretched shirt, yanking it over her head and tossing it to the ground. She stood in only </p>
+<p>her panties, pondering at herself, watching her own impressive bosom in the mirror as it </p>
+<p>heaved with her excited breaths.</p>
+<p>Kat was always so warm and open about everything except for the topic exempliﬁed </p>
+<p>by Mel’s soggy pajama shirt. Why was Kat so evasive about her lactation? Was she </p>
+<p>embarrassed? Mel couldn’t fathom such a thing, and the thought of her own big breasts </p>
+<p>producing milk made her nipples harden even further under her gaze.</p>
+<p>Her curiosity got the best of her, and she peered over the shelf of her chest down at the </p>
+<p>soaked mess of her pajama top on the ﬂoor. She bent slowly at her waist, her huge naked </p>
+<p>breasts colliding around her knees in great undulating waves, and grasped an especially </p>
+<p>damp part of her discarded top. Standing upright once again, she brought the shirt close to </p>
+<p>her nose and inhaled deeply.</p>
+<p>Kat’s hot milk smelled simply divine; an eﬀervescent symphony that ﬁlled her lungs and </p>
+<p>that she somehow felt warming the core of her being. At once she felt herself burning white-</p>
+<p>hot at her center, involuntarily bringing her knees together as the incredible aroma overtook </p>
+<p>her.</p>
+<p>7</p>
+<p>She felt frozen in place and developed a kind of tunnel vision, seeing little except for </p>
+<p>the shirt in her hand. She felt her mouth drop open, and increasingly more of her vision fell </p>
+<p>away as she brought the milky shirt ever closer to her outstretched tongue. She could </p>
+<p>almost imagine the taste of Kat’s hot milk.</p>
+<p>She had nearly touched victory when she caught a glimpse of herself in the bathroom </p>
+<p>mirror. Who was this slim brunette, ﬂushed red, nearly losing herself over the smell of her </p>
+<p>roommate’s lactation? She blinked slowly at herself, then looked down at the soaked </p>
+<p>pajama top in her grasp, frowning as she again tossed it aside. She didn’t notice it land atop </p>
+<p>a large unlit blood-red candle in a corner of the bathroom.</p>
+<p>She stepped over to the shower, turning on the hot water and stripping oﬀ her panties </p>
+<p>in a single practiced movement. Her close encounter with Kat’s milk and colossal breasts </p>
+<p>had her in a distracted haze that dulled her senses, and she hadn’t noticed until now that </p>
+<p>the front of her chest was feeling unusually warm. She reached an arm under each of her </p>
+<p>huge breasts and pressed upwards, tilting them back towards her face. </p>
+<p>Her suspicions were soon conﬁrmed: her nipples had fully erected, thrusting </p>
+<p>prominently from her chest. Right now they seemed positively enormous, stretching out </p>
+<p>almost half again as long as she’d ever remembered seeing them, nearly to the length of her </p>
+<p>outstretched hand. She stared at them as they throbbed urgently just a few inches from her </p>
+<p>face, her mind reeling. How was this possible?</p>
+<p>The sound of running water seemed to fade into the background as Mel grasped her </p>
+<p>big breasts in both hands, realizing suddenly that they had never before felt quite this heavy. </p>
+<p>The deliciously warm sensation around the front of her chest was still tingling, and as she </p>
+<p>stared at her incredible nipples she could see them slowly stretching as they extended even </p>
+<p>longer.</p>
+<p>She gasped as an epiphany hit her. The front of her shirt… Kat’s milk! She quickly </p>
+<p>stepped inside the shower, moving her huge chest directly under the hot water. The </p>
+<p>unnatural warmth in her chest seemed to fade as if washed away by the shower streams. </p>
+<p>She furrowed her brow, grasping and hefting her huge chest to inspect it more closely under </p>
+<p>the rushing water.</p>
+<p>It was immediately obvious that her bosom had grown larger. She felt the increased </p>
+<p>mass of her breasts, and she had no doubts that her big nipples were longer now than she’d </p>
+<p>8</p>
+<p>ever known them to be. She quickly ruled out more mundane explanations for her growth, </p>
+<p>instead ﬁnding her thoughts drawn back towards her roommate.</p>
+<p>She knew that she’d been ogling Kat in the two days since she moved in. Her easy </p>
+<p>laugh, her beautiful features, her astonishing breasts, her milk! That incredible blonde with </p>
+<p>the oversized chest was hard to ignore, and Kat’s evasiveness about her breast milk now </p>
+<p>seemed all the more conspicuous in Mel’s mind. Did Kat know that her milk would have this </p>
+<p>eﬀect?</p>
+<p>As Mel stood pondering under the shower spray, she felt herself heating up even more </p>
+<p>as she recalled the warm sensation of Kat’s massive chest against her own just minutes </p>
+<p>earlier. She knew that she needed to attend to herself, and here in the shower was one of </p>
+<p>her favorite places to do so. </p>
+<p>Her arms naturally gravitated towards her huge breasts. She rubbed and stroked them </p>
+<p>for long idle minutes, turning things over her mind, and found the delicious sensations from </p>
+<p>her tender ﬂesh to be especially pronounced today. Lost in thought, an errant turn to the </p>
+<p>side accidentally dragged her hard nipples across the wet tile, reminding her again of the </p>
+<p>amazing new length of her monstrous teats.</p>
+<p>She grasped her left breast with both hands and lifted, focusing on her huge left nipple </p>
+<p>as it towered into the air above her eye level. She wrapped her hand around it, amazed as </p>
+<p>its tip thrust gloriously beyond her curled ﬁngers. She’d always enjoyed showing oﬀ the </p>
+<p>incredible size of her huge nipples, but seeing them now longer than ever before had her </p>
+<p>imagining what Kat had been thinking during their ﬁrst meeting.</p>
+<p>As she marveled over the incredible power of Kat’s milk, she looked down to ﬁnd her </p>
+<p>hand had been gently sliding up and down the full length of her nipple. It felt incredible, and </p>
+<p>her other hand quickly reproduced those eﬀorts on her other erect teat. </p>
+<p>Stroking both nipples at once, she found herself squeezing her knees together from the </p>
+<p>incredible sensations. Her sexual fantasies had always involved her huge breasts and long </p>
+<p>nipples, but she’d never imagined she could know this level of pleasure from her own chest.</p>
+<p>She rode waves of bliss from her huge nipples, squeezing and releasing them in a </p>
+<p>quick rhythm. She imagined Kat standing beside her, her roommate’s colossal breasts ﬁlling </p>
+<p>almost all of the space in the narrow stall, forcing them to opposite ends of the shower. Kat </p>
+<p>9</p>
+<p>was slowly kneeling, her incredible breasts inching ever closer to Mel’s wet pussy, as Mel </p>
+<p>thrust her hips forward…</p>
+<p>Her climax overtook her suddenly, crashing into her as it shook her to her very center. </p>
+<p>She quivered and whimpered, then ﬁnally opened her eyes to ﬁnd herself alone in the </p>
+<p>shower, her hands still wrapped around her nipples. </p>
+<p>She moved both hands underneath her right breast and lifted it towards her face, </p>
+<p>leaning in close to stare at her nipple. It was smooth and ﬁrm, fully erect and impossibly </p>
+<p>long, and it looked positively delicious. She had always enjoyed indulging herself with her </p>
+<p>teats and they now seemed more inviting than ever.</p>
+<p>Extending her tongue, she licked along her nipple from base to tip. She repeated the </p>
+<p>gesture on the other side of her nub, amazed at how much new surface area she had to </p>
+<p>cover. She dove in with gusto, licking around her teat, then lifted her breast further and </p>
+<p>spent a happy moment rubbing her big nipple all over her face. </p>
+<p>She pulled it away, turning her head, then quickly swung her huge breast back in the </p>
+<p>other direction. Her massive erect nipple struck her own cheek with a loud wet slap before </p>
+<p>bouncing oﬀ. She laughed in amazement at the force of the impact, then leaned in again, </p>
+<p>slobbering all over her teat. She exalted in feeling its unyielding ﬁrmness resisting her gentle </p>
+<p>licks.</p>
+<p>suckle herself.</p>
+<p>She slurped her huge nipple into her mouth without further ceremony, pressing it </p>
+<p>between her tongue and the roof of her mouth. She sucked hard, immediately feeling an </p>
+<p>incredible rush of pleasure at the moist crush around her sensitive nub. Her knees again felt </p>
+<p>weak, and she leaned to the side, steadying herself against the tile wall as she continued to </p>
+<p>She ran her tongue over and around the full length of her nipple, enjoying its taste </p>
+<p>almost as much as the amazing sensations she felt. At once she had a curious thought, </p>
+<p>grinning deviously around the breast stuﬀed in her mouth, as she slid her left hand towards </p>
+<p>her groin. At the same time, her right hand pressed further upwards on her breast.</p>
+<p>Her nipple slid slowly backwards in her mouth as her ﬁngers neared her dripping pussy. </p>
+<p>She slipped a ﬁnger inside herself and gave one ﬁnal push with her other hand, her huge </p>
+<p>nipple barreling into her throat. Her eyes went wide suddenly; never had she known such </p>
+<p>10</p>
+<p>incredible pleasure, ﬁnding an even higher peak from the combined assault on her throat </p>
+<p>and pussy.</p>
+<p>She slipped another ﬁnger inside her pussy, stroking softly in time with her gentle </p>
+<p>suckling on her big nipple. She soon plunged over the edge once more, feeling her pussy </p>
+<p>squeezing her ﬁngers as she careened forward. She wheezed and laughed as her big nipple </p>
+<p>slipped out of her mouth, her huge right breast bouncing and settling next to its twin.</p>
+<p>Grasping her left breast with both hands and pressing it downwards, she grinned to </p>
+<p>herself as she felt her huge nipple poking around her abdomen. She dragged her teat ever </p>
+<p>so slowly across her bare pussy, her breath catching in her throat as her sensitive nub </p>
+<p>caught and released against her clit. </p>
+<p>She grasped her pointy nipple in her hand, pressing it ﬁrmly against her dripping pussy. </p>
+<p>Her hips thrust back and forth vigorously as she rubbed her pussy along its incredible </p>
+<p>length. It felt so hot and ﬁrm against her and she rode her own nipple to another shattering </p>
+<p>climax, amazed at her own ﬂexibility.</p>
+<p>She leaned her shoulder against the tile wall, panting and smiling, then gathered her </p>
+<p>huge chest in her arms. Hugging them tightly, she squeezed until she felt her big breasts </p>
+<p>bump gently against her chin. She rested her head in her cleavage, gently licking the </p>
+<p>sensitive skin of her breasts as she came down from her peak.</p>
+<p>She shut oﬀ the shower and toweled oﬀ, paying extra attention to her chest, which she </p>
+<p>noted with disappointment had shrunken somewhat to its normal size. Her nipples were still </p>
+<p>incredible, she thought, but nowhere near as marvelous as they’d been a few minutes earlier </p>
+<p>under the inﬂuence of Kat’s milk. </p>
+<p>Maybe if she asked nicely, Kat might help her grow again? And how exactly, she </p>
+<p>wondered, does one ask a girl to share her breast milk?</p>
+<p>She grinned at her reﬂection, wrapping her towel tightly around her torso and beaming </p>
+<p>at her huge ﬂaccid nipples bulging prominently through it. She gently ﬂicked both teats, </p>
+<p>biting her lip as they started to harden, thrusting visibly against the towel.</p>
+<p>Opening the door just a crack, she saw the coast was clear. She dashed down the </p>
+<p>hallway into her room, closing the door behind her with a relieved sigh. She slid on a fresh </p>
+<p>pair of panties and stood in front of her mirror, stretching an old t-shirt around her huge </p>
+<p>11</p>
+<p>shopping? </p>
+<p>earlier. </p>
+<p>table.</p>
+<p>breasts. She grinned with pride as the shirt failed to cover her bosom, leaving the bottom </p>
+<p>swells of her breasts mostly visible. Her half-erect nipples made large protrusions in the </p>
+<p>fabric that she hoped Kat would notice.</p>
+<p>She planned to enjoy a casual breakfast in their kitchen, wishing that Kat might wander </p>
+<p>in so she could watch keenly for Kat’s reaction to her big nipples. She steeled herself, </p>
+<p>praying that she could work up the courage to ask whether her feelings were mutual.</p>
+<p>She exited her room and paced into the kitchen. There was no sign of Kat, and she </p>
+<p>found herself almost relieved at the chance for a brief moment alone. Opening the fridge, </p>
+<p>she tilted her head quizzically; it was nearly empty. Hadn’t they just recently gone food </p>
+<p>Then again, she remembered that Kat had spent many hours the previous day cooking </p>
+<p>in their kitchen. She didn’t mind, ﬁnding herself not particularly hungry, still distracted as her </p>
+<p>thoughts drifted back to how long her nipples had grown in the shower a few minutes </p>
+<p>She spotted a plate on the counter piled high with chocolate chip cookies. She </p>
+<p>grabbed a few of them, then pulled a large glass bottle of milk and a few small reusable </p>
+<p>containers from the fridge. She placed everything on a large tray and sat at the kitchen </p>
+<p>She pried open the containers to ﬁnd a small wedge of cheese and a large dollop of </p>
+<p>whipped cream, then poured herself a small glass of milk from the bottle. She shrugged; </p>
+<p>she’d had stranger breakfasts than this in college, after all, and everyone knows that milk </p>
+<p>goes well with cookies!</p>
+<p>She spread some whipped cream onto a cookie and dunked it into the glass of milk. </p>
+<p>Grinning, she ate the entire mess in a few quick bites; it was delicious! She had just </p>
+<p>swallowed a chunk of the wedge of cheese, enjoying the sweet taste, when she sensed </p>
+<p>motion in the corner of her eye.</p>
+<p>“What’s for breakfast?” Kat asked, grinning broadly as she leaned in the kitchen </p>
+<p>doorway. Mel noted that her roommate had ﬁnally made herself decent, although decency </p>
+<p>for a ﬁgure like Kat’s was perhaps a moving target. </p>
+<p>12</p>
+<p>Kat was wearing an oversized t-shirt that was clearly too small for her stupendous </p>
+<p>breasts. Large crescent moons of her bare ﬂesh were visible as they hung below the bottom </p>
+<p>hem of her shirt. At their lowest depths, Mel was amazed to see that Kat’s enormous bosom </p>
+<p>stretched nearly to her knees. Kat seemed barely able to ﬁt herself through the kitchen </p>
+<p>doorway.</p>
+<p>throat.</p>
+<p>milk.”</p>
+<p>roommate.</p>
+<p>shirt.</p>
+<p>again.</p>
+<p>Mel hesitated a moment, seeing two familiar dark spots appear at the front of Kat’s </p>
+<p>shirt and quickly start spreading in all directions. Her eyes widened and once again she </p>
+<p>couldn’t help her own curiosity.</p>
+<p>“Do you… are you always milking like that?” she queried, her breath catching in her </p>
+<p>Kat threw her head back and laughed, the sudden motion making her colossal chest </p>
+<p>leap and bounce in a stunning display of jiggling ﬂesh. </p>
+<p>“Most of the time, yes,” Kat nodded. “But I’ve found some… creative uses for my </p>
+<p>Mel suddenly felt her heart drop. She looked down at the spread before her, ﬁnding it </p>
+<p>entirely gone - she’d wolfed down the small wedge of cheese, the dollop of whipped cream, </p>
+<p>and had ﬁnished drinking all of the milk. She was stunned by a sudden realization.</p>
+<p>“That whipped cream! It was made from your… your…” Mel started, staring at her </p>
+<p>“Breast milk,” smiled Kat, patting the sides of her enormous bosom in her overstuﬀed </p>
+<p>Mel’s mouth dropped open. She felt her half-erect nipples starting to stretch longer </p>
+<p>“The cheese and cookies?” she queried, but she suspected she knew the answer.</p>
+<p>Kat nodded. “Milk is a versatile ingredient, you know,” she said, but her roommate </p>
+<p>didn’t seem to hear her. Mel was staring at the nearly empty glass jar on the table, which </p>
+<p>now contained but a few droplets of a milky white liquid.</p>
+<p>“That jar…” Mel said, staring at it. “This was all made with your milk? Why?”</p>
+<p>Kat was beaming. “I think we’re about to ﬁnd out.”</p>
+<p>13</p>
+<p>Mel tilted her head quizzically at Kat’s latest non-answer. She had opened her mouth to </p>
+<p>speak when suddenly she felt a warm sensation in her bosom. Her huge nipples burned as </p>
+<p>they stretched longer, straining gloriously against the front of her shirt and rising to great </p>
+<p>peaks in the fabric. </p>
+<p>There was a heavy silence for a long moment. Mel had frozen in place, her breath </p>
+<p>caught in her throat, feeling the warm sensation in her chest increasing. It was strangely </p>
+<p>familiar, like her experience earlier in the shower, but now far more intense.</p>
+<p>A hole suddenly ripped open in Mel’s shirt under her right arm, exposing a large swath </p>
+<p>of the smooth skin of her breast. She didn’t seem to notice, though, as she was feeling </p>
+<p>especially distracted by watching Kat idly stroking her own enormous chest.</p>
+<p>A moment later she felt her nipples unexpectedly rubbing against the edge of the table. </p>
+<p>That shouldn’t have been possible, though, as she always made sure to give her huge chest </p>
+<p>plenty of room when sitting down… hadn’t she? Frowning, she tore her eyes away from </p>
+<p>Kat’s milky breasts. </p>
+<p>After another moment, she could sense that her big nipples had fully erected, straining </p>
+<p>gloriously forwards, and she was certain that Kat would be able to see the huge peaks in the </p>
+<p>front of her shirt. She made eye contact with Kat, seeing the blonde glancing down and </p>
+<p>grinning broadly at Mel’s predicament.</p>
+<p>“Kat, what’s happening? Are you making me bigger?” Mel whispered, trying to conceal </p>
+<p>her excitement at the prospect of her breasts again growing larger, her mind racing.</p>
+<p>“Well, I’ve seen the way you look at me, and I think you’re super cute, so…” Kat replied </p>
+<p>with a chuckle, twirling her blonde hair in her ﬁngers.</p>
+<p>Mel felt another surge of growth as her huge chest leaped forward, straining her </p>
+<p>already-overtaxed shirt and tearing open a new hole under her other arm. She felt her </p>
+<p>nipples expanding further, now even longer than they’d been earlier in the shower, as they </p>
+<p>fought the constricting pressure of her shirt.</p>
+<p>Mel was glancing rapidly between her surging chest and her roommate. Her growing </p>
+<p>nipples slowly pushed her empty plate away from her. She had never known her teats to be </p>
+<p>this impossibly long before, and she estimated that the enormous peaks in her shirt were </p>
+<p>now far beyond the length of her entire hand.</p>
+<p>14</p>
+<p>“But… how? How are you doing this?” she queried. She had already dismissed more </p>
+<p>mundane explanations for her growth, leaving her uncertain, but she knew Kat had to be </p>
+<p>involved somehow. </p>
+<p>“It’s magic,” Kat admitted, awkwardly rubbing her neck. “It’s why I’m milking, and it’s </p>
+<p>also why I…” she started, then trailed oﬀ.</p>
+<p>“Magic?” Mel said, arching an eyebrow as her lengthening nipple pushed her empty </p>
+<p>glass across the kitchen table.</p>
+<p>“You know, spells and incantations and cantrips. Pew pew!” Kat giggled.</p>
+<p>Mel stared at her, unblinking.</p>
+<p>“Sure, right, magic,” she said slowly. “And it’s also why you… what?”</p>
+<p>“I… well, maybe I’ll show you later,” Kat grinned at her.</p>
+<p>Mel felt a sudden relief, as if a great weight had been lifted, but she realized a moment </p>
+<p>later it had been the last threads of her overstuﬀed shirt ﬁnally giving way to her swelling </p>
+<p>breasts. Her top fell in tatters around her slender form, revealing the great mounds of her </p>
+<p>chest. The fabric around her huge nipples thankfully remained in place for now, leaving her </p>
+<p>with one last modicum of decency.</p>
+<p>“Mel, your nipples! They’re so big!” Kat exclaimed, eyes wide, and Mel felt a ﬂush of </p>
+<p>pride through the haze of her arousal. She was pleased that Kat seemed as impressed by </p>
+<p>her teats as she was herself.</p>
+<p>Mel scooted her chair a few inches up and leaned forward, resting her rapidly growing </p>
+<p>breasts on the table. Her teeth clenched as her huge nipples suddenly surged several inches </p>
+<p>longer, sending her drinking glass ﬂying, which struck the ﬂoor and miraculously remained </p>
+<p>unbroken. The sensations from her chest felt amazing, but something was sticking in her </p>
+<p>mind. </p>
+<p>“So, magic, huh?” she pondered. “You’re not, like, 500 years old, are you?”</p>
+<p>Kat let out a lengthy guﬀaw, her colossal chest shimmying and shaking as she stood in </p>
+<p>the doorway. Numerous rivulets of milk were running down the exposed undersides of her </p>
+<p>breasts, then dripping to the ﬂoor.</p>
+<p>15</p>
+<p>“Your breasts and nipples are growing huge from my magic, and that’s the ﬁrst thing </p>
+<p>you ask me?” she wheezed through her laughter, before continuing.</p>
+<p>“No sweetie, I’ve only been practicing magic for a few weeks. But my ﬁrst experiments </p>
+<p>have been in… well, liquid control. That’s what started my milk and my…” she started, then </p>
+<p>trailed oﬀ again. She awkwardly shifted her weight, directing her squirting milk away from </p>
+<p>the side of the fridge she’d been splattering.</p>
+<p>Mel didn’t ﬁnd this to be a particularly satisfying answer. Today she learned that magic </p>
+<p>was real, as evidenced by her breasts still spreading across the kitchen table. They pushed </p>
+<p>ever higher, nearly rising to obscure her chin from Kat’s view. She found herself growing </p>
+<p>more suspicious of Kat, and was about to enquire further when she was interrupted by a </p>
+<p>sudden exclamation from her roommate.</p>
+<p>“M-Mel! Your nipples! They’re…” Kat started, her eyes wide. She was now </p>
+<p>enthusiastically kneading and squeezing her own massive breasts, her hot milk issuing forth </p>
+<p>in great spurts that sprayed several feet in front of her even through the soaked fabric of her </p>
+<p>shirt. </p>
+<p>Mel found herself wondering how it might feel to lactate as easily and profusely as Kat. </p>
+<p>Her right hand had unconsciously started creeping towards her groin when her bare foot </p>
+<p>rather unexpectedly slid through a puddle of warm liquid on the ﬂoor. Maybe she’d spilled </p>
+<p>some of Kat’s milk from her drinking glass?</p>
+<p>Her nipples felt positively enormous, dense and sensitive with her urgent need, but </p>
+<p>something shifted and the sensation felt diﬀerent, unlike any pleasure she had known </p>
+<p>before. Reaching forward, she found that her chest had swollen so large across the kitchen </p>
+<p>table that her fully-outstretched arms could just barely grasp the base of her huge nipples. </p>
+<p>She instinctively squeezed them tightly even as they continued stretching forwards, </p>
+<p>straining until they were nearly out of her reach. Still, she wasn’t certain of the cause of Kat’s </p>
+<p>apparent alarm. Kat saw Mel’s confused face and tried to help her along by stating the </p>
+<p>obvious.</p>
+<p>“Mel! You’re milking!” Kat exclaimed, then took a few steps forward, placing herself on </p>
+<p>the other side of the table directly in front of Mel. Her own massive bosom was still spurting </p>
+<p>milk, spraying through her tight shirt and raining down on Mel’s growing breasts.</p>
+<p>16</p>
+<p>With little ceremony, Mel pulled her tattered pajama shirt over her head and tossed it </p>
+<p>aside, leaving her topless. Her monstrous chest now covered all of their kitchen table and </p>
+<p>had started overﬂowing the sides. She grinned, closing her eyes for a moment to enjoy the </p>
+<p>warm sensation of Kat spraying milk all over her sensitive breasts. </p>
+<p>After a long while in which Mel felt her chest completely covered with a thick coating of </p>
+<p>Kat’s milk, she opened her eyes to see an unexpected sight: arcs of milky white liquid were </p>
+<p>spraying forcefully from her own nipples towards her roommate. </p>
+<p>It felt simply divine to express her milk, and she now realized it was no big surprise that </p>
+<p>Kat enjoyed it so. It was like her own special kind of magic, issuing forth gloriously from her </p>
+<p>turgid teats. She’d never imagined that her deepest sexual fantasy would come true, and </p>
+<p>certainly not with such overabundant milky excess.</p>
+<p>She stood slowly, still resting her swelling breasts on the table, and peered forwards </p>
+<p>over the great swells of her chest. Her nipples had lengthened to an astonishing new size, </p>
+<p>extending nearly as long as her forearm and thicker than two of her ﬁngers together. They </p>
+<p>were incredibly sensitive and she felt as if she could detect every rivulet of her milk dripping </p>
+<p>down their distended forms.</p>
+<p>Great arcs of milky essence were spraying from her incredible nubs, splashing wildly all </p>
+<p>over everything in front of her: the ﬂoor, the fridge, the stove, and Kat. Large sheets of </p>
+<p>excess milk ran down her swollen nips, falling to a growing puddle on the ﬂoor below or </p>
+<p>continuing to roll down the undersides of her surging breasts.</p>
+<p>Kat laughed, reveling in the apparently successful results of her magic, feeling her </p>
+<p>entire body being covered by the abundant spray from Mel’s milky teats. As she stood </p>
+<p>watching, Mel’s lactation seemed to increase even further, and a stray stream of milk </p>
+<p>knocked a small portrait oﬀ the wall nearby. Kat’s expression turned to surprise and then </p>
+<p>concern. </p>
+<p>“Mel, it wasn’t supposed to be… quite so much,” she pondered, placing one hand on </p>
+<p>her hip as both girls’ colossal breasts continued spraying milk on each other.</p>
+<p>Mel didn’t seem to hear her. Kat watched as Mel’s hands disappeared beyond the wall </p>
+<p>of her breasts, reappearing under the table near her panties.</p>
+<p>17</p>
+<p>Kat’s eyes widened and she dashed forward as quickly as her chest would allow, </p>
+<p>taking care to avoid the growing puddle of milk on the kitchen ﬂoor. She swung her massive </p>
+<p>breasts to the side and grabbed Mel’s arms with both hands, pulling them away from Mel’s </p>
+<p>groin.</p>
+<p>“Mel, no! I can ﬁx this, but you can’t cum! Not yet!” she pleaded, speaking loudly over </p>
+<p>the metallic splatter of Mel’s milk striking their fridge. </p>
+<p>Mel saw the urgency in Kat’s eyes and her expression softened.</p>
+<p>“Okay. I trust you, Kat,” she smiled.</p>
+<p>Kat was ﬂattered and blushed for a moment, then leapt to action.</p>
+<p>“C’mon! To my room!” she stressed, helping Mel to stand upright and slide her swollen </p>
+<p>breasts oﬀ the kitchen table. With Mel standing beside her, she could see that Mel’s chest </p>
+<p>had grown every bit as large as her own, extending below Mel’s waist and projecting nearly </p>
+<p>an arm-length in front of her. </p>
+<p>Mel clearly wasn’t used to the weight of her bosom, but with Kat’s guidance and gentle </p>
+<p>touch, they were able to shuﬄe-slide over to the kitchen doorway together. Kat’s room </p>
+<p>beckoned, merely a few feet in front of them, and Kat clenched her teeth with resolve.</p>
+<p>Mel was the ﬁrst to pass through the doorway, sliding sideways one breast at a time </p>
+<p>and wincing as each of her extremely long nipples knocked against the doorframe. Her </p>
+<p>incredible breasts were still gushing, and her wildly bouncing nipples were very eﬀectively </p>
+<p>spraying her milk over large sections of the walls in their hallway.</p>
+<p>She suddenly felt the gentle pressure and hot embrace of Kat’s enormous breasts </p>
+<p>pressing into her from behind. A wet sensation ran down her back, making her grin to </p>
+<p>herself at the feel of Kat’s hot milk on her bare skin. She staggered ahead through the </p>
+<p>doorway into Kat’s room.</p>
+<p>She hadn’t been inside this room since Kat moved in and took a moment to glance </p>
+<p>around. Her curiosity was derailed, however, when she caught her own reﬂection in a full-</p>
+<p>length mirror near Kat’s bed. She saw her newly colossal breasts dangling around her </p>
+<p>knees, obscuring her groin and most of her thighs in her reﬂection, and they had stretched </p>
+<p>so far in front of her that she doubted she could even reach her own spurting nipples. </p>
+<p>18</p>
+<p>Suddenly the lower third of the mirror was covered in a generous spray of milky </p>
+<p>whiteness. She could see in her reﬂection that her amazing nipples had continued growing </p>
+<p>longer, now nearing the length of her entire arm. They continued their unrelenting spray, </p>
+<p>soon covering the rest of the mirror. Her teats felt simply divine, the focal point of the </p>
+<p>burning need she now felt.</p>
+<p>Kat pushed past Mel into her room, continuing to the foot of her bed. She quickly </p>
+<p>stripped oﬀ her panties and oversized shirt, then sat on the edge of the bed facing her </p>
+<p>“Hey, Mel,” she smirked, calling towards the brunette with the huge nipples spraying </p>
+<p>Kat waited for Mel to turn to face her, then reclined somewhat, her massive breasts </p>
+<p>resting taut and ﬁrm atop her knees. Her nipples were fully erect, spraying great arcs of her </p>
+<p>milk that landed in the carpet near Mel. She spread her legs wide and exposed her beautiful </p>
+<p>“You need to put your nipple into my pussy. Both of them, if you can,” she remarked </p>
+<p>oﬀhandedly, as if she’d asked Mel to pass the salt.</p>
+<p>Mel’s mouth fell open, as much from the sight of her beautiful nude roommate as from </p>
+<p>“My… what? In your pussy?” came her uncertain reply.</p>
+<p>“Look, do you want to keep growing forever?” Kat shot back, rolling her eyes, then </p>
+<p>“Now that you mention it, if it feels this good…” Mel giggled, squelching around on the </p>
+<p>roommate. </p>
+<p>down her mirror.</p>
+<p>bare pussy.</p>
+<p>her peculiar request.</p>
+<p>realized her mistake.</p>
+<p>wet carpet. </p>
+<p>“I’ve wanted to see that pretty pussy,” she grinned, then shimmied her spurting breasts </p>
+<p>until she was standing between Kat’s slender spread legs.</p>
+<p>She kneeled to rest her enormous bosom on the wet carpet around her, then leaned </p>
+<p>forward, admiring her roommate’s milk-soaked blonde hair dripping onto the bed. Kat </p>
+<p>leaned in towards her and they shared their ﬁrst kiss.</p>
+<p>19</p>
+<p>As their lips embraced, the dull roar of Mel’s milk splattering against the paneling on </p>
+<p>Kat’s bed seemed to fade away. Time seemed to slow down as they lost themselves in their </p>
+<p>kiss, sliding their lips and tongues together in a torrid mess that left both of them gasping. </p>
+<p>Kat leaned back after a minute, panting wildly, and extended her tongue. Mel smiled, </p>
+<p>slurping the blonde’s tongue into her mouth and pulling on it with a gentle sucking motion. </p>
+<p>She felt herself burning hotter as she shared such delicate intimacy with this beautiful girl.</p>
+<p>Mel fell backwards onto her taut bottom after another minute, wheezing from the </p>
+<p>intensity of their kiss. Kat grinned widely, then gestured down towards her wet center. Mel </p>
+<p>leaned forward again, peering closely at Kat’s pussy.</p>
+<p>It was beautifully proportioned and perfectly hairless, and Mel found herself wondering </p>
+<p>whether Kat had employed her magic here as well. As she continued staring, it started </p>
+<p>glistening with moist wetness, and she was amazed to see Kat’s dripping arousal ﬂowing </p>
+<p>seemingly without end onto the bed below her.</p>
+<p>“You’re so wet, Kat!” Mel marveled. “You’re dripping!”</p>
+<p>Kat had closed her eyes, enjoying the heat of her roommate’s body between her legs. </p>
+<p>She cracked one eye open and winked.</p>
+<p>“Yes, my love. That was, oooooh… an unexpected result of my liquid magic.”</p>
+<p>Mel’s eyes widened as Kat’s incredible pussy started spurting and gushing great sheets </p>
+<p>of her essence onto the carpet. The volume and intensity of Kat’s squirting increased until </p>
+<p>great jets of her arousal were spraying into Mel’s cavernous cleavage.</p>
+<p>Mel’s expression soured somewhat. Clearly lubrication wouldn’t be a problem, but as </p>
+<p>she poked at Kat’s gushing center with her ﬁngers, earning a moan from the blonde, she </p>
+<p>wasn’t sure how her enormous teats would squeeze in there. And both at the same time?</p>
+<p>“Kat, are you… are you sure my nipples will ﬁt?” she asked hesitantly. “I’ve never been </p>
+<p>this big before!” she remarked, amazed even at herself.</p>
+<p>Kat threw her head backwards, moaning loudly, and Mel wasn’t sure that her question </p>
+<p>was heard. A reply came a moment later in the form of a massive gush of squirt that </p>
+<p>splattered all over Mel’s breasts and neck, splashing up and soaking her face. She licked </p>
+<p>her lips; it tasted incredible.</p>
+<p>20</p>
+<p>Clenching her teeth with renewed determination, Mel wrestled and dragged her </p>
+<p>enormous bosom until both of her huge spurting nipples were pointing directly at Kat’s </p>
+<p>gushing pussy. Each of her teats was now easily the length of her forearm, sending forth </p>
+<p>great sprays of her milk that seemed to ﬂow without end. As she pressed her enormous left </p>
+<p>nipple against Kat’s pussy, her milk and Kat’s squirt splashed together in a cacophony of </p>
+<p>gushing liquid that was quickly drenching them both.</p>
+<p>Mel laughed with delirious glee, her long dark hair now soaked through with a </p>
+<p>combination of Kat’s gushing arousal and their combined milk. She pressed upwards and </p>
+<p>forwards on her huge left breast from below, and sure enough, her impossibly long nipple </p>
+<p>slid completely inside Kat’s gushing pussy.</p>
+<p>Both girls gasped loudly. Mel’s huge nipples had always been extremely sensitive, and </p>
+<p>they seemed to become even more so as they grew ever larger. Her turgid teat now felt </p>
+<p>simply divine, enveloped completely by the moist warmth of Kat’s magical pussy. Judging </p>
+<p>by Kat’s continued moaning, her roommate seemed to be enjoying the ride as well.</p>
+<p>Kat’s pussy continued its incredible deluge, catching Mel’s spurting milk and carrying </p>
+<p>their combined liquids out of her pussy to splash onto the bed beneath them. Mel grit her </p>
+<p>teeth with determination, her hands sliding along the wet skin of her colossal right breast as </p>
+<p>she tried to position her other nipple near its twin.</p>
+<p>With her right nipple waiting just outside Kat’s amazing pussy, Mel hoped she was </p>
+<p>mere inches away from a solution to her uncontrolled breast and nipple growth. She </p>
+<p>hesitated for a moment, considering whether, as Kat had asked her, she’d really wanted to </p>
+<p>stop growing after all. Living with breasts like these might introduce more than a few </p>
+<p>logistical diﬃculties, she thought, resolving at that moment to see Kat’s plan through to its </p>
+<p>end.</p>
+<p>Mel slid her enormous right nipple parallel with its twin, whimpering for a moment at </p>
+<p>the sensation of her nubs rubbing together, and continued pressing forward onto her right </p>
+<p>breast. Sure enough, Kat’s miraculous pussy parted further with an astonishing gush of </p>
+<p>squirt. Mel felt both enormous nipples ﬁnally enveloped together by the searing heat of Kat’s </p>
+<p>amazing pussy.</p>
+<p>Kat fell backwards onto the bed, writhing with pleasure. Mel could no longer see her </p>
+<p>roommate’s face but heard a crescendo of moaning that let her know she had hit her mark. </p>
+<p>21</p>
+<p>She wasn’t entirely certain what she was meant to do now that both of her massive nipples </p>
+<p>were buried inside Kat’s pussy. Shrugging to herself, she decided to improvise. </p>
+<p>Grasping a massive breast under each arm, she leaned and twisted her shoulders back </p>
+<p>and forth, making her best eﬀorts at thrusting her huge teats in and out of Kat’s gushing </p>
+<p>pussy. She couldn’t see below the curves of her chest, but she could sense Kat’s </p>
+<p>voluminous squirt rushing along her nipples until it combined with her milk and ran down her </p>
+<p>huge breasts. </p>
+<p>Mel’s eyes went wide when she suddenly felt her nipples being pressed tightly together </p>
+<p>inside Kat’s pussy. Over the next minute, Kat’s amazing pussy rhythmically squeezed and </p>
+<p>released, expertly massaging and milking Mel’s massive teats.</p>
+<p>“Kaaaaaat! Your pussy is milking my nipples so hard!” Mel cried.</p>
+<p>Mel continued her best eﬀorts at thrusting her teats in and out of Kat, but the weight of </p>
+<p>her breasts had become immense and she tired after barely a minute of exertion. Panting </p>
+<p>and wheezing, she again fell onto her taut bottom, leaning back until both of her massive </p>
+<p>nipples withdrew from Kat’s pussy with a wet-sounding <em>squelch</em> and a <em>pop</em>.</p>
+<p>Mel leaned forward, resting on top of her heaving bosom as she tried to catch her </p>
+<p>breath. The powerful sprays of her milk had ﬁnally slowed to a trickle, but she could feel her </p>
+<p>massive nipples remained just as huge and hard as before, longer than her forearm. Her </p>
+<p>breasts felt burning hot and engorged with what she now recognized to be her new milky </p>
+<p>potential. </p>
+<p>blonde’s milk.</p>
+<p>She looked up, frowning at the undersides of Kat’s colossal breasts as they rested on </p>
+<p>the blonde’s knees. Kat’s nipples were dripping their own milk in lazy streams that ran down </p>
+<p>the underside of her huge breasts. They were waving around in the air near Mel’s face, and </p>
+<p>Mel leaned over to give one of Kat’s teats a long, slow lick, savoring the taste of the </p>
+<p>“Kat, did it… did it work? My nipples were… in you, so why am I still so big?” she </p>
+<p>whispered, watching Kat’s breasts shimmy and rotate as her roommate strained to sit back </p>
+<p>up again, gasping for breath.</p>
+<p>“What? Oh, that was just for fun,” Kat grinned, still panting heavily. “Your nipples are </p>
+<p>amazing, Mel! I had to have them in my pussy.”</p>
+<p>22</p>
+<p>“Fun?” Mel sounded exasperated. “Kat, what am I going to do with these?” she said, </p>
+<p>gesturing at her titanic milky breasts. They ﬁlled the space between her and Kat’s bed, rising </p>
+<p>up to her eye level as she sat on the ﬂoor, yet remained taut and ﬁrm. Kat’s expert eyes </p>
+<p>recognized their color; Mel’s breasts looked angry with milk.</p>
+<p>Kat laughed again, her wet blonde hair shaking loose droplets of Mel’s milk. </p>
+<p>“Like you didn’t enjoy that?”</p>
+<p>Mel rolled her eyes, but she knew Kat was right, and she couldn’t help but smile </p>
+<p>despite her predicament. Kat leaned forward, seeing Mel’s expression soften, and they </p>
+<p>shared another leisurely kiss. After a minute of their tongues writhing together, Mel moaned </p>
+<p>her satisfaction and sat back as Kat oﬀered her another suggestion.</p>
+<p>“Come, Mel. Bring your nipples up here,” Kat said, gently patting the top swells of her </p>
+<p>own breasts. At the same time, she brought her slender legs close together and slid her foot </p>
+<p>forward under Mel. Mel gasped when she felt Kat’s delicate toes sliding along her wet </p>
+<p>pussy. </p>
+<p>Mel strained to grasp and lift her chest, standing up on her knees until she felt Kat’s </p>
+<p>toes sliding away from her pussy as her massive breasts settled on top of Kat’s. She </p>
+<p>ﬁnished shifting her weight with one ﬁnal exertion, swinging her leg up and around until she </p>
+<p>was straddling one of Kat’s toned legs. </p>
+<p>Mel looked up to see an incredible sight: Kat had pressed on Mel’s chest, positioning </p>
+<p>both hugely distended nipples between their faces, towering upwards as they continued to </p>
+<p>exude lazy streams of her milk. Kat gave her a conspiratorial wink and leaned in, licking </p>
+<p>along one of Mel’s massive nipples from base to tip. She collected the dripping milk on her </p>
+<p>tongue, then opened her mouth to reveal the milky bounty still within.</p>
+<p>Mel couldn’t help herself and immediately pressed her lips to Kat’s. They embraced </p>
+<p>with urgency, passing Mel’s delicious milk back and forth until they had swallowed it </p>
+<p>between them. Mel sucked hard on Kat’s milk-slickened tongue, then inserted her own </p>
+<p>tongue in Kat’s mouth and thrilled as her friend returned the gesture.</p>
+<p>Both girls licked and sucked Mel’s towering nipples for long idle minutes, slurping her </p>
+<p>dripping milk and occasionally leaning in to share a milky kiss. They slid their lips together, </p>
+<p>23</p>
+<p>then around Mel’s turgid nipples, and back together again as their faces were gradually </p>
+<p>covered with Mel’s proliﬁc milk. </p>
+<p>Mel marveled that her huge nipples, pressed together, were now thick enough to </p>
+<p>almost entirely obscure Kat’s pretty face from her view. She busied herself on her own </p>
+<p>impossible teats, licking up, down, and all over their huge lengths and occasionally feeling </p>
+<p>Kat’s tongue sliding against her own as they made love to her nipples together.</p>
+<p>Mel found herself pressing down on her huge right breast until her throbbing nipple </p>
+<p>pointed directly up at her face. She couldn’t get enough of her own delicious milk, and she </p>
+<p>opened her mouth wide to take in as much of her teat as she could. She had to stretch her </p>
+<p>lips to ﬁt around the incredible girth of her teat, ﬁtting only a small part of its enormous </p>
+<p>length into her mouth. She sucked hard, closing her eyes, feeling the glorious moist heat </p>
+<p>against her sensitive nub.</p>
+<p>A minute later she popped her nipple out of her mouth, exhilarated at the sensation of </p>
+<p>the cool air on its incredible size. She reveled in the taste of her own milky essence.</p>
+<p>“My milk! Oh Kat, it tastes so good!” she exclaimed, her eyes still closed with pleasure.</p>
+<p>She suddenly felt the warmth of Kat’s mouth enveloping her other nipple. Kat was </p>
+<p>sucking expertly on her teat, the great arcing sprays of her lactation being drawn into Kat’s </p>
+<p>mouth. The sensation of her nipple being suckled so urgently was joined at that moment by </p>
+<p>a curious warm pressure on her dripping pussy she felt from below. </p>
+<p>Kat had lifted her slender leg and was once again rubbing her dainty toes up and down </p>
+<p>Mel’s dripping pussy, even as she continued to suckle on Mel’s throbbing teat and swallow </p>
+<p>her milk. Mel felt herself suddenly cresting, teetering on a knife’s edge. Her hands shot </p>
+<p>downwards and she pushed Kat’s leg down to the ground, then shimmied herself forward </p>
+<p>until she was straddling Kat’s knee.</p>
+<p>Mel pressed her dripping pussy against Kat’s leg, then started urgently rocking her </p>
+<p>hips, grinding against Kat’s knee and thigh until they were covered in a slick sheen of her </p>
+<p>wetness. The gentle pressure of Kat’s ﬁrm skin rubbed most deliciously against her clit, and </p>
+<p>she felt herself gasping as she plunged over the edge.</p>
+<p>Kat’s mouth was still stuﬀed with Mel’s massive nipple, her eyes bulging as a sudden </p>
+<p>gush of milk ﬂooded her throat. She did her best to swallow all of Mel’s spurting essence, </p>
+<p>24</p>
+<p>but she couldn’t keep up and the excess milk gushed from her mouth, splashing down onto </p>
+<p>her own huge chest. She pulled Mel’s huge teat from her mouth with a wet <em>pop</em> and </p>
+<p>gasped for air.</p>
+<p>Mel laughed from the intensity of her orgasm and the sight of her milk nearly </p>
+<p>overwhelming her roommate. She felt a moment of great aﬀection for Kat, for having shown </p>
+<p>her such incredible pleasure.</p>
+<p>Kat was catching her breath, her hand wrapped around Mel’s towering nipple. Mel saw </p>
+<p>it still lazily exuding her milk, dripping down its length in small white rivulets that pooled </p>
+<p>together and ﬂowed down her colossal breast. </p>
+<p>Her chest had at long last stopped growing and she paused for a moment to take in its </p>
+<p>immense majesty. Kat was grasping her left nipple ﬁrmly, while her right nipple had grown </p>
+<p>past her roommate and was dangling in the air over the far side of the bed. </p>
+<p>Kat sighed and smiled, leaning her head against the inner wall of Mel’s colossal right </p>
+<p>breast. Mel had never imagined her own chest would be able to envelop Kat’s monstrous </p>
+<p>bosom, let alone her roommate’s entire body. Her impossible breasts now covered her </p>
+<p>roommate’s to a far greater extent than Kat had done to her in the hallway earlier that </p>
+<p>morning.</p>
+<p>“You’re so beautiful, Kat,” Mel spoke slowly through the haze of her arousal. </p>
+<p>“So are you, my love… oh!” Kat said dreamily, then interrupted herself with a gasp.</p>
+<p>Mel felt two sudden wet sensations near the lower reaches of her massive breasts. She </p>
+<p>couldn’t place them until a moment later, when her ﬁrm stomach was struck by what felt like </p>
+<p>a jet of hot liquid that dripped down her legs. It was followed shortly by a continuous series </p>
+<p>of wet splashes gushing against her abdomen, each of them increasing in intensity and </p>
+<p>volume. Suddenly alarmed, she struggled to her feet and peered down into her cleavage.</p>
+<p>Kat was now staring at her own breasts, her arms atop them as she tried to grasp and </p>
+<p>squeeze their incredible masses. She looked up at Mel, her eyes wide with surprise.</p>
+<p>“Mel! I’m not sure what… oh!” she gasped again, feeling a curious warm sensation in </p>
+<p>her chest. Both girls could see Kat’s huge breasts start to swell even larger. </p>
+<p>“Your milk!” Kat gasped. </p>
+<p>25</p>
+<p>“Mistress did warn me about magic being visited upon its caster…” she pondered, </p>
+<p>trailing oﬀ. She threw her head back, moaning from the powerful magic she suddenly felt </p>
+<p>enveloping her growing chest. She could see her breasts surge outwards, pressing against </p>
+<p>Mel’s massive bosom, and both of them felt her milky spray increasing. </p>
+<p>Mel was grinning widely from the feel of Kat’s hot milk splashing on her sensitive </p>
+<p>breasts.</p>
+<p>“So, you can just magic us smaller again, right Kat?” she smiled at the blonde girl </p>
+<p>inside her cleavage, feeling the gentle pressure of Kat’s growing breasts against her own.</p>
+<p>Kat looked up, biting her lip.</p>
+<p>“I’m only an apprentice, Mel!” she harrumphed. </p>
+<p>“I… haven’t gotten to that part yet.” she ﬁnally admitted sheepishly.</p>
+<p>Mel laughed heartily and leaned in close to share another long kiss with Kat. She felt </p>
+<p>her roommate’s huge milky breasts still swelling larger against her own and she couldn’t </p>
+<p>imagine a more perfect Sunday.</p>
+<p>Some time later that morning, Kat’s colossal chest had grown over and beyond Mel’s </p>
+<p>breasts, cascading down onto the carpet behind Mel. Mel had to lean far back with her arm </p>
+<p>outstretched to softly squeeze one of Kat’s nipples, Kat’s hot milk running down her arm </p>
+<p>and back in great milky rivers. Both girls were smiling happily at one another, now and then </p>
+<p>leaning in to leave quick wet kisses on each other’s lips.</p>
+<p>Kat was idly sliding a hand in long strokes up and down Mel’s milk-slickened nipple, </p>
+<p>making its owner whimper quietly in pleasure, when both girls heard a sudden clicking </p>
+<p>noise. The distinctive click-click of a pair of high heels drew ever closer. At long last, a ﬁgure </p>
+<p>arrived in the dripping wet doorway.</p>
+<p>Kat’s eyes leapt upwards and a ﬂash of recognition dawned on her face.</p>
+<p>“Mistress?!”</p>
+<p>(cid:15911)</p>
+<p>26</p>
+<p>Treats at Melanie’s </p>
+<p>by purplish [email]</p>
+<p>(For adult eyes only: lesbian, breast/nipple expansion, lactation. All characters are 18+) </p>
+<p>Continuing from Lunch at Melanie’s… </p>
+<p>Melanie drifted into a timeless void and darkness overcame her. After an indeterminate while, </p>
+<p>she awoke and opened her eyes only to ﬁnd that everything was still dark.</p>
+<p>The last thing she remembered was the Archmage, who had suddenly appeared in the living </p>
+<p>room of the apartment she shared with Katrina. The Archmage’s immense nude breasts had ﬁlled </p>
+<p>the room from ﬂoor to vaulted ceiling, and the powerful magical energy they radiated had left her </p>
+<p>struggling to remain standing, but had she imagined it? That impossible bosom had seemed so </p>
+<p>real, and she could still feel a curious warm sensation on her hips where the Archmage’s huge </p>
+<p>nipples had wrapped around her.</p>
+<p>And what of Katrina? Her roommate had moved in only a few days earlier, soon revealing </p>
+<p>herself to be an apprentice mage, and in that time Mel had more than a few encounters with Kat’s </p>
+<p>liquid magic. She last remembered seeing Kat standing by her side in their living room, her </p>
+<p>roommate’s blonde hair soaked through with her own breast milk. They were holding hands, and </p>
+<p>she had been squeezing Kat’s hand tightly…</p>
+<p>After a moment pondering, she found herself distracted by a pressure against her skin. There </p>
+<p>was a warm, ﬂeshy mass squeezing gently in on her from all sides. She felt it across her entire </p>
+<p>body, realizing suddenly that she was nude within this dimensionless dark space.</p>
+<p>She reached to her sides, pushing the warmth away, and soon began ﬂailing with both arms </p>
+<p>and legs. Her ﬂeshy prison was as unyieldingly ﬁrm as it was vast, though, and it swelled ﬁrmly </p>
+<p>back into place after each of her blows. She noted with interest that, rather than a single large </p>
+<p>shape, it felt more akin to being squeezed gently from both sides between two distinct masses.</p>
+<p>As much space as she had created, there always seemed to be more of the jiggly darkness </p>
+<p>surrounding her, which for all its staggering expanse and curious nature at least felt reassuringly </p>
+<p>warm on her skin. Drawing her arms in towards her body, leaving seemingly barely any air around </p>
+<p>her, she was relieved to ﬁnd she didn’t have any trouble breathing. What magic was this?</p>
+<p>There was something else, too: a dull throbbing that she recognized as a powerful magical </p>
+<p>presence somewhere nearby. It felt simply divine, as if she were absorbing it, growing from it, and </p>
+<p>1</p>
+<p>making its power part of her being, merely by being so close to its source. She felt herself getting </p>
+<p>hotter, her arousal buoyed as much by the electric magical potential as from the sensation of </p>
+<p>warm ﬂesh against her skin.</p>
+<p>Flipping herself head over heels, she had the distinct sense that she was now hanging </p>
+<p>upside-down. She paused, the blood rushing to her head, before rotating around the other way </p>
+<p>until she felt herself upright once again. Pushing herself in the opposite direction, she ascended </p>
+<p>upwards, climbing ever higher, and kept squeezing and sliding and rubbing until a ray of blinding </p>
+<p>sunlight shone upon her through a small crack in the ﬂesh.</p>
+<p>She thrust her arms straight out with all of her might, forcing the opening wide...</p>
+<p>...only to reveal Mistress Zara’s beautiful visage beaming down at her. She blinked rapidly, </p>
+<p>her eyes adjusting to the bright light, and she was certain that she’d glimpsed behind Zara the </p>
+<p>front door of the apartment she shared with Katrina. </p>
+<p>Zara winked knowingly at her and held a ﬁnger to her lips. A moment later the opening </p>
+<p>slammed shut, leaving her in darkness once more.</p>
+<p>Mel’s heart was racing. The warm ﬂesh wrapping around her whole body, supporting her </p>
+<p>entire weight, could only be… Mistress Zara’s enormous breasts. Could she escape? Did she even </p>
+<p>want to? If she did, she’d be nude in public... or wherever Zara was taking her.</p>
+<p>Zara’s great ﬂeshy abundance felt simply wonderful as it slid against her skin, and Mel felt </p>
+<p>herself becoming even more aroused. Her unruly nipples, which had been magically enhanced </p>
+<p>earlier that day by Katrina and Zara, started swelling thicker and longer.</p>
+<p>She focused on them, bringing her teats to the front of her mind. As big as they were, she </p>
+<p>sensed a nearly unbounded potential within them, as if she could merely will them to become as </p>
+<p>huge as she desired. They were quickly hardening with her arousal, becoming longer and thicker </p>
+<p>as they reﬂected her growing need.</p>
+<p>There was something else, too: a strange new sensation, almost like a sixth sense, that </p>
+<p>allowed her to visualize just how large they had become. At this moment she knew, with a </p>
+<p>strangely assured certainty, that her hard teats each extended from her areolae about the length of </p>
+<p>her outstretched arm. They were nearly at their full lengths, thrusting far ahead into the ﬂeshy </p>
+<p>darkness between Zara’s breasts.</p>
+<p>Suddenly the entire world seemed to… bounce? She felt herself falling for a moment, </p>
+<p>reaching bottom, then rocketing upwards once more. It happened again a second later, then again </p>
+<p>2</p>
+<p>and again before she realized that Mistress Zara was walking, no doubt in her magical stiletto </p>
+<p>heels, and Mel was being carried along for the ride, safely tucked between and completely </p>
+<p>concealed by her Mistress’ immense breasts.</p>
+<p>Mel found herself boggling at how large Zara’s breasts must be to contain her. There was </p>
+<p>also the incredible magic that Zara had no doubt employed to stand upright, let alone walk at such </p>
+<p>an intrepid pace. Her Mistress’ power was truly immense, and she felt herself burning even hotter, </p>
+<p>as if her mistress’ breasts were fueling her arousal across every inch of her nude skin. Her ﬂeshy </p>
+<p>prison became slick with her sweat, and she felt herself sliding around as she bounced along with </p>
+<p>Zara.</p>
+<p>Mel could sense her magically enhanced nipples had fully extended, reaching their immense </p>
+<p>new lengths. She had yet to see them, but she knew innately just how hugely thick and long they </p>
+<p>had become. With her arms extended forwards through Zara’s ﬂesh, she wrapped her ﬁngers </p>
+<p>around her own throbbing teats, knowing that she couldn’t reach their distended tips. She felt </p>
+<p>them pulsing, burning hot as they stretched even farther forwards, rubbing against each other as </p>
+<p>Zara’s ﬂesh squeezed them together.</p>
+<p>She was giving quick loving squeezes to her left teat while she ran her hand up and down her </p>
+<p>right nipple as far as her arm could reach. She could feel herself nearly white-hot at her core, </p>
+<p>cresting on the edge of a thunderous climax, when her bouncy habitat suddenly stopped bouncing </p>
+<p>and came to an abrupt rest. </p>
+<p>She held her breath, wondering if Mistress Zara somehow knew what she was up to.</p>
+<p>“Hrnnn mkh rhlghghlglhg,” she heard Zara’s distinct voice say, the hot ﬂesh of Zara’s breasts </p>
+<p>vibrating around her ears and muﬄing the sound.</p>
+<p>She rolled around to point her stomach down, parallel to where she imagined the ﬂoor to be. </p>
+<p>She pushed herself forwards, straining to move ahead, and lifted upwards underneath both of her </p>
+<p>own huge breasts, trying to urge her nipples forward until they broke free into the cool evening air.</p>
+<p>“Rhll ghrhg grlhrlhrgu!” she heard an unfamiliar feminine voice say.</p>
+<p>“Dkhra,” came Zara’s reply to Mel’s muﬄed ears.</p>
+<p>There were few desserts that Zara enjoyed more than ice cream, and what better treat on a </p>
+<p>warm summer evening than a cone piled high with toppings? Plus, this excursion would allow her </p>
+<p>to look after Melanie, her newest apprentice — the poor girl had just fainted in the presence of the </p>
+<p>Archmage’s breasts — and show her a trick or two at the same time, all while giving Mel’s </p>
+<p>3</p>
+<p>roommate Katrina a brief respite for her own study. And besides, Zara didn’t mind any opportunity </p>
+<p>to ﬂaunt her incredible ﬁgure to the other girls around town.</p>
+<p>This small ice cream parlor was just around the corner from Mel’s apartment, making it ideal </p>
+<p>for a quick and tasty dessert. Having placed her order at the window, Zara turned around to rest </p>
+<p>her immense bosom next to the parlor’s doorway.</p>
+<p>Melanie felt a rush of cool air across the tips of her nipples. She had focused all her energy </p>
+<p>on encouraging her teats to grow as long as possible, thinking that the least she could do would </p>
+<p>be to put them to use thanking her mistress, and she had ﬁnally succeeded in exposing the ends </p>
+<p>of her nubs to the cool evening air. </p>
+<p>She felt herself heating up again, and with a grinning realization, spread her legs wide from </p>
+<p>within her ﬂeshy home. Moaning softly, she thrust her hips back and forth, rubbing her pussy all </p>
+<p>around the inner wall of her mistress’ enormous breast.</p>
+<p>In the fogginess of her arousal, she found herself unable to focus on much more than the </p>
+<p>burning heat in her pussy and the huge lengths of her incredibly sensitive nipples. She still </p>
+<p>couldn’t see their true size, but she could sense somehow they had continued stretching longer, </p>
+<p>each of them now rivaling the length and thickness of her arms.</p>
+<p>She remembered earlier that afternoon, when Zara’s magic had saved her and Katrina alike </p>
+<p>from a miscast growth spell. She had grown huge across most of Kat’s bed, but even that </p>
+<p>incredible swelling paled in comparison to this intoxicating experience of her entire body being </p>
+<p>caressed between the hot ﬂesh of her mistress’ immense breasts. </p>
+<p>The ice cream parlor’s waitress, a girl with ﬁery red hair wearing a short skirt and blouse, </p>
+<p>stepped outside through the shop’s front door carrying a large brown bag. She politely averted her </p>
+<p>eyes from the vast expanse of Zara’s cloth-covered bosom, instead squinting at the receipt taped </p>
+<p>to the bag.</p>
+<p>“Zara?”</p>
+<p>vision.</p>
+<p>She made eye contact with Zara, who beamed back from beyond the vast expanse of her </p>
+<p>bosom. She was standing at the far opposite end, though, and found herself frozen in place, trying </p>
+<p>to decide which way to circumnavigate the immense cloth-covered mounds ﬁlling most of her </p>
+<p>Melanie knew that she was close to her goal, feeling the cool summer breeze on her nipples </p>
+<p>as they extended beyond Zara’s bosom. She reached forward, through the warm jiggly darkness, </p>
+<p>4</p>
+<p>to grasp the base of her own throbbing teats. She willed them to continue swelling longer as she </p>
+<p>squeezed them tightly, sensing their tips thrusting even further into the evening air. With a ﬁnal </p>
+<p>surge of growth, she gasped when she felt their ﬂeshy tips rubbing against ﬁrm, warm skin. </p>
+<p>This, she was certain, must be Zara’s leg! Now she could ﬁnally endeavor to properly thank </p>
+<p>her mistress. She focused her magic once again, feeling her thick nipples stretching even longer.</p>
+<p>The waitress, having decided on a clockwise approach around Zara’s bosom, had just taken </p>
+<p>her ﬁrst step when something warm and ﬁrm bumped against her. She stopped in her tracks and </p>
+<p>glanced downwards. Her mouth fell open as she ran her eyes along the ﬂeshy teats bouncing </p>
+<p>gently against her leg. She traced along their thick lengths with her eyes, following them until they </p>
+<p>disappeared underneath the edge of Zara’s enormous cloth-wrapped bosom.</p>
+<p>“M… Miss Zara, I believe your, ah, nipples… OH!” she stammered, gasping suddenly when </p>
+<p>they surged longer in mere seconds, one of them wrapping twice around her right leg and the </p>
+<p>other continuing upwards to hover in the air near her face. She bit her lip, feeling the nipple’s </p>
+<p>burning hotness against her bare skin, while eyeing the other teat near her head. It squeezed ever </p>
+<p>so gently around her leg, growing further and wrapping around again, reaching upwards until, with </p>
+<p>a ﬁnal surge, its tip thrust forwards from between her upper thighs. It waved lewdly in the air, mere </p>
+<p>inches from her groin.</p>
+<p>“Miss, I’m ﬂattered, but you can always tip in caaa—”</p>
+<p>Melanie’s nipple had at that moment thrust itself upwards, rubbing and grinding itself against </p>
+<p>the panty-covered mound above, while its twin extended further to rub gently against the waitress’ </p>
+<p>cheek. The waitress had never before had she seen such impossibly huge breasts, and found </p>
+<p>herself lost in the delirious sensations of being pleasured by this woman’s incredible nipples.</p>
+<p>“Zaraaaa!” she cried, vigorously thrusting her hips and grinding her pussy against the thick, </p>
+<p>hard nipple between her legs. With her mouth open in pleasure, she turned her head ever so </p>
+<p>slightly to the side and slurped Melanie’s other nipple into her mouth. She sucked hard on it, </p>
+<p>amazed at how its thickness completely ﬁlled her mouth.</p>
+<p>Although Zara couldn’t see the nature of the waitress’ plight beyond the great swells of her </p>
+<p>bosom, she had felt Mel’s every movement and quickly surmised what had befallen the poor girl: </p>
+<p>her newest apprentice had gotten confused about which way she was facing. Melanie thought </p>
+<p>herself to be pleasuring her mistress, but had instead thrust her nipples far in the other direction, </p>
+<p>in front of Zara and around the waitress.</p>
+<p>5</p>
+<p>Mel was cresting near the peak of her own climax. She ﬂushed with the thought that her </p>
+<p>magically enhanced nipple seemed to be thrilling her mistress, and felt no small amount of pride </p>
+<p>along with her pleasure. She grinned at the prospect of sharing some of these new tricks with </p>
+<p>Katrina and paused for a moment, centering her beautiful blonde roommate in her thoughts. She </p>
+<p>hoped that Kat had recovered from their earlier encounter with Zara. </p>
+<p>Katrina had indeed, and was standing at that moment in the living room of the apartment she </p>
+<p>shared with Melanie, studying an incantation she’d never cast before. She couldn’t stop thinking </p>
+<p>about Melanie’s magically enhanced nipple having grown long enough to ﬂop over her own ear, </p>
+<p>and her temporary separation from that cute brunette made her ache all the more.</p>
+<p>Mel had been practicing magic for only a few hours, Kat realized, and in that time she’d </p>
+<p>demonstrated her incredible natural ability more than once. Kat was especially impressed by the </p>
+<p>skill with which Mel had wielded her incredible nipples in her bedroom, and she had been newly </p>
+<p>inspired to seek ways to grow her own nipples to match.</p>
+<p>Staring at her own notes in a small leather-bound journal, Kat was facing her own </p>
+<p>predicament: her writing had smudged, and the entire page was damp and smelled faintly of milk. </p>
+<p>She had prepared for this spell an extra large glass jar ﬁlled to the brim with her breast milk, the </p>
+<p>huge container merely a small part of her daily production. She frowned; her milk was the primary </p>
+<p>ingredient for most of her incantations, but without her notes she was uncertain how much to use.</p>
+<p>Although this unfamiliar spell was somewhat outside of her expertise, being part of the </p>
+<p>growth school while her training had been in liquid magic, it should have the eﬀect of growing her </p>
+<p>nipples and bestowing a degree of control over them. She hoped she’d soon be able to go teat-</p>
+<p>to-teat with Melanie’s incredible natural talents. With just a few substitutions and alterations to suit </p>
+<p>her style as a liquid mage, she hoped to have quite a surprise ready for when Melanie returned </p>
+<p>home.</p>
+<p>The jar of milk smelled simply divine, testing her patience, as she was all too familiar with her </p>
+<p>milk’s delicious taste. After a moment staring at it she shrugged; Mistress Zara had always said </p>
+<p>that magic rewarded experimentation. What could possibly go wrong? </p>
+<p>She patted the sides of her enormous bosom, which had been swelling larger with milk while </p>
+<p>she was distracted preparing her spell. She was now nearly as large as she’d be after a long </p>
+<p>night’s rest, the bottom swells of her huge breasts resting heavily below her hips. Even with both </p>
+<p>arms fully extended before her, she was nowhere near able to grasp her own throbbing teats, </p>
+<p>although she’d certainly planned on doing just that as soon as her nipple growth took eﬀect.</p>
+<p>6</p>
+<p>She reached out with her right arm, placing it ﬂat against the great underside of her right </p>
+<p>breast. In her other hand she hefted the large glass jar to her lips, pausing hesitantly. A few sips </p>
+<p>brought the familiar taste of her milk to her tongue, which she savored for a moment, sighing </p>
+<p>happily. Swallowing quickly, she tilted the jar back, drinking its entire contents as quickly as she </p>
+<p>could, then set it aside.</p>
+<p>Focusing her energy inwards, she gathered magical potential within herself, channeling it </p>
+<p>through the huge mass of her bosom, but at the last moment an unexpected image formed in her </p>
+<p>mind. It was Melanie, the pretty brunette with whom she’d become so close, and her feelings for </p>
+<p>her roommate nearly overcame her magic, leaving her almost unable to maintain control, and she </p>
+<p>felt her spell cresting, barely contained within her, frothing and writhing as it struggled to escape, </p>
+<p>until she released it with a loud cry and a massive burst of magical energy — </p>
+<p>Several blocks away, Mistress Zara was chuckling at the ice cream parlor’s waitress. That </p>
+<p>poor girl had Melanie’s nipple wrapped twice around her torso like a large ﬂeshy python, although </p>
+<p>she didn’t seem to mind, seeming to be lost in pleasure and shuddering as it rubbed gently around </p>
+<p>her body.</p>
+<p>From her position deep between Zara’s expansive breasts, Melanie felt a sudden curious </p>
+<p>sensation that was somehow familiar, although she couldn’t place it. At once, the image of Katrina </p>
+<p>rushed to the front of her mind, momentarily overcoming everything else about her curious </p>
+<p>situation. She found herself wondering what Kat was up to right now.</p>
+<p>Zara had just resolved to try and calm Melanie down when the entire world seemed to ﬂicker </p>
+<p>for a moment. She recognized immediately that a powerful magical discharge had occurred </p>
+<p>somewhere in the vicinity. Centering herself and becoming still, she snapped her ﬁngers to </p>
+<p>perform a minor cantrip. The oversized dark cloth fabric wrapped around her chest detached </p>
+<p>itself, falling to the ground and leaving her colossal nude breasts exposed to the world.</p>
+<p>She squeezed large handfuls of her bosom with both hands and cast a quick divination to </p>
+<p>scry the source of the magical disturbance; sure enough, the direction and distance put it squarely </p>
+<p>within Melanie and Katrina’s apartment. She chuckled to herself, thinking that maybe she should </p>
+<p>have brought both of them along with her on this errand.</p>
+<p>Melanie’s nipple had grown even longer, extending from around the waitress’ torso to now </p>
+<p>rub insistently against her cheek while its twin remained lodged in her mouth. So grand were </p>
+<p>Zara’s breasts that the waitress tore her eyes away from the nipple creeping up the side of her </p>
+<p>face, instead trying to take in as much of Zara’s magniﬁcence as possible while she sucked on </p>
+<p>Mel’s teat.</p>
+<p>7</p>
+<p>The facade of the ice cream parlor seemed to tilt strangely askew for an instant, leaving her </p>
+<p>blinking and rubbing her eyes. The impossible bosom before her and the nipples wrapped around </p>
+<p>her and in her mouth had suddenly vanished as Zara’s teleportation spell took eﬀect. A second </p>
+<p>later, almost as an afterthought, the takeout bag in her hand suddenly winked out of existence.</p>
+<p>Katrina knew right away that something unexpected had happened. Her growth spell should </p>
+<p>have been localized in her nipples, but she could feel an increasing warmth throughout the entirety </p>
+<p>of her huge chest. It was matched by an insistent throbbing near her center, her arousal cresting in </p>
+<p>waves as her body was racked with powerful magic. And there was still the insistent image of </p>
+<p>Melanie at the forefront of her mind, distracting her and leaving her longing for her roommate’s </p>
+<p>touch.</p>
+<p>She shuddered, the movement of her shoulders casting great jiggling waves throughout her </p>
+<p>enormous bosom, then froze in place when she felt an unexpected rough sensation against the </p>
+<p>bottoms of her huge breasts. She arched her neck, peering around her bosom to conﬁrm what she </p>
+<p>already knew to be true: her colossal breasts were still growing larger, already having swollen large </p>
+<p>enough to brush against the ground while she stood upright.</p>
+<p>She could feel a warm, sticky liquid soaking through her jeans. She turned to the large jar of </p>
+<p>milk, thinking that she’d spilled some of it on herself. No, she’d drunk it all; she could see it now </p>
+<p>contained but a few drops of an opaque white liquid. She blushed, realizing suddenly that her </p>
+<p>pussy was soaking her arousal through her clothing. She quickly stripped oﬀ her jeans and panties </p>
+<p>and stood nude, resting some of her weight on her bosom. She paused to catch her breath, </p>
+<p>feeling her enormous breasts creeping along the carpet as they swelled ever larger.</p>
+<p>She didn’t have much time to ponder, as a moment later a loud splashing sound ﬁlled her </p>
+<p>ears. She leaned forwards, placing more of her weight on her colossal bosom, and craning her </p>
+<p>neck she was ﬁnally able to see her left nipple spraying great arcs of milk that splattered noisily </p>
+<p>against the side of their refrigerator.</p>
+<p>Her other breast had continued expanding in the opposite direction, although last she’d seen </p>
+<p>there was quite a bit of room between it and the other wall. She suddenly sensed that open space </p>
+<p>having been replaced by a large warm mass rubbing against her breast, and she knew even before </p>
+<p>she turned around that her mistress would be standing nearby. She bit her lip as she made eye </p>
+<p>contact with Zara, fearing a reprisal.</p>
+<p>“Mistress! My spell… I don’t understand, I followed your recipe exactly!” she said, her eyes </p>
+<p>pleading.</p>
+<p>8</p>
+<p>Zara glared at her, but only for a moment. She chuckled and spoke, her voice raised, but Kat </p>
+<p>realized it was only to be audible above the splattering sound of her uncontrolled lactation.</p>
+<p>“Katrina, you’ve attempted growth magic once again, a spell from outside your discipline, </p>
+<p>which is… ?” she asked, trailing oﬀ.</p>
+<p>“I am a liquid mage, mistress!” Kat nearly sang, almost too cheerfully given her plight.</p>
+<p>Zara raised an eyebrow at the great arcs of milk gushing from Kat’s nipples.</p>
+<p>“You certainly are, my dear,” she said appreciatively.</p>
+<p>“Fortunately for you, your fellow mage Melanie is here to assist.”</p>
+<p>Kat twisted her head, looking all around her living room, but saw no one else. She grasped at </p>
+<p>her own bosom, trying to wrestle it around to look behind herself, but made little progress moving </p>
+<p>their enormous weight. Her milky spray was still increasing, and the insistent sound of her milk </p>
+<p>splattering against the fridge was making it diﬃcult for her to hear her own thoughts.</p>
+<p>“Melanie?” she called loudly. Her chest had expanded further, her right breast rubbing </p>
+<p>against the sofa while her left breast, pressed against its twin, crept higher up the wall. At this </p>
+<p>point, she realized with a start, her bosom wasn’t much smaller than even Mistress Zara’s </p>
+<p>immense pair.</p>
+<p>Mel sensed the world twisting around her once again, the second time in the last few </p>
+<p>minutes. She was still suspended in the darkness between two great spheres of ﬂesh, but they </p>
+<p>seemed diﬀerent now, less magically potent. And there was now an overpowering smell of milk...</p>
+<p>She grinned, launching herself upwards through her jiggly environs with a practiced thrust of </p>
+<p>her arms. A faint light appeared ahead, and she gave another great push, forcing herself through </p>
+<p>the opening, until it parted wide to reveal a familiar face.</p>
+<p>Kat beamed widely at her brunette roommate squeezed between her mountainous breasts. </p>
+<p>They stared deeply into each other’s eyes, each of them relieved and excited to see the other. Mel </p>
+<p>shimmied herself forward, wiggling through the sea of Kat’s enormous bosom. They drew ever </p>
+<p>closer, never breaking eye contact.</p>
+<p>Mel lifted one hand out of Kat’s cleavage to brush her blonde roommate’s hair behind her ear. </p>
+<p>Kat thrust both hands deep into her own cleavage, resting her wrists on Mel’s shoulders and </p>
+<p>sighing happily.</p>
+<p>9</p>
+<p>They embraced, pressing their lips together. So great had their attachment grown, through </p>
+<p>their shared magical adventures and swelling bosoms, that they lost themselves in each other, </p>
+<p>kissing with sloppy urgency as Mistress Zara looked on approvingly.</p>
+<p>“Oh Mel, I missed you so much,” said Kat, sighing happily.</p>
+<p>“I missed you too, Kat,” Mel whispered softly in reply, ﬁnding only a moment for each word </p>
+<p>between her kisses. She licked slowly along Kat’s cheek. </p>
+<p>“I have had the strangest day,” she continued, then licked along Kat’s left ear.</p>
+<p>“Mel, I was only…” Kat started, giggling when Mel interrupted her by sucking on her tongue.</p>
+<p>“…trying to grow my nipples like yours, but my spell…” she admitted, trailing oﬀ and </p>
+<p>blushing under Mel’s gaze.</p>
+<p>and sucking gently on it.</p>
+<p>Mel couldn’t help but laugh, then leaned in, once again pulling Kat’s tongue into her mouth </p>
+<p>Zara allowed the two lovers a happy while to reunite, although as the seconds passed they </p>
+<p>were still licking each other’s mouths with ever greater vigor. She cleared her throat, interrupting </p>
+<p>the younger girls and drawing their attention. </p>
+<p>“Melanie, you absorbed a great deal of magical energy from my bosom today,” Zara said, her </p>
+<p>eyes ﬁxated at the brunette.</p>
+<p>“Almost too much, truth be told. Never have I seen an apprentice gather so much––” she </p>
+<p>started, but caught herself, ﬂushing red for just a moment. Kat felt the grand masses of Zara’s </p>
+<p>bosom suddenly surge larger against her own right breast, and would later remark to Mel that this </p>
+<p>was the only time she’d ever seen her Mistress lose control, even if only for a moment.</p>
+<p>Zara paused, closing her eyes for a moment and taking a deep breath. She opened her eyes </p>
+<p>to see both girls still staring at her from within their busty embrace.</p>
+<p>“Melanie, your fellow apprentice…” she started, stressing their rank amateur status and </p>
+<p>chuckling as Kat blushed with embarrassment.</p>
+<p>“…ﬁnds herself at the mercy of a runaway spell. She will need your help to counter this </p>
+<p>magic,” she intoned sternly, then her expression softened.</p>
+<p>“Earlier today you passed your ﬁrst test by restraining your urges. This will be your second </p>
+<p>test, and like the ﬁrst, your love for each other will lead you to success,” she said.</p>
+<p>10</p>
+<p>A curious smirk suddenly grew over her features. She paused, tilting her head at Kat, until a </p>
+<p>sudden realization dawned on her.</p>
+<p>“I… I did not see until now the nature of Katrina’s miscast spell. You have achieved </p>
+<p>something signiﬁcant today, Katrina. Your growth, and Melanie’s, have been tied together,” she </p>
+<p>said slowly, impressed by her apprentice’s accomplishment.</p>
+<p>“The growth and liquid schools of magic, brought together…” she pondered.</p>
+<p>“The Archmage must know of this. You must look to each other now,” she said, seeming </p>
+<p>distracted, before making an exaggerated gesture of covering her mouth in surprise.</p>
+<p>“Oh! And don’t forget to enjoy some ice cream,” she said with a wink.</p>
+<p>The entire room seemed to tilt askew for a brief instant, then righted itself again to reveal that </p>
+<p>Zara had vanished, leaving Melanie and Katrina alone in their apartment. On the ﬂoor near where </p>
+<p>Zara had been standing, the takeout bag from the ice cream parlor was ﬂoating by on a small river </p>
+<p>of white liquid.</p>
+<p>bare legs.</p>
+<p>Mel leapt to action, diving back down into Kat’s cleavage and disappearing from view. She </p>
+<p>pressed further onwards, ﬁnally emerging with her back on the ﬂoor and her head between Kat’s </p>
+<p>She peered upwards between the long slender legs towering above her. They met at Kat’s </p>
+<p>taut little bottom, and she grinned at her blonde lover’s beautiful nude pussy. Kat seemed to be </p>
+<p>absolutely soaked, which wasn’t uncommon in Mel’s experience, although today Kat seemed </p>
+<p>especially wet, as her legs looked to be drenched with her arousal. Great rivers of translucent </p>
+<p>liquid were spilling down her legs onto the carpet, and more than a few stray droplets had </p>
+<p>splashed onto Mel’s face and the tops of her big breasts.</p>
+<p>Mel tilted her head to the side, her back sliding on the wet carpet, and leaned in towards one </p>
+<p>of the larger streams of nectar running down Kat’s right leg. She couldn’t resist, leaning further </p>
+<p>until she was able to lick slowly along the inside of Kat’s ankle. She caught the juices on her </p>
+<p>tongue and lapped them into her mouth, licking around Kat’s heel as she took a long drink of her </p>
+<p>roommate’s delicious essence.</p>
+<p>“Oooh, M… Mel,” she heard Kat sigh from somewhere above.</p>
+<p>Mel swallowed luxuriously, cherishing the taste of Kat’s arousal and grinning when another </p>
+<p>fresh squirt covered Kat’s legs with an even greater volume of liquid. She grinned in anticipation, </p>
+<p>11</p>
+<p>giving one last long lick along the top of Kat’s foot, then lowered her head, resting her cheek atop </p>
+<p>Kat’s foot where she had licked moments earlier. She opened her mouth, grinning with anticipation </p>
+<p>at the prospect of Kat’s hot squirt washing over her... but she frowned after a moment as Kat’s </p>
+<p>shin, from her perspective, remained unusually dry.</p>
+<p>She turned her head, gazing upwards between Kat’s legs. She gasped when she saw that </p>
+<p>her unruly nipples had wrapped themselves in thick ﬂeshy coils around Kat’s legs, extending from </p>
+<p>her knees nearly up to her waist. Her teats had diverted the voluminous streams of Kat’s arousal, </p>
+<p>which now ﬂowed down Mel’s huge nipples until they splashed into the carpet. Mel’s eyes were </p>
+<p>wide as she laughed to herself, impressed by her own incredible nubs, as if they had somehow </p>
+<p>acted upon her own unconscious desires by trying to get closer to Kat. </p>
+<p>A soft, uncertain voice reached Mel’s ears from above.</p>
+<p>“M... Mel? Is that your… your nipples on my legs... oooh!” Kat said, her whisper rising nearly </p>
+<p>to a wail. </p>
+<p>Kat’s enormous right breast had grown up and onto their couch, while its twin, with nowhere </p>
+<p>left to go, had continued its ascent up the wall towards their vaulted ceiling. The dull roar of Kat’s </p>
+<p>spurting milk against the fridge suddenly increased in volume.</p>
+<p>Mel’s new awareness of her teats left her certain that they had grown longer as well. Their </p>
+<p>coiled shape around Kat’s legs had a way of obscuring their true lengths, and Mel knew they were </p>
+<p>both now nearly as long as her own full height. But this latest growth hadn’t originated from her </p>
+<p>own desires; it was as if it had come from somewhere else… Or maybe someone else?</p>
+<p>What had Mistress Zara meant about their growth being tied together? Mel frowned to </p>
+<p>herself; it was only her ﬁrst day practicing magic and she already felt in over her head. But Zara </p>
+<p>had also said that their love for each other would lead them to success. At least, Mel thought, that </p>
+<p>might be something with which she was more familiar.</p>
+<p>Her eyes narrowed. She watched her huge nipples gently squeezing around Kat’s legs above </p>
+<p>her as she idly wondered aloud.</p>
+<p>one thing,” she said slowly.</p>
+<p>“Kat, if my nipple growth was somehow tied to your breast growth, then that can only mean </p>
+<p>A long moment passed. Mel realized that the girl above her was teetering on the edge of her </p>
+<p>own climax, clearly struggling to respond through her arousal.</p>
+<p>12</p>
+<p>“M…Mel, what does it mean?” came Kat’s halting reply.</p>
+<p>“I was hoping you would know,” Mel sighed. “It’s only my ﬁrst day as a nipple mage!” she </p>
+<p>frowned, then brightened up.</p>
+<p>“But ﬁrst, you look like you need some relief, my sweet Kat,” she grinned, thinking that she </p>
+<p>knew just how to bring her lover over the edge. She grew still, focusing her will. </p>
+<p>Her left nipple continued its ascent up Kat’s thigh, growing longer and angling upwards until </p>
+<p>it thrust forwards from between Kat’s legs. It grew parallel to Kat’s gushing pussy, pushing its thick </p>
+<p>mass ﬁrmly against Kat’s wet opening, diverting the great gushes of Kat’s squirt around it. Kat </p>
+<p>gasped, holding her breath.</p>
+<p>A moment later Mel’s nipple started sliding up and down ever so slowly. Kat quivered in </p>
+<p>response, rocking her hips back and forward, rubbing her drenched pussy against the hot </p>
+<p>ﬁrmness of Mel’s thick nipple. Gushing streams of her squirt were rushing down Mel’s nipple, </p>
+<p>coating it with thick essence and dripping down into the growing puddle below.</p>
+<p>Mel was nearly delirious from the feel of Kat’s hot pussy against her huge teat. It was making </p>
+<p>her feel weak and squishy inside, and she was glad for the moment that she didn’t have to worry </p>
+<p>about standing up. Her ministrations had been successful, as Kat had almost immediately plunged </p>
+<p>over the edge into her own orgasm.</p>
+<p>“MMMel!” Kat gasped, her moans crescendoing.</p>
+<p>Mel was suddenly being sprayed in the face by an enormous jet of hot liquid from above. It </p>
+<p>let up for only a moment, leaving her gasping, before it started again, gushing and splattering all </p>
+<p>over her face and the nearby carpet, almost instantly soaking her hair through. She laughed and </p>
+<p>wheezed, ﬂipping over on her stomach and giggling as she crawled over the slippery carpet, her </p>
+<p>nipples unwinding from Kat’s legs as she drew further away.</p>
+<p>She was still somehow getting wet, though. As she rubbed her eyes, Kat’s essence dripping </p>
+<p>down her face, she realized that Kat’s magical pussy had yet to stop squirting, and if anything the </p>
+<p>enormous volume of liquid seemed only to have increased. From her vantage point, she could see </p>
+<p>Kat facing away from her and resting her weight on the wall that was her enormous breasts, which </p>
+<p>were still growing larger.</p>
+<p>Huge jets of squirt from Kat’s magical pussy were striking the carpet forcefully enough to </p>
+<p>rain hot splashes of nectar onto Mel’s bare skin, even from where she sat several feet away. Mel’s </p>
+<p>13</p>
+<p>substantial nipples, currently resting heavily along the carpet between her and Kat, were gradually </p>
+<p>being covered in a ﬁne sheen of hot squirt.</p>
+<p>Mel wondered how Kat could remain standing while feeling such pleasure, only to realize </p>
+<p>with a start that Kat wasn’t standing at all; the girl’s growing bosom was large enough now to have </p>
+<p>lifted her feet oﬀ the ﬂoor entirely. Kat’s long slender legs hung limp against the great masses of </p>
+<p>her bosom, and Mel could see her quivering softly as her climax continued. Kat’s legs, and much </p>
+<p>of the nearby carpet, were continually being soaked in fresh deluges of her squirt.</p>
+<p>Kat turned her head, trying to squint at Mel on the ﬂoor behind her through the waves of her </p>
+<p>climax.</p>
+<p>at them.</p>
+<p>“Mel! It’s… my breasts, they feel so good! And our connection… I can feel it!” she gasped, </p>
+<p>barely audible above the great splashing sounds of her milk and squirt.</p>
+<p>Mel’s eyes leapt back to her own teats. Sure enough, they were once again growing longer, </p>
+<p>sliding over the carpet towards Kat’s legs. She glared at them.</p>
+<p>“You two have had enough fun. You need to remember who’s in charge,” she said, frowning </p>
+<p>They didn’t seem to have heard her, as they continued stretching longer over the soaked </p>
+<p>carpet, their tips resting just inches from Kat’s bare feet. They were now well within the splash </p>
+<p>zone of the great deluge of liquids splattering down between Kat’s legs, and once again Mel felt </p>
+<p>her teats being drenched in Kat’s hot squirt.</p>
+<p>Mel struggled to her feet, then pressed a hand underneath both of her big breasts. She </p>
+<p>started walking around the side of Kat’s great bosom.</p>
+<p>“C’mon, you two. I have a job for you, something I think you’ll like,” she said, winking at </p>
+<p>them. They were pulled along the carpet behind her as she walked away, making her whimper with </p>
+<p>pleasure from the sensation of so many feet of sensitive nerve endings rubbing against the thick </p>
+<p>fabric of the carpet. </p>
+<p>Nearing the front of Kat’s massive bosom, Mel paused for a moment in sheer amazement. </p>
+<p>This was surely the largest bosom she’d ever seen, she thought, before catching herself — if the </p>
+<p>Archmage had been real then Kat would still be in second place, although perhaps not for long at </p>
+<p>this rate.</p>
+<p>14</p>
+<p>“Kat! Kat, I’m going to try and milk you!” Mel called over the great expanse of ﬂesh before </p>
+<p>her. She continued pacing ahead until one of Kat’s teats came into view, making her stop in her </p>
+<p>tracks.</p>
+<p>Kat’s nipple was now easily the length of Mel’s entire arm and at least twice as thick. It was </p>
+<p>an angry reddish color, throbbing powerfully and dripping with its own milky essence. Numerous </p>
+<p>small arcs of white liquid were gushing forth from it, many of them joining together into a powerful </p>
+<p>jet of gushing breast milk that was now splattering noisily against the kitchen’s tile ﬂoor.</p>
+<p>Mel stepped forward with urgency, kneeling down and sliding with her back on the ﬂoor until </p>
+<p>she was directly underneath Kat’s spurting nipple. She reached upwards, grasping Kat’s teat in her </p>
+<p>arms and hugging it close, then pulled it down between her breasts into her cleavage. She tilted </p>
+<p>her head back, delighting in the feel of Kat’s hot milk dripping all over her body.</p>
+<p>There was far too much spraying milk to see straight, though, and she closed her eyes, once </p>
+<p>again ﬂoating in a warm dark void. She opened her mouth, licking gently along the underside of </p>
+<p>Kat’s hot nipple. Its tip extended above her head, and she did her best to cover as much of its </p>
+<p>surface area with her tongue as she could. She laughed, gulping and swallowing great mouthfuls </p>
+<p>of Kat’s spurting milk, hugging the great teat close to her body.</p>
+<p>She wrapped her legs around Kat’s nipple, pulling it even closer until she felt its great mass </p>
+<p>resting on her stomach. She dug in with her heels, grasping and sliding, until at last she felt her </p>
+<p>pussy rubbing against the huge milky nipple. It was so hot and hard against her, and brimming </p>
+<p>with magic potential, that almost immediately she felt herself nearly white-hot at her core.</p>
+<p>She pulled with both arms and legs, thrusting Kat’s huge nipple back and forth from above </p>
+<p>her head, between her breasts and down her stomach, delighting as it slid against her pussy. She </p>
+<p>gasped, her open mouth instantly ﬁlling with Kat’s dripping milk, then grinned, gulping it down as </p>
+<p>she rubbed herself against the hot ﬂesh of her roommate’s massive teat.</p>
+<p>This, she thought, was as close to a state of bliss as she could imagine. She could live here, </p>
+<p>underneath Kat’s great nipple, or perhaps inside the beautiful blonde’s cleavage. This huge milky </p>
+<p>teat would nourish them both, and they could grow together forever, larger even than the </p>
+<p>Archmage herself, until they had to move outdoors…</p>
+<p>A sudden biting sense of dread ripped her back to reality. She had just ﬁnished swallowing </p>
+<p>another mouthful of sweet milk when she remembered how Kat’s milk had aﬀected her earlier that </p>
+<p>day. A building sensation of warmth from within her own substantial breasts signaled that it had </p>
+<p>15</p>
+<p>started to aﬀect her. Already she could feel her breasts swelling larger, surging above her while </p>
+<p>clasping Kat’s nipple tightly between them.</p>
+<p>Her nipples had continued their growth as well, now nearly half again as long as she was tall. </p>
+<p>They had almost instantly grown thick and hard from Kat’s milk, towering into the air above her </p>
+<p>and waving back and forth with her movements. She shuddered; they were more sensitive than </p>
+<p>ever, as if she could sense every inch of the air currents gently licking against them. </p>
+<p>She had to focus. She couldn’t lose control now, not with Kat counting on her! She struggled </p>
+<p>with the weight of Kat’s nipple, now even thicker in diameter than her waist, as it slid around in her </p>
+<p>cleavage. With a great heave she slid its slippery mass to the side and onto the ﬂoor nearby, </p>
+<p>where it landed with a wet-sounding slap. It was still spurting great arcs of milk, but it was now </p>
+<p>propped awkwardly against the wall. It ﬂopped over itself to spray its bounty back onto the vast </p>
+<p>surface of Kat’s own breast, which was quickly covered with a ﬁne milky sheen.</p>
+<p>Mel stood frowning. She had tried pleasuring Kat’s big nipples, but it seemed only to amplify </p>
+<p>Kat’s liquid magic, Kat’s milky spray now greater than before she’d started. She doubted she </p>
+<p>could even approach the vicinity of Kat’s magical pussy, given the incredible volume of liquid it </p>
+<p>was still squirting. If anything, all of her eﬀorts had seemed only to accelerate Kat’s growth further, </p>
+<p>and her own along with it. </p>
+<p>Their bond had proven to be real, and Kat’s breast growth had been mirrored in her own </p>
+<p>nipple expansion. Mel stared at her teats as they waved slowly in the air, trying to wrap her head </p>
+<p>around the innate realization that they were more than twice as long as she was tall. She giggled </p>
+<p>as they traced lazy bouncing circles in the air before her, still stretching longer as the eﬀects from </p>
+<p>Kat’s milk continued swelling her breasts even larger.</p>
+<p>“Oh Kat, my extremely large roommate, what are we to do with you?” she sighed, feeling </p>
+<p>some small amount of desperation creeping in at the edges of her mind.</p>
+<p>She needed to cool things down. Some kind of concentrated source of cold energy could </p>
+<p>maybe help slow, or even reverse, this runaway magic. As she stood pondering, the takeout bag </p>
+<p>from the ice cream parlor ﬂoated slowly past in one of the larger puddles of milk running through </p>
+<p>their living room. Her eyes widened.</p>
+<p>She held her breath as the bag was suddenly splattered with a great jet of translucent liquid. </p>
+<p>She traced it back to its source, gasping as she saw Kat’s taut bottom angling upwards as the </p>
+<p>massive breast upon which it rested swelled ever larger. Kat’s magical pussy had increased its </p>
+<p>amazing squirting, running together with her breast milk and submerging most of their living room </p>
+<p>16</p>
+<p>in a translucent puddle of thick liquids. Some of the excess liquids seemed to splash downhill </p>
+<p>towards the kitchen, which was gradually being submerged in its own milky ocean.</p>
+<p>“I know! Kat, it’s the ice cream!” Mel cheered, turning towards the brown bag and </p>
+<p>accidentally slapping her massively erect teats into the wall of Kat’s swelling bosom. She balled </p>
+<p>her hands into ﬁsts and stomped her foot, biting her lip as she rode a wave of biting pleasure from </p>
+<p>the impact.</p>
+<p>The unexpected collision had stolen the edge from her arousal, and she saw her huge teats </p>
+<p>quickly soften. Their great ﬂaccid forms hung from the centers of her breasts down to the ﬂoor, </p>
+<p>where their excess length coiled into piles of sensitive ﬂesh. She took advantage of this brief </p>
+<p>respite, leaping to action and grabbing the large brown takeout bag. It was easy to tear open, </p>
+<p>having become soaked through with milk; Mel threw it aside and triumphantly held aloft a large </p>
+<p>unmarked paper container, cold to the touch and brimming with delicious potential.</p>
+<p>“Hold on, Kat! I’m coming!” she yelled above the thunderous sound of Kat’s splashing milk </p>
+<p>and squirt. She ran around the great expanse of Kat’s chest, dragging her sensitive teats behind </p>
+<p>her and biting her lip. She could see her roommate’s feet lifted high above the ﬂoor, resting gently </p>
+<p>on a pair of truly enormous breasts that had grown across most of their living room. </p>
+<p>She stepped to the other side of the room, pausing for a moment to take in the enormity of </p>
+<p>Kat’s splendor. She aligned herself with the powerful jet of squirt gushing downwards between </p>
+<p>Kat’s legs. Her breasts had expanded signiﬁcantly from the eﬀects of Kat’s milk, resting heavily </p>
+<p>around her hips, and she doubted she could reach her erect teats, even with her arms fully </p>
+<p>extended.</p>
+<p>Still, the enormous size of her bosom gave her an idea; she placed the container of ice </p>
+<p>cream into her cleavage, nestling it between her huge breasts. She wrapped her arms tightly </p>
+<p>around her chest, angling her great teats directly in front of her, willing them to become erect. They </p>
+<p>snapped up in front of her a moment later, pointing directly at her target.</p>
+<p>She gave a cheer, then stepped cautiously forward, breaking into a jog and ﬁnally a sprint as </p>
+<p>she launched herself forwards. She slid ﬂat on her back, her momentum carrying her forwards </p>
+<p>through several inches of liquid until she passed directly underneath the powerful jets of Kat’s </p>
+<p>magical squirting pussy — here she squeezed her eyes closed — and was carried beyond them, </p>
+<p>until she disappeared between the grand twin masses of Kat’s breasts. Her long erect nipples had </p>
+<p>tilted backwards over her head, then were pulled behind her until they too vanished into the </p>
+<p>darkness of Kat’s great cleavage.</p>
+<p>17</p>
+<p>Kat had been riding waves of ecstasy, lost in the foggy haze of her ongoing climax. Her </p>
+<p>mammoth breasts seemed to only become more sensitive as they grew, and she thought that she </p>
+<p>could now feel every square inch of the carpet beneath her. There was also something new; was </p>
+<p>that the vaulted ceiling of their living room she was feeling against the tops of her breasts? She </p>
+<p>had been lifted by her bosom nearly halfway to the ceiling, although the slope of her chest above </p>
+<p>her was too steep for her to see whether she’d impacted it. </p>
+<p>Her magically enhanced pussy was still squirting endless waves of her arousal over her legs </p>
+<p>and the carpet far below; this had thankfully settled into only a moderately high level of erotic </p>
+<p>sensations in her mind. She cast her gaze behind her, but couldn’t see Mel, and in every other </p>
+<p>direction the great expanse of her bosom was ﬁlling most of their living room.</p>
+<p>Emerging suddenly from between her giant breasts, a smiling face popped into view.</p>
+<p>“Melanie!” Kat said breathlessly, immediately leaning in to give her a peck on the cheek.</p>
+<p>“How’d you get up here so fast?”</p>
+<p>Mel laughed, thrusting one arm forward from within Kat’s cleavage to brush her roommate’s </p>
+<p>dripping wet blonde hair behind her ear.</p>
+<p>“I’ve had a lot of practice today,” Mel admitted. She grinned widely and, leaning forward, </p>
+<p>they embraced once again. She allowed herself a long moment to enjoy the taste of Kat’s lips </p>
+<p>before reluctantly pulling away, her expression souring.</p>
+<p>“Kat, I know I haven’t been very helpful today,” she frowned. “Everything I tried seemed to </p>
+<p>only make you bigger, and now you’re so gloriously huge…” she said, trailing oﬀ.</p>
+<p>Kat pouted for a moment in reply, then broke into a grin.</p>
+<p>“You did your best, my sweet Mel. And it’s only your ﬁrst day as a nipple mage! We’ll get </p>
+<p>through this together,” she smiled, then bopped Mel’s nose with her ﬁnger.</p>
+<p>Mel brightened, smiling back, then reached deep into her own cleavage and retrieved the </p>
+<p>takeout container.</p>
+<p>“At least we have ice cream! You know, Mistress Zara had emphasized that…” she </p>
+<p>pondered, then had a realization.</p>
+<p>“Oof! I didn’t bring any spoons,” she frowned.</p>
+<p>18</p>
+<p>Kat laughed at this, then leaned in again, poking out her tongue and licking slowly across </p>
+<p>Mel’s cheek. Mel squirmed in response, then grinned and opened the container, tossing the lid </p>
+<p>aside. </p>
+<p>She held it aloft between them, and they embraced next to it. They pressed their tongues </p>
+<p>together, and Mel moved their tasty dessert closer. They were straining forwards, mere inches </p>
+<p>away, about to taste it at exactly the same moment…</p>
+<p>The living room twisted around them. Mel recognized the familiar trappings of a teleportation </p>
+<p>spell, but it was a new experience for Kat, who was dazed and disoriented. Mel found herself </p>
+<p>standing on a stone ﬂoor, cool to the touch and engraved with intersecting geometric shapes. </p>
+<p>She raised her eyes slowly. Kat’s distinct ﬁgure was above, resting on her colossal breasts, </p>
+<p>her feet dangling up out of reach. The great spheres of Kat’s bosom shone with a thick coating of </p>
+<p>her own milk and essence, although she was relieved to see Kat’s squirting had reduced to a slow </p>
+<p>trickle down both her legs. Her roommate wasn’t moving, though.</p>
+<p>“Kat? Kat, are you okay?” she called.</p>
+<p>A long moment passed, and she grew tense.</p>
+<p>“Katrina!” she yelled.</p>
+<p>Kat stirred, rubbing her eyes and sliding her toes along the vast expanse of her bosom. She </p>
+<p>looked down over her shoulder.</p>
+<p>“Mel! I’m… I’m okay. Just a little dizzy,” she said slowly.</p>
+<p>“Hang on, Kat!” Mel called. “I’m going to take a look around.”</p>
+<p>They were in a large circular chamber carved from what appeared to be a single stone, as if it </p>
+<p>had been hewn in one great cut from the side of a mountain. There was precious little space </p>
+<p>between Kat’s massive bosom and the encircling wall, and Mel stepped gingerly through that </p>
+<p>narrow path, her ﬂaccid nipples dragging along on the ground behind her.</p>
+<p>As she rounded the sides of Kat’s great bosom, another great shape slowly came into view. It </p>
+<p>seemed awfully familiar, though, and the telltale throbbing of a powerful magical source nearby </p>
+<p>gave it away — this could only be the glorious bosom of the Archmage herself. As enormous as </p>
+<p>she was, Mel was surprised and more than a little proud to see that Kat’s colossal chest had </p>
+<p>grown every inch as large as the Archmage’s. </p>
+<p>19</p>
+<p>Near the base of one of the Archmage’s breasts, Mel recognized the familiar twin spheres of </p>
+<p>Mistress Zara’s bosom. One of the Archmage’s prehensile nipples was hovering in the air near </p>
+<p>Zara, who seemed rather preoccupied by slurping down the milk it was issuing forth. Even the </p>
+<p>great expanse of Zara’s bosom, with which Mel had become intimately familiar, was dwarfed by </p>
+<p>the enormity of the Archmage’s left breast.</p>
+<p>Mel stood gawking at the three pairs of enormous breasts ﬁlling most of the room. The </p>
+<p>Archmage’s other nipple surged towards her, then slowed and came to a stop in the air nearby. It </p>
+<p>hovered idly, bobbing slowly up and down.</p>
+<p>“Melanie, apprentice of growth magic, and Katrina, apprentice of liquid magic, welcome to </p>
+<p>my private chambers,” said the Archmage. Her musical voice, high and light like a late spring </p>
+<p>breeze, reached Mel’s ears from somewhere beyond the wall of breast.</p>
+<p>“Zara has told me how your love for each other has seen you through two trials. I have been </p>
+<p>most impressed by your ingenuity,” she continued, her voice somehow airy while still carrying </p>
+<p>The nipple near Mel’s head started dripping an opaque white liquid, and its owner’s melodic </p>
+<p>immense weight.</p>
+<p>voice returned in her ears.</p>
+<p>“I have a mission for you.”</p>
+<p>20</p>
+</body>
+</html>

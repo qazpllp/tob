@@ -1,0 +1,1408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Catnipped</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>Questions, comments, or commissions? Send me an email at the.be.engineer@gmail.com or message me on Discord at BE Engineer#2306</p>
+<p>1</p>
+<p>Lily’s Tales
+Cat-Nipped: An Origin Story</p>
+<p>2</p>
+<p>A stone building loomed over the empty parking lot. Against the light of the full moon,</p>
+<p>the ornate masonry gave it the appearance of a massive mausoleum. Only a few dim security
+lights found their way through the windows to give any sign of life.</p>
+<p>Sitting in her car, Lily took in the museum from behind the safety of her windshield. It
+was a different world than during daylight hours. Only one car remained to keep her company:
+the janitor’s.</p>
+<p>“Wow…” she whispered. “It’s a lot bigger at night when no one else is around…”
+Her car door opened with a creak as she stepped into the cool night air.
+Thump!
+“Ow!! Nngh...”
+Lily moaned and rubbed the sore spot on top of her head. It wasn’t the first time she’d
+knocked herself against the top of her car when exiting, and it wouldn’t be her last. A lack of
+coordination ensured such a fate.</p>
+<p>Lily shook the pain from her mind and headed towards the front door. “I’m going to need</p>
+<p>to start wearing a helmet.”</p>
+<p>A shadow of an older male figure could be seen through the glass. Approaching under</p>
+<p>misplaced guilt for being there at such an hour, Lily lightly tapped on the door, scared as if a cop
+might pop up to accuse her of breaking and entering.</p>
+<p>“Mr. Baran!” she called out. A wild flailing of her arms in the form of waving was</p>
+<p>enough to grab his attention. It was a relief to hear his keys jingle in the lock.</p>
+<p>The janitor greeted her with a large smile hidden under a healthy mustache. “Lily! I was</p>
+<p>wondering where you were!”</p>
+<p>“Sorry I’m late! I dropped my keys and kicked them under my car and I couldn’t reach</p>
+<p>them…  It took me forever to find something long enough to drag them out…”</p>
+<p>“Well lucky for you, I’m still here!” Mr. Baran stepped aside to grant access to the closed</p>
+<p>museum. “Don’t be too long; I’m ready to go home for the night.”</p>
+<p>She nodded hard enough to kick brown hair into her face. “Thank you! I promise I won’t</p>
+<p>be long! I just need to grab my bag!”</p>
+<p>The museum’s lobby flew by in a blur as she briskly walked through the hall. It was odd</p>
+<p>finding the building so desolate. During the day it would be bustling with old women, art majors,
+and school field trips. Lily had been lucky enough to find her way into an internship as a curator.
+It wasn’t the most glamorous of positions, nor did it offer any kind of pay, but it was enough to
+satisfy her college requirement. Additionally, it was exciting enough to capture her imagination
+on most days. The different cultures and ancient artifacts she had the privilege of handling was a
+dream come true for her inner archeologist. Unfortunately, her mentor still didn’t trust her
+enough to hold anything fragile. They both agreed this was for the best.</p>
+<p>A visiting dinosaur exhibit brought her pace to a slow walk. Skeletal remains drifted</p>
+<p>overhead like ghosts. Their empty black sockets had never scary until this moment. Lily decided
+it was best to keep her head down until she was far away from the ancient beasts.</p>
+<p>Turning a corner brought Lily into a long hallway. Several small spotlights reflected off</p>
+<p>golden surfaces to throw a yellow aura into the air. This Egyptian exhibit was one of the</p>
+<p>3</p>
+<p>museum’s few permanent attractions. Artifacts such as burial jars stood on pedestals throughout
+the floor. Larger objects had their place along the walls with giant informational posters. The
+most impressive of these was a sarcophagus. Even in the day, it was enough to give her the
+chills. During the night was no exception. Not enjoying the idea of mummified remains being so
+close, Lily focused on other things.</p>
+<p>A blinking red light on a camera on the ceiling made her chuckle; she knew they were all</p>
+<p>for show. None of the cameras had worked in several years. According to her mentor, at least.
+Several faces were made on her way through while taking care to avoid the pedestals and their
+contents.</p>
+<p>“No wonder this is an unpaid internship… They can’t even afford a working security</p>
+<p>system.”</p>
+<p>The end of the hall waited in darkness. Only the glow of a green exit sign illuminated the</p>
+<p>door to the back office she shared with her mentor. Mr. Baran had been nice enough to leave it
+unlocked for her arrival. The inside greeted her like an acquaintance surprised to see her at such
+an hour. She didn’t intend to dawdle and spent only enough time to turn on the light and recover
+her bag waiting on the desk.</p>
+<p>“Mission accomplished!” she announced to the dead pharaoh and his possessions.
+Mr. Baran’s gleeful whistling from the foyer echoed through the empty museum as she</p>
+<p>closed the office door. Finding herself in cheerful spirits and anticipation of returning home for a
+relaxing Friday night, Lily’s keys swung around her finger by a lanyard. They traveled in a large
+circle as she retraced her steps through the exhibit. No doubt Mr. Baran was as eager to go home
+as she was.</p>
+<p>“I’m coming!” Lily promised, knowing her voice would carry through the building.</p>
+<p>“Thanks for wai--Whoops!”</p>
+<p>Her blood froze when the lanyard slipped from her finger. Like a comet of doom, her</p>
+<p>bundle of keys sailed through the air towards a waiting canopic jar. A lid in the shape of a cat’s
+head peered forward in unsuspecting bliss.</p>
+<p>Clink!!
+“Oh no,” Lily squeaked, wincing as it struck the ancient pottery.
+Connecting with the top of the jar, the weight of her keys sent the container teetering</p>
+<p>back and forth. She watched in frozen fear as it shimmied around its rounded bottom.</p>
+<p>“No please no!”
+With a final wobble, the burial jar came to a stop only slightly off-center of the pedestal.
+Lily held her breath from the stress. She’d come close to losing her unpaid job. Scared to</p>
+<p>take any other action, she moved toward the artifact to recover her dastardly keys.</p>
+<p>“Thank God…” she sighed while approaching the pedestal. Stepping close, one of her
+feet collided with the other mid-stride. Lily felt her soul leave her body as she toppled forward
+with hands flailing for support. They found it, unfortunately, upon the artifact’s stand.</p>
+<p>CRASH!!!</p>
+<p>4</p>
+<p>“OW!” Lily fell on the floor next to the toppled pedestal. The shattered remains of the jar</p>
+<p>and its contents covered the tiles in a horrible display of misfortune and millennia-old organic
+matter.</p>
+<p>Destruction and doom filled the air. She could almost hear the distant sound of thunder in</p>
+<p>the back of her racing mind. Scared and bleary-eyed, Lily watched as a cloud of grey particles
+swirled from the spilled contents and filled the air like a small sandstorm.</p>
+<p>“Ahh!!” she cried out, hair whipping around her face. “M-Mr. Baran!” Unable to see the</p>
+<p>rest of the exhibit through the dense cloud, she turned her head upward.</p>
+<p>The looming face of a cat stared back from the swirling dust. It filled her vision to make</p>
+<p>her feel as small as a mouse. Features blurred and subtle, Lily ogled in fear at the animalistic
+shifting visage. Dull red glowed within its eyes as if inspecting who had disturbed its final
+resting place. Lily wholly believed she was in a nightmare.</p>
+<p>Suddenly the ghostly feline bared its fangs. Opening its mouth, Lily cried out in terror as</p>
+<p>the cloud of dust fell upon her. Air was pushed from her lungs and she coughed against the
+assault. An unexplainable force traveled throughout her body as if another presence had collided
+with her own.</p>
+<p>As swiftly as it had begun, it was over. Lily opened her eyes to see the museum ceiling.</p>
+<p>She sprawled on her back in a pile of debris and broken pottery. The pedestal lay on its side as if
+to remind her of her toppled career as an unpaid intern.</p>
+<p>“Huh??”
+Lily rose into a sitting position and looked around. There was no sign of the mini dust</p>
+<p>storm or a giant cat face. Running her hands over herself, Lily felt anxiety gripping her core in an
+iron fist. There was something else she couldn’t put her finger on, however. She felt strange and
+lightheaded. An ethereal force ebbed and flowed like there was something inside her body that
+wasn’t supposed to be there.</p>
+<p>“W-What just happened to--”
+A beam of light cast itself upon her to make Lily recoil in fright.
+“Ahhh!!”
+Mr. Baran called out, rushing towards her with an overweight jog. “Are you all right,</p>
+<p>Lily?? What happened?! I heard a crash!” He stopped in his tracks when he saw the broken jar.</p>
+<p>Blushing with embarrassment and guilt, Lily confessed, “T-There was a little bit of an</p>
+<p>accident…”</p>
+<p>( . Y . )   ( . Y . )   ( . Y . )   ( . Y . )   ( . Y . )</p>
+<p>Lily awoke the next morning in a lazy daze. An awful taste filled her mouth as if she’d
+just come out of a coma. Despite the previous night’s events, it was one of the deepest rests she
+could remember in a long time. Odd recollections from her dreams brought forth ideas and
+cravings. It wasn’t often Lily awoke with the first thought in her head being of fish.</p>
+<p>“Nnnghh…”</p>
+<p>5</p>
+<p>She groaned and stared at the ceiling. Under the covers she could feel her nakedness</p>
+<p>rubbing against the soft sheets. Considering how hot she felt at that moment, it was no wonder
+her sleeping self had wanted the garments off. Various articles of clothing sat on the floor or
+piled around her feet at the end of the bed. It wasn’t enough to keep her thoughts away from the
+night before.</p>
+<p>Lily cringed when the mishap at the museum ran through her mind again. A shattering jar</p>
+<p>still rang in her ears. “I’m so clumsy I can’t even manage to stay in my clothes all night…”</p>
+<p>She rolled onto her side and stared across her room. The warmth of her arms wrapping</p>
+<p>around her torso was intoxicating, as was the heat of the blankets and the sun shining through her
+window. Lily snuggled herself into a tight ball. Such a soft, pillowy warmth was pressing into
+her forearms that she couldn’t believe they were her own breasts. Above-average B-cups had
+never been such a good reason to stay in bed hugging herself.</p>
+<p>“It’s a good thing I’m friends with Mr. Baran…” she sighed, still filled with regret. “If he</p>
+<p>hadn’t been willing to cover for me, I would be out of an internship. I guess it wasn’t the first
+time a floor buffer has ‘accidentally’ knocked over a pedestal.”</p>
+<p>Just the thought of leaving her bed was torture. Groaning once more, Lily rose into a</p>
+<p>sitting position and allowed the blankets to slide off. The room felt different than normal when
+she stood on groggy feet. Suspicious weight wobbled on her chest. The fronts of her breasts
+seemed excessively intrusive in the bottom of her vision. Tired and absentminded, she wrapped a
+steady arm across them without a second thought.</p>
+<p>Something flashed in the corner of her peripheral vision. Several seconds later, she saw
+the same blur again over her other shoulder. It was fast and brown like a tiny bird darting back
+and forth. Lily didn’t have the mental capacity to care for such a thing at the moment.</p>
+<p>On her way to the bathroom, Lily passed by a full-length mirror. A reflection followed
+her movements but there was something that gave her pause. There were colors and shapes she
+had never associated with her body. Taking a step back into its reflection, Lily stared in
+confusion.</p>
+<p>Perched on top of her head like tiny tents were two cat ears. They rose from her hair to</p>
+<p>face outward. Tufts of white fur laid against their light-pink insides. Soft calico fur splotched
+their outsides in a collage of Autumn colors.</p>
+<p>Lily didn’t move a muscle. Under her nervous gaze, the left cat ear twitched.
+“Ah!!”
+The movement startled her into jumping. Breathing and heart rate increasing to levels of</p>
+<p>panic, a trembling hand reached to her head. An ear was pinched between a thumb and finger
+before she delivered a gentle tug.</p>
+<p>“Ow!”
+Her scalp moved with it. Every bit of tension was transferred. As if angry, the ear</p>
+<p>twitched itself free of her shaking grip.</p>
+<p>“W-What the...What are these things?! ARE THESE GROWING OUT OF MY--”
+Something flicked behind her shoulder again. She didn’t need to rely on her peripheral</p>
+<p>vision this time; the culprit was plainly visible in the mirror.</p>
+<p>6</p>
+<p>“Please don’t tell me…”
+A long, serpentine-like object whipped behind her in long wavy motions. The color</p>
+<p>matched that of her calico ears too perfectly. Watching it sway side to side commanded Lily’s
+total attention. Too scared to have her fears confirmed, she craned her head over her shoulder.
+From the base of her spine extended a cat’s tail. It twisted through the air with a bushy</p>
+<p>thickness slightly less in width than her wrist. It wiggled in joy as if to say hello to its new
+owner.</p>
+<p>“AHHH!!!!!”
+Lily screamed in shock and spun around to turn her back toward the mirror. Her hands</p>
+<p>couldn’t move fast enough. Together they grabbed at her head and her new tail. Its form was
+warm in her hands and thrashed like a fresh fish. Tugging at the base did nothing to remove the
+foreign object other than sending strange tingles across her hips. The sexual glimpse between her
+thighs wasn’t helping.</p>
+<p>7</p>
+<p>“T-T-These are real…” she whispered. “This tail is real!”
+An ear wiggled against her hand and the tail whapped the back of her thigh in</p>
+<p>confirmation.</p>
+<p>I HAVE CAT EARS AND A TAIL?!”</p>
+<p>fell into a stunned silence.</p>
+<p>“Aahhhhh they’re real they’re real!! WHAT THE HELL HAPPENED TO ME?! WHY DO</p>
+<p>Her panic escalated until her eyes finally had a chance to witness the rest of her body. She</p>
+<p>“E-Everything is different…”
+Normally an average build resting around five feet tall and one hundred and forty pounds,
+the body in the mirror was far from her own. Lily had lost weight and in turn gained half a dozen
+inches in height. A slender figure filled the mirror from top to bottom with lithe curves and
+contours. She could have passed for a professional gymnast.</p>
+<p>Lily’s gaze settled on her chest.
+“O-Oh wow…”
+A stunning transformation consumed her breasts. Her B-cups were nowhere to be found,</p>
+<p>having been buried beneath the supple mounds pulling at her shoulders. Plump and full, they
+stood into the air with incredible elasticity given their DD-cup size. Nipples as thick as the tip of
+her pinky pointed straight ahead with tingling sensitivity to the open air.</p>
+<p>Lily’s hands floated to her chest. The dramatic increase in size mystified her. Feeling</p>
+<p>their heaviness sink into her palms was satisfying. Lily stared at the glorious mounds
+overflowing her grasp. They would have been big on her old body, but on this new slender
+frame, they commanded attention. Lily’s best guess placed her at an impressive bra size of 28F.</p>
+<p>“They’re so soft…” she whispered. Their depths were hot to her squeezing fingers.
+Tempting sensitivity sent electricity from her nipples to her crotch. Watching her reflection with
+wide eyes, Lily released her bust in favor of stretching her arms over her head. The result left a
+stunning profile of her mammaries jutting off her front. They jiggled and wobbled when she
+swayed left and right. Such a display of feminine maturity was arousing even to the owner.</p>
+<p>“Jason is going to love these,” she mused, considering her boyfriend. Then she pondered
+what he might think of her other new extremities and she quickly despaired. “What am I saying?!
+I can’t go out like this! How am I going to--Nnnghmmmm...”</p>
+<p>Sensual ecstasy took over Lily as her arms stretched. Arching her back, she closed her</p>
+<p>eyes and felt every muscle in her body relax. She rose onto her tiptoes and felt her tail stand
+straight along her back. Electric tingles washed over her.</p>
+<p>“Mmmnngh… Oh my God… It feels so...good to stretch…”
+Bringing her arms down, she bent forward to slide her hands down her legs until they</p>
+<p>came to rest on her feet. She bent totally at the hips, her knees locked and body limber.</p>
+<p>“I-I can touch my toes!” she giggled. “I feel like I could do the splits if I wanted!”
+Lily fell silent. Straightening up, she came to look at her reflection again. Everything
+about her was cat-like. Ignoring the ears and tail, Lily’s new figure excluded an air of sensual
+feline sexuality. She felt capable of luring any man into her claws with this body.</p>
+<p>8</p>
+<p>Lily’s heart skipped a beat. Quickly she glanced at her hands. The fear of discovering</p>
+<p>disfigured cat claws dissipated with a sigh of relief.</p>
+<p>“So it’s just the ears and tail…” she hummed. “Without them, I could be a supermodel.</p>
+<p>With them, I’m some kind of freaky lab experiment gone wrong.”</p>
+<p>Curiosity overpowered Lily’s fear and confusion and she started to wonder. How many of
+her qualities had been affected? Was it just her appearance and flexibility? She looked around her
+room, suddenly viewing it as an obstacle course. Such a thing would never have been imagined
+previously, not when walking down the stairs proved to be a challenge from time to time. Now,
+however, Lily felt confident in her motions. Complete control was hers; she could tell clumsiness
+was a thing of the past. This was her Spider-Man moment.</p>
+<p>A daring cat-ninja path from her desk chair, to a bedpost, to another bedpost, and finally
+back to the floor caught her eye. The ability was within her, she could feel it. Tail twitching, Lily
+jumped onto her chair. Energetic legs sprang her from the seat and through the air toward the
+bed. Sure footing would ensure her balance on the bed post as she--</p>
+<p>THUNK
+“WHOA!!”
+Approaching the bed, the top of Lily’s foot caught against the outside of the footboard.</p>
+<p>The collision robbed her of any forward momentum. In a blur, she threw her arms out for aid
+when the mattress rushed toward her falling face like a wall.</p>
+<p>CLANG-SPLASH!
+Arms flailing, Lily’s fingers found a glass of water on the nightstand. She fell face-first
+onto her bed, crying out when the cold water spilled over her back and soaked her sheets. Utter
+defeat clouded her heart as she lay in the uncomfortable wetness. Her new ears twitched in
+annoyance.</p>
+<p>“Ok… So I’m still clumsy. I’m a cat in almost every way, except I’m uncoordinated.</p>
+<p>Perfect.”</p>
+<p>A dripping tail slapped against her back. Whatever had happened during the night, it</p>
+<p>couldn’t be allowed to last. Lily dismayed at her feline transformation. She couldn’t live her life
+or face her boyfriend with a tail and a pair of fluffy ears. No matter how it came to be, they were
+not welcome on her body. Surely she wasn’t the first to experience this condition. A skilled
+professional would have the answers and ability to remove her calico qualities.</p>
+<p>Water flung against the wall from her tail as it whipped. Lily sighed and felt her breasts</p>
+<p>squish between her and the bed. It was a wondrous feeling, but not enough to remove the anxiety
+of growing a tail. “I need to talk to somebody about this.”</p>
+<p>( . Y . )   ( . Y . )   ( . Y . )   ( . Y . )   ( . Y . )</p>
+<p>A trip to the doctor’s office never felt so awkward. Lily would have preferred to see her</p>
+<p>physician for anything other than the cat ears hiding under her knit hat. Coming to a medical
+professional for what would sound like such a childish joke felt demeaning. Her tail struggling
+under her skirt didn’t help. It took a surprising amount of time to wrap it between her legs and</p>
+<p>9</p>
+<p>around her hips before tying it in place, all while still maintaining a realistic outward appearance.
+A puffy floral skirt had been the solution, paired with a light sweater on top. Against her better
+judgement, this had meant going without underwear; Lily wasn’t ready to cut a hole in every pair
+of panties she owned so she could wear them with her tail.</p>
+<p>At her side sat a girl waiting with her mother. Lily guessed she couldn’t have been older</p>
+<p>than eight. Since walking in, Lily had felt the girl’s eyes lingering on her. She did her best to
+ignore her audience and wait for her turn with the doctor.</p>
+<p>The girl asked suddenly, “Do you have something under your hat?”
+“N-No!!”
+Not immediately buying Lily’s denial, the girl stared at the large blue knit hat. “Are you</p>
+<p>sure? It keeps moving… It reminds me of Ratatouille!”</p>
+<p>Seeing the secretary glance in her direction with curiosity, Lily clamped her hands over</p>
+<p>her head. “There’s nothing under my hat!” Lily promised. The left side of her skirt shifted as the
+end of her tail wiggling in annoyance.
+“Lily?” a nurse called.
+“Oh thank you,” Lily accepted in a fluster. She rose and quickly left the girl’s sight. There</p>
+<p>was no doubt in Lily’s mind the girl’s eyes would beam upon seeing her condition. To an entire
+generation of young girls, Lily could stand as a fantastical dream come true.</p>
+<p>“I guess I can always have a future in entertaining birthday parties…” she mumbled.
+The nurse led her to an empty room. “Dr. Symmonds will be with you shortly.”
+“Thank you.”
+The room was cold while Lily waited in silence. A settling chill and rising anxiety made
+her tail puff against her legs. How would another person react to her mutated body? Did it count
+as a mutation? Would the doctor recoil at the sight? Would she be sent away to a lab and never
+see the light of day again? Lily’s head swam with fear. As it stood, there was no chance of going
+about her life without being ridiculed or ogled.</p>
+<p>A click alerted her to the doctor’s presence when the door opened.
+“Lily!” the doctor greeted, entering the room reading a clipboard. She was older with a
+full head of blonde hair. Surely she would have at least heard about a condition such as Lily’s.
+“It’s been a while!” she smiled, “What brings you in? Your notes say you’re experiencing some
+strange growths?”</p>
+<p>Lily’s tail twitched nervously. She stammered, unsure of where to start. “I...I woke up</p>
+<p>different this morning.”</p>
+<p>“Ok… Different how?”
+She couldn’t bring herself to say the words. Building every ounce of courage, Lily</p>
+<p>removed her hat. Cat ears sprang from her hair and pointed at the ceiling.</p>
+<p>Dr. Symmonds stared at them for several seconds.
+“Those are simply adorable on you! Are cat ears coming back in style?? Every now and
+then I’ll see pictures of girls your age wearing them at the mall or clubs! My little girl just loves
+to pretend she’s a--”</p>
+<p>“These are real!!” Lily blurted out.</p>
+<p>10</p>
+<p>The doctor’s smile faded and she stepped towards Lily with an outstretched hand. She</p>
+<p>gripped one ear and played with it gently.</p>
+<p>“Ahh! G-Gentle!”
+“When you say they’re ‘real’, do you mean they’re an actual cat’s ears? Like lucky</p>
+<p>rabbit’s feet? Because that’s quite gruesome. I’m not sure I would approve of--”</p>
+<p>“What?! No! I mean they’re actually--Ngh!”
+Dr. Symmonds pulled again and elicited an annoyed groan. “Well they’re certainly</p>
+<p>realistic!”</p>
+<p>“I know they’re realistic! They were growing out of my head when I woke--”
+“Did you have to use some kind of fancy costume glue to get them to stick so well? I</p>
+<p>don’t see any headband attached to them. Not sure my daughter would be willing to sit still for
+an hour to get them attached like this… I’m impressed with how far fake ears have come!” The
+doctor stepped back. “Now back to your visit, I didn’t mean to cut you off. You were about to tell
+me about some growths?”</p>
+<p>Lily felt like growling after the woman tugged on her ears and scalp for several minutes.
+She grabbed her ears and held them towards the doctor. “These are the growths!! Look!!” Heart
+pounding, Lily reached under her skirt’s waistband with such speed she made the doctor blush. A
+long tail unwound into view.</p>
+<p>Dr. Symmonds watched it slither on the paper-covered exam table. “Ok, now that is</p>
+<p>awesome. Lily, you have to tell me where you bought that. It looks expensive!”</p>
+<p>Incredulousness spread over Lily’s face. This was not what she’d been expecting. The</p>
+<p>doctor stepped forward with curious hands before she could say anything. Dr. Symmonds’s eyes
+lit up. “It’s even warm?? Where do you keep the battery pack??”</p>
+<p>“Stop it!” Lily slapped her hand away and gathered her tail to hug against her chest. She
+didn’t like the woman squeezing it. “I’m trying to tell you it’s real! There is no battery pack! It’s
+all real! The ears! The tail! I woke up this morning and I was part CAT!!” Lily tried to catch her
+breath but the words wouldn’t stop. “My whole body changed! I was skinnier, taller, and my
+boobs grew!! I-I know it sounds crazy, but I think I disturbed the soul of an ancient cat buried in
+an old Egyptian urn, and now its soul is inside of me and I’m half cat!!!!”</p>
+<p>Dr. Symmonds allowed herself several seconds to take in Lily’s insane statement.</p>
+<p>“Oohhh… I see.”</p>
+<p>Relief came in a massive wave. “Thank God, you mean you believe--”
+The doctor smiled and set her clipboard down. “This is a prank, isn’t it? Did you lose a</p>
+<p>bet? Did someone dare you to do this? Is this some new crazy TikTok or Instagram challenge to
+get a doctor to examine you for a fake condition?” Dr. Symmonds looked down with
+disappointment. “Lily, it’s not good to waste a doctor’s time. There are patients waiting that need
+actual help. We don’t have time for stuff like this.” She chuckled, looking at Lily’s cat
+extremities. “Although this is fairly elaborate.”</p>
+<p>“I need actual help, Doctor!!” Lily’s mouth trembled with frustration. “There is a cat tail</p>
+<p>growing out of my butt!!”</p>
+<p>11</p>
+<p>The doctor sighed. “Ok, Lily… How about I play along so I can move on with my</p>
+<p>patients?”</p>
+<p>Lily would have settled for an acknowledgment. Watching Dr. Symmonds remove a laser</p>
+<p>pen from her jacket pocket, however, made her ears perk up. The front of her sweater revealed
+hardened nipples and lack of a bra. Under the top, her breasts felt hot and swollen. Quick breaths
+made them shift against the fabric. Had the doctor been paying attention, she would have noticed
+Lily’s dilated pupils. They followed the laser pointer through the air.</p>
+<p>Dr. Symmonds addressed a female model on an anatomy poster on the wall next to the</p>
+<p>exam bed. The laser danced around the base of her back. “Humans do have a vestigial tail bone.
+This is actually left over from a tail every fetus grows before losing it by the eighth week of--”</p>
+<p>PAT!
+Lily’s palm slapped against the poster. Determined eyes stared at the red dot wavering on</p>
+<p>top of her hand.</p>
+<p>remnant of evolution…”</p>
+<p>Dr. Symmonds wasn’t certain how to respond. “A-And it’s widely thought to be a</p>
+<p>PAT!
+PAT!
+Lily began smacking the wall in an attempt to capture the laser. It commanded her full</p>
+<p>concentration.</p>
+<p>PAT!
+Lily purred. “Let me catch you…! Stupid dot!”
+PAT!
+PAT!
+Dr. Symmonds was at a loss. She’d never seen a prank go so far. “U-Uh… Lily… This is</p>
+<p>becoming a little embarrassing.”</p>
+<p>Laser wavering as the doctor lost her train of thought, it veered away from the poster and
+down the wall. Lily jumped from the exam table with predacious speed and followed it with both
+hands.</p>
+<p>PAT! PAT!
+PAT PAT PAT!!
+Shocked, Dr. Symmonds found Lily’s tail smacking her in the face as her patient jumped
+at the wall like a deranged lizard. The laser remained out of Lily’s grasp until the doctor finally
+had enough. With a click, the dot vanished and Lily spun her head in search of her prey.</p>
+<p>“Where’d it go??”
+“Lily, I think our time is up. I’m afraid I have other patients to attend to.”
+Lily snapped out of her trance. “W-What? But I--”
+Dr. Symmonds opened the door to the hallway. “Thank you for the laugh! I didn’t know</p>
+<p>how much I needed that. Don’t worry about a charge on the way out.”</p>
+<p>She left without another word. Lily couldn’t believe how poorly her quest for help had</p>
+<p>gone. It could have gone worse, but in the end she was still stuck with extra ears, a tail, and was</p>
+<p>12</p>
+<p>no closer to understanding why or how to remove them. Her tail drooped against her calves and
+she looked down in defeat.</p>
+<p>“Well I didn’t get hauled off to some lab… But now what am I supposed to--”
+Lily paused. Her feet were hidden from view. A shelf of stretched sweater fabric jutted</p>
+<p>from her body and rose over her abdomen. Her eyes grew wide as moons at the sight of the
+melons stretching her top.</p>
+<p>“WHAT?! D-Dr. Symmonds!! COME BACK!! M-MY BREASTS!!”
+Groping herself, Lily found her chest sensitive and heavy. Soft mounds had bloated to the</p>
+<p>size of her head. As if to accompany their swelling, she could feel a matching excitement still
+swirling in her belly from the battle with the laser pointer. Her nipples throbbed at the thought of
+catching the darting red pest.</p>
+<p>“M-Mmngh…” Lily moaned as her bust weighed heavy in her hands. Slowly her tail was</p>
+<p>winding between her thighs. Squeezing herself had never been so thrilling. “When did they
+get...s-so warm…?”</p>
+<p>Lily chewed on her lip. Beneath her skirt, her tail was rubbing against her crotch as if</p>
+<p>tempting her to explore further.</p>
+<p>“M-M...Meow…” she struggled to contain a mew of delight. The motion of her tail drew</p>
+<p>purrs of pleasure. “I… O-Oohhhhh… Mmmmm...”</p>
+<p>Lily shook her head in a flurry of brown. “No! No no!!”
+It was clear there would be no answers from this doctor’s office, nor did she intend to</p>
+<p>continue feeling herself up in front of an open door. Tearing her hands away in favor of pulling
+her sweater down to her hips, Lily exited the exam room with her ears and tail adequately
+stowed.</p>
+<p>“Give us a call if there is anything else you need!” the secretary said in farewell when</p>
+<p>Lily entered the waiting room.</p>
+<p>She couldn’t lean forward far enough. It helped conceal the ample masses hiding below</p>
+<p>her sweater, but it made her walk like a drunken penguin. “I-I will!” she squeaked before
+pushing open the front door.</p>
+<p>As she left with more questions than when she arrived, Lily could still feel the little girl’s</p>
+<p>eyes following her until the door closed.</p>
+<p>“Bye, kitty!” the girl waved.</p>
+<p>( . Y . )   ( . Y . )   ( . Y . )   ( . Y . )   ( . Y . )</p>
+<p>Lily rushed into the privacy of her apartment. After the ordeal at the doctor’s office, her
+heart still raced under her sweater. The thrill of chasing the laser remained fresh in her mind and
+swollen in her chest. She couldn’t understand her fixation with the bright red dot. In the back of
+her mind she knew it was impossible to catch, but a part of her refused to accept such ridiculous
+claims. It could have been caught had she just been faster.</p>
+<p>13</p>
+<p>“This whole catgirl thing is turning out to be a nightmare,” she moaned, leaning on her</p>
+<p>kitchen counter. “What am I supposed to do?? Am I going to jump at every small thing that zips
+across the ground?! I can’t go to work with a tail wiggling behind me!”</p>
+<p>Her eyes fell below to her sweater. It wasn’t as filled out as before, but it remained</p>
+<p>ill-fitting.</p>
+<p>“And why did my boobs swell up…??”
+Lily thought back to the laser. Thinking about it flitting back and forth made sparks fly in</p>
+<p>her mind. She desperately wanted to try catching it again, certain she knew the secret this time.
+Her heart raced beneath her chest.</p>
+<p>“It’s like…” Lily breathed, staring at her body, “It’s like...the excitement of it all...just</p>
+<p>made them...m-mmmnngh…”
+SSTTRRRTCH
+“A-Ahh!” Lily trembled when her chest bloated noticeably. “No no no! Go back down!”
+It required every ounce of willpower to banish the laser pointer from her mind. Doing so</p>
+<p>was enough to quell the sensations in her chest and she breathed a sigh of relief.
+“I hope there are no more surprises. I don’t think I could handle--”
+Lily paused. A sweet, creamy aroma was drifting from her fridge. Dryness spread over</p>
+<p>her parched throat. A tongue licked her lips at the overwhelming desire for a glass of cold milk.</p>
+<p>“God a glass of milk sounds good…” she whispered.
+Retrieving the carton from the fridge and listening to the fluid fill a tall glass made her
+tail twitch with excitement. Throbbing nipples stood against her sweater and sang with heat as
+she lifted the glass to her lips.</p>
+<p>“Mmmm!!!”
+Lily leaned back against the counter and closed her eyes in ecstasy. Milk had never tasted</p>
+<p>so good. Electricity and joy coursed through her body at the creamy beverage.</p>
+<p>SSTTRRRTCH
+“M-Mmmmm!!”
+Tight fabric rubbed over her chest. It titillated her nipples to the point of making her</p>
+<p>shiver. As if following a suggestion from her thrashing tail, Lily lifted a finger to rub a
+protruding nipple. Milk ran through her lips with greedy gulps.</p>
+<p>STTTRRRTCH
+“Mmmm!!”
+The heat of her breasts couldn’t have paired better with the coolness of the milk. Together
+they tempted Lily into a dance of pleasure. Color filled her cheeks and her ears drooped over her
+head. She couldn’t tell if she was hearing her heartbeat or her tail thumping against a cabinet. A
+thimble-sized nipple puffed between her fingers as she sank her hand deep into the depths of a
+breast. Milk leaked from her lips to run down her chin.</p>
+<p>“Mmmm… M-Mmmm!!”
+SSTTRRRTCH!!!!
+A chilly drop of dairy jumped from her chin. It fell moments later on exposed cleavage</p>
+<p>and ran between her breasts.</p>
+<p>14</p>
+<p>“M-M-MMNGH!!”
+Lily’s eyes popped open at the chilly surprise. A shower of milk sprayed from her lips in</p>
+<p>shock as she slammed the glass on the counter.</p>
+<p>“Oh my God!!”
+Her mammaries were out of control. Supporting them with both hands under their girth,
+Lily arched her back against the counter. Cleavage had stretched her neckline far beyond repair
+to the point of releasing an expanse of pale skin. Flesh overflowed from the bottom of the
+garment with no regard for modesty. Her fingers brushed against her bare skin and sent shocks of
+arousal straight to her groin. Comparing them to a pair of large watermelons, Lily gawked at her
+engorged size.</p>
+<p>“Noooo NO NO!! Why is this--MMMM!!!”
+Lily’s thighs rubbed together under her skirt. Touching her chest and still tasting the milk
+on her lips was intoxicating. There was only one word she could find to describe her current state
+of mind: frisky.</p>
+<p>“O-Oohhh… Oh wow…” she moaned, slipping a hand under her sweater. “Mmmm…</p>
+<p>M-Mmmmeooow!!!”</p>
+<p>The cry was too cat-like for her liking. Tearing her hands away, Lily demanded she keep
+her hands anywhere but herself. “No! NO!! Don’t give in!! This isn’t natural!! T-This...shouldn’t
+be happening!! None of this is right!! I’m not a cat!! Boobs aren’t supposed to grow like this!!”</p>
+<p>Lily breathed deep and watched her chest’s bloated weight move. “I-I can’t keep...getting</p>
+<p>so excited over stupid things! The laser… The milk… Everything a cat would love, just makes
+me lose my mind and my tits blow up! What the hell was in that burial urn?! Am I cursed?!”</p>
+<p>She closed her eyes. Not having to look at her beautifully swollen breasts helped.
+“I just need to relax. No more excitement. No more distractions. If I stay calm, my chest</p>
+<p>will go back down and I can think clearly again.”</p>
+<p>Lily thought for a moment and decided to try playing into her new strengths.
+What would a cat do to relax?
+Opening her eyes, she saw her yoga mat waiting in the living room.
+“Stretching!! Cat’s always stretch before a nap!”
+The answer seemed so obvious. Some stretching followed by a warm electric blanket was</p>
+<p>the perfect recipe for a catgirl tranquilizer. Lily ran into her room to change out of her skirt and
+sweater, though not without tripping on her way. She wasn’t sure if it was due to her enlarged
+breasts or simply because of her own clumsy disposition. The two were a clumsy match made in
+heaven.</p>
+<p>The thought of stretching was already calming her body. Cups melted off her chest. She</p>
+<p>could feel its weight dwindling as she searched for a sports bra and shorts. Stretching the bra
+over her chest was a challenge, though when it gave a satisfying SNAP! against her torso and
+secured her cantaloupe breasts, she grinned in triumph.</p>
+<p>“That’ll hold the two of you troublemakers.”
+Lily approached her yoga mat with confidence. It was going to be different performing</p>
+<p>the poses with her new body. Her longer limbs would change everything.</p>
+<p>15</p>
+<p>The effects of stretching were instant. Laying on her stomach, Lily ignored the cushion of</p>
+<p>her breasts and pushed up onto her hands. Relaxing chills traveled down her spine to the tip of
+her tail. These continued as she brought herself onto her hands and knees and arched her back up
+and down.</p>
+<p>“Heh…” she chuckled, “Look at me, I’m a catgirl doing cat-cows.”
+Lily brought herself into downward dog. The range of her flexibility amazed her. Never
+before had she been able to bend so fluidly with such ease. Almost bent in half at the hips, Lily
+closed her eyes in meditation. Her tail fell limp against the back of her legs as if taking a nap.
+“This is bliss…” she sighed, finding the first nugget of joy in her predicament. “I can’t</p>
+<p>believe how calm--”
+BZZZ
+BZZZ
+Lily’s eyes popped open at the sound of her phone vibrating by the mat. The notification</p>
+<p>told her it was from Jason. A picture message was waiting for her. The possibility of a risque
+photo made her face flush.
+“M-Mmm…”
+She couldn’t help herself. Ignoring the tightness of her sports bra, Lily paused her</p>
+<p>stretching to open the message</p>
+<p>A hardened cock sitting in her boyfriend’s hand filled the screen. The erotic sight
+penetrated her mind with arousal. Ogling the package, Lily felt her sports bra tighten and force
+excessive cleavage towards her collarbones.</p>
+<p>“No… No… Just ignore it…” She replaced the phone on the floor and returned to</p>
+<p>stretching. She didn’t dare test that particular feline quality. “I refuse to go into heat some like
+horny ca--.”</p>
+<p>BZZZ BZZZ BZZZ!
+BZZZ BZZZ BZZZ!
+Her phone was ringing. Jason would know she read his message and her heart thumped.
+Chewing on her lip, she answered the phone and put it on speaker while changing positions onto
+her back.</p>
+<p>“H-Hey!” she answered.
+“Hey, you. Get my pic?”
+STTRRRRTCH
+Lily panted as her bra tightened. Thinking about her boyfriend’s cock wasn’t going to end</p>
+<p>well. Moisture warmed her crotch against her athletic shorts. “N-Nngh! Y…Yea…”</p>
+<p>Jason sounded pleased by the aroused tone in her voice. “How about you come over</p>
+<p>tonight and I’ll show you some more? I’ve been hard all day.”</p>
+<p>“Mmmngh!” Lily stifled a moan when pressure rose in her sports bra. On her back, it felt
+like two boulders were building on top of her chest. Spandex compressed them tight and caused
+firm bulges of skin to overflow into her face. Trying her best to focus on stretching, she lifted her
+butt from the mat to attempt a bridge pose.</p>
+<p>16</p>
+<p>“Tonight might not...ngh...be very good for--A-Ahh…!” A cry escaped when her chest</p>
+<p>shifted in its prison. Cleavage filled her view as her chest tumbled into her face.</p>
+<p>“What are you doing right now?”
+“S-Some...Some yoga!”
+Jason moaned approvingly. “I like the sound of that… Are you bending over?”
+“M-Maybe!”
+Legs shaking, Lily knew she couldn’t hold her bridge for much longer. Flesh threatened</p>
+<p>to swallow her face.</p>
+<p>“Whoa!”
+BWOOMPH
+Collapsing under the weight of her watermelon tits and her own arousal, she lay splayed</p>
+<p>on her back. Flesh jiggled in her sports bra and pressed the air from her lungs. A stray hand
+traveled across her belly and into her shorts. Her waiting pussy was wet to the touch and soaking
+through her shorts.</p>
+<p>She could almost hear Jason grinning through the phone. “Want me to come take you</p>
+<p>from behind?”</p>
+<p>SSSTTTRRRRTCH
+Angry spandex screamed across her bust. It was the largest sports bra she owned, but it</p>
+<p>wasn’t meant to contain anything over a C-cup. The forced swelling within its seams was far
+beyond its design. Lily could feel herself overflowing the bra at every corner. Much of her view
+was dominated by the heaving globes.</p>
+<p>“I could pull those little shorts of yours down and grab your hips,” Jason teased.
+SSTTRRRTCH!!
+“M-MMnngh!!! J-J-Jason!” Lily gasped for air. The weight was incredible. Two beach
+balls sat crushing her within her own bra. “Maybe...M-Maybe we shouldn’t be doing this right
+n--”</p>
+<p>“Or would you rather I let you ride my cock? You could bounce up and down while I</p>
+<p>pinch your nipples.”</p>
+<p>“NNNGHHHH!!! O-Ooohhhh!!!”
+Heat flooded Lily’s body. A finger worked furiously to stimulate her clit while she was
+still able to reach it. Buried inside her cleavage, Lily could see only the dim light coming from
+between her breasts. Creaking spandex echoed across her mammaries. Her bra wouldn’t last
+much longer. It had grown tight enough to deform her breasts into a collection of trembling
+bulges.</p>
+<p>POW!!
+POW!!
+Stitches burst along the side of her bra. Each one was like a slap to her chest, sending it</p>
+<p>heaving with stored energy.</p>
+<p>“You know I love watching the face you make when you sit on my cock,” Jason urged.
+SSSTTTRRRTTCCCH</p>
+<p>17</p>
+<p>“J-Jason!!” Lily gasped for air. An unknown force was multiplying her arousal to</p>
+<p>monumental levels. Her tail squirmed against her hand from outside of her shorts. “Please…
+Please stop!! Mmmmmm I can’t take it!!” In the back of her mind, Lily pictured Jason stroking
+himself to the erotic sounds of her breast-laden distress.</p>
+<p>“Or maybe I could tie you up like last time, then get the vibrator and--”
+SSTTTRRRRTCCCHHH
+“MmmmmMMMMMMEEOOOW!!!!”
+SSHRRIIPP!!!!
+Billowing flesh burst through Lily’s sports bra like it was made of paper. What was left
+snapped against the floor before becoming buried under her flowing chest. Swollen to massive
+proportions, Lily writhed in heated orgasm under tits large enough to reach her belly button. The
+expanse of flesh rippled and jiggled as her hand shook between her legs. “Ahhh!!! Oh yes!!!
+MMMEEEOOWW I’m cooooming!!”</p>
+<p>Lily’s outburst lasted several dozen seconds before exhaustion came over her. Hand</p>
+<p>slipping from her shorts and glistening with juices, she lay under a cloud of gasps and moans.
+The weight of her chest wouldn’t let her rise.</p>
+<p>“...Lily?”
+Her eyes fluttered at Jason’s voice. “Y-Y-Yea…?” The end of her tail massaged her</p>
+<p>crotch.</p>
+<p>“You all right? I thought I heard…” Jason paused. “Well I don’t really know what I</p>
+<p>heard… It sounded like you were making animal noises…”</p>
+<p>Lily grunted and tried to free her arms. They wouldn’t budge.
+“Are you all right?” Jason asked again.
+Lily was more than all right. Her mind still ached from the orgasm she’d just</p>
+<p>experienced. “Nnngh… Uh-huh…” she panted. “C-Cool as a kitten…! The TV is just on in the
+background.”</p>
+<p>There was a period of silence on the phone. “So… I’ll see you tonight?”
+Staring into the tower of cleavage pinning her to the floor, Lily gulped. Her senses were</p>
+<p>returning and every single one screamed about the fantastical breasts pinning her to the yoga
+mat. “Yup! I-I’ll see you tonight!” Under her breath, she squeaked, “Assuming I can get up
+before then!”</p>
+<p>( . Y . )   ( . Y . )   ( . Y . )   ( . Y . )   ( . Y . )</p>
+<p>“Why am I doing this… I shouldn’t be doing this! I’m a cat-eared freak! I shouldn’t even</p>
+<p>be out of my house!”</p>
+<p>Lily panicked as she climbed the steps to Jason’s apartment. Even in her disguise, there
+was no concealing the anxiety raging inside. Her life was drastically changed from the moment
+she woke up this morning. She didn’t know if she was ready to face those closest to her yet.</p>
+<p>“Even if you ignore the ears and tail, I barely look like the same person!” Lily hoped her
+skirt would conceal her tail. Her knit hat would do its job assuming it stayed on. Looking down</p>
+<p>18</p>
+<p>at her body, however, Lily feared there was a small chance of any of her clothes staying on once
+Jason got a look at her. An absent bra left little to the imagination and his taste for buxom women
+was no mystery.</p>
+<p>“Jason is going to notice them right away…” she feared, looking at her breasts. After the</p>
+<p>incident with the milk, her sweater had stretched too much to wear again. A loose-fitting blue
+button-up blouse was all she could find to wear and still provide ample modesty. Still there was
+no hope of hiding her chest from her boyfriend, not when she’d tripled in size overnight.</p>
+<p>“Is he going to laugh at me? Is he going to freak out?? What if he leaves me?! There’s no</p>
+<p>way I can show him what happened! He’s not into furries! Do I even count as a furry?!” Lily
+pondered for the crisis for a moment and sighed. “Maybe I should just run away to Japan and get
+a job at a maid cafe… I could probably live like royalty and--”</p>
+<p>“Hey, babe!”
+Lily froze when she saw Jason standing in front of her. Being so wrapped up in her</p>
+<p>thoughts, she failed to notice she’d already knocked on his door. Color left her face as she felt
+Jason’s eyes looking her over.</p>
+<p>“You look good tonight!” he complimented, lingering on her chest. “Uh… Nice hat!</p>
+<p>Little warm for it, don’t you think?”</p>
+<p>Lily grabbed the sides of her hat and pulled them further down her head for extra</p>
+<p>measure. “Nope! Not at all! It completes my outfit!”</p>
+<p>Arms wrapped gathered Lily’s waist when Jason embraced her. The firm bulge of his</p>
+<p>member pressed into her pelvis as he kissed her. “I won’t argue with that; you look adorable. Is
+there a new push-up bra under this shirt I haven’t seen yet, too?”</p>
+<p>“N-No… Why do you ask?”
+He shifted his gaze in uncertainty. “No reason, I guess.”
+Jason pulled her into his apartment with the eagerness of a horny college student.
+Refusing him was impossible; after the ordeal on their phone call, Lily was just as desperate for
+intimacy as he was. Although her breasts had reduced to normal size, her nipples remained erect
+in hopes of stimulation.</p>
+<p>“You look different,” Jason admitted after closing the front door. “I can’t really decide
+what it is…” He didn’t dare say she looked thinner or inquire about her excessive bust, but her
+height was fair game. “Did you get taller shoes?”</p>
+<p>Lily tried to calm her breathing as she placed her bag in his bedroom. “Yea! I thought</p>
+<p>they would help me look more professional at the museu--”</p>
+<p>ARROOOWWWLLLL
+A growl made Lily’s neck hair stand on end and her eyes bulged. Jason’s cat had
+completely slipped her mind. Based on its scowling position on his kitchen table, it wasn’t too
+happy at Lily’s presence.</p>
+<p>“H-Hi, Marci!” Lily stammered. “She looks mad…” she whispered to Jason. At the cat’s</p>
+<p>side sat a bag from a local pet store. The plastic crinkled under its waving tail.</p>
+<p>19</p>
+<p>“What’s the matter with her…?” Jason puzzled. “She usually loves you. Maybe she just
+wants her new toy.” Jason grinned with a cat owner’s pride. “I bought an entire spool of catnip
+yarn today. It should last her at least a week! She gets high as a kite on the stuff!”</p>
+<p>Lily’s heart pounded. “C-Catnip, huh?” If milk had been enough to blow her out of her</p>
+<p>sweater, she didn’t dare think about what the scent of catnip might do to her.</p>
+<p>“Hey…” Jason said in a smooth voice. He stepped close and put an arm around Lily’s</p>
+<p>waist. “I’ve been thinking about you all day since our phone call…”</p>
+<p>“Mmmm…” Shivers traveled to the tip of Lily’s tail as he stroked the lower part of her</p>
+<p>“You sounded pretty horny for someone who was just doing yoga.”
+“My...M-My sports bra...was really tight…” Lily whispered without thinking. “It was</p>
+<p>back. “Yea…?”</p>
+<p>hard to breathe!”</p>
+<p>Hoping to kick things off, Jason slipped a hand under Lily’s skirt. Fingers traced up her</p>
+<p>thigh and made her eyes flutter.</p>
+<p>“Oooh, no panties?”
+“Ahh!” Lily jumped when she realized she’d let his hand travel to her butt. A writhing tail</p>
+<p>was less than an inch away from being discovered. “H-Hey, frisky! Let’s calm down!”</p>
+<p>She escaped his grasp before her secret could be discovered. Jason’s interest wouldn’t be
+deterred, however. Arms timidly clasped in front of her chest, Lily felt his eyes looking her over.</p>
+<p>“I swear there is something different about you.”
+Lily glanced at her chest, slightly swollen against her forearms. As much as she wanted</p>
+<p>Jason to explore it and its swollen wonder, she knew it would ultimately mean releasing her new
+appendages. “T-There might be a few things different about me.”</p>
+<p>“Oh yea?” He came forward to embrace her and tug at the bottom of her shirt. Flesh</p>
+<p>squeezed between them when he pressed into her chest. “Am I going to need to inspect every
+inch of you to find out?”</p>
+<p>“I don’t think you would need to look very hard!”
+Lily regretted not wearing a bra. At this rate her nipples were going to tear through her</p>
+<p>shirt. Jason was coming on strong and she wasn’t equipped with the mental fortitude to resist his
+advances, let alone her own urges. She desperately wanted to straddle his cock and scream out as
+he pulled her tail like a leash and sank a strong hand into her new tits. With a mind of its own,
+Lily’s hand rubbed gently against his jeans. A waiting cock throbbed into her fingers and made
+her tail bristle with arousal.</p>
+<p>Jason nibbled on her earlobe. “I was just about to take a shower. Want to jump in with me</p>
+<p>and I’ll get you all soapy? You won’t have to lift a finger; I’ll wash you from head to toe.”</p>
+<p>It took everything Lily had not to moan and fall into his arms. Revealing herself was far</p>
+<p>too risky. Such an uncanny transformation to her body could ruin the night, if not their
+relationship.</p>
+<p>“I-I actually just showered before coming over,” Lily lied. “I shouldn’t get my hair wet</p>
+<p>again today!”</p>
+<p>20</p>
+<p>Jason wasn’t fazed. “Mmmm, looks like I get to look forward to a nice surprise waiting</p>
+<p>for me when I get out then!”</p>
+<p>“W...We’ll see…!” Lily couldn’t bring herself to tell him it would be a good idea to wait
+a few days. She needed more time to find help and more professional medical opinions. All she
+had to do was keep her clothes on. She considered having sex while somehow still wearing her
+skirt and hat. It wasn’t impossible, though keeping Jason’s eager hands away would be a
+challenge.</p>
+<p>A final kiss fell on her lips. “I’ll be out in a few.”
+Lily watched him step towards the bathroom until he paused. “Oh, can you open the yarn
+and give some to Marci? It should keep her plenty busy so we can have some time to ourselves.”</p>
+<p>Anxiety flooded her mind. Fate was trying to drive her mad. “S-Sure! No problem!”
+The door closed to separate them, leaving Lily with a hostile cat and a package of catnip</p>
+<p>yarn to open. Trepidatiously, Lily entered his room and approached the bed.</p>
+<p>Arrooowwwwll
+“O-O-Ok, Marci…” Lily cautioned, “It’s me! Lily! We’re best friends, remember? I’m</p>
+<p>just going to give you some fun yarn to play with!”</p>
+<p>Lily removed a large ball of twine from the shopping bag, all while under Marci’s
+watchful gaze. Holding the yarn in her hands, Lily was scared to touch the package, much less
+break the plastic seal and release the catnip scent.</p>
+<p>“Ok, you can fight this,” she encouraged herself, “You’re a person, not a cat. Something</p>
+<p>as stupid as catnip isn’t going to get the better of you. Just ignore it, like a normal person.”</p>
+<p>Hand trembling, Lily opened the wrapping.
+Gushing happiness flooded her mind. A wall of a scent she’d never imagined to be real
+engulfed her in joy and bliss. Together with Marci, her pupils grew to saucers as the wrapping
+was torn from the spool.</p>
+<p>“I-It’s just…” Lily swallowed and felt light as air. “It’s just catnip… Nothing to worry</p>
+<p>about…”</p>
+<p>her lungs.</p>
+<p>The iron firmness in her nipples begged to differ. Breaths quick with excitement as the
+sound of Jason’s shower ran in the background, she found the end of the spool and unraveled
+several feet.</p>
+<p>Pure happiness brought her eyes to saucers. Dropping the spool to the bed, Lily ran the</p>
+<p>yarn through her fingers. Every motion released its wondrous scent to make her feel hot and
+heavy. Several cups ballooned her chest outward though she paid no mind.</p>
+<p>“It’s...I-It’s just…”
+Marci watched with interest from below as Lily brought the yarn to her nose and filled</p>
+<p>“Mmmngnnhhhh… Oooohhhhh my Goooood…”
+Lily fell onto the bed in a heap with a bundle of yarn coiled against her face. It warmed
+her cheeks and made her head swim with delight. Cool air washed over her exposed abdomen
+but she couldn’t have cared less. The spool jumped across the mattress as she yanked more yarn
+free. Heaven was a place on Earth.</p>
+<p>21</p>
+<p>“Aahhh! Oh I feel so...MMM!!! This is INCREDIBLE!”
+Yarn winding around her squirming body, Lily’s mind lost itself to the cloud of catnip. A</p>
+<p>wild hand pulled at her skirt to slide it down her thighs and reveal a moist crotch aching for
+attention. It sang with sensitivity rivaling that of her chest, bloating big enough to fill the
+capacity to her shirt. Her tail whipped free with delight.</p>
+<p>“Mnnghhh!!! I-I want to feel it!!! I WANT TO FEEL IT ALL OVER ME!!”
+Blankets tangled around her feet. Hands moving in a flurry, Lily unbuttoned her blouse.
+Her breasts demanded freedom. Yarn wrapped across her body to dig into her bust. Nary a curve
+was left unbound as Lily lost control. Rubbing her face across Jason’s bed, her hat slid from her
+hair.</p>
+<p>“Mmmm!!! MMMMMMEOOWW!!”
+Skin billowed from her torso. With her libido thrown into chaos and her inhibitions</p>
+<p>non-existent, Lily reveled in her swelling tits.</p>
+<p>“Aahhhh it feels SO GOOD!! This SCENT!! I can’t get enough!!”
+In the shower, Jason glanced up from shampooing his hair. “Lily? Everything all right?”
+Purrs like an engine vibrated the apartment walls. The sounds coming from her mouth</p>
+<p>were unreal. So strong was her joy that Lily could feel them traveling down her arm and into her
+fingers as she played with herself. Her own joy turned her into a vibrator.</p>
+<p>SSTTRRRRTCH
+Yarn creaked around her body. Coils upon coils tightened and pulled. As Lily succumbed</p>
+<p>to her pleasures and color filled her pleasured cheeks, the twine entrapped her in a web of sex.
+With most strands shooting across her chest, her engorgement led to further tightness. She began
+to feel like a puppet with her breasts acting as a puppet master. The bigger she bloated, the more
+the yarn restricted her movement.</p>
+<p>“Mmmeooow!! M-MEOWW!!”
+“Lily??”
+Cleavage filled her view. Hot skin rubbed across her stomach where her breasts expanded
+wherever able. Yarn looped around her nipples to drive bolts of pleasure into her core. Their size
+felt incredible weighing on top of her. As they grew and demanded more yarn, her limbs lost
+their freedom. A net of string held her firm.
+“NgghhmmMMMEEOW!!”
+Yarn sank into her body. Colors of cat ecstasy flashed across Lily’s eyes. Nothing else</p>
+<p>mattered in the world. Everything she could ever want was tangled around her.</p>
+<p>“L-Lily??”
+She looked up through a gap between her chest and her arm bound against her head.
+Jason stood over her dripping with water. A towel hung loose around his waist with a single hand
+holding it in place.</p>
+<p>He gulped, seeing her ears and a tail slithering between her thighs. “When I said a</p>
+<p>‘surprise’...this wasn’t what I had in mind.”</p>
+<p>A sight previously only possible in a dream lay squirming in his bed. Lily, tangled in a</p>
+<p>mess of yarn, completely bared herself. Her right arm held firm against her head while her other</p>
+<p>22</p>
+<p>arm sank into the side of a massive breast. Each was forbidden to move by a nest of yarn. It
+pulled around beach ball-sized breasts to create soft valleys and mountains. One nipple looked
+like a primed orgasm button as it puffed and quivered under the tension of multiple loops of
+yarn. Below, her thighs refused to close. Strands forced one knee to bend and bring her heel to
+her butt, while the other leg maintained partial suspension with the help of her weighty chest. A
+discarded floral skirt hung off her foot with delicate precision, while her blouse sat beneath her in
+a crumpled heap after being hastily unbuttoned. Numerous strands ran tastefully between her
+legs and around her crotch as if holding an erotic door open.</p>
+<p>Jason gawked at the sight as Lily giggled from her prison. “Mmmngh! Hiiii, Jason…!”</p>
+<p>she swooned, face flushed pink. Her eyes sparkled with excitement and she gasped for air. “Your
+little catgirl got herself all tangled up!! N-Nnngh!!” Lily squirmed against her ties and tried
+reaching for his cock. “I need help!!”</p>
+<p>“LILY WHAT HAPPENED TO YOU?! Y-You have a TAIL!! And...CAT EARS!!” Jason</p>
+<p>took in the scene and stared at the breasts shaking in their bonds. “Your boobs are
+ENORMOUS!!”</p>
+<p>She giggled louder and nestled her face into her cleavage. “I got really excited and they</p>
+<p>just popped up!”</p>
+<p>and squirm.</p>
+<p>Jason stared with silent disbelief. A rising bulge under his towel made Lily’s tail twitch</p>
+<p>“Jasoooon…!” she moaned, struggling against her ties, “I’m hoooorny!!” Spreading her
+legs further until the yarn would allow for no more, she begged, “Come give your kitty a treat.”</p>
+<p>23</p>
+<p>Her boyfriend’s mouth watered. The towel dropped to the floor to release his manhood.</p>
+<p>His erect shaft made Lily purr with heat. They locked eyes and Lily licked her lips, using her tail
+to trace teasing circles around her navel and down her pussy.</p>
+<p>There was no hope of resisting. Feeling his cock throb from his body, Jason climbed onto</p>
+<p>his bed. The rocking motion of his mattress sent Lily’s chest heaving back and forth to draw
+complaints from the yarn. Lily giggled when he grabbed her knees and positioned her onto her
+back.</p>
+<p>“You like my new body?” she cooed, making her calico snake maneuver its way around</p>
+<p>Jason’s hips. It wrapped around his cock and stroked it with soft fur. “How about my soft tail…?
+It sure likes you. Why don’t you give it a tug?”</p>
+<p>Flesh bulged against the yarn as Lily breathed. Positioning himself between her legs,</p>
+<p>Jason pressed his hands against her chest. Tight skin supported his weight. A pussy spread open
+before his cock with the help of winding yarn. Lily was helpless to his every whim. Any part of
+her he wanted was there for the taking. Her figure was beyond perfect. Jason couldn’t admire any
+one part long enough.</p>
+<p>“M-Meooow!! Oooohhh look how big I’ve gotten!!!” Lily grinned with horny delight.</p>
+<p>“Remember how tiny they used to be?? I’m a BIG kitty now!! I’m so big I--MMNNGHH!!!
+MMEEEOOOWWWW!!!”</p>
+<p>Jason plunged his cock into the helpless catgirl. The spike of pleasure made her cry out in</p>
+<p>ecstasy as her chest swelled further.</p>
+<p>CCRREEEEAAAAAAK
+“M-Meow!!” Lily’s animalistic sounds drove Jason to attack. Primal urges awakened</p>
+<p>within him. Seeing his girlfriend in such a transformed state brought forth temptations he didn’t
+know he was capable of. Along his back, Lily’s tail traced frantic circles.</p>
+<p>“How big do you want your catgirl??” Lily gasped.
+Pumping in and out, Jason could barely keep his thoughts straight. Lily’s breasts were</p>
+<p>bigger all the time. They buried her figure and adopted the appearance of flesh-colored
+raspberries due to the yarn digging into them.</p>
+<p>GUUURRRGLE
+Pressure struck Lily. Jolting her tail and ears into standing straight, she groaned and</p>
+<p>squirmed. “A-Ahhh!! I-I think...your catgirl is...is going to... Mmmnnghhh my tits feel FULL!!”</p>
+<p>Her hand fought against the yarn tying it to her chest. Finding Jason’s hands sinking into</p>
+<p>her breast, it clawed at the back of his palm with primal desire.</p>
+<p>CCRREEEAAAAAAK
+“Ooohhh I can’t take this!! Fuck me!! M-Make me purr!!” Lily begged. An</p>
+<p>overabundance of catnip saturated her mind. She didn’t care if she had a tail. She didn’t care if
+she had cat ears. Pleasure was all she needed. The catnip wouldn’t allow for any other desire.
+“N-Nngh!!” Jason grunted at the deep scratches left on his hand and arm. The scenery</p>
+<p>was too much. Lily’s cries of excited distress were too effective. The massive breasts taking up
+most of his bed were far too erotic and soft. Gurgles and heat came from within them, making</p>
+<p>24</p>
+<p>Lily’s body sound like a holding tank. Watching her nipples bound tight by the yarn, he saw
+trickles of white fluid run over her swollen pink mounds.</p>
+<p>“M-MMNGH!! Oh God my TITS!! OH THEY FEEL SO FULL!! I think there’s something</p>
+<p>inside of them!!”</p>
+<p>CRREEEEAAAAAK!!
+Yarn pulled tight as cables. Stimulated by Jason and catnip, Lily stretched the yarn to its</p>
+<p>limit. Ridges formed across her limbs where it constricted her flesh. Sloshing fluid filled her ears
+and jostled her cleavage.</p>
+<p>“I-I feel something!!” Lily warned, straining against her bonds. “Jason!! I think… I-I</p>
+<p>think I’m… Nngh!! There’s...m-m-meow!!...There’s something...happening in my chest!!”</p>
+<p>There were only seconds left of endurance. Jason couldn’t take any more. Feeling her tail</p>
+<p>thrashing between his legs and stroking his balls, he plunged deep into Lily and pressed his full
+weight onto her chest.</p>
+<p>“NNNGH!!”
+“AAAHH!!! MEEOOWW!!!!”
+CCRREEEEAAAAA--SNAP!!!
+Dozens of strands of yarn exploded from around Lily’s body. Releasing its hold all at</p>
+<p>once, she flung open to spread eagle on her back as cum rushed from Jason to fill her belly with
+warmth.</p>
+<p>FWOOOOSH!!!
+An orgasmic fountain of milk erupted from Lily’s nipples. The white fountains struck the</p>
+<p>ceiling and showered down onto Jason’s back, where he collapsed onto her bean bag chest.
+Enveloping skin embraced him with utter bliss as he felt Lily’s lactation flowing around him
+within her bosom. Lithe and flexible, her body squirmed below as it was wracked with
+purr-inducing pleasure.</p>
+<p>Soon, there was only the sound of milk dripping from the ceiling and their breathing. The</p>
+<p>shower of milk had washed the scent of catnip from the air. Coupled with her release, Lily’s
+anxiety had returned and she lay hidden under her chest, frightened to make a sound.</p>
+<p>Finally, as Jason remained quiet atop her chest, she whispered, “A-A-Am I a freak?”
+Jason lifted his head from her cleavage. “What??”
+Her shaky voice filled him with compassion. “I’m half cat! I’m possessed by an ancient
+cat ghost and now I have ears and a tail! And my boobs blow up when I get too excited!!” Lily
+whimpered, feeling buried under a mountain of fear as big as her chest. Her tail fell limp on the
+bed. “I-I actually chased a laser pointer at the doctor’s office today… I got high off catnip and
+turned into some kind of sex maniac. I couldn’t help myself! I woke up this morning as a freak of
+nature… What if I slowly turn into a cat completely??”</p>
+<p>The lack of an immediate response made Lily nervous. “J-Jason? Please say something!”
+“Are you kidding me?! You’re not a freak!!”
+“M-Mmm!!”
+Lily moaned when Jason’s cock slid from her loins. Fighting against its bulk, he crawled
+over her chest enough to look his lover in the eyes. They were watery with stress and her ears sat</p>
+<p>angled low in sadness. They perked up, however, when Jason leaned into her cleavage to deliver
+a kiss. A playful tongue licked a drop of milk from her nose after their lips released.</p>
+<p>“You’re the person I love!” Looking into her eyes, Jason smiled and confessed, “You’re</p>
+<p>even more perfect than you were before.”</p>
+<p>25</p>
+</body>
+</html>

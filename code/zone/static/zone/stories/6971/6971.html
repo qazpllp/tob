@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Nine Days Until Heaven: Chapter 1</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>"There should be some stuff coming for me in the mail in the next couple of days. Oh, and please remember to feed Chompy."</p>
+<p>"Of course! Don't worry about it! How long are you gonna be gone for, anyway?"</p>
+<p>"Uhhh, like 9 days?"</p>
+<p>"Alright, see you then! I'll take good care of the house and Chompy, don't you worry! Have fun with your folks!"</p>
+<p>"Ahaha, and you don't have too much fun inviting girls over every night!" Click.</p>
+<p>Nina rolled her eyes and put her phone away. Tammy was acting like she was both a 12 year old that couldn't be trusted alone, AND a super slut that threw wild, house destroying orgies. The latter wasn't wrong, but that was one time and it was NOT her fault that the wall got smashed! She always tries to be as courteous and quiet when she has a lady friend over. If there were any super loud, housemate awakening moans and cries for more, that was because of whoever she was fucking's fault for not being able to be quiet! She was totally innocent!</p>
+<p>Well, no use getting mad about it since she was out of the house. Now that she was sure Tammy was in Florida, and there was no way she could come back and walk in on her, Nina thought she might as well get comfortable.</p>
+<p>Rising up, Nina stepped over to the full sized mirror she had propped up at the opposite end of her queen sized bed. She took off the cyan t-shirt she was wearing, threw it to the ground, and soon after her jeans and panties followed.</p>
+<p>Nina was a beautiful woman, no one could deny that, especially not her. Any opportunity to steal a glance at her sexy 6'2 tall, slender frame she took it. She looked down at her 6 and a half inch cock, just looking at it and thinking about a particularly great night a few days ago was already getting her hard. What turned her half-chub into a full hard-on though was her breasts. Oh, how she loved her breasts; her full, round C cups that she proudly displayed any way she could. She spent so much money on designer lingerie that pushed her breasts up in just the perfect way. Right now, she was proudly thrusting her chest out, watching in pleasure and delight as the chill from the air conditioning, which she had cranked to the max, made her dark and puffy nipples hard and stand out. She could stare at such a sight all day...Maybe she'd invite a friend over to-</p>
+<p>"RUFF RUFF RUFF RUFF WOOOOOOOOOOOOOOOOOOOO!"</p>
+<p>"GEEZ, I HEARD YOU!" Nina cried, opening the door to her room.</p>
+<p>In waddled Chompy. Chompy was Tammy's black and brown komondor, named for how apparently the first thing he did after getting adopted was bite Tammy's hand. Nina was never a huge pet person, but she had to admit the pooch was pretty cute, even if a little pampered. Even if she promised to take good care of him, she knew what that combination of barks meant...</p>
+<p>"You're really gonna make me get dressed just for a walk? Right after I got naked?" She said, looking him square in his big ol' puppy dog eyes. He gave a confident whine and then scampered to the front door. Nobody could resist the power of a mop dog.</p>
+<p>"Gimme a minute." She sighed.</p>
+<p>Nina quickly put the shirt and panties back on, but opted instead for a stylish pair of sweat pants instead of the hip clinging jeans she was wearing before. Sure, she may be a slut, but the very nice old couple who lived right in front of the community mailbox didn't need to know that.</p>
+<p>With Chompy's leash in hand, Nina was out the door and on her way to the mailbox. She said hello and made small talk to Mrs. Fredrikson on her porch, checking the mail as Chompy desperately tried to break free from the leash and bite the old lady. Nothing came in the mail for Tammy, but Nina's copy of The Lactating Lady monthly did come.</p>
+<p>"UHHH, ANYWAY IT WAS NICE TALKING TO YOU MRS. FREDRIKSON BUT I GOTTA GO." She said frantically, rolling up the magazine and stuffing it into her pocket. She had never speed walked faster in her life. Maybe she should ask if these things could be sent in paper bags...</p>
+<p>Nina made sure the porn mag couldn't be seen as the two continued their walk. Tammy and her lived on the outskirts of town, so the environment was filled with a lot more trees and space between houses than the more city-like mid and downtown. Of course, she was still a party girl at heart, but the neighborhood had its own little charm, in a way.</p>
+<p>Pretty soon Chompy had to take a piss, and Nina took the time to enjoy some of the scenery. Namely, a mom on the other side of the road in a stretched to death t-shirt and yoga pants out for a jog. The poor shirt was covered in sweat, looking like puddles of shadow for her large melons. There were a lot of hot as hell moms in this neighborhood, but Nina wasn't ready to make the jump from slutdom to full on homewrecker. Seeing the busty mom did make her think of something...</p>
+<p>If you asked her parents why Nina moved to Lecheston, Pennsylvania, they'd say that the University of Lecheston really appealed to her and that she just fell in love with the town's history and culture.</p>
+<p>"Heh, well the culture sure is appealing..." She thought to herself, watching as the mom tried oh so discreetly to scratch her sweaty underboob.</p>
+<p>In reality, Nina moved to Lecheston because it was known to be one of the bustiest cities in all of America. Nobody quite knew why, but the women who were native to the town averaged in the H cup range. It is the largest importer of custom tailored bras in all of North America. You couldn't walk down the street, much like Nina is doing now, without passing by a woman with an insane pair of tits. If not for their size, but their projection, roundness, and/or shape. It became a sort of holy land for breast fetishists like her. Of course, nobody in the town itself would admit it. If it was on a beach, it would probably be a killer tourist destination.</p>
+<p>The mom lifted up the bottom of her shirt to wipe the sweat off her forehead. Nina nearly gasped, seeing her soft stomach and even softer looking underboob. She couldn't even see the full bra, but she knew that it was being stretched to the brim...Any second now and that baby would pop, and that milf's boobs would be right out in the open, for the whole world to see...</p>
+<p>Suddenly, Chompy dashed forward, catching Nina completely off guard. For such a little dog, he was pretty good at dragging along a grown woman, although she tried her best to get up and back to the basking milf.</p>
+<p>"Ahhh! H-hey! We were just getting to the good part!" She grunted, struggling to get to her feet. The leash had somehow wrapped itself around her body, clinging just a little erotically to her crotch. She struggled to free herself, but the leash bondage was too strong. Even if she let go, Chompy would still drag her around. It did give her some ideas for a night with her petplay friend...</p>
+<p>"I hope he stops sometime soon..." She thought, praying that nobody would see her. She had a reputation to keep, and while being tied up was definitely part of it, being towed on the ground by a giant mop dog didn't really fit with her image.</p>
+<p>After what only was maybe 15 or 20 minutes, but what felt like hours to Nina, Chompy finally took a break, letting her untangle the leash. "The hell did you take me...?" She grumbled, easing a bump on her head she got from the ride.</p>
+<p>She'd never been this far in the woods before. There was a strong breeze blowing. She appreciated it in the summer weather, but with the way the leaves were rustling and the wind whipped, it was like something out of a movie. She was on a circular patch of dirt, with wilting white lilies all around it. It took her a second to register the statue she was right at the feet of.</p>
+<p>Nina backed up, taking a look at the statue. It was standing in a small wooden shrine-like structure, although the wood was faded and cracked in places. It was barely taller than her and made of marble, depicting a curvaceous woman with hair down to her wide hips. She had large, plump lips. Etched into her forehead was a symbol Nina had never seen before. A simple seafoam green robe was placed on top of it. The strangest thing about the statue, though, was that its chest was completely broken. There wasn't a hole, it looked like someone had taken a giant knife and lopped off her breasts. Along with that, the statue was just in general disrepair, with plenty of moss and cracks covering it.</p>
+<p>"That's...freaky." Nina said to herself, getting up. As she stood, though, her issue of The Lactating Lady monthly fell out of her pocket, splaying out on the ground right in front of the statue. "Ugh, now it's gonna be all di-"</p>
+<p>FWOOOOOOOOOOOM. The wind blew so hard Nina was nearly knocked back to the ground. Chompy ran around the little dirt patch, barking like mad. "Knew I should've worn a bra..." Nina thought to herself, feeling the wind make her boobs wobble in the direction it was blowing. She could hear through the noisy flurry of the wind a soft, feminine but strong voice whisper to her, "You will be instrumental to the coming of Heaven." The statue's eyes shone a blindingly bright blue, like diamonds.</p>
+<p>The wind stopped, just like that.</p>
+<p>"Alright, we're getting the fuck outta here." She said plainly, grabbing Chompy's leash and running, not bothering to pick up the magazine.</p>
+<p>It didn't take her long to find her way out of the woods. There were paths leading from the little grove back to town, although they looked like they hadn't been used in years.</p>
+<p>The rest of the day was pretty normal. When she got home she jumped straight into giving Chompy his dinner and starting on making hers, hoping to take her mind off of what happened. She couldn't help but wonder about the statue, though...Why was it there? Why hadn't she heard of it? What was that weird symbol? How the hell did it SPEAK?! "The voice was probably just somebody else in the woods. It's fine." She told herself, throwing some garlic into a pan.</p>
+<p>She had minored in Ancient Religions in college, but in all her studies she never came across anything like that. The curviness of the statue certainly made it seem like some sort of fertility goddess, but again, what was that symbol? Why were its breasts broken off? The rest of the statue was so lovingly carved, those boobs must've been fantastic!</p>
+<p>She was finally able to distract herself from the statue, getting comfortable on the couch with her plate of chicken. She booted up Netflix. Since nobody but Chompy was there to judge her, instead of putting on The Office for the 80th time, she decided to watch one of the many horny animes the service aired. From there, it was pretty easy to unwind, letting her mind clear more and more with every panty shot or unbelievable boob bounce.</p>
+<p>"Iyaaaah, Nanami-senpai, I'm sorry, I didn't see you there!~" The overly endowed anime girl on screen blurted after running into a much smaller girl, smashing her sweater puppies into her senpai's face. She then tripped, smothering the girl against the floor and her soft boobs. "Ahh, senpaiiiiii!~" She cried, although it sounded a lot like a moan. The camera cut to a shot of the senpai's face, which was almost completely taken up by her kohai's melons.</p>
+<p>"God, I wish that were me." Nina sighed out loud, stabbing another piece of chicken with her fork.</p>
+<p>"Good." Said an eerily similar voice, right in her ear.</p>
+<p>"Huh?! What?! Who the hell's there?!" Nina gasped, pausing her show. She held up her fork like a knife against the intruder. Chompy jumped up and bit the piece of chicken on the fork.</p>
+<p>"Jesus Christ, I need to get some sleep. I'm hearing things." She stretched herself out against the couch, getting comfortable. She threw a blanket over herself and drifted off to the soothing ASMR of jiggling sound effects.</p>
+<p>The first thing she felt was an unimaginable warmth. Nina was floating in a void of pure white that slowly pulsated green and blue. Her eyes were closed like she was still sleeping, but she could still see. She couldn't move at all. ".....Where am I? Maybe...Is this a dream?" She thought. Slowly, a figure faded into view. "Nina..." It called. It was the voice from before!</p>
+<p>The image became clearer, now Nina was able to make out the vague shape of a woman. She had long, flowing blue hair and piercing blue eyes. She had light brown skin. She looked like she was carrying two huge sacks of something in front of her...They were so huge they came down to her knees...Wait...The woman's image became even clearer now. THOSE WERE HER BOOBS! Perfectly round and spherical, their sheer size made them droop down to her knees. Nina gasped, seeing the strange woman's even stranger bust.</p>
+<p>"Yes...I thought even someone like you would be shocked to see breasts like these..." The figure said.</p>
+<p>As Nina looked at her more, she realized that this woman was the statue! Same hair, same tall and curvy figure, same robe, which was useless in covering up her giga sized assets.</p>
+<p>"I'm sorry if I scared you earlier today. I thought my fate was sealed...All hope was lost, despair and the forces of evil had won. But then...you came along, you gave me that offering, and you proved yourself to me." The woman said emphatically, her massive mammaries bouncing and swinging around to put even more emphasis on her point.</p>
+<p>"I'm...sorry?" Was all Nina could muster.</p>
+<p>The woman sighed. "I am Teatana, the Goddess of Breasts, and the mother of all life on Earth." She explained, thrusting her chest out, just barely enveloping Nina in her cavernous cleavage. "Since the beginning of time, I have been with humanity, and given them my gifts." A cave painting of a stick figure with massive circles where its chest would be appeared in the background of the void. A classical painting of an orange haired woman with even larger breasts followed. A woman shaped vase that poured the water from the nipples. So on and so on. "It was so peaceful back then...when everyone had my gifts. And then one day...humanity decided they didn't need them anymore.</p>
+<p>Teatana held up a black and gold-laced bra, one Nina quickly realized as hers. "Hey! Give that back!" She said.</p>
+<p>"Do you really want it? Why have you all grown attached to clothing, but not just clothing, clothing that constricts my gift!" The Goddess cried. Instantly Nina could feel herself full enveloped in soft squishiness. Teatana had teleported behind her. She grabbed Nina's right boob, expertly groping and rolling it in her hand. "This is where you have gone! Such tiny, minuscule mounds!" Nina was too busy being utterly turned on to defend her average-sized boobs, but she would if she could. She'd never felt such pleasure from any of her partners before...</p>
+<p>"Faith in me has been eradicated, and I am nearly gone from the Earth. I can't even take a physical form anymore. That statue is all that remains of me on your planet. Humanity turned away from me, and look where it got them! War and poverty! Once you all turned away from my bosom you started attacking and starving each other! I can't go on seeing such suffering!" Teatana wailed, tears streaming down her face. Her boobs were quaking from her sadness and fury. Nina was a little scared that she'd get completely crushed between them, but now didn't really seem like the time. Besides, she was way too horny.</p>
+<p>Teatana held Nina's cheek in her hand. "But you, Nina...You and your breast obsession. You will be my gateway back to Earth. You will be my assistant in bringing my gift and peace back to the world. Through you, I will make the planet my Heaven once more..." Teatana brought her in close for a kiss. The heat immediately went up, as Nina had what was objectively the best kiss of her life. Soon, everything faded into white, and Nina knew she was waking up...</p>
+<p>"What. The. Fuck."</p>
+</body>
+</html>

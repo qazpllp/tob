@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>The Apple Doesn't Fall Far from the Tree</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>Author's Note: The idea for this story and the protagonist's name are based on suggestions from two of
+my awesome Patrons. Standard disclaimer applies: this story contains graphic depictions of sex, so if 
+it's illegal or immoral for you to be reading this, stop now! All characters are of legal age, all situations 
+are entirely fictional, and any resemblance to any real-life individuals or situations is entirely 
+coincidental. Copyright Fidget, 2020. All rights reserved. Enjoy!</p>
+<p>The Apple Doesn't Fall Far From the Tree </p>
+<p>by Fidget</p>
+<p>Chapter 1</p>
+<p>Josh couldn't be more unlike his father, for all of the usual, stereotypical reasons.</p>
+<p>Josh was smart, good grades, good with computers. He was on his high school's chess club and debate 
+team, and hadn't played a sport since a particularly bad asthma attack in his last year of Little League.</p>
+<p>His father, on the other hand, while by no means unintelligent, fit the jock stereotype perfectly. He was 
+obsessed with following sports and showed zero interest in more intellectual pursuits, quickly 
+becoming frustrated and angry when confronted with problems he couldn't solve with his considerable 
+muscles.</p>
+<p>His parents had been high school sweethearts. His dad was the captain of the football team, and went 
+on to lead the league in rushing yards in college, before a knee injury ended his blossoming career 
+prematurely. His mom had been head cheerleader, but dropped out to have Josh and be a stay-at-home 
+mom while his dad went to college, though complications with his birth had prevented his mother from 
+ever having any more children, in spite of her wishes for a whole housefull. She had died in a car crash 
+when Josh was still a toddler.</p>
+<p>His dad had worked as a mechanic in his hometown after his injury. He had never married again, 
+though Josh was well aware that his dad made frequent calls to the apartments of various single women
+around town.</p>
+<p>Josh had tried playing soccer and baseball when he was younger, but it quickly became clear that he 
+didn't have the talent or the athleticism to succeed. Not to mention that it was boring to mindlessly run 
+after a ball or stand in right field hoping a ball would be hit his way, and he'd much rather be teaching 
+himself to code. Josh often worried that his lack of interest in sports and other stereotypically 
+masculine activities disappointed his father, but if it did, his dad never let it show, and was always 
+supportive of his interests, which Josh appreciated.</p>
+<p>One summer day shortly after finishing his junior year of high school, his dad knocked on his bedroom 
+door, and then let himself inside.</p>
+<p>"You're a man now Josh; it's time you had this. It's something my dad gave me when I was your age, 
+and it's the reason I've enjoyed all of my success."</p>
+<p>He handed over a box wrapped with white paper and a bright blue bow, the colors of their local high 
+school.</p>
+<p>"Open it whenever you want, but be careful with it."</p>
+<p>Later that day, Josh's best friend Amy came over with her laptop so they could work on their most 
+recent programming project together.</p>
+<p>They'd been best friends for a few years now, after discovering how much they had in common their 
+freshman year. They both had interests in computers, chess, and debate, shared very progressive ideals, 
+and were budding activists on a number of important fronts. They were both vegan, and, not wanting to
+contribute to an increasingly overpopulated earth, had fully committed to adoption over having their 
+own children.</p>
+<p>Amy was petite and somewhat attractive, but Josh respected Amy far too much to risk their friendship 
+on a superficial relationship. For her part, Amy appreciated his lack of toxic masculine traits and the 
+way he didn't view her as a sexual object, so their relationship had quickly grown close without ever 
+becoming physical.</p>
+<p>Josh showed her the gift from his father, still wrapped, and told her about the strange things his dad had
+said about it.</p>
+<p>"Should I open it?" Josh asked hesitantly. He could see no reason why whatever was in the box should 
+be overly dangerous (or life-changing, for that matter), but his dad had never been prone to unnecessary
+exaggeration or embellishment.</p>
+<p>"Absolutely! I want to see what it is! It's weird that he just gave you a random present out of the blue 
+like that though," Amy responded.</p>
+<p>Josh untied the bow and slowly removed the wrapping paper from the box, careful not to rip it, before 
+taking the top off and revealing... an old, deflated football.</p>
+<p>Surprised, and more than a bit disappointed, Josh reached in to pull out the unexpected object, but, as 
+soon as his fingers wrapped around the worn leather, what felt like an electric spark jolted into his 
+hand, and he doubled over as what felt like all of the muscles in his body began to tighten and spasm. 
+Between red flashes of pain in his mind, Josh saw fleeting images of himself reveling in his own 
+physical strength as he angrily tore his way through the grips of weaker men on what looked like a 
+football field, before this vision was replaced by one of him pressing himself against a half-naked 
+cheerleader panting with arousal, his prize for his display of masculine virility on the field.</p>
+<p>Amy noticed his distress when he touched the ball, and ran over to grab it away as his face contorted 
+with uncharacteristic anger at the pain running through his body as his weak muscles continued to 
+clench.</p>
+<p>"Josh, what's wrong??" Amy asked, but then she felt a strange surge of energy jump from the ball she 
+was holding into her hands as well, and her mind fogged as her body filled with giddy butterflies. 
+Unable to stand with the intense fluttering sensation she was experiencing, she slowly let herself down 
+on Josh's bed as her mind began to wander aimlessly. Images flashed through her head of short 
+cheerleading skirts, halftime performances, and of a faceless, heavily muscled star quarterback pressing
+his powerful body and giant erection against an entirely willing, curvy, topless figure that Amy 
+somehow knew was her own even though she didn't recognize it.</p>
+<p>After a minute or so, Josh's muscles finally relaxed and Amy's mind cleared of her pleasant daydream. 
+She abruptly remembered what had happened to Josh, and leapt off the bed to check on him.</p>
+<p>"No, I'm fine. Let's just get to work," Josh mumbled as he tentatively picked the football back up off 
+the floor to put it back in the box, relieved that his muscles didn't clench up again when he touched it 
+this time.</p>
+<p>They didn't make as much progress on their programming that day as they'd hoped, possibly because 
+the weird experience they'd just shared had kept them from focusing on their work. With both of them 
+unable to concentrate, Amy decided to go home early, and they agreed to meet again the next weekend 
+to get back on track.</p>
+<p>"Dad?"</p>
+<p>"Yeah son?"</p>
+<p>"What was that ball thing in the box? Is it just an old football?"</p>
+<p>"It's an original football from the early 1900s. My grandfather gave it to my father when he was ready 
+for it, he gave it to me, and now I'm passing it down to you."</p>
+<p>"Uhh, thanks. I'll try to take care of it because I know it's important to you. It felt weird though, almost 
+like it gave me and Amy an electric shock or something."</p>
+<p>"Did it? That's how I felt when I first touched it too, which is what gave me the idea to try out for 
+football that summer. Maybe you take after your old dad more than you think!"</p>
+<p>"If you say so, Dad, but I wouldn't hold your breath."</p>
+<p>Even so, over the next few weeks, Josh noticed that his body seemed to be slowly growing larger. His 
+arms and legs seemed bigger and slightly longer, and it felt like he had more energy, which initially 
+translated into much more productive coding sessions, but eventually the continued energy increase 
+was starting to become distracting, and sitting too long without some sort of physical activity was 
+starting to make him more and more fidgety.</p>
+<p>He began taking breaks to go for a walk every hour or so, but those walks soon became jogs, and his 
+coding sessions got shorter as his jogs got longer. He also noticed that he was ravenously hungry by </p>
+<p>mealtimes, but his dad didn't seem surprised when he began asking for seconds, and instead simply 
+began preparing more food for future meals.</p>
+<p>"Josh, I think you're taller!" Amy exclaimed when she came over at the end of the week to work on 
+their project together.</p>
+<p>He knew she was right. He was at least two inches taller, and it felt like he was looking down on 
+everything even though he was still below six feet. It wasn't natural to grow this fast, and he was 
+slightly worried about it. He decided not to voice his concerns to Amy, however, and they continued to 
+work on their project together over the next several weeks, though it seemed like they were getting less 
+and less done each session, partially because they were becoming more and more distracted by the 
+other's presence.</p>
+<p>In the meantime, Josh noticed that his cock had been growing as well, and he found himself giving in 
+to his natural temptation to masturbate much more often. He had always avoided porn because it was 
+demeaning to women, but now he found himself seeking it out, if only to temporarily sate the lust he 
+was starting to feel whenever Amy was over.</p>
+<p>He had always been slightly attracted to her, and knew that Amy experienced a surface-level attraction 
+to him as well from time to time, but they had both openly and objectively acknowledged their bodies' 
+natural lust for each other, and had agreed not to give in to their baser, animalistic urges, both because 
+they respected each other too much to risk their friendship and because they felt they were above such 
+vulgar behavior.</p>
+<p>Still, Josh could clearly see that Amy's body had been just as affected by whatever was in the football 
+as his had been, and his eyes were drawn to her larger breasts, which she gradually stopped hiding so 
+much under loose clothing and eventually even began to display a bit, wearing tops that showed them 
+off, and shorts and even skirts that emphasized the rest of her developing curves. His body was getting 
+more and more eager to see hers each week, and hers was clearly being redesigned to attract and 
+encourage his gaze in return. And, from the way her eyes widened as they lingered on his own 
+broadening shoulders and thickening muscles, she was just as enticed by the sight of his physical 
+transformations as he was hers.</p>
+<p>Previously, Josh's attraction to Amy had always been relatively weak and easy to ignore, but she was 
+becoming harder and harder for him to resist as her bust and hips continued to swell and his own sexual
+urges strengthened, to the point where jerking himself off before Amy arrived was less and less 
+successful at distracting himself from her presence as they tried to work. By the end of each successive 
+session, it was clearly becoming harder and harder for Amy to leave, and for Josh to let her go.</p>
+<p>Even so, they still maintained a stubborn veneer of ignorance of their obvious growing attraction for 
+each other, though their more frequent declarations of how happy they were with the strictly platonic 
+nature of their friendship betrayed the increasing sexual agitation they were both clearly feeling.</p>
+<p>Even when Amy wasn't there tempting his weakening control over his sex drive, his body and appetite 
+continued to grow, and he was still taking larger and larger potions at dinner. Josh's dad had never 
+commented on his veganism, and even did a bit of limited research to help him accommodate his son's 
+choice in the meals he prepared, making smaller portions of meat on the side for himself.</p>
+<p>One day toward the end of the week, however, Josh found himself practically salivating at the smell of 
+the pork chop on his dad's plate, and felt himself becoming increasingly angry for denying himself such
+a delicious-smelling dish. Eventually, he could resist no longer, and found himself asking his dad, "Can
+I have some of your pork?"</p>
+<p>"No need, son. I made extra today." His father rose and walked over to grab the pan from the stove and 
+brought back two extra chops, which Josh tore into without a second thought as his stomach growled 
+appreciatively.</p>
+<p>"Amy, I've been eating meat for a few days now. I'm sorry, and I know you'll be upset with me, but I 
+just keep craving it and it seems to be the only thing that can fill me up," Josh admitted remorsefully 
+during Amy's visit that weekend.</p>
+<p>"I know what you mean," Amy responded matter-of-factly. I've been having cravings like that too, but 
+I've mostly stuck with veggies so that I can watch my figure," she finished, running her hands down 
+over her widening hips.</p>
+<p>That's unlike her on two fronts, Josh thought to himself. She's never talked about how she looked 
+before, and she was the one who converted me to veganism in the first place. "Are you sure you're not 
+mad about me eating meat?"</p>
+<p>"Of course not, silly! With how tall you are now, and how wide your shoulders are getting, you 
+probably need the extra protein!" As Josh watched her eyes wander hungrily over his new physique, 
+almost as though he were a piece of meat himself, he felt a now-familiar tingle starting up between his 
+legs and let his own attention fall to Amy's body, which seemed to be filling out her shorts and tight 
+tank top even more than usual.</p>
+<p>They tried to work on their project, but the concentration required by the coding soon made both of 
+them fidgety with their shortening attention spans, and it wasn't long before they couldn't even act like 
+they were still working. They decided to catch up on their favorite content creators instead, but quickly 
+became distracted by how close their bodies were to each other on the couch as the videos cycled on 
+autoplay in the background, forgotten. Every accidental touch sent pleasant tingles through each of 
+them, and their bodies began to drift closer together as their "accidental" touches became increasingly 
+less accidental.</p>
+<p>The next few hours flew by in a haze of building sexual tension that continued to go pointedly 
+unacknowledged, with each of them hyperaware of the brief, hesitant, thrilling touches between their 
+tensed arms and legs. Their heightened libidos drove their bodies, shaking with apprehension and 
+excitement, to repeat and prolong these touches and rewarded them generously in pleasure and arousal 
+for each one. Inevitably, however, Josh's dad came home from work and the two hormonal teenagers </p>
+<p>reluctantly decided to call it a night, too embarrassed of their crude sexual attraction to each other's 
+increasingly sexy bodies to make eye contact as they awkwardly stood up and said their goodbyes. 
+They agreed to meet again on Wednesday instead of the following Saturday, ostensibly to try to catch 
+up on their project a bit, and parted ways.</p>
+<p>"How was your afternoon with Amy?" his father asked at dinner.</p>
+<p>"It was good," Josh responded, still feeling his hand tingling where Amy's soft fingers had repeatedly 
+brushed against it. "It was kinda hard to focus, so we didn't get as much work done as we wanted to, 
+but it was still fun."</p>
+<p>"I know what you mean," his dad said. "When your mother and I were assigned group projects 
+together, we didn't get much work done either!"</p>
+<p>"Dad, it's not like that!" Josh protested even as his cheeks turned pink and he felt a renewed, 
+unexpectedly powerful yearning for Wednesday to come.</p>
+<p>On Monday morning, Josh happened to notice the football in its box on his dresser and found himself 
+walking over, picking it up once more, and tossing it up into the air a few times as he wrapped his 
+strengthening fingers tightly around the laces. He was suddenly struck with a strange, uncharacteristic 
+desire to try out for the team - it would give him an outlet both for all of the energy that seemed to 
+build endlessly within him, and for the increasingly powerful emotions he had been feeling lately. He 
+was also much stronger than he was two weeks ago, now over six feet tall with visible muscles, and so 
+he felt that there must be some position on the team where he could be useful.</p>
+<p>At breakfast, his dad was ecstatic when he mentioned what he was considering, and so, instead of 
+attending summer chess club that afternoon, Josh walked onto the football field and asked for a tryout. 
+He clearly knew nothing about the game, and his athletic performance was only middling, but he 
+showed himself to be a quick learner and already performed better than some of the second string 
+players, so the coaches set him to practicing with special teams while he familiarized himself with the 
+basic rules and goals of the game.</p>
+<p>That Wednesday Amy came over early, and as Josh admired the additional inch that just a few days 
+apart had added to his less and less platonic friend's curves, he sheepishly admitted that he'd joined the 
+football team.</p>
+<p>Rather than being disappointed in him, however, Amy was unexpectedly bubbly and supportive. "That's
+such a good idea! You're so strong now, and this will give you a chance to work off all of that 
+aggression you think I don't notice," she responded, giving him a wink as he flushed with 
+embarrassment. "I know you'll do great, and that you'll be leading the team by the time school starts 
+back.</p>
+<p>"Also, that kinda makes me want to do something to support you! I know that I've talked about how 
+demeaning cheerleading is to women, but the camaraderie and team-building experience you get in a 
+demanding organization like that is anything but demeaning when you think about it, and it opens the 
+doors to all sorts of scholarships and other opportunities later. If anything, joining the cheer squad 
+would be empowering. Not to mention what a great workout it is, and I've been feeling a little stir-crazy
+at home recently. Maybe an organized athletic outlet would do me good," she concluded, enunciating 
+her response with a slow stretch that lifted up her shirt a bit, baring her midriff in a subconscious effort 
+to emphasize her assets for Josh's hungry eyes.</p>
+<p>His growing muscles flexed involuntarily as the testosterone flooding through his body filled him with 
+sexual desire at the sight of her swelling boobs and curvy hips, and his thin athletic shorts already 
+began to tighten with an erection. Josh had conveniently "forgotten" to jerk off before Amy arrived that 
+day, but he was still unprepared for the full intensity of his craving for her body. He saw her eyes flick 
+down to the outline of his growing dick, which twitched in response to the attention, and Josh could 
+clearly tell the exact moment that Amy's horniness got the better of her, broke through her inhibitions, 
+and caused her to take a step toward him as her face transformed into a seductive pout that tightened 
+his shorts even further.</p>
+<p>"After Saturday, I think it's time we rethink our no physical contact policy," she purred as she 
+approached.</p>
+<p>"Are you sure? I don't want our friendship to change."</p>
+<p>"It'll be fine," Amy said distractedly, at this point willing to say anything that would lead to his body 
+touching hers. "I don't think I can hold myself back much longer anyway."</p>
+<p>Josh felt exactly the same way, and knew the situation was quickly spiraling out of their control, but he 
+made one final, desperate effort to slow their bodies' inexorable pull toward each other, in spite of the 
+fact that Amy had clearly fully given in already. "We should at least sit down and talk about it first," 
+Josh stammered as he dropped onto the couch. Amy, however, made the choice to sink onto the couch 
+directly beside him, slowly sliding the entire length of her thigh against his, lighting up pleasure centers
+all along his central nervous system that overwhelmed his own crumbling inhibitions. Unable to hold 
+himself back any longer, he abruptly pulled her face toward his with one hand and pressed his lips 
+against hers as he unceremoniously and clumsily groped at her swollen breasts through her tight tank 
+top and bra with the other.</p>
+<p>It was Amy's turn to be surprised by the ferocity of his reaction, and she knew that they should 
+probably take things a bit more slowly, but the intensity of the pleasure and stimulation running 
+through her body as Josh teased her with his tongue while he roughly groped and squeezed her breasts 
+filled her with unexpected and irresistible sexual need, and she found her left hand eagerly reaching 
+over between Josh's legs, avoiding all ceremony herself as she began to instinctually stroke and 
+squeeze the large, twitching bulge encased in his practice shorts. With her other hand, she unfastened 
+her bra to give his hands more direct access to her sensitive breasts, in order to heighten the sensations 
+that were sending waves of pleasure down to her already soaked pussy.</p>
+<p>As they continued to make out, lost in sensation, Josh successfully removed Amy's bra and ventured a 
+hand under her shirt to grope her unprotected tits. The direct skin contact and satisfying squeeze of her 
+large, firm mounds of flesh made him even harder, but as Amy continued to grip and stroke him 
+through his shorts, he felt an impending pressure growing in his cock, quickened by the taste of Amy's 
+lips and the feel of her soft body against his as the pace of her hand on his sensitive, straining member 
+sped up.</p>
+<p>He grunted and tried to pull himself away, but he had driven Amy's arousal far too high, and she was 
+completely unable to stop herself as she gave a throaty moan against his open mouth in return, gripped 
+his cock even more tightly through his thin shorts, and jerked him past the point of no return. He tried 
+to hold himself back, but she had pushed him too far; he couldn't stop himself from tightening against 
+her hand and then his dick was surging as his large balls tensed and then he was helplessly sending 
+spurt after enormous spurt of thick cum into his shorts in his ecstasy.</p>
+<p>As his orgasm ran its course, his head finally began to clear a bit from the thick fog of insistent sexual 
+desire it had been wrapped in, and he was filled with shame over what he had just done, at how 
+completely beyond his control his body had felt the entire time, and at how good it had felt to give in to
+his urges. "Sorry about that," he mumbled to Amy in embarrassment.</p>
+<p>"Don't apologize!" Amy insisted as she scooted a bit closer and pressed her body against his 
+reassuringly. "I'm just glad I could make you feel good like that. Also, it was super hot." Her eyes 
+glistened with unabated arousal, and Josh felt his guilt compound.</p>
+<p>"But you didn't get to finish!"</p>
+<p>"Oh, don't worry about that! I can take care of it later. I never really used to do anything like that, but 
+over the past few weeks, I've kinda wanted to a lot, and by now I've gotten pretty good at it!" She gave 
+him a wink. "I think it's more important that we try to talk about what's been going on this past month, 
+and figure out what we are, and where to go from here."</p>
+<p>"You're right. I think it's pretty obvious that all of this started with that stupid football that dad gave me.
+It looks like he was right - the football is clearly changing us, and the changes don't show any signs of 
+slowing down."</p>
+<p>"True, but I feel better than I ever have before. I have so much more energy, and I'm so happy all of the 
+time now! It feels so good to just not worry about it and go with the flow, and for now, I think that 
+means we explore this new side of our relationship a bit more thoroughly," she said, grinning in 
+anticipation.</p>
+<p>"Yeah, I don't know if I want to go back to being just friends, and honestly, I don't think I could even if 
+I wanted to," Josh admitted as the sight of Amy's bra-less tits protruding against her tight shirt already 
+began filling him with arousal again.</p>
+<p>"I feel the same way," he was relieved to hear her say. "Whatever is happening to us, it's clearly a one-
+way street, and I don't think there's much we can do other than go along with it, and see where the 
+journey takes us, taking advantage of whatever benefits our transformations have in store for us along </p>
+<p>the way." She smirked flirtatiously, and gently stroked a finger up his hardening cock through shorts 
+still slick with copious amounts of cum, before getting up so she could leave before Josh's dad got 
+home from work.</p>
+<p>After Amy left and he had cleaned himself up and changed his shorts, Josh thought about what Amy 
+had said. Even though she seemed fine with embracing her own changes and seeing where they took 
+her, when Josh thought about what was happening to him, and his complete inability to do anything 
+about it, he began to get angry, something that was happening more and more often these days. Josh 
+had always been calm and collected when facing problems in the past, but now he was flexing his 
+increasingly powerful muscles in impotent rage at his helplessness to stop the changes that were clearly
+affecting his body and mind, and those of his new girlfriend as well.</p>
+<p>He knew that, eventually, he would have to confront his father about what had happened. His father had
+given him the football, after all, and thinking back to the conversations they'd had over the past month, 
+it was clear that his father knew something about what was going on with him and Amy. That wasn't a 
+conversation he was ready to have yet, though, and Amy was right - it was much easier to just go with 
+the flow, especially when everything (and especially Amy) felt so good.</p>
+<p>Over the next few weeks, he saw Amy more and more often, and, while they still hadn't gone all the 
+way, they had lost all pretense of their earlier attempts at chastity, and went further and further each 
+time they saw each other, each stimulating the other to an increasing number of powerful, satisfying 
+orgasms with their mouths and fingers as they explored each other's increasingly sexy bodies, and they 
+both knew that it wouldn't be long before they could no longer resist the blissful coupling that was 
+becoming more and more appealing to both of them.</p>
+<p>School started back a little over a month later. Josh had continued to grow larger and stronger, and his 
+quick grasp of football strategy, combined with a superhuman athleticism that quickly outclassed 
+everyone else on the team, had catapulted him to the role of starting quarterback in two short months, 
+leaving his coaches dumbfounded at his meteoric improvement. And, while Amy wasn't head 
+cheerleader yet for political reasons, everyone on the team knew who the real leader was as she 
+continued to grow stronger, more athletic, and bustier herself with each passing day.</p>
+<p>It was shaping up to be quite a senior year.</p>
+<p>End of Chapter 1</p>
+<p>Author's Note: Thanks for reading! If you have any feedback, comments, or questions, I'd love to hear
+from you at fidget1@protonmail.com. If you find yourself enjoying my stories, please consider 
+supporting my work on Patreon, at www.patreon.com/fidget1. Patrons get early access to my stories, 
+input into which stories I write, and some other fun perks. Every little bit helps, and your support is 
+what enables me to keep doing what I love!</p>
+</body>
+</html>

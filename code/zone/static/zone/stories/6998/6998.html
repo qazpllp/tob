@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Ball's Pyramid Ch. 1-3</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>**DISCLAIMER</p>
+<p>**This is a work of erotic fiction. If you don\'t want to read that
+sort of thing, then don\'t. If you\'re not legally allowed to read that
+sort of thing, then don\'t.</p>
+<p>**Please feel free to post this anywhere, so long as credit is given
+to me (Oasis) in some way, shape, or form (like a link to the original
+posting). I read all comments, so you can sort of reach me there if you
+have a question.</p>
+<p>**Chapter Two begins on page 6.</p>
+<p><strong>**Chapter Three begins on page 10.</strong></p>
+<p><strong>Ball\'s Pyramid</strong></p>
+<p><strong>Chapter 1.</strong></p>
+<p>Ever since their first summer of college, Lulu and her friends had
+played a bit of a game with each other: get as far away as you can from
+civilization without touching your bank account. That first year, \'away
+from civilization\' meant camping in the woods behind their college\'s
+student center in a couple of tents. But now, 5 years out of college,
+Lulu and her friends had really upped their game. They spent the year
+leading up to their vacations fundraising, putting money in literal
+piggy banks, and networking with airline pilots.</p>
+<p>Last year, Lulu\'s friend Meg had won by getting herself to the western
+coast of Greenland in a little under two weeks -- no thanks, of course,
+to the rather intimate relationship she had formed with the couple of
+self-proclaimed \'pro adventurers\' Liam and Ben.</p>
+<p>But this year, Lulu knew she had it in the bag. She\'d spent the year
+contacting various travel agencies, paying ridiculous amounts of money
+up front, and training her body for the ultimate adventure. She was
+going to climb Ball\'s Pyramid: the uninhabited, 18,000-foot-tall
+remains of a volcano in the middle of the Pacific Ocean.</p>
+<p>For months she had practiced rock climbing with heavy packs on her back
+and had watched as her body had transformed from the rail-thin girl she
+was in college to a gently muscled woman. She was, however, disappointed
+when her curves, previously limited, shrank to next to nothing as her
+breasts simply became muscle. Nonetheless, she remembered chuckling to
+herself in front of a mirror before she left. The girls wouldn\'t know
+what to think when she made it back to claim the annual prize. This
+year, they had all chipped in to purchase the winner an all-expenses
+paid trip to a singles resort on a tropical island, and she was going to
+win.</p>
+<p>At least, that\'s what she had thought until she was halfway up the
+ridiculous 18,000-foot climb. Her arms ached, she was freezing cold, and
+the summit was another 9 Empire State buildings above her. Groaning, she
+tucked herself into a crevice to rest as she pulled a snack out of her
+bag. Sighing deeply, she took her final windbreaker out of her bag and
+started to slip it on, leaning even deeper into the crevice to do so. As
+she tugged the jacket on, she realized that her back was surprisingly
+already warm. The crevice, gratefully, seemed to have a natural air
+vent, heating it from the inside. Surprised at her discovery, Lulu
+turned around as well as she could and flipped on her flashlight to find
+that the crevice was actually something closer to a cave, the heat
+pouring from somewhere just out of sight.</p>
+<p>Intrigued, and having no desire to continue her climb at the moment,
+Lulu wormed her way into the rock, following the warmth into the
+mountain. After about twenty minutes, Lulu realized she no longer needed
+her flashlight. Silently praying that the \'remains\' of the volcano
+hadn\'t suddenly become active again, she flicked off her flashlight and
+laid still, allowing her eyes to adjust to the light.</p>
+<p>A few yards ahead, the tunnel she had been crawling through gently
+sloped downwards into a massive cavern lit by bioluminescence. The walls
+glowed a beautiful blue color, and the plant life on the ground, ranging
+in size from a blade of grass to a huge palm tree, glowed even more
+magnificent shades of green. In the center of the room was a small
+puddle, shimmering as it reflected the light coming from all around it.
+It was like she was trapped inside of a jewel that mankind had never
+seen. Edging herself downward, she rested a moment to take off her
+windbreaker, chuckling that she had put it on in the first place, then
+decided it was hot enough to remove all of her other layers as well. She
+shoved them back in her bag as she slowly stood, wearing her hiking
+shorts and a simple tank top. She\'d obviously forgone the sports bra,
+since she had no breasts to speak of, and tugged absentmindedly at her
+underwear, simple seamless things made for mountain climbers.</p>
+<p>Lulu, now standing, stretched to get some of the ache out of her muscles
+from the ridiculous climb and the subsequent crawl through a cave. The
+bioluminescence hovered just above her outstretched hand, and Lulu
+giggled. She was definitely winning that trip to the singles resort.
+There was no way any human being had ever seen something like this, and
+she was going to get proof. Stretching even taller, she ran her fingers
+against the blue of the ceiling and gasped as she felt the soft
+bioluminescence give way under her touch, removing her hand to find that
+the gentle blue glow clung to her fingers. Like the rest of the cavern,
+it was warm, and as she inspected it on her fingers, she swore she could
+feel it growing warmer.</p>
+<p>Suppressing the sudden and obvious thought that she maybe shouldn\'t
+have touched the glowing, unknown-to-mankind substance, she wiped her
+fingers off on her pants. Or rather, she wiped them off on where her
+pants would have been had she not just taken them off in lieu of the
+shorts. So what ended up happening was that she simply wiped the glow
+onto her thighs and groaned internally as she felt the warmth spread
+there, too. Shaking it off as simple exposure to a foreign element, Lulu
+straightened her shoulders and continued down the slope, determined to
+not stop until she stood in the middle of the room despite feeling the
+warmth spread from her fingers slowly up her arms and from her thighs
+slowly down her legs.</p>
+<p>By the time she reached the middle of the cavern, she was practically
+panting. The warmth had spread to her entire body, and she was more than
+a bit embarrassed to notice how the heat concentrated behind her nipples
+and her crotch. Ignoring it as well as she could, she took the final
+step she needed to reach the small, glistening puddle she had seen as
+she surveyed the room and promptly tripped as the toe of her hiking boot
+caught on a small stalagmite she had overlooked in her determination to
+reach the puddle.</p>
+<p>Cursing as she went down, Lulu threw out her arms only to find them
+engulfed by cool, clear water. The puddle, larger than she had initially
+thought, was chilly to the touch despite the temperature of the room,
+but as she fumbled into an upright position, she was grateful that she
+had fallen on her front, allowing the water to calm the heat behind her
+breasts.</p>
+<p>Sitting there sputtering, as she had swallowed some of the water in her
+fall, for a moment, Lulu took stock of her situation. She was alone in a
+place no human had ever set foot in, surrounded by an unknown, glowing
+material, sitting in a body of surprisingly cool water that she had
+accidentally also consumed a bit of, with heat pouring out of the most
+sensitive parts of her body. And the heat, she noticed, was growing
+stronger by the second despite the cooling influence of the water.</p>
+<p>Her breath caught in her throat as she tried to stand up out of the
+puddle, surprised to find that the water had also taken on a glowing
+quality which now encompassed her entire body. Realizing her situation
+was turning rather grim, she looked down nervously at her nipples, which
+were as hard as a rock and, she swore, larger than they had ever been.
+Pulling back her shirt, she gasped as she realized that her nipples were
+indeed bigger than normal, and in fact were actively growing. She
+watched in horror, trying to ignore the pleasurable feeling of the
+warmth as her nipples lengthened to a ridiculous inch long before
+thickening out to the size of a nickel, surrounded by areola the
+circumference of a shot glass. Moaning quietly, she let her tank top
+fall back to her body and reached up to touch the tents that were poking
+out through the fabric. She fell again into the puddle, soaking her tank
+top even further, when she made contact with her nipples. Never in her
+life had she experienced an orgasm that good, much less from just
+brushing her nipples against something.</p>
+<p>Trying hard to concentrate, Lulu focused again on the heat now building
+in other places in her body. She felt herself rise gently out of the
+puddle as her ass expanded underneath her, stretching her shorts to
+their capacity and causing her underwear to ride up, looking far more
+like a Brazilian thong than anything she had originally intended to
+wear. But the fabric, now taught between her ass, felt ridiculously good
+and she rubbed her thighs together, forcing herself to cum again as her
+legs lengthened and her thighs thickened to accommodate her generous
+ass. The second orgasm did nothing to quell the heat now concentrating
+again behind her nipples, and she prayed that she wasn\'t about to
+experience another nipple growth spurt. They were already
+disproportionate to her still non-existent chest.</p>
+<p>Like the glowing aura had her thoughts, she watched in awe as her
+breasts slowly grew out from her chest. Moaning, her nipples pushed
+against the fabric of her soaked tank top as her breasts picked up
+speed, surging from a AA cup to something approaching a B cup in a
+matter of seconds. The fabric of her shirt was a coarse, heavy duty
+fabric with little stretch made for rock climbers, and the earlier
+growth of her nipples had already stretched the top nearly to its
+maximum.</p>
+<p>The sudden expansion of her boobs, because she felt that they were at
+least boobs at this point, nearly did the shirt in, and Lulu was left
+gasping for breath as her nipples pushed hard against the top, the mass
+of flesh behind them continuing to grow. Without warning, the fabric of
+the tank top split open and Lulu watched as her boobs sprung out of
+their confinement. Though she had thought they were a B cup, seeing them
+free and in the open made her realize just how much they had grown as
+the heavy D-cup tits hung like teardrops. And the heat only persisted.</p>
+<p>Moaning, Lulu reached a hand up to play with her tits as they continued
+to grow. She tweaked her nipples and came almost instantly again.
+Noticing that the orgasms felt better the more submerged in the water
+she was, she threw all caution to the wind as pure lust overtook her,
+and fully laid down in the water, chest heaving above her as her tits
+grew, and grew, and grew. Past the range of a D cup, Lulu\'s tits became
+heavy on top of her as they grew larger than softballs, but still they
+looked too small for her nipples.</p>
+<p>Arching her back as pleasure overtook her yet again, she spluttered as
+she accidentally dipped her head below the water and swallowed some of
+the mysterious liquid. Twenty minutes ago, she would have been terrified
+at the prospect of consuming the strange substance, but now she reveled
+in the feeling of the cool water rush down her throat. She swore she
+could feel it spread through her body and was unsurprised when she sat
+back up only to find her hair a slightly lighter shade of brown, her
+fingernails perfectly manicured, and any blemish she could recall
+completely vanished. She was sure that, if she had a mirror, she would
+see her face becoming subtly different -- more feminine, to match the
+fertility-goddess body she was quickly acquiring.</p>
+<p>As the thought of a fertility goddess crossed her mind, Lulu groaned
+with pleasure as the heat gathered behind her nipples once again. Her
+breast expansion had slowed somewhat, leaving perky, but pendulous orbs
+the size of large honeydew melons hanging from her chest. But the glow
+wasn\'t done with her, and Lulu reached up to tweak her nipples, hoping
+to relieve some of the heat.</p>
+<p>As she squeezed them, allowing an orgasm to course through her yet
+again, she watched in awe as a creamy white liquid began to leak from
+her thick nipples. Eyes wide, she carefully put her hands underneath one
+of her heavy tits and delicately hoisted the nipple towards her face,
+tilting her head downward in excitement. With a bit of a stretch, she
+was able to latch on to the dripping nipple and, without a second
+thought, she sucked as hard as she could. She was rewarded instantly
+with a mind-blowing orgasm as she felt the milky substance flow through
+her. And still she continued to suck, letting the pleasure build in
+every part of her body. She sucked as she felt her breasts continue to
+grow, more steadily now, past the point of melons and into the realm of
+small watermelons. She sucked as her tongue elongated out of her mouth,
+enabling her to latch on to her breast even more firmly. She sucked as
+her legs became slightly longer, and her nipples even slightly bigger.
+She sucked until the blue glow clouded her vision and the incredible
+erotic energy finally maxed out.</p>
+<p>One hand on her boob, the other deep within her folds, her mouth latched
+around a nipple, Lulu screamed with pleasure as she came one final time
+before settling in the pool of liquid and letting the heat of the cavern
+lull her to sleep.</p>
+<p><strong>Chapter 2.</strong></p>
+<p>Lulu awoke with a start, staring with awe at the extremely bright light
+coming from every surface in the cavern. She swore it hadn't been like
+that before, but then again, she was a bit...preoccupied earlier.
+Counting on the fact that she had just been too horny to notice the
+actual luminescence of the room, she stretched her arms up and gasped.
+Massive, absolutely perfect breasts sat on top of her chest. She stood
+up as quickly as she could to take stock of the other changes that had
+happened to her body as she laid passed out in the puddle.</p>
+<p>Groaning internally, Lulu realized that she hadn't had to stand up <em>out</em>
+of hardly anything. The puddle was nearly gone, only a few drops of
+water were left. Counting yet again on her earlier preoccupation with
+her heavy breasts, she tried to ignore the fact that she knew exactly
+where the water had gone --- she had absorbed it. That would explain the
+continued growth of her tits past the size they were during her last
+incredible orgasm as well as the rest of the changes to her body.</p>
+<p>Her hair, once a standard brown that hung just past her shoulders in
+stick-straight strands, was now a perfect auburn that fell with a gentle
+wave most of the way down her back. The tips were highlighted ever so
+subtly, and she could feel that it was far more voluminous than when she
+had entered the cavern. It had that professional, extremely expensive
+dye-job look in that a passerby would know in their gut that there was
+no way it was natural, and yet it looked so realistic that nobody would
+ever be quite sure.</p>
+<p>As she ran her hands through her hair and over her face, she was quick
+to realize that her skin was as equally as flawless as the locks on her
+head. She had always struggled a bit with acne after college, never
+anything serious, but enough to make her look simply average no matter
+how hard she tried. And yet, standing here taking account of her body,
+she knew that the woman who left this cavern would never be considered
+average again.</p>
+<p>Beyond the changes of her hair and her skin, she could feel slightly
+plumper lips --- nothing outrageous, just big enough to be enticing
+---and cheekbones that were definitely present, but softened in a
+feminine way. But the greatest changes came lower down. She hadn't
+removed her shorts before her incredible growth, and the once-modest
+fabric was pulled almost painfully tight across her ass and thighs. Her
+legs were long and slim through the ankles and calves, but widened out
+to plump thighs and an ass that was stuffed into canvas shorts that made
+her look like the porn version of Lara Croft.</p>
+<p>Her hips were wide enough that it made her already-small waist look even
+smaller. Her pussy was leaking constantly, and she could feel the
+muscles of her vagina undulating gently, as if waiting for a cock. And
+her tits. Her tits were incredible. They hung like pendulums off of her
+chest, hanging down most of the way to her navel, yet were surprisingly
+so perky that she could barely reach her arms around in front of her. As
+she tried that maneuver and bumped against her nearly shot-glass-sized
+nipples, she was quickly reminded of the last big change that had
+happened before she passed out as milk dripped from her chest. In short,
+Lulu had become nearly the picture of modern-day femininity.</p>
+<p>And she loved it.</p>
+<p>The only thing left in her fertility-goddess transformation, she though
+to herself, was a slightly pregnant stomach to signal to the world just
+how fertile she was.</p>
+<p>Without warning, the already-bright walls flashed even brighter, and
+Lulu moaned as she felt the familiar heat building inside of her yet
+again. Determined not to lose herself to pleasure this time, she focused
+as well as she could on the warmth, surprised to find it directed
+towards her stomach. Slowly, it expanded outwards. Past the point of
+simply bloated, Lulu ran her hands over the still-firm skin as it grew.
+The touch of her fingers on her stomach only seemed to increase the heat
+that was building in another part of her body, and her tight shorts
+became gradually wetter and wetter, to the point that the coarse fabric
+was borderline painful against her extremely sensitive skin.</p>
+<p>Not wanting to miss the growth, she stripped the shorts off as quickly
+as she could and straightened again. Her stomach was now the size of a
+woman three months pregnant, just at the point where even people who
+didn't know the soon-to-be mother could tell that she was with child.
+And still the growth didn't stop.</p>
+<p>Almost like her breasts could sense that the rest of her was fulfilling
+the goal of becoming a true fertility-goddess, her nipples started
+leaking in earnest until the top of her growing stomach was covered in a
+thin layer of the milky substance. And still the growth didn't stop.</p>
+<p>Unable to stand the heat that was mounting, Lulu bent down to latch on
+to a nipple. Sucking the liquid from her breast resulted in nearly an
+instant orgasm as the pleasure exploded between her legs. She quickly
+dropped the hand that wasn't caressing her stomach down to her folds and
+began delicately rolling her clit under the pad of her thumb. This was,
+she was sure, the most erotic thing any human being had ever
+experienced.</p>
+<p>As her stomach approached the five months pregnant range, the growth
+began slowing, and she moaned quietly as the sensitivity increase of her
+skin also seemed to taper down. Though infinitely more sensitive than
+her stomach had ever been, the skin on her stomach, covered in her own
+milk, was back to a manageable level. Her breasts laid slightly on top
+of the gentle curve of her midsection, still dripping liquid.</p>
+<p>It only took a moment or two of clarity for Lulu to realize what had
+happened. She had thought that pregnancy would make her sexier, and
+suddenly she looked like a woman five months pregnant. And the remainder
+of the puddle that had been there when she awoke was now completely
+gone. Though she knew that she wasn't truly with child, she doubted that
+anyone else would be able to tell the difference. The woman that stood
+in the middle of the cavern was nothing like the one who had entered.
+She was the picture of feminine fertility, with her heavy, full, leaking
+breasts and her unquestionably pregnant-looking stomach. And she loved
+it.</p>
+<p>Wanting to test here theory, Lulu willed her fingernails to look like
+they had a perfect French manicure. Immediately, she felt the oddly
+erotic warmth at the tips of her fingers and watched as her plain,
+closely cropped nails developed a coat of polish. They remained fairly
+short and rounded, since she didn't like women with dagger-esque nails,
+but retained the erotic sensation that accompanied all of her changes.
+It was like she had a sudden desire to stick her fingers in her mouth
+and just...suck. She fought the urge to masturbate again, choosing
+instead to revel in the power she had somehow just acquired. Just how
+far did her new ability extend? Could she change other people? And how
+the hell was she going to get out of this cavern with her massive
+breasts and gravid stomach?</p>
+<p>Lulu looked around the cavern for her backpack. There was no way she was
+going to be able to crawl through the tunnel she had come through with
+her body as sensitive as it was now. The thought alone of her sensitive,
+leaking nipples dragging across the cold stone, leaving a trail of her
+milk as she went was enough to push her over the edge. She
+absentmindedly stuck one of her perfectly-manicured fingers into her
+mouth, running her tongue down its length, wishing subconsciously that
+her tongue were long enough to reach her nipples and stroke them in a
+similar fashion. She was so distracted by the goal of finding her
+backpack that she missed the heat swelling in her mouth, and instead
+squeezed her legs together as hard as she could for yet another
+mini-orgasm.</p>
+<p>She found her bag a few paces away, behind a rock and veiled by the
+light that was now truly beaming from the walls. It was time to get out
+of the cave whether she wanted to or not. She paused to pull her
+windbreaker and warmer pants from the bag. There was no way her
+thong-like shorts would protect her from the weather back on the outside
+of Ball's Pyramid, and she wanted to hide her changes from the guides
+who had brought her to the mountain and were surely by now waiting for
+her to return.</p>
+<p>The pants went on readily enough, though you could tell that they were
+far tighter than originally intended. But the windbreaker made her look
+like a pillow stuffed awkwardly too full with feathers, and she grimaced
+when she looked down and saw her nipples tenting through the thin
+fabric. It might have been sexy, but it was in no way practical for the
+climb she was about to make.</p>
+<p>Frowning with the realization of what she had to do, Lulu forcefully
+thought about her breasts shrinking down and her stomach receding. She
+didn't like the idea of giving up her curves so soon after gaining them,
+but she knew that she'd just grow them back as soon as possible.</p>
+<p>Nothing happened.</p>
+<p>Her eyebrows knitted together. Apparently, shrinking down wasn't an
+option. But the light in the cavern was becoming blinding, so she had to
+come up with something quickly. Thinking on her feet, Lulu willed the
+mass of her breasts and stomach to spread evenly to other parts of her
+body, leaving only D cups and a slight bulge at her waist behind. In
+return, her ass plumped up the smallest amount more and her thighs
+thickened almost imperceptibly, stretching the silky fabric of her pants
+even tighter. Determined not to let the transition of the weight make
+her look chubby, she concentrated on her legs, and in return, they
+gained a few inches of length.</p>
+<p>Though her pants looked like skin-tight capris and her windbreaker
+looked like it was made for a woman far less feminine than she was, it
+was the best that she could do given the circumstances. She would figure
+out why she couldn't shrink down later, once she had properly fitting
+clothes and wasn't surrounded by the memories of the most erotic moments
+of her life.</p>
+<p>Slinging her backpack over her shoulder, Lulu half-jogged, half-ran back
+to the entrance of the cave, stopping only to stoop to the floor and
+drag her hands across the now-blinding substance. As she ran up the
+slope, chest heaving and leaking with every step, she shoved the mass of
+earth into her bag, and began the crawl back to the outside world.</p>
+<p><strong>Chapter 3.</strong></p>
+<p>The trip back to the States went off mostly without a hitch. Lulu had
+stopped for a few days in Sydney before catching her plane and had spent
+that time picking up a number of newly-required necessities. A breast
+pump, maternity clothing, baggy things to hide her new frame,
+not-so-baggy things to show off her new frame, and some...personal care
+items. She had also spent the days figuring out what exactly her
+newfound powers were.</p>
+<p>As far as she could figure it, her abilities were tied to water. If she
+were in water, like a pool, she could change herself essentially at will
+-- something she figured out much to the delight of her fellow hotel
+guests. If she had only a glass of water, she could change her body a
+decent amount, increasing her breasts by three or four cup sizes. That
+first night in the hotel, she had explored the limits of what she could
+do to her body. She'd changed her hair color, made herself look 9 months
+pregnant with twins, caused her tits to spray chocolate-flavored milk,
+and even given herself a cock (all temporarily). But no matter what she
+did, she could not shrink past the size at which she left the cave.
+This, she assumed, was because her new baseline was what she had become
+after absorbing all of the mysterious cave water.</p>
+<p>Not that she was complaining. Lulu adored the looks that men and women
+alike gave her as she walked down the street. She was, in fact, grateful
+for her new appearance. The changes had been accompanied by incessant
+horniness, and no amount of masturbating with her new toys fixed the
+issues. The only way to alleviate the dripping of her pussy was to fuck,
+and fuck she did. The only things she used more of than condoms were
+bottles of water.</p>
+<p>And that was why, after the 20-hour flight from Sydney to the States,
+Lulu would have fucked the first willing person she saw, wherever and
+whoever they happened to be.</p>
+<p>But Lulu's friend Meg, who had won their little "travel to nowhere"
+competition last year, had promised to pick Lulu up from the airport,
+and so Lulu was doing everything in her power to restrain herself. The
+last thing she wanted was to ruin a friendship because of her
+overzealous sex-drive. She pumped her breasts before leaving security
+and had donned the baggiest sweatshirt she could find. Her ass was still
+prominent through her jeans, but she hoped that Meg would be too focused
+on getting all of Lulu's luggage to focus on her new assets.</p>
+<p>But then she got through security and Meg was there in tiny white denim
+shorts and a silken tank top that showed off just the top of her
+breasts, and Lulu groaned. Since "the incident", she'd become
+increasingly interested in other women, and the sight of Meg standing
+there, in all of her tiny feminine innocence, was nearly enough for Lulu
+to cum on the spot.</p>
+<p>The issue was that Lulu knew Meg liked <em>men</em>. Sometimes more than one at
+once, if her relationship with "pro-adventurers" Ben and Liam was as
+intimate as Lulu thought it was. And all that meant simply that the only
+way Lulu would get Meg into bed was if she used her new abilities to
+make Meg want her, something Lulu wasn't okay with. So she mustered her
+best "I'm sick, don't touch me" face and made her way towards Meg.</p>
+<p>"Lulu!" Meg shouted with delight when she saw the sweatshirt-wearing
+Lulu. But Lulu was quick to fake a cough and mutter something about
+being sick from the airplane so that Meg wouldn't go in for a hug and
+feel her newly-gravid stomach. Instead, they worked together in relative
+silence to gather Lulu's bags before packing them in the car.</p>
+<p>Once they had been on the road for a while, Meg finally couldn't contain
+herself and started peppering Lulu about her trip, to which Lulu replied
+simply, "It was... interesting."</p>
+<p>"That's it? You made it to one of the most untouched places in the world
+and the only word you have is <em>interesting</em>?"</p>
+<p>Lulu laughed, becoming less worried that Meg would stumble across her
+secret as the two friends chatted.</p>
+<p>"It's just, well, it's a big rock in the middle of the ocean. There's
+only so much to report, Meg."</p>
+<p>"I know, I know. But come on! You've explored a place that only, like,
+twelve other people have ever even seen. Surely there was something cool
+about it! What was the view at the top? Amazing?"</p>
+<p>"Okay first of all, more than 12 people. Probably closer to 30, but
+yeah, I see your point. Except I, uh, didn't make it to the top." Lulu
+closed her eyes as she figured out how she would explain that little
+fact.</p>
+<p>"You WHAT!? What happened? Are you okay? I mean, don't get me wrong, you
+look great. Your muscles are way bigger than I remember. I don't know
+why you're covering them with that awful sweatshirt. If I had those, I
+would flaunt them loud and proud."</p>
+<p>Meg had always been one to get a bit sidetracked, a fact that Lulu was
+very grateful for in this moment. Avoiding her initial questions, Lulu
+responded with a noncommittal eye-roll and a shoulder shrug, and the two
+rode in companionable silence, as the trip back to Lulu's apartment was
+a few hours from the airport. After a while, Meg turned on music and the
+girls simply sat in idly. Every so often, Meg would sip from her water
+bottle, offer water to Lulu, Lulu would decline, and the cycle would
+repeat. She knew what would happen if she did drink water, and she
+didn't think having a quickie on the side of the highway would be very
+popular with the law.</p>
+<p>But damn it all if she wasn't thirsty. And horny. Her tits had started
+to leak and she could feel the inside of her maternity bra slowly
+soaking up the creamy, white liquid. Her pussy was just as equally wet
+and she was shocked that Meg hadn't said anything about the smell.</p>
+<p>The smell. The idea hit her like a ton of bricks.</p>
+<p>"Actually," she said, "can I have some of that water? I didn't realize
+how thirsty I was."</p>
+<p>"About damn time," Meg responded as she handed Lulu the bottle. "I would
+have been parched after being on a plane for that long!"</p>
+<p>Lulu downed the rest of the bottle and focused immediately on changing
+not her body, but her pheromones. She didn't know if it would work, but
+still she concentrated on producing pheromones that forced anyone who
+breathed them in to have a deep desire to be completely honest with her.</p>
+<p>"Do you smell something?"</p>
+<p>"Huh?" Lulu's concentration was broken by Meg's comment. "Oh. It's
+probably my sweatshirt. I haven't washed it recently. Sorry."</p>
+<p>"Girl, just take it off. It doesn't smell <em>bad</em>, exactly, but I can't
+imagine you're comfortable being in dirty clothes."</p>
+<p>"I, uh, can't."</p>
+<p>"What, did you gain weight or something? Honestly I think you look sexy
+as fuck right now, but I won't lie -- I wouldn't be as attracted to you
+if you were, like, hugely fat or something." Meg blinked in shock as she
+realized what she had just said.</p>
+<p>Lulu sat in the chair of the car, mouth open, staring at the driver.
+"You...you're attracted to me?"</p>
+<p>"I mean. Yeah. I am. You were hot before you left for this trip, but
+fuck if I don't want to just pull over and fuck you right now. I can't
+quite put my finger on it, but you've changed. Not just your muscles,
+but your face and your body and your hair. Just what is in the water
+over there?!" Meg joked awkwardly, trying to figure out why on earth she
+was suddenly telling her friend of nearly a decade all of her hidden
+desires.</p>
+<p>Lulu muttered "You have no idea" under her breath before contemplating
+Meg's response.</p>
+<p>Apparently, not only did her pheromones work, but they worked
+exceptionally quickly, too. Concentrating again on what her body was
+producing, Lulu willed the pheromones to make Meg feel physically
+pleasured to talk about her sexual desires, and took her time responding
+to Meg's surprising admission while she waited for the changes to take
+effect.</p>
+<p>"Hey, I'm sorry if I said something to offend you," said Meg, "I didn't
+want to make it weird or anything, I just am feeling surprisingly honest
+right now. It feels good to have it off my chest, actually."</p>
+<p>"I'm not offended, just surprised is all. How far from the house are
+we?"</p>
+<p>"You're in luck, sister, because that's the driveway right there,"
+replied Meg as the car pulled into Meg's private drive. Meg's house was
+halfway between the airport and Lulu's house, and both girls had thought
+it wise to use it as a pit stop and overnight location before continuing
+the drive in the morning. It didn't hurt that Meg's house was stunning.
+It was totally secluded, surrounded by woods on three sides and a pond
+on the fourth, and looked like a modern architect had been given free
+reign of an old ski lodge.</p>
+<p>Before Meg had a chance to hop out of the car and start unloading Lulu's
+bags, Lulu grabbed her arm, pulled her close, and whispered into her
+ear: "What about my body do you find so sexy, Meg?"</p>
+<p>Meg's mouth parted as blood rushed to her face unexpectedly. She
+stammered, feeling Lulu's pheromones in full effect as she tried to
+formulate a response. But all she could focus on was the heat emanating
+from under Lulu's sweatshirt. It was clear that what Meg has taken to be
+'bagginess' was actually warm, firm flesh.</p>
+<p>"Is that...are those - those are your...?"</p>
+<p>Lulu grinned, pulled away, and hopped out of the car, letting her hips
+sway as she walked down the driveway and let herself into the house.
+Unsurprisingly, Meg hurried along behind her, not able to believe that
+she was just now noticing Lulu's perfectly-shaped ass. Had it always
+been like that? When they got inside, she was going to tell Lulu exactly
+what she found so sexy about that body. Just the thought made her pussy
+clench in anticipation. She didn't understand what had gotten into her,
+but she was loving it.</p>
+<p>Lulu stood in the entranceway to Meg's home and let the butterflies flip
+around in her stomach. She was going to let Meg mostly inn on her little
+secret, and she hoped more than anything that it wouldn't push Meg away.
+Steeling herself, she focused on her body and readjusted her
+proportions, pushing her leaking breasts out from an overfull D-cup to a
+bursting F-cup and moaning as she felt the skin stretch over her heavy
+tits.</p>
+<p>She downed the rest of the bottle of water that she had in her backpack
+and allowed her stomach to swell back out to its 5-months pregnant
+comfort zone. Her tits responded in kind and she shuddered with pleasure
+as they started actively leaking milk into her soaking maternity bra.
+She would wait to really let herself go until she got Meg's opinion on
+fertility goddesses and made one last change before Meg got to the door.
+Some of the last of the water that she had drunk went straight to her
+pheromones, which she willed to make those who came into contact with
+her not only honest and aroused at their own sexuality, but eager to
+talk about how they would change her, too. More of the water went into
+her willing her milk to be a permanent aphrodisiac. She couldn't wait to
+see how this played out.</p>
+<p>As Meg entered the room, flushed from her own unexpected desire, Lulu
+turned around.</p>
+<p>"You asked why I didn't make it to the top of Ball's Pyramid," said
+Lulu. "It's because I found something much more rewarding just halfway
+up. I'll take off my sweatshirt, but only if you promise to not freak
+out and instead tell me if you like what you see."</p>
+<p>Meg could only nod as Lulu reached down to the hem of her baggy
+sweatshirt and slowly pulled it up over her body, hesitating at key
+times to let the changes sink in. She groaned as she shimmied it over
+her heavy stomach, willing any residual water to make its way there for
+added effect. The result was heat pouring into the dome of her pregnant
+belly as it burst free of the confines of her sweatshirt. Continuing to
+pull it upwards, she hooked her thumbs underneath the strap of her
+soaking bra and shimmied it over her breasts, which had taken the
+last-second growth of her stomach as a sign to produce more milk. They
+swelled outward almost imperceptibly to Meg, but Lulu could feel them
+growing heavier and hotter and more sensitive and she moaned in
+response.</p>
+<p>The bra caught momentarily on her thick nipples, the result of which was
+Lulu lifting her entire rack up by the leaking knobs at the front of her
+chest. She was completely lost in the sensation as pleasure pulsed in
+waves from her nipples throughout the rest of her body. She ground her
+thighs together in a futile attempt to alleviate the growing desire to
+have something big filling her.</p>
+<p>As her breasts finally made it free of their confines, the sweatshirt
+popping off of Lulu's nipples, milk flowed freely from her chest as her
+tits fell heavily onto her stomach.</p>
+<p>Topless, panting, and leaking milk, Lulu looked up at Meg.</p>
+<p>In the time it had taken Lulu to pull her sweatshirt off of her
+newly-stacked body, Meg had processed three things. First, that Lulu was
+sexy as fuck. Second, if her dripping pussy meant anything, that Meg
+apparently had a previously unknown pregnancy and lactation fetish. And
+third, that Meg <em>needed</em> Lulu -- now.</p>
+<p>Lunging forward, Meg latched on to one of Lulu's nipples, sucking the
+warm milk from Lulu's heavy breasts. She moaned in ecstasy as she felt
+the liquid course down her throat in waves, pausing from her sucking
+only to share her desire for <em>more</em>. More milk, more Lulu, more changes.</p>
+<p>Lulu, whose head was tilted back as she came from the sensation of
+having her best friend suckle the milk out of her, took a minute to
+understand why Meg was cumming violently from simply drinking her milk
+and talking. Until she remembered her earlier pheromone experiment:
+"feel physically pleasured to talk about their desires and aroused at
+their own sexuality."</p>
+<p>"You want more of me, Meg? What do you want to do to me? Do you like
+sucking on my massive tits?"</p>
+<p>Meg only moaned in response as she reached down, past the tight skin on
+Lulu's stomach, to pull down Lulu's pants. When she realized that the
+seemingly-pregnant woman had worn nothing but a (now soaking wet) thong
+underneath, she groaned into Lulu's tits, letting the vibrations from
+her vocalization thrum into her friend's milk-laden chest.</p>
+<p>The vibrations were too much for Lulu, and she stood there in the
+entranceway of Meg's house, cumming. Milk sprayed from the thick nipple
+not in Meg's mouth, and the unexpected increase in lactation caused
+Meg's eyes to open wide as she fought to catch every drop of the
+addictive liquid. The aphrodisiacal qualities of the milk that Lulu had
+created earlier rushed through every vein in Meg's small body, and she
+came violently -- one hand desperately touching Lulu's dripping slit,
+and the other searching vaguely for her own.</p>
+<p>Her last thought before giving in to the largest orgasms she had ever
+had was simple: <em>more</em>.</p>
+<p><strong>**NOTES</strong></p>
+<p>**What happens next is partially up to you. Please leave suggestions
+in the comments.</p>
+<p>**Meg's two male friends will definitely play a part soon, as will the
+massive pond conveniently in Meg's backyard.</p>
+<p>-Oasis</p>
+</body>
+</html>

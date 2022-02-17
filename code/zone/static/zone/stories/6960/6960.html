@@ -1,0 +1,1529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Tales From ForeverAge2: Wysteria </title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>Tales from ForeverAge 2 </p>
+<p>Wysteria, a Beastfolk Shaman, mounted her steed and made haste to Gladesvale in pursuit of 
+an item that might grant her amazing powers.  </p>
+<p>In a dense forest just outside the quiet Fae village was the Wishing Well. The Spirit of the Forest 
+allegedly used the well to escape pursuers, building herself a home at the bottom. Those who 
+are worthy―so really, those with great wealth, since the Spirit of the Forest was known for her 
+propensity to lose borrowed money in high-risk gambles―would receive a blessing from the 
+Spirit if they asked with the truest intentions. Those whose desires bore fault only brought 
+destruction on themselves, as the Spirit of the Forest was as adept at blessings as she was at 
+curses.  </p>
+<p>“Oh Spirit, out of your great generosity, bestow strength and prosperity to me and my 
+comrades,” said Wysteria, resolving her prayer. She went to Zephyr, her Oathsworn, a 
+white-gray Great Mare, and produced a sack from the worn saddle. The pouch fit square in her 
+hand. One would need two human palms to manage similarly.  </p>
+<p>Wysteria frowned. Must not be all that powerful a Spirit, she thought. If she needed a hulking 
+sack of silver pieces to make people’s dreams come true, most would profit better by investing 
+the money into the exchange, or just dungeoning with the gear the sack of coins would buy.  </p>
+<p>Luckily, the money was stolen anyway―from a cultish church. Her plus-eight, enchanted mallet 
+had been enough to put the fear of god into the undead nuns, who had been promising eternal 
+life while they sucked the life force away from the town in which they lived. The affair still filled 
+the Shaman’s nostrils with the odor of rotten flesh and dusty, abandoned churches.  </p>
+<p>All this to mean, she didn’t consider the money hers. Whatever she got out of the Wishing Well 
+would be of profit because she was gambling with undead money in the first place. </p>
+<p>And, of course, if she were to profit, it would be done at little or no personal cost.  </p>
+<p>Wysteria looked inside, saw the glint of water from the fading sunlight, and dropped her coins. 
+She fully expected a splash, but heard nothing. Instead, a single vial came shooting from the 
+well, glimmering with drops of water without warning. Reactions swift, she snatched it from the 
+air.  </p>
+<p>Your wish has been granted. Drink this vial of lesser enchantment in the heat of battle! </p>
+<p>Lesser enchantment, eh? Cheapskate.  </p>
+<p>Wysteria mounted Zephyr and travelled to where her dungeoning party awaited her with little 
+more to show for her trip than a vial of little significance. </p>
+<ul>
+<li>
+<ul>
+<li></li>
+</ul>
+</li>
+</ul>
+<p>Naa the Gnomish Bard, talked to Wysteria to try to keep the fighter’s mind on the adventure 
+instead of on augmented animosity.  </p>
+<p>Group dynamics had suffered as of late. For a long while, Wysteria had been the main source of 
+damage for the party. A fighting Shaman with a badass enchanted mallet, she could send 
+enemies flying and summon elements of nature to protect and tank for her. In reality, she was a 
+one-woman army who mostly just needed Bards and Guardians for when she was seriously 
+outnumbered.  </p>
+<p>Naa presumed that the Beastfolk woman took pride in her role. </p>
+<p>That was, until LuvelyCypress2020, known as ‘Luv’ or ‘Luvvy’, switched to their realm and 
+joined the party. Like Wysteria, Luvvy was a damage dealing Shaman. Unlike Wysteria, who 
+had put considerable effort into her talents and skills to maximize damage, Luvvy had specced 
+into whatever struck her fickle fancy.  </p>
+<p>Luvvy the Faerie, a Shaman, had specced in nearly every class and subclass for one skill or 
+another, which ruined her ability to do any type of sustained, meaningful damage. It did, 
+however, win her a chest full of cool points.  </p>
+<p>She was a Shaman, Ninja, Cannoneer. Seriously. Which was freaking cool. Her only practical 
+function was executing large monsters, though. Kill stealing, basically; enough to participate in 
+the loot drawings.  </p>
+<p>Which she spent on dyes, fancy clothes, and other aesthetics. As a result, Luv was a Shaman 
+Ninja Cannoneer Faerie with swirls of pink and blue hair, boisterous wings, custom animations 
+for literally everything, and a brothel maiden’s character model.  </p>
+<p>“Who fights like that? It’s so unrealistic!” Wysteria grunted noisily.  </p>
+<p>Naa looked ahead. Luv and the three other teammates were busied in conversation. Guys also, 
+naturally, found the Faerie funny, charming, and original. Even the sharpshooting bowman, who 
+was supposed to be covering the flank, far from the pathfinders, was walking up front to have a 
+chat with her Highness, newly-crowned princess of the party.  </p>
+<p>Wysteria gagged.  </p>
+<p>A large bead of sweat rolled down Naa’s temple. “I tried offering her some better gear, but she 
+can’t exactly wear much. Everything’s for higher levels. But her robes reflect magic, don’t they?” </p>
+<p>“How is that going to help us in a dungeon full of mountain giants?” </p>
+<p>“Well, it won’t,” Naa’s head slumped. “But hey! Now you can carry like you always used to. 
+Someone has to chunk through their health pools, and you’re still the heaviest hitter we’ve got.” </p>
+<p>Naa had spoken as if she hoped reassurance would be all Wysteria needed. Clearly, it wasn’t. 
+In fact, it just seemed to annoy the Beastfolk even more.  </p>
+<p>Wysteria’s nostrils flared. She grumbled something that had to be a swear in the language of 
+one of the many creatures she’d befriended. Likely horse, since Zypher blinked slowly and 
+pretended not to have heard the slur as she trailed behind. </p>
+<p>For a descendent of one of the four horses of the apocalypse, Zephyr was a chaste, innocent 
+soul who blushed at the mere mention of such vulgarity.  </p>
+<p>“I shouldn’t have to take my position back. It should just be my position. This party may have 
+needed a sixth, but it didn’t need more damage. I’m the damage.” Wysteria swung her mallet to 
+emphasize. Flames and ashes rained as she swung it, like it was fresh from the forge and 
+peppered in blackened coals. “And I’m just six-thousand giant kills away from the bonus Slayer 
+Quests, so it’s really halting my progress having our promiscuous pixie last hitting all my kills.” </p>
+<p>“Whoa, you’re that close! Wait, so since you’re Beastfolk, you could challenge the Narjoula and 
+take its horn, right? You need a crazy strength stat and a form of overdamage to break it off. 
+ the fight just to keep it!” Naa hadn’t meant to, but she swooned. A 
+survive
+Then you have to 
+​
+bard couldn’t stop herself from fangirling over a rare instrument. “It would slow my movement to 
+a crawl, but those buffs it gives? I need it―</p>
+<p>“I’ll get it for you. Might take a few weeks to grind for a good set to fight the thing, but that’s what 
+good teammates are for.” Wysteria was excited for barely a moment, captivated by Naa’s 
+eagerness.  </p>
+<p>But then the Beastfolk heard Luv’s sweet giggle up ahead and her eyes narrowed. Naa had 
+been close to cheering her up. Closer than anyone else had been, and not just because her 
+team wasn’t interested in trying.   </p>
+<p>Naa kicked at a stone and freed her magic flute so she would be ready for combat. And 
+Wysteria would never know, but now that a new, rare instrument was on the line, Naa wished 
+Wysteria could get the kill credit too.  </p>
+<p>it.” 
+need
+​</p>
+<p>Mountain Giant dungeons were all elemental. Some were themed around wind and storms, 
+others on luscious fields of vibrant hills.  </p>
+<ul>
+<li>
+<ul>
+<li></li>
+</ul>
+</li>
+</ul>
+<p>​
+​
+ 
+Pillars of lava dripped like waterfalls from this dungeon. Molten earth was sometimes disguised 
+under normal looking rock, which would swallow up an adventurer like a sinkhole if they weren’t 
+careful. Magic, poisonous mountain gas could build up and fill a room with purple and white fog 
+causing adverse effects, the least of which was common poison. Often there wasn’t even much 
+of a warning. A faint odor was all that might warn an adventuring party that they were on death’s 
+doorstep. </p>
+<p>The Hall of Brandforge lay perched at the peak of the mountain, and the party stood stalwart 
+before it. They knew that Brandforge was the Mountain King―lovingly referred to as King 
+Scorchy Burn Burn―and that he’d created a line of molten weapons and armor out of the fires 
+of the Underworld. As such, Wysteria’s mallet was the main damage of choice, since it wouldn’t 
+burn or melt as she used it to bash the Mountain Giant King.  </p>
+<p>“Five potions of greater healing,” called the party’s Human Alchemist. He acted as the healer for 
+the coming battle. “That’s twenty drinks.” </p>
+<p>“Frost arrows for the guys he spawns. Still have plenty,” replied their Elven Sharpshooter.  </p>
+<p>“I’m specced in heat resist. But I’ll still need bardic inspiration if I want to avoid hellflame blight 
+damage,” said the Guardian, a bear who walked on his hind legs, glistening in pointed 
+pauldrons and a war helmet.  </p>
+<p>The shield, which could guard his whole ten foot height, began to glisten as Naa flitted a ditty on 
+her flute. It was a gay and lively tune from a gay and lively Gnome. “Done. I’ll keep an eye on 
+you to renew it. Otherwise, I’ll just stay in range for my―. . .” </p>
+<p>A sound like a crashing cart turned the heads of the five.  </p>
+<p>An immense boulder had fallen from a previously unexplored cliff, smashing the ground nearby, 
+opening up a cauldron of magma that bubbled and splashed from the impact. Moments later, 
+demons wrapped in the liquid earth rose and slurped to life, taking aim at the adventurers.  </p>
+<p>“Oops,” said Luvvy, who was flapping her sparkling Faerie wings like a hummingbird near the 
+boulder she’d just knocked over. </p>
+<p>Wysteria squeezed her weapon with such vexation that light shone through her fingers. At the 
+very least, Luvvy was playing her archetype: Faeries were prone to curiosity and mischief. But 
+damned that wench! Did she not know the final battle was about to commence? And here she 
+was summoning more bosses to fight through. </p>
+<p>With added vigor, the mallet-wielder pulverized the lava demons till they were nothing but dark 
+splatters on her weapon. The ambush cost the party a few drinks from their healing potions. 
+They were lower than comfortable now. A general unrest filled the group.  </p>
+<p>Everyone knew it was all Luvvy’s fault, that the smoothness of the dungeon clear had been 
+compromised. The group waited for one member to rise up and address it.  </p>
+<p>No one did.  </p>
+<p>Wystria nearly boiled over. She would put the wench in her rightful place. But when she was 
+nearing the Faerie, who was distracted by the shiny gems dropped by the demons, Naa stopped 
+her.  </p>
+<p>“Don’t. Her damage will make this fight all the faster. You know how long this boss can take if 
+there isn’t enough people hurting him. We can’t afford to stall him out, either―. . .” </p>
+<p>“Because that worthless, brain dead bimbo forgot that ninjas were supposed to be sneaky!” 
+Wysteria roared. </p>
+<p>“Umm, excuse me,” Luvvy said, then turned, her arms full of shiny rocks. Decolletage on her 
+black dress put most of the glittering treasures under, over, and between her luscious breasts. 
+Wysteria had successfully ignored the fact for several weeks, but glaring at Luvvy brought to her 
+attention how well done the Faerie’s chesty figure had been conjured. While flying, there was a 
+constant bobbling of her immense, buoyant breasts, within which she could hide no shortage of 
+treasure. “Why you mad, Wysteria?” </p>
+<p>“Because I’m being forced to split my drops between six people when I’m doing the work of two! 
+Honestly, it would be a massive improvement if you would stand still and touch nothing.” 
+Wysteria struggled for eye contact. There was a ruby the size of a fist and it had all but 
+disappeared between her new teammates fat titties. Who needed tits of that size on a 
+battlefield? For Aether’s sake! “It’s actually a waste of mana keeping you alive.” </p>
+<p>“First of all, I’m only two-thousand kills from Shaman Slayer Quests, so clearly I’m not useless. 
+I’m getting a ton of kills―. . .” </p>
+<p>“Those are my kills!” Wysteria’s voice went screechy. “You stole them! From. </p>
+<p>“Anyway.” The Faerie used her free hand to flick back her coral and aqua hair, then slinged her 
+traveler’s satchel of unexpected depth to the front. In went all the drops. “We were about to 
+leave without all this good loot. I figured it was smart of me to keep exploring. You’re welcome.” </p>
+<p>Hundreds of copper pieces dropped, nay, 
+ores too. The pristine ruby she had to fish out and she didn’t pretend―not for a single </p>
+<p>from her outfit. Coins rolled down, precious 
+oozed
+​</p>
+<p>.” 
+Me
+​</p>
+<p>​
+​
+second―that she didn’t have the highest charm level in the whole party when she went to 
+groping down the front of her robe. In truth, such an astronomically high stat did permit her to 
+have increased rewards for trading items, almost guaranteeing that she would make back more 
+from trading the loot than any of her party members. And because of this unique advantage, Luv 
+had been the one responsible for trading in the party’s loot, then distributing the earnings among 
+the members. She sort of just fell into the role and was doing it well. </p>
+<p>But it shouldn’t have been given that she should activate traps for loot, or that she should be the 
+one carrying the huge ruby, or anything, really, since she was still too new―in Wysteria’s 
+opinion―to be taking anything for granted. She should have asked. Ask before coming into a 
+new group and changing fucking everything. </p>
+<p>Who did she think she was? </p>
+<p>“But now we might not be able to complete the boss fight. We were playing it safe. What? Did 
+you really think we just forgot that hard mobs spawn good loot?” Wysteria chuckled sardonically. 
+She turned back to her group, hoping at least one of them would see how glaringly aloof Luvvy 
+was being; how unreasonable. </p>
+<p>The two men of the group, Sharpshooter and Alchemist, held eye contact with the ground. 
+Occasionally, they looked Wysteria up and down, then Luvvy, but ultimately returned to staring 
+at pools of lava. The guard bear, who was also male even if nobody thought of him that way, 
+took more interest in Zephyr, choosing to stay out of the group spat. Zephyr was bashful, 
+conflict averse as well.  </p>
+<p>Naa was visibly troubled, her flute pressed to her chest. Her fists were tight around it, knuckles 
+white.  </p>
+<p>“Guys? Tell her!” </p>
+<p>“It’s not that big a deal, Wysty,” said Alchemist. “It’s just one dungeon run. If it doesn’t go well 
+we can always retreat.” </p>
+<p>“I had no idea the room before the boss had such nice drops, too. The golems inside don’t drop 
+gems,” said Sharpshooter.  </p>
+<p>Luvvy flitted over merrily and hugged the archer. They had been very buddy-buddy lately, 
+thought Wysteria. More than friends, spending extra time in the backline together. Wysteria 
+used to be able to depend on her bowman to be there for her, to have her back. He’d been 
+slipping some, as of late. Missed spells, poor timing, things she would normally overlook.  </p>
+<p>But with the buxom Faerie fawning over him, Wysty couldn’t help but feel the heat of betrayal 
+spidering jagged, forking strings of treason around her heart. Not only was Luvvy stealing her 
+kills, she was stealing another competent warrior.  </p>
+<p>Wysteria hated that her party was weakening. She looked down at herself, her hulking muscled 
+form in hardened leather. Bits of chain poked out in places, bandages covering old combat 
+wounds. Around her neck was a wide crescent of Beastfolk Shaman artifacts for spellcasting 
+and minor buffs.  </p>
+<p>Like every girl does, she wondered if she could have held her party together with her looks. If 
+she lost some stats―unrobed her shaman collar―would her body help inspire her party as 
+Luvvy’s did? </p>
+<p>Likely not. Her charm level―and cup size―was ineffective in those regards.  </p>
+<p>Having had enough, she marched toward the Faerie who was rubbing her scarcely covered self 
+against the archer. “One-’V’-One me. Right now. I’ve had it.” </p>
+<p>“Speaking of wasting resources,” Luvvy sassed. “So obsessed with numbers and efficiency but 
+you’re ready to lose a party member over. . . o-over―. . . </p>
+<p>Wysteria raised her mallet. She came fast, swinging with a heavy overhand.  </p>
+<p>Her strike found purchase, but it was on the Guardian’s shield. The heat aura Naa had passed 
+all but neutralized Wysteria’s damage.  </p>
+<p>“I wasn’t going to kill her. Duels are nonlethal,” snarled the Beastfolk Shaman.  </p>
+<p>“But they do consume health points, and debuffs last their full duration. You know that.” The 
+bear flashed his fangs, eyes a sickly yellow between the glint in his helmet. </p>
+<p>“You’re on her side too, huh?”  </p>
+<p>“That bitch tried to hit me! She really tried!” Luvvy hissed. </p>
+<p>“Nobody is on anybody’s side,” Naa interjected. “This isn’t a sided thing. We’re on the same 
+team.”  </p>
+<p>Wysteria felt the Gnome girl’s hand on her fist, applying gentle pressure so that the hammer 
+came down to her side.  </p>
+<p>“We do what’s best for the team,” the bear said, barely moving his mouth. </p>
+<p>” 
+Eep!
+​</p>
+<p>​
+“She’d have one hit point with heavily compromised armor, if that was the case,” Wysteria 
+grumbled. “That close to death, she’d have to play more carefully.” </p>
+<p>Luvvy screamed, “Screw you!” </p>
+<p>It wasn’t nearly enough, but Wysteria contented herself to scaring the shit out of the little Faerie. 
+She nodded to her Guardian, silently agreeing to a truce.  </p>
+<p>“Damned cubs,” Guardian said, nostrils wriggling with frustration. </p>
+<ul>
+<li>
+<ul>
+<li></li>
+</ul>
+</li>
+</ul>
+<p>The warriors entered the Hall of Brandforge. Inside was a tremendous throne room carved of 
+black rock. The sides were rivers of lava whose starts were somewhere behind a vast throne at 
+the back wall of the cave. On the right was a hole in the wall grand enough for a giant to pass 
+through, though the King wasn’t known to run from battle. Perhaps he’d gotten angry and 
+punched a hole in his wall. It was a menacing, jagged opening so maybe its whole purpose was 
+to be menacing and jagged. </p>
+<p>Sitting on the lip of the glossy black bench, three sizes too small, was the person to whom such 
+questions should be posited: King Brandforge.  </p>
+<p>None of the experienced fighters were surprised by his size, having heard about the Giant’s 
+shapeshifting qualities from written lore or word of mouth. </p>
+<p>“That’s him? He’s just a normal guy!” Luvvy said emphatically. “Why did we need so many 
+resources just to fight one guy? We could have carried even less so we could take more loot 
+with us on the way out.” </p>
+<p>The Sharpshooter blushed, fingers subconsciously fidgeting around an arrow shaft.  </p>
+<p>“That right there,” Wysteria muttered down to her bowman. “Is who you’re trusting with your life.” </p>
+<p>The King rose from his seat. Skin darker than black rippled with cracks from his molten core 
+bleeding through; bursts of orange and brown breaking his skin. He wore no clothes so his 
+stony exterior could be seen melting and hardening like tectonic plates. Though he was no 
+doubt elemental, his body was largely humanoid, taking the form of a muscled young man. Six 
+feet, five inches. His hair glowed with whips of hot fire and each arm burned with pumice.  </p>
+<p>“Travelers! Ah, how long it has been since I’ve had worthy company. You will not find me to be 
+the most gracious of hosts. I do apologize!” </p>
+<p>There were a few lines of dialogue that came to Wysteria to speak. Each one changed based on 
+the encounter, improving a person’s odds. “We come on a quest for weapons to vanquish the 
+fires of the Underworld! We know you to be the only artisan of such invaluable crafts!” </p>
+<p>“That I am. Quests to that world would be impossible without the work of my hands.” </p>
+<p>Good. ‘Work of his hands’. First would come close range combat. Wysteria saw her frontline 
+partner brandishing his shield. Naa gave her confident eyes, lips already pursed to blow a heat 
+repelling melody.  </p>
+<p>“Why are we waiting for all this dialogue? We’re wasting time. We could be selling our stuff and 
+running the dungeon again,” Luvvy whined. </p>
+<p>“Would you find a way to close that hole in your face?” Wysteria said, commented with a friendly 
+smile.  </p>
+<p>Luvvy shot back. “Why don’t you make me?” </p>
+<p>“Say that when you can do more than hide behind our Guardian’s shield―. . .” </p>
+<p>“Did anyone hear what the boss said? What are we supposed to say to him next?” Naa intruded 
+on the catty rivalry.  </p>
+<p>“I was distracted,” answered Alchemist.  </p>
+<p>Sharpshooter answered in the negative, face gone beet red. </p>
+<p>Zephyr blew fast air through her lips and stamped a hoof on the ground a few times.  </p>
+<p>“What does that mean?” asked Naa. </p>
+<p>“I don’t know,” Wysteria shrugged. “It’s hard to understand Zephyr’s accent sometimes. 
+Something about the Mountain Queen? One more time, Zephyr. Slower―. . .” </p>
+<p>“No matter!” shrieked Brandforge. “I will show you all what makes my molten weapons so 
+potent! This will teach you foolish mortals to climb my mountain!” </p>
+<p>“Finally!” Luvvy groaned and brandished a set of throwing stars that were green with vines and 
+laced with thorns. </p>
+<p>The fight commenced with a sense of dread across the whole party.  </p>
+<p>The sky that opened above them filled with a column of toxic, volcanic gas. A small earthquake 
+made the ground rumble with foreboding, signalling the influx of mana rushing toward the 
+monster of a young man. Belting demonic utterances, the King’s eyes went red, orange, yellow, 
+blue, and white―every color of flame, from warm to unapproachably hot. Then, his body grew, 
+losing all semblance of humanity. The fumes which rushed out of the volcano’s top now swirled 
+about his middle and bottom. His abdominals became meteorites. His chest, a mountain of 
+stone set ablaze.  </p>
+<p>Brandforge sank a hand into one of his rivers of molten rock and pulled out a dripping lance, 
+nearly twenty feet in length. It remained liquid for the most part, dripping untouchable dollops of 
+intolerably hot goo all around him. The tip popped and sizzled as it cooled into a triangularly 
+headed bolt.  </p>
+<p>“Face the Underworld’s Champion, mortals!”  </p>
+<ul>
+<li>
+<ul>
+<li></li>
+</ul>
+</li>
+</ul>
+<p>The King’s whole battle scheme changed.  </p>
+<p>As the King swung his lance, crescent blades of orange lava would sling from the rod and 
+solidify as they wrapped around like boomerangs. The party split into groups of two. Clumping 
+up would only make for an easier target. Zephyr fled the battle, remaining just outside the door, 
+(still) conflict averse. </p>
+<p>Wysteria summoned a duo of swamp golems whose moisture helped shield them from the heat. 
+Upon direct contact with the sickles of fire, though, they each burst into flame, all moisture 
+sizzling away at once. A smoke cloud was all that remained of the vaporized spirit. It smelled 
+like sewage and sulphur, and weakened Wysteria’s strength if she breathed it in. Alchemist was 
+behind her preparing tonics while casting minor spells to keep the Beastfolk Shamen topped off. </p>
+<p>In the middle, the Guardian bear bore the brunt of the damage. His shield was reinforced with 
+Naa’s flute playing. His roar bought the attention of the King, who mocked the efforts of nature 
+and promised to rid the world of all bear kind. It seemed to be part of the bear’s plan, even 
+though he was absolutely pinned by the swirling projectiles.  </p>
+<p>Several feet beyond the Guardian’s shield, the Sharpshooter took aim. While he did have the 
+range to hit the King, many of his shots were aimed at taking down the boomerangs that 
+managed to bend around the shield meant to be protecting him. The tank and spank method of 
+combat was seriously inhibited because the ranger was sniping projectiles out of the air, leaping 
+or tumbling out of the way of those that caught him by surprise.  </p>
+<p>The King had the upper hand, but the party at least held its own. It would have been a great 
+time for a sixth member to step in and do damage to the weaker points.  </p>
+<p>“Kyaah! Hah! Hah!” Luvvy made different martial art poses, each accompanied by her throwing 
+a nature magic infused shuriken.  </p>
+<p>The poses were wrong. Ninjas were part of the rogue class, not the monk or the fighter. There 
+she was, doing kicks and flips and bringing extra attention to herself, when she should have 
+been blending in, biding time in search of a weak point. Also, her shuriken didn’t have the 
+strength to travel far enough. Each one fell short, melting in the air before they even reached the 
+whirlwind of poisonous fog serving as a barrier to the King. Luvvy was utterly useless. Her 
+abilities were nothing but a show.  </p>
+<p>Which wasn’t so bad, if that was your thing. The abundance of chest flesh was a source of 
+entertainment at the very least, trouncing around with reckless, sexy abandon. In some form of 
+reality bending magic, each time a wardrobe malfunction was threatened, a gossamer band of 
+her robe would slither down into place to cover her. Her combat was the perfect tease, and her 
+heated, effortful face charmed those who watched.  </p>
+<p>Wysteria fell prey to the girl’s charms, paying way more attention than she should have. A 
+crescent of magma to the shoulder was all the motivation needed to put her focus back on the 
+battle. She winced, nearly taken to the ground by the pain, blight eating away at her armor till 
+nothing but her shoulder remained. Before it could completely paralyze her, though, the 
+Alchemist smashed a vial over her arm whose blue contents soothed the blight and rejuvenated 
+Wysteria.  </p>
+<p>It stung like hell in the process, though. </p>
+<p>“Stay sharp,” he told her. “Those are expensive. I don’t have many more left.” </p>
+<p>“Sorry! Sorry, okay,” Wysteria replied.  </p>
+<p>The King cackled madly after a successful hit which gave a pause to the artillery that had forced 
+the group onto the defensive. Wysteria roared that her group advance. She led the charge. 
+While she wasn’t the fastest, she made it to the throne before King Brandforge could break 
+away from taunting the Guardian and used the arm of the throne to spring herself high into the 
+air. Down came her mallet, smashing the Mountain King’s shoulder. She’d aimed for his head 
+but her actions needed to be fast to deal damage within the break window. Also, since much of 
+his upper body was shrouded by his smog, it was hard to tell exactly where the head, neck, and 
+shoulders were.  </p>
+<p>“Glaaaarghraaah!” bellowed the king.  </p>
+<p>Naa’s spell of levity ensured Wysteria’s descent happened without much trouble. It was a solid 
+hit and a swift retreat. Obsidian shards twinkled down from the right shoulder of the king like 
+falling stars.  </p>
+<p>“Nice!” shouted Sharpshooter. He’d remained back, but had a frost shot charged.  </p>
+<p>Wysteria nodded at him.  </p>
+<p>He grinned and let fly his arrow, which sang through the air and lodged itself into the damaged 
+shoulder. Brandforge went spinning, twenty-five foot tall pillar of fire and smog and rock and 
+volcano all in a death spiral. He’d taken serious damage.  </p>
+<p>The party was working. It was actually working!  </p>
+<p>Until Luvvy found a way to mess things up.  </p>
+<p>Before Wysteria or Sharpshooter or anyone else could stop her, she went running forward with 
+her pink club. “I got him!” she shouted. Half gliding, half skipping she reached the King as he 
+writhed. Experienced fighters could tell the window for damage had closed, but Luvvy went on 
+and bonked him with the heart-shaped head of her shaman war club.  </p>
+<p>That’s when the King ceased his charade of taking damage. “Ahh, a foolish Faerie. You remind 
+me much of my old bride. . . insolent!”  </p>
+<p>Then a billow of toxic gas blasted Luvvy clear across the room, where her body slammed flat on 
+the wall behind and slumped to the ground at an odd angle. Instantly, the expensive, custom, 
+magic resistant robes began to disintegrate. She wailed in pain as the toxins ate into her flesh, 
+poisoning her. </p>
+<p>“He wasn’t open, you idiot. . .” Wysty whispered. She couldn’t bring herself to scream it, not after 
+seeing her get taken from everything to nothing in a single counterattack.  </p>
+<p>‘If she were brought to the brink of death, maybe she’d play more carefully’. That’s what 
+Wysteria had said just a few minutes earlier. Now, the Faerie was all but shattered into nothing, 
+the sizzle of acid on her black robes an ominously ticking time bomb. Wysteria had gotten her 
+wish, but she couldn’t bring herself to look the one she cursed in the eye. </p>
+<p>The Alchemist ran over, blue flasks double fisted. Wysteria heard them shatter but turned to 
+face the King before she could see what accompanied a blood curdling cry of out-of-body 
+suffering. It was like Luvvy wanted to die―the pain of being healed being worse than death.  </p>
+<p>“Incoming!” </p>
+<p>The King had his fingers curled to both his sides. Out of the rivers of lava marched lava golems. 
+Each was twice the size of the ones that the team had dispensed with just outside the door, and 
+these guys were armed. The giant, craggled stone men marched, held together by sticky, 
+sinewy magic lava goop. Each of them were holding smaller versions of the King’s lance.  </p>
+<p>Wysteria readied herself, trusting Luvvy’s care to their healer. This meant she had no source of 
+healing. They’d gone from six against one to four against two―a very big two.  </p>
+<p>Naa blew a new melody. Wysteria felt herself being lighter on her feet. When a golem came at 
+her, she was able to move herself out of the way, reflecting the stabbing motion, and slamming 
+her weapon into the lava golem’s side. She turned and winked at Naa who couldn’t keep herself 
+from grinning. Tune of enhanced alacrity. It felt strong, like a second level spell. Possibly third. 
+The range on such a thing was impossibly short, though, so only the bear Guardian and 
+Wysteria could make use of their newfound speed and dexterity.  </p>
+<p>They felled the golems quickly, taking no hits and spending little more than Naa’s mana. But 
+then, the pieces of broken stone and the splatters of fiery adherent began to piece themselves 
+back together. Now, there were four golems, made from what had been broken in the first two.  </p>
+<p>They were multiplying.  </p>
+<p>Wysteria swore. She looked at her partnering frontliner. He looked ready to defend, but his 
+shield was dented, showing wear. If Naa was giving them speed to increase their chances of 
+damage dealing, she wasn’t buffing their defenses. This was weakening Guardian.  </p>
+<p>“Slower this time. Defense, Naa,” Wysty instructed.  </p>
+<p>Which Naa did. The group had to back up. Sharpshooter wasn’t able to get good shots on the 
+four golems as they were now small enough to fit behind Guardian and his shield. Naa kept a 
+consistent spell of healing and defense, but her mana pools were ebbing fast. Wysteria 
+managed a few more kills, but each time she pounded her hammer into a golem or had a 
+swamp elemental tackle a sentry into the lava pools nearby, they would always divide and 
+multiply, coming back with twice the speed and aggressiveness.  </p>
+<p>Things were looking bad.  </p>
+<p>If not for that damned Faerie! They needed a dedicated healer, not a bard doing her best to play 
+out of both sides of her mouth. Cloistered so tight together at the back of the dungeon hall, it 
+seemed all but lost for everyone involved.  </p>
+<p>“We ought’a retreat. We hadn’t planned for this. Not enough area of effect,” Guardian called as 
+he shield bashed a golem, knocking it back with a sound like bricks breaking.  </p>
+<p>“I can do AoE, but I need time to charge it,” countered Wysteria.  </p>
+<p>“How long?” </p>
+<p>“Twenty? Twenty five seconds?” </p>
+<p>“I can’t tank this many for you. Bardic haste an option?”  </p>
+<p>Naa couldn’t answer as her lips were busy. She shook her head.  </p>
+<p>“We already have her playing two songs. By the time she adds a third, the effects are 
+negligible.” </p>
+<p>“We retreat. Go, now! I’ll hold them―. . .” Guardian started. </p>
+<p>But Wysteria called out first, “No! No, we’ve come this far. Done a ton of damage. We can finish. 
+We just need. . .” </p>
+<p>“I said go! There’s nothing we have to counter this. No shame in trying again another day, 
+cutting our losses. Hrragh!” Guardian held off two lava golems with his shield in one hand, then 
+activated rage and tore the stone head off another with his sharp maw and slung it away before 
+slapping the rest of the beast with his claws. </p>
+<p>It was, admittedly, bad ass. Except, when the bear started to use his animal skills, it meant that 
+he wasn’t saving them for the later phases of the boss fight. Guardian was digging deep into his 
+bag of tricks, becoming reckless, less logical. Their tank had a clock on his tankiness now.  </p>
+<p>But Wysteria couldn’t give up.  </p>
+<p>She looked over and scowled clearly at the recovering Faerie. That wench! It was her fault. This 
+raid was a failure because of her. To think, Wysteria’s party had taken the Faerie’s side―was 
+still taking it by using their most valuable potions to basically bring their most useless member 
+back to life. It was like they’d all forgotten how much this raid meant to all of them! Weeks ago, 
+when they were gathering supplies for the battle, they were a well-oiled machine. They dug as 
+deep as they needed and beat dungeons that were ten levels above what was recommended. 
+Wysteria was their fearless Beastfolk leader. She knew they were unstoppable if they stuck 
+together. She always made up the difference, too, clutching out a win with whatever her team 
+could provide her.  </p>
+<p>Luv greedily sucked down an entire potion of greater healing, her lips on the flask like a child 
+with her mother’s teat. A red droplet escaped, fleeing the newcomer’s mouth, dripping down to 
+the point of her chin where it splashed onto her nearly exposed tits.  </p>
+<p>That’s when Wysteria remembered her own special raid preparations.  </p>
+<p>She blew between her fingers. A loud whistle pierced the chaos. From the door behind them 
+burst Zephyr who was left outside for not having any combat stats yet. She dug in her saddle 
+bag and fished out the vial from the Spirit of the Forest’s Wishing well.  </p>
+<p>“Keep tanking! This will be quick―we’re going to win this!” Wysteria shouted.  </p>
+<p>Then she thought of the power she would need to help her team and swallowed the vial’s 
+contents. </p>
+<p>It was warm going down. A smooth comfort coated the back of her throat. Then, her vision 
+blurred and her balance wavered. She stumbled but caught herself on Zypher’s side. The 
+warmth was gone. All that remained was bitterness and a lingering feeling of an approaching 
+death.  </p>
+<p>“The hell did she drink?” said the Alchemist. He went to the vial that Wysteria had dropped in 
+her delirium. “Where did you get this?” </p>
+<p>“Wishing Well. G-Gladesvale,” Wysteria slurred. She tried using her force of will to come to and 
+managed to clear her vision. Standing on her own was still impossible. “T-the spirit of the forest. 
+. .” </p>
+<p>The Alchemist understood, as he might since his class specialized in rare mixtures and potions. 
+His face soured. “You know that well has two names, right? It’s the Wishing Well for those who 
+wish with a clear conscience. It’s the Witch’s Well for people with selfish intention. And since 
+you’re clearly being poisoned, I’d say your intentions were pretty spiteful.” </p>
+<p>“Spiteful of. . .” Naa said, breaking a note in half to say what the whole party already 
+understood.  </p>
+<p>The Alchemist turned toward Luvvy. Her tongue was flicking at the bottom of the potion she’d 
+just had. “Who else?” The Alchemist shrugged. “Fae are tricksters. You knew this and still went 
+spending money on potions they offer?” </p>
+<p>“I-it was to help the team. . .” rasped Wysty. </p>
+<p>“It was to get a boost in combat so you could look good and prove the group doesn’t need 
+Luvvy,” the Guardian amended. “Well, congratulations. Your jealousy has done nothing but 
+make you the weakest in the party, so now we need Luvvy’s power more than ever.” </p>
+<p>And just like that, as if the spell was waiting for someone to call Wysteria out, a bright light 
+started in the Beastfolk’s heart. To her, it was like a frost bolt being plunged into her chest, biting </p>
+<p>crystals digging like nails through her leather armor and skin. Out came the swirling, frosty glow. 
+A ball of it spun lopsidedly in the air as if regarding its existence and those around it for the first 
+time. Then, before anyone could call it into question―Wysty most desired to interrogate it, but 
+its departure left her as weighted and undefined as a bag of sand―it shot high into an arch 
+before plopping down square on Luvvy’s candy-colored head. </p>
+<p>An angelic choir called. Trumpets sounded. The ball of light dispersed leaving the Faerie alight 
+with its endowment.  </p>
+<p>“Uh. What was that?” Luvvy asked, finally concerned enough about the situation to put the vial 
+of potion on the ground at her side.  </p>
+<p>Wysteria wanted to say what she thought, but Naa said what was on her mind, giving up on her 
+song. “Looks like a buff of some kind. Haven’t seen it before, though. It doesn’t feel bardic in 
+origin.” </p>
+<p>“Not Alchemic, either,” said the Alchemist. </p>
+<p>Wysteria made a noise of pain and bereavement.  </p>
+<p>“Magic of the Beastfolk? Is that what it is?” Guardian interpreted.  </p>
+<p>Zephyr bobbed her head back and forth, clucking her hoof on the ground once.  </p>
+<p>“Think that means no,” Sharpshooter sighed.  </p>
+<p>Luvvy skipped over and squeezed Sharpshooter’s arm. “I didn’t know you spoke horse! That’s 
+so cool!” It appeared that her recovery was complete which, even with a whole potion of greater 
+healing, should have taken a much longer time. </p>
+<p>“Someone bounced back quickly,” mentioned the Alchemist. </p>
+<p>“Yea! That light feels really good. I feel great, actually. Maybe it’s a buff of invigoration―. . .” </p>
+<p>“Trying to flee, mortals? I’m afraid I cannot allow that―not after you’ve disgraced me with your 
+pathetic excuses for attacks!” King roared.  </p>
+<p>At his command, creatures made of lava rose from the fiery pits that flanked the throne room. 
+They were sluggish pillars of rolling liquid fire whose bodies were slender tubes with four smaller 
+tubes of flame slithering twelve feet long from each of its sides. They kept coming and coming. 
+The rivers of lava never lowered, birthing deadly tentacled beasts ceaselessly as if fueled by the 
+powers of hell. Within a wink, there were a dozen of them. In short order, that number doubled. 
+The air hung heavy with their smoke and the smell of sulfur, nearly suffocating. </p>
+<p>With Wysteria incapacitated, Guardian unfastened his shield and gave the order to run as his 
+fangs elongated. He was prepared to deal as much damage and buy enough time for his team 
+to escape with their leader slumped atop her horse.  </p>
+<p>But of all people to refuse, Luvvy floated in front of the party.  </p>
+<p>“Luvvy! It’s time to go―there’s nothing else we can do!” Naa screamed. </p>
+<p>Alchemist agreed. He was pulling Sharpshooter back by the arms since the bowman had frozen 
+at the sight of his closest party member fluttering herself in front of the sacrificial war bear.  </p>
+<p>“Nah, it’s fine. I somehow feel like I can handle this?” she answered.  </p>
+<p>Wysteria, still mostly out of sorts, had little choice but to watch. With Zephyr lowering herself and 
+Naa pushing on Wysty’s behind, the Shaman was made to straddle her stead, riding backward 
+like the fool she now felt she was. She saw Luvvy find her pink Faerie club and hold it in an 
+outstretched hand. From behind, her curvaceous little body was fully on display. She stood nude 
+in front of rolling mountain giants, dripping lava golems, and the Mountain King himself.  </p>
+<p>Then the aura of the light hardened sharply into a sash and wrapped her in a bikini made of 
+solid light. </p>
+<p>“Wh-whoa!” shouted Luvvy.  </p>
+<p>And her power soared.  </p>
+<p>Everyone in the room felt it―like someone had popped a potion of Greater Sorcery or a Buff of 
+Absolute Domination. Dust and stone rose up and swirled around her ankles. Her hair billowed 
+beautifully, up and back, lifted by an invisible spirit.  </p>
+<p>Suddenly, the Faerie’s body started to shift. Luvvy noticed too, and reacted with a sharp panic 
+that had her watching over her shoulders, whimpering. “Wh-what is―Ah! Hey, th-that’s t-too 
+tight.” </p>
+<p>Wysteria made a ghost smile with as little energy as she could. She hoped Luvvy had cracked 
+after seeing what she’d volunteered for and was making an excuse for why she should be 
+allowed to retreat after all.  </p>
+<p>“M-my ass?!” was what Luvvy said instead. </p>
+<p>She said so as she clapped a hand over an exposed cheek. Wysteria saw the defined ripple of 
+her soft skin at the impact of her hand. Her fingers sank in, too, and her plumpness appeared </p>
+<p>anew between her fingers and beside her palm. Luvvy always had a nice butt. This butt was 
+way better than ‘nice’.  </p>
+<p>The string of her bikini bottom wedged tighter and tighter, squeezing until her hips and cheeks 
+were rolling over and camouflaging them completely. Luvvy used her wings and spun, trying to 
+crane her head around with futility to see what was happening to her. It no doubt felt awkward, 
+to feel the surging power of magic while also feeling your clothes shrink around you. Still, that 
+was the truth of this new power, and the Faerie had to suffer it.  </p>
+<p>On one of her spins she turned back around and noticed her front instead of her rear. She made 
+her discovery while looking straight in Wysty’s direction and gave a full on ‘O’ face at the sight. 
+“No way. Here too?! It took me weeks to save for the ones I had―I always wanted them bigger!” </p>
+<p>She’d gotten her wish. Luvvy’s already flirtatious, impractical chest was being augmented by 
+this magic buff. Her bulging breasts surged in bursts like an invisible agent was pumping her up 
+with a lever from a well.  </p>
+<p>That’s when it clicked for Wysteria.  </p>
+<p>She wished for strength and prosperity. She’d wished it for her and her comrades. Never did 
+she specify who ought to get the strength or prosperity. And, since her vengeance was against 
+the newest member of the party, the Great Spirit of the Forest had seen it fit to steal as much 
+energy as could be taken without killing Wysteria herself and giving it to the one person she 
+didn’t want to have it. </p>
+<p>Cruelty.  </p>
+<p>“It was a booby buff!” Luvvy announced, like everyone wasn’t already gawking at her absurd 
+proportions.  </p>
+<p>With each growth she’d make a cute little hiccup and make her chest bounce. Grander, they 
+pushed the bikini to its limits. Whenever it looked like its strings were about to fail, the magic of 
+the light bikini would extend so that her modesty was protected. Still, the front coverage lost 
+effectiveness as the faerie continued inflating to uncertain, precarious sizes.  </p>
+<p>“Glaaaargh!” </p>
+<p>“Eep!” </p>
+<p>A stony golem from before interrupted the excitement of the Faerie Shaman’s growth by rushing 
+her while her back was turned. Luvvy heard the creature approach, at which point what little 
+fighting instinct she had took over. She spun with her baton to bonk the beast on his head. </p>
+<p>jeez!” 
+Whoa
+​</p>
+<p>The blow struck home, a full-bodied overarm club that had so much speed and power that it 
+threw her rounded, moonish rump into the air as a counterbalance.  </p>
+<p>The bikini bottom was so tight, Wysty saw everything.  </p>
+<p>But she couldn’t dally on that fact long. The monster went from volcanic stone to dust with the 
+single hit, and lightening bent from the source of the impact to another three rock golems behind 
+the first. They each were hit by the forking electricity and fell to the ground. </p>
+<p>“No way,” Wysty croaked.  </p>
+<p>“She has chain lightning!” Naa shouted, unable to keep a grin off her face. “It’s the AOE we 
+need.” </p>
+<p>Luvvy spun around halfway, flapping her wings ecstatically as she looked at the party. Pride had 
+her full lips bent into a radiant smile, and the view of her body from profile was a treat on the 
+weary eyes of her warrior band. </p>
+<p>“See? I knew I could handle th-that―. . . </p>
+<p>Her light bikini flashed with sun rays. Her legs kicked just a few inches off the ground, some 
+sensation rushing up her body. Then came a few more noticeable bursts during which the 
+faerie’s lithe, petite frame was taxed with several more helpings of delightful body weight.  </p>
+<p>“Ahhn! Mmm, th-that’s―that’s good,” she moaned as her wings worked doubletime to keep her 
+aloft. She had an expression of effort, but her biting her lower lip implied that it had little to do 
+with the extra effort of keeping her new size off the ground. Her breasts sank lower and lower, 
+held tight to her body by the work of her magic string bikini, but their lower ridges rolled with a 
+freedom around her stomach, padding her tummy. At the same time, from the side, her bulging 
+areola were a ripe pink and puffed up cutely, peeking out all three sides of the celestial fabric 
+keeping her together. </p>
+<p>Then there was her booty. Each cheek had lost their pert, muscular quality and acquired an 
+equal level of soft jiggle―not yet a rival to her breasts, but still a compliment to them. Each time 
+her top half grew, so her round rump rounded further.  </p>
+<p>All to maintain what was becoming an hourglass figure reserved only for the world of fantasy.  </p>
+<p>“This is the coolest spell ever! I would have had to work forever to get enough gold to pay for 
+this kind of body! I’m so flirty―I love it!” Luvvy spun cheerfully, striking a pose.  </p>
+<p>Hand on her hip, girlish pink club over her left shoulder. A wink, a giggle. Her breasts swung 
+sexy and hypnotic when she leaned forward. They were so perfect in fullness and length and </p>
+<p>​
+size. Everyone was watching her, which she played to by taking that hand off her hip and 
+scooping it under her right udder as if to imply it was quite the effort just to tote herself around.  </p>
+<p>And despite herself, Wysty found herself deeply curious whether those blessed, newly inflated 
+jugs would feel as nice as they looked. </p>
+<p>“Incoming! Behind you!” Sharpshooter yelled, then broke away from Alchemist who was petrified 
+like the rest of the party.  </p>
+<p>Sharpshooter made for his bow, but when he had his arrow ready, Luvvy was already in the 
+midst of combat again.  </p>
+<p>Her flesh went slinging, rotating wildly, full of seduction. She all but danced around her enemies, 
+finally acting like a true Faerie. The way her wings carried her up and over confused and 
+beguiled her enemies, sparing plenty of time for her to come down on each with her club one at 
+a time.  </p>
+<p>Many went for her softer, squishier bits as they were large targets and magnetic to just about 
+everyone who watched them―apparently including inanimate material made to fight by magic 
+forces. This Luvvy seemed to suspect, and just when her big, delicate titties were in her 
+enemy’s sights, she’d pull them just out of range and counter. Soon, she was taunting the 
+golems and giants with her body, shimmying out her luscious figure and giggling merrily at the 
+attention it garnered her.  </p>
+<p>Truly, nobody had ever seen anything so hilarious, sexy, and effective at wiping away vast 
+swaths of enemies. Every other hit or so lightning would branch out and vaporize several of the 
+King’s spawns. Those golems were reduced to rubble, never reanimated. Not even the lava 
+rivers could supply enough to replace how many Luv was defeating. The damned lap dance of 
+destruction was working.  </p>
+<p>“Zephyr. . . Get me out of here.” Wysteria’s guts were so sick and twisted she thought she might 
+vomit. The emotions of pride, wonder, lust, and resentment were strong and all she wanted to 
+do was run away.  </p>
+<p>The horse seemed reluctant and only got two steps out the door before Naa got in the way. She 
+was so short that Zephyr was able to step over her and out the doorway, but the horse stopped 
+dead with a jerk that reminded its rider of the icy needles still unmelted in her chest.  </p>
+<p>“Ouch. . .” </p>
+<p>Wysty heard Naa’s voice. “You’re staying. Not only is this what you wished for, it’s what we 
+needed. Now, the group is strong. I’m not the biggest fan of how this unfolded either, but you’ve 
+made your bed, Wysteria.” </p>
+<p>Now she would have to sleep in it. Except, sleep didn’t come. Her restlessness warred within 
+her and she was forced to watch, both eyes open, as five, ten, and twenty monsters were all 
+taken down by a single, hourglass-shaped Faerie.  </p>
+<p>So that is what she did.  </p>
+<p>Luvvy cleared away all the smaller monsters on her own. Every few underlings slain resulted in 
+a flash of her bikini strings. More growth; Wysteria had put that much together. Every so many 
+foes, the micro top―it seemed pointless in battle, but it would be foolish not to refer to the 
+diamond-shaped slivers of modesty as a ‘battle bikini’―would twinkle.<br />
+It was like the battle just before the boss, Wysty remembered. Luvvy’s tits were flashing with the 
+diamonds and coins and treasures she’d carried around in her boobs. Those were artificial light, 
+reflections off of metal and crystal, but Luvvy’s boobs created their own light now, like she was 
+the greatest treasure in the whole dungeon.  </p>
+<p>Her pink melons shone even brighter when ten or so enemies spilled their molten blood over the 
+mountain floor. The bikini absorbed their power, but needed a place to store it. Shaman were 
+natural conduits, so it made sense to place all the accumulated power of a horde of demonic fire 
+enemies in Luvvy’s body. Wysteria had been a conduit for energy too. But it never did for her 
+what it was doing for Luvvy. All the power of the Faerie’s slain foes seemed to bolster her 
+already-astronomic charm, causing her to grow bigger, sexier, and even happier about both of 
+those qualities.  </p>
+<p>The Faerie’s endowments were tremendously powerful. Bouncy too. They looked like they 
+would make for the best night’s rest, certainly preferable to Zephyr’s rear end. Wysteria knew 
+this and still felt spite. Except, there was little more for her to do than lay there and admire. As 
+much as she wrote off Luvvy’s growing chest as gewgaw, useless, gaudy, and inefficient, her 
+pride as a warrior wouldn’t let her denounce the technique all together. </p>
+<p>“Hiyaah!” Luvvy screamed in quite the impressive maneuver. A monster had rushed her with a 
+large, granite bulb at the length of its ‘arm’. Luvvy was quick on her wings, so she spun away. 
+Except, rather than retreating, she appeared on the spawn’s left. And instead of dealing a killing 
+blow, she had the foresight to incapacitate the first beast and use its body for shield against yet 
+another approaching monster. How did she incapacitate it? </p>
+<p>Why, with her boobs, of course.  </p>
+<p>She clutched an entire rock golem in her canyon of delicious, pale flesh. His entire build was 
+sunken inside her, bulging skin yielding around it, trapping the spawn and inhibiting its 
+movements. It did struggle, but Luvvy was plenty busty enough to deal with its futile swinging. It 
+ended up bashing its teammates in a blind rage―literally blind, both because it lacked eyes, 
+and because the boulder which served as its ‘head’ was gone without a trace betwixt the little </p>
+<p>trickster’s gargantuan gourds. “Now left. Now right! Now left again, hehe,” Luvvy teased. Her 
+shoulder shimmy confused the stone warrior even further. He threw his stone body in wide 
+berths, none of which came close to hitting the lady he was being suffocated by. Then, once five 
+of his comrades had been bowled over by his own hand, his form lost all composure, vibrated 
+violently, and tumbled to the ground in lifeless bits of rubble.  </p>
+<p>The conscious spawn of fiery war was so frustrated―sexually?―that he saw no better way of 
+escape than complete incapacitation. Luvvy had cuddled a stone golem to death.  </p>
+<p>“Ahh yea! Here it comes―he was a big one,” the Faerie cheered. Luvvy’s eyes rolled, and her 
+fluorescent hair blinked a brighter color momentarily receiving the magic that her clothes 
+absorbed for her. Flesh compounded on flesh, softness on softness. Her chest continued to 
+blimp, racing to beat the bikini, hoping to snap the poor thing to pieces. Wysteria partially hoped 
+for such a fate. It would make Luvvy topless―which was disgusting, annoying, and 
+arousing―but at least the magic item which fueled her growth would be destroyed. Instead, the 
+magic wear behaved, well, magically and stretched thin and long, accommodating Luvvy as her 
+pixie body was belabored to absurdity.  </p>
+<p>Her entire center of mass while flying sank toward the ground. She no longer hovered upright, 
+but had to over-rotate to the front just to keep herself airborne. Admiration filled her eyes as she 
+dangled her breasts, now the size of wine casks―which corresponded to the same volume of 
+wine Wysteria would have had to drink to be drunk enough to believe what was in front of her 
+under normal circumstances. </p>
+<p>“I’m so heavy!” Luvvy said, eyes wide, smile heart-shaped. “A-and full. I bet I could solo this 
+dungeon with this size.” </p>
+<p>“I recommend you finish up! It’s been fun,” the Alchemist shouted. “But Fae magic fades fast. 
+You ought to finish the boss off.” </p>
+<p>“Oh really? Man! So I don’t get to stay this big and beautiful forever?” Luvvy asked, frowning at 
+the resident expert in enhancements.  </p>
+<p>“That’s Fae magic: never lasts as long as expected, never in the way expected.” </p>
+<p>Sharpshooter spoke up. “I’ll grind mobs forever to earn you the money to pay for the body you 
+want, Luvvy. I owe you that much, at least, for saving us from this party wipe.” </p>
+<p>“Aww, Sharpy!” Luvvy giggled and floated nearby.  </p>
+<p>At the height she needed to hover above the ground, she was a foot or so above him as she 
+swooped down to plant a kiss on his forehead. For reference, the tip of her barrel breast―her 
+nipple was as round as a pint from an inn, thick and throbbing, proportionate to the rest of </p>
+<p>her―bumped sharpshooter’s knee, and he wasn’t the shortest of the group by quite a margin. 
+There was nearly four feet to Luvvy’s breast, a size so ample that Naa could walk into her 
+swinging cloud canyon and never return. </p>
+<p>“Alright. I’ll finish off the boss, but only if you promise I get boobs like these for real one day.” </p>
+<p>Sharpshooter blushed, but his eyes intensified. He flashed a half smile. “Easy. For you, dear, I’ll 
+raid the four realms. And you’ll have the biggest chest when I’m through, I swear.” </p>
+<p>Dumb lovebirds, thought Wysteria. Then, she realized she could feel her hatred even stronger. 
+It motivated her, gave her the strength to start to get up. It wasn’t all there yet, but her power 
+was returning to her, which meant Luvvy was nearly out of time. </p>
+<p>The image obsessed Faerie floated over to center stage yet again. </p>
+<p>“You send a single shaman girl to fight me? She may have survived my spawn, but one small 
+daughter of magic is no match for me!” the Mountain King bellowed.  </p>
+<p>Her silhouette from behind was a shrine to gratuity as Luvvy reached into her satchel and pulled 
+out a medium-sized cannon. There might have been a time when it was large for her frame, but 
+like everything else in the room except the King himself, Luvvy’s chest eclipsed the cannon.  </p>
+<p>“There’s nothing small about me, Mountain King! Now surrender your fat loot!” Luvvy smarted 
+off.  </p>
+<p>Wysteria groaned. The line wasn’t cool at all. At least she could groan without pain, though. </p>
+<p>“Insolence will only expedite your demise! Now, face the hellish flames from which I’ve forged 
+the world’s strongest weapons!” </p>
+<p>The King wound up his arm, cocking it like a weapon. Spirals of lava branched away from his 
+body. They formed a tight, glowing ball just in front of his palm. More and more, he built magic 
+and heat and smoke into the orb, till it was meteoric and devastatingly massive. He could take 
+out the entire mountain with it.  </p>
+<p>He levelled it at the party. </p>
+<p>But Luvvy faced complete annihilation with a smile. In fact, she briefly surveyed her cannon, and 
+found something amiss, as she slipped it back into her satchel and rolled her eyes. What was 
+she thinking? She’d never be able to rush the King in time. Even with greatly increased 
+constitution and dexterity, her gargantuan breasts would drag the ground slowing her. At her 
+size any attempt to hide her intentions was futility.  </p>
+<p>“You holster your weapon?! Good! Yes! Face your demise knowing you are powerless to resist 
+me!” </p>
+<p>“Gah! Please, you’re not so hot,” Luvvy said.  </p>
+<p>She then grounded herself. It came as a surprise to everyone, since almost all her combat had 
+been done in the air. But the Faerie rested her wings, and breasts, on the ground. Wisty would 
+never get the image out of her mind. There was too much emotion knotted around the memory. 
+Her delicate shoulders, translucent wings, pinched waist, and rounded hips were all womanly 
+yet slender. Then, appearing almost a foot on either side, bunched up between her legs, 
+stacked tall and soft and obtrusive, were her unfathomable barrel breasts.  </p>
+<p>Luvvy leaned back. Her boobs dismounted, raising from their semi-rounded domes to 
+elongated, cylindrical beauties, hoisted by their owner. Each of her nipples were angled toward 
+the Mountain King.  </p>
+<p>Never having slain an enemy, her bikini straps began to glow and her hair swam through the air. 
+Elevated with the help of her hands, her tremendous, sexual blimps developed a faint aura all 
+their own. It began with a few wisps of color, barely visible. Within seconds, it was a roaring 
+flame with tongues of power surging up and away. Her nipples extended even further, domes 
+first, then full on rods. Cannons. Clearly, they were becoming cannons. Powering them were a 
+web of blue cords, veins that were as brilliant as sapphire, bulging all over her skin in their 
+branched and rivered journey to reach their destination at the end of her powerful teats. </p>
+<p>“Now, puny warrior,” King wound up, his asteroid of devastation complete. “Face my mighty―” </p>
+<p>“Suck my awesome tits, Brandforge!” Luvvy screamed.  </p>
+<p>And what had to be a fourth level spell shined at the tips of her nipples and burst forth in 
+sparkling white heaven. The King was slain before he could even unleash his stored powers.  </p>
+<ul>
+<li>
+<ul>
+<li></li>
+</ul>
+</li>
+</ul>
+<p>The Brightmoss Tavern was situated in the Agher Mountains. It was the only dwarven 
+settlement in this part of the mountains that welcomed people of all classes and races. For this 
+reason, most hard working Dwarves kept to their tunnels and underground keeps, but on a rare 
+occasion, when they were feeling talky or social―distinctly non-dwarvish―they might venture to 
+Brightmoss and share a drink with one of the other races. </p>
+<p>Naa slapped her thigh and stomped her feet. A ring of dwarves mimicked her and sloshed ale in 
+their stone pitchers, singing a jaunty tune. “I sing a tale of warrior brave, of beauty great, of giant 
+slain!” Naa’s high pitched soprano contrasted sweetly with the shouting raucousness.  </p>
+<p>Wisty checked again, making sure her bard friend was alright. Naa snatched a dwarf’s ale, 
+chugging long and deep, and leaped up onto the table. She trilled out a flute solo worthy of a 
+stage. The twelve dwarves loved it. She was fine. Her hangover would be of greater concern 
+than her safety as a fun-loving Gnome among Dwarves. </p>
+<p>So the Beastfolk Shaman retreated into shadow, climbing the steps that led to the upper rooms 
+where she and her party were spending the next day or so. She came to the first door and found 
+it opened, lit by candle light. Guardian was seated, nubby hind legs crossed, pouring over a 
+scroll of some kind. He’d found a pair of spectacles somewhere and balanced them over his 
+snout, like his eyes weren’t too far apart to make use of them. A feather dabbed with ink was 
+situated between two of his claws.  </p>
+<p>Wisty thought she best not disrupt the creative process, even if her curiosity all but consumed 
+her. She left without saying a word.  </p>
+<p>“Get some rest, Wysteria. You’ll need your strength,” came his resonant voice. </p>
+<p>Wysty didn’t answer, moving toward the end of the hall. Tomorrow, they would be hiring 
+transportation to move all of the ore, gold, and items they pillaged from the Hall of Brandforge. 
+With such a large load of supplies, they would need to be awake and alert to ensure the safety 
+of their winnings.  </p>
+<p>Thinking of how much they would make off their killings, Wysty changed her mind and didn’t go 
+straight to bed as she wished. She stopped, instead, at the door across the hall. It was cracked 
+open, the flicker of a lantern still on.  </p>
+<p>“Hey, Luvvy? I. . .” </p>
+<p>She started to open the door and heard scrambling and a startled yip. Danger? Was something 
+the matter? Something wrong, must be. </p>
+<p>Wysty’s legs carried her to the center of the action. Even if she was still weakened by the 
+potion, her instincts always put her in the middle of danger if it meant she could protect her 
+party, so she found herself on an animal fur rug in the middle of Luvvy’s room. She had 
+convinced herself that she’d find a greedy thief or unwanted solicitor.  </p>
+<p>Instead, she found Luvvy in bed with white linen sheets bunched and strewn around her. There 
+was a desk at the head of the bed with a lantern, lit lower than Guardian’s. Beside it was that 
+fist-sized ruby from earlier in the day, capturing the flicker of the flame in a million imperfect 
+faces. Wysteria thought it beautiful, even in its imperfect state. </p>
+<p>Sharpshooter was in the room. In the bed, actually, and on top of Luvvy. Topless. And 
+well-endowed? For a woman, that is. Yup, the scarce light enhanced the shadows in the room, 
+so rounded things like breasts and hips were much more prevalent.  </p>
+<p>And Sharpshooter had them.  </p>
+<p>“I-I. . . I, umm,” Wysty stammered. “You, uh. I thought you were in trouble and―. . .” </p>
+<p>Sharpshooter held up a hand. He―whoops, 
+pushed up from the mattress. “Don’t. I didn’t 
+she―
+​
+want you to find out this way, but now that you have could we please save the conversation till 
+morning?” </p>
+<p>There. Wysteria heard it. Sharpshooter always had a boyish, cocky voice. He was the kind of 
+man that young girls fell for. It wasn’t until now, with her hair undone, with her voice more 
+smooth and natural, that it became clear. “I’m so sorry,” Wysty whispered. </p>
+<p>“Relax, will ya?” Sharpshooter stood―of stature for a man, but impressively statuesque for a 
+woman―and swept a bit of discarded garb over her breasts. “I assume you’re here for her?” </p>
+<p>“Sharpy,” said Luvvy. </p>
+<p>“I’ll be back,” said the bow</p>
+<p>A few heartbeats elapsed with nothing said. Luvvy swept her legs onto the floor and sat up. 
+“Well?” It was clear she was annoyed. Why wouldn’t she be? Her and her ‘Sharpy’ had been 
+rudely interrupted.  </p>
+<p>Wysty had become the unsolicited visitor she’d wanted to protect Luvvy from. That seemed to 
+be the running theme for the day: Wysteria’s best efforts turning on her. </p>
+<p>“This is hard for me,” Wysteria started. She grabbed the nape of her neck and squeezed. “But 
+it’s the only way I’ll be able to sleep tonight. I’m sorry for antagonizing you. Sorry for thinking 
+you didn’t belong―that you had nothing to contribute. You saved our party, saved the raid, and 
+saved me.” Wysteria had expected to be interrupted so she sighed, giving her audience a 
+chance to interject. When she didn’t, Wysty said some more. “We have different styles. That’s 
+all. In the future, I’d like to, uh, maybe try to find a way to compliment yours instead of fighting 
+over the differences.” </p>
+<p>Luvvy’s eyebrow went up. She waited, as if waiting for the team leader to redact her statement. 
+When she didn’t, her lips bent into a sweet smile and she rolled her fingers through her 
+pastel-colored hair. </p>
+<p>, as she slipped by Wysteria and out the door. 
+woman
+​</p>
+<p>​
+​
+“I would love that. And I’m sorry too. Fighting is a two-way street and I wasn’t exactly the easiest 
+girl to get along with.” </p>
+<p>“No. You certainly weren’t.” </p>
+<p>“Rude!” Luvvy levelled her gaze. Her look was soft, though. “You’re just jealous that I found love 
+in that dungeon. Love and titties.” </p>
+<p>“As long as I get my share of gold to fix the gear that was eaten by scalding acid, you can keep 
+my share of love and ‘titties’.” Wysteria smirked. Even if she meant what she said, Luvvy’s 
+nudity felt like such a rare and elusive thing that her eyes flicked momentarily to the Faerie’s 
+bosom.  </p>
+<p>“That’s not where a woman focused on armor is supposed to look.” Luvvy caught Wysty 
+immediately. </p>
+<p>Wysty played it cool. “Just making sure you aren’t about to suffocate. For the record, you don’t 
+need to pay for any enhancements. You’re proportioned plenty well as it is.” </p>
+<p>“Just like our raiding and combat styles, I’m inclined to disagree. We’re just going to have to 
+come to a compromise there, Wysty.” </p>
+<p>Luvvy smiled, and it felt warm and genuine to Wysty so she turned and left without another 
+word. Actually, there were a few words spoken in tones only Zephyr would understand, and 
+likely blush over.  </p>
+<p>Even after the unleashing of all that magic, Luvvy still had tits in her lap! And they didn’t seem to 
+bother her, either. She was somehow more confident with them. It was like how Wysteria felt 
+whenever she wore a nice new set of armor. Maybe that’s how the Beastfolk Shaman would 
+have to think of it: Luvvy would only boldly face her foe with a gratuitous padding of her fleshy 
+mounds.  </p>
+<p>And if that was the case, Wysty was fine with admitting that Luvvy was indeed a warrior worthy 
+of her party. By no means a typical one, but one they could not do without.  </p>
+<p>No sooner after having left did she hear the fair maiden pining for her brave bowwoman. 
+“Sharpy! Oh, Sharpy!” </p>
+<p>Sharpshooter had waited patiently behind the door and appeared as Wysteria was leaving. 
+Before the ranger returned to her lover, she held the team leader by the arm.  </p>
+<p>“Thank you,” said Sharpshooter. “That’s exactly what she’s been worried about all evening. She 
+doesn’t act like it, but your opinion of her matters a lot to her.” </p>
+<p>Wysty felt a pang because she heard the truth in her bowwoman. How silly this whole adventure 
+had been. “I’m touched. Really. And I’ll be happy to show how touched I am as soon as you put 
+some clothes on.” </p>
+<p>Sharpshooter grinned, her charming half smirk a crackling, welcoming fire. “Really, Wysteria. 
+Thank you. I’m proud to call you my party leader. So is Luvvy―. . .” </p>
+<p>“Yea, yea. Back to bed with you,” Wysty shrugged away, scampering down the hall as a gallant 
+leader might. “We’ll have this talk at a better time.” Like when she could stop comparing chest 
+sizes with every girl in the party. She wasn’t sure how the conversation would go, but at some 
+point she’d have to ask Sharpshooter how she’d hidden such round, bulbous boobs for so long.  </p>
+<p>That put Wysty in third place. Only Naa had smaller tits than her. That wasn’t a comfort though! 
+Naa was a Gnome! And why did it matter anyway. </p>
+<p>“Sharpy! Hurry up!” Luv called. </p>
+<p>Sharpshooter seemed pleased. When Wysty turned before entering her bedroom for the night, 
+the tall, busty archer nodded and said. “Goodnight, Wysteria. Now, where were we, my sweet?” </p>
+<p>Their door shut firmly, then. The click of the lock sealed them in for the night. </p>
+<p>“Good riddance,” said Wysty. All her armor came off and she hit the mattress in her room like a 
+log. Out she went, into the realm of dreams. She couldn’t help but feel that things were as they 
+should be, and that they could only improve from here. </p>
+<p>Why had she ever gone to that Well in Gladesvale? To grant her party strength and prosperity. 
+But they’d already had that. They had been stronger than ever without some Fae magic trick. 
+And Luvvy, in her eclectic wonder, had only added to that strength. Wysteria swore, as she 
+adjusted her pillow, that she would never lose faith in her team’s strength ever again. And, as 
+far as Fae magic, she was done. That Great Spirit could drown in her well for all the Beastfolk 
+Shaman cared.  </p>
+<ul>
+<li>
+<ul>
+<li></li>
+</ul>
+</li>
+</ul>
+<p>Just before dawn, the Alchemist was still awake. He hadn’t slept since the battle. The others 
+had burned through their post-victory high in their own ways. The Bard wrestled with 
+dehydration after a night of drunken reverie, the Guardian slept on the cool floor pleased by the 
+creative uptick he’d had after such a triumph, and the Faerie and Sharpshooter had kept each 
+other company in the expected way, passionate and noisy till just a few minutes ago.  </p>
+<p>Alchemist had gone straight back to work. He had no passion like the others, other than botany 
+and cataloguing and other skills that paralleled his role of potion maker. There were times when 
+he would be bothered by such things, times like these where his energies still fueled him. He 
+wished he might find something else to take his mind off of how his stocks were low or how he 
+would need to consult the glass mason for additional vials. </p>
+<p>That shaky old woman would have his head for sure this time. Glass for her was an art and no 
+amount of payment could justify all the damage Alchemist had done by shattering her prized 
+pieces. </p>
+<p>Something about making the hag upset did feel like home, though. </p>
+<p>“Alchemist. Good morning.” </p>
+<p>He paused his picking of clovers from behind the inn in time to see Wysteria diving from the 
+second floor window. In the rare moment before the sun rose above the mountains, the braids in 
+her messy hair looked to slow her fall and she was, briefly, angelic.  </p>
+<p>She diffused the force of her landing with a series of tumbles, then popped up to her feet and 
+slowed into a walk in a single fluid motion. Alchemist blinked at this. He of course knew her to 
+be a skilled fighter but could never quite get over seeing her feats of strength and agility. The 
+move of her body was that of nature itself, efficient and forceful, yet full of grace. The top she 
+wore was tanned and contoured her musculature while clinging to her breasts. Again, force and 
+grace were embodied.  </p>
+<p>“Glad to see you well after a quick nap.” Alchemist rolled a plant between his fingers before 
+stuffing it into a pouch at his waist. “Has your shoulder recovered?” </p>
+<p>“It’s sore,” Wysteria answered honestly. “But the more I use it, the better it’ll be. I wouldn’t have 
+an arm if not for you, so thank you.” </p>
+<p>Alchemist didn’t answer. He busied himself with the blades of grass and the tiny, dew-covered 
+petals of wildflowers. Anything to keep from having to see his leader’s thankfulness or 
+remember how it pained him to see her wounded.   </p>
+<p>“I have a favor to ask of you, Alchemist. It’s, uh, not a typical one.” </p>
+<p>They’d spent mornings together before, her meditating in the break of dusk, him collecting rare 
+plants for salves. Their silent communion had been enough for him. When her eyes were closed 
+and she was at peace, he could feel better about watching her beautiful body, of admiring her 
+physically for more than her leadership and status as a warrior. She was a Beastfolk. She was 
+the body of a human but scaled in height and girth and curve the way Alchemist secretly 
+adored.  </p>
+<p>It was one thing to fight alongside her, and another to watch her in a meditative state. But to 
+have her standing beside him―over him―with eyes like amber marbles and lashes that blinked 
+like fans. Her Beastkin were horses, and she had eyes of similar size and depth. Men could lose 
+themselves in them. Enemies had cowered under them. Now, they gently rested on Alchemist’s 
+features, and they both shrank and grew him; made him tremble and made him rise. </p>
+<p>“Speak,” he said at last. </p>
+<p>“You’re knowledgeable in Fae magics, yes? And you understood how the potion I took affected 
+Luvvy and I.” </p>
+<p>“I do. . .” </p>
+<p>“I’m not going back there. That’s not what I’m thinking―unless it’s to raze that damned Well, I 
+can’t think of a reason to return to that cursed Spirit.” </p>
+<p>Alchemist fought a grin. He loved hearing her swear and speak of destruction on her enemies. 
+“But you still want to study Fae magic?” </p>
+<p>“It’s less straightforward than that. I, uh,” Wysty spoke, then paused. She seemed to shrink 
+before making her request. Was she nervous? Impossible. Maybe just unsure if what she 
+wanted was even possible. “I would like to explore new methods of storing natural power. Say, 
+holding energy within me so I can unleash it on larger enemies and bosses.” </p>
+<p>“Oh, like Luvvy did,” said Alchemist. </p>
+<p>“Yes. Like, uh, like Luvvy did.” </p>
+<p>But the leader’s eyes flicked away. A blush came up her neck and her shoulders hunched. 
+Alchemist was slow to social situations but even he distilled the meaning out of the silence. “Oh. 
+you mean, like Luvvy. Literally.” </p>
+<p>“No!” Wysteria shouted. She cleared her throat and straightened herself, realizing something 
+about how she’d come off. “Not to her ridiculousness. Just, something similar. It will take some 
+planning, as I’ll need armor that would accommodate my new skill. And I’m pretty sure I’ll need 
+to research what talents and magic routes will be necessary to have the desired effects. This 
+will be a lengthy journey. I’ll need the best―the most loyal. The tightest lips. . .” </p>
+<p>“You want my help in his?” Alchemist answered flatly.  </p>
+<p>“It would be preferred to doing this alone. I trust your council. You would be honest with me.” </p>
+<p>He understood now. And he was thrilled. His leader, whom he admired, had invited him on a 
+quest to make her boobs bigger! That was the gist of it, wasn’t it? His leader was on a valiant 
+quest for strength and bust size and she’d come to him first. He was already imagining it. Luvvy 
+had danced and flown, but Wysteria would mow down foes with a swing of her hammer and 
+reduce bosses to dust with a single blow. Her body could easily holster curves twice or thrice 
+Luvvy’s since she had the muscle and stature to support it. The might and sexuality were too 
+much! Alchemists’s heart couldn't take the anticipation.  </p>
+<p>On the outside, though, he sighed through his nose and shrugged. Playing cool and being level 
+were what made him the best candidate for this mission, after all. “Two conditions.” </p>
+<p>“I’m listening.” </p>
+<p>“You will refer to me by my name, not my role.” </p>
+<p>Wysteria, after a beat of recognition, chortled. She crossed her arms under her breasts. “Alright, 
+Haes. It’ll take a while like it did with Naa, but I’ll eventually get used to it.” </p>
+<p>Haes felt pleasant shivers hearing his name on her lips. Again, he divulged nothing. “And 
+second―and answer me straight―do you want bigger boobs for a reason other than power?” </p>
+<p>“Haes! Ugh!” she said and spun toward the Inn’s front door. </p>
+<p>“I’ll help you. Consider me your right hand,” he called after her. </p>
+<p>“You’ll be my right and left after a question like that! I can’t believe you. . .” Wysteria stormed off, 
+cursing in beast tongue as she disappeared. </p>
+<p>Haes the Alchemist went back to picking rare herbs. Except, for the first time in his life, he 
+couldn’t focus on his task. He had something else to think about and aim at, now. When he was 
+finished gathering, he went back upstairs but passed his room by so that he could peek in at 
+Wysteria.  </p>
+<p>Her back was to him. She was on the floor in a spot of sunlight, meditating, peaceful, already 
+over his offensive question.  </p>
+<p>Again, he allowed himself the pleasure of being close to her and seeing her for everything he 
+appreciated. Strength. Leadership. Unrivalled beauty. </p>
+<p>When he went back to his room, he went straight to work. There had to be a potion that grew 
+breasts―it seemed the most obvious thing when he thought about it. If it hadn't yet been 
+created, he would be the one to do it.  </p>
+<p>And he’d do it for Wysteria. </p>
+</body>
+</html>

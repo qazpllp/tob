@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Irresistible</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>Check out my new transformation cat-girl romance short story!</p>
+<p>https://books2read.com/b/bWdBlY</p>
+<p>Follow me on twitter https://twitter.com/brandedtoe
+I have a patreon! https://www.patreon.com/Brandedtoe Part 3 of</p>
+<p>Huperion Will be available on my Patreon by Sunday 6-21!</p>
+<p>I sat in Sheila's basement.
+"Are you sure this is going to work?" I asked.
+Sheila walked back into the room with her supplies of herbs, pow-</p>
+<p>ders, and teas.</p>
+<p>worked for her."</p>
+<p>union photo."</p>
+<p>"Of course, it will. I got the recipe from my Aunt Maria, and it</p>
+<p>"Yeah, but I am a guy."
+"She used it on her husband dumbass. That's him in the family re-</p>
+<p>"Which one is he?" I looked at the photo, and one face stood out. A
+tall Hispanic man that was popping the buttons off of his shirt with mus-
+cles stood to one side. "Nevermind, I think I found him."</p>
+<p>Sheila was putting all of the ingredients together, each time going</p>
+<p>back to the recipe.</p>
+<p>"Do you think I will be that hot afterward?" I asked.
+"I promised you would be irresistible to women after this, and I in-
+tend to keep my promise. How long have we been friends?" She said, wig-
+gling her butt as she worked, dancing to music only she could hear.</p>
+<p>I never could stop myself from looking at her ass. We never got past
+an awkward first kiss in high school, and the rumors going around cam-
+pus were that she was spending alone time with her sorority sisters. We
+never talked about our relationships, as both of us prefer to keep our dis-
+astrous relationships to ourselves. It wasn't fun watching your best friend
+be in the trainwrecks of partners.</p>
+<p>"For way too long to trust anything you want me to drink. I still can't</p>
+<p>drink gin anymore."</p>
+<p>"That was one time." She said.</p>
+<p>1</p>
+<p>2</p>
+<p>BRANDED TOE</p>
+<p>"One time that scarred me for life."
+"Fair enough. My masterpiece is complete. You must decide if you
+want to trust me and become irresistible to women, or if I am just fuck-
+ing with you." Sheila held out the glass.</p>
+<p>I took the cup and smelt the liquid. It was a combination of berry
+and spice and felt warm in my hand. I weighed the probabilities of
+Shiela's desire to mess with me.</p>
+<p>I drank the concoction, downing it in one swallow."
+"Ooo, maybe you should have sipped that."
+"What?"
+"Yeah, you just sip it until you get the results you are going for and
+stop when you are satisfied." There was a wicked grin on her face now.
+Shelia had fucked me.</p>
+<p>Sheila took her small folding desk chair and sat it in the middle of</p>
+<p>the room. She walked over to the basement couch and sat down on it.</p>
+<p>"What are you doing?" I asked.
+"The chair is for when you lose your balance, and I am making sure I</p>
+<p>get a good view."</p>
+<p>"For what?" I asked, becoming flush. The way Sheila looked at me
+made me uncomfortable. The heat in my cheeks spread to my chest be-
+fore I noticed how hard my dick was in my pants.</p>
+<p>My arms shot down to cover the tent I was pitching in front of my
+best friend. But when I touched myself, I almost fell over. My dick was
+one thousand times more sensitive. My body pulsed with heat.</p>
+<p>I could feel my shirt starting to get taught. My body was becoming
+more sensitive with each beat. I looked down, and the buttons on my po-
+lo were beginning to strain against the pressure of two small breasts. My
+nipples, perky and small, tented the fabric. My breasts jiggled and added
+more stress to the material as they swelled larger.</p>
+<p>I started trying to take deeper breaths to calm down.
+"What did you do?" I gasped.
+"I made you irresistible to women," Sheila said with a grin.</p>
+<p>IRRESISTABLE</p>
+<p>3</p>
+<p>"But, I am turning into a woman!" I said as another surge pulsed
+through my body. I tried to stand up straight, but the motion put pres-
+sure on my sensitive crotch, and I had to hunch back over again. I could
+feel my breasts' pendulous weight swing on my chest with the movement,
+and the feel of fabric brushing on my nipples almost made me orgasm.</p>
+<p>"I may have changed the recipe to make you Irresistible to one
+woman in particular." Sheila stood up and cupped my new breast. "Me?"
+I looked up into her eyes, and there was a hunger that I had never
+seen directed my way before. She twirled my nipples through my shirt,
+driving me to come. I lost my balance and fell into the chair.</p>
+<p>There was more to sit on than I remembered having a few seconds be-
+fore. After Sheila made me orgasm, the heat in my body grew even more
+substantial.</p>
+<p>"The formula increases in effectiveness if you orgasm while trans-</p>
+<p>forming. Did you just come?"</p>
+<p>I was not coherent enough to speak, so I just nodded.
+"Good," she said.
+Each surge swelled my tits larger and larger. I hear threads start to rip
+and snap. My pants dug further into my crotch. My ass must be expand-
+ing, as well. I tried to reach down and shift myself to a more comfortable
+position in my slacks, but my hands searched to find my penis had dis-
+appeared. A new feeling appeared as I felt my new mound. I had already
+soaked my boxers, and the further explorations were causing me to lose
+control. My body wanted to experience the new sensations, but I tried to
+control myself as I remember what Sheila had said. Orgasms make the ef-
+fects stronger.</p>
+<p>Sheila must have other ideas because her hand joined mine at my</p>
+<p>crotch.</p>
+<p>"I think this could be a new step for both of us. If only you could be
+a girl, so we could be together. I always imagined what we would be like
+together."</p>
+<p>4</p>
+<p>BRANDED TOE</p>
+<p>I never thought of us together after our awkward first time, but now
+I wanted her kiss desperately. I lept forward and pressed my lips to hers.
+Her lips were soft, and she wanted my kiss just as severely.</p>
+<p>I wanted to be perfect for her.
+I grabbed her arm with mine and pressed her fingers into my mound.
+I bucked my hips into her hand. I was sensitive there already, and she
+brought me to my third orgasm.</p>
+<p>Each surge now added inches to my hips and chest. My body expand-
+ed so fast; I was still growing when the next wave hit. My pants gave up
+the fight first. But my shirt was splitting as well, and my tits were pushing
+out of the gaps. Sheila took the opportunity of my open fly to press on of
+her fingers into my slit.</p>
+<p>I remember a wave rushing over me, cascading to my brain, and</p>
+<p>spreading blackness.</p>
+<p>~</p>
+<p>I woke up on the floor of the basement, laying in wetness. Sheila felt my
+movements and pulled me closer. She had been cuddling me from be-
+hind. I gasped when she squeezed my massive tits together. I tried to roll
+over and face her, but my body's new shape threw me off. I only managed
+to make it to my back. I took in all of the new sensations.</p>
+<p>The cold air tickled my breasts, now the size of basketballs, and made
+my nipples erect peaks to my mountains. I couldn't see past them, but I
+could feel my new ass as well. It was impossible to miss. It was so big; I
+had to arch my back when laying flat. Sheila started to play with my nip-
+ple.</p>
+<p>I breathed deeply and looked into her eyes.
+"The transformation must be over now." She said.
+"Oh, good," I said. "Did I get big enough for you?"
+Sheila laughed.
+"I may have gotten carried away, but I think I should add a new note
+to the recipe." She took off her shirt. She wore a dark, loose-fitting t-shirt,</p>
+<p>IRRESISTABLE</p>
+<p>5</p>
+<p>and it had hidden her new mounds. Sheila had two hanging softballs
+from her chest instead of her usual B-cups. "I think the formula might
+also be in your fluids when you transform."</p>
+<p>"You grew that much from tasting my juices on your finger?" I asked.
+"Oh, no. After you passed out, I played with your body for a while. It</p>
+<p>turns out you are a squirter."</p>
+<p>I noticed that there was still a moist sheen on her chin.
+"So, you ate me out when I was unconscious, and that is what made</p>
+<p>you grow."</p>
+<p>second time."</p>
+<p>pussy. Definitely."</p>
+<p>make it up to me."</p>
+<p>"Yeah, but only the first time. I think you finished growing by the</p>
+<p>I tried to look scandalized.
+"You were done growing the third and fourth time I dove into your</p>
+<p>"Well, I am sorry I missed it. You owe me four orgasms. You better</p>
+<p>Sheila lay on top of me, our breasts pressing into each others'.
+"Every day."
+"Every day, what?"
+"Every day, for the rest of our lives, I will make it up to you."
+"I think I can live with that," I said and kissed her.</p>
+</body>
+</html>

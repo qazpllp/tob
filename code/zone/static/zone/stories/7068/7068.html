@@ -1,0 +1,1443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>The Milkmage</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p><strong>[The Milkmage]{.underline}</strong></p>
+<p><strong>Warning</strong>: The following is erotic content featuring <em>breast
+expansion, lactation,</em> and other minor fetishes. You know why you're
+here, so don't complain to me if it's not your thing.</p>
+<p><strong>Commission:</strong> The following is a commission for an <em>anonymous</em> Discord
+user.</p>
+<ul>
+<li><em>Madam Materia</em></li>
+</ul>
+<p>To say it was a warm day would be putting it nicely. High above the sun
+was shining brightly, casting its rays down on the open fields and
+plains that stretched far as the eye could see around these country
+roads. Not a speck of shade in sight to shield Myrikal from the heat
+bearing down on her, which she wouldn't have minded too much if her
+robes didn't leave her so exposed.</p>
+<p>Rich blue fabric hung off her supple hips, flowing like water over her
+smooth legs with each step, though the garment left nothing to the
+imagination up top. Her breasts were fully exposed, bouncing upon her
+chest and jingling the fine golden jewelry draped over their
+magnificence. Each was more than a handful, a perfect teardrop that
+swayed and lightly batted at its heavy partner while their owner trekked
+onward; further and further from the university on her pilgrimage.</p>
+<p>It was a rite of passage for all novice milkmages, even those that
+carried the natural talent and potential Myri did, to set out into the
+world and put their gifts to practice. A good milkmage needed three
+things: desire, control, and expression.</p>
+<p>The first was easy, a part of being human, but also the most dangerous
+unfettered. It was easy to lose oneself to lust, but there was also a
+balance to be struck lest one not be able to tap into the powers of a
+milkmage when needed. Many acolytes saw it as a matter of temperament,
+dipping into the second discipline of control to keep themselves reined
+in, then use inner foci to bring themselves up when needed. Myri knew
+the real secret though; true masters were always aroused, and used
+control to pull it back and function day to day with the constant high
+burning inside of them. The final key though, expression, was the true
+separator between a milkmage and the rest of the world.</p>
+<p>Everyone was capable of expression, to some extent; the most common
+manifesting in mothers to withstand the hardships of childbirth, and
+feed their young for the coming years until the magic ran its course.
+Some could harness it with the aid of remedies and salves, using it to
+grow their chests as symbols of femininity, or hope they could awaken a
+latent talent and harness their milk to cast a spell or two. The truly
+gifted though, when they came of age a whole new world opened to them.
+It was why the first two disciplines were so important; an untrained
+milkmage could do wonders great and potentially terrible.</p>
+<p>Such was the need for the university, to help those young souls temper
+that raw talent into true skill through the three disciplines. To the
+uninitiated, some of their methods likely seemed odd; their uniforms for
+example. The open-front robes Myri now wore to show her chosen
+profession served two purposes. The first was a matter of expression,
+leaving her chest ready to release her bounty for spells without the
+need to waste time undressing. The lesser-known reason for it though was
+for control, to dispel the milkmage's sense of modesty or shyness about
+their body. After all, getting flustered whenever you have to go topless
+to cast would interfere with the desire needed to manifest your magic.
+Even the jewelry served a purpose, as not only small charms the
+prestigious school bestowed upon its students to help their magic, but
+to draw the eye and further quash any sense that a milkmage's body
+wasn't something to be admired for its gifts.</p>
+<p>And gifts Myri had, as she brushed a lock of her golden blonde hair over
+her ear. She was quite the prodigy, inducted into the university at a
+young age, a record by almost a full two years according to the
+headmistress. Plus, not only did she have a natural affinity, but she
+was quick to learn, having picked up her first spells in only a few
+weeks.</p>
+<p>None of it however, exempted her from her pilgrimage. They had waited a
+few years, to ensure she was of age before setting out on her own, but
+she wouldn't achieve higher than a novice rank until she'd seen more of
+the world for herself; which was probably for the best. A few times
+she'd bitten off more than her experience could chew, and caused a bit
+of a ruckus on the campus grounds.</p>
+<p>Just recalling those moments had a soft flush in her cheeks, partially
+masked by the faint traveler's tan walking the country roads had
+bestowed upon her flawless skin. All too quickly her body felt the
+desire, and soon her breasts were swelling with sweet milk, the
+pearl-like dots appearing over her decorated teats in anticipation for
+expression. They accumulated a couple sizes before the milkmage caught
+herself, embarrassingly dipping into recounted lessons to regain her
+control. Maybe she did need this journey, her mind was too prone to
+wandering alone on these empty trails.</p>
+<p>Casting her ice blue gaze to the horizon Myri frowned. Another of heat's
+perils, the dark clouds of a summer thunderstorm, was coming in from the
+west. Her robes may have done little to protect her from the sun, but
+they'd do far less against torrents of rain. She needed shelter, and
+quickly.</p>
+<p>Scanning about she caught sight of a chimney, the soft billow of smoke
+rising in swirled plumes before fading into the air. A fire in this
+weather could only mean one thing, amplified by the low grumble of her
+belly, someone was cooking supper. She crossed her fingers for an inn,
+though if it were a nice farmhouse willing to recognize and take in a
+milkmage for the night she'd accept that too.</p>
+<p>Picking up the pace she came to regret choosing sharp heels over more
+sensible footwear. Each jogging step was a ride, her unbound tits
+bouncing on her chest, rattling her charms as they rose and slapped
+against her fit abs. Scarier was when her dainty feet landed, her shoes
+giving a loud "clack" against the gravel and threatening to send her
+spilling.</p>
+<p>She made it though, heart hammering as she barely beat out the storm to
+stand beneath the swinging sign of "The Leaky Teat"; a fitting name for
+a place only a few days out from the university. Their lamps were lit,
+casting a dim glow out from the frosted windows, and the smell from the
+dinner pot was strong enough to reach through the wooden door as an
+invitation. Hopefully it wasn't too expensive for a bowl.</p>
+<p>Stepping in there was a wave of rowdy cheering, the evening regulars
+raising glasses at the ring of the bell above the entry. It was good to
+be appreciated, Myri giving a cute little wave as she looked about the
+patrons, only to realize their attention wasn't on her.</p>
+<p>All eyes were up at the bar, where a cute little redhead had her shirt
+hiked up. She had to have been around Myri's age, her chest pert, perky,
+with adorable cinnamon nipples just smaller than a pinky tip; fun to
+tease. More pressing however, she was in the middle of clumsily affixing
+a charm to her left breast.</p>
+<p>How'd she gotten her hands on that? She wasn't wearing a milkmage's
+robes, and the pink flush in her cheeks was not that of someone who'd
+mastered control. Fiddling with that type of magic was asking for
+mishaps, and so the buxom traveler shot forth on clacking heels to
+intervene.</p>
+<p>"Stop!" she commanded, sliding across the countertop with a hand
+outstretched.</p>
+<p>The barkeep's face went red, as Myri's delicate hand snugly fit itself
+over her plump tit. It hadn't exactly been the milkmage's plan, but from
+the way that coloured nub was stiffening into her palm, it was the right
+move. A mixture of disappointment and excitement at the sight of the
+blonde cupping the cutie rang out, along with a few whispers from what
+she would assume were hicks who'd never seen a proper student of the
+university before.</p>
+<p>The attention was certainly welcome, making her breasts swell with
+anticipation for expression, the little white droplets appearing on her
+chest and drawing an amazed stare from the redhead. "Ahem," Myri cleared
+her throat, reluctantly removing her hold and taking the charm with her,
+"are not you aware of the dangers of milkmagic charms? You could end up
+overexpressing, growing to the extreme and spurting good milk all across
+your floor."</p>
+<p>It clearly struck a chord, the girl's green eyes casting downwards in an
+unspoken admission that such things had happened before. "It ain't so
+bad," she mused shyly, still not fixing her top, "an' we need it fer the
+Teat's specialty drinks."</p>
+<p>"Yeah, jus' let 'er milkmage!" a semi-drunk voice came from the back.
+"Ah came 'ere fer a show!"</p>
+<p>Did they truly have so little care for the girl's wellbeing? "Oh, can
+you not get your wife to lift her top with a mug like that?" she shot
+back at him, her ice blue eyes steeling a cold glare.</p>
+<p>She struck a nerve. "Why ye little-" the drunk was ready to rise when a
+member of his table stopped him with a hand.</p>
+<p>"Ye wanna pick a fight with a milkmage?" she challenged, turning a
+skeptical eye on him. "All our fields need their blessin's in the
+spring, 'less ye want the lot o' us pissed at ye keep yer ass in yer
+seat!"</p>
+<p>A smug satisfaction twisted into a grin on Myri's lips; good to see some
+people at least had sense. With the room calmed down somewhat she was
+able to turn her attention back to the innkeeper, fixing a lock of her
+golden hair over her ear. "Specialties? What do you offer that needs
+milk charms?"</p>
+<p>The redhead finally fixed her look, pulling her grease-stained tunic
+back into place to cover her cute little body. "Nan could do some
+milkmagic. Used ta use it fer mixed drinks an' a few recipes," she
+explained.</p>
+<p>Well, that certainly explained it. "Do you need any tonight?" Myri asked
+with a cute little tip of her head.</p>
+<p>"Stew'll be mighty thin without good milk," the innkeeper answered.</p>
+<p>Stew sounded lovely, leading the milkmage's stomach to rumble with need.
+"Well then," she spun, planting her plush bottom on the counter and
+pressing her unbound breasts out as they continued to tease her
+expression, "how about a proper master of lactation provide for the
+guests tonight? In exchange for a bowl or two from that delicious
+smelling pot on the fire?"</p>
+<p>You couldn't put a price on the look of gratitude in the young redhead's
+eyes. "O' course! Ah'd be more'n grateful fer yer help milkmage," she
+chirped, straightening with new vigor so quick her pert little tits
+bounced in her top.</p>
+<p>"Please," the intricately garbed novice turned with a grin, "call me
+Myri."</p>
+<p>The curvy blonde dipped deep, giving up the lightest bit of her control
+in order to dwell in her powerful desire. Her chest swelled before all
+their eyes, rounding out into full, heavy milk tanks that hung off her
+chest, each as large as her face, and looking enticingly obscene on her
+small frame. "So," her voice struggled with a sultry moan, her cheeks
+warm as the space between her legs, "who had the order in need of proper
+milk?"</p>
+<p>Hands shot up around the bar, and the innkeeper's wide eyes were a good
+sign not all had been original requesters of the specialty beverage.
+"Hold up, lemme jot y'all down," she chirped, scribbling names down with
+her grease pencil.</p>
+<p>"The more the merrier," the swollen milkmage giggled, turning and
+plopping her weighty bust onto the counter. "I am afraid that I do not
+know how to make your goods, so these are at your disposal," her words
+were a purr, an invitation for the redhead to return the grope she'd
+incidentally given her earlier.</p>
+<p>The bartender paused, her face pink at the sight of the beautiful woman
+and her offer. It was clear she knew how to work the crowd, there were
+already hoots and hollers of, "Come on Nemee! She's askin' ya nicely."
+So that was her name.</p>
+<p>Nemee cleared her throat, wiping her messy fingers off on her tunic.
+"Awright, keep yer coppers fer the drinks!" she plucked a bottle from
+her racks, shaking the fine mead and juggling a half-dozen tankards to
+fill the new orders.</p>
+<p>Milkmagic was an art, as much as any other; watching the young innkeeper
+work the bar was its own thing entirely. She laid out the deep mugs,
+popping the cork of the fermented beverage with a thumb, and fluidly
+poured each of them without even a stutter in her movements. It was all
+in some part muscle memory, as her hand moved to her chest, only to
+remember she was getting the secret ingredient from another source
+today.</p>
+<p>Her green eyes turned to the buxom magician, the first mug in her grip
+as she held it under one of the girl's "taps". "Jus' lemme know if ah'm
+doin' somethin' ya dun like," she whispered.</p>
+<p>All the speed from just a moment ago transformed into elegance. Her
+fingers were soft, delicate as they gently took hold of one of Myri's
+pebbly nipples. Such tenderness spiked the milkmage's desire, her
+breasts filling another size and leaking a steady stream of her pale
+expression down the curved underside of her tits and onto the counter.
+The barkeep didn't have three hands, all she could do was slip the
+current drink into place and carefully pinch the bud in her grasp to aim
+the flow where she wanted.</p>
+<p>The blonde bit her lip, realizing she needed to reel back a bit or she'd
+end up spurting across the cute girl. "Ah'm not bein' too rough, am I?"
+Nemee asked at the sight.</p>
+<p>"N-not at all," her voice rasped, the tease of the redhead stopping
+making her squirm, "Keep going!" she pleaded as she felt her desire
+growing, threatening to swell her further with sweet bounty.</p>
+<p>Once more warmth filled the girl's face. She didn't need further
+prompting, tipping the tank to maintain the booze's foam head as she
+pinched the teat in her grasp. Myri's flow picked up, a stuttering moan
+singing out from her core to the background of her milk pouring into the
+drink. It was full in seconds, and the seasoned bartender slid it across
+the bar with an "Order up!" before taking the next to the rapidly
+squirting nip.</p>
+<p>The way she was handled left the milkmage in ecstasy, savouring the
+girl's touch as she beckoned out her creamy expression. The whole bar
+got to watch the rock of her hips while she danced on her toes, heels
+clicking like the tempo in her lustful orchestra. She must have filled a
+dozen drinks, alternating between left and right, her stream never
+slowing as the gentle caressing of her buds helped keep her at a steady
+balance between the disciplines.</p>
+<p>It had to come from somewhere though, the blonde's tight tummy sending a
+reminder with another whimpering growl. "Awright, jus' need some fer the
+stew an' we can see to fixin' ya a meal Myri," the lithe innkeeper's
+tone had lightened, accented with a fluttery giggle, "Doubt ya wanna be
+holdin' those beauties over a hot pot."</p>
+<p>"Not particularly, no," the hungry mage joked along, happy to know her
+efforts had broken the girl's nervous shell.</p>
+<p>As they bantered, Nemee pulled out a bowl, setting it on a stool beneath
+those milky fountains; she didn't need the accuracy of a single teat
+into a mug for this job. Both hands rose up, taking a brief moment to
+fondle the sheer, impressive size of the head-sized mounds on the
+milkmage's chest. Once more the buxom traveler's song rang, as the
+bartender kneaded from base to those hard nubs in a proper milking
+motion.</p>
+<p>Long spurts fell, painting the bottom of the container and splashing up
+over the lip from their sheer volume. Sweet smelling droplets soon
+dotted her milker's trousers, and though the suntanned blonde was making
+more than enough to spare, she still let out a precious whimper at the
+waste. "Jus' a bit more," the greasy server assured, misinterpreting her
+whines, "then we'll getcha somethin' ta fill ya proper."</p>
+<p>She wasn't lying, Myri's copious bounty soon filling the bowl to near
+the top. The milkmage did her best to hold her tongue, watching the
+redhead get to her feet, licking the errant droplets of her milk from
+her fingertips with a cat-like grin. "Oh, tha's real good."</p>
+<p>"Ah'd say, might need another round," one of the patrons hooted from
+their seat in the corner, mug held high, with a telltale line of white
+on their upper lip.</p>
+<p>The barkeep shot a playful leer, "Come now, le's give the lady a break.
+She's jus' give the better part o' a gallon."</p>
+<p>"I can handle a few more glasses," the sleek dressed woman purred from
+the counter. In reality, she really just wanted those skilled hands back
+on her needy teats.</p>
+<p>With a chuckle Nemee shook her head. "Ah dun' doubt it Myri, but ye
+should, if nothin' else, stretch yer back. Ye've been hopped over the
+bar fer longer n' a whore getting' a railin'."</p>
+<p>Excellent advice, the golden blonde had to admit. She'd been so fixated
+on the delights of milking, the stiffness she'd been accruing had
+floated under her notice. It was a hassle to push herself up, the weight
+of her laden bosom, and her own desire, fighting to keep her down.
+Wasn't often they got this big without "fun" on the menu, and it was
+going to take a deep dive into her control to calm back down; something
+all the more challenging watching the innkeeper waltz her way to the
+dinner pot.</p>
+<p>Even in such plain attire, that stained tunic and baggy trousers she was
+unafraid to get dirty, one could make out the feminine flare of her
+hips, her bottom bouncing with the same youthful vigor as her generous
+chest. The light dip she made to tend to the stew offered a perfect
+outline of her heart-shaped rear, lasting through the pouring in of the
+final ingredient and a few good stirs. Soon the warm smell of supper was
+tinted sweet with the milkmage's expression, and faces around The Leaky
+Teat lit up with hungry anticipation.</p>
+<p>The first bowl was ladled out, and brought to the starving traveler.
+"There y'are," the redhead served with a smile and a soft blush, "first
+o' the night should go ta ya, fer the hard work."</p>
+<p>Rustic in its presentation, the steam alone rising out of the dish was
+enough to have anyone's mouth watering with anticipation of some fine,
+country cooking. While the well-worn wooden spoon was far from the
+university student's ideal, after years now of dining with fine
+silverware, it fit well in her hand, and the first scoop of the thick
+slop clung to the porous material making it a proper tall mouthful.</p>
+<p>Myri took it to her lips, and as the hefty bite touched her tongue, she
+let out a coo that put her delighted mewling from earlier to shame.
+Large chunks of beef melted in her mouth, mingling with the flavours of
+field-fresh greens, carrots, and perfectly cooked potato, all caressed
+by the broth mixed with her very own hot milk. Perhaps it was the long
+day on the roads, but it was one of the most delicious things she had
+ever tasted, and quickly she found herself dipping in for the next
+spoonful.</p>
+<p>"That good eh?" the innkeeper gave a chuckle, "Musta worked yerself up
+quite an appetite."</p>
+<p>The blonde could only nod, a gooey dollop nearly escaping over her plush
+lip. Like earlier there were patrons ready to jump out of their seats,
+Nemee hurriedly scribbling names and serving steaming bowls. Her skills
+behind the bar moved around the room, three to four dishes balanced in
+her arms as her cute butt danced about the floor, receiving every manner
+of compliments about the meal.</p>
+<p>"Best bowl o' stew ah've ever tasted."</p>
+<p>"So, this' the difference o' proper milkmage's work? Ah'll take 'nother
+round!"</p>
+<p>"Ain't no surprise after them drinks the meal'd be just as good."</p>
+<p>It was good to be appreciated, Myri's face breaking into a grin. Not all
+were singing the girl's praises however. A woman in the back, at least a
+few years her senior, done up with flashy reds and glittering golds
+designed to draw attention to the finer points of her figure; while
+distracting from the subtle signs of age that had begun to appear
+beneath her layers of makeup.</p>
+<p>"Ah dun' see the big deal," she scoffed, though the near-empty tankard,
+white drops drying upon its lip, told another story. "I's tit milk, we
+all got 'em. Y'all're trippin' over yer jaws to lick 'er boots jus' cuz
+she's from that university. Ah'll bet mine'd be jus' as good, f'not
+better, bein' a lady an' not jus' a girl," she bragged in open challenge
+of the milkmage.</p>
+<p>The bar was brought to a still silence, the cracks of the fire and
+bubbling of the pot the only sounds as eyes moved between the talented
+novice and her challenger. The expression on the bare-chested girl
+remained a satisfied grin. "Oh?" she turned her icy eyes up, making the
+woman flinch with the confidence of her smirk, "Would you care to try
+Miss?" she offered, fishing The Leaky Teat's charm from her dress
+pocket.</p>
+<p>A bead of sweat marred her foundation. She knew all too well what the
+little trinket could do, everyone at the inn did, but whether from the
+buzz of the milky mead, or simply her own jealousy, she'd dug herself
+too deep to back down. "Give it here!" she demanded, holding her hand
+out stubbornly.</p>
+<p>Myri complied, heels clicking dominantly as she carried herself across
+the room. This wasn't her first challenge, and certainly wouldn't be the
+last. Many a senior student at the university had sought to try and put
+the gifted novice in her place, only to fall short next to her talents.
+A gift-less, peacocking, hussy from the backcountry wouldn't hold a
+candle.</p>
+<p>Perhaps it was cruel to even humor her baiting, how else would she learn
+though? Besides, maybe it would help them all respect the dangers of
+milkmagic charms to watch her fumble. "It would not be a proper wager
+without a judge. What say you we both fill a single glass, and a
+volunteer of our host's choice will taste each of our expressions to
+determine the victor?"</p>
+<p>"Fine ba me," the woman hissed, snatching the piece from the blonde,
+face red as her dress as she hesitated with her top.</p>
+<p>"Two clean cups please Nemee," the buxom milkmage called, dipping into
+the shallows of her desire to prepare; the redhead made quite a good
+subject to help her too.</p>
+<p>The barkeep was quick to it, fishing out a pair of decently sized
+tankards and bringing them to the table. "There y'are. Ah'll pick out
+yer tester when ye're done ladies."</p>
+<p>The challenger looked at the mug, tall as the one she'd drunk from
+earlier. "A might big ain't it?" she questioned, the whole of her will
+going into preventing a stutter as the fingers wrapped around the inn's
+charm trembled.</p>
+<p>"S'not easy aimin' yer milkers," Nemee advised, "Ah'd like ta not be
+cleanin' milk outta the table all night."</p>
+<p>"Too much for you Miss?" Myri popped in, her breasts already firm with
+her bounty, bouncing and setting her jewelry chiming as she propped
+herself on the table. "We can do only half a glass if you would prefer."</p>
+<p>You couldn't buy the look of disdain in the woman's made-up eyes. "I's
+fine," she growled. How easy it was to play types like her, push their
+buttons and watch them make fools of themselves; even without a good
+drink in them.</p>
+<p>With the stage set for their duel there was no more delaying. Polished
+nails rose up, dipping into the neckline of that frilly garment and
+yanking it down with such force you could hear stitches pop. She knew
+her breasts were an asset worth showing, decent in size, hanging just a
+tad low in their teardrops from the effects of time, but still quite
+hearty. That, however, had no bearing on an upbringing of somewhat
+modesty, as heat took her cheeks.</p>
+<p>A shame, it seemed the innkeep's desire for a clean table would go
+unfulfilled. "Then let us begin," the milkmage exclaimed, her bosom
+swelling in size, her sweet expression once more coming to the surface.
+Delicate and careful she drew up her container, holding it beneath one
+of her bejeweled teats and gently pinched it to get her flow going. Even
+from just self play she let out a small moan, and soon enough was
+filling her receptacle with her white bounty.</p>
+<p>The challenger stubbornly affixed the charm to her tit, and immediately
+she felt the effects. All of the eyes on her were sparking a mixture of
+the vanity she craved, and embarrassment she was topless without
+"getting the goods" as it were; a dangerous combination for desire. With
+the catalyst giving her access to powers unknown to her, her bust
+quickly surged with growth. The bar listened as dress stitches popped,
+the woman scrambling to try and contain her expanding chest while beet
+red from her cheeks down to her neck.</p>
+<p>No control, and without it her wanton, selfish desire was running away
+with her. She was dragged to the table by their weight, mewling like a
+right slut as they spread over the surface. Her tankards were knocked,
+clattering to the floor and spilling their remaining errant drops across
+the hardwood. That was just an opening act unfortunately, as the pent-up
+desire the woman fostered was rapidly turning into expression.</p>
+<p>It was too much for her to hold back. Her nipples, currently large as a
+thumb tip, puckered into hard nubs, and from just the pressures of the
+platform beneath them, and her scrambling arms, they began firing jets
+of her milk across the inn.</p>
+<p>People stepped back, not wanting to have a laundry on their list of
+things to do tomorrow. Myri herself just gave a cocky little side step,
+avoiding the blasts and cradling her offering for the wager close as to
+not taint it. "Forgive me for the mess," she offered the redheaded
+cutie, knowing this would unfortunately end up her job to clean.</p>
+<p>"Nah, s'awright," Nemee picked up the tumbled cups, using the clean one
+to collect a bit of the spray for the sake of the wager, "She deserved
+ta be taken down a peg."</p>
+<p>There was more to it: that smug smirk on the bartender's lips telling
+that she was more than a little happy to watch someone else experience
+her misfortunes. "Awright, we got the goods, who 'ere wants ta be the
+taster?"</p>
+<p>Hands once more shot up around the bar, a moment which had become quite
+amusing in and of itself to the traveler. "Gladis, ye've popped out a
+kid 'r two, ye've got the best tongue to judge," she offered, holding
+out the red-clad harlot's mug.</p>
+<p>A middle-aged woman rose, her body still quite supple for her years,
+something which Myri attributed to having experienced milkmagic first
+hand. "Ah'd be glad ta," she said, taking the first offering and
+enjoying a slow sip.</p>
+<p>She lingered, wishing to do her role justice as she swished the woman's
+milk about over her tongue. "S'good. A tad thin, but serviceable fer a
+youngin', they'd drink their fill," she turned to the barkeep. "Some
+water 'fore ah try the other? Dun' wan' ta give 'er grade with 'er
+competitor's taste in ma mouth."</p>
+<p>"Course," the redheaded girl nodded, dipping behind the bar and filling
+a cup from a fresh barrel to bring to her.</p>
+<p>Much the same the judge swished the water about, cleanin' her mouth and
+ending with a crude spit into a used mug. "Aight, ah'm read fer the
+milkmage's," she held out her hand.</p>
+<p>Myri got to give her offering herself, doing her best to not appear too
+cocky. "Here you are madam," she chirped with a small curtsey before
+stepping back, her heels kicking up sharp splashes in the red-dressed
+harlot's excess milk, now pooling in wide puddles on the floor.</p>
+<p>Gladis, as she was called, took her sip, and immediately there was a
+difference from the first tasting. Her aged lips curled into a smile, a
+warm pink in her cheeks as she rolled the drink over her taste buds.
+"'At's a fine milk. Rich, sweet, near fatty as cream bu' still goin'
+down easy," she took another swig just to enjoy more of the taste. "Ye
+wouldn' think there'd be artistry ta tit milk, but ah s'pose tha's why
+ye get taught, eh milkmage?"</p>
+<p>The buxom, golden-haired beauty took a small bow, her bangs hiding the
+victorious grin upon her pristine lips. "Thank you, madam, you do me a
+kindness with your praise," she cooed, enjoying the tickling of her ego.</p>
+<p>"Ah s'pose tha' means we got our winner," the innkeeper declared, eyeing
+the mess on her floor and headed off to get a mop and pail.</p>
+<p>Still overfilled and coating the table with tit, the challenger gave a
+whine. "Ya knew this wou' happen, witch," she accused, struggling to
+wrangle her chest and doing little more than spray more excess
+expression.</p>
+<p>The milkmage smirked, plucking the charm off the woman's bust so at
+least she could start to relieve herself. "I may have had an inkling,
+yes," she admitted, slipping the trinket back into one of her dress
+pockets. "Good news though, it would appear you will be going home with
+what you wanted if the looks you have been catching are any indication,"
+she finished teasing with a playful slap of the woman's tit that left
+her moaning.</p>
+<p>What an evening. The relief that flooded Myri as she slipped into one of
+The Leaky Teat's finer rooms and finally got the chance to kick off her
+shoes was palpable. After her little competition the drinks started
+rolling her way, many she herself had to take part in filling, and it
+was singing and dancing about the bar with the locals until her feet
+were sore. After everything she'd done, Nemee had insisted she couldn't
+just wander out into the night, not half drunk anyway, and so had given
+her a key to spend the night.</p>
+<p>She collapsed onto the bed, the wooden frame creaking from the sudden
+impact. While not as lavish as those at the university, just the
+presence of a proper down-stuffed mattress and thick, warm, woolen
+blanket were like a gift from the heavens. Her dogs were barking,
+thankful to have her weight off them after a long day of traveling and
+merriment, and she took it as a good sign to prepare and turn in for the
+day.</p>
+<p>One by one the milkmage started removing her charms, laying them upon
+the nightstand with delicate care. They needed to be taken off in a
+proper order, many helped with expression, but just as many assisted
+with control. With each one that lost contact with her tanned skin she
+could feel her breasts swelling and receding, the concentration of her
+milkmagic changing and ushering them towards expression or rest. When
+all were done her chest was lain bare, a pair of perfectly spherical
+orbs upon her form, small white droplets already eagerly waiting on her
+nipples; her natural state.</p>
+<p>There was a pride to be had in her gifts, Myri idly scooping up one of
+the beads on a finger to take to her lips. It had been fine with booze,
+but in her mind, it was far more perfect on its own. She was about ready
+to slip out of her uniform dress when there was a knock upon her door,
+drawing her icy blues its way. "Come in," she offered, not wishing to
+rise back to her feet.</p>
+<p>"Who could it be" the traveler couldn't help but wonder? Maybe Nemee
+come to check on the room. Or perhaps this evening rival finally
+expressed back to a more manageable size and wanting to slip a last few
+venomous words in. Neither were immediately correct, as the door swung
+open to reveal a new face.</p>
+<p>Freckles dotted across her nose and cheeks, partially hidden by a proper
+tan, earned from working her days in the fields, that made Myri's
+sun-kissed skin seem like a joke. Shoulder-cut sandy hair was done up in
+pigtails to keep it out of her face, letting her hazel eyes sparkle on
+their dark canvas, and opening the way to follow down her body. She wore
+little, just a loose fitting, and frankly undersized, top that had seen
+a right amount of wear and tear, and a pair of similar shorts that
+hugged tightly to her rear.</p>
+<p>Her arms and legs were well toned, another sign of a life of labour,
+with defined muscle under smooth-looking skin and lithe hands you could
+make out the discoloration of calluses on. The short nature of her top
+showed off flat abs that held her high, leading up to a pair of petite
+but perky boobs, and down to fine hips that would likely one day
+continue her family line. For today though, they were a treat on the
+eyes, making their way into the milkmage's room and crawling up onto the
+bed with her.</p>
+<p>Not that the buxom blonde was opposed to a cute girl in her bed, she
+rather enjoyed such experiences, but it did catch her by surprise to
+have a stranger in her sheets. Before the well-spoken novice could
+inquire as to her reason for being here however, another appeared in the
+still open doorway.</p>
+<p>"Hope we're not intrudin'," Nemee stepped inside, gently sealing the
+door behind her.</p>
+<p>She'd changed out of her grime-covered work clothes and into a simple
+white nightdress. Considering the light nature of it, the way it hung
+off her modest breasts like water that waved about her thighs as she
+moved, it was probably fine satin or silk; and the most expensive thing
+a country girl like her owned. The kind of thing only for special
+occasions.</p>
+<p>"After all ya did today, figured a bowl o' stew n' the Teat's bes' bed
+weren' quite 'nough," she explained, walking over on long barefoot
+strides to join the pair. "Made more in a night \'an the usual week, n'
+ya saved me least one spill," her cheeks tinted rose, as she slid up
+with them, her legs curled in such a way as to offer the lightest peek
+up her dress to the lack of any underthings beneath, "ah wanted to give
+ya proper thanks Myri."</p>
+<p>Her green eyes flitted upward, filled with an all too recognizable
+emotion: lust, and it had the same stirring within the milkmage. Her
+tits perked, nipples puckering and growing ever so slightly with
+anticipation as the flesh behind them filled with her milk. She was up
+two sizes in seconds, the beads upon her teats swelling until their
+breaking point where they rolled down the round underside of her bust.</p>
+<p>"Wow, ya weren't lyin' Nem," the freckled girl among them gasped in
+wonder, edging closer, placing her arm across the blonde's body so she
+could be right up to those pebbly fountains, "leaks right easy."</p>
+<p>"I's beautiful right?" The innkeep cooed, drawing in herself and closing
+any distance between the three, "An' it's so sweet, like cream," she
+licked her lips, her breath hot against the bare skin of Myri's exposed
+chest. "Wha' say we help 'er Airene?"</p>
+<p>The two girls locked eyes, and a blink later were locking lips. Tongues
+danced together, revealing the display as more than just a cute attempt,
+the pair were well versed in one another. Nemee's teeth grazed her
+partner, beckoning her closer, and the sandy-haired girl complied with
+one of those strong hands coming to run up her thigh, sliding that
+nightie up her mate to show off more of the girl's pale skin.</p>
+<p>Myri was pinned beneath their play, unable to do anything but watch and
+whimper in her escalating desire. Further her breasts grew, rivalling
+the head-size she'd adopted earlier to fill drinks, however now she was
+struggling with her control. Her rock-hard buds quivered, profusely
+leaking only to surrender the game and fire a first spurt of her warm
+expression across the temptresses teasing her.</p>
+<p>As the white ambrosia hit her cheek, Nemee gave a giggle, her breath
+ragged with arousal. Those green eyes fluttered as she broke the
+kissing, letting her tongue out to lap the droplets off her cheek. There
+were more unaccounted for however, a pair of dark spots tarnishing her
+pristine gown, over the redhead's hardened teats.</p>
+<p>Worry spiked in the milkmage, her icy gaze jumping to the nightstand to
+make sure they hadn't nicked one of her charms while she was distracted.
+They were all accounted for, including the one that she'd originally
+taken from the barkeep, which only left one conclusion; one Airene was
+quick to confirm.</p>
+<p>"Oh, ya got Nem goin'!" she said in absolute wonder, running those
+fingers further up, continuing to hike the girl's dress. It came up over
+those milky beauties, revealing that her plump little handfuls had grown
+firm with pure expression that was beading at their tips. "It's so much!
+Ain't often she gets 'xcited 'nough ta milk."</p>
+<p>Her other, powerful, hand came up, taking one of those eager tits and
+giving it the lightest little squeeze to get the girl going. It worked,
+as Nemee's cute little moan chimed, singing from her throat as a little
+arc of her expression was brought out. Her partner let out her tongue to
+catch it, skillfully getting most as the rest spattered her cheeks and
+roughed top.</p>
+<p>The golden-haired beauty pondered it briefly. The girl had said her
+"nan" could do a little parlour casting, it made sense the gift might
+run in her family line. Any further deductions though were cut short;
+they were still in bed together, in the middle of play.</p>
+<p>And play the redhead wanted. "Come on Airee," she chastised with a lewd
+grin, "we got tits bigger 'n mine already overflowin' ta take care o',"
+those green emeralds returned to Myri, joined quickly by her mate's as
+they shared an equally lurid expression.</p>
+<p>They were right, the milkmage was close to spraying in arcs, her desire
+for these two farm girls reaching a peak; and unfortunately watching
+another girl express was leaving her errant mind wandering. "N-now
+careful-" she managed to sputter out before they were upon her.</p>
+<p>One of each of their hands were on her shoulders, pushing her onto her
+back among the woolen sheets. The pair crawled over her, bodies
+slithering in a sinful dance as they put their weight upon her, letting
+her feel the warmth, and in Nemee's case wetness, of their nethers over
+her thighs.</p>
+<p>"Ya know ah will be," the redhead purred, grinding on the buxom caster
+and spreading her liquid love on her skin.</p>
+<p>The girls descended, the innkeep, having already gotten a taste of the
+milky feast, now eager to take a drink from the tap as she wrapped her
+lips over the first leaky bud. Airene was a little more tactful, lapping
+up the flowing trail that had been dripping down that beautiful breast,
+and letting one of her strong hands come in to knead the source of such
+sweet nectar before latching onto the other. It was a little more than
+the farmhand could handle, her cheeks quickly filling in her attempts to
+swallow it all back until it began to overflow, spilling from the
+corners of her mouth in rivulets.</p>
+<p>It was a delight for all three, Myri letting out a powerful cry of
+pleasure that drowned out the pair's cute suckling and whimpers. She
+couldn't match the redhead's excitement though. The girl's lower lips
+were positively drooling just from the eroticism of her own actions. Her
+legs quivered, needily going to work rubbing herself off on the
+milkmage, eager for a release she both craved and hoped would never come
+and end this moment.</p>
+<p>Those stray thoughts floating in the blonde's head amplified, as she
+lost her mind briefly to the euphoria. Her bust swelled, soft tit
+squishing around the cheeks of her two bedmates, and her flow increased
+in kind, forcing them to drink deeper or spill the white bounty. It was
+different now though, now the blue-eyed beauty's lewd imaginings had her
+sweet expression laced with milkmagic.</p>
+<p>Airene was the first to feel it, her eyes going wide as the effects
+started to manifest. She had to let go of the teat in her mouth, pouring
+warm milk over the chin and across her tiny top as she peered down. "Oh
+mai," she gasped, reaching up and cupping her pert little boobs.</p>
+<p>Her powerful fingers pressed into the softest part of her form, molding
+the damp fabric to her skin and making what was happening more visible.
+Beneath her grasp they were pulsing, pushing against their restraints
+with each breath in and failing to fall as she exhaled. Soon they were
+filling her palms, spreading her digits with their girth and pulling her
+already ill-fitting work shirt up. The sheer excitement in her eyes was
+a treat, as the hem of her short covering became insufficient at hiding
+the round undersides to her breasts.</p>
+<p>"Damn Nem, look! Ah got a right fine rack," she grinned, bouncing them
+in her hands, swaying her shoulders back and forth just to watch and
+feel the way they swayed on her body.</p>
+<p>Her mate's green eyes peeked open, her lips unwilling to part from the
+turgid, spouting nipple in her mouth. Indeed, it was fine, the girl
+letting out a moan around the sensitive bud in her mouth, tribbing
+herself more fiercely on the milkmage's leg before relenting that she
+wouldn't reach her peak yet. Had she seen what had become of her then,
+perhaps she might have.</p>
+<p>Slowly she stopped her suckling, pulling away without spilling a drop of
+the liquid gold from the beauty's teat, only remaining connected to it
+by a string of drool. "Ya d-" she started, her attempts to rise thwarted
+as she was dragged back down onto Myri by an unfamiliar weight.</p>
+<p>It took a grunt of effort, and the aid of her arms, to pull herself up.
+Just like Airene she'd grown, her chest a pair of face-sized melons that
+held her cute dress away from the rest of her body to outline their
+grandeur. They were still leaking, even more profusely now that they had
+size compared to what the blonde novice had been sporting over the bar,
+leaving the pale silk practically transparent to show the cinnamon
+colour of her nips clearly.</p>
+<p>"By the... ah'm bigger 'n nan," she exclaimed, unable to get even both
+her hands over a single heaving tit. The attempt however had her cheeks
+flush, as her delicate fingers moved over the massive expanse of
+femininity.</p>
+<p>The sandy-haired girl crawled over on her powerful limbs, once more
+teasing her partner with her touch. "They look mighty good on ya," she
+purred, creeping her hand up the hem of that nightie, "Mind if'n ah take
+a peek?"</p>
+<p>Nemee let out a soft moan, her breasts surging with a fresh spurt of
+milk in response. All this desire, but she wasn't at all trained to
+control it and not spray like a dairy cow. Not that the milkmage among
+them was doing much better.</p>
+<p>With the two girls temporarily off her, Myri had a moment to catch her
+breath, the weight on her chest making the task somewhat difficult. Each
+tit was dominating her torso, the heavy milk tanks rolling out over her
+ribcage to her sides, while still remaining full enough to stand more
+than a foot from her in firm, round mounds. She knew she let herself get
+out of hand, her incidental growth spell all the more evidence of her
+lack of control. If the headmistress could see her, oh the scolding the
+novice would get.</p>
+<p>It took a grunt of effort to sit up, doughy boob rolling down over her
+core to rest on her thighs and wrap around the two girls playing on her.
+It was enough to distract their exploration, the hands they had upon
+each other slowing as they marveled at the giant bust before them.
+"Wow," it was Airene to break the wonder, running one of her strong
+fingers over the expanse of tit. "Ah dun' think ah've seen no one so
+big, even with yer nan's charm."</p>
+<p>The redhead joined in, her nightie hiked up over her bust, allowing her
+to dock her head-sized breasts on one of the milkmage's massive nipples.
+"Me neither," she purred, her voice raspy with arousal as she squished
+her assets around the bud, "Jus' her nip's more 'an a mouthful," she did
+her best to point the teat up, lapping at the milk still pouring out of
+the sensitive, nearly fist-sized tap.</p>
+<p>"I-I do not normally get so worked up," the golden blonde shuddered with
+delight at the attention, feeling herself continue to swell further.</p>
+<p>At least she was regaining her control, concentrating so there were no
+more accidental spells. That was about all she was going to manage
+though. She was on fire, her nethers burning between her thighs nearly
+as much as Nemee's still rubbing against her. There wouldn't be any
+cooling down, returning to her normal, not without release.</p>
+<p>She needed to take a more active role in what was happening. Pleasant as
+it was to be fawned over by a pair of cute country girls, it wasn't
+going to get her much closer to finish having them just worshipping her
+heavenly milkers; sensitive as they were. She placed her hands upon her
+two ravenous ladies, giving herself a little distance to work with.</p>
+<p>"Ye not enjoyin' it Myri?" she barkeep asked with a nervous quiver in
+her voice.</p>
+<p>The blonde shook her head, her plush lips twisted into that confident
+smirk she wore so well. "I have been quite enjoying it," she flashed her
+icy blues to her overstuffed breasts for emphasis, "but, I like partners
+who pay the whole of me attention, not just the best parts."</p>
+<p>She turned her gaze to Airene, to the girl's muscular arms. "Do you
+think your friend would assist me in rolling over Nemee?" she inquired
+with a purr.</p>
+<p>"Wouldn' even hesitate Missy," the freckled farm girl stated proudly,
+puffing out her new chest and doing her best to wrangle one of the
+milkmage's huge tits.</p>
+<p>It was an ordeal, more for the awkwardness of their size than their
+weight. Myri did her best to help out, pivoting on her hips, but her
+unassisted boob kept one arm consistently pinned to stop her using those
+limbs effectively. Soon enough she was on all fours, albeit her hands
+weren't really a part of the equation.</p>
+<p>"Damn Myr," the sandy-haired girl wiped her brow, "ye're too full even
+ta hang fer milkin'."</p>
+<p>It was true. Even if her breasts weren't too heavy to be putting less
+than her full strength into lifting, they were so big that even
+extending her arms and pushing against the well-stuffed down mattress
+they refused to rise off the sheets. "It would appear so," she giggled
+with a flush, reaching her hands beneath her soft mounds and running
+them under, rolling her heaving assets so her leaky nipples were facing
+forwards and resting on them like cushions. "Though that does not mean I
+would not like a little relief, from Nemee's trained hands."</p>
+<p>Airene gave a playful scoff. "Ye think Nem's good? Ah were the one what
+taught 'er ta drain a tit," she exclaimed, crawling herself in front of
+the pinned milkmage and stretching her fingers.</p>
+<p>"Well then who will-" she started, only to let out a lewd gasp.</p>
+<p>Behind her, the innkeeper had scooted herself into place, sodden box
+straddled over the girl's heel, painting it with her juices as she rode
+on it. Meanwhile, her face was buried in Myri's rear, one hand holding
+that blue dress up while her tongue went to work delving into the gifted
+girl's folds.</p>
+<p>The fit Airene's powerful hands moved to the giant milk tanks before
+her. "Looks like Nem's got ya," she purred as her calloused fingers slid
+from breadth to tip of the milkmage's overfull teats.</p>
+<p>Comparing her to the softness of the bartender's digits, the buxom girl
+had expected roughness from her milker's hands; she couldn't have been
+more wrong. Airene was gentle as a summer breeze, lifting from the
+underside of her right breast and coaxing out her expression with a
+petting from base to nip. This was her passion, her raison d'être, and
+it was obvious in how every caress got the absolute most out of the
+swollen teat before her.</p>
+<p>Myri was mewling, squirming in ecstasy as her breasts were firing jets
+across the bed, and the sandy farm girl servicing her. "There there,"
+she giggled, lifting, squeezing, and relieving some of the pressure,
+"we'll get ya handled."</p>
+<p>It was such a waste, so much good milk gone and soaking into sheets,
+clothes, and tanned skin alike. The feeling was just too good though,
+the blonde seeing spots as she was expertly tended on both ends. Nemee
+was busily savouring her sex, the texture of her tongue sliding in and
+out, caressing the parts of her inner walls that elicited the strongest
+sparks. The softness of her lips tangled with her labia, skillfully
+tickling them the same as she would any mouth, and every now and again
+giving them the tiniest graze from her teeth to keep the subject of her
+pleasure on her toes.</p>
+<p>The soaked farmhand lapped the nectar from her fingers with a coo,
+eventually moving to the other tit in her care. "Can' have perfect
+beauties like these bein' uneven, can we?" she teased, coaxing out more
+and more of their alabaster gold.</p>
+<p>Indeed, they couldn't. As her second teat was released the milkmage gave
+a cry, tipping her head back in the throes of climax. Her body
+tightened, the muscles of her chest not even enough to elicit more than
+a trickle from her overgrown bust. The girl's folds however wrung the
+tongue penetrating them, and rewarded the exploring girl's efforts with
+a splash of her feminine spunk.</p>
+<p>The cute and curvy innkeeper murred happily into those spasming folds,
+funneling as much as she could towards her mouth. With so much desire
+coursing through the golden magician's body it was a small flood,
+pouring from the corners of the redhead's grin and down her neck to her
+exposed body. "Nearly sweet 's yer milk," she cooed, taking a moment to
+come off the heel she'd been grinding all this time; sticky threads of
+her juices linking her to it and showing she'd also reached a peak.</p>
+<p>Clarity from her overwhelming lust was coming back, giving the blonde
+returned control to reduce herself to something more manageable, thanks
+to Airene's help of course. She flopped onto her side with a delightful
+sigh, her heavy milkers slapping against one another to fall in a round
+stack. Her bedmates weren't quite as ready to call it a night however.</p>
+<p>Strong arms took her shoulders, once more rolling her onto her back with
+her doughy breasts atop her. "Race ain't over," the tanned worker
+whispered, slipping out of her tight little shorts and planting her
+hands over those leaky teats, "not 'til er'ry horse crosses the line."</p>
+<p>Myri was hardly in a state to protest, even if she didn't know what the
+girl's euphemism meant at first. She got the gist of it however, when
+the working girl straddled herself over her face, tight womanhood wet
+and ready, only inches from her mouth and nose.</p>
+<p>The milkmage wasn't green when it came to sex, she knew her way around,
+what was generally expected of each position she and another girl could
+get into. She let out her tongue and prepared to crane her neck forward
+and tend to the delicate flower that had been placed in her care. Its
+owner was a tad more enthusiastic, to say the least. The distance
+between her and her target disappeared in an instant, Airene dropping
+herself down and grinding on the buxom girl from nose to chin, all while
+toying with the monumental boobs in her hands, pinching, teasing, to
+drive the beauty to more ecstatic moaning that disappeared muffled into
+those velvety folds.</p>
+<p>Nemee wasn't finished with her either. Behind the veil of that wall of
+tit, and the powerful thighs boxing the ice blue-eyed magician in, the
+redhead was weakly repositioning. Her own upsized bust was flopping
+about, sprinkling creamy droplets about the already soaked woolen
+sheets, as her legs slid up along the hyper-buxom girl's own. Soon the
+barkeep's feet were mingling with the undersides of those mammoth
+mammaries, and the still simmering wetness of their sexes met in an
+electric spark of euphoria.</p>
+<p>Beneath them, the bedframe creaked, the cutie putting the whole of her
+body to work grinding their velvety walls together, while her well built
+partner continued going to work on the milkmage's face. Myri was once
+again at the two girls\' mercy, riding the peak of her orgasm,
+squirming, moaning, and reveling in the moment until the world went
+white with pleasure. Time became a figment. They could have been there
+like that for minutes, days, it didn't matter. All that did was the
+moment when the folds smothering her face quivered, and slicked her
+cheeks and hair with more liquid love.</p>
+<p>There was a relieved sigh from above, muffled by the powerful thighs
+around her ears, their grip tightening with the farm girl's climactic
+release. "There t'is," she babbled weakly, finally letting go and
+flopping, satisfied, onto the bed with the others.</p>
+<p>The redhead crawled up from below, laying her head upon one of the
+body-sized pillows the traveler was still sporting. Soon the three were
+curled up in a small pile, exhausted from their play, after what was
+already an exciting day, and drifted to sleep together.</p>
+<p>The storm passed, morning came, and the warmth of the summer sun drifted
+in through the frosted glass to tickle and kiss at the milkmage's skin.
+Slowly her senses reawakened, her ice-like eyes coming open to catch the
+light, her delicate fingers curling lazily into the girls on either arm.
+All delightful, until she took in a deep breath and was met with the
+pungent smell of stale milk.</p>
+<p>Even after hours of night the quality mattress was still damp, giving
+squishy little groans as she sat up. Her perfect breasts fell into place
+on her chest, back to their normal glory after a fine evening of
+release, and good the dreams that followed. All they needed, along with
+the rest of her, as a tuft of her golden hair was sticking straight up
+from Airene's dried juices, was a nice bath. A last little comfort
+before she hit the road once more.</p>
+<p>With utmost care Myri slipped out of the tangle of bodies, collecting
+her charms from the nightstand and making her way towards the small bath
+her inn room connected to. It wasn't much, not compared to the ornate
+hot springs available at the university, the barrel by the window was
+only barely warm as she transferred buckets of water from it to the
+lay-in tub. Still, it was more than suitable to wash her body and robes.</p>
+<p>As she bathed, her bedmates began to stir, Nemee the first to rise with
+a wide yawn and a cat-like grin. It faded when she noted the milkmage's
+absence, as well as her own and Airene's busts returned to their usual
+pert sizes now that the novice's accidental spell had worn off. Her
+hands rose, gently toying with her plump little tits in the hope maybe
+she could express a few more drops, or get them to grow once more. To
+her disappointment they did not.</p>
+<p>The pigtailed working girl was next to rise with a soft groan. "Smells
+like ah fell 'sleep in the barn," she chuckled, pulling herself up and
+stretching her stiff limbs. Just as her partner, she too noticed how her
+short little top slipped back down over her flattened chest, leaving her
+to whine. "Awe, thought ah'd be a right looker from now on," she joked,
+patting her shirt.</p>
+<p>They were joined as the blonde slipped out of the bath, still wet, her
+charms sparkling atop her bare bosom and drawing the eye. Her blue
+dress, not yet dry, hung heavy on her body; the sun would do the rest
+when she got back on the road. "I would argue you are quite a treat for
+the eyes already Airene," she noted, wringing out her hair. "Sorry to
+leave a mess Nemee, but I must get going."</p>
+<p>The redhead sank a little, "Ye're leavin'?" her voice was a whine as she
+crawled up to the edge of the bed. "Can' ya stay Myri? The Teat's never
+been so lively 's last night, an' we wouldn' need nan's charm no more,"
+she pleaded.</p>
+<p>"Ya could even teach Nem ta use magic!" her sandy mate added. "An' I
+could milk ya right proper, we cou' have fun like this er'ry night when
+th' lamps go out!"</p>
+<p>Memories from last night were still fresh, the dancing, the praise from
+the inn crowd, the farm girl's strong hands as they coaxed the sweet
+expression from her gigantic teats. Just thinking about it had her
+swelling a size, fighting her own control as milk began to bead on her
+beautiful nipples. It wouldn't be a bad life, by any means, definitely
+one that would be filled with pleasure and the love of two cute women;
+one would even be her apprentice.</p>
+<p>A novice milkmage giving up her training for bar work wasn't unheard of;
+after all, the point of a milkmage's pilgrimage was to help experience
+the world and find their place in it. But, was it the life she wanted?
+To stop here would be to never reach her full potential. Myrikal,
+prodigy of the university, was destined for greatness, and no matter the
+comforts, she couldn't give that up and end her journey here.</p>
+<p>"I am sorry," she told them, "but I cannot stay. I have only just begun
+my pilgrimage, and must return to it if I am to finish my own training,"
+she gave them that confident smile she'd worn the prior night, "I would
+make a poor teacher after all if I were not a master."</p>
+<p>Though disappointed, the two understood, their shoulders slumping with
+defeat. "Ah guess then can we have nan's charm back?" Nemee asked her.
+"The Teat wouldn' be able ta survive withou' 'er specialty drinks."</p>
+<p>The buxom novice couldn't in good conscience let the girl continue to
+put herself at risk. "Nemee," she whispered, coming over and resting her
+hand upon the girl's shoulder, "you have the gift. You have no need for
+a dangerous trinket, only training, and I would like to write you a
+letter of recommendation for the university, where you could learn to
+harness that potential," she told her.</p>
+<p>The redheaded cutie sank a bit, her cheeks flush. "Tha's mighty nice
+Myri, bu' who'd run the Teat withou' me?" she pointed out.</p>
+<p>Airene threw her arm over the girl's shoulders, a grin on her lips.
+"Come on Nem, ya know ah know ma way 'round the bar, ah can handle the
+Teat 'til ya get back. Wouldn' even be the first ah've taken care o\',"
+she joked, giving the girl a loving shake.</p>
+<p>"Where wou' ya get the milk Airene?" the innkeeper questioned.</p>
+<p>"The university is full of young milkmages eager to prove their mettle,
+or who need a little extra coin for spending," Myri answered for her, "I
+can let them know in my letter than you are in need, they will send
+someone post-haste."</p>
+<p>Stripped of her excuses, Nemee could only sit silently, twiddling her
+thumbs. "Nem," her sandy-haired partner nuzzled into her neck, "ya got
+an opportunity ta learn like yer nan, ta not have ta 'xpose yerself fer
+pervs' entertainment," she laid a kiss on the girl's neck. "Dun' waste
+it. Ah'll be here waitin' for ya when ya get back, promise," she let out
+her pinky, the strong digit piercing through the redhead's tight fists
+to loop with her own.</p>
+<p>A smile couldn't help its way onto her lips. "Airee," she mused softly,
+nuzzling her back until their lips could meet, and she could embrace her
+love in a proper kiss.</p>
+<p>It was touching to watch, perhaps making the traveler just a tad
+regretful to be leaving. She had greater pastures on her horizon though.</p>
+<p>She stayed long enough for a fine breakfast, and to draft her letter for
+the royal carrier, before departing for the road once more. The sun was
+high above, shining brightly and forcing the last bits of moisture from
+her uniform as it cast its rays down on the open fields and plains of
+these country roads. Her heels crunched in the gravel, her magnificent
+breasts bouncing gently and ringing her fine jewelry with each step.
+Waves from her new friends sent her off, with a feeling in her heart
+light as the pale clouds above as she trekked onward; further and
+further from the university on her pilgrimage.</p>
+<p><img alt="" src="media/image1.jpeg" />{width="8.49375in" height="3.7555555555555555in"}</p>
+<p><strong>Oh hi there!</strong></p>
+<p>I see you\'ve discovered this new little document bundled with my zip
+downloads. Well due to certain avenues not having places for profiles,
+interactive descriptions, or hyperlinks, and not wanting to make double
+copies of my stories for those that do, this here is just a little one
+pager with a few important Madam Materia links. And maybe some FAQ at a
+later date.</p>
+<p>Anywhore, if you wanna keep up to date with my works, see about
+supporting my craft with a sub or commission, or just in general chat,
+then the following links are your best friend.</p>
+<p><strong>Twitter:</strong> <a href="https://twitter.com/MadamMateria">\@MadamMateria</a></p>
+<p><strong>Discord:</strong> <a href="https://discord.gg/svqa8Z2">The Menagerie Lobby</a></p>
+<p><strong>Reddit AMA:</strong> <a href="https://www.reddit.com/r/overflowingbra/comments/azte2c/ask_the_author_madam_materia/">For public
+questions</a></p>
+<p><strong>Patreon:</strong> <a href="https://www.patreon.com/MadamMateria">Madam Materia</a></p>
+<p><strong>Commissions:</strong> <a href="http://www.furaffinity.net/commissions/madammateria/">Gasp!
+FurAffinity!</a></p>
+</body>
+</html>

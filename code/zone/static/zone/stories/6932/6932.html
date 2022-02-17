@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Curves: Part Three and Four</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>Curves</p>
+<p>Conclusion</p>
+<p>by The Preve</p>
+<p>Thanks to Todger 65 for the edit.</p>
+<p>The first thing Lynn noticed was the quiet. The silence last night was
+creepy, sure, but this morning, more so. <em>No birds,</em> was the thought,
+<em>Better look in on the girls.</em></p>
+<p>Lynn, a creature of habit, did her morning ablutions first. She walked
+down the hall later, scrubbed clean, hair combed, teeth brushed; a woman
+who disliked unkempt appearances, even before her best friends.</p>
+<p>Charlotte and Maria were not in their rooms. <em>Odd,</em> but only slightly.
+Her friends were early risers. No sign of them in the kitchen either.
+<em>Strange, they left the door open.</em></p>
+<p>The morning outside was bright and cloudless. The air, warm with little
+humidity. <em>Perfect, </em>Lynn thought, <em>But damn! It\'s so quiet.</em></p>
+<p>Her friends were at the pier, sitting. Lynn noticed they were also nude.
+<em>Skinny dipping,</em> she smiled, remembering mischievous nude swims of old.
+Maria and Charlotte were quietly chatting when Lynn reached them.</p>
+<p>"So how\'s the water?"</p>
+<p>"Nice and cool," Charlotte answered.</p>
+<p>"We\'re about to go in again," added Maria.</p>
+<p>Her BFF\'s smiles told Lynn she didn\'t have to ask further. Off came
+her white tee and daisy dukes, and Lynn was nude like the others.</p>
+<p>Lynn, of the Club, was the most fit. She had the curves, yes, but
+sported the best muscle tone. Maria thought Lynn would be perfect as a
+fitness model.</p>
+<p>Lynn\'s skin was also the lightest of the three. Her hair was medium
+brown, to Maria and Charlotte\'s glossy black. Her eyes were blue-gray
+to the others\' dark amber.</p>
+<p>Lynn was also the shyest, though not more so than her contemporaries.
+She was comfortable nude around friends and husband but dressed
+conservatively outside those circles. Still, under certain circumstances
+such as the present, she could step up and be as adventurous as the
+others.</p>
+<p>Her friends stood by patiently while she stretched. Lynn, in body and
+personality, was the least curvy and the most demure. Her style was
+"girl next door", a trait attractive to more than a few. It didn\'t
+surprise the others when she became the first to settle down.</p>
+<p>"You ready?" smiled Charlotte.</p>
+<p>"Just about."</p>
+<p>"Hey, let\'s race to the middle," suggested Maria. "Last one there has
+to make breakfast."</p>
+<p>"Ha! You two better hope I win," laughed Charlotte.</p>
+<p>The trio dived in. Charlotte, the best swimmer, won handily. The other
+two argued, in good humor, over who came second.</p>
+<p>"Tell you what. I got here first so both of you treat me to breakfast."</p>
+<p>"Oh good grief, Charlotte!" the other two chorused.</p>
+<p>The Curvy Club floated in the lake like a trio of water nymphs waiting
+for an unlucky (or very lucky) fisherman.</p>
+<p>"We must be something to look at," Lynn remarked.</p>
+<p>"I guess. I know some college boys in Miami who\'d like to see these,"
+Maria giggled, glancing at her breasts.</p>
+<p>Maria and Charlotte floated close to Lynn, on either side of her. Lynn
+didn\'t notice, nor would she think it odd if she had.</p>
+<p>"You know Lynn?" Charlotte said, "Me and Maria found something here
+while you were asleep."</p>
+<p>"Here? In the lake? Ooo, what is it? A sunken boat?"</p>
+<p>"No," Maria giggled, "It\'s cooler than that. It\'s a cave."</p>
+<p>"A cave? Damn! You think other people know about it?"</p>
+<p>"I don\'t know," Maria replied.</p>
+<p>"We don\'t think anyone else knows," Charlotte added, "There are things
+in it. Strange, beautiful things. I think people would make a big noise
+if they knew."</p>
+<p>"Oooo, what kind of things? New creatures? Precious stones?"</p>
+<p>"You\'ll have to see for yourself," Maria whispered.</p>
+<p>The waters around the trio began to bubble.</p>
+<p>"Uh, girls? Something\'s happening to the lake. I think we better go."</p>
+<p>Charlotte and Maria didn\'t move, lips curled in enigmatic smiles, which
+disturbed Lynn. <em>Something\'s seriously wrong here.</em></p>
+<p>"Relax Lynn," said Charlotte.</p>
+<p>"Yes, relax Lynn. It\'s part of the beautiful thing we\'ll show you."</p>
+<p>The waters bubbled like a spa. Lynn wasn\'t relaxed. The Stepford smiles
+on her friends did not help.</p>
+<p>"Okay girls, this isn\'t funny! I\'m getting out of here!"</p>
+<p>Charlotte and Maria drew close and grabbed Lynn, hugging her between
+their bodies.</p>
+<p>"What the fuck! What are you doing?!" Lynn squirmed and struggled.</p>
+<p>"Relax Lynn," Charlotte breathed in her ear.</p>
+<p>"It\'ll be over soon," whispered Maria in the other.</p>
+<p>"Yes it will! \'Cause you two are going to let me go right now!"</p>
+<p>Lynn struggled, sandwiched between her friends. The waters churned and
+swirled. Charlotte and Maria pressed tight, skin to skin, with
+Charlotte\'s breasts against Lynn\'s, and Maria\'s against her shoulder
+blades. Lynn could not help but be extremely conscious of their nude
+bodies against hers, in spite her panic. <em>What\'s happened to them!</em> The
+wrongness was obvious. Charlotte and Maria were like a pair of
+hypnotized drones.</p>
+<p>The trio, Lynn squirming all the way, began to whirl around together.</p>
+<p>"Don\'t be afraid," Charlotte and Maria said in unison.</p>
+<p>"Who . . . the hell . . . are you?!" Lynn grunted. These two couldn\'t
+be her friends. <em>It\'s like they\'re pod people!</em> The two smiled at her
+like bland mannequins.</p>
+<p>The women whirled in the churning water. Lynn just had time to draw in
+breath before the went under. The waters swirled and bubble for a few
+moments more, and then settled to placid glass, and once again, the lake
+was quiet.</p>
+<p>Lynn woke in the tunnel. Her memory was a confused swirl of churning
+water and nude women. She raised her wet body and coughed. Her body
+swayed dizzily. Lynn waited until the nausea passed then gazed around.
+Two emotions dominated: confusion and anger. <em>Where the fuck are those
+bitches?! We are going to have a talk!</em></p>
+<p>Voices floated from the end of the tunnel, as if in reply</p>
+<p>"Lynnnnn! Come and see!"</p>
+<p>"Yes Lynn, come and see the beautiful things."</p>
+<p>Lynn couldn\'t tell which one spoke. The tunnel distorted the voices.
+The direction, to her right, was not a good prospect. The temptation to
+go the other way was overwhelming. The passageway curved towards a
+mystery chamber emitting a pink glow. Faint, soft, and wet sounds
+drifted to her ears, ominous but strangely erotic.</p>
+<p>"Come on in Lynn, it\'s soooo wonderful."</p>
+<p>The voice, Charlotte or Maria, beckoned, mischievous and enticing like a
+siren. Lynn was torn; wisdom said to go the opposite direction. <em>This is
+where the idiot chooses whether or not to go into the haunted house, and
+they always do.</em> Unfortunately Lynn saw the other end was a solid wall
+of obsidian. <em>Dead end.</em></p>
+<p><em>There\'s no choice. I can\'t stay here forever. It\'s the haunted house
+or nothing. </em>Besides, an adventurous, curious part deep within her
+wanted to know. <em>What is at the other end? Why did the girls do this?</em></p>
+<p>The tunnel was warm and humid, growing increasingly fetid as she drew
+closer to the glow. The wet sounds resolved into distinct noises;
+familiar sounds Lynn thought akin to lovemaking. <em>They sound like skin
+on skin.</em></p>
+<p>Other sounds, moans, groans, gasps, grunts, and sighs accompanied the
+sensual music. <em>Oh, did the girls draw me to an orgy?</em> It could explain
+their strange behavior. <em>Maria might be up for it but Charlotte?</em></p>
+<p>It was a daring prospect for Lynn. The Club came close in the past but
+never quite went over the top. Lynn never asked what her BFF\'s did
+outside their circle.</p>
+<p>Lynn rounded the curve to see the entrance to the chamber. Her friends
+stood there, nude and wet, illuminated by the pink glow behind them.</p>
+<p>"Girl\'s what . . . ?" Lynn started, but the two smiled, turned, and
+walked into the chamber.</p>
+<p>Lynn frowned, breathed, quietly counted to ten, and walked forward, into
+the strangest, and most insane, stunning, and terrifying scene ever seen
+in her entire life.</p>
+<p>Once, in Australia, Lynn took a scuba dive to the Great Barrier Reef.
+Among her best memories, besides the colorful exotic fish, were the
+almost endless carpet of sea anemones, beautiful, in the colors of the
+rainbow.</p>
+<p>It seemed strange, a beautiful memory entering her mind at this moment.
+Perhaps it was the anemone-like pods filling the chamber, or the thick,
+fetid atmosphere she could cut with a knife, or the streams of thick,
+clear, oily fluid raining from the ceiling.</p>
+<p>Maybe her mind was desperately erecting a barrier to the horrific sight
+before her. The sight of her friends, Charlotte and Maria, nude and
+slick, beaming smiles at . . . her friends, Charlotte and Maria, also
+nude, also very, very slick, and also extremely, powerfully pregnant.</p>
+<p>The other Charlotte and Maria\'s breasts were heavily swollen, swollen
+well past their double D\'s into giant-sized breast lover\'s fantasy.</p>
+<p>There were things on her friends\' breasts: giant, tentacled suction
+cups pumping and milking them like human cows.</p>
+<p>Gravid Charlotte, who\'d seen her friend enter, stared at Lynn with a
+strange mixture of despair and erotic ecstasy. She moaned around the
+tentacles stuffed in her mouth. Her throat moved, gulping down the
+nutrients. Her hands stroked around her enormous belly.</p>
+<p>Maria\'s head was tilted back, her eyes shut, a long, thick, penile
+tentacle filled her mouth. Her throat, too, worked to keep up with the
+fluids pumped into her body.</p>
+<p>Maria\'s body, shockingly, was larger than Charlotte\'s; giant G melons
+pumped and squeezed by the suctions, their hoses expanding to handle the
+steady flow of milk into the storage tanks. Her giant belly throbbed,
+reflecting Charlotte\'s own movements.</p>
+<p>The sight, for Lynn, overwhelmed enough, but the lower view tipped her
+over.</p>
+<p>Things, strange, alien, monsters were emerging from her friends\'
+pussies, with shocking, assembly line regularity.</p>
+<p>Charlotte\'s body produced lizards, strange reptilian babies. The
+creatures from Maria\'s body looked like baby calves . . . with tusks.</p>
+<p>The creatures came at roughly one per minute. Umbilical cords were
+severed; the crying babies conveyor-belted away, on a wave of tentacle
+pods.</p>
+<p>Lynn swayed, light-headed. Her mind fought a desperate, failing battle
+to stay functional.</p>
+<p>The other Charlotte and Maria, the fake ones Lynn realized, turned their
+heads to her.</p>
+<p>"Look Lynn, isn\'t it beautiful?" they both asked, harmoniously.</p>
+<p>Lynn could have screamed and bolted, a futile action given the tentacles
+wound, unbeknownst, around her feet. Plus, the exits were sealed. She
+chose the other option, mainly because her mind lost the battle. Her
+eyes rolled up and, with a soft moan, she fell back into the soft, oily
+tentacles of the chamber.</p>
+<p>Lynn\'s first thought when she woke was, <em>Damn! That was the weirdest
+dream! </em>Next came, <em>What the fuck?! What are those? Sea anemones?
+</em>Third, <em>Why is everything upside down?</em> And finally, <em>Oh God! It
+wasn\'t a dream!</em> "Aaaaahhhh!"</p>
+<p>Lynn was bound, upside down. Tentacles bound her arms and legs, holding
+her to the roof of the chamber by her feet. She moved toward her
+friends, like a slab of meat on a hook.</p>
+<p>The new acquisition impressed the ship. It moved her to the others for
+space saving purposes. \&lt;It should be easy with this one. The issues
+with the chemicals are straightened out. I can fulfill the contract.></p>
+<p>Lynn was moved between Charlotte and Maria, then raised up to the
+ceiling, and bound, spreadeagled, by the tentacles. Her view was
+afforded of her friends, heads tilted back, mouths working around
+tentacles like so many cocks, gazing at her with despair, and erotic
+heat. Their shiny, oily, gravid bodies shuddered with orgasms and
+births.</p>
+<p>"Charlotte?! What . . . mmmf!" A tentacle stuffed into Lynn\'s mouth.</p>
+<p>"Uuhh, Thlynnth!" Charlotte lisped.</p>
+<p>"Fuuughnnn!" added Maria.</p>
+<p>Lynn\'s eyes darted frantically. Tentacles slithered over her curvy
+body, slathering her in oil. Her mouth filled with fluid. She gulped to
+keep from choking. Tentacles slithered between her pussy lips and into
+her bunghole. Lynn growled and moaned, outraged.</p>
+<p>Charlotte and Maria moaned together, watching the now familiar change
+happen to her friend. The breasts swelling to milk-loaded jugs; the
+belly bloating to impossible gravidity; the suctions attaching, pumping;
+the pussy expanding to giant elastic proportions; Lynn\'s moans as out
+popped her doppelganger.</p>
+<p>Lynn watched in numb shock, her clone splash to the floor; a horror
+among many. Her belly skin hung off her body like an empty sack, before
+starting to merge back into her torso.</p>
+<p>The Lynn clone lay, curled, on the floor, until tentacles severed her
+umbilical. She woke and gazed around, confused, until her eyes lit upon
+"Charlotte" and "Maria".</p>
+<p>"Wow! I gotta say girlfriends, you don\'t stop with the surprises."</p>
+<p>"We knew you\'d love it," Charlotte said.</p>
+<p>"Isn\'t it great? And we discovered it," added Maria.</p>
+<p>"Yeah, a brand new cave. So Curvies, what do we do now?"</p>
+<p>"Let\'s go back to the pier and talk about it. I think I can get a
+camera crew up here," Maria suggested.</p>
+<p>Lynn, Charlotte, and Maria watched their clones chat. Lynn tried to
+shout but her tentacle-stuffed mouth only warbled a loud moan. Charlotte
+shook her head, knowing the futility of her friend\'s efforts. The
+originals were invisible to the clones.</p>
+<p>The copies left the chamber, in a trail of giggles and chatter. Lynn\'s
+body reset to its toned and curvy configuration; a temporary condition.
+Minutes later, her belly swelled, once again, to permanent pregnancy.
+The pumps increased their milking. Her stomach and body flooded with
+nutrients.</p>
+<p>Lynn realized, gradually, her friends gulps, grunts, and moans, while in
+part orgasmic, fit a pattern. <em>Curvespeak!</em></p>
+<p>Lynn gulped, grunted, and moaned curvespeak back to her BFF\'s, and they
+conversed.</p>
+<p><em>Charlotte! Maria! What is this place?!</em></p>
+<p><em>We don\'t know!</em> Charlotte gulped.</p>
+<p><em>It got us and forced us to birth those clones!</em> Maria moaned.</p>
+<p><em>And now these alien monsters!</em> Charlotte grunted.</p>
+<p><em>There are things in my womb! I can feel them!</em> Something slid through
+Lynn\'s birth canal and squeeze from her pussy. Instead of pain, as she
+expected from birth, a shudder raced through her body, as when she
+birthed her clone. <em>I just came again.</em></p>
+<p><em>It\'s done something to us! We\'re all cumming! </em>Charlotte gulped.</p>
+<p><em>What\'s coming out of me?!</em></p>
+<p><em>It\'s a lizard baby Lynn,</em> gulped Maria.</p>
+<p>As with the others, the ship\'s tentacles carted the Zorgon to the
+creche. The ship, however, had a slightly different plan for its newest
+breeder.</p>
+<p><em>Something else is coming.</em></p>
+<p>Maria watched her friend\'s pussy spread. <em>It\'s a tusked cow Lynn.</em></p>
+<p>The ship found alternating between Zorgons and Cretans for the breeder,
+an economical convenience. \&lt;Hmmm, I detect some emotional distress
+among the three breeders. I shall increase the Orion pleasure juice
+concentration. That should alleviate some of it.></p>
+<p>Ululations sang from all three women, accompanied by a mutual orgasm.</p>
+<p><em>What was that?!</em></p>
+<p><em>I don\'t know Lynn. It\'s just I feel . . . I can\'t describe it,</em>
+Charlotte moaned.</p>
+<p><em>I\'m feeling it too,</em> grunted Maria.</p>
+<p>The other two felt as Charlotte. On the one hand, the women were
+captive, force-fed strange fluids, big-breasted gravid bodies gleaming
+with oil, sweat, and cum, milked and forced to breed aliens out of their
+worst nightmares.</p>
+<p>On the other, euphoria and orgasms flooded their bodies, quaking with
+each pump and birth.</p>
+<p>The turn of events well satisfied the ship. It managed to score three
+viable primates as breeders, after a long sleep. Final scans confirmed
+their complete conversion to production modules. A steady stream of
+product was coming out of their wombs.</p>
+<p>\&lt;No problems foreseen fulfilling the contract. My employers will be
+pleased. Time to depart.></p>
+<p>A final scan of the primates\' minds revealed no complications, insofar
+the presence of others. The closest habitats were far enough away to
+reduce the chance of witnesses.</p>
+<p>The clones were exact genetic copies . . . almost. The manufacturing
+program did fix some flaws in the DNA. The brain patterns of the
+originals were copied into the duplicates. \&lt;With adjustments to their
+memories of course. Obviously there will be some differences but so
+subtle as to be barely noticed.></p>
+<p>Speaking of the originals. \&lt;Hmmm, no real need for thought processing.
+They don\'t need to think, just produce. Massive infusions of
+concentrated Orion Pleasure Flower Juice should do the job.></p>
+<p>A loud, sonorous moan filled the chamber. Lynn just had time to lisp,
+"Tharlothe . . .!"</p>
+<p>Maria moaned, "\'Ynn . . .!"</p>
+<p>Charlotte sighed, "\'Aria . . .!"</p>
+<p>The three, now perpetually curvy, milfs chorused one final moan, before
+their thoughts drowned in pleasure juice and orgasms.</p>
+<p>The ship felt pride, taking these three primates away from their harsh,
+primitive lives on this backwater planet; far better for them as
+pampered, pleasured, mindless broodmares, with greatly extended lives.
+They\'ll have no more cares or worries other than breeding. \&lt;And I\'m
+sure once they\'ve filled their quota, the company will find other uses
+for them.> It broadcast some final commands to the clones, and prepared
+for departure.</p>
+<p>"Charlotte," "Maria," and "Lynn" hoisted themselves onto the pier and
+sat at the end, nude and dripping.</p>
+<p>Charlotte smiled, "That was a good swim."</p>
+<p>"Yeah, what about you, Lynn?"</p>
+<p>"Yeah, I had fun, Maria but . . . there\'s something . . . I don\'t know
+. . . odd."</p>
+<p>"What?" queried her friend.</p>
+<p>"I . . . it kind of feels like . . . well . . . we should be doing . . .
+something . . . or did something."</p>
+<p>"Other than swim around bare-assed you mean?" Maria raunched.</p>
+<p>"I don\'t know, I . . . darn! It\'s lost. Forget it."</p>
+<p>"Well, I know what I\'m going to do," Charlotte said, stretching back on
+the pier, "I\'m going to lay down, enjoy the sun, and then I\'m checking
+out that bar we passed in the town yesterday."</p>
+<p>"Good idea, Charlotte," Lynn seconded. The other two stretched beside
+Charlotte.</p>
+<p>The three nude milfs lay in the morning sun. The gloss on their skin
+turned from lake water to sweat.</p>
+<p>"Mmmm," purred Maria, "This feels good."</p>
+<p>Lynn sighed, "Just like Florida."</p>
+<p>Charlotte grinned, "Yeah, crazy Florida. Spring break and all those
+fratboys."</p>
+<p>"Heh," Maria laughed, "Remember that frat prick who tickled your ass,
+Charlotte?"</p>
+<p>"And got a smack in the jaw for it. Yep, I remember."</p>
+<p>"The fucker should\'ve asked," Lynn snorted, "We were up for anything
+that night."</p>
+<p>"Don\'t take liberties with the Curvy Club. Not without permission,"
+Charlotte said.</p>
+<p>"Damn straight," the other two chorused.</p>
+<p>The women lay back enjoying the sunshine. Maria cocked an eyebrow. "You
+think the townies would \'take liberties\' if they saw us like this?"</p>
+<p>"Probably, some of them seemed rude enough."</p>
+<p>"If they did, Charlotte, they should go for your belly. That\'s always
+been your weak spot." Lynn chuckled, looking over.</p>
+<p>"Oh you mean this," Maria reached over and tickled Charlotte\'s lower
+belly.</p>
+<p>"Ha! Come off it Maria," Charlotte giggled and reached out to grasp
+Maria\'s offending hand.</p>
+<p>"Wrong spot, Maria," Lynn laughed and tickled her hands a little lower.</p>
+<p>"Don\'t! Stop!"</p>
+<p>"Oooo! Don\'t stop? So girl tickles are better than frat boys?" laughed
+Maria. Both women doubled down, playing their fingers across
+Charlotte\'s torso.</p>
+<p>"Oh! Fuck! Stop!"</p>
+<p>The tickling went on for several minutes. The trio giggled and laughed .
+. . and then something happened. It was simultaneous, almost comical,
+and a little shocking.</p>
+<p>Somehow, in Charlotte\'s flails, her hands found their way to her
+friends\' breasts: left hand on Maria\'s, right on Lynn\'s.</p>
+<p>At roughly the same time, Maria and Lynn\'s tickling fingers found
+themselves tickling Charlotte\'s groin . . . just above her intimate.</p>
+<p>All three were too lost in the moment to notice their wandering hands.
+When they did, all three noticed two things: Charlotte\'s hands on their
+boobs, and Charlotte\'s cum squirting from her pussy.</p>
+<p>Two days ago, such an event would be cause for shock, gasps, hurried
+withdrawals, deep red faces, a cacophony of apologies, followed by an
+awkward and intensely self conscious vacation.. The Curvy Club were very
+close, and each loved the other as surrogate sisters. Erotic attraction
+was close to the surface but never quite erupted. There was a bond, a
+deep one, that a sexual encounter could endanger. A certain dynamic
+would change irrevocably. A unique friendship could end.</p>
+<p>The Curvy Club of today was not the Curvy Club of two days prior, in
+quite literal terms. Barriers present in the originals were missing
+here.</p>
+<p>The women looked at each other, shocked, but with mild embarrassment.</p>
+<p>Sweat covered Charlotte,with heaving melons and heavy breaths, gazed,
+wide-eyed, at her friends. Maria and Lynn gazed back, reflecting
+Charlotte\'s heat. Something was happening, and the three were unsure of
+the ending.</p>
+<p>Charlotte ran her finger around Maria\'s tit. <em>It\'s hard.</em> Lynn\'s tit
+pressed into her palm. <em>They both are.</em></p>
+<p>The trio\'s fingers moved, and not to tickle. Charlotte squeezed her
+friends\' melons, softly, noting their round, firm, yet pliable touch.</p>
+<p>Maria and Lynn caressed down Charlotte\'s groin, towards her wet bud.
+Charlotte glanced down, knowing what was about to happen, yet not
+willing to voice it. She glanced up to her friends, expectant. They
+gazed back, eyes gleaming with a heat never before felt until this
+moment.</p>
+<p>Two hands, from one each, plunged fingers into Charlotte\'s folds. She
+gasped and arched her back. No words were spoken; actions said
+everything.</p>
+<p>The first to kiss Charlotte was Maria. Charlotte moved her hand to
+around Maria\'s neck. The women\'s tongues wrestled and slid around each
+other.</p>
+<p>Charlotte\'s other hand embraced Lynn as well. Her fingers danced along
+Lynn\'s nape and upper back.</p>
+<p>The three women fucked in the morning sunlight. The silence of the lake
+broken by their heated moans. Lynn kissed and licked Charlotte\'s body
+down to between her legs. Maria broke of her kiss and moved to straddle
+Charlotte\'s head. Lynn wrapped her arms around Charlotte\'s legs and
+plunged her tongue into her friend\'s quim. Charlotte performed the same
+on Maria. Two tongues from two women licked two clits. A mutual
+explosion of cum burst moments later.</p>
+<p>The Curvy Club orgied through the morning, repositioning, grinding
+pussies, and plunging into each other, heedless of the activity brewing
+off the pier.</p>
+<p>The water began to churn and boil, spreading from the center to
+encompass the entire lake. The lake water receded, as the waters on a
+shore recede before a tsunami.</p>
+<p>The orgiastic trio were oblivious to this event, per instructions
+written into their brains. They continued their lovemaking, neither
+hearing the massive gurgle of draining lake water, not taking notice of
+the giant saucer rising from the lake\'s bottom.</p>
+<p>Its overall look was a standard UFO cliché, but with a somewhat organic
+appearance. An observer might compare it to the top of a giant
+jellyfish, but without the tentacles. It was almost completely silent,
+but for the gallons of water sloughing off its surface.</p>
+<p>The A.I observed the trio. Their behavior seemed slightly unusual given
+its impression of the originals. It gave a positronic shrug; cloning
+produced varied effects among different species. These women were no
+less perfect than the originals, just slightly different. \&lt;Ah well, no
+longer my problem. I have a contract to fulfill.></p>
+<p>The A.I powered up its engines and, with a "woosh", disappeared into the
+clear blue sky, taking three beautiful women away on a permanent
+vacation. The package included indefinite youth, constant sex, permanent
+pregnancy, factory birthing, and endless orgasms.</p>
+<p>Maria, Charlotte, and Lynn woke after a light doze. It was late morning;
+the women were entangled together. Lynn was the first to notice.</p>
+<p>"Uh, girls? What happened to the lake?"</p>
+<p>"Whoa!" Maria gasped.</p>
+<p>The lake was gone. A giant mud hole, with puddles of water dotting its
+expanse, stood in its place.</p>
+<p>"Damn!" Charlotte said, "How did this happen and how didn\'t we notice?"</p>
+<p>"Too occupied, I guess," Maria smiled. The other women chuckled.</p>
+<p>"We were swimming in it just a couple of hours ago," Lynn said, "What if
+this had happened while we were in it?"</p>
+<p>"What do you think happened?"</p>
+<p>"I don\'t know Maria. Maybe a cave underneath the lake collapsed? I
+heard something like this happened in Florida."</p>
+<p>"For reals, Charlotte?" Maria asked.</p>
+<p>"Yep. Somebody drilled into a salt mine. Bawhoosh! Just like a flusher."</p>
+<p>"Good thing it didn\'t happen then," Lynn said, "We\'d end up drowned or
+. . . worse."</p>
+<p>"You think this is permanent?"</p>
+<p>"Maybe, maybe not, Charlotte," Lynn replied, "I heard the lake\'s fed by
+underground springs. It might look like this for a few."</p>
+<p>"No swimming for a while, I guess," Maria frowned. "Well! I\'m not
+standing around covered in you two. I\'m taking a shower, and we
+haven\'t eaten anything this morning except each other."</p>
+<p>"Is the shower big enough for three?" chuckled Charlotte.</p>
+<p>"We\'ll see."</p>
+<p>The nude and happy trio left for the house, ready to make the most of a
+beautiful summer. They found the shower big enough.</p>
+<p>The Curvy Club spent an intensely erotic two weeks at the house,
+enjoying good food, mimosas, and each other\'s bodies. Occasionally, a
+lucky young townie was invited to participate.</p>
+<p>Lynn\'s prediction about the lake proved correct. While it didn\'t rise
+to the level from the vacation\'s start, it filled up enough to allow
+some swimming the last couple of days.</p>
+<p>At the end, the Club separated to resume their public lives: Lynn to her
+CEO husband, Charlotte to her billionaire boyfriend, Maria to her life
+as a celebrity.</p>
+<p>And if the husband, boyfriend, and public noticed increased libidos, or
+a bawdier outlook, none (except Charlotte\'s fans) remarked on it.</p>
+<p>In the following years, the Curvy Club would reunite, to gossip, to
+fuck, to talk about their many successes, their accomplishments, their
+husbands, and their many, many children.</p>
+<p><strong>The End.</strong></p>
+</body>
+</html>

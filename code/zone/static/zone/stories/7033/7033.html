@@ -1,0 +1,2111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Echo II</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>Echo II</p>
+<p>by Goldleaf </p>
+<p>She had managed to wait four days, but it had been tough. 
+What  she  had  seen  in  the  window  would  be  impossible  to 
+forget. She had fancied her neighbour ever since moving into 
+the  marina  village  last  year.  Marc  had  moved  into  his 
+waterside apartment around the same time as she had moved 
+in  opposite  him,  and,  having  bumped  into  each  other  a  few 
+times  around  their  small  seaside  community,  they  had 
+become  accustomed  to  seeing  each  other  around.  They’d 
+become  friends  on  Facebook  through  the  residents’  group, 
+but  that  hadn’t  really  given  her  much  insight  into  his  life;  his 
+proﬁle  was  buttoned  up  pretty  tight.  She  didn’t  even  know 
+how old he was. From the conversations they’d had, and from 
+scrutinising his warm and open yet somewhat chiselled face, 
+she  suspected  that  he  was  a  few  years  older  than  her.  She 
+herself was only 23, so guessing him to be in his late twenties 
+made sense to her. What he did for a living, or where he went 
+with  his  friends,  was  a  mystery.  Though  they’d  had  several, 
+fairly lengthy conversations out and about around the marina, 
+he’d  kept  the  conversation  focused  largely  on  her.  She’d 
+found it ﬂattering, acutely aware of the occasions when she’d 
+blushed  at  his  compliments,  and,  afterwards,  she’d  always 
+found herself a little disappointed at the fact he hadn’t asked 
+her out. Sometimes, when she caught sight of him driving out 
+of the car park or pottering around his house on the other side 
+of  their  little  marina  inlet,  she  daydreamed  about  taking  the 
+matter  into  her  own  hands  and  asking  him  out  for  a  coﬀee. 
+Though  she  sometimes  saw  him  with  another  girl,  there  was 
+never  enough  consistency  for  her  to  suspect  he  had  a 
+girlfriend – but clearly, she always thought with a sigh, she just 
+wasn’t his type. And, after seeing the events of previous night, 
+she had no doubt.</p>
+<p>Firstly, she was short. Only a smidge over 5’6”. Then there 
+was her entirely ﬂat physique. She had no boobs and no arse 
+to  speak  of.  Her  puberty  had  peaked  to  leave  her  with  not-
+quite-B-cups which, given the hobby she kept secret from her 
+friends  and  family,  was  something  she  was  constantly  and </p>
+<p>painfully  reminded  of.  Because  every  other  girl  she  saw  in 
+cosplay seemed to have big boobs – or at least a nice round 
+bum – and she had neither. The only thing that worked in her 
+favour  was  her  talent  for  makeup,  and  though  she  always 
+ended up feeling a little inadequate at comic conventions and 
+other  cosplay  events,  she  was  frequently  told  that  she  was 
+one of the most beautiful girls there; her long hair framed her 
+striking  blue  eyes  and  perfect  nose  with  it’s  little  point,  and 
+whilst the rest of her was devoid of shape, her lips had a little 
+plumpness  to  them  which  –  people  said  –  made  her  whole 
+radiate when she smiled.</p>
+<p>Physically,  of  course,  she  tried  to  help  herself  where  and 
+when  she  could.  On  a  few  occasions  when  she’d  made  full-
+body costumes, she’d integrated the padded bottom part of a 
+pair  of  cycling  shorts  deep  into  the  lining  to  try  and  give  her 
+rear a little more swell. When it came to her cosplay Instagram 
+account and YouTube makeup tutorial videos – were she was 
+only  visible  from  the  waist  up  –  she  stooped  to  another  low. 
+She stuﬀed her bra.</p>
+<p>Whilst her boobs may only have been small, her petite and 
+narrow  frame  meant  that,  with  the  right  push-up  bra  and  the 
+careful  placement  of  some  additional  material,  she  was  able 
+to give her pert little B-cups just enough cleavage to give the 
+appearance of C or even D-cup bulges in her top.</p>
+<p>Ever since the events of the other night however, her over-
+active  imagination  had  run  away  with  itself.  Her  dreams  had 
+taken  a  dirty,  lustful  turn,  and  on  a  couple  of  occasions  now 
+she had dressed in some of her favourite cosplay outﬁts and 
+stuﬀed her bra more than ever before. Though it was obvious 
+that  it  wasn’t  real,  that  hadn’t  stopped  her  from  tiptoeing 
+around her bedroom, her hands caressing the fake boobs as 
+she  felt  herself  ﬂush;  an  excited  tingle  blossoming  between 
+her thighs which, on at least one occasion, had led her to her 
+bed and a frenzied yet embarrassed orgasm.</p>
+<p>Finally, she had had enough. Though she had thought of a 
+million  diﬀerent  ways  of  doing  it  –  even  fantasising  about 
+walking right up to his front door and just asking him to do it – 
+she had gone with the option more inline with her personality. 
+She  had  messaged  him  on  Facebook  and,  squirming  in  her 
+chair as she hit send, asked him out for dinner.</p>
+<p>Why, why, why did it have to be dinner?! 
+She  stood  outside  her  front  door  and  chastised  herself. 
+She  could  have  just  suggested  drinks.  She  could  have  just 
+invited him straight to hers. But from every interaction they’d 
+ever  had,  she  sensed  that  he  was  a  genuinely  nice  guy  and 
+there  was  a  tiny  part  of  her  that  felt  bad.  She  was,  in  eﬀect, 
+planning on simply using him.</p>
+<p>Would it even work? 
+She had wondered a few times whether it was his ability or, 
+somehow,  the  mystery  woman’s.  If  it  wasn’t  his,  she’d  be 
+wasting  her  time  and,  if  she  wasn’t  careful,  she’d  embarrass 
+herself too. She recalled the sight of him lying on his back on 
+his  sofa,  his  enormous  penis  erect  hovering  above  his 
+muscular abdomen. Despite the cool evening air, she felt her 
+body ﬂush a little, a faint tingle blossoming between her legs.</p>
+<p>‘Hey! How’re you?’</p>
+<p>She actually jumped as the sound of his voice snapped her 
+from  her  daydream.  The  plan  had  been  for  him  to  knock  for 
+her, but she had seen him coming and left her house to meet 
+him. She turned to look up at him as he approached. Wearing 
+a  leather  jacket,  shirt  and  jeans,  he  looked  smarter  than  she 
+had expected. Taller too. </p>
+<p>‘You  look  great,’  he  said  as  he  came  to  a  stop  in  front  of 
+her,  a  broad,  easy-going  smile  extending  upward  from  his 
+mouth to his eyes. </p>
+<p>Her  heart  ﬂuttered  at  the  compliment  and  she  felt  herself 
+blush.  She  had  agonised  for  hours  over  what  to  wear, 
+ultimately  settling  on  a  skirt  –  jeans  betrayed  her  ﬂat  arse  – 
+and  a  sleeveless  halter  neck  top.  Underneath,  she’d  chosen 
+her  favourite  purple  lingerie  set,  the  bra  padded  and  ﬁlled  a 
+little  with  more  expertly  placed  stuﬃng.  You  could  just  about 
+see the lacy purple fabric peeking out from the side of the top, 
+and she’d carefully arranged for the front to show oﬀ as much 
+cleavage as possible. Though it wasn’t much, she hoped that<br />
+with  the  surrounding  bulge  beneath  her  top,  it  would 
+convincingly appear as though she was rocking D-cups.</p>
+<p>‘You  look  good  too,’  she  replied,  stepping  forward  as  he 
+opened  his  arms  to  give  her  a  friendly  hug.  Placing  her  own 
+around him, she rested an open palm in the small of his back </p>
+<p>as  she  squeezed  him  gently.  His  body  was  muscular,  and  as 
+she  felt  his  arms  settle  around  her,  she  felt  another  wave  of 
+excitement wash over her as her breasts – both real and fake 
+– pressed ﬁrmly against his lower abdomen. One of her knees 
+jerked  a  little,  as  though  it  had  almost  buckled,  and  she  felt 
+his strong hands press into her a little ﬁrmer as he held her. </p>
+<p>‘Shall we…?’ he asked as they separated, gesturing toward </p>
+<p>the marina’s restaurant area.</p>
+<p>She nodded and smiled her most dazzling smile.</p>
+<p>Though  she  had  gone  to  pains  to  make  sure  it  was  clear 
+she was asking him out on a date, she had also made sure to 
+keep the suggestion casual and, more importantly, keep them 
+local.  Ideally,  she  had  wanted  to  remain  within  walking 
+distance  of  her  apartment,  and,  as  a  result,  they  had  chosen 
+to visit the Italian chain restaurant on the water’s edge only a 
+few hundred metres from their front doors.</p>
+<p>Having  been  shown  to  a  small  booth  –  it  was  a  weekday 
+and  the  restaurant  was  quiet  –  the  two  had  settled  into  an 
+easy  conversation  full  of  laughter  and,  to  her  delight,  ﬂirting. 
+He had ordered a beer and she had chosen a cocktail, and as 
+they sipped their way through them and a sharing platter for a 
+starter,  she  enjoyed  the  way  he  leant  forward  and  engaged 
+with  her  as  they  chatted.  Not  only  did  it  bring  his  handsome 
+face  closer  to  her,  it  also  gave  her  the  opportunity  to  check 
+out  the  muscles  in  his  arms  as  he  rested  them  against  the 
+table. She mirrored him, leaning forward and oﬀering him the 
+best view of her cleavage. Her long hair, which she’d recently 
+spent hundreds of pounds to have dyed near-white to match 
+her  latest  cosplay,  sat  tucked  obediently  behind  her  left  ear 
+whilst  occasionally  the  right  side  continued  to  fall  across  her 
+face  and  down  onto  her  faintly  bulging  breasts.  Though  she 
+didn’t want to make it too obvious, she always made sure she 
+nudged  them  a  little  as  she  brushed  it  back  into  place,  a 
+warmth  spreading  between  her  thighs  on  the  occasion  she’d 
+caught him looking.</p>
+<p>I just want bigger boobs. 
+She  found  herself  whispering  it  silently  to  herself  in  her 
+head  as  she  stared  across  the  table  at  him,  smiling  or 
+laughing  at  his  jokes.  It  was  easy;  he  was  a  genuinely  funny </p>
+<p>guy;  easy-going  and  easy  to  talk  to.  Despite  everything,  she 
+realised, she would enjoy their date no matter what happened 
+or how it ended. </p>
+<p>Does he fancy me though? Is this going to work? 
+Her leg accidentally brushed up against his underneath the </p>
+<p>table and she didn’t move it away. </p>
+<p>I just want big boobs.  </p>
+<p>They  had  almost  ﬁnished  their  main  courses  when  he 
+excused himself and headed oﬀ in search of the bathroom. A 
+smile still spread across her face, she ate another mouthful of 
+food, revelling in the enjoyable evening she was having. </p>
+<p>She  had  to  admit  that  her  anticipation  was  growing,  her 
+pulse  quickening  at  the  thought  of  their  meal  ending;  a  now 
+familiar  warmth  spreading  from  beneath  the  purple  panties 
+she wore beneath her skirt.</p>
+<p>Brushing  her  hair  back  behind  her  ear,  noting  the  purple 
+edge of her bra poking clearly out from the side of her halter 
+neck top, she glanced down at her cleavage. </p>
+<p>Her  eyes  narrowed.  Though  the  top  she  wore  was  slightly 
+too small for her padded boobs – stretching it slightly over the 
+front of her lacy bra – it seemed as though her cleavage had 
+developed  a  more  bulging  appearance  to  it  than  that  which 
+she had engineered. It was only slight, but as she sat upright 
+in  the  booth  and  took  a  deep,  excited  breath,  she  felt  a 
+tightness to her bra that was decidedly new.</p>
+<p>She  took  a  long,  full  breath,  watching  as  her  chest 
+expanded,  the  stuﬀed  contents  of  her  bra  rising  as  her 
+cleavage pushed further out of the neckline of her top than it 
+had when she’d done the exact same thing at home. </p>
+<p>Were her boobs actually bigger? 
+She took a furtive glance around and, quickly, gave them a 
+squeeze.  Her  breath  caught  in  her  throat  and  her  legs 
+squirmed. </p>
+<p>Not much. But they were! 
+‘Did you miss me?’</p>
+<p>He  was  back,  and  she  glanced  quickly  up  at  him  like  a 
+child  almost  caught  doing  something  naughty.  She  knew  her 
+face was ﬂushed, and whilst she longed to avoid his gaze, she </p>
+<p>tried to examine his expression for a hint of anything unusual. 
+But there was nothing. Just a look of slight confusion over her 
+somewhat breathless answer. </p>
+<p>They had ﬁnished dinner, shared a desert –</p>
+<p>This way going way better than expected! 
+– and ﬁnished their last drink. He’d had three beers now, to 
+her  three  cocktails.  Whether  he’d  noticed  her  last  one  was 
+alcohol-free or not, she wasn’t sure, but if the evening went as 
+planned she wanted to have a clear mind. </p>
+<p>Leaving  the  restaurant,  and  confronted  with  a  row  of  bars 
+to  their  right,  she  gauged  the  mood  of  the  date  so  far  and 
+took a gamble. </p>
+<p>‘I  don’t  suppose  you’d  like  to  come  for  a  drink  at  mine?’ </p>
+<p>she asked. ‘It’s not far from here.’</p>
+<p>She  laughed  and  smiled  coyly  up  at  him  as  he  stood 
+beside  her.  The  slowly  fading  eﬀects  of  the  alcohol  she  had 
+consumed bolstered her conﬁdence. Dammit, she thought to 
+herself, she might be ﬂat-chested, but she was still beautiful, 
+and as she heard his answer a second later, she felt her heart 
+skip a beat as they set oﬀ toward her house. </p>
+<p>Their jackets brushed together as they walked, and though 
+she  savoured  the  closeness  of  him  beside  her,  she  couldn’t 
+help  but  become  a  little  distracted  by  the  faint  jiggling  in  her 
+chest.  With  her  bra  stuﬀed  like  normal  –  her  real  boobs 
+pushed  tightly  together  –  there  wasn’t  normally  much 
+movement  to  them  when  she  moved.  Now  however,  and 
+though  admittedly  only  slight,  there  was  deﬁnite  movement. 
+She stole a glance downward, and almost tripped as her gaze 
+became  momentarily  stuck  on  her  chest.  There  was  no 
+mistaking it: Though in reality it was only slight, her cleavage 
+had  grown  a  couple  of  centimetres  longer,  the  additional 
+material  in  her  bra  pushing  her  real  breasts  upward  so  that 
+they  were  starting  to  spill  out  from  the  soft  purple  fabric, 
+creating a faint bulge where her bra met her top. </p>
+<p>Reaching  her  house,  her  hands  trembling  faintly,  she </p>
+<p>opened the door. </p>
+<p>‘What  can  I  get  you  to  drink?’  she  asked  as  she  showed 
+him  into  her  small  home.  Though  she  wasn’t  sure,  she 
+suspected the layout was identical to his own. Standing in the </p>
+<p>lounge  –  his  own  house  visible  through  the  open  curtains  – 
+she saw him take it all quickly in. </p>
+<p>Whilst avoiding a cluttered appearance, she’d managed to 
+squeeze  a  nice  amount  of  furniture  into  the  modest  room. 
+Along  one  side,  her  plush  two-seater  sofa  sat  angled  toward 
+the TV unit whilst along the other, and positioned to look out 
+over  the  small  marina  inlet,  was  her  chaise  lounge.  Sideless, 
+with  a  double  curve  that  allowed  her  to  lie  back  with  her 
+laptop  perched  on  her  raised  legs,  it  oﬀered  her  a  relaxing 
+view of the harbour and the sea when she worked from home. 
+Though tonight she had other plans for it. </p>
+<p>‘I’ll  just  have  another  beer  if  you’re  sure  that’s  okay?’  he 
+replied to her insistence that she had plenty of drinks to oﬀer 
+him.  Nodding  and  smiling,  she  didn’t  mention  the  fact  that 
+she’d deliberately been out and bought several diﬀerent types 
+– all to make him feel more at home. </p>
+<p>Leaving him momentarily alone in the lounge, she stood in 
+the kitchen for a moment, simply staring down at her bust. It 
+was  now  deﬁnitely  larger  still.  With  her  padding  pushing  her 
+swollen  breasts  upward  and  outward  even  further,  it  was 
+starting  to  look  a  little  silly  –  perhaps  even  betraying  the  fact 
+that  she  was  a  stuﬀer.  Keeping  her  ears  pricked  in  case  he 
+followed  her,  she  reached  quickly  down  into  her  bra  and 
+removed a couple of the ﬁllets she had placed there. Weighing 
+up  her  appearance  again,  she  couldn’t  help  but  grin  at  the 
+realisation that her cleavage was now almost identical to how 
+it had looked at the start of the evening – yet without most of 
+the stuﬃng.</p>
+<p>She couldn’t tell if he noticed a change as she handed him 
+his  beer  back  in  the  lounge.  She  had  set  the  lighting  in  the 
+room  carefully  –  aiming  for  atmospheric  rather  than  simply... 
+dark.  The  choice  of  music  too  was  very  speciﬁc;  nothing 
+overly romantic, but not loud and intrusive either. </p>
+<p>She settled on the sofa beside him, angling her whole body 
+toward  him  as  she  tucked  her  legs  up  underneath  herself. 
+Smoothing  out  the  front  of  her  relatively  short  skirt,  she 
+watched him take a sip of his drink.</p>
+<p>‘Oh,’  she  said  with  a  grin,  ‘that  embarrassing  stuﬀ  I  was </p>
+<p>telling you about earlier...?’</p>
+<p>She  reached  for  her  phone,  her  pulse  quickening.  The 
+alcohol  was  quickly  wearing  oﬀ  and  she  felt  her  nerve 
+wavering.  She  should  have  had  another  drink.  Quickly 
+opening her photos, she pretended to search for the right one. 
+In reality, she’d already lined up a deliberate selection.</p>
+<p>‘I know a lot of people think it’s daft and a bit childish,’ she 
+said, holding out her phone, ‘but it’s a great opportunity to get 
+creative  and  be  artistic,  and  I  love  the  fact  that  no-one  really 
+knows who I am. I can be anyone I want.’</p>
+<p>Gesturing for him to take her phone, she watched his face 
+closely  for  a  reaction  to  the  recent  photograph  of  herself  at 
+Comic-Con. Her skintight outﬁt highlighted the few curves her 
+body had to oﬀer, the high-neck design having allowed her to 
+stuﬀ her bra to the max.</p>
+<p>‘No,  I  think  it’s  great,’  he  said  with  a  chuckle  –  aimed,  it 
+seemed, at her feigned embarrassment rather than the photo. 
+‘I’ve never really gotten into it enough to claim I’m a huge fan, 
+but I used to read the odd comic book when I was a kid and 
+I’m a huge fan of the ﬁlms now.’</p>
+<p>Grinning, she gestured for him to swipe through to the next 
+photo,  her  hand  brushing  his  leg  as  she  did  so,  and  her 
+insides  squirming  in  delight  as  she  watched  him  zoom  in  on 
+her in the next picture. Whilst he hadn’t zoomed directly onto 
+her chest, he wasn’t far oﬀ. </p>
+<p>He  scrolled  again,  and,  perfectly  on  cue,  she  feigned 
+embarrassment  as  the  next  image  slid  into  view.  Essentially 
+wearing  nothing  but  booty  shorts  and  a  boob  tube  –  which 
+was,  once  again,  stuﬀed  to  create  the  impression  of  a 
+generous  amount  of  boob  lurking  within  the  taught  fabric  – 
+she  might  as  well  have  been  wearing  a  bikini.  Unlike  the 
+others,  this  one  had  been  taken  in  a  hotel  room,  and  had  all 
+the hallmarks of a more private photo. </p>
+<p>‘Oops, sorry –,’</p>
+<p>‘It’s  ﬁne,’  she  said  quickly,  taking  the  oﬀered  phone  back </p>
+<p>as she allowed her hand to momentarily linger against his.</p>
+<p>Swiping along to the next image, she chuckled. </p>
+<p>‘That’s our little group at the last one,’ she said, turning the 
+screen toward him. She leaned forward, her hair brushing his 
+face as she lowered herself until they were sitting only inches 
+apart. Her folded legs, pressed against his. </p>
+<p>She watched him closely as he looked at the image. It had 
+been  carefully  selected,  and  showed  a  line  of  six  or  seven 
+young woman, including her, standing in the middle of a large, 
+bustling hall. Like her, all were wearing costumes that ﬂaunted 
+their  ﬁgures,  and,  without  fail,  all  of  them  were  considerably 
+curvier  than  she.  Boobs  spilled  from  elaborate  costumes  as 
+hips and bums ﬂared out at the waist. Two of the women fell 
+ﬁrmly into the BBWs category, and even as she looked at the 
+image  now  she  found  herself  envious  of  the  canyon  of 
+cleavage one of them had on show.</p>
+<p>‘The costumes are amazing,’ he said, a little hesitantly, his 
+gaze  jumping  around  the  image  as  he  clearly  struggled  to 
+determine what was an appropriate compliment to pay them.</p>
+<p>He  turned  his  attention  away  from  the  screen,  smiling 
+across  the  small  gap  between  them  as  they  sat  in  close 
+proximity.  Reaching  out,  she  rested  her  hand  on  his  forearm, 
+her  ﬁngers  gently  caressing  his  skin.  Her  heart  was 
+hammering  in  her  chest,  and  she  saw  his  gaze  dart  quickly 
+from the phone to her chest and then back to her eyes. Taking 
+a  quick,  nervously  excited  breath,  she  felt  an  unusual 
+tightness once again present in her bra, and it took all she had<br />
+not  to  look  down.  Fixing  her  attention  on  him  instead,  she 
+noticed him shift slightly toward her, his body leaning into her 
+a little more as he smiled at her. </p>
+<p>‘You know,’ she said as she took her phone and switched 
+the  screen  oﬀ.  She  glanced  wistfully  away  for  a  moment,  ‘I 
+have to admit that I do ﬁnd myself rather jealous of a lot of the 
+girls that I meet...’</p>
+<p>She trailed oﬀ as she nodded toward her phone. </p>
+<p>‘Why?’ he asked, his curiosity genuine.</p>
+<p>‘Well,’  she  said,  feeling  her  face  ﬂush  as  her  whole  body 
+began  to  feel  suddenly  hot,  ‘I’ve  just  always  wanted  to  be  a 
+bit curvier, you know...?’</p>
+<p>She hung her head for a moment, using the gesture to steal 
+a  glance  at  her  chest.  Her  heart  pounded  as  she  saw  a  new 
+surge  of  cleavage  pushing  its  way  out  of  her  halter  top.  No 
+wonder  her  top  was  feeling  tight  –  whilst  a  small  amount  of 
+additional stuﬃng remained inside her padded bra, her chest 
+was looking larger than it ever had. </p>
+<p>‘Aw,  but  you’re  stunning,’  he  said  opposite  her,  his  own 
+appearance  seemingly  a  little  ﬂustered,  though  he  quickly 
+appeared  to  pull  himself  together.  ‘You’re  staggeringly 
+beautiful... and you do have curves.’</p>
+<p>Even  as  she  ﬂashed  him  her  best  smile,  she  caught  him 
+steal a glance at her chest, and as her gaze returned to meet 
+his, she was sure she saw a sudden tightness to the front of 
+his  jeans.  She  took  a  deep  breath,  the  constricted  sensation 
+around her chest intensifying. </p>
+<p>It had to be him, she thought to herself. There could surely 
+be  no  doubt.  It  was  impossible  otherwise.  Well  –  it  was 
+impossible either way but –</p>
+<p>Fuck it, she decided. If this wasn’t the opportunity she had </p>
+<p>been waiting for, she’d never do it. </p>
+<p>‘You know,’ she said slowly and coyly, ‘there is something I </p>
+<p>could should, if you’d like?’</p>
+<p>The pounding in her ears was almost deafening, and even 
+as she saw him simply begin to nod, she scrambled quickly to 
+her feet and ﬂed the room. </p>
+<p>Having  sprinted  as  quietly  as  possible  up  the  stairs  to  her 
+bedroom,  she  stood  in  the  darkness,  panting  slightly.  The 
+sensation  of  her  bra  digging  into  her  sides  was  intoxicating, 
+and  as  she  tore  her  clothes  oﬀ  and  kicked  them  under  the 
+bed,  she  stood  naked  for  a  moment,  her  dainty  hands 
+reaching tentatively upward. When she found her breasts, her 
+nipples  almost  agonisingly  erect,  she  couldn’t  help  but  gasp. 
+Whilst they weren’t as large as she had hoped, she could not 
+deny the fact that they were bigger. Taking them into her warm 
+hands,  she  squeezed  them  gently,  quickly  biting  her  lip  to 
+suppress a moan as she wondered what size they might now 
+be. </p>
+<p>At least a C cup, surely.</p>
+<p>She  crossed  her  legs  where  she  stood,  massaging  the 
+swollen  ﬂesh  within  her  hands  as  she  felt  herself  grow  wet 
+between her thighs.</p>
+<p>Behind her in her cupboard, her “surprise” waited patiently, 
+and  it  took  an  awful  lot  of  willpower  for  her  to  let  herself  go 
+and turn to put it on. </p>
+<p>‘What  do  you  think?’  she  called  as  she  headed  back 
+downstairs  a  minute  later.  She  had  tied  her  hair  up  in  a  tight 
+ponytail, and as she bounded down the hallway barefoot she 
+enjoyed  the  new  and  utterly  wonderful  sensation  of  a  slight 
+jiggle to her slightly larger tits. </p>
+<p>Her plan worked as she had hoped, the sound of her voice 
+and her question getting him to his feet and, by the time she 
+re-entered  the  room,  he  was  standing  in  the  middle  of  it. 
+Thankfully, she noted, he had left his beer by the sofa, as by 
+the look on his face, she suspected, he might have otherwise 
+dropped it.</p>
+<p>Her  face  was  burning  and  her  heart  was  pounding  louder 
+than  ever  as  she  took  his  hand  and  pulled  him  toward  the 
+window  –  leading  him  to  a  faint  swathe  of  light  cast  into  the 
+room from the marina below. </p>
+<p>The  costume  was  one  she  had  bought  especially  for  the 
+occasion,  and  though  she  had  bought  it  from  a  high  quality 
+specialist online – even paying for express delivery to ensure it 
+arrived  on  time  –  it  wasn’t  in  the  same  league  as  her  other 
+costumes. But that wasn’t really the point. The point, instead, 
+was that it was deliberately several sizes too big for her. Whilst 
+the elastic fabric – not quite neoprene and not latex like some, 
+but more of a stretchy synthetic blend – clung to her in all the 
+right  ways,  it’s  initial  impact  wasn’t  quite  the  same  as  a 
+correctly  ﬁtted  one  would  have.  Especially  had  she  retained 
+her stuﬀed bra.</p>
+<p>‘It’s  supposed  to  be  Black  Widow  from  the  Marvel 
+universe,’ she said as she stood before him, twisting her hips 
+slowly. She pointed out the detailing on the arms and around 
+her waist, before glancing down toward her legs.</p>
+<p>‘Though I’m not entirely sure why they cut it oﬀ above the </p>
+<p>knee,’ she added with a shrug and a lighthearted laugh.</p>
+<p>She  looked  back  up  at  him  to  ﬁnd  him  taking  it  all  in 
+unapologetically.  Though  the  slightly  baggy  costume  had  a 
+deep  V-neck,  she  felt  suddenly  extremely  self-conscious  of 
+her unsupported boobs, and, more than ever, prayed that her 
+plan was going to pay oﬀ.</p>
+<p>‘So,  what  do  you  think?’  she  asked  seductively,  still 
+swaying  slightly  as  she  stepped  forward,  pressing  her  lower 
+body  against  his  as  she  placed  her  hands  around  his  waist. </p>
+<p>Any doubt as to the origin of the bulge in the front of his jeans 
+disappeared as she looked up at him, wondering momentarily 
+whether he’d be able to feel her racing heartbeat.</p>
+<p>Shaking  his  head  a  little  and  stiﬂing  a  chuckle,  he  looked </p>
+<p>down at her. </p>
+<p>‘You  look  incredible,’  he  said  earnestly,  his  large  hands 
+settling  around  her  waist  as  he  spoke  and  giving  her  a  faint 
+squeeze. ‘I –,’</p>
+<p>For  a  moment  he  seemed  a  little  lost  for  words,  and  she 
+wondered  if  he  was  feeling  at  all  suspicious.  Or  perhaps 
+whether, somehow, this was all feeding into a plan of his own.</p>
+<p>‘Okay,’ she said simply, ‘I have a confession.’</p>
+<p>She  took  his  hand  as  he  laughed,  and,  though  gently, 
+manoeuvred  him  very  deliberately  down  onto  the  chaise 
+lounge behind them. Before he could question her, she helped 
+him shift his legs up and onto the soft fabric until he was half 
+sitting, half lying on the chair. As he ﬁnally did open his mouth 
+to  speak,  she  quickly  stretched  her  leg  over  and,  turning  to 
+face him, sat down astride him, her bum resting on his thighs. </p>
+<p>‘This  is  a  very  strange  confession,’  he  mused  as  she 
+grinned at him a little guiltily. Due to the raised kink, mid-chair, 
+she  was  actually  sat  a  little  higher  than  him,  his  head  resting 
+on the reclined back of the chaise as he looked at her.</p>
+<p>‘So,’ she said, placing her hands on his thighs and running 
+them  slowly  away  from  her  and  toward  the  unmistakable 
+bulge  in  his  jeans,  her  thumbs  coming  to  rest  mere 
+centimetres from the taut denim. ‘I really hope you don’t mind, 
+but my confession is that I saw you on Monday evening.’</p>
+<p>She  massaged  his  thighs  gently  as  she  watched  him.  For 
+several  moments,  the  smile  remained  –  albeit  with  an  air  of 
+confusion.  And  then  she  saw  it  dawn  on  him.  A  fascinating 
+range  of  emotions  ﬂashed  across  his  face  as  he  began  to 
+decipher and truly understand what she was saying; what she 
+meant. </p>
+<p>‘You  know,  I’ve  had  a  great  evening,’  she  said  earnestly, 
+shifting  slightly  closer  and  running  her  hands  dangerously 
+close  to  his  crotch.  ‘I’ve  honestly  had  a  great  evening 
+and...regardless of whatever else might still happen...’</p>
+<p>She  grinned  at  him,  her  heart  still  pounding  away  in  her </p>
+<p>ears as she urged him to speak.</p>
+<p>‘I just...’</p>
+<p>She glanced down to her chest, her breasts lost in the large </p>
+<p>costume despite their new-found size.</p>
+<p>‘You  really  are  beautiful,’  he  said  ﬁnally,  his  tone  earnest. 
+Reaching out, he placed his hands on her slender thighs and 
+gave them a gentle squeeze.  </p>
+<p>‘Thank you,’ she replied quickly, ‘but –,’</p>
+<p>‘No, I know,’ he said quickly, nodding faintly as he tried to </p>
+<p>hold back the beginning of a smile. </p>
+<p>‘Can you...help me?’ she asked, her voice little more than a 
+whisper.  Leaning  slightly  further  forward,  she  ran  her  hands 
+slowly  up  his  thighs  and,  ﬁnally,  onto  the  bulge  on  his  jeans. 
+Feeling  the  rock  solid  erection  beneath,  and  listening  to  the 
+suddenly ragged sound of his breathing, she whispered in his 
+ear. </p>
+<p>‘I’ll make it worth it.’</p>
+<p>She  kissed  his  neck  softly  as  her  hand  massaged  the </p>
+<p>throbbing mass beneath her delicate ﬁngers. </p>
+<p>When she sat back up, she saw a smile spread across his </p>
+<p>face, and every part of her began to tingle.</p>
+<p>‘I might be able to help a little,’ he said, pausing a moment </p>
+<p>before adding, ‘you really saw everything on Monday?’</p>
+<p>Her  whole  body  ﬂushed  as  she  replayed  it  instantly  in  her 
+head,  heat  coursing  through  her  as  she  felt  herself  grow  wet 
+once  again.  Still  leaning  forward,  she  felt  her  nipples  press 
+against the soft material of her suit. </p>
+<p>She nodded. </p>
+<p>‘You  can  control  it?’  she  asked,  her  own  smile  growing </p>
+<p>uncontrollably as he nodded. </p>
+<p>‘You can control what grows?’</p>
+<p>He seemed to contemplate his answer with a little diﬃculty </p>
+<p>as she continued to stroke him through his jeans. </p>
+<p>‘I can sort of channel it,’ he said, ‘with my hands.’</p>
+<p>She felt a ﬂutter run the length of her body as she became </p>
+<p>much more aware of his ﬁngers squeezing her thighs. </p>
+<p>‘I  can  make  really  small  changes  without  touching  at  all, </p>
+<p>but it’s most eﬀective if I...’</p>
+<p>He  squeezed  her  thighs  a  little  harder  and  she  let  slip  an 
+involuntarily  gasp.  Sliding  herself  forward,  she  pressed  her </p>
+<p>crotch  ﬁrmly  against  his  and,  ever-so-slowly,  began  to  move 
+her hips back and forth against him. </p>
+<p>‘So... you can make my boobs bigger?’ she asked, unable 
+to see his face as she once again kissed his neck. She felt his 
+hands move to her arse, and squeeze it through her suit. </p>
+<p>Was he doing anything now? 
+‘Yeah, I can,’ he muttered as she continued to grind against </p>
+<p>She sat up just enough to look at him.</p>
+<p>‘Can you make them really big?’ she asked. </p>
+<p>‘Yes,’ he said softly, nodding faintly.</p>
+<p>‘Will  they  stay  big?’  she  asked,  drinking  in  the  arousal  on </p>
+<p>him. </p>
+<p>his face. </p>
+<p>‘Pretty much,’ he replied. ‘The only way I know to undo it is </p>
+<p>to just have a cold shower and, sort of, will it...’</p>
+<p>She digested the information, her own breathing shallow as </p>
+<p>her body burned with desire.</p>
+<p>‘So  we  could  make  them  huge?’  she  replied,  closing  her 
+eyes  as  she  concentrated  on  the  bulge  of  his  dick  rubbing 
+against her soaking crotch. </p>
+<p>‘Uh  huh,’  he  replied,  his  hands  squeezing  her  arse  and </p>
+<p>pulling her ﬁrmly against him. </p>
+<p>‘And  one  last  question,’  she  whispered  into  his  ear,  ‘I  saw </p>
+<p>you grow too.’</p>
+<p>She felt him smile as she brushed her face on his. </p>
+<p>‘How does that work?’</p>
+<p>Beside her, he chuckled darkly.</p>
+<p>‘Well, you saw what made it grow,’ he said simply. ‘And it’ll 
+just keep growing that way until it... until it gets used in other 
+ways.’</p>
+<p>The excitement coursing through her was almost too much. </p>
+<p>Her patience was almost at its limit.</p>
+<p>‘Though,’  he  added  quickly,  ‘if  you  do  that,  I  can’t  really 
+control  which  part  of  you  changes.  But  I  can,  sort  of,  edit  it 
+after... the other way.’</p>
+<p>Leaning back, she looked at him, a hunger erupting in the 
+pit of her stomach as she suddenly saw his own desire staring 
+back at her.</p>
+<p>Shifting  herself  up  and  oﬀ  him,  she  pivoted  her  leg  back 
+across  the  chaise  and,  with  his  help,  stripped  his  shirt  and </p>
+<p>jeans  from  his  muscular  body.  Fumbling  in  her  excitement, 
+she  ﬁnally  took  his  boxer  shorts  and  threw  them  to  the  ﬂoor, 
+turning  back  to  survey  his  naked,  muscular  form  in  the  faint 
+ray of light from outside. His nine, maybe even ten, inch cock 
+stood  proud,  waiting  for  her,  and,  as  he  watched,  she  knelt 
+down  on  the  soft  carpet  beside  him.  Running  a  hand  slowly 
+up  and  down  his  cock,  she  lowered  her  head  and  took  him 
+into her mouth.</p>
+<p>Above  her,  she  heard  him  exhale  as  she  moved  slowly  up 
+and down, surprised by the sweet taste of him in her mouth. It 
+was  unexpectedly  enticing,  and  with  each  passing  second 
+she  found  herself  enjoying  it  more  and  more.  Drinking  in  the 
+sound of his shallow breathing above her, she wondered what 
+the  result  of  her  actions  would  be.  She  recalled  the  memory, 
+burned  into  her  mind,  of  the  woman  she’d  seen  across  the 
+marina  several  nights  before,  and  suddenly  she  became 
+aware of just how wet she was; how furiously hard her nipples 
+had become inside the slightly gaping suit.</p>
+<p>She  felt  him  twitch  inside  her  mouth,  her  excitement  and 
+eagerness  bringing  him  to  the  edge  far  faster  than  she  had 
+expected. All but squirming in anticipation, she braced herself, 
+her  pulse  bounding  once  again.  And  then,  with  only  the 
+slightest  of  warnings,  she  felt  him  explode  inside  her  mouth. 
+Swallowing  with  ease  –  even  enjoying  the  unusual,  almost 
+addictive  taste  –  she  felt  his  energy  ﬂow  into  her  like  a  hot 
+drink  on  a  cold  day.  Only  it  was  spreading  to  more  than  her 
+stomach.  She  swallowed  and  swallowed  as  the  ﬂush  spread 
+throughout her body, her thighs growing hotter and slicker as 
+she  closed  her  eyes  and  allowed  the  myriad  of  sensations 
+erupting  all  over  her  body  to  ﬁnd  their  way  to  her  brain’s 
+pleasure centre.</p>
+<p>As  his  orgasm  began  to  subside,  she  slowed,  gently 
+massaging  him  with  her  lips  as  she  listened  to  him  moan 
+softly.  And  then  she  felt  it:  A  sudden  tension  in  her  bum,  a 
+sense  of  the  suit  moving  against  her  skin.  Her  waist  too  was 
+growing a little. Up top, she felt the suit graze her nipples, and 
+she  faltered  momentarily  as  a  wave  of  pleasure  ran  from  her 
+breasts to her soaking groin. </p>
+<p>But then, inside her mouth, she felt him begin to swell. At 
+ﬁrst  she  thought  he  was  simply  beginning  to  recover,  but  it </p>
+<p>wasn’t  long  until  she  realised  it  was  something  else.  He  had 
+grown  larger  than  before,  once  again  rigid  inside  her  mouth. 
+Even as she longed to straddle him and take him deep within 
+her,  she  doubled  down  and  began  to  bob  her  head  up  and 
+down.  Within  the  suit  she  felt  her  swollen  tits  jiggle  slightly, 
+and though she longed to look, she forced herself to focus on 
+him.</p>
+<p>I  won’t  let  him  go  until  we’re  both  huge,  she  thought  to </p>
+<p>herself, her mind running wild with what might be possible. </p>
+<p>Manoeuvring  herself  up  a  little,  tightening  her  lips  as  she 
+ran them up and down the length of him, she tried to take as 
+much  of  him  as  she  could.  Above  her,  she  heard  him  gasp, 
+and  a  second  later  his  hips  bucked.  As  a  pulsating  torrent 
+erupted from him once again, she tried desperately to swallow 
+every last drop, a ﬁre erupting in her stomach and spreading 
+quickly to every part of her.</p>
+<p>Once again she felt the suit constrict around her bum and 
+her thighs, the waistline growing a little less slack. For the ﬁrst 
+time, she felt her nipples make contact with the inside lining of 
+the  stretchy  fabric  and  stay  there  –  no  longer  hanging 
+pathetically inside the baggy suit as they grew into swollen D 
+cups. As she leaned in, refusing to stop for even a moment as 
+she  struggled  to  swallow  each  enormous  mouthful,  she  felt 
+her tummy begin to press softly against the side of the chaise. 
+Her  mind,  darting  rapidly  between  all  sorts  of  dark,  lustful 
+thoughts,  momentarily  pictured  her  second  most  favourite 
+erotic  anime  where  the  men  all  featured  enormous,  bulging, 
+cocks. </p>
+<p>In total, and oﬀering no respite against the endless waves 
+of mounting pleasure, she brought him to orgasm eight times. 
+Out  of  view  above  her,  she  could  hear  him  panting  weakly, 
+unable  to  catch  as  his  breath  as  he  lay  almost  powerless  to 
+stop her as her obsession grew more and more tangible. </p>
+<p>After each time, as more and more of his delicious energy 
+ﬂowed  from  him,  his  entire  body  bucking  and  quivering,  she 
+slowed  for  only  a  moment  as  his  cock  continued  to  swell, 
+unable to tell if he was begging her to stop or continue. </p>
+<p>But  she  didn’t  care  –  each  almost  seismic  eruption  ﬁlling 
+her with a torrent of ﬂuid that only made her hungrier for more. </p>
+<p>She  was  immersed  in  her  own  little  bubble,  the  only  thing 
+penetrating it the monster that she continued, with increasing 
+diﬃculty, to take into her mouth. Every part of her body tingled 
+and  burnt  with  a  ﬁre  that  spread  from  her  stomach  to  her 
+soaking  thighs  and  indeed  everywhere  else.  It  wouldn’t  take 
+much  for  her  to  orgasm  right  there  and  then,  the  relentless 
+waves  of  pleasure  washing  over  her  making  her  tremble  and 
+requiring  a  great  deal  of  concentration  to  stop  from 
+overcoming her completely. </p>
+<p>It wasn’t time yet! 
+It was diﬃcult though. Oh so diﬃcult.</p>
+<p>Though she could no longer ﬁt much more than the head of 
+his  staggeringly  engorged  penis  inside  her  mouth,  she  had 
+taken every last drop of him within her, moaning and writhing 
+almost uncontrollably as she felt it take it’s eﬀect. </p>
+<p>Though  she  longed  more  than  anything  for  enormous, 
+bulging  and  burgeoning  breasts,  she  had  not  expected  the 
+level  of  pleasure  she  was  deriving  from  the  sensation  of 
+growth  taking  place  all  over  her  body.  Though  she  was, 
+undoubtedly, biding her time until she could feel the grasp of 
+his  powerful  hands  around  her  tits  as  they  grew  larger  and 
+larger,  she  had,  in  the  meantime,  held  herself  on  the  brink  of 
+orgasm  as  his  energy  poured  ﬂesh  into  her  once  lithe  and 
+slender body.</p>
+<p>Her  once  ﬂat  and  shapeless  rear  had  swollen  and 
+expanded  in  every  direction.  Stretching  out  the  lower  half  of 
+her Black Widow suit, she had felt ﬂesh pour steadily into her 
+thighs  and  arse,  her  hips  growing  broader  and  ﬂeshier  until 
+she had eventfully felt the swell of her arse press into the new 
+curves of her calves as she kneeled beside the chaise lounge. </p>
+<p>Having  taken  in  what  seemed  like  gallon  upon  gallon,  she 
+had  felt  her  stomach  grow  too,  ever  hungry  for  more  as  she 
+swallowed  greedily  and  increasingly  frantically.  Billowing  out 
+before  her,  expanding  above  and  onto  her  thick  and  meaty 
+thighs, she had felt the soft ﬂesh of her belly push against the 
+side of the chaise with increasing fervour.</p>
+<p>One size ﬁts all – the advert for the cheap stretchy costume </p>
+<p>had said – from size 8 to size 18. </p>
+<p>Well,  she  thought  to  herself,  feeling  the  taught  fabric 
+stretch around her waist and around the bulge of her bloated 
+stomach, she was going to see about that!</p>
+<p>Then there were her breasts; the main reason she was now 
+bracing  herself  for  the  ninth  and  ﬁnal  eruption  before,  ﬁnally, 
+she  would  ride  her  captor  until  her  tits  were  so  big  she’d 
+barely be able to stand. Though her target was still a long way 
+oﬀ,  she  knew  without  looking  that  they  were  already 
+magniﬁcent. Constrained by her costume, they had grown out 
+in  every  direction  as  they  had  expanded;  slowly  at  ﬁrst,  yet 
+with  increasing  speed  as  she  continued  to  work  her  own 
+magic  on  his  swollen  cock.  Now,  they  protruded  from  her 
+chest  like  two  conﬁned  basketballs,  spilling  around  to  her 
+sides and, in the middle where they met, billowing out through 
+the deep V-neck of her suit in an incredibly, bulging display of 
+cleavage. With nowhere left to go, they had then worked their 
+way downward too, coming to rest on her bulbous stomach.</p>
+<p>Pressing  her  swollen  body  against  the  side  of  the  chaise, 
+she felt him begin to orgasm one last time, the new weight of 
+her body pulling her forward as she tried to take in the torrent 
+bursting out of him. Her belly pressed almost painfully into the 
+side  of  the  chair  as  she  kept  her  hands  wrapped  tightly 
+around his pulsating shaft, determined not to let even a single 
+drop  escape.  In  the  space  between  her  outstretched  arms, 
+she  was  aware  of  her  tits  ballooning  once  more.  Shimmying 
+forward  a  little,  her  whole  body  jiggling  inside  the  over-
+stretched fabric, she felt her breasts come to rest against the 
+soft material of the chair, spilling out forwards and sidewards 
+against the side of his body.</p>
+<p>As  he  ﬁnally  ﬁnished,  she  released  him,  gasping  for  air  as 
+she kneeled beside him, her eyes closed as she fought oﬀ an 
+orgasm of her own. Her whole body tingled and throbbed with 
+desperate  desire,  her  nipples  painfully  erect  as  they  pushed 
+against  the  taught  material  stretched  tightly  across  her  bust. 
+Between  her  plump  thighs,  squashed  together  as  she  knelt, 
+she felt soaked fabric rub softly against her.</p>
+<p>Finally, it was time.</p>
+<p>Balancing  her  new  weight  carefully,  she  climbed  slowly  to 
+her feet. There was not a single place on her body where the </p>
+<p>costume  was  not  completely  taught.  Reaching  around,  she 
+ran  her  hands  up  her  enormous  thighs  until  she  reached  her 
+arse,  moaning  softly  as  she  sunk  her  ﬁngers  into  the  soft 
+ﬂesh.  Continuing  upward  and  around,  she  massaged  her 
+massive, spherical belly. Having lost some of it’s deﬁnition as 
+it ballooned, the fabric of her costume had helped it to retain a 
+near  perfect  shape,  and  she  bit  her  lip  as  she  ran  her  hands 
+over it. Though she had no frame of reference, this was surely 
+what  it  must  feel  like  to  be  pregnant,  she  thought.  Not  that 
+she could see much of it, though.</p>
+<p>She trembled with excitement as her hands continued their 
+journey  north,  and  onto  the  now  translucent  black  fabric. 
+From her perspective, her incredible tits were now simply one 
+enormous  explosion  of  ﬂesh  pushing  out  from  her  chest  in 
+every direction. Sinking her ﬁngers into the soft ﬂesh through 
+the  taut  material,  she  cried  out  as  pleasure  coursed  through 
+her.</p>
+<p>She couldn’t wait any more.</p>
+<p>Reaching  down,  her  ﬁngers  trembling,  she  found  the 
+waistband  stretched  to  its  limit  around  her  broad  hips. 
+Matching  the  same  black  fabric  of  her  costume,  the  booty 
+shorts she was wearing over the top had all but blended in to 
+her outﬁt, and the reason for their presence was simple. Ever 
+since she had conceived her plan a few days ago, fantasising 
+about ballooning up on her neighbours enormous cock as her 
+tits grew larger than anything she had ever previously dreamt 
+of,  she  had  envisaged  herself  wearing  a  Black  Widow  outﬁt; 
+the outﬁt of her secret lesbian crush, Scarlett Johansson.</p>
+<p>With  a  little  diﬃcult,  she  removed  the  booty  shorts, 
+watching  as  a  devious  smile  crept  over  her  prisoner’s  face: 
+The  other  reason  she’d  bought  this  cheaper  outﬁt  for  the 
+evening was so she wouldn’t feel so bad when she cut it up a 
+little.</p>
+<p>Climbing  carefully  onto  the  chaise  lounge  at  it’s  far  end, 
+she positioned herself onto all fours above his shins. Despite 
+the  fabric  of  her  suit  holding  them  up,  she  felt  the  weight  of 
+her  tits  pull  her  down  as  they  settled  heavily  onto  his  bare 
+legs.  Before  her,  he  sat  transﬁxed,  his  gaze  glued  on  her 
+constricted,  rippling  cleavage  as  she  made  her  way  up  his 
+body.  Her  belly,  too,  hung  below  her,  swaying  faintly  as  she </p>
+<p>went and grazing his legs as well. Her hips, now several times 
+wider  than  they  had  been  before,  bulged  out  behind  her, 
+clearly visible either side of her as her enormous arse hung in 
+the air; his legs squashed between her ﬂeshy thighs. </p>
+<p>Reaching his waist, she pushed her swollen breasts against 
+his rock hard erection, the head of his penis above her as the 
+monster  stood  fully  erect  before  him.  Manoeuvring  herself  a 
+little  cumbersomely  into  a  sitting  position,  she  pressed  her 
+bulging belly against his muscular abdomen, the twitching tip 
+of his cock disappearing into the eruption of tit ﬂesh beneath 
+his chin.</p>
+<p>Still  unaccustomed  to  her  new  size,  she  pushed  her  hips 
+slowly  forward,  the  base  of  his  penis  pressed  against  her 
+soaking pussy through the hole she had cut from the front of 
+the  cheap  Black  Widow  costume  and  hidden  with  the  booty 
+shorts. Pinned back in the chaise lounge by the weight of her 
+body,  she  could  see  from  the  look  in  his  eyes  that  he  too 
+wanted nothing more. And so, raising herself up, she took the 
+tip  of  his  throbbing  cock  in  her  small,  delicate  hand,  and 
+positioned  him  beneath  her,  her  soaking  crotch  hovering  in 
+front  of  his  face.  Somehow,  through  all  the  changes  she  had 
+experienced,  she  somehow  knew  that  she  would  be  able  to 
+take it all within her. But still...</p>
+<p>Her  body  began  to  tremble  from  both  the  exertion  of 
+holding her new weight above him, and simple, unadulterated 
+desire.  She  began  to  lower  herself,  feeling  his  enormous, 
+warm  and  wet  head  press  against  her  before,  with  a  faint 
+gasp, she took him inside of her.</p>
+<p>It  was  unlike  anything  she  had  ever  experienced  before  –
+the  sensation  of  his  incredible  girth  gently  stretching  her  as 
+she slid more and more of him into her burning body. </p>
+<p>Her  eyes  screwed  tightly  shut,  she  felt  him  throb,  her 
+swollen  belly  rubbing  against  his  chest  as  she  continued  to 
+lower herself onto him. Her body continued to tremble, and a 
+moment  later  she  felt  him  place  his  hands  on  the  bulging, 
+ﬂeshy  cheeks  of  her  enormous  arse.  Lower  and  lower  she 
+went,  his  monstrous  form  ﬁlling  her  from  within  as  she 
+moaned  and  shook.  Her  tits,  mammoth  and  quivering  within 
+their  stretchy  conﬁnes,  made  contact  with  his  chest,  her 
+nipples pulled gently upward as she continued to take him in. </p>
+<p>And then her arse made contact with his thighs, and for a 
+moment  the  two  simply  sat  there,  motionless,  their  bodies 
+teetering  on  the  brink  of  what  would  surely  be  the  most 
+powerful orgasm either had ever experienced. </p>
+<p>She felt full. In a most intense and satisfying sense that she 
+had never experienced before, she felt every inch of her body 
+revel  in  its  newfound  form,  the  rigid  form  of  his  gargantuan 
+penis within her seemingly pushing her body out from within. 
+Pressed  against  him,  her  breasts  and  belly  bulging  out 
+sideways  as  they  found  themselves  trapped,  she  found 
+herself unwilling to move lest she accidentally succumb to the 
+waves of pleasure coursing through her.</p>
+<p>‘Listen  to  me  closely,’  she  whispered  in  his  ear,  leaning  in 
+as closely as the cleavage surging up between them and her 
+belly would allow. </p>
+<p>‘I  want  you  to  give  me  the  perfect  butt,’  she  breathed, 
+feeling his ﬁngers tighten on her rear as she spoke. ‘Massive 
+is ﬁne, but make it massive and perfect and round.’</p>
+<p>She failed to contain a whimper as she felt his cock twitch </p>
+<p>deep within her.</p>
+<p>‘I  don’t  dislike  the  belly  either,’  she  continued,  shimmying 
+as much as she dared to illustrate her point, ‘but give it a nice, 
+round shape.’</p>
+<p>With diﬃculty – her bulging breasts getting in the way – she </p>
+<p>gripped his arms tightly. </p>
+<p>‘But,  most  importantly,’  she  whispered  darkly,  ‘we’re  not 
+leaving  this  chair  until  you’ve  given  me  the  best  tits  I’ve  ever 
+seen.’</p>
+<p>Amidst his shallow breathing, she felt him grunt faintly, and, </p>
+<p>a second later, she felt it.</p>
+<p>The  heat  from  his  ﬁngers  erupted  into  the  cheeks  of  her 
+butt,  and  immediately  she  felt  herself  begin  to  change. 
+Though  she  could  tell  she  wasn’t  growing  larger,  she  felt  the 
+ﬂesh in her arse grow ﬁrmer and fuller. It was a vastly diﬀerent 
+sense of growth from before, and as she felt him take charge 
+and  guide  the  energy  through  her,  she  found  herself  holding 
+her breath. It was almost mesmerising, and simply closing her 
+eyes  she  succumbed  as  she  felt  her  immense  butt  grow 
+tighter and rounder.</p>
+<p>Moments later, his large, powerful hands slid onto the sides 
+of her belly. This time, as the energy poured in and he began 
+to shape her, she felt her breasts begin to grow as some of it 
+spilt  over.  Once  again,  she  could  sense  that  whilst  her 
+stomach  wasn’t  growing  larger,  per  se,  he  was  ﬁlling  it  up  to 
+give  it  the  shape  she  wanted;  the  distance  between  them 
+growing  slightly  as  he  turned  the  ﬂabby  shapeless  ﬂesh  into 
+an enormous, taught, egg-shaped mountain. </p>
+<p>As graciously as she could, she leaned backwards, placing 
+her  hands  on  the  side  of  the  chaise  lounge  behind  her. 
+Arching her back, she glanced at the fabric of her suit – now 
+so  taught  it  surely  had  to  be  nearing  its  limit.  Though  her 
+beachball-sized  tits  hid  his  hands  from  view,  she  felt  his 
+ﬁngers massaging the ﬂesh of her stomach as it continued to 
+press against his despite the fact she was now leaning away.</p>
+<p>Finally,  and  as  she  braced  herself  against  the  explosion 
+building between her legs, she felt his hands run up and onto 
+her tits.</p>
+<p>They  settled  there  ﬁrmly,  his  strong  ﬁngers  sinking  deep 
+into  the  soft  ﬂesh  which,  conﬁned  within  the  suit,  gave  her 
+mammoth tits the appearance of huge water balloons. Within 
+her,  she  felt  his  cock  jerk,  and  a  moment  later  she  felt  the 
+energy begin to ﬂow from his hands. Gasping and squirming, 
+she fought back furiously against her orgasm, unable to keep 
+her eyes open as she bit down hard enough on her lower lip 
+to draw blood.</p>
+<p>Within the costume she felt the pressure build. Like he had 
+done  with  her  arse  and  her  stomach,  she  could  feel  him 
+channel the growth. Had it not been for the suit, she was sure 
+that the growth in her breasts would have resulted in a natural, 
+probably  somewhat  sagging  shape  –  their  enormous  weight 
+working  against  them.  Now  though,  she  felt  him  pump  ﬂesh 
+into what felt like the top of them, as though he was somehow 
+given  them  buoyancy  against  gravity.  Though  retaining  a 
+natural,  teardrop  appearance,  they  grew  steadily  more 
+bulbous,  the  Black  Widow  suit  groaning  audibly  as  her  tits 
+began to round out.</p>
+<p>As  more  and  more  cleavage  poured  through  the  deep  v-
+neck,  they  deﬁed  the  suit’s  pull  as  they  grew  outward  and 
+sidewards, ﬁlling the remaining gap between their bodies. </p>
+<p>And, ﬁnally, she felt the costume begin to rip. The seam on 
+her left shoulder, almost in slow motion, began to unravel, the 
+black  fabric  coming  apart  to  reveal  the  pale  skin  of  her 
+shoulder.  Even  as  a  surge  of  tit  ﬂesh  began  to  appear,  the 
+seam  surrendered  entirely  –  the  whole  front  section  of  her 
+costume  growing  slack  as  the  stitching  unravelled  from 
+shoulder to shoulder. </p>
+<p>Realising what had happened, she felt him hesitate, and for 
+a moment his hands disappeared from her chest. With nothing 
+to hold it in place, the front section of her costume simply fell 
+away, landing silently on the upper swell of her belly.</p>
+<p>And, ﬁnally, her tits were free.</p>
+<p>For  a  moment,  the  two  of  them  simply  stared.  They  were </p>
+<p>perfect.</p>
+<p>Largely  defying  gravity,  they  hung  down  just  enough  to 
+make them look somehow, incredibly, natural. Rippling faintly 
+as her body quivered, the motion served only to highlight their 
+enormous shape – each surpassing the size of an overinﬂated 
+beachball.  Her  nipples  too  had  grown,  pointing  angrily 
+outward in the cool air of her apartment. </p>
+<p>Mesmerised, she watched as he lifted his hands and sunk 
+them into the mountains of ﬂesh before him. The feeling of his 
+skin on hers for the ﬁrst time was like electricity, and she felt 
+her hips buck as he began to pour more ﬂesh into her. </p>
+<p>Moaning loudly, she rocked her hips again, feeling the rock 
+hard  enormity  of  him  swell  within  her.  She  gasped,  the  heat 
+from her tits arcing all the way through her from her nipples to 
+her  groin.  Her  monstrous  thighs  trembled  as  they  embraced 
+his  girth,  and  as  she  heard  herself  whimper  softly,  she 
+watched her tits grow before her eyes. Unable to stop herself, 
+she  gyrated  her  bulging  body  against  him,  her  raging  lust 
+ﬁnally consuming her as she lost all restraint. </p>
+<p>‘Bigger,’ she gasped, arching her back further and thrusting 
+her chest up and into the air. They were enormous now, their 
+weight immense as they approached almost two feet across. </p>
+<p>‘We have to cum together,’ she heard him gasp somewhere </p>
+<p>beyond the mountains of ﬂesh.</p>
+<p>‘Cum  then!’  she  gasped,  her  ﬁngers  clenched  so  tightly 
+onto  the  edge  of  the  chaise  they’d  gone  white.  ‘Cum  inside 
+me and make even bigger.’</p>
+<p>Her own words were the thing that ﬁnally pushed her over </p>
+<p>the edge.</p>
+<p>The  ﬁrst  surge  of  her  orgasm  was  like  an  electric  shock. 
+Every muscle in her body went rigid. Unable to even breathe, 
+she  heard  herself  groan  as  the  air  in  her  lungs  was  expelled. 
+The second wave was no less intense, and as her eyes rolled 
+back,  her  head  fell  backward  until  she  was  staring  at  the 
+ceiling.</p>
+<p>And then she felt him orgasm.</p>
+<p>Already ﬁlling her to an extent beyond anything she would 
+ever previously have thought possible, she felt his cock swell 
+larger  still,  stretching  her  even  further  as  she  jerked 
+uncontrollably. </p>
+<p>Then  came  the  eruption,  and  for  a  moment  she  simply </p>
+<p>didn’t know if she could take it.</p>
+<p>As  her  muscles  remained  rigid,  her  belly  and  breasts 
+shuddering and rippling, she felt herself go lightheaded as she 
+felt the torrent erupt inside her. Instantly, it was everywhere: in 
+her thighs and arse, in her belly and hips, and in her breasts. 
+Even  as  her  own  orgasm  continued  to  ravage  her,  her  hips 
+bucking uncontrollably, she felt her taught, bulging body begin 
+to expand. </p>
+<p>From the bottom of her suit where she had cut a hole in the 
+crotch, she heard and felt it begin to rip. With a ballooning of 
+previously  contained  ﬂesh,  her  perfect  round  arse  erupted 
+from  the  black  fabric  and  splurged  out  and  into  his  lap. 
+Around her waist, she felt the stretchy fabric reach its elastic 
+limit as her belly burgeoned under the sudden, forceful inﬂux 
+ﬁlling her like a ﬁre hose. </p>
+<p>Even  as  he  lay  beneath  her,  his  breath  coming  in  short, 
+sharp  bursts,  she  felt  him  run  his  hands  up  her  broadening 
+hips  to  her  expanding  belly.  Even  as  it  began  to  press  ﬁrmly 
+against his own, the pressure still growing, she felt him begin 
+to channel the energy upward. </p>
+<p>Twitching and gasping, her vision wavering, she felt her tits 
+swell.  Their  weight  and  their  girth  exploding,  they  surged 
+outward as the last remnants of her suit slither to the ﬂoor.</p>
+<p>Naked, she sat astride him, thrusting herself against him as 
+best as the electricity shooting through her body would allow.<br />
+The orgasm had lit her on ﬁre and as her body glistened with </p>
+<p>sweat,  she  fought  to  keep  the  lightheadedness  at  bay  and 
+savour  every  single  sensation  shooting  her  new,  immense 
+body.</p>
+<p>Her  magniﬁcent  belly  pinned  him  ﬁrmly  into  the  chaise 
+lounge  as  her  ballooning  breasts  surged  to  ﬁll  the  remaining 
+space between them. They were almost the size of small yoga 
+balls  now,  and  though  she  could  also  see  them  in  her 
+peripheral vision as she leaned yet further backward to make 
+way  for  their  growth,  she  felt  their  enormous  form  pressing 
+against  her  stomach  and  pressing  against  her  sides  as  they 
+grew.</p>
+<p>Even as her orgasm began to fade, she felt a second wash 
+over her with all the subtlety of a tsunami, her vision fading as 
+she  fought  for  breath,  aware  of  her  tits  beginning  to  press 
+ﬁrmly against his chest.</p>
+<p>Beneath  her,  having  pumped  himself  into  her  for  over  a 
+minute,  she  ﬁnally  felt  his  orgasm  begin  to  subside.  With  her 
+nipples  squashed  tightly  against  his  abdomen,  she  felt  her 
+growth begin to slow too.</p>
+<p>Manoeuvring  her  hands  carefully,  and  leaving  one  to  prop 
+herself  up,  she  brought  the  other  around  to  explore  her  new 
+body.</p>
+<p>Lifting  her  head,  she  took  in  the  sight  before  her  as  her 
+hand  kneaded  the  taught  mountain  of  tit  ﬂesh  bulging  out 
+between them.</p>
+<p>Slowly,  a  smile  spreading  across  her  face,  she  began  to </p>
+<p>laugh.</p>
+<p>Echo I</p>
+<p>by Goldleaf </p>
+<p>He had bumped into her two days ago in town. Though he 
+had seen on Facebook that she had moved into the area, he 
+deﬁnitely  hadn’t  expected  to  run  into  her  so  soon.  Walking 
+along the high street, he had turned at the sound of someone 
+calling  his  name,  and  had  come  face  to  face  with  his  ex-
+girlfriend,  a  broad  smile  lighting  up  her  face  as  she  stood 
+opposite him. </p>
+<p>‘Long time, no see,’ she had said with a raised eyebrow.</p>
+<p>He had studied her face as he replied, thinking back to the 
+amicable ending of their relationship several years before, and 
+the  numerous  times  since  when  he  had  wondered  quietly  to 
+himself whether she was the one that had got away. </p>
+<p>Trying not to be too obvious about it, he checked her out. 
+Her  long  brown  hair  was  mixed  with  professional-looking 
+highlights,  and  cascaded  over  her  shoulders  as  their  breath 
+rose between them in the cold winter air. Beyond that, and the 
+minimal make-up she wore, her thick coat made it diﬃcult for 
+him  to  see  much  more.  She  had  always  been  petite  –  her 
+appearance almost mousy – her slender ﬁgure ﬁtting her 5’6” 
+frame  and  her  somewhat  quiet  and  reserved  persona.  Today, 
+however,  she  seemed  full  of  a  new  conﬁdence,  her  height 
+bolstered by a pair of black boots with a substantial heel. He 
+quickly  traced  the  outline  of  her  jean-clad  legs  until  they 
+disappeared behind the lower hem of her jacket. She went to 
+the gym – he had seen that on Facebook too – and though her 
+legs were lean, there was a new, gentle curve to them. </p>
+<p>The two of them had chatted for several minutes, catching 
+up  on  each  other’s  lives  with  genuine  interest.  On  several 
+occasions, he had been tempted to ask out for a coﬀee, but, 
+ultimately,  the  right  moment  hadn’t  arrived,  and  suddenly  he<br />
+had found himself saying goodbye. </p>
+<p>Taking  a  step  forward,  she  had  wrapped  her  arms  around<br />
+him in a farewell hug, and as her body pressed against him he 
+had felt the faint impression of her breasts through the layers 
+of their coats. Matching the rest of her, and recalling her perky </p>
+<p>B-cups from the year or so they had dated, he suspected that 
+they remained much the same as they always had done. And 
+as  he  reached  out  and  placed  his  arms  around  her  in 
+response, he couldn’t help himself.</p>
+<p>The two of them had parted, and he smiled down at her as 
+she  said  a  ﬁnal  farewell  and  turned  away.  She  hadn’t  felt  a 
+thing – and neither had he really; just a faint and ﬂeeting pulse 
+that  faded  as  quickly  as  it  had  originated  in  his  ﬁngers  and 
+travelled through their coats to her.</p>
+<p>He didn’t know where it had all come from – and he didn’t 
+question  it  much  either.  As  far  as  he  was  concerned,  this 
+strange  ability  he  had  somehow  developed  didn’t  harm 
+anyone,  and  it  seemed  extremely  unlikely  that  he’d  ever 
+receive answers to any questions he might ask anyway. </p>
+<p>But now, two days later, he was about to get an answer to </p>
+<p>a related, yet diﬀerent question.</p>
+<p>On  the  sofa  beside  him,  the  Facebook  Messenger  app  on 
+his  phone  pinged,  and,  with  a  devilish  smile,  he  recognised 
+her name. </p>
+<p>Claire. </p>
+<p>Here we go. 
+He opened the chat, returning her greeting and wondering 
+whether  she’d  have  the  guts  to  mention  it.  Because  it  was, 
+undoubtedly, the sole reason she was messaging him at half-
+past nine at night.</p>
+<p>He  waited  patiently,  replying  politely  to  her  messages  and 
+trying coyly to pretend he couldn’t see she was trying to lead 
+the conversation somewhere. </p>
+<p>‘So,  do  you  think  I’ve  changed  much  since  we  last  saw </p>
+<p>each other?’ she asked him eventually.</p>
+<p>He sat up a little straighter on the sofa. </p>
+<p>‘I’m  not  sure,’  he  replied  innocently,  ‘we  only  spoke  for  a </p>
+<p>minute or so.’</p>
+<p>changed much?’</p>
+<p>She replied almost instantly with an exasperated emoji. </p>
+<p>‘I  meant  physically,’  she  wrote.  ‘Did  you  think  I  had </p>
+<p>Well you hadn’t changed much then, he mused, but since… 
+‘Your hair was diﬀerent.’ He wrote back. ‘I liked it a lot.’</p>
+<p>Her reply was, again, almost instant – and it was clear that </p>
+<p>she was still digging for a diﬀerent, very speciﬁc answer.</p>
+<p>Deciding to help the conversation – and her – along a little, </p>
+<p>he picked his next words carefully, and typed:</p>
+<p>‘I  think  you  looked  the  same  the  other  day,  but  you’re  </p>
+<p>probably looking a little diﬀerent now.’</p>
+<p>This time, there was a pause before she replied. </p>
+<p>Somehow  –  through  the  bizarre  ability  he  had  come  to 
+possess  and  the  strange  link  it  gave  him  –  he  knew  her 
+dreams had, for the last two nights, been ﬁlled with images of 
+him; moments between the two of them. </p>
+<p>‘How so?’</p>
+<p>He  knew  that,  despite  all  logic  to  the  contrary,  she </p>
+<p>suspected he knew. Though it was impossible. Wasn’t it?</p>
+<p>‘I think there’s a part of you that’s grown a little,’ he typed, </p>
+<p>his pulse quickening slightly as he continued to smirk.</p>
+<p>This time, there was a signiﬁcant pause before she replied. </p>
+<p>‘It was you…?’</p>
+<p>In  a  sense,  it  was  an  admission,  and  his  smile  grew. </p>
+<p>Shrugging slightly to himself, he decided to just go for it. </p>
+<p>‘Your boobs grew, didn’t they?’</p>
+<p>An agonising pause, then…</p>
+<p>‘Yes! How did you do it? It’s impossible!’</p>
+<p>He  chuckled  quietly  to  himself  in  the  cosy  warmth  of  his 
+living room. On the opposite wall, a ﬁlm continued on his TV, 
+though  he’d  turned  the  volume  down  when  she  had  ﬁrst 
+messaged him. </p>
+<p>‘I  don’t  know,’  he  replied.  ‘You  get  the  dreams  and  it  just 
+happens.  If  you  want  to  ﬁx  it,  go  and  stand  in  the  shower. 
+Don’t  touch  them,  just  slowly  turn  the  temperature  down  as 
+cold as you can handle.’</p>
+<p>He  hit  send  and  watched  as  the  ‘message  received’ </p>
+<p>symbol changed to ‘message read’. He waited. </p>
+<p>He wondered how much they had grown by. She had been 
+a  solid  B-cup  when  they  had  dated,  and  none  of  her  photos 
+on  Facebook  or  anything  he’d  seen  the  other  day  had 
+suggested  otherwise.  Though  their  hug  had  been  brief,  he 
+wondered whether they could have grown a whole cup size.  It 
+would  have  had  to  have  been  signiﬁcant  enough  for  her  to 
+message him. Though of course there were the dreams too.</p>
+<p>If  he  closed  his  eyes,  he  could  almost  picture  her  now 
+heading  into  her  bathroom,  removing  her  clothes  and  she 
+turned on the tap. She hadn’t replied to his last message, and 
+he was sure it was what she was doing.</p>
+<p>Did  she  really  mind,  he  wondered.  He  was  fairly  certain 
+they’d  had  the  odd  conversation  back  when  they’d  dated 
+about things she wouldn’t mind changing about herself.</p>
+<p>He saw her standing in the shower, the warm water running 
+down  her  trim  body  as  she  reached  for  the  temperature 
+control. Even as the ﬁngers on one hand reached out for the 
+silver  dial  though,  her  other  hand  reached  up  to  cup  the 
+swollen outline of her newly enlarged breast. Her whole body 
+shuddered  slightly  as  her  ﬁngers  sunk  in  to  the  soft, 
+voluminous  ﬂesh  that  had  spilled  out  of  her  bra  earlier  that 
+morning.  Her  eyes  closed  as  her  thumb  and  index  ﬁnger 
+surrounded  her  nipple  as  the  rest  of  her  hand  gently 
+squeezed.</p>
+<p>And that, he knew, would be it. </p>
+<p>‘I think I deserve an explanation.’</p>
+<p>His  Messenger  app  pinged,  and  the  images  from  his 
+almost meditative daydream vanished as he opened his eyes.</p>
+<p>‘You live over on the marina, right? Can I come round?’</p>
+<p>He  glanced  at  the  clock  on  his  phone.  It  was  gone  ten. 
+Thirty  minutes  or  so  was  a  long  time  to  stand  in  a  cold 
+shower…</p>
+<p>He  gave  her  his  address  and  glanced  around  his  living 
+room.  Though  his  two-bedroom  house  wasn’t  exactly  large, 
+it’s interior was spacious. Whilst the front door opened onto a 
+small,  pedestrianised  boardwalk,  the  rear  patio  doors  beside 
+him  opened  onto  a  small  balcony  overlooking  a  small  U-
+shaped  bay  of  the  marina.  Across  the  short  distance  – 
+currently  devoid  of  boats  thanks  to  the  winter  months  –  he 
+could  see  a  handful  of  lights  on  in  the  houses  opposite. 
+Preferring  to  admire  the  view  of  the  twinkling  lights,  he  often 
+spent the evening with the curtains open, conﬁdent that, with 
+only a lamp and his TV illuminating the room, the darkness of 
+the night would hide him from view. </p>
+<p>The doorbell rang, and he glanced, once again, at the time. </p>
+<p>It hadn’t taken her long.</p>
+<p>He stood up, walking somewhat excitedly down the dimly-
+lit  hallway  toward  the  front  door.  Trying  hard,  he  forced  the 
+smile oﬀ his face as he opened the door. </p>
+<p>‘Hey,’  he  said  cheerfully,  stepping  quickly  aside  as  she 
+didn’t  hesitate  before  brushing  past  him.  Closing  the  door 
+behind  her,  he  followed  her  through  to  the  lounge.  From 
+behind,  and  in  the  relative  darkness  of  the  hallway,  it  was 
+diﬃcult to make out much beyond her silhouette. Her long hair 
+was tied back in a ponytail, her upper body hidden by a black 
+hoody. He could see her legs though, he noted as he followed 
+her  into  the  lounge,  the  pale  skin  of  her  thighs,  then  calves, 
+appearing from beneath the hem of a short grey skirt. </p>
+<p>‘Can I get you a drink?’ he asked innocently as she came 
+to a stop before him. Turning to face him, and lit from the side 
+by the light of the lamp, he saw it. Despite the oversized, near-
+shapeless  and  decidedly  far-too-large  hoody,  it  was  obvious, 
+and  as  he  traced  the  faint  yet  undeniable  swell  beneath  the 
+fabric down from her neck toward her navel, he knew exactly 
+what had happened in the shower. </p>
+<p>With  one  hand  ﬁrmly  grasping  the  shower  controls,  her 
+other  had  begun  to  massage  the  larger,  rounder,  heavier 
+shape of her swollen breast. Though she had done the exact 
+same  thing  earlier  that  morning  when  she  had  awoken, 
+soaking  wet,  once  again,  from  another  night  of  sex-ﬁlled 
+dreams, it somehow felt diﬀerent, now, under the warm water 
+of the shower. </p>
+<p>She  closed  her  eyes  as  she  kneaded  and  squeezed  her 
+chest,  the  taunt  skin  of  her  breast  spilling  out  between  her 
+ﬁngers  as  her  breath  grew  shallow.  Without  any  sort  of 
+conscious  decision,  her  other  hand  left  the  temperature 
+control and, from her thigh, worked its way between her legs. 
+She  gasped  faintly  as  she  began  to  play  with  herself,  her 
+swollen  nipple  squeezed  gently  between  her  ﬁngers  as  she 
+kneaded her breast.</p>
+<p>It  wasn’t  long  before  she  convulsed,  gasped  involuntarily 
+as she orgasmed. For the ﬁrst time, her hand left her breast as 
+she steadied herself against the shower wall, her eyes closed 
+tight  as  she  shuddered,  enjoying  the  sensation  of  the  hot 
+water massaging her swollen body.</p>
+<p>Eventually  though,  her  breathing  beginning  to  slow,  she 
+opened  her  eyes,  and  choked  back  an  involuntary  stutter  of 
+surprise. For the past two days she had been living with the all 
+but explicable growth of her breasts from her usual size to at 
+least  a  proud  C-cup.  Now,  however,  she  saw  as  she  looked 
+down  in  shock,  they  had  grown  again  and  by  at  least  the 
+same amount. </p>
+<p>She watched as they rose and fell, swelling in tandem with 
+her  shallow  breathing.  Both  nipples  stood  ﬁrmly  erect,  and 
+she  watched  as  a  steady  stream  of  water  cascaded  down 
+each, utterly perfect, breast. Curiously, she twisted her upper 
+body  sharply,  and  watched,  transﬁxed,  as  they  jiggled  and 
+swayed.  And  then,  once  again,  she  had  reached  up  and 
+cupped them.</p>
+<p>This  time,  her  moans  had  grown  a  little  louder,  and  her 
+squeezing  and  kneading  a  little  more  frantic  as  her  hand 
+returned,  once  again,  to  between  her  thighs.  She  had 
+orgasmed faster too, and harder, and even as she had bucked 
+and  gasped,  reaching  out  to  steady  herself,  she  had  opened 
+her eyes to see her breasts larger once more. Staggered, she 
+had  held  them  in  her  small  hands,  watching  as  only  the 
+slightest  squeeze  formed  a  chasm  of  cleavage.  A  moment 
+from  last  night’s  dream  pierced  her  body,  and,  as  she 
+remembered  the  weight  of  his  body  atop  hers,  she  fought  to 
+remain standing as her knees threatened to buckle. Gasping, 
+and  spluttering  at  the  water  cascading  down  over  her,  she 
+squeezed her swollen breasts and moaned.</p>
+<p>He  couldn’t  help  but  stare  as  she  stood  deﬁantly  before 
+him. Without speaking, she reached down, grasping the hem 
+of  her  hoody  and  pulling  it  up.  Underneath,  he  saw  the  light 
+grey material of a t-shirt begin to ride up as she lifted the top 
+away. The elasticated band of her short grey skirt dug into her 
+narrow hips, he noticed, the beginnings of a muﬃn top spilling 
+out  above  it  from  a  surprisingly  soft  little  belly.  As  the  hoody 
+continued its journey upward, he felt his heart skip a beat. </p>
+<p>How many times had she orgasmed in the shower? 
+Her  light  grey  t-shirt  would  normally,  he  suspected,  be  a 
+size  too  big  for  her.  It’s  lower  half,  despite  her  tummy,  was<br />
+loose, and as it returned to it’s natural position on her body, it </p>
+<p>hid  the  ﬂare  of  her  slender  hips  from  view.  But  it  was  up  top 
+that his attention was now ﬁxed. </p>
+<p>His  ﬁrst  thought,  he  realised  as  he  saw  her  stiﬀ  nipples 
+poking  prominently  through  the  taught  cotton,  was  that  she 
+wasn’t wearing a bra. Which made sense, as none she owned 
+would  surely  ﬁt  her.  As  had  none  of  her  t-shirts  either,  he 
+suspected.  Had  they  had  room,  her  magniﬁcent  tits  would 
+surely  have  hung  proudly  before  her,  free  to  sway  and  jiggle 
+with each minuscule movement she made. In the conﬁnes of 
+the only t-shirt she had clearly been able to squeeze them into 
+however, he saw that they had simply run out of room.</p>
+<p>Though  their  perfect  shape  was  obvious,  they  were  now 
+pushed  so  tightly  together  they  could  barely  move,  a  insane 
+cleavage  running  from  the  taught  mid-point  of  the  top’s  v-
+neck almost all the way down to her navel – at which point the 
+t-shirt hung loosely oﬀ her.</p>
+<p>‘I, err…</p>
+<p>He couldn’t help but chuckle as she threw the hoody to the </p>
+<p>ﬂoor beside them.</p>
+<p>‘I guess you didn’t turn the temperature down like I said?’</p>
+<p>The  obvious  ﬂush  to  her  cheeks  as  he  tore  his  gaze  away 
+from  her  sensationally  swollen  breasts  told  him  she  knew  he 
+knew what she had done in the shower. </p>
+<p>Taking a step forward, her boobs bulging as they jostled up 
+and  down  within  her  t-shirt,  she  pressed  herself  against  him. 
+Half  expecting  a  slap,  and  caught  somewhat  oﬀ-guard,  he 
+opened  his  mouth  to  speak.  But,  before  he  could,  she  had 
+leaned  in  and  kissed  him.  It  was  ﬁerce  and  unexpected,  and 
+as he felt the incredible swell beneath her t-shirt press against 
+him, he stumbled and fell backward. </p>
+<p>Somewhat unceremoniously, he landed on his back on the 
+elongated section of his sofa where he normally stretched out 
+his legs. Looking up, and blinking in surprise, he watched as 
+she climbed onto the soft fabric, her knees resting either side 
+of  his  waist  as  she  lowered  her  body  towards  his.  First  to 
+make  contact  were  her  tits,  squeezed  between  them  as  she 
+pressed her crotch against his. Within his jeans, he felt himself 
+grow impossibly harder as she grinded herself against him. As 
+she  continued  to  kiss  him,  he  reached  up  and  placed  his 
+hands  on  her  thighs,  running  them  blindly  upward,  brushing </p>
+<p>past  the  hem  of  her  skirt  and  the  delicate  fabric  of  her 
+underwear until he found her arse. </p>
+<p>She  moaned  softly  and  her  hips  bucked  against  him. 
+Moving her lips to his neck, she laid a trail of breathless kisses 
+downward  until  she  reached  the  top  of  his  t-shirt.  With  her 
+hands  around  his  waist,  she  lifted  it  up,  aﬀording  him  a 
+momentary  view  of  her  incredible  cleavage  as  her  heaving 
+breasts hung down in the gap between them, still constricted 
+by the conﬁnes of her top. </p>
+<p>Shimmying down a little until her tits were pressed against 
+the  unmistakeable  bulge  in  his  jeans,  she  continued  to  kiss 
+her  way  down  his  chest  until  she  reached  his  belt.  Almost 
+frantically, her ﬁngers worked at the buckle and then at the zip 
+of  his  jeans  until,  ﬁnally,  she  was  able  to  pull  them  oﬀ  him 
+entirely  and  discard  them  onto  the  ﬂoor  beside  her  hoody. 
+Running  her  hand  over  the  top  of  his  boxer  shorts,  her 
+delicate ﬁngers caressed the bulge beneath the soft material, 
+before reaching up and pulling them away too.</p>
+<p>Free,  his  penis  stood  erect  above  his  muscular  abdomen, 
+and even as his gaze was drawn in once again by the pair of 
+enormous breasts before him, he couldn’t help but notice the 
+slight look of surprise on his ex-girlfriend’s face. </p>
+<p>He was bigger than she remembered. 
+Her  tits  disappeared  from  view  as  she  lowered  her  head 
+toward his waist, and he closed his eyes as her warm, wet lips 
+closed  softly  around  his  aching  cock.  Already  shallow,  his 
+breathing  grew  ragged  as  she  slowly  began  to  work  her  way 
+up and down. His mind, on ﬁre, leapt back to the image of her 
+in her shower, before fast-forwarding to the moment she had 
+removed her hoody.</p>
+<p>His  hips  bucked,  and  he  groaned  softly  as  he  came.  She 
+had learnt some new tricks since they had split up, and that, 
+couple  with  her  recent  growth  spurt,  meant  he  hadn’t  lasted 
+long  at  all.  He  knew  that  she  had  been  expecting  it  though, 
+and  he  had  felt  her  grasp  his  hips  ﬁrmly  as  she  swallowed 
+over  and  over  again.  Ironically,  it  lasted  longer  than  normal, 
+and  with  each  spasm  and  murmured  groan,  he  felt  her  grip 
+tighten a little, and even as the throbbing began to dissipate, 
+he pushed as hard as he could. </p>
+<p>‘Oh, my god.’</p>
+<p>She had more gasped it than spoken it.</p>
+<p>He opened his eyes to see her resting before him, her arms 
+propping  herself  up  at  the  end  of  the  sofa  between  his  legs. 
+Immediately,  he  found  himself  staring  at  the  taught  fabric  of 
+her t-shirt. It was unmistakable: her breasts had grown again. 
+Filling  the  space  around  them  to  the  maximum,  they  had 
+expanded  in  the  only  direction  they  could.  Downward.  Her 
+nipples  continued  to  poke  angrily  through  the  fabric,  and,  as 
+he  glanced  down,  he  saw  a  series  of  other  small  yet  still 
+noticeable changes. Though the bulge of her breasts created 
+an enormous overhang, he could now see the faint outline of 
+her small, round belly pressing against the front of her t-shirt, 
+and from where her engorged breasts were now causing it to 
+ride  up  slightly  higher,  he  see  that  her  muﬃn  top  was  now 
+spilling over the top of her skirt. Though he couldn’t be sure, 
+he suspected that even her hips were a little wider.</p>
+<p>‘I can’t believe how good that tast…’</p>
+<p>She  trailed  oﬀ  as  she  opened  her  eyes,  her  gaze  darting </p>
+<p>momentarily to his face before returning to his crotch. </p>
+<p>She wasn’t the only one who had grown. </p>
+<p>Whereas  he  was  normally  a  fairly  healthy  eight  or  so 
+inches,  he  was  now  a  solid  nine  or  even  ten  –  and  still  rock 
+hard. </p>
+<p>‘But…’</p>
+<p>Apparently  oblivious  to  the  changes  within  her  own  body, 
+she glanced at him in breathless confusion. Reaching out, she 
+wrapped an inquisitive hand ﬁrmly around his new girth.</p>
+<p>‘When you do what you just did,’ he murmured with a slight 
+shrug  and  a  shudder  as  she  began  to  move  her  hand  slowly 
+back and forth, ‘I’ll get bigger and stay hard until we –,’</p>
+<p>He gasped as she squeezed him playfully.</p>
+<p>‘– until we do something else.’</p>
+<p>Her  gaze  ﬁxed  largely  on  his  quivering  penis,  he  saw  her </p>
+<p>cock an intrigued eyebrow.</p>
+<p>‘Interesting,’  she  murmured,  lifting  herself  slowly  up,  her 
+breasts  catching  on  the  end  of  the  sofa  as  she  moved 
+upward. His eyes closed again as he felt her take him into her 
+mouth,  and  though  he  suspected  that  she  was  struggling  a 
+little  with  his  size,  it  was  clear  that  she  wasn’t  going  to  let  it 
+get in her way.</p>
+<p>Twisting and turning, she managed to tease him for several 
+minutes, her hands pressing down ﬁrmly on his waist to stop 
+him moving too much as she sucked. Before long, though, he 
+felt himself begin to lose control, and as he groaned loudly, he 
+felt his entire body go rigid. His hips bucked as he came, and 
+through  his  own,  powerful  orgasm,  he  heard  her  moan  softly 
+as  she  swallowed.  Pressing  him  down  into  the  sofa,  the 
+sensation  of  her  lips  pressed  tightly  around  him  only 
+intensiﬁed  it,  and  for  what  felt  like  more  than  a  minute  he 
+came continuously into her mouth, her groans muﬄed as she 
+tried to keep up.</p>
+<p>Finally, the throbbing subsided, and even though he felt his </p>
+<p>cock stiﬀen, he opened his eyes.</p>
+<p>She was kneeling at the end of the sofa, her eyes closed as 
+she panted heavily. Her tits had grown to the point where he 
+doubted  they  could  possibly  move  even  an  inch  beneath  the 
+furiously  taught  t-shirt;  the  material  cutting  sharply  into  her 
+back  as  her  breasts  pulled  at  the  front.  With  her  top  now 
+pulled  even  higher,  he  could  see  the  round  curve  of  her 
+swollen belly poking out the bottom, the waistline of her skirt 
+taught around her ﬂeshy waist.</p>
+<p>‘That was amazing,’ she moaned, her open palms propping </p>
+<p>herself up against the end of the sofa, ‘but I can’t breathe.’</p>
+<p>She  gasped  a  dark  laugh,  and  he  watched,  almost 
+hypnotised,  as  she  reached  up  and  grabbed  at  one  of  her 
+enormous  boobs,  her  ﬁngernails  digging  in  to  the  stretched 
+fabric  of  her  t-shirt.  She  moaned  loudly  and  swayed  as  she 
+squeezed  the  mass  of  ﬂesh  beneath  her  hand,  her  face 
+ﬂushed  as  she  eyes  never  broke  contact  with  his.  Then, 
+reaching down, she pulled at the hem of the distorted garment 
+and, with a little diﬃculty, pulled it up and over her head.</p>
+<p>He took it all in as it was revealed: her ﬂared hips and the 
+outpouring of ﬂesh around her waist pushed up and out into a 
+muﬃn top by her waistband; the bulge of her belly as though 
+she  had  spent  the  last  few  hours  stuﬃng  her  face;  her 
+remarkably narrow waist and then…</p>
+<p>Her fantastic breasts came free from the conﬁnes of the t-
+shirt,  and  with  a  magniﬁcent  array  of  jiggling  and  bouncing </p>
+<p>spread  out  to  take  their  proper  shape  and  size.  They  must 
+have been at least J-cups, he thought to himself. Though still 
+teardrop shaped, they had lost some of their perkiness, giving 
+them  a  shape  that  looked  entirely  natural.  Which  was,  he 
+knew, a side eﬀect of growing the way they had. When he got 
+his hands on them he’d be able to change that.</p>
+<p>Above him, he saw her expression change as her attention 
+moved  away  from  herself  and  back  to  him  –  and  he  glanced 
+down:  he  was  still  rock  hard,  and  well  past  10  inches.  Her 
+ﬂushed face spread into a grin as she reached out and began 
+to stroke his throbbing dick. Though her lower half was hidden 
+from view as she kneeled at the end of the sofa, all he wanted 
+was to rip her panties oﬀ and…</p>
+<p>She leaned forward, her tits ﬂowing and bulging against the 
+insides of his legs as she approached him from the third time.</p>
+<p>‘Wait,’ he begun, ‘we can –,’</p>
+<p>In front of him, her warm breath making his cock twitch, he </p>
+<p>saw her shake her head.</p>
+<p>‘Oh no,’ she said darkly. ‘We’re doing this my way.’</p>
+<p>Her  grip  tightened  around  him  and  he  couldn’t  help  but </p>
+<p>‘And when we do ‘do it’, I want you to be the biggest I can </p>
+<p>moan.</p>
+<p>take.’</p>
+<p>She shot him a look that told him everything he needed to 
+know, and as she pushed his hips forcefully into the sofa, she 
+wrapped her lips around him once again.</p>
+<p>Though  he  couldn’t  quite  tell  how  much  of  him  she  was 
+able  to  take  into  her  mouth,  it  didn’t  matter.  Each  movement 
+was  ecstasy,  and  he  found  himself  holding  his  breath  as  she 
+rotated a little to the left and then right, moving up and down, 
+her  enormous  tits  ﬁlling  the  gap  between  his  legs  and 
+pressing against his balls.</p>
+<p>Soon,  he  felt  his  orgasm  beginning  to  build,  and  as  he 
+pictured her mischievous expression and expanding body, he 
+found himself determined to give her exactly what she wanted 
+–  and  perhaps  a  little  bit  more.  Summoning  everything  he 
+could,  he  forced  as  much  as  he  could  into  making  his 
+pulsating cock as big as possible, and as he began to come, 
+he  pushed  as  much  cum  out  as  possible,  the  desperately 
+needy moans coming from his midsection keeping him going </p>
+<p>and  going.  How  she  kept  her  lips  wrapped  so  tightly  around 
+him,  he  simply  couldn’t  fathom,  and  as  the  throbbing  ﬁnally 
+began  to  subside,  he  found  himself  wondering  what  she 
+would look like when he opened his eyes. Down below, he felt 
+his cock twitch, and, for the ﬁrst time, he realised that though 
+she had slowed, she hadn’t stopped her rhythmic movement. 
+This  time,  and  though  mainly  by  the  sensation  of  her  mouth 
+growing  smaller  around  him,  he  felt  himself  grow;  his  penis 
+lengthening  as  it  grew  thicker  and  heavier.  Undeterred,  she 
+was building speed, and as he found himself simply unable to 
+do anything but lie on his back on the sofa, he found himself 
+moaning almost uncontrollably.</p>
+<p>She was mad! 
+Unable to see it, this time he felt the growth of her breasts; 
+the soft yet taught skin expanding outward against his legs as 
+she  sucked  feverishly.  She  too  was  moaning,  he  was  sure, 
+and as he felt her try to take him as deeply as she could, he 
+felt  himself  start  to  come.  Without  warning,  and  so  violently 
+that  he  almost  dislodged  her  hands  from  his  hips,  he 
+exploded  into  her  mouth,  his  hips  bucking  and  his  moans 
+drowning  out  her  whimpers  as  she  frantically  swallowed 
+everything  he  gave  her.  By  the  time  he  stopped,  he  had  lost 
+track  of  time;  his  head  was  spinning  and  his  whole  body  felt 
+light. Had it not been for his desire to see what he had done to 
+her body, he could easily have passed out.</p>
+<p>Gasping  for  air,  sweat  glistening  oﬀ  her  body,  he  watched 
+as  she  staggered  to  her  feet  at  the  end  of  the  sofa.  Her  tits 
+were  fantastic;  swaying  and  wobbling  as  she  tried  to  stand. 
+Not  only  had  they  grown  out  sideways,  they  had  bulged 
+outward  as  well  as  down  as  gravity  took  its  toll  on  their 
+incredible  size.  They  must  have  been  slightly  bigger  than 
+basketballs, creating their own cleavage down from her neck 
+to  her  stomach.  And  speaking  of  which.  Though,  somehow, 
+her  waist was still,  relatively  speaking,  narrow, the waistband 
+of her skirt was digging into her ﬂared hips to such an extent 
+he  was  surprised  it  wasn’t  hurting  her.  And,  to  be  accurate, 
+the small skirt was now almost just a waistband. Whilst, above 
+it, her almost-pregnant looking belly extended out toward him 
+– the lower half of her enormous breasts resting against it, the 
+lower  half  had  been  pushed  upward  by  the  expansion  that </p>
+<p>had  taken  place  there.  It  was  the  ﬁrst  time  he  had  seen  her 
+lower  half  since  she  had  ﬁrst  dropped  to  her  knees,  and  he 
+couldn’t  believe  the  changes  that  had  occurred  there.  Trying 
+desperately to wiggle her ﬁngers through the band in order to 
+remove  it,  he  watched  as  she  turned  slowly  on  the  spot,  her 
+entire body jiggling as he took it in.</p>
+<p>Her  slender  legs  had  doubled  in  size,  her  thigh  gap 
+disappearing  to  be  replaced  by  her  two,  enormous, 
+curvaceous  thighs  which  had,  in  expanding  outward,  pushed 
+her  skirt  upward  and  over  her  bum  –  which  had  been  doing 
+some  growing  of  it’s  own.  Perhaps  due  to  her  previous 
+dedication  to  the  gym,  her  arse  had  somehow  retained  it’s 
+incredible  shape  as  it  had  swollen  and  doubled  in  size,  her 
+two  large  cheeks  taught  and  perfectly  shaped  as  they 
+stretched  her  lacy  lingerie  to  it’s  limit.  Until,  ﬁnally,  she 
+wrestled  the  last  of  her  clothing  away  –  her  enormous  tits 
+blocking her elegant sweep of an arm as she tried to discard 
+them onto the ﬂoor.</p>
+<p>Finally  naked,  she  turned  to  face  him,  her  incredible 
+hourglass  ﬁgure  swaying  before  him  as  his  cock  began  to 
+throb  again.  As  though  drawn  to  it,  she  took  a  step  forward, 
+her  eyes  taking  in  it’s  size  with  a  strange  expression  of 
+eagerness  and  determination.  It  was  enormous,  and  as  he 
+looked between it and her, he found himself consumed by the 
+singular desire to push himself deep within her.</p>
+<p>She  knelt  astride  him  as  she  had  done  before,  shimmying 
+her  incredible  body  forward  until  his  enormous  dick  was 
+resting  against  her  swollen  belly.  Then,  lifting  herself  slightly, 
+she took it in her hand and positioned herself above it. With a 
+look  of  gleeful  desire,  she  closed  her  eyes  and  slowly  began 
+to lower herself.</p>
+<p>He listened to her deep, drawn out moan as she began to 
+take him inside her; her tight, wet, warmth surrounding him as 
+his dick throbbed within her. Bit by by, she continued lowering 
+herself  down,  and  he  saw  her  bite  her  bottom  lip  as  she 
+gasped.  Slowly,  her  enormous  breasts  grew  closer  to  him, 
+their magniﬁcent size and shape almost within his reach.</p>
+<p>Oh, what he still had to do to them! To her! </p>
+<p>And  then,  incredibly,  she  came  to  rest  against  him,  the 
+entirety  of  him  taken  within  her,  her  incredible  body  angled 
+slightly forward as she placed a hand beside his shoulder. Her 
+soft, ﬂeshy belly pressed against his stomach, and her breasts 
+hovered tantalising close to his face.</p>
+<p>You have time, he told himself.</p>
+<p>With  incredible  self  control,  he  placed  his  hands  on  her 
+arse,  his  ﬁngers  sinking  into  her  soft  ﬂesh  as  he  heard  her 
+moan in response; her body sinking into his as she quivered.</p>
+<p>Slowly, yet forcefully, he used his hands to pull her forward </p>
+<p>slightly, his enormous dick moving inside her.</p>
+<p>She  gasped  loudly,  the  sound  transforming  into  another 
+moan  as  she  pushed  back  against  him,  then  forward  again. 
+With  a  soft,  almost  guttural  sound  escaping  her  lips  each 
+time, she began to establish a slow and steady rhythm.</p>
+<p>And with her distracted, he gently squeezed her arse, and 
+concentrated. The sensation was the same as it had been two 
+days  before,  though  now,  skin  to  skin,  it  was  stronger  and 
+more intense. It was almost like an energy, and as she slowly 
+gyrated  on  top  of  him,  he  felt  it  ﬂow  into  her  through  his 
+ﬁngers. Though he couldn’t see it’s eﬀect, he could feel it, and 
+as he channelled it as he wanted, he felt her begin to grow.</p>
+<p>Her  hips  grew  wider,  her  thighs  rounder  as  he  channelled 
+the muscle and fat into just the right areas to keep her ﬁgure 
+nothing  but  stunning.  Though  by  no  means  ﬁnished,  he 
+moved his hands up to her waist, keeping her hourglass ﬁgure 
+intact as he rounded the top of the thighs. Gently, he ran his 
+ﬁngers up her stomach, adding ﬂesh to make her soft, ﬂabby 
+belly round and taught. </p>
+<p>And then came something he did not expect.</p>
+<p>‘My boobs,’ she gasped above him, her eyes closed as she </p>
+<p>moved back and forth above him. ‘Please. Make them –,’</p>
+<p>She whimpered as he forced himself to grow a little inside </p>
+<p>her.</p>
+<p>‘Make them bigger.’ 
+He didn’t need to be told twice.</p>
+<p>Removing his hands from her swollen stomach, he paused 
+for a fraction of second, before taking her fantastic tits in his 
+hands.  Above  him  she  let  out  a  helpless  cry  as  he  squeezed 
+them  gently,  and  then,  with  an  incredible  amount  of  ﬂesh </p>
+<p>pressing  through  his  ﬁngers,  he  lifted  them  up  as  though 
+imitating  a  push-up  bra.  Even  as  he  did,  he  squeezed,  the 
+energy ﬂowing through his ﬁngers into her tits. And incredibly, 
+bulging upward in his hands, he felt them begin to change in 
+order to stay that way. The eﬀect of gravity on their enormous 
+size  reduced,  and  as  they  slowly  began  to  expand  between 
+his  ﬁngers,  he  saw  them  take  on  a  new,  perfect  teardrop 
+shape  as  they  hung  oﬀ  her  chest.  As  though,  now,  entirely 
+unaﬀected by their incredible mass, they simply continued to 
+grow as he channelled more and more energy into her.</p>
+<p>Though this time, she was very much aware of it.</p>
+<p>‘Yes!’  she  whispered  breathlessly,  whimpering  as  she </p>
+<p>pushed herself backward and forward on top of him. </p>
+<p>Unsteadily,  she  raised  a  hand  from  the  sofa,  and  as  he 
+removed  his  own  hands,  she  grabbed  her  left  boob.  As  her 
+ﬁngers settled into the soft ﬂesh, her small hand ridiculous in 
+comparison, she cried out.</p>
+<p>‘Oh my god,’ she breathed. ‘I’m going to come.’</p>
+<p>She  shuddered,  her  hand  returning  to  the  sofa,  and  he 
+found  her  enormous  tits  surging  toward  him  as  she  leaned 
+forward, her head hovering above his chest.</p>
+<p>‘Wait,’ he replied with a little urgency. ‘You need to wait for </p>
+<p>me.’</p>
+<p>kicked.</p>
+<p>‘I…can’t…’</p>
+<p>She  groaned,  her  mouth  remaining  open  as  her  hips </p>
+<p>Fighting to bring himself to orgasm, he felt himself pulsate 
+within  her  –  which  was  the  ﬁnal  straw  for  her.  He  felt  her 
+spasm around him, and even as he felt himself rushing toward 
+orgasm, he felt her go rigid. Inside her, he continued to twitch, 
+the  motion  enough  to  make  her  whimper  slightly  each  time. 
+As  her  own  orgasm  began  to  hit  her,  he  began  to  feel  it. 
+Though  his  hands  rested  on  her  enormous  butt,  without  any 
+intent  or  input  from  him,  he  felt  it  beginning  to  grow  once 
+more.  As  she  shuddered  and  moaned  on  top  of  him,  her 
+inﬂated body sinking into his, he felt everything else begin to 
+grow  too.  Around  his  waist,  her  thighs  began  to  expand, 
+whilst against his stomach, he felt her belly begin to balloon. 
+All of which couldn’t come close to her breasts.</p>
+<p>All of which, ﬁnally, pushed him over the edge.</p>
+<p>Inside her, he felt himself erupt, his cum ﬂowing into her as 
+he grunted helplessly – entirely unable to explain that this was 
+why he should have come ﬁrst.</p>
+<p>As  the  ﬁrst  of  his  spasms  hit  her,  he  felt  her  shudder,  a<br />
+breath  escaping  her  lips  as  her  head  collapsed  onto  his 
+shoulder.  With  each  enormous  release,  he  heard  her  gasp 
+almost  silently  in  his  ear,  entirely  unable  to  move  as  another 
+orgasm hit her.</p>
+<p>And  it  wasn’t  just  his  writhing  dick  that  was  making  her 
+quiver  uncontrollably.  As  his  cum  ﬂooded  through  her,  and 
+entirely unable to do anything to stop it, he simply placed his 
+hands  around  her  as  she  ballooned.  Her  thighs  began  to 
+squash him as they grew, his hands struggling to encompass 
+the  size  of  her  arse  as  it  too  expanded.  Between  them  he 
+could  feel  her  belly  growing  in  every  direction  as  if  she  was 
+overdue  to  give  birth.  And  her  breasts.  Pressed  between 
+them,  resting  against  his  upper  chest,  he  felt  them  grow  in 
+every  direction  until  the  force  of  their  expansion  began  to  lift 
+her upward in order to generate more space. With each of her 
+muted  cries  as  her  second,  or  perhaps  even  third,  orgasm 
+ravaged her, he felt her grow. With each of his uncontrollable 
+grunts, he felt her balloon a little more.</p>
+<p>Finally though, her last orgasm subsiding alongside his, he 
+felt  the  throbbing  began  to  subside.  And  suddenly  he 
+remembered the look on her face from earlier.</p>
+<p>Even as the last throes of his orgasm shot through him, he 
+concentrated  hard  and,  one  last  time,  pushed  his  penis  as 
+hard as he could.</p>
+<p>He felt the last eruption surge into her; her slowing rate of 
+expansion reversing momentarily as, all at once, every part of 
+burgeoned  under  a  fresh  wave  of  ﬂesh.  Unsuspecting,  and 
+ﬁnally  beginning  to  regain  her  breath  as  she  lay,  exhausted, 
+against  him,  he  felt  her  tense  as  another  wave  of  pleasure 
+rocked her body.</p>
+<p>‘Ooh,’  he  heard  her  whimper,  before  suddenly,  to  his </p>
+<p>immense surprise, he felt her pass out.</p>
+<p>Standing in darkness at the window on the opposite side of 
+the small marina bay, the woman stood motionless, her breath 
+caught  in  her  throat.  Why  she  had  originally  come  from  her </p>
+<p>kitchen  to  her  living  room  was  now  a  mystery;  she  had 
+popped in to get something and, by chance, caught sight of a 
+mystery  woman  standing  in  the  apartment  across  the  way  of 
+the man she quite fancied. For how long she had stood there, 
+utterly motionless, in the darkness, she did not know; her eyes 
+wide as she had followed the events that had unfolded in the 
+dimly-lit  apartment  just  close  enough  for  her  to  see  into 
+across  the  way.  In  her  chest,  her  heart  pounded,  and  as  she 
+took  in  the  sight  before  her,  realising  that  now  might  be  the 
+time  to  ﬁnally  turn  away,  she  absentmindedly  raised  a  hand 
+and somewhat wistfully cupped one of her small breasts.</p>
+</body>
+</html>

@@ -1,0 +1,1539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Sorority Circle</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>Sorority Circle </p>
+<p>by purplish [email]</p>
+<p>(For adult eyes only: breast/nipple expansion, magic, mind control, lactation, reality alteration. All 
+characters are 18+)</p>
+<p>“Welcome to your ﬁrst day at Beta Beta!” Amber said cheerfully. </p>
+<p>She had long enjoyed showing the newest pledges around the sorority. As the sorority </p>
+<p>president, she tried to be a positive example to the younger girls. They were usually new to the </p>
+<p>university as well, so she wanted to be extra welcoming.</p>
+<p>Today she was leading a ﬁrst-year student through their modest sorority house. This was </p>
+<p>Lisa, who had been at the university for less than two weeks, but she had a strong academic </p>
+<p>record and Amber thought she showed leadership potential.</p>
+<p>“Thanks Amber! I’m so excited to be your newest sister,” Lisa replied, blushing. She was still </p>
+<p>growing accustomed to being away from home, and had been feeling on edge all day. It was </p>
+<p>intimidating to live with other girls her age for the ﬁrst time. She just wanted to ﬁt in and learn all </p>
+<p>she could from them.</p>
+<p>“Right this way, Lisa! It’s early, so let’s see who’s in the kitchen,” Amber oﬀered, pointing </p>
+<p>ahead. </p>
+<p>turn.</p>
+<p>Lisa.</p>
+<p>They walked down a short hallway before emerging into the kitchen, where three girls were </p>
+<p>seated around a large circular dining table. Amber introduced them, pointing to each of them in </p>
+<p>“Heather, captain of the university’s cheer squad and the sorority’s social chair,” she said, </p>
+<p>nodding at a girl with blonde pigtails. </p>
+<p>Heather looked up from her breakfast and beamed at Lisa.</p>
+<p>“Welcome! Who’s this? Our newest pledge?” she asked.</p>
+<p>“This is Lisa. It’s her ﬁrst day at Beta Beta!” Amber said warmly, then turned back towards </p>
+<p>1</p>
+<p>“I’m sure you’ll be seeing more of Heather at our social events, Lisa,” she said, giving Lisa’s </p>
+<p>shoulder a friendly pat.</p>
+<p>response.</p>
+<p>“There’s Jessie, business major and sorority vice president,” she continued, indicating a girl </p>
+<p>with thick brown curls. Jessie was staring intently at the back of a cereal box and oﬀered no </p>
+<p>“Don’t mind her,” Amber whispered to Lisa. “She hasn’t had her coﬀee yet.”</p>
+<p>“I heard that,” Jessie mumbled around her spoon.</p>
+<p>Amber chuckled, turning towards the third girl at the table.</p>
+<p>“And that’s Rachel, applied economics major and the sorority’s Treasurer,” she said proudly, </p>
+<p>pointing at a girl with a long brown ponytail. Rachel was staring at her phone and distractedly </p>
+<p>waved a hand without looking up.</p>
+<p>“C’mon Lisa, I’ll show you the lounge,” Amber said, rolling her eyes. Her sisters weren’t </p>
+<p>helping her make the best ﬁrst impression. She’d have words with them… later.</p>
+<p>Lisa gave a timid wave and followed Amber. They arrived at the lounge, which featured a </p>
+<p>large sectional sofa and a big-screen television. It was early yet, and no one was around.</p>
+<p>“I guess everyone’s still waking up,” Amber said, sounding disappointed. </p>
+<p>“Anyway, let’s get you to your new room!”</p>
+<p>Lisa followed Amber down another hallway, relieved that they hadn’t encountered anyone </p>
+<p>else. She had pledged Beta Beta for the academic excellence and moral character of its sisters, </p>
+<p>and meeting so many of them in such a short time was awe-inspiring. She hoped she was making </p>
+<p>a good ﬁrst impression.</p>
+<p>They arrived outside a doorway in the residential wing. </p>
+<p>“I’ll let you get settled in,” Amber said. </p>
+<p>“Your roommate should be along shortly. See you this afternoon for our house meeting!”</p>
+<p>She smiled, then turned and walked down the hallway, disappearing around a corner.</p>
+<p>Lisa peered at the doorway. There was a small paper taped to the wall, on which Lisa &amp; Ella </p>
+<p>was written in pink ink. The “I” in her name was dotted with a pink heart, dutifully ﬁlled in by its </p>
+<p>author’s pen until it was solid pink. She stepped inside the room, closing the door behind her. </p>
+<p>2</p>
+<p>It was a small space, barely large enough for a bunk bed on the far wall and two desks on </p>
+<p>opposite walls. One of the desks was stacked high with books, and the lower bunk was so </p>
+<p>overcrowded with piles of clothing that she couldn’t see the bedsheets.</p>
+<p>Lisa was disappointed, having also preferred the bottom bunk. She hoped her new </p>
+<p>roommate wasn’t as messy as the bed would suggest. </p>
+<p>The other desk was almost bare. A lamp above it was turned on, illuminating a small pink </p>
+<p>envelope with her name written on the outside. She picked it up and walked towards the entrance, </p>
+<p>under an overhead light near the doorway. She opened it, unfolding a note to read:</p>
+<p>Lisa, </p>
+<p>A. Friend </p>
+<p>Welcome to Beta Beta! May all your wishes come true. </p>
+<p>She frowned. A friend sent this? She didn’t feel like she had many friends right now. </p>
+<p>There was a weight in the envelope. She turned it over above her cupped hand. A small </p>
+<p>purple crystal fell out, dropping towards her hand —</p>
+<p>WHAM! The door swung wide open, slamming into her from behind. The impact sent her </p>
+<p>careening forwards until she fell, sprawling across the tile ﬂoor. </p>
+<p>“Hey roomie!” called a feminine voice from behind the door.</p>
+<p>Lisa was fortunately uninjured. She sat up on the ﬂoor, more surprised than smarting.</p>
+<p>A girl about her age stepped into the room. She was tall and slender, with tan skin and long </p>
+<p>black hair. She wore a blue dress that fell to her ankles.</p>
+<p>“Hi, I’m Ella!” she said cheerfully, to no one in particular. She tilted her head, peering around </p>
+<p>uncertainly before ﬁnding Lisa on the ﬂoor.</p>
+<p>“Whatcha doin’? New ﬁtness craze?”</p>
+<p>Lisa crossed her arms over her legs as she sat on the ﬂoor. She sighed, starting to second-</p>
+<p>guess herself.</p>
+<p>3</p>
+<p>“Hi Ella. I’m Lisa,” she said, forcing a smile. </p>
+<p>“It’s my ﬁrst day here at Beta Beta, and everyone’s been so kind, and I was just having a </p>
+<p>moment alone, so I was surprised to see you,” she rambled, deciding not to mention being bowled </p>
+<p>over by the door. </p>
+<p>“Don’t worry, Lisa,” said Ella, giving a reassuring smile. “I’m sure you’ll ﬁt right in!”</p>
+<p>A glimmering reﬂection caught Ella’s notice. She turned to her side, bending over her long </p>
+<p>legs to grasp a purple crystal from the ﬂoor. She straightened up, peering closely at it for a </p>
+<p>moment, and shrugged.</p>
+<p>“Then again, the drama around here can be distracting, and sometimes I wish that we were </p>
+<p>all very close,” she sighed, staring into space.</p>
+<p>The crystal in her hand started glowing a soft purple light.</p>
+<p>“Not that you’d need it,” she continued, “But if I could, I’d wish that everyone at Beta Beta </p>
+<p>loved you!” she exclaimed, trying to be supportive.</p>
+<p>The crystal glowed more brightly in her hand.</p>
+<p>“Anyway, you’ll ﬁgure it all out soon enough. Hey, you wanna get some ice cream? My treat!” </p>
+<p>She opened her palm, but neither of them noticed the purple glow of the crystal in her hand. </p>
+<p>She tossed it upwards, intending to catch it again.</p>
+<p>The instant it left her touch, a purple ﬂash of light instantly ﬁlled the room, overwhelming </p>
+<p>Lisa’s vision until she could see nothing else —</p>
+<p>(cid:15911)</p>
+<p>“Welcome to your ﬁrst day at Beta Beta!” Amber said, ﬂuttering her eyelashes.</p>
+<p>She had always enjoyed showing the newest pledges around the sorority. As the sorority </p>
+<p>president, she wanted all the girls under her watch to feel welcome. But there was something </p>
+<p>about this newest sister, though, that really caught her eye.</p>
+<p>4</p>
+<p>She was leading the most beautiful girl she’d ever seen on a tour of their modest sorority </p>
+<p>house. This was Lisa, a stunning brunette who had been on campus for less than two weeks. Lisa </p>
+<p>had a sexy, slender body, and Amber couldn’t help but admire her long brown hair.</p>
+<p>Amber knew the moment they met that she was falling for Lisa. She was glad beyond </p>
+<p>measure that Lisa had agreed to join her sorority, for it gave her a better chance of getting to know </p>
+<p>Lisa before anyone else.</p>
+<p>Lisa looked around and immediately knew something was wrong. The problem wasn’t that </p>
+<p>every girl at Beta Beta had been fawning over her, though. That was ﬁne, actually, and quite </p>
+<p>ﬂattering as well. What’s more, she couldn’t believe her luck that all of her sisters seemed to like </p>
+<p>girls, just like she did.</p>
+<p>No, what stood out in her mind was that she was again standing at the beginning of her tour </p>
+<p>of the sorority. Hadn’t she just been in her room with Ella? There was some kind of purple ﬂash, </p>
+<p>and now she’s back at the entrance with Amber? She furrowed her brow, confused.</p>
+<p>“Thanks Amber,” she managed. “I’m so excited to be your newest sister.”</p>
+<p>As the words emerged from her mouth, she felt a growing sense of deja vu. She’d had this </p>
+<p>conversation before, and on this same tour, too. She was sure of it. Was Amber playing a prank on </p>
+<p>her?</p>
+<p>eyed at her. </p>
+<p>tour.</p>
+<p>obvious.</p>
+<p>She looked up to meet Amber’s eyes. Just like every other sister she’d met at Beta Beta, </p>
+<p>Amber seemed positively obsessed with her. The sorority president was presently staring doe-</p>
+<p>Then again, Lisa thought, it would be helpful to have a close relationship with the president. </p>
+<p>She shook her head, trying to focus through the fog in her mind.</p>
+<p>Amber felt her knees quivering. That impossibly gorgeous ﬁrst-year was doing the cutest </p>
+<p>thing with her eyebrows right now. </p>
+<p>Amber knew she was becoming aroused, and tried to pull herself together to continue their </p>
+<p>“Right this way, Lisa! It’s early, so let’s see who’s in the kitchen,” she said, having trouble </p>
+<p>thinking straight with this astonishing beauty so close by. She hoped her admiration wasn’t too </p>
+<p>5</p>
+<p>She stood to the side and gestured. As the ﬁrst-year girl walked by, Amber couldn’t help </p>
+<p>herself and leaned in to smell the younger girl’s neck and hair. Lisa smelled divine. What a turn on! </p>
+<p>Amber hoped her surreptitious gesture wasn’t noticed.</p>
+<p>They walked down a short hallway before arriving in the kitchen, where three girls were </p>
+<p>sitting closely together at a large round table. They were leaning their heads in, embracing each </p>
+<p>other in an intense three-way kiss. </p>
+<p>Lisa had visited Beta Beta several times before joining, so she wasn’t surprised to see her </p>
+<p>sisters kissing each other. She and Amber both enjoyed a moment watching the multi-way </p>
+<p>embrace. Amber laughed heartily. </p>
+<p>“Look at that, three of our sisters enjoying a traditional Beta Beta breakfast!” she said with a </p>
+<p>chuckle. She introduced them, pointing to each of them in turn.</p>
+<p>“Heather, our social chair, and consistently voted best kisser by her sisters,” Amber said with </p>
+<p>pride, indicating a pretty blonde with her hair in pigtails. Heather was sucking hard on another </p>
+<p>girl’s tongue and gave only a quick wave in their direction.</p>
+<p>“The curly brunette in the middle is Jessie, our vice president. She’s got the sexiest long </p>
+<p>tongue, and you can see how much Heather loves sucking on it. Be sure to ask her for a personal </p>
+<p>demonstration sometime,” Amber continued with a smile. She pointed towards the third girl at the </p>
+<p>table.</p>
+<p>“And that cutie with the big chest is Rachel. All the sisters especially love her,” Amber said, </p>
+<p>grinning. She hoped Lisa wasn’t into girls with big breasts, or she’d be risking yet another of her </p>
+<p>sisters being seduced by Rachel and her melons.</p>
+<p>It was only polite to introduce Lisa to all of her sisters, Amber thought, as long as they didn’t </p>
+<p>go steady with Lisa before she could. Even if Lisa were dating one of the other sisters instead, </p>
+<p>Amber knew she would still spend every minute pursuing that impossible beauty. She had never </p>
+<p>felt this way about anyone before, but then again, she’d never met anyone like Lisa before either.</p>
+<p>Heather, Jessie, and Rachel continued their three-way kiss, each girl immensely enjoying </p>
+<p>herself as she sucked and licked her sisters’ tongues and lips. Licking and slurping sounds ﬁlled </p>
+<p>the air. They were lost in each other, completely ignoring the two new arrivals in the doorway.</p>
+<p>Amber tried to control her arousal enough to carry on with their tour. It was hard enough to </p>
+<p>restrain herself while standing so close to Lisa, and her other three sisters were turning her on </p>
+<p>even more.</p>
+<p>6</p>
+<p>“C’mon Lisa, I’ll show you the lounge,” she said, hoping Lisa couldn’t see her knees </p>
+<p>quivering. She turned and walked down a short hallway.</p>
+<p>Lisa’s foggy confusion was growing. She had pledged Beta Beta for the skilled tongues and </p>
+<p>generous touch of its sisters, so of course she loved watching them kissing at the kitchen table. </p>
+<p>After all, any of her sisters would have. </p>
+<p>But she was certain that she’d seen those three girls making out before. This entire tour still </p>
+<p>felt oddly familiar. She frowned, pacing down the hallway after Amber. </p>
+<p>They arrived together in the lounge, which featured a large sectional sofa and a big-screen </p>
+<p>television. </p>
+<p>Two girls were sitting nearby, both wearing towels around their body and hair. Their skin was </p>
+<p>ﬂushed red, as if they’d just emerged from the shower. One was sitting across the other’s lap, and </p>
+<p>they were lost in a sloppy wet kiss, whimpering with delight as they slid their lips together.</p>
+<p>“Don’t mind them,” Amber chuckled. </p>
+<p>“They’ve probably just ﬁnished showering, and besides, isn’t that everyone’s favorite time for </p>
+<p>making out?” she asked. She emphasized her point by leaning over and giving Lisa a quick peck </p>
+<p>on her cheek.</p>
+<p>“Anyway, let’s get you to your new room!” Amber exclaimed.</p>
+<p>Lisa knew it was commonplace for her sorority sisters to shower together, and she too </p>
+<p>enjoyed bathing with her sisters. But she was certain Amber had shown her this lounge before, </p>
+<p>and those same two girls had been making out then, too. </p>
+<p>She shook her head, then followed Amber down the hallway. They arrived outside a doorway </p>
+<p>in the residential wing.</p>
+<p>“I’ll let you get settled in,” Amber smiled, breathing heavily. As much as she wanted to, it </p>
+<p>probably wasn’t the right moment to ask Lisa to come to her room for some private time. Besides, </p>
+<p>she could make sure to partner with that stunning beauty at their regular sorority kissing session </p>
+<p>that afternoon.</p>
+<p>“Your roommate should be along shortly. I’ll see you this afternoon for our house make-out… </p>
+<p>sorry, kissing practice!” she said, smiling.</p>
+<p>She waved, then walked down the hallway and disappeared around a corner.</p>
+<p>7</p>
+<p>Lisa, </p>
+<p>A. Friend </p>
+<p>familiar as well. </p>
+<p>Lisa felt wobbly on her feet. That strange deja vu was now especially pronounced, and she </p>
+<p>just needed a moment to herself. She opened the door and stepped inside, closing it behind her. </p>
+<p>It looked like one half of the room had been struck by a tornado. The bottom bunk was </p>
+<p>covered with some girl’s extensive collection of makeup, lip gloss, and blush. One of the desks </p>
+<p>was piled high with years’ worth of women’s fashion and beauty magazines.</p>
+<p>The other desk was nearly empty. Its lamp was illuminating a small pink envelope, on which </p>
+<p>her name was written. She grabbed it, then took several steps until she stood under an overhead </p>
+<p>light near the doorway. She opened it, pulling out a folded note to read:</p>
+<p>We’re so lucky to have a beautiful girl like you at Beta Beta! May all your wishes come true. </p>
+<p>One of her sisters must have sent this, she thought. The sender’s name seemed somehow </p>
+<p>There was a weight in the envelope. She turned it upside-down above her hand and gave it a </p>
+<p>small shake. A small purple crystal fell out — </p>
+<p>WHAM! The door swung wide open, slamming into her and sending her ﬂying. She fell, </p>
+<p>sprawling across the tile ﬂoor. </p>
+<p>“Hey roomie!” called a feminine voice from behind the door. </p>
+<p>A girl with long slender legs, beautiful tan skin, and straight dark hair stepped into the room. </p>
+<p>She was wearing faded jeans with several large holes that showed her skin, and a sleeveless blue </p>
+<p>blouse.</p>
+<p>ﬁnding Lisa on the ﬂoor.</p>
+<p>her mouth with one hand.</p>
+<p>“Hi, I’m Ella!” she exclaimed, to no one in particular. She looked around for a moment before </p>
+<p>“Whatcha… wow! Oh my, you’re… beautiful,” she said, staring openly at Lisa. She covered </p>
+<p>8</p>
+<p>Lisa sat up, rubbing her shoulder, and saw a familiar look in this dark beauty’s wide eyes. </p>
+<p>She knew her roommate was lusting for her, just like her other sisters.</p>
+<p>“Hi Ella, I’m Lisa—” she started, but she was interrupted by the taller girl.</p>
+<p>“You’re Lisa?” Ella gasped. </p>
+<p>“I can’t believe I’m sharing a room with you! Can I… oh, what’s this?”</p>
+<p>Ella had spied a curious ﬂash in the corner of her eye. She leaned over her long legs and </p>
+<p>picked up a small purple crystal. She straightened up and peered at it for a moment, then </p>
+<p>shrugged, wrapping her ﬁngers around it. </p>
+<p>She turned her attention back towards her beautiful roommate.</p>
+<p>“So, Lisa,” she started, her heart racing.</p>
+<p>“Do you want to practice kissing before this afternoon’s group session?” she asked. She </p>
+<p>hoped she’d get a chance to be a good Beta Beta sister and indulge herself at the same time.</p>
+<p>Lisa smiled eagerly. It was only normal to kiss her sorority sisters for several hours each day, </p>
+<p>and perhaps some intimate attention was just what she needed to settle her mind. Maybe, she </p>
+<p>thought, she was imagining the whole deja vu thing after all.</p>
+<p>Ella brightened, seeing her roommate’s encouraging response.</p>
+<p>“Yay! I’ll show you some tongue tips that Jessie taught me earlier. She’s so talented,” she </p>
+<p>said dreamily. </p>
+<p>Ella couldn’t wait to make out with her beautiful roommate, but it was bothering her that the </p>
+<p>sorority’s rules prevented them from being more intimate.</p>
+<p>“You know, there are so many pretty girls around here,” she said wistfully.</p>
+<p>“But they never want to do anything more than kiss. Sometimes I just wish that we all had </p>
+<p>much lower inhibitions!”</p>
+<p>notice.</p>
+<p>The purple crystal in her hand started glowing, but she was too distracted by Lisa’s smile to </p>
+<p>“It’s those daily kissing practices. They’re such a tease,” she continued. She stared at Lisa, </p>
+<p>imagining holding her close and kissing her cheek.</p>
+<p>9</p>
+<p>“Not that I mind them, of course, but honestly I wish we could all just have sex anytime!”</p>
+<p>The purple crystal glowed much more brightly in her hand. </p>
+<p>“Anyway, let me show you what I can do with my tongue!” she said cheerfully. She placed </p>
+<p>the crystal on a small table near the door and stepped towards Lisa.</p>
+<p>Just as it left her hand, a great purple ﬂash ﬁlled the room, which quickly overwhelmed Lisa’s </p>
+<p>vision until her world contained nothing else —</p>
+<p>(cid:15911)</p>
+<p>“Welcome to your ﬁrst day at Beta Beta!” Amber said, smiling as she turned to show oﬀ her </p>
+<p>nearly-nude body.</p>
+<p>Exhibiting her body for the newest pledges was part of the special delight she took in </p>
+<p>welcoming them. As the sorority president, it also allowed her to be the ﬁrst to explain the </p>
+<p>sorority’s clothing-optional policy. It was unusual, she knew, but the younger girls all seemed very </p>
+<p>enthusiastic about being nude with their sisters.</p>
+<p>She put one hand on her hip, touching her pink miniskirt, which was fewer than three inches </p>
+<p>in length as dictated by sorority tradition. With that and her favorite pair of pink stilettos, she saw </p>
+<p>no need to wear anything else. She knew she was setting a positive example for her sisters by </p>
+<p>remaining at least topless, if not nude, within the sorority’s walls.</p>
+<p>She shimmied her shoulders, bouncing her bare breasts. She knew this gesture would come </p>
+<p>across as an obvious attempt to impress Lisa, the beautiful ﬁrst-year student she was leading </p>
+<p>around. She had never met anyone more stunningly gorgeous, and hoped the younger girl felt </p>
+<p>similarly about her as well.</p>
+<p>Lisa watched Amber’s chest in motion. As much as she admired the older girl’s big breasts, </p>
+<p>she was distracted by a most peculiar sensation. It wasn’t the cool air she felt across her own </p>
+<p>nude body, though. Besides, she never wore clothing unless she absolutely had to.</p>
+<p>No, it was instead a strange sense of deja vu. She was certain she’d been on this </p>
+<p>introductory tour before, completely nude with her sorority president, but what could she say? </p>
+<p>Amber would never believe her. </p>
+<p>10</p>
+<p>She tried to pull herself together, smiling and shaking her own bare breasts to return Amber’s </p>
+<p>friendly gesture.</p>
+<p>“Thanks, Amber,” she said. She reached out to gently cup Amber’s nude breast with her </p>
+<p>hand, in keeping with a traditional Beta Beta greeting. She thought it would be best to act normally </p>
+<p>for now until she could ﬁgure out her deja vu.</p>
+<p>Amber smiled, enjoying Lisa’s friendly embrace. She was impressed by Lisa’s gorgeous </p>
+<p>slender body and her eyes kept returning to Lisa’s bare pussy. It was perfectly formed and </p>
+<p>completely hairless, and in her mind, the most beautiful element of the most beautiful woman </p>
+<p>she’d ever seen. </p>
+<p>She couldn’t help herself and reached out, placing her palm on Lisa’s pretty pussy. With her </p>
+<p>other hand she gently stroked her own pussy, knowing that it was important for the sisters of Beta </p>
+<p>Beta to embrace their own pleasure too. They stepped towards each other and embraced, </p>
+<p>meeting in a deep kiss.</p>
+<p>Lisa was thankful for a few moments of sharing her lips and tongue with the older girl. With </p>
+<p>her eyes closed, she pondered her curious circumstances and enjoyed having her tongue sucked </p>
+<p>and pussy rubbed at the same time. She gave Amber’s breast a gentle squeeze in her hand, </p>
+<p>enjoying its heft, although she found herself wishing that they both had much larger chests.</p>
+<p>Amber rubbed her palm against Lisa’s dripping pussy as they kissed. She enjoyed feeling her </p>
+<p>hands coated with the slippery wetness of any of her sisters, and was especially grateful to touch </p>
+<p>such an astonishingly beautiful girl as Lisa.</p>
+<p>She soon felt Lisa writhing in her grip. She knew that this gorgeous ﬁrst-year girl was close to </p>
+<p>orgasm, a ﬁne opportunity for a reminder which of them was president. She withdrew her hand </p>
+<p>from Lisa’s dripping pussy and stepped away.</p>
+<p>“Right this way! Let’s see who’s in the kitchen,” she said, licking her lips sultrily. She </p>
+<p>extended an arm towards the younger brunette.</p>
+<p>Lisa took Amber’s arm, thankful for her sister’s loving support while her head felt so fuzzy. </p>
+<p>She felt another moment of that weird deja vu again. Hadn’t Amber shown her the kitchen before?</p>
+<p>Amber leaned towards Lisa, kissing her on her cheek.</p>
+<p>“You look troubled, babe. Hey, I know what’ll cheer you up! Let’s see if we can kiss and </p>
+<p>ﬁnger each other all the way to the kitchen!” she beamed. She’d discovered in her time as </p>
+<p>11</p>
+<p>president that many of the younger girls, on their ﬁrst days as sisters, just needed some extra </p>
+<p>attention to their pussies to help them relax.</p>
+<p>Lisa couldn’t resist Amber’s infectious enthusiasm and found herself reluctantly smiling. She </p>
+<p>moved in close until she was kissing Amber’s lips once more. </p>
+<p>She felt the welcome sensation of Amber’s ﬁnger slipping into her pussy, making her feel </p>
+<p>somehow whole again. She gladly reciprocated, reaching over and plunging two of her own </p>
+<p>ﬁngers into Amber’s wet pussy. Hopefully Amber wouldn’t think her too forward for using an extra </p>
+<p>ﬁnger, she thought. After all, they had only just met.</p>
+<p>They took a step forward, then another, still kissing each other and thrusting their ﬁngers into </p>
+<p>each other’s pussies. They giggled and gasped as they proceeded down the hallway, keeping their </p>
+<p>lips together and ﬁngers wiggling inside each other in a loving embrace. </p>
+<p>Lisa felt her knees becoming weak as they walked. She admired her president’s masterful </p>
+<p>touch on her pussy. She had heard that Amber ran daily cunnilingus classes for her sisters, and </p>
+<p>resolved to ask her later for some personal instruction.</p>
+<p>They strolled arm-in-arm into the kitchen, at last breaking their kiss and withdrawing their </p>
+<p>ﬁngers from each other’s dripping pussies. They glanced around, giggling and wheezing as much </p>
+<p>at each other as at the scene before them. </p>
+<p>Three girls were atop the kitchen table. They were all nude, as was expected of the more </p>
+<p>senior girls in Beta Beta leadership. </p>
+<p>Amber gave Lisa another kiss on the cheek and leaned in close, helpfully narrating her </p>
+<p>sisters’ performances and introducing each of them in turn.</p>
+<p>“That pretty blonde rubbing her nipple across her sister’s pussy is Heather, our vice president </p>
+<p>of pussy,” Amber said proudly, pointing at a girl with platinum blonde pigtails.</p>
+<p>“If you ever need to get oﬀ, she’s got the fastest ﬁngers around! And as you can see, she’s </p>
+<p>quite adept with her nipples as well,” she nodded.</p>
+<p>“And that cutie enjoying Heather’s breast on her pussy is Jessie, our oral liaison. Look how </p>
+<p>quickly Jessie is driving her tongue into her sister’s pussy! Don’t miss your chance for a private </p>
+<p>lesson with her later, Lisa,” she encouraged.</p>
+<p>“The busty brunette with Jessie’s tongue in her pussy is Rachel. Doesn’t she have the most </p>
+<p>amazing big breasts? I could watch them bouncing for hours! I can tell that you like her, so I’ll be </p>
+<p>12</p>
+<p>sure to have her visit your room later for a personal introduction,” Amber smiled as she whispered </p>
+<p>in Lisa’s ear.</p>
+<p>her ear. </p>
+<p>Lisa shifted uneasily. All three girls on the kitchen table were beautiful and quite talented in </p>
+<p>pleasing their sisters, as was expected of any woman at Beta Beta. It was always so hot every </p>
+<p>time she saw her sisters having sex together, too. But that wasn’t what was bothering her. </p>
+<p>No, she was certain she’d seen these three girls before in the same positions on top of the </p>
+<p>kitchen table. It was hard to focus too much on that, though, as Amber had started gently licking </p>
+<p>She grinned, enjoying the attention. Maybe she was worrying too much about nothing, after </p>
+<p>all. She turned to thank her president by thrusting her tongue between Amber’s lips.</p>
+<p>Amber grinned, eagerly sucking the ﬁrst-year’s tongue into her mouth. She gently cupped </p>
+<p>Lisa’s left breast in her hand in a gesture of sisterly solidarity. After a moment they separated, and </p>
+<p>she leaned back, chuckling.</p>
+<p>“I’m sure you’ll see them again later. Come Lisa, let me show you to your room,” she grinned, </p>
+<p>again extending her arm. She grasped hands with the stunning ﬁrst-year brunette, whom she still </p>
+<p>couldn’t believe was also her newest pledge. She tried to show her appreciation by reaching out </p>
+<p>with her other hand, rubbing Lisa’s bare pussy as they walked. </p>
+<p>Lisa purred, appreciating the older girl’s intimate attention. She had pledged Beta Beta for </p>
+<p>the alluring nude bodies and wet pussies of its sisters, after all. She was thrilled that being naked </p>
+<p>all the time seemed to encourage her sisters to touch her just as Amber was doing now. </p>
+<p>She showed her thanks by reaching under Amber’s miniskirt, gently stroking her president’s </p>
+<p>pussy as they strolled down the hallway together. They passed by the lounge and continued </p>
+<p>towards the residential wing.</p>
+<p>They arrived in front of a doorway, but it was another few moments before Lisa had stopped </p>
+<p>sucking on Amber’s tongue long enough to look around. </p>
+<p>This door was somehow familiar, Lisa thought, still stroking Amber’s dripping pussy with one </p>
+<p>hand. Amber had leaned over to reciprocate, again slipping a ﬁnger into Lisa’s pussy as they </p>
+<p>stood close together.</p>
+<p>Amber would have loved to taste Lisa’s pussy, but she wanted to shower before their </p>
+<p>afternoon class, and a break would give Lisa a chance to settle in as well. She reluctantly pulled </p>
+<p>13</p>
+<p>her ﬁngers from Lisa’s pussy, quickly slurping them into her mouth to swallow as much of Lisa’s </p>
+<p>arousal as she could.</p>
+<p>quick squeeze. </p>
+<p>“I’ll see you later this afternoon, lover,” Amber smiled, giving Lisa a quick peck on the cheek. </p>
+<p>“Don’t forget, we have pussy-licking practice at three o’clock,” she said, giving Lisa’s hand a </p>
+<p>Lisa withdrew her own ﬁngers from Amber’s dripping pussy, grinning as she imitated Amber’s </p>
+<p>gesture by sucking them into her mouth. </p>
+<p>Amber turned and walked away, turning back to blow a kiss over her shoulder, which Lisa </p>
+<p>pantomimed catching and applying to her lips. Amber giggled, then disappeared around a corner.</p>
+<p>Lisa sighed happily. Amber’s ﬁngers were skilled indeed and the older girl’s touch had helped </p>
+<p>distract her from that weird feeling of deja vu. </p>
+<p>She stepped inside the room, closing the door behind her. As she looked around, though, </p>
+<p>she felt a growing certainty that she’d been here before. </p>
+<p>She knew she had seen the piles of all-girl adult magazines on one of the two desks. An </p>
+<p>extensive collection of nipple clamps and chains was scattered atop the room’s large shared bed, </p>
+<p>and she was sure she’d seen that before, too.</p>
+<p>There was a small pink envelope on the other desk. It featured her name, handwritten in a </p>
+<p>ﬂowery script. She picked it up, opening it to ﬁnd a handwritten note:</p>
+<p>Thank you for pledging your breasts and pussy to the sisters of Beta Beta! May all your </p>
+<p>Lisa, </p>
+<p>wishes come true. </p>
+<p>A. Friend </p>
+<p>There was something else in the envelope, but a sudden sense of foreboding overcame her. </p>
+<p>Here under the overhead light near the doorway was an excellent spot to admire her own nude </p>
+<p>body, but she felt a strange impulse to take two large steps away. She did so, then turned the </p>
+<p>envelope upside-down over her palm.</p>
+<p>14</p>
+<p>A small purple crystal fell into her hand. She looked closely at it, and it seemed to reﬂect </p>
+<p>something about herself back at her. But it was hard to be too introspective right now, though, as </p>
+<p>Amber’s attention to her pussy had gotten her awfully turned on. </p>
+<p>As much as she loved being nude and having sex with her sorority sisters, they left her high </p>
+<p>and dry sometimes. She had to ﬁnish by herself far too often for her liking. She closed her ﬁst </p>
+<p>around the crystal. </p>
+<p>At that moment the door swung wide open. </p>
+<p>“Hey roomie!” Ella called as she stepped into the room, then stopped in her tracks. </p>
+<p>The most beautiful girl she’d ever seen was standing just inches in front of her. Who was this </p>
+<p>astonishing creature? Whoever she was, she was completely nude, and Ella couldn’t help but </p>
+<p>admire the girl’s straight brown hair, beautifully ample breasts, and pretty pussy, which was </p>
+<p>dripping wet with obvious arousal.</p>
+<p>A stunned realization came over Ella.</p>
+<p>“You must be Lisa!” she exclaimed, beaming widely. </p>
+<p>“I’m Ella. It’s nice to meet you, and it’s such an honor to be sharing your bed!”</p>
+<p>She closed the door behind her, turning away from Lisa. She began a sultry striptease under </p>
+<p>the overhead light, although she didn’t have many clothes to remove, as she wore nothing except </p>
+<p>for her bra and her favorite stilettos.</p>
+<p>Today was an odd-numbered day, after all. They both knew that it was traditional for the </p>
+<p>sisters of Beta Beta to go nude from the waist down on odd days, and from the waist up on even </p>
+<p>days. </p>
+<p>“Won’t you unhook me?” she teased. She took a step backwards, closer to Lisa.</p>
+<p>Lisa chuckled. She felt like she’d met Ella before, but that didn’t make her any less excited at </p>
+<p>the thought of sharing her bed with such a pretty girl. She unhooked Ella’s bra with one hand in a </p>
+<p>single practiced movement. </p>
+<p>Ella shrugged her bra over her shoulders and down her arms, then kicked oﬀ her heels, </p>
+<p>leaving her just as nude as her gorgeous roommate. She felt Lisa reaching ahead to gently cup her </p>
+<p>breast from behind. This was a common variation on Beta Beta’s most polite greeting, used when </p>
+<p>15</p>
+<p>two sisters felt an especially acute attraction to each other. She blushed, realizing the immense </p>
+<p>compliment that Lisa was paying her.</p>
+<p>Lisa leaned in close and licked along Ella’s ear from bottom to top, just as Amber had done </p>
+<p>to her minutes earlier. She felt Ella quivering in her grasp, and sensed Ella’s warmth over her whole </p>
+<p>body as they pressed their bare skin together. A wave of aﬀection for her roommate washed over </p>
+<p>her.</p>
+<p>She loved having sex with her sisters for hours each day, just as they did, but it wasn’t </p>
+<p>enough for her. She found herself wanting more. </p>
+<p>As she grasped Ella’s pert breast in her hand, she thought of her own modest chest, and </p>
+<p>Amber’s as well. None of them could compare with Rachel’s very large natural breasts. Lost in </p>
+<p>thought, she felt a strange urge to speak in support of her sisters.</p>
+<p>“I wish that my sisters and I would grow larger breasts when one of our sisters gives us an </p>
+<p>orgasm,” she sighed.</p>
+<p>within her closed ﬁst.</p>
+<p>In her other hand, the purple crystal started to glow. It was beyond both their sight, hidden </p>
+<p>“Ooh, babe! That would be so hot!” Ella agreed. She reached up and grasped her own nipple </p>
+<p>in her ﬁngers. Her teat was as hard as she’d ever remembered it, and its hot ﬁrmness felt </p>
+<p>wonderful in her ﬁngers as she squeezed it. She imagined herself with a larger chest, which turned </p>
+<p>her on even more. She eagerly ground her pert bottom into the beautiful girl behind her.</p>
+<p>Lisa sighed, resting her chin on Ella’s shoulder, daydreaming in an aroused haze. It sure was </p>
+<p>inconvenient, she thought, that she and her sisters had to stop having sex now and then to drink </p>
+<p>water and rest. She again felt a strange urge to vocalize her desires.</p>
+<p>“I wish that my sorority sisters and I would spray breast milk and squirt when we’re turned on </p>
+<p>and when we climax, and it’s a good thing that never dehydrates us!” she sighed dreamily. </p>
+<p>The purple crystal in her hand glowed brighter.</p>
+<p>Ella reached down to rub her own pussy, which had received so much attention today from </p>
+<p>her sisters that she found herself agreeing with her roommate. It would be helpful if she were </p>
+<p>wetter between her legs, and she had always liked the idea of milky breasts for herself and her </p>
+<p>sisters.</p>
+<p>16</p>
+<p>“Babe, if you want to get oﬀ, my ﬁngers and tongue are yours anytime. Just say the word,” </p>
+<p>she cooed.</p>
+<p>That gave Lisa an idea. She enjoyed these girls all lusting after her, but she wouldn’t have </p>
+<p>minded having more control during her frequent encounters with her sexy sorority sisters.</p>
+<p>“I wish that my sorority sisters would worship me,” she whispered. </p>
+<p>Ella gave an especially strong shudder at this, as if she were especially aroused by the idea. </p>
+<p>Her hips bumped against Lisa’s closed ﬁst.</p>
+<p>Lisa straightened up, ﬁnally having put aside her fantasies for the moment. She just wanted </p>
+<p>to run her hands all over her roommate’s sexy nude body. She tossed the crystal towards the </p>
+<p>empty desk.</p>
+<p>At the very instant it left her hand, a bright purple ﬂash overwhelmed the room, which quickly </p>
+<p>ﬁlled Lisa’s vision until her world contained nothing else —</p>
+<p>(cid:15911)</p>
+<p>“Welcome to… mmm, your ﬁrst day, <em>slurp</em>, at Beta Beta!” Amber said, between licks of her </p>
+<p>newest sister’s bare feet. </p>
+<p>Today she had the immense honor of welcoming Lisa, a living goddess who had graced Beta </p>
+<p>Beta by becoming a member within her ﬁrst two weeks at the university. </p>
+<p>From her position lying down on the carpet, Amber realized how glad she was that they were </p>
+<p>both fully nude. That made it easier for her to use every part of her body in service of this </p>
+<p>impossibly beautiful ﬁrst-year girl. </p>
+<p>She thought it best to demonstrate proper Beta Beta protocol by starting with her tongue, </p>
+<p>and this goddess’ bare feet seemed as good a place to begin as any. Still, she wanted to be polite, </p>
+<p>so she thought she should ask just in case. </p>
+<p>But ﬁrst, there was something she had to get oﬀ her chest.</p>
+<p>“Goddess, I must apologize, for I did not grow my breasts larger for you,” she started, feeling </p>
+<p>compelled to seek forgiveness. Like her sisters, her breasts grew every time one of her sisters </p>
+<p>17</p>
+<p>gave her an orgasm, although each of them had to start anew each day as their chests returned to </p>
+<p>normal overnight. She’d been so focused on helping her sisters prepare for Lisa’s arrival, she </p>
+<p>hadn’t had any time that day to ask one of them for help growing her breasts.</p>
+<p>“How may I use my body to please you?” she asked, resting her cheek on Lisa’s foot. </p>
+<p>She tilted her head upwards to behold Lisa’s ﬂawless face. It was an astonishing vision, the </p>
+<p>sight of which made her gush her arousal all over her own legs and the carpet.</p>
+<p>She was the sorority president, after all, so she didn’t wait for an answer and hoped Lisa </p>
+<p>would appreciate her taking initiative. She sat up, spreading her legs wide and lowering herself </p>
+<p>until her pussy was rubbing along the top of Lisa’s right foot.</p>
+<p>Like her sisters, her breasts tended to leak milk and her pussy was almost always gushingly </p>
+<p>wet, both of which she hoped would please her goddess. Great splashes of her juices were ﬂying </p>
+<p>everywhere as she slid her pussy all over Lisa’s foot. She rubbed her leaky nipples on Lisa’s </p>
+<p>calves, covering them in a thick coating of milk. </p>
+<p>Never had she imagined being so close to a girl of such perfection, and she felt herself </p>
+<p>milking and squirting unusually large volumes of liquid. She hoped that Lisa would notice her </p>
+<p>obvious arousal.</p>
+<p>She wrapped her arms around Lisa’s legs, kissing and licking Lisa’s thighs with great vigor. </p>
+<p>She hoped she was making the best ﬁrst impression possible. Besides, it was nothing less than </p>
+<p>what this goddess deserved.</p>
+<p>Lisa had been enjoying the attention to her legs and feet, but something was bothering her. </p>
+<p>The problem wasn’t that her new sorority sisters kept throwing themselves at her, seemingly </p>
+<p>content to rub any part of their bodies against her. She had pledged Beta Beta for just that reason, </p>
+<p>and if anything, she rather enjoyed their attention.</p>
+<p>No, it was a subconscious strange sensation, as if she’d been here before. She was sure she </p>
+<p>remembered her toes being doused in Amber’s hot arousal, too. She needed some time to think. </p>
+<p>For now, she might as well have the sorority president keep up her eﬀorts.</p>
+<p>“You may continue with your pussy on my feet, Amber,” she said, smirking as the sorority </p>
+<p>president licked her inner thigh. </p>
+<p>Amber gasped with delight. To use her body to pleasure this goddess was an incredible </p>
+<p>honor. She began thrusting her hips with vigor, driving her pussy back and forth along the top of </p>
+<p>18</p>
+<p>Lisa’s right foot. Her pussy was feeling especially wet today, and its gushing sprays of squirt had </p>
+<p>soaked through a large area of carpet around them, mingling with the ﬂying droplets of her milk.</p>
+<p>Lisa was certain that Amber had greeted her here before, and in just this same way, too. </p>
+<p>Something strange was deﬁnitely going on. One small comfort, Lisa thought, was feeling her own </p>
+<p>pussy dripping and gushing down her legs, soaking her skin along with the milk dripping from her </p>
+<p>breasts. At least that was something normal amid all this uncertainty.</p>
+<p>She took a half step forward with her left leg, which positioned her pussy just above Amber’s </p>
+<p>head. Amber looked up and was immediately blasted in the face by a huge jet of Lisa’s arousal. </p>
+<p>She opened her mouth, trying in vain to swallow as much of her goddess’ squirt as possible, </p>
+<p>although it was so voluminous that it kept overﬂowing her mouth and splashing down onto her </p>
+<p>body.</p>
+<p>Lisa was lost in thought for a few moments as she held her leg aloft. It only took a few </p>
+<p>moments for her gushing pussy and dripping nipples to cover Amber’s entire body in her hot </p>
+<p>liquids. She felt her own leg and foot being covered in milk and arousal as Amber had kept up her </p>
+<p>end, dutifully rubbing her own pussy back and forth.</p>
+<p>“Please, goddess… let me… show you to the kitchen,” Amber said haltingly, between licks of </p>
+<p>Lisa’s inner thigh. It was intoxicating to be so close to Lisa’s bare pussy while tasting the ambrosia </p>
+<p>of its arousal, and she was certain she could feel its heat on her cheeks. Another beneﬁt of this </p>
+<p>position, she thought, was feeling her goddess’ breast milk dripping onto her head from above.</p>
+<p>She scooted along the wet carpet after Lisa, who had started walking away. Every few steps </p>
+<p>she would catch up, enjoying a blissful few moments of rubbing her pussy against her goddess’ </p>
+<p>bare ankle before Lisa stepped away again. She left a long line of milk and arousal soaked into the </p>
+<p>carpet as she thrust her gushing pussy forwards down the hallway.</p>
+<p>Lisa arrived in the kitchen doorway. She was sure she’d seen this room before, and the three </p>
+<p>girls on the ﬂoor all seemed familiar too. All three were kneeling a few feet away, completely nude </p>
+<p>and averting their eyes as they waited to be addressed. Lisa smirked at them, for she was certain </p>
+<p>that she remembered them greeting her in just this way before. Still, she wouldn’t mind indulging </p>
+<p>them while she pondered her situation.</p>
+<p>Amber had continued scooting along the carpet, at last arriving behind Lisa. She eagerly </p>
+<p>rubbed her gushing pussy along Lisa’s left ankle. After a moment she planted her hands and feet </p>
+<p>on the ﬂoor, thrusting her hips to slide her pussy up and down her goddess’ calves. She enjoyed </p>
+<p>feeling her own arousal mixing with Lisa’s and running down her bare skin.</p>
+<p>19</p>
+<p>She turned her head to the side, looking between Lisa’s legs into the kitchen. She laughed </p>
+<p>heartily, seeing three of her sisters kneeling on the ﬂoor, each of them surely wishing to greet Lisa </p>
+<p>in their own way. </p>
+<p>of them in turn.</p>
+<p>All three of them had clearly anticipated their goddess’ arrival, having ensured their pussies </p>
+<p>were wet and their breasts grown from several orgasms, as had long been traditional when Beta </p>
+<p>Beta sisters were entertaining guests of honor. Amber remembered her manners, introducing each </p>
+<p>“The blonde beauty with pigtails is Heather, goddess. Notice how she has grown her breasts </p>
+<p>large for you, squeezing them gently between her elbows,” Amber said with a ﬂourish, still rubbing </p>
+<p>her pussy on Lisa’s calves. Heather had clearly enjoyed several orgasms today, as her breasts had </p>
+<p>swollen huge, covering almost all the space between her shoulders and her navel.</p>
+<p>Amber lowered herself back to the ﬂoor, thrusting her wetness hard against Lisa’s ankle. She </p>
+<p>had to catch up to her sisters. It wouldn’t do at all for the sorority president to be so obviously </p>
+<p>outclassed! She hoped that Lisa didn’t notice her shame, and pointed towards the second girl </p>
+<p>kneeling on the ﬂoor.</p>
+<p>“The gorgeous girl in the middle is Jessie, goddess. I assure you that her long tongue and </p>
+<p>huge breasts will bring you much pleasure,” Amber embellished. A ruby red lip coloring was </p>
+<p>smeared around Jessie’s mouth, and it didn’t surprise Lisa to see that Jessie’s sisters loved </p>
+<p>kissing her. </p>
+<p>Jessie was holding her mouth open, fully extending her long tongue, which passed below her </p>
+<p>chin. Her saliva was drooling along the tops of her nude chest, which she had grown even larger </p>
+<p>than Heather’s basketball-sized breasts in honor of Lisa’s arrival. Jessie hoped her goddess </p>
+<p>appreciated how her saliva-covered milky breasts complimented her soaked legs, thanks to her </p>
+<p>continuously dripping pussy.</p>
+<p>“And there, goddess, you can see Rachel,” said Amber, giving a long lick along Lisa’s inner </p>
+<p>thigh and swallowing a large mouthful of her arousal. </p>
+<p>“Rachel’s always been busty, but you can see she really outdid herself for you. Nicely done, </p>
+<p>Rachel!” she said, beaming with pride.</p>
+<p>Rachel’s breasts were enormous, stretching below her hips and so far forward that she had </p>
+<p>trouble reaching her own milky nipples. Her long brown ponytail was soaked through with her own </p>
+<p>milk, sticking wetly to her nude body.</p>
+<p>20</p>
+<p>Amber slid her pussy down Lisa’s leg and lowered it onto Lisa’s ankle. She peered between </p>
+<p>Lisa’s legs, admiring how Rachel’s towering nipples dripped milk onto her own knees.</p>
+<p>“As you know, goddess, we Beta Betas have to grow our breasts each day anew, in our </p>
+<p>tireless pursuit of orgiastic excellence. Rachel and her sisters have been pleasuring each other all </p>
+<p>day in your honor!” Amber enthused. She thought Rachel’s huge breasts were so sexy, and the </p>
+<p>mere sight of them while being so close to goddess Lisa’s pussy proved too much for her. She felt </p>
+<p>herself plunging into her own climax.</p>
+<p>Amber’s pussy gushed its arousal across Lisa’s feet and a large area of the kitchen’s tile ﬂoor. </p>
+<p>She grinned as she felt her breasts growing from the climax, becoming larger and heavier on her </p>
+<p>chest. They felt simply amazing as they swelled larger. After only a moment they were large </p>
+<p>enough for her to wrap them around her goddess’ leg, which she did without hesitation. She </p>
+<p>returned to enthusiastically thrusting her hips, rubbing her pussy on Lisa’s ankle.</p>
+<p>Lisa was sure that she’d had sex with all four of these girls before. That weird deja vu was </p>
+<p>back again, but it was hard to focus with so much nude skin around, and maybe she just needed </p>
+<p>to relax after all. She felt a fresh deluge of hot liquids spraying across her left foot and heard </p>
+<p>Amber giggling below her. That gave her an idea.</p>
+<p>“You three,” she said, gazing at the three girls kneeling before her. </p>
+<p>“Spread your legs.”</p>
+<p>Heather, Jessie, and Rachel immediately opened their legs wide, revealing their bare pussies. </p>
+<p>Their arousal was obvious, as all three of them were squirting onto the ﬂoor between their legs. A </p>
+<p>growing pool of milk and squirt was covering most of the tile ﬂoor. They splashed happily in it, </p>
+<p>sliding their legs open and closed to cover them all over in their own juices.</p>
+<p>They seemed in need of release, Lisa thought. She ﬁgured it was the least she could do to let </p>
+<p>them blow oﬀ some steam.</p>
+<p>Lisa intoned.</p>
+<p>“I want you licking each other’s pussies until your breasts are too big to reach your sisters,” </p>
+<p>“Of course, Lisa!” Heather smiled.</p>
+<p>“Anything you want!” Jessie exclaimed.</p>
+<p>“That’s so hot!” Rachel admired, staring lovingly at Lisa.</p>
+<p>21</p>
+<p>They immediately arranged themselves in a triangle on the tile ﬂoor, thrusting their chests </p>
+<p>into the narrow space between them, which was nearly ﬁlled by Rachel’s huge breasts alone. Each </p>
+<p>of them settled in between the spread legs of one of her sisters. </p>
+<p>All three of their faces were instantly soaked by each other’s pussies. They laughed, opening </p>
+<p>their mouths wide and wrapping their lips around their sisters’ soaked centers. They sprayed their </p>
+<p>arousal all over each others’ faces for long minutes, during which they set to their task with great </p>
+<p>enthusiasm, hoping that Lisa would approve of their skills.</p>
+<p>Like most sisters of Beta Beta, all three had spent many hours practicing the art of pussy </p>
+<p>licking, on top of having substantial natural gifts as well. They soon worked themselves into a </p>
+<p>frenzy, each girl aspiring to lick and suck her sister’s pussy better and faster than the next. It was </p>
+<p>Rachel who lost control ﬁrst, squirting a thick jet of her gushing arousal across Jessie’s face that </p>
+<p>completely soaked her sister’s curly brown hair.</p>
+<p>The large spheres of Rachel’s breasts grew even bigger, taking up more of the space </p>
+<p>between their bodies and gently nudging her sisters’ breasts out of the way.</p>
+<p>“Ooh! I love feeling my boobs grow bigger!” Rachel cried.</p>
+<p>This remark drew Heather’s attention, and she lifted her head from between Jessie’s legs to </p>
+<p>admire Rachel’s bosom.</p>
+<p>big before!” she complimented.</p>
+<p>“That is so hot! Your sexy breasts are so huge, Rachel. I don’t think I’ve ever seen them so </p>
+<p>Jessie redoubled her eﬀorts with her tongue between Rachel’s legs, doing her best to help </p>
+<p>Rachel grow her chest large enough to satisfy goddess Lisa. She licked and sucked Rachel’s </p>
+<p>pussy with gusto, and its occasional gushes of sticky arousal all over her face let her know that </p>
+<p>her sister appreciated her eﬀorts.</p>
+<p>“Oh, goddess! Jessie, your tongue feels so good in my pussy!” Rachel wailed, and soon </p>
+<p>launched into another climax from Jessie’s eﬀorts. A moment later her pleasure increased even </p>
+<p>more when she sensed her breasts growing larger across the wet tile ﬂoor.</p>
+<p>“Very impressive,” Lisa had to admit. Rachel’s chest had grown enormous enough to push </p>
+<p>Jessie and Heather away from her. </p>
+<p>“All of you, sit up.”</p>
+<p>22</p>
+<p>All three girls sat up on the liquid-covered ﬂoor and stared at her. Lisa’s approval was alluring </p>
+<p>beyond measure. They felt like they were staring into the sun.</p>
+<p>Heather took initiative, spinning herself around with her palms on the ﬂoor, raising her hips </p>
+<p>and spreading her legs. She did her best to present her dripping pussy to Lisa.</p>
+<p>“Please, goddess, use my pussy! I’m so wet for you!” she called over her shoulder, almost </p>
+<p>begging.</p>
+<p>Jessie felt great aﬀection for her sister, and put her own arousal aside for a moment to help </p>
+<p>with what she recognized as Heather’s obvious need. She leaned over Heather’s taut bottom and </p>
+<p>extended her long tongue to lap at Heather’s upthrust pussy. Heather clearly appreciated her </p>
+<p>eﬀorts, for her pussy released a sudden large gush of sticky arousal that spurted more than six </p>
+<p>feet away to splash over Lisa’s feet.</p>
+<p>Jessie slurped her tongue back between her lips, then turned to smile at Lisa.</p>
+<p>“It’s true, Lisa! Heather just has the sweetest, wettest pussy. I promise you’ll love it!” she </p>
+<p>called, trying to be supportive of her sister. She poked out her tongue again and began gently </p>
+<p>thrusting it in and out of Heather’s dripping pussy, causing Heather to moan loudly over her </p>
+<p>shoulder.</p>
+<p>Rachel wasn’t one to be outdone by her sisters, though, and moved both arms underneath </p>
+<p>her own huge breasts. She did her best to lift them towards Lisa, but they were so large that they </p>
+<p>overﬂowed her arms, and her gesture served mostly to send great quaking shivers through them. </p>
+<p>Her thick nipples were fully erect, tracing large circles in the air and leaking her milk. She hoped </p>
+<p>Lisa would notice her as she did her best to present her breasts.</p>
+<p>“Goddess, please make use of my breasts! I grew them so large just for you,” she whispered </p>
+<p>with urgency. She rose to her knees and spread her legs to reveal her pussy to Lisa. She knew her </p>
+<p>pussy was always so wet whenever she was around her sisters, and she hoped it would make her </p>
+<p>all the more attractive in Lisa’s eyes.</p>
+<p>Amber was thrusting her own pussy into Lisa’s left ankle with extra vigor, hoping that her </p>
+<p>goddess wouldn’t forget about her. She made a point of switching to Lisa’s other leg, sliding </p>
+<p>herself across the ﬂoor until she could rub herself all over Lisa’s right ankle in hopes of impressing </p>
+<p>her. </p>
+<p>23</p>
+<p>Lisa chuckled. She was used to all this attention, yet she never tired of it. Besides, it wasn’t </p>
+<p>these girls’ fault that she was feeling strange today. It wouldn’t be right to deny them their </p>
+<p>pleasure.</p>
+<p>command.</p>
+<p>“All right. Come on, all of you,” she said, beckoning warmly.</p>
+<p>The four other girls whooped with glee. Heather, Jessie, and Rachel scrambled across the </p>
+<p>ﬂoor towards their goddess, whom they were dismayed to see had turned away and started </p>
+<p>walking down the hall. Lisa turned back to peer at them, and they froze in place, awaiting her </p>
+<p>“Wait,” said the brunette goddess. “I want all of you to crawl.”</p>
+<p>She turned away, walking towards the lounge. Amber looked into the kitchen for just a </p>
+<p>moment, her eyes wide. She immediately started down the hallway on all fours after Lisa, trying to </p>
+<p>point her pussy towards whichever of Lisa’s legs was nearer.</p>
+<p>Lisa arrived in the doorway of the lounge. Three nude girls were sitting closely together on </p>
+<p>the extra large couch that dominated the room. Each girl was using both hands to rub the pussies </p>
+<p>of her two friends, as would be expected of any sister of Beta Beta. Besides, it was only polite to </p>
+<p>help your sisters get oﬀ whenever you’re sitting next to each other.</p>
+<p>None of them noticed Lisa standing in the doorway. The sister in the middle, a pretty girl with </p>
+<p>long platinum blonde hair, was looking back and forth between the girls on either side of her.</p>
+<p>“Ooh, you girls are making my nipples so hard!” she exclaimed. </p>
+<p>“Do you want to practice sucking on them?”</p>
+<p>“Yay!” the other two girls yelped. Each of them grabbed one of the blonde girl’s breasts and </p>
+<p>sucked a hard nipple into their mouths.</p>
+<p>There was something unusual here too, Lisa thought. It was that strange sensation again. </p>
+<p>The lounge and its large sofa were somehow familiar to her, but she couldn’t put her ﬁnger on it.</p>
+<p>As she stood pondering, the four girls crawling along the ﬂoor behind her ﬁnally caught up </p>
+<p>with her. They allowed their president to have ﬁrst choice, respecting their sorority tradition even </p>
+<p>while they were almost blind with lust. Amber quickly spread her legs wide and returned to </p>
+<p>rubbing her pussy all over Lisa’s ankle.</p>
+<p>24</p>
+<p>Lisa looked down, recognizing the great spheres of Rachel’s huge breasts enveloping her left </p>
+<p>leg from behind. Rachel began sliding her chest up and down Lisa’s legs, through the great trails </p>
+<p>of wetness that seemed to ﬂow without end from Lisa’s pussy.</p>
+<p>After another moment, Jessie and Heather appeared on the ﬂoor in front of her, having </p>
+<p>crawled around from either side. They were on their knees, and as Lisa watched, they both </p>
+<p>touched their foreheads to the carpet.</p>
+<p>“Please mistress, allow us to suck your beautiful toes,” Jessie said. She twirled her long </p>
+<p>tongue for emphasis.</p>
+<p>Lisa grinned at them and they leapt forward, one of them towards each of her feet. Lisa had </p>
+<p>long enjoyed her sexy sisters sucking on her toes, and they knew it was one of the best ways to </p>
+<p>indulge her. Heather had a harder time of it though, as she was licking and sucking the same foot </p>
+<p>against which Amber had been grinding her pussy, which regularly doused Heather’s face in great </p>
+<p>sticky jets of squirt.</p>
+<p>Lisa paused for a moment, enjoying the sensations and sounds of Heather and Jessie </p>
+<p>whimpering and moaning with delight as they worshipped her feet.</p>
+<p>Amber was as ever a proper hostess, and she realized while licking Lisa’s long legs that the </p>
+<p>goddess might want to relax in her room. </p>
+<p>“Goddess Lisa… please allow me… to show you to your chambers,” she said, while licking </p>
+<p>Lisa’s inner thighs. She was trying to lick as close to her goddess’ pussy as would be polite </p>
+<p>without being invited. She felt herself ﬂushing hot when she saw Lisa smiling down at her.</p>
+<p>Lisa stepped away, gently pulling her toes out of Heather and Jessie’s mouths, sliding her </p>
+<p>foot away from Amber’s gushing pussy, and extracting her other leg from between Rachel’s huge </p>
+<p>breasts. She strolled slowly down the hallway as all four girls enthusiastically crawled after her.</p>
+<p>Amber had taken to spreading her legs wide and launching herself forwards, a desperate </p>
+<p>attempt to keep her pussy in contact with her goddess as often as possible. Heather and Jessie </p>
+<p>were not faring much better, and Rachel seemed to have the most diﬃculty reaching the ﬂoor </p>
+<p>while crawling with her huge breasts spreading out all around her. </p>
+<p>Every few steps one of them would stumble, causing a pile-up of sweaty, sticky girl-ﬂesh that </p>
+<p>they quickly disentangled, then continued across the ﬂoor after their beautiful mistress.</p>
+<p>25</p>
+<p>Lisa arrived in a familiar-looking doorway. She paused, running her hands along the door </p>
+<p>frame. She had deﬁnitely seen it before.</p>
+<p>After a moment pondering, she felt a warm, wet sensation rubbing rhythmically against her </p>
+<p>ankle. One of her sisters was humping her again, and she felt her foot covered in a fresh coating of </p>
+<p>hot arousal.</p>
+<p>“Leave me for now, girls,” she said distractedly, waving them away. All four of them pouted, </p>
+<p>then slinked away on their hands and knees as they crawled towards the lounge.</p>
+<p>Lisa stepped inside the room, closing the door behind her. It was a modestly-sized pillow pit </p>
+<p>with a large bed at its center, and it too seemed somehow familiar to her. </p>
+<p>In the center of the bed was a small pink envelope, upon which her name was written. She </p>
+<p>sat on the edge of the bed, grabbing it and opening it to reveal a hand-written note:</p>
+<p>Goddess Lisa, </p>
+<p>A. Friend </p>
+<p>The sisters of Beta Beta are here to serve your every need! May all your wishes come true. </p>
+<p>There was something else in the envelope, too. She was thankful for the large array of lights </p>
+<p>over the bed that illuminated her nude body, and held the envelope upside-down over her palm. </p>
+<p>A small purple crystal fell into her hand. At that very same moment, the door swung wide </p>
+<p>open.</p>
+<p>“Hey roomie!” called a feminine voice from behind the door. A tall brunette with beautiful tan </p>
+<p>skin walked into the room. She was completely nude, like any sorority sister was expected to be, </p>
+<p>and her slender form was pleasing in Lisa’s eyes. </p>
+<p>“I’m Ella,” the girl started, casting a glance over the pillow pit. The moment she laid eyes on </p>
+<p>Lisa, her mouth opened and she fell to her knees.</p>
+<p>“Goddess!” she whimpered. She couldn’t help herself and started crawling towards the </p>
+<p>stunning vision sitting a few feet away. She arrived next to the bed, and Lisa felt the warm, wet </p>
+<p>sensation of Ella’s tongue animatedly licking her feet.</p>
+<p>26</p>
+<p>Ella gasped and moaned as she worshipped Lisa’s legs and feet for several long minutes. </p>
+<p>She had never thought she would ever be this happy. She imagined she could spend all of eternity </p>
+<p>licking any part of this astonishing goddess.</p>
+<p>Lisa was turning the crystal over in her hand, pondering. Something had been bothering her, </p>
+<p>and she ﬁnally knew what it was. It was those three girls they had passed in the lounge a few </p>
+<p>minutes earlier, on the way to her room. Those girls had been pleasing each other… and not her. </p>
+<p>Her sisters may have called her a goddess, but she didn’t really feel like one. She was used </p>
+<p>to them feeling compelled to lick her feet and worship her body, of course, but that was hardly the </p>
+<p>same thing. And on that note, she thought, she had to admit that Ella had a more talented tongue </p>
+<p>than perhaps any of her sisters, save for Jessie.</p>
+<p>She felt a strange need to verbalize her desire. She closed her ﬁngers around the purple </p>
+<p>crystal.</p>
+<p>only to serve and worship me!”</p>
+<p>“I wish that I were the sorority goddess my sisters knew me to be, and that my sisters lived </p>
+<p>The crystal, held tight in her ﬁst, started glowing purple.</p>
+<p>Lisa felt her big toe being sucked into Ella’s mouth. There was something else on her mind, </p>
+<p>too. The name on that note was somehow familiar. Her mouth opened again as if on its own, </p>
+<p>“I wish that whoever ‘A. Friend’ is would present themselves to me,” she whispered, falling </p>
+<p>speaking her desire.</p>
+<p>backwards onto the bed.</p>
+<p>use.</p>
+<p>somewhere below.</p>
+<p>The purple crystal in her hand glowed brighter. She chuckled at herself for having made such </p>
+<p>silly wishes. Maybe she just needed to relax, she thought, and she could put her cute roommate to </p>
+<p>“Come here, Ella. I want your pussy on my mouth,” she called, then heard a gasp from </p>
+<p>“Right away, Lisa!” said Ella with breathless excitement. She clambered onto the bed and </p>
+<p>turned around atop her mistress.</p>
+<p>Lisa grinned as she saw Ella’s dripping pussy lowering slowly from above. She released the </p>
+<p>crystal from her grasp, bringing both hands towards Ella’s wet folds.</p>
+<p>27</p>
+<p>The instant the crystal left her touch, a bright purple ﬂash ﬁlled the room. The light </p>
+<p>overwhelmed Lisa’s sight until there was nothing else —</p>
+<p>(cid:15911)</p>
+<p>“Welcome, goddess Lisa!” said several hundred female voices in near-perfect unison. </p>
+<p>It was early in the morning, and it had long been traditional for all of the sisters of the </p>
+<p>goddess to present themselves each day when the goddess awoke.</p>
+<p>They all lived together inside a large stone temple, which the university had built in honor of </p>
+<p>the living goddess. The temple contained the goddess’ bedchambers at one end, connected by a </p>
+<p>long, straight hallway to the goddess’ throne room at the opposite end. </p>
+<p>Hundreds of girls lined both sides of the hallway for its entire length. They were seated on a </p>
+<p>purple carpet, each girl nude and spreading her legs wide, crossing her legs over or under her </p>
+<p>sisters’ legs next to her. They were all eagerly presenting their bare, wet pussies and their milky </p>
+<p>breasts, hoping beyond hope that the goddess would notice them as she passed by.</p>
+<p>After a long moment, no one had emerged from the bedchambers. The hundreds of </p>
+<p>assembled sisters began shifting awkwardly. Several dozen of the younger, more impatient girls </p>
+<p>began rubbing their dripping pussies against the carpet, desperate for any relief. Their nearby </p>
+<p>sisters noticed their unease and tried to calm them, reaching over and gently rubbing and ﬁngering </p>
+<p>their needy pussies.</p>
+<p>Three members of the goddess’ council emerged into the hallway from within the goddess’ </p>
+<p>bedchambers. They were all fully nude, as beﬁtting any servant of the goddess. </p>
+<p>One of them was famous among the sisters as being ﬁrst among the council. She had been </p>
+<p>blessed with enormous breasts, which extended several arm-lengths ahead of her and hung </p>
+<p>below her knees, but they were remarkably perky and ﬁrm and she seemed to have little diﬃculty </p>
+<p>walking around with their weight. A small red clasp was clamped around the base of her huge left </p>
+<p>nipple, which identiﬁed her status as a member of the goddess’ council.</p>
+<p>She paused just inside the hallway, turning towards the girls who had arrived with her.</p>
+<p>“She’s certainly in excellent form today, isn’t she, Heather?”</p>
+<p>28</p>
+<p>Heather turned, smiling at her sister and standing proudly nude before the assembled </p>
+<p>sisters. Her own breasts weren’t nearly as large as her sister’s, but the goddess had gifted her with </p>
+<p>a huge pair that extended beyond her elbows, which any sister would be proud to bear. She too </p>
+<p>wore a red metal clamp around her left nipple that indicated her rank.</p>
+<p>“The goddess always is, sister Rachel,” she replied. </p>
+<p>The third girl had long brown curls and an enormous bosom nearly as large as Rachel’s. Her </p>
+<p>nipples were fully erect, nearing a foot long as they projected far ahead of her. Her left teat bore </p>
+<p>the red metal clasp of a council member, clamped around its huge base.</p>
+<p>She extended her long, prehensile tongue more than a foot from her lips, slurping up a small </p>
+<p>puddle of milk from atop her own breast. She slurped her milky tongue back between her lips, </p>
+<p>surveying the assembled girls. </p>
+<p>“I hope these girls are ready for her,” said Jessie.</p>
+<p>An impossible vision appeared in the doorway. There was a wave of astonished excitement </p>
+<p>that reverberated down the temple’s hallway. Several hundred sisters all gasped at once.</p>
+<p>Instantly, every one of the assembled girls had a powerful, shattering orgasm. They were </p>
+<p>overwhelmed by the arrival of the living goddess, whose form was so perfect as to drive them </p>
+<p>nearly mindless with pleasure. Hundreds of wet pussies instantly gushed. Great arcs of arousal </p>
+<p>and breast milk ﬂew back and forth across the hallway, as each line of assembled girls thoroughly </p>
+<p>soaked the other with their voluminous liquids.</p>
+<p>Rachel’s own involuntary orgasm overcame her, and her pussy soaked the undersides of her </p>
+<p>huge breasts. Her huge nipples spurted great arcs of milk across the carpeted ﬂoor. Next to her, </p>
+<p>Heather felt her knees growing weak as her pussy released a great gush of liquid down her legs. </p>
+<p>Jessie was barely able to remain standing as she felt her breasts growing larger and her nipples </p>
+<p>stretching longer. They all cherished every moment that they could spend so close to their </p>
+<p>goddess.</p>
+<p>beauty.</p>
+<p>Hundreds of voices gasped and moaned with delight as every girl felt her breasts growing </p>
+<p>larger. Their growth each day always felt so good, and they were thankful for their breast milk as </p>
+<p>well, for these were but two of the many blessings their goddess had bestowed upon them.</p>
+<p>The girls in each line had arranged themselves in order of tenure. The newest sisters were </p>
+<p>closest to the goddess’ bedchambers, all the better to catch their ﬁrst glimpse of her divine </p>
+<p>29</p>
+<p>On the ﬂoor next to Rachel, a ﬁrst-year student named Tara was having her ﬁrst day as a </p>
+<p>sister of the goddess. It was her great honor to be ﬁrst in one of the lines of girls. She knew her </p>
+<p>role was to use her nude body to entice none other than goddess Lisa herself. She had been </p>
+<p>among the ﬁrst to witness the goddess’ arrival, and her orgasm had overtaken her immediately, </p>
+<p>but her position also allowed her to be among the ﬁrst to recover.</p>
+<p>With no one sitting next to her on one side, she realized she had a chance to make a good </p>
+<p>impression. She swung her leg open wide, spreading her bare pussy. She did her best to thrust </p>
+<p>her hips in the air to present herself as openly as she could to her goddess.</p>
+<p>Lisa stood tall, surveying the hundreds of girls assembled before her. She had powerful </p>
+<p>shoulders and subtly muscular arms that hid her true strength, which she knew was nearly </p>
+<p>limitless. Her abdomen was packed tight with muscle, though it was still capable of becoming soft </p>
+<p>to the touch if she so desired.</p>
+<p>Her breasts were legendary among the sisters. Each enormous sphere was more than three </p>
+<p>feet in diameter, and they were topped by long nipples that each towered more than two feet into </p>
+<p>the air beyond their sturdy bases. </p>
+<p>Tara had heard many excited whispers among the sisters about their encounters with the </p>
+<p>divine bosom. Most of the time, simply passing within a few feet of the divine bosom was enough </p>
+<p>to send a girl into the throes of an intense climax. Now and then, the goddess herself selected one </p>
+<p>or many sisters to attend to her breasts by washing, rubbing, stroking, licking, or milking them </p>
+<p>upon her command.</p>
+<p>It was obvious this morning that the divine bosom was in dire need of being milked. The </p>
+<p>divine teats were straining huge and erect. Several gasps were heard as the goddess’ nipples </p>
+<p>began leaking her milk. A girl kneeling near the front of one line, upon glimpsing the divine breast </p>
+<p>milk for the ﬁrst time, fainted onto the sister next to her.</p>
+<p>To Tara’s astonished delight, she saw that her widely spread legs and dripping pussy had </p>
+<p>been noticed by the goddess herself. The goddess gestured in her direction, and she felt herself </p>
+<p>leaving the ground as she was lifted into the air. She ﬂoated slowly forwards until she came within </p>
+<p>mere inches of her goddess, hovering gently in the air just next to Lisa’s right shoulder.</p>
+<p>It was all Tara could do to keep herself from orgasming. It was an incredible honor to be so </p>
+<p>close to the goddess herself, and even more so to have captured her attention.</p>
+<p>“You’re new,” said Lisa. The divine voice left Tara gasping in pleasure.</p>
+<p>30</p>
+<p>“My name is Tara, goddess!” she managed.</p>
+<p>Lisa reached up with one hand towards Tara’s breast. Tara arched her back to meet her, </p>
+<p>gasping from the astonishing feeling of her goddess squeezing her nipple. Lisa released Tara’s teat </p>
+<p>and gestured, and Tara ﬂoated down to land on the ground nearby.</p>
+<p>Lisa exerted a fraction of her power, bestowing upon Tara an enormous pair of breasts as </p>
+<p>large as her own. With a wink, Tara’s brown locks slowly turned a platinum blonde. </p>
+<p>Tara was thrilled for her body to be shaped by her goddess’ will. To have been intimate with </p>
+<p>the goddess herself, and on her very ﬁrst day! She collapsed backwards, overcome with pleasure. </p>
+<p>Three nearby girls pounced on her newly enormous breasts, each of them eager to suck on the </p>
+<p>milky nipples of the latest girl to have been blessed by the goddess.</p>
+<p>Lisa knew the pleasure that Tara was feeling. She was intimately linked with every one of </p>
+<p>these girls, and their desires fueled her, which she gifted back upon them in turn. Her brush with </p>
+<p>Tara was enough for her to experience her ﬁrst orgasm of the day.</p>
+<p>The divine bosom began swelling larger on her chest. Her huge nipples stretched even </p>
+<p>longer, nearing the length of her entire arm. </p>
+<p>She made a small gesture, and Heather, Jessie, and Rachel were lifted into the air. They all </p>
+<p>bent forwards at their waists and rotated, ﬂoating towards her nipples. Heather arrived ﬁrst, and </p>
+<p>she ﬂoated slowly backwards until her gushing pussy was rubbing up and down along the tip of </p>
+<p>Lisa’s left nipple.</p>
+<p>Heather suddenly dropped the remaining distance, her pussy magically swallowing more </p>
+<p>than two feet of Lisa’s huge nipple. Rachel followed a moment later, her pussy magically </p>
+<p>enveloping Lisa’s other nipple. They were instantly elevated to an astonishing level of pleasure as </p>
+<p>they were pierced by their goddess’ nipple, their weight supported entirely by the goddess’ magic </p>
+<p>as they rode atop the divine bosom.</p>
+<p>Jessie continued ﬂoating upwards on her back with her legs spread, until she arrived just in </p>
+<p>front of the goddess’ mouth. She felt her pussy being licked by the divine tongue, each lap of </p>
+<p>which launched her anew into another orgasm.</p>
+<p>Lisa turned towards the girl at the front of the line on the opposite side of the hallway. This </p>
+<p>was a fresh-faced girl with ﬁery red hair, desperately rubbing her gushing pussy with both hands in </p>
+<p>a vain attempt to grow her breasts to impress her goddess. Lisa extended a hand, and instantly </p>
+<p>31</p>
+<p>the girl was pulled towards her, ﬂying through the air until her legs straddled Lisa’s arm. She slid </p>
+<p>down Lisa’s arm, coming to rest with her pussy on the inside of Lisa’s elbow.</p>
+<p>She felt her entire weight supported by the goddess’ perfect arm below her. It was beyond </p>
+<p>intoxicating to be so close to her, and her pussy felt like it was on ﬁre as it rubbed against the </p>
+<p>goddess’ bare skin. She was elevated to towering heights of pleasure almost immediately, </p>
+<p>teetering on the edge of her own climax.</p>
+<p>Lisa gestured towards the next girl in line on the opposite side of the hall, a gorgeous </p>
+<p>brunette who had already grown her breasts larger than basketballs in her enthusiastic eﬀorts to </p>
+<p>please herself for her goddess. She ﬂew through the air towards Lisa, sliding onto the goddess’ </p>
+<p>other arm until her pussy was nestled on the inside of Lisa’s elbow. She was carried into a realm of </p>
+<p>pure pleasure as she urgently rubbed her drenched pussy along her goddess’ arm.</p>
+<p>Mounted atop Lisa’s thick nipples, Heather and Rachel had already launched into their tenth </p>
+<p>orgasm each. Their enormous breasts were swelling larger almost continuously. If their minds had </p>
+<p>been capable, they would surely have remarked that they were both larger now than they’d ever </p>
+<p>been before, each of their breasts having surpassed the goddess’ own chest at nearly ﬁve feet in </p>
+<p>diameter each. Face-down as they were, their titanic chests had swollen large enough to drag </p>
+<p>along the ﬂoor as Lisa walked slowly forward.</p>
+<p>Lisa’s feet left the ground as she ﬂoated into the air. The ﬁve girls riding her mouth, arms, and </p>
+<p>nipples rose into the air with her, all of them supported by her magic.</p>
+<p>The next two girls in line were extremely fortunate as well. They were lifted into the air, </p>
+<p>ﬂoating towards the goddess’ outstretched hands as their legs spread wide. They came to rest in </p>
+<p>the air, hovering just next to the goddess’ divine hands. The goddess herself reached out, </p>
+<p>stroking, ﬂicking, and slapping their pussies, and even her slightest touch gave them a pleasure </p>
+<p>greater than they had ever known. </p>
+<p>A cacophony of moaning was audible from the seven girls riding the goddess’ body as she </p>
+<p>ﬂoated forward. Two more soon joined them, rising up and ﬂoating parallel to the ﬂoor with their </p>
+<p>legs spread, until each of them felt one of the goddess’ big toes slip into their dripping pussies. </p>
+<p>The pleasure they received from even this small part of the goddess launched them into their own </p>
+<p>orgasms. They ﬂoated along with her, suspended by magic with the goddess’ toe in their pussies, </p>
+<p>joining the seven girls already ﬂying slowly down the hallway with her.</p>
+<p>32</p>
+<p>Lisa reached three ﬁngers into the pussy hovering just oﬀ her right hand. She felt it instantly </p>
+<p>squeezing tight around her, its owner climaxing hard and squirting a great volume of liquid over </p>
+<p>her wrist. </p>
+<p>The divine bosom jiggled and strained as it swelled continuously larger. Lisa’s titanic breasts </p>
+<p>quickly overtook even Rachel’s bosom, each grand sphere more than 12 feet in diameter. She </p>
+<p>ﬂoated ever higher towards the domed ceiling to make room for her chest.</p>
+<p>She glanced down to her left, making eye contact with each of the next three girls in line. As </p>
+<p>she focused, each of them in turn enjoyed a spontaneous growth: the ﬁrst quickly grew nipples </p>
+<p>taller than she was, which towered into the air above her. The second immediately grew a </p>
+<p>tremendous pair of breasts nearly as large as Rachel's, which had swollen beyond six feet in </p>
+<p>diameter as she rode the goddess’ nipple. </p>
+<p>The third, a pretty girl with short dark hair, received both in spades. Her breasts were almost </p>
+<p>instantly larger in diameter than she was tall, and she was blessed with thick, towering nipples </p>
+<p>long enough to rub gently against the hallway’s domed ceiling nearly thirty feet above.</p>
+<p>All three of them were host to mindless bliss, crashing into their own orgasms. For all the </p>
+<p>immense pleasure they were feeling, they were aroused further as they sensed their rolling </p>
+<p>climaxes causing their breasts and nipples to grow even larger. </p>
+<p>A large area of carpet along one end of the hallway was quickly soaked through. The </p>
+<p>combined milk and squirting of the three dozen girls closest to their goddess was soaking them in </p>
+<p>great pools of liquid.</p>
+<p>Lisa continued ﬂoating down the hallway past two dozen more sisters, blessing each of them </p>
+<p>in turn. There were now four girls rubbing themselves on both of her arms, all eight of them </p>
+<p>transported to incredible peaks of pleasure from feeling their pussies in contact with the divine </p>
+<p>arms. Their breasts had grown huge, thrusting into the back of the girl ahead of them and spilling </p>
+<p>out in every direction. Several of them had sucked their nipples into their mouths to drink their own </p>
+<p>milk, heightening their pleasure.</p>
+<p>Two tall blondes were straddling Lisa’s upper thighs, her magic holding them parallel to the </p>
+<p>ﬂoor and lifting and lowering them, stroking their gushing pussies along her legs. Each of them </p>
+<p>was embracing as much of the undersides of Lisa’s breasts as they could manage. They were </p>
+<p>completely covered by the goddess’ divine bosom, doing their best to suck, lick, and squeeze </p>
+<p>every inch of it. They felt fortunate for their goddess having removed their need to do something </p>
+<p>as inconvenient as breathing.</p>
+<p>33</p>
+<p>The numerous girls rubbing their pussies all over Lisa’s body were enjoying almost untold </p>
+<p>pleasure. All of them had grown much larger breasts, consuming ever more space around Lisa. </p>
+<p>They ﬂoated ever higher in the air as Lisa allowed room for even more growth.</p>
+<p>Lisa had just blessed another dozen girls with towering nipples when she sensed a presence </p>
+<p>close by. She paused her advance, hovering slowly in the air. All of the girls riding her body </p>
+<p>writhed, their continuous orgasms intensifying, as if every moment in contact with their goddess </p>
+<p>multiplied their pleasure. </p>
+<p>“Goddess Lisa?” whispered the girl below her, apprehensively. She was nude like her sisters, </p>
+<p>showing oﬀ her extremely large breasts. They bounced below her hips, more than covering her </p>
+<p>entire torso, a gift from her goddess that she carried with ease and great pride. A small metal </p>
+<p>clasp was squeezing one of her nipples, indicating her status as a member of the goddess’ </p>
+<p>council.</p>
+<p>Lisa extended her divine consciousness towards the girl below, recognizing her instantly: it </p>
+<p>was Amber, one of her most trusted sisters. It was rare for any girl, even one of her tenured </p>
+<p>council, to address her unprompted. There must be some pressing matter.</p>
+<p>Amber gingerly opened one hand, revealing a small pink envelope.</p>
+<p>“I wrote you a letter, goddess. I’m not sure why, but I felt compelled to deliver it to you just </p>
+<p>now,” she said.</p>
+<p>Lisa smiled. Amber felt her knees becoming weak from the goddess’ allure, and she </p>
+<p>struggled for a moment with the envelope. She opened it, then gently extracted a small piece of </p>
+<p>paper. It was signed with her name but otherwise blank, and it was soaked through with liquid.</p>
+<p>Amber stared uncertainly at the wet paper in her hand.</p>
+<p>“I was too aroused to write anything other than my name, goddess. I… I got my own milk all </p>
+<p>over my letter,” she admitted.</p>
+<p>“But I signed it, see? A. Friend. It’s my last name, goddess. Amber Friend, your servant! I like </p>
+<p>to write my name that way,” she said, almost babbling as she bathed in the glory of the divine </p>
+<p>There was a sudden spark in Lisa’s nearly inﬁnite mind. That name: A. Friend. It meant </p>
+<p>something to her, but for all her divinity, she was unable to place it and unsure when she’d last </p>
+<p>attention.</p>
+<p>heard it.</p>
+<p>34</p>
+<p>“I have a welcoming gift too, goddess! It’s a lucky wishing stone, discovered by one of the </p>
+<p>sisters just before you woke up today,” Amber eagerly continued, waving the pink envelope. She </p>
+<p>reached into it, grabbing a small purple crystal.</p>
+<p>Lisa’s divine mind was amused, but not by the ﬁfteen girls squirming, squirting, and dripping </p>
+<p>their breast milk all over her body. She pulled her ﬁst out of a girl’s pussy hovering just over her left </p>
+<p>arm, where she had been keeping it warm for the last few minutes. She uncurled her ﬁngers, </p>
+<p>dripping a large, gooey mess onto Amber’s head below.</p>
+<p>“What do you wish for, Amber?” she inquired.</p>
+<p>Amber felt hot arousal dripping down her face from above, and used one hand and her </p>
+<p>tongue to slurp as much of it into her mouth as she could. She swallowed luxuriously, staring at </p>
+<p>the grand spheres of her goddess’ enormous milky breasts above her. </p>
+<p>She admired Heather and Rachel, her sisters who were continuously climaxing from Lisa’s </p>
+<p>nipples inside their pussies. They seemed to know the greatest pleasure of any of the girls whom </p>
+<p>her goddess magically bore across her divine body. She was overcome with a feeling of loving </p>
+<p>devotion.</p>
+<p>“I wish that the whole world knew your splendor like your sisters do, goddess!” she said, </p>
+<p>sensing Lisa’s approval and ﬂushing with pride.</p>
+<p>The crystal in her hand started glowing purple.</p>
+<p>Lisa giggled. The sound was a divine chorus that warmed the ears of the hundreds of girls </p>
+<p>along the hall. She gestured and Amber was lifted into the air, rising upside-down with her legs </p>
+<p>spread and her pussy dripping. </p>
+<p>Amber giggled as her own huge breasts tilted backwards, resting against her face as she </p>
+<p>was suspended upside-down. As she reached the apex of her ascent, she thrust her hips forward </p>
+<p>next to the other sister by Lisa’s right hand. </p>
+<p>Her gushing pussy was caressed by the divine touch. In this moment she knew nothing but </p>
+<p>her own pleasure. She unconsciously opened her ﬁst, and the crystal fell from her grasp. </p>
+<p>At the moment it left her hand, a bright purple ﬂash ﬁlled the hallway. The light overwhelmed </p>
+<p>the sight of all present, even goddess Lisa, until they could all see nothing else —</p>
+<p>35</p>
+</body>
+</html>

@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Little Miss Mindy (Revised Version)</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p><strong>Little Miss Mindy</strong></p>
+<p>Heads up! This story contains: Short stacks, huge boobs, minor BE, and
+pop idols with gratuitous cleavage.</p>
+<p>(All characters are fictional, only characters 18+ perform sexual
+activities)</p>
+<p>The crowd in the large theater was excited. As part of her tour around
+the country, Mindy was going to be performing songs from her newest
+album. Although a majority of the audience was male, many women also
+dotted the pumped-up concertgoers. Finally the lights dimmed to near
+darkness, fog machines began rolling out billowing clouds of atmospheric
+smoke, and everyone knew that the moment had come.</p>
+<p>Rather than quiet down, the whole audience erupted in cheers, many
+standing up already. A low voice began to rumble over the screams,
+preparing the excited and potential fans for a night like no other.</p>
+<p>\"Ladiiiees and gentelmeeeenn! Time is up! No more waiting because now
+it\'s time to get bowled over by, the one, the only: LITTLE MISS
+MINDY!!\"</p>
+<p>An extra loud roar followed those final words as the lights came up on
+the stage illuminating the rising rock and pop star for which everyone
+had come. A huge grin was plastered on her face as she and her band
+began the hit single off the album \"Paradise in a Hand Basket.\"</p>
+<p>Out in the crowd, new and old fans screamed and whispered to themselves
+in wonder.</p>
+<p>\"How can she more with all that?\"</p>
+<p>\"She\'s more beautiful in person.\"</p>
+<p>\"Miss Mindy, take my heart away with your song!\"</p>
+<p>You see, Mindy was no normal star. She had a ... property about her
+that gave her some advantages. The fact was, there was very little that
+was little about Little Miss Mindy. She had come up with the stage name
+as a reference to her short stature. At 4\' 11\'\' she was pretty
+miniature, and that was before her real changes started and made her
+whole scale impossible to understand. The 21-year-old was now anything
+from normal.</p>
+<p>Standing onstage, Mindy wore a black, custom made tank top that held
+back her most prominent feature(s): a pair of breasts each just over 2
+whole feet in diameter. They bounced and jounced in her clothes with
+serious weight as she commandeered the stage with her very presence. The
+tank top was as conservative is any article of clothing stretched over
+two-foot tits could, but her deep cleavage was obvious whenever she
+leaned over to belt another hard-hitting lyric into the microphone.</p>
+<p>\"Those can\'t be real!\" yelled one particularly shocked guy to his
+best friend. The poor boy had been dragged along and now was in the
+middle of some sort of dreamland.</p>
+<p>\"Hell yeah they are!\" his friend cried back excitedly, \"They had a
+doctor check her out and everything!\"</p>
+<p>It was true. A seriously skeptical doctor had been brought in to examine
+Mindy\'s overblown bust just two months prior. Waves were made in the
+music biz when the poor woman came back shocked that Mindy\'s
+proportions were possible. She barely stammered out that they were
+indeed that big and Mindy\'s managers weren\'t lying when they said she
+was still growing.</p>
+<p>\"Can you believe they have to update her physical measurements every
+week!?\" the friend continued.</p>
+<p>\"Fuck,\" the poor boy replied, eyes glued to the jiggling masses,
+\"That\'s amazing.\"</p>
+<p>Of course, Little Miss Mindy\'s oxymoronic name didn\'t end there. Mindy
+wasn\'t slack in the back either. As she turned to the side it was
+possible to see her entire bottom half for once. While her giant baps
+had hidden her hips from the front, there was no question now that Mindy
+had a thick behind to boot. Clad in a pair of tight jeans, Mindy\'s butt
+exploded off wide motherly hips. These aspects were nowhere near the
+size of her front orbs, but they certainly completed her hourglass look
+that made the entire audience scream and shout.</p>
+<p>One guy in the back wasn\'t quite as enthusiastic as his brethren in the
+orchestra tier. \"Those ... things ... are unnatural. I wish I could
+see more of that angelic face,\" he said sadly to himself.</p>
+<p>It seemed everyone had something they loved about Mindy, and there was
+no denying the cute and simultaneous tomboyish look that she managed to
+pull off. While Mindy\'s face was round, she tended to wear a sharp
+dazzling smile and a fierce attitude. Her auburn hair was short in front
+and long in back, the tips resting just above the small of her back. All
+over, Mindy could be best described as looking simultaneously strong and
+soft, a wonderful contradiction for such a contradictory person. Her
+butt and thick thighs had to be very muscular to hold up the weight of
+her chest, yet they also gave a sense of soft plumpness. On an already
+surreal figure, it was surprisingly mundane.</p>
+<p>\"I think I get what you mean Jen, this is AMAZING,\" called one girl
+over the crowd as the first song wrapped up.</p>
+<p>\"Jealous? How can she be both so crazy and a good singer?\"</p>
+<p>The girls in the crowd, at least those who weren\'t lesbian, were truly
+there for the music. A cute face and a hot bod might make a good idol,
+but being a good singer on top of every other feature she had made her
+the whole package. People bought her CD, bought her music, not because
+she was sexy (at least not at first) but because it was good. Miss Mindy
+would even write some of her own songs. They were often her biggest
+hits. And it was to these hits that the large arena would sing for the
+rest of the night.</p>
+<p>Little Miss Mindy was sweating hard as he finished her set on stage. It
+was harder to keep things under control now, but she had managed to hold
+up the whole time plus an encore.</p>
+<p>\"Thank you all for coming out today! May we cross paths again!\" Miss
+Mindy cried through the microphone to her generous fans.</p>
+<p>Her breathing came hard and fast as she raised the mic as high above her
+head as her \"tiny\" body would allow. Cheers, screaming, and applause
+came from the stands as she gave a bow and threw the mic to a crew
+member. Jogging offstage, she waved at the appreciative crowd, a winsome
+and devilish smile on her face as she contemplated the looking at her
+bounding boobs.</p>
+<p>As soon as she was out of sight, Mindy ran to her dressing room as fast
+as she could. \"Fuuuuuck,\" she thought as she rushed away.</p>
+<p>Slamming the door behind her, Mindy, no longer her persona of Miss
+Mindy, panted hard, feeling both the exhaustion of her performance and
+the sprint to her private chambers. For a few moments, Mindy simply
+stood there breathing silently. She reflected on the thrill of being in
+front of the crowd. The feeling of them all looking at her. The strain
+she put herself under constantly. Then she let it all go.</p>
+<p>Instantly her poor shirt, custom made and designed specifically with her
+in mind, ripped in half as a cascade of breasts poured forth. Mindy
+collapsed on top of them, brought to her knees by the feeling of air
+upon her delicate skin. Knees that touched boob before they could touch
+floor. The pile of warm flesh that Mindy now laid upon wasn\'t the mere
+two feet of tits that she had shown her fans that evening. Rather, the
+not-quite-five-foot woman now showed off her full size of nearly 3.5
+feet in diameter that the shirt had compressed.</p>
+<p>Mindy tried to hold back a moan as she pressed her head into her own
+magnificent melons, but all she could do was muffle it. She began to
+grope what she could as her mind began to conjure up her favorite
+imagery. The poor doctor who had thought Mindy\'s tits were fake. Mindy
+moaned again as she remembered the look on the doctor\'s face as he
+revealed her true size, her growth charts, and her natural beauty.</p>
+<p>The doctor had been right, Mindy was still growing. Very fast. Too fast
+for anyone to consider it reasonable. Faster than the speed at which her
+official size was updated. As she continued to tease her boobs, Mindy
+wondered if anyone would still appreciate her at this size. The whole
+point of the project was to slowly ease people into her insanity, but if
+tonight\'s close call was anything to go by, they needed to speed up her
+official speed fast.</p>
+<p>Mindy glanced at the remains of her shirt. Poor thing. It was doomed
+from the moment it was made. Mindy smiled delightedly at all her
+memories of destroying shirts. After every concert she would destroy her
+shirt in private. It was amazing. The flood of memories fueled the final
+burst Mindy needed, and as she gripped great handfuls of herself, she
+came.</p>
+<p>With a sigh of relief, Mindy stood up and walked to her dresser, pulling
+out a more appropriately sized T-shirt as well as a cute skirt. She had
+just stepped behind the changing screen when there was a knock on her
+door.</p>
+<p>\"Who is it?\" she called to the doorway.</p>
+<p>\"Miss Mindy? It\'s Jane, have you finished your post-concert ritual?\"</p>
+<p>\"Ha! Mostly, I\'m changing now. Come on in, but close the door
+quickly.\"</p>
+<p>Mindy, still changing out of her clothes, heard the door open and shut
+in quick succession. She ran a hand down the side of her body
+appreciating the curves she hadn\'t touched. She lifted one of her
+overfed baps out of the way to poke her stomach. Softer than normal. Her
+pretty face scrunched a bit as she tried to decide if that was a good or
+bad thing.</p>
+<p>\"Mindy. Earth to Mindy,\" came Jane\'s voice from the other side of the
+screen.</p>
+<p>\"Huh?\"</p>
+<p>\"You done, or what?\"</p>
+<p>\"Oh, um,\" Mindy said looking at her naked form embarrassed to have
+been called out, \"just one moment.\"</p>
+<p><strong>For more of my work please check out my Deviantart page. I also go by
+Go2daWest there and will often be the first updated with any new
+content. Thank you for reading!</strong></p>
+</body>
+</html>

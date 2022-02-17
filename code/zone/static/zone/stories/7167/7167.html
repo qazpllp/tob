@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Upper Management 3</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>Author’s Note: If you are under 18 turn back now! This is NOT for you. </p>
+<p>Part 3 is here! Expect Part 4 to be the conclusion of the story at least for now. If you have been eagerly 
+awaiting more content, I post my stories on deviantart first at a-spooky-ghost which is also the best place 
+to contact me. </p>
+<p>Upper Management 3 </p>
+<p>The sound of a gently-tolling bell woke Cora from her slumber. Following the hours that she and 
+Vanessa had spent exploring one another’s bodies she had been in deep need of rest. Little else 
+had been explored in the newly-reformed building other than the existence of a custom mattress 
+on the second floor. Much to the amazon’s disappointment Vanessa was nowhere to be found. 
+She reached over to dismiss her phone’s alarm and noticed she’d received a text from Vanessa. </p>
+<p>Cora’s face went beet red and her heart fluttered. Setting the phone down, she set about to begin 
+her day by exploring how much the world had changed. In addition to turning part of the bank’s 
+headquarters into her own personal loft everything was sized for her. The shower, the soaps, and 
+the towels were all custom-designed for a 7’1” giantess with breasts the size of her head, an ass 
+the size of a couch cushion and muscles worthy of a fitness model. </p>
+<p>For the morning, Cora decided to stay nude under the assumption nobody would bother her. She 
+sat at her computer located on the first floor. The keyboard was the only appliance not sized for 
+her fingers, forcing her to resort to hunting-and-pecking one key at a time. </p>
+<p>First, Cora discovered that she was no longer VP but in fact the sole owner and proprietor of the 
+bank. Second, she found that the ‘no more taxes’ portion of her wish had increased just as the 
+rest of her had. The universe, apparently, interpreted the improvement of not paying taxes as the 
+IRS paying her an exorbitant amount of money over time. Her immense fortune allowed her to 
+purchase and rename the bank to ‘CoraBank.’ </p>
+<p>“It has a nice ring to it,” Cora said to herself. The last thing she checked was on Vanessa, 
+assuming she would have gone up the corporate ladder as well. Instead, she found that Vanessa 
+was still in her prior role of floor manager. Such a tangled mess of corporate hierarchy sat above 
+her girlfriend that she made an executive decision. Vanessa went directly to President of 
+Marketing with the press of a few buttons. Just then, her phone went off again as another text 
+from Vanessa arrived. </p>
+<p>When another text didn’t arrive explaining the outburst Cora set her phone aside. She strode into 
+the massive closet and changed into a simple black pantsuit and black flats. Her ample curves 
+were still plainly visible packed into this outfit, but it was better than venturing out in public 
+naked. Yet again her phone began to rumble but to her surprise it wasn’t Vanessa. The called ID 
+simply said “Trevor” which she assumed this reality’s Cora knew much better. </p>
+<p>“Hello?” Cora asked into the receiver. </p>
+<p>“Good morning! This is Trevor, with security. Do you have a moment to speak?” he asked. </p>
+<p>“Er, yeah? I mean, yes,” Cora self-corrected. </p>
+<p>“Excellent. You may be aware that we recently opened a new commercial branch?” Trevor 
+paused a moment then continued, “well, we’ve received reports of an ongoing armed robbery at 
+that location.” </p>
+<p>“Oh, that’s terrible! Have the police been called?” a fearful shiver ran down Cora’s spine. Some 
+odd sense of dread regarding the reason she, specifically, was being notified was forming. </p>
+<p>“Yes, ma’am, I just thought you should hear from me,” Trevor sighed shakily, “that, uhm, we’ve 
+been informed that the new President of Marketing is present at that location.” </p>
+<p>“Send me that branch’s address,” Cora demanded brusquely. Without delay she then 
+disconnected the call and took her leave. Dread had turned to fury; she was partially emboldened 
+by her confidence in what her body could do even against armed criminals. On her way out she 
+found that her compact sedan had been replaced by a large truck meant to accommodate her size. 
+Her phone buzzed once more with another text, but it was in her pockets and she had other 
+concerns demanding her attention. </p>
+<p>On the way to the bank branch Cora risked numerous collisions; she sped through red lights and 
+swerved across lanes of traffic like her life depended on it. To her, Vanessa’s did, and that 
+superseded all other concerns. Finally, she arrived to the scene of numerous police cruisers 
+parked outside the bank. A team of armored SWAT officers seemed to be conversing. She strode 
+past them and stepped over their barricades, eliciting shouts for her to stop. None of them could, 
+and their only effort was verbal.  </p>
+<p>“Well, go find her!” one of the masked men shouted. This was the first utterance Cora heard 
+upon striding into the bank. Though she had to duck to fit through the door the building was 
+rather large for a bank branch and had at least two stories. The criminal that had been instructed 
+to search the building left, but as she stepped forward all attention in the room fell upon her. </p>
+<p>All of the day’s customers, security guards and staff were gathered on the ground in front of the 
+counters. Seven criminals wielding rifles of some kind stared at the large woman but wasted no 
+time in training their weapons upon Cora. She hadn’t actually tested if she was somehow more 
+durable and it occurred to her this might hurt. Worse, she couldn’t see Vanessa in the crowd. She 
+assumed when the apparent ringleader said ‘her’ that he was referring to Vanessa. </p>
+<p>“Oh, hey, who ordered the candy?” a criminal called out. A fit of chuckles broke out among the 
+would-be thieves. Just as Cora started to step forward the bank’s intercom system relayed a 
+buzzing feedback signal. </p>
+<p>“You know,” a feminine voice cut through the feedback, “I love her, I really do. I just..” </p>
+<p>“Vanessa?!” Cora cried out frantically. Rationally, she knew that Vanessa probably couldn’t hear 
+her, but couldn’t help from expressing herself nonetheless. Just then, she remembered that she’d 
+received a test and immediately checked her phone. It had doubled in size, fortunately, but it was 
+still awkward to use a touch screen with huge fingers. A look of surprise crossed her face and she 
+put her phone away. </p>
+<p>“I just feel like she’s missing something,” Vanessa continued, “I mean, Cora is such a small 
+name. Is it short for anything?” </p>
+<p>A familiar tingling built up within Cora. Though it hadn’t begun yet she knew what was coming. 
+A smile spread across her face. She centered her attention back on the robbers. </p>
+<p>“I know everybody will agree with me when I say that Cora could just be…” Vanessa seemed to 
+pause purposely. Cora’s heart began fluttering, she clenched her fists and shut her eyes. </p>
+<p>“Much, much bigger,” Vanessa finished the thought. This time, in full view of a room of people, 
+Cora felt her body being stretched. The growth was different, however; she presumed it may 
+have been because reality was having to adapt in real time. </p>
+<p>All of Cora’s body began to pulse with each beat of her heart. Her breasts began pushing further 
+out of her button-up blouse. She had only created large indentations before, but spaces between 
+the buttons began to form. Mountainous cleavage was immediately visible between the spaces in 
+her top, which grew more numerous each second. Her breasts puffed up out of her blouse’s 
+neckline, threatening to brush the bottom of her chin by the massive bra constraining them. </p>
+<p>Cora’s breasts quickly delivered on their threat. An expanse of cleavage could be seen over her 
+shirt’s neckline, and through many straining buttons. With an audible snap her bra was snapped 
+by the ceaseless discharge of boob, and then vanished from her top completely. Each tit 
+gradually swelled past twice the size of her head. Another pulse ran through her body and her 
+shirt broke open completely. The motion of being freed caused her tits to sway and jiggle. Still, 
+they rode high on her chest as they made one final push. </p>
+<p>All the while Cora had been expanding upward with staggering spurts. She began to massage her 
+breasts, tweaking her nipples as she felt her powerful body become ever greater. A pop echoed 
+throughout the chamber, and then another. Her ass and hips were pushing outward inches at a 
+time. While her thighs thickened, too, she maintained a visible gap between them. </p>
+<p>The perspective of Cora’s audience was skewed; confusing, to say the least. When she’d first 
+walked in the crooks were eye-level with her shoulders. Their eyes rose higher and higher, some 
+focused on her astounding tits, others on her hips, and others still trying to get a better look at her 
+perfectly round ass. There was enough glorious booty that just a portion could be seen peeking 
+out from behind. </p>
+<p>Still, Cora’s body continued its conquest upward. The ever-towering woman began to step 
+towards the perpetrators. Her muscular arms and shoulders burst out of the blouse and blazer. </p>
+<p>Long, firm legs tore her business slacks to shreds. Everybody in the room, with the exception of 
+the growing giantess, began to question how she had entered the bank to begin with. </p>
+<p>Then, the building’s concrete walls began to twist and groan. The doors soared upward, the 
+ceiling rose and the branch itself seem to double in size. A white camisole appeared over Cora’s 
+breasts which defied any bra manufacturer to create something that could contain them. To an 
+average-sized person they were as large as a beanbag chair, but twice as soft to the touch despite 
+their high position on her chest. </p>
+<p>A flowery skirt manifested over Cora’s waist, leaving several handfuls off buttock hanging out 
+for all to see. Sandals appeared over her massive feet, decorated with a little flower sticking out 
+of the top strap. At the end of the spurt the assailants stood just a few inches taller than her waist. 
+A massive, powerful arm shot out and grabbed one of them by the legs. A moment of fear 
+washed over the giantess when the others opened fire. She braced for impact. </p>
+<p>“Oh, fuck me,” Cora heard the ringleader lament. Opening her eyes, she found that she had not 
+in fact been gunned down. Flattened bullets littered the floor in front of her, having struck 
+against her body and simply fallen from her flawless skin. Her clothing, however, hadn’t been so 
+lucky as the rest of her and sported a few more bullet holes than before. The predatory grin 
+returned as she pulled the criminal she’d apprehended up to her full height. </p>
+<p>A heavy ‘thump’ echoed throughout the room as Cora flung him into the concrete wall behind 
+her. He slid down onto the ground, motionless. Hands on her generous hips, she sighed 
+triumphantly and leaned down in front of her impotent attackers. The cleavage put on display as 
+she moved was beyond mountainous; the top managed to push her boobs together without 
+breaking, causing them to nearly burst from the neckline even when standing. By leaning over, 
+the fraction of boob she revealed was itself large enough for an adult person to sleep on. </p>
+<p>“Run,” Cora purred. Without hesitation the troop of crooks turned tail and ran. A few cheers rang 
+out from the captive audience. As their gigantic savior began to stalk her prey the former 
+hostages began to clear out of the building. At the conclusion of the readjustment, it appeared 
+that the entire building had been designed from the ground-up to fit Cora in every nook and 
+cranny. </p>
+<p>Heavy footsteps echoed off the walls as Cora tracked her quarry. She was navigating the back 
+offices of the branch. There were a few closets and corners that made decent hiding spots. When 
+she closed her eyes to listen, she could faintly hear the sound of panicked breathing somewhere 
+in the hallway. </p>
+<p>“I’m not trying to suggest that size is everything, by the way,” Vanessa’s voice returned to the 
+intercom system, “I said I loved her and I meant it!” </p>
+<p>Cora stuck her head through the massive doorway to a conference room but didn’t notice 
+anybody within. Hearing Vanessa’s voice continued to fill her chest with butterflies; her ears 
+burned bright red. </p>
+<p>“But, if there’s more Cora, there’s more to love, right? I have so much love to give, and she’s 
+just too small to handle it all!” Vanessa decreed proudly. </p>
+<p>With each step Cora took her body took up more space in the hallway. A mountain of boob 
+poured into her top. Her ass and hips billowed outward, pushing her skirt up and out until it was 
+less clothing and more a suggestion of what could have been. She meant to continue her search 
+but the feeling of her body pulsing and pumping all on its own was beginning to overwhelm her. 
+For the first time since she had made the wish a desire manifested in her thoughts: to never stop 
+growing. </p>
+<p>For the time being Cora’s body would arousingly manifest her desires. A shuddering pulse 
+caused her body to bloom upward and outward. She stopped, concerned about fitting in the 
+hallway without realizing the tight corridor she’d chosen. With her back against the wall, she 
+paused to slip a hand into her tingling sex. Her movements became more vigorous as she felt 
+herself push more deeply into the wall and floor beneath. </p>
+<p>A moan erupted from Cora’s soft, pillowy lips as she continued massaging herself. She raised 
+her other arm to begin fondling her breasts again but flexed her inexorable muscles just a little 
+too hard. The camisole tore setting her breasts tumbling free. Another shiver pushed her breasts 
+ahead an inch, and then another. Still invested in herself, literally, she hadn’t noticed her ongoing 
+developments until her breasts pushed into the wall opposite from her. </p>
+<p>The sound of a masculine gasp echoing throughout the hallway tore Cora from her conundrum. 
+Fury at the attackers for threatening Vanessa overwhelmed her arousal. The building shift again, 
+releasing her just as she returned to the task at hand. A sports bra molded itself over her chest 
+and a tight pair of shorts manifested on her bottom. Her hair swayed and shifted until it draped 
+over her head just enough to cover one eye, otherwise hanging down her back just above her 
+buttocks. </p>
+<p>A golden light had begun to shine from Cora’s eyes. The building finished reshaping, once again 
+much larger, which also left the crook exposed in the middle of the hallway. Confusion flooded 
+his mind as he tried to understand why he had thought standing in the middle of the enormous 
+hallway was a good idea. The giantess approaching him dwarfed him by several feet; at full 
+attention the top of his head was just barely level with the smooth curves at the top of her 
+buttocks. </p>
+<p>A foot half the size of the crook’s torso launched him through the air. Cora watched him crash 
+into the concrete hard enough that she heard the telltale cracking of breaking bones. Without 
+bothering to pay him any more mind she continued to walk through the bank’s back area. It had 
+increased in size enough that a full staff and call center could fit within. She saw the very back of 
+one of the assailants hurry into empty call center. </p>
+<p>“But I’m just so nervous, y’know,” Vanessa began speaking over the intercom once again. Cora 
+stopped her pursuit to fully inspect her surroundings. She soon found herself staring into a 
+camera mounted high on the ceiling. Furtively, she confirmed that she was alone in the hallway 
+and looked back at the camera. Once confident she was alone, she vigorously waved both her </p>
+<p>arms and jumped up and down. The motion sent her enormous boobs, each nearly the size of a 
+full-grown average adult, into an avalanche of jiggling. </p>
+<p>“Because the world is a big place! And it’s not easy for a woman to make it out unscathed,” 
+Vanessa said. </p>
+<p>While Cora’s sports bra was itself an incredible feat of textile craftsmanship, her incredible 
+pectoral muscles combined with the sheer volume of boob meant very few if any top could truly 
+contain her. She stopped her jumping and flashed her bare breasts at the camera with a wink. 
+Then, she made a heart-shape with her hands, blew the camera a kiss and took her leave. </p>
+<p>“I don’t want Cora to get hurt by what’s out there. I want her to be safe. I need my little shorty to 
+be safe,” Vanessa’s voice seemed to quiver. </p>
+<p>To Cora’s chagrin the cubicles seemed designed with her height in mind. The desks were 
+obscured with walls tall enough to block her vision on all but one side. Even inactive, the sound 
+of humming machinery would make it difficult to track her prey by sound. That same euphoric 
+feeling began to take over her desire to hunt this crook down. She felt her hips pushing further 
+into the custom-tailored shorts wrapped around them. More delicious flesh poured into her 
+buttocks; her ass rounded out with more plump, grabbable skin each second. </p>
+<p>Cora felt her boobs shift in her top but the growth, this time, seemed to be focused more on her 
+lower half. The previous spurt had left her somewhat top heavy and the magic was still 
+interpreting her wish in the most beneficial way possible. A lifetime’s worth of squats began 
+manifesting on her ass, ensuring it was firm enough to bounce a hubcap off of it. </p>
+<p>Cora’s hips swayed with every movement she made, even while she was standing still. Her 
+thighs plumped up another inch, and then another. Her legs stretched longer, and longer still until 
+the average person would come up to her thighs. Her body broadened in order to support the 
+ever-growing assets. Her figure had initially begun to become an hourglass, but as it continued to 
+grow virtually no part of her was hiding another. While Cora’s waist was still small it remained 
+at a size appropriate for a woman of her level of fitness. Her musculature gained no mass but 
+instead became increasingly pliant with time. A full school of gymnasts and ballet dancers’ 
+worth of agility seeped into her body. </p>
+<p>Though it pained Cora to do so, she dismissed the rising tide of arousal in favor of finishing the 
+hunt. Even as she continued to tower over the cubicles she realized it was too much space to 
+search. She took to kicking down the wall in front of her. With just a brief motion of her foot did 
+she managed to not only push the cubicle wall but launch it. Three desks were destroyed in one 
+sweep, and it was then that she heard a pained yelp. </p>
+<p>Cora bounded over to the mess from which she’d heard the voice. She felt her growth coming to 
+a close just as her head came within a few inches of the fourteen-foot ceiling. With one hand she 
+cleared the debris away, revealing a cowering crook. No time was wasted in throwing him across 
+the office; he flew for dozens of feet until hitting something. The gigantic huntress paid no mind 
+for his destination once he’d been tossed. </p>
+<p>By some miracle Cora’s clothing had managed to contain her after her most recent growth. The 
+building didn’t change, either; she paid no mind to these facts beyond brief recognition. She 
+came bounding back out of the call center in time to see four crooks rushing into the restrooms. 
+Both pairs seemed to struggle with the doors’ immense size but only briefly. </p>
+<p>“So, what I’m saying is that I don’t care what happens in the world, or what changes come,” 
+Vanessa spoke through the intercom, “I can handle it, I know that I can.” </p>
+<p>Cora chose to enter the men’s bathroom first, flinging the door off its hinges with one hand. The 
+men’s room was clearly not built to accommodate her as its ceiling was only teen feet high. She 
+ducked in, having to crawl on her hands and knees in order to fit inside. </p>
+<p>“But I know I can’t handle a world without you in it, Cora, and I know I have the power to 
+prevent that,” Vanessa’s voice was resolute. </p>
+<p>“Please come back to me, shorty,” Vanessa commanded in a domineering tone. </p>
+<p>Cora’s heart fluttered at the sound of her girlfriend’s demand. The flutter increased in intensity 
+until it felt like her entire body was pulsing. While the restroom itself was wide she remained on 
+her hands and knees, crawling across it in search of her prey. Her body was visibly pulsing, even 
+to the point of causing the ground to quake somewhat as she crawled. She seemed to be 
+stretching her legs, reaching her arms and flexing her back. </p>
+<p>Yet, Cora was merely crawling through the increasingly inadequate space. Her body expanded 
+outward with forceful spurts. Along with the rhythm of her beating heart did she become more, 
+and more, and more. Her ass pushed out until her shorts finally burst at the seams, revealing a 
+derriere that jiggled with every step. She felt her shoulders brush against the ceiling, so she bent 
+her arms to remain small enough to fit inside the room. </p>
+<p>A loop of shoulders scraping ceiling tiles and Cora bending lower and lower occurred. When she 
+was pushing tits the size of full-size sedans into the floor she decided to stop playing around. She 
+flexed her arms and shoulders until her bountiful breasts bulged around every orifice of the 
+garment. The amount of boob on display above, below and to the sides of the bra dwarfed any 
+other living human alone. </p>
+<p>When Cora sat up her back and head utterly destroyed the ceiling above. She flexed again as she 
+felt another pulse pour into breasts. The sports bra finally tore off and she waited expectantly for 
+clothing to reappear on her body. None did, signaling the collective surrender of the world’s 
+tailors to try to contain her incredible body. She huffed angrily and grabbed hold of a counter 
+that was host to a set of ten sinks. Then, she swung the object into every stall she could until it 
+was destroyed. </p>
+<p>There was a sickening crack followed by a pair of voices crying out in pain. With two fingers, 
+she reached into the rubble to confirm the presence of two motionless masked figures. As Cora 
+took her leave, the bathroom did not reshape itself. The entryway was utterly destroyed when she </p>
+<p>forced her shoulders through it. On the other side she was pleased to find out she could stand up 
+to her full height. </p>
+<p>It appeared the women’s restroom was significantly larger than men’s, or at least the door was. 
+Standing still, she was taller than a double decker bus. If she went up on the tips of her toes, she 
+could hug the roof of a two-story house. With her stature she could also likely destroy it with her 
+car-sized breasts, or smash it with her equally-large ass. A sigh of satisfaction escaped her lips at 
+the sight of her gratuitous proportions. </p>
+<p>Just as Cora pushed open the door to the bathroom did she hear the intercom emit a feedback 
+signal. She stopped briefly in anticipation of Vanessa’s next message. </p>
+<p>“Oh, looks like somebody’s at the door. Hey, tiny, can you wrap it up already? I’m in the 
+security room, first floor, door’s labelled,” Vanessa was trying and failing to hide the fear in her 
+voice. Fear-fueled rage ignite within Cora with a renewed intensity. She pushed the restroom 
+door open, shattering its hinges as well. Her form rapidly began to lengthen once more. She 
+began smashing one stall door after another until she found the first crook. He was picked up by 
+a hand as large as he was and used as a battering ram until he was knocked unconscious. </p>
+<p>Still, Cora continued using the assailant to bash open doors until she found the second. With one 
+gripped in her hand, she kicked at the man’s chest. Then, she threw the other at him for good 
+measure. Neither seemed to be moving. Immediately, she turned on an enlarging heel and made a 
+mad dash toward the security room. At such a high speed her body was sent into a fit of 
+bouncing and jiggling. </p>
+<p>Each step created the illusion that Cora was walking up a flight of stairs. One step pushed her 
+head high and she remained at that height. Her bust would bounce upward and come back down 
+an inch or two larger. Her frame increased once more to keep her proportionate, but still utterly 
+gargantuan from every angle. By the time she reached the security room the majority of Earth’s 
+population would stand no higher than her knees. </p>
+<p>The sight that greeted Cora sent terror through her spine. The last gunman, the one that had been 
+sent away, was holding a pistol to Vanessa’s head with one hand. With his other he was 
+squeezing her bust. For a brief moment the giantess regarded her girlfriend, having seen her for 
+the first time that day. Something about her seemed larger, fuller; and was she taller? Cora 
+couldn’t adequately focus on ogling Vanessa. </p>
+<p>“You breathe wrong and this bitch is dead!” the gunman screamed. </p>
+<p>Cora’s mind raced; she looked for anything in the room that could help. Even at her size she felt 
+that distant feeling of powerlessness and humiliation wash over her. She made eye contact with 
+Vanessa and her eyes welled up with tears. Then, while staring at the girlfriend she dwarfed by 
+more than a dozen feet a plan came to her. </p>
+<p>“Baby, don’t worry. It’s going to be okay,” Cora said as she raised her hands, “I’m signing 
+ownership of the bank over to you.” </p>
+</body>
+</html>

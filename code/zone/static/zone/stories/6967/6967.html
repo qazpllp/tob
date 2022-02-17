@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>The Seed</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>The Seed </p>
+<p>A Light Fantastic Tale </p>
+<p>(you can see more of my work at https://lightfantasticstories.blogspot.com/p/stories-index.html) </p>
+<p>I didn't think much of it when my roommate turned up in the early morning. Her 
+astronomy club met and ran late. I did think it was sort of odd how much noise she made 
+getting in and getting to her room - lots of thumping and crashing, like she was drunk, but 
+it didn't last long before she fell into her room. </p>
+<p>That's when the moaning started, though. Now I'm hardly one to complain about some 
+late-night self-gratification, but she was really loud, and that was unusual for her. I put up 
+with it and tried to sleep for a little but, but eventually I had to roll out of bed and slump 
+out and across to her door, which I gave some heavy knocks. </p>
+<p>"Hey, want to do that a little more quietly? Stuff a gag in there if it's that hard!" </p>
+<p>Not only did the noises not stop, if anything they increased. I could hear muttering in 
+between the moans, too faint to make out, but definitely her voice, although deep and 
+slurred. </p>
+<p>I gave her door another thump. "Hey, seriously, you wanna shut the fuck up? God damn." </p>
+<p>When it didn't stop, I squared my shoulders and threw her door open - and froze. </p>
+<p>My roomie was sprawled out on her bed, which I'd expected. What she had her hands on, 
+though, was an absolutely enormous mutant penis, sprouting from between her skinny 
+legs. It had to have been more than a foot long, and as fat as a wine bottle. Thick veins ran 
+up and down its length, and before my eyes they visibly pulsed. I thought it was a trick of 
+the light but the veins actually seemed to be glowing a faint toxic green. Underneath it was 
+a gigantic wrinkled scrotum, loose and thick, containing two testicles each bigger than 
+basketballs, that also glowed radioactive green. Her hand seemed tiny wrapped around the 
+monstrous shaft - some of the veins alone were as thick as her fingers. Green goo was 
+running in rivulets from the yawning tip. </p>
+<p>She lifted her head, locking eyes with me around it, her iris the same shade as the horrible 
+organ's features. Her face was slack, almost emotionless except for an expectant, manic 
+edge that looked almost like hunger. </p>
+<p>"B..." </p>
+<p>"J-jesus, what the fuck? Is this some kind of joke?" </p>
+<p>"B..." She shuddered, eyes still wide, hand jerking against the cock. "B-br..." </p>
+<p>I stepped forward, trying to make sense of the situation, when she suddenly launched from 
+the bed with unexpected strength. "Breed!" </p>
+<p>Before I could react she'd grabbed my arms. I struggled back but her grip was like steel - I 
+couldn't budge. She pivoted and hurled me onto the bed, grabbing me again, eyes manic 
+and twitching. "Breed!" </p>
+<p>She pushed the tip of her cock against my pyjama bottoms. The goo soaked through a little 
+bit, and where it touched my skin I felt waves of heat spread out, flooding into me and then 
+settling - in my breasts, in the pit of my stomach, in my clit, deep in my pussy. She kept 
+pushing, more of the goo spreading against me, and it was like my brain shorted out. My 
+world contracted and all I could see was my roommate and her cock. Almost without my 
+control my hips thrust against her, my body disconnecting from my brain in its desperation 
+to experience her dick. </p>
+<p>She growled, frustrated, then grabbed my bottoms and snarled, shredding them apart like 
+tissue paper. The cold air hit my pussy, which in the space of just a few seconds had puffed 
+up and become boiling hot, making me whine and buck my hips again. Her face tightened 
+as she saw it, her cock lurching, and her voice became even hungrier. </p>
+<p>"Breed!" </p>
+<p>She thrust. It should have killed me - not that I cared at that point. There's no way 
+something that big could have gone anything close to as far as it did inside me in a single 
+motion, no matter how badly I wanted it. It did, though - at least half of the massive shaft 
+slid inside me, my pussy spreading apart greedily to accept it, carpet-bombing what was 
+left of my consciousness with a blast of ecstasy stronger than anything I'd ever experienced 
+before. Howling, she pulled back slightly and thrust again, and this time her entire gigantic 
+shaft went inside me, her hips contacting mine, her balls slamming against my ass cheeks 
+with a fat, fleshy slap. </p>
+<p>She didn't make love to me. She barely even fucked me. She ravaged me. Between her 
+supernatural strength and my arousal I was utterly helpless beneath her, and with laboured 
+breathing, whines and groans she slammed into me over and over so hard the bed began to 
+shake and sway. The green glowing veins were spreading out from between her legs, her 
+body tightening wherever the glow touched, her strength and desperation multiplying. It 
+was almost like she was in pain, and fucking me was the only thing that took it away. I 
+dimly realised she was still muttering under her breath between her louder exclamations. </p>
+<p>"B-breed... Breed you... Breed... Gotta... Breed..." </p>
+<p>With her monster cock feeling as though it was directly touching my brainstem on each 
+thrust, I tried my best to assist her with breeding me, but I couldn't even manage that. 
+Orgasm over orgasm crashed over me, my body quaking and spasming as her need only 
+grew until finally her skinny body tightened, her abs flexing, mouth slack as something 
+clearly built up inside her. One more grunting, sweaty thrust, her ass quivered, and her 
+cock lurched as it started to shoot off inside me. </p>
+<p>It was like someone had shoved a firehose up my pussy. It gushed inside me, my nerdy 
+roomie bucking and seizing over and over each time I felt her dick pump, although the </p>
+<p>difference between the start of one pump and the next was difficult to tell when I was 
+already so full. </p>
+<p>Full. That was the next word that managed to worm its way into what was left of my 
+consciousness. Within seconds I was feeling full, bloated from the inside as she pumped 
+endless amounts of her cum inside me. Between us I saw my belly starting to rise up, slowly 
+inflating in spasmodic bursts with each lurch of her cock until after two full minutes I 
+finally felt her painstakingly slip out of me. I heard her stumble back and fall, but couldn't 
+see her over the now-vast swell of my bloated belly. From inside it, though, in the dim light, 
+I could see the same green glow I'd seen in her. I laid my hands on it - it was tight, and 
+warm. The glow wreathed my fingers. Somewhere in the back of my brain I realised I 
+should have been terrified, but instead I grunted up to a sitting position, calmly rubbing my 
+hands across the glowing belly that extended outwards nearly level with my knees. </p>
+<p>My roomie was backed up against the wall, staring down between her slim legs. Her cock 
+was slowly pulsing and deflating and the testicles underneath it had shrunk down and lost 
+the acidic glow. Suddenly, I was struck by my own sensation. It came from deep in my 
+abdomen, but it was like nothing I'd ever felt before. The closest thing I could think of was 
+suddenly swallowing something large and round, feeling it suddenly appear in my stomach, 
+and it was accompanied by a sudden surge of heat through my whole body, as well as a 
+spark of pleasure that left me slack and moaning. The heat swirled until it concentrated 
+itself in my chest and my rump, and then with a final surge, I watched my tits expand 
+slightly. </p>
+<p>If you're being charitable, I'm thick. If you're not, I'm kind of chubby. My boobs have always 
+been around the right size to match the rest of my body, at least until my roommate 
+stretched my womb full of radioactive cum, but now they had visibly puffed up what easily 
+had to be an extra cup size. I gently tested one with my hand. It was firm, and fatty, and 
+definitely all me. </p>
+<p>Before I could touch the nipple another moan forced its way out of my throat, and I felt the 
+sensation in my belly again. With the opportunity to experience it again, I realised it wasn't 
+something dropping in, but rather appearing. Like something was suddenly swelling into 
+existence inside me. It carried with it another burst of heat and pleasure, but this time a 
+strange awareness. </p>
+<p>Eggs. My eggs. I don't know how I knew it, but my roomie's cum was doing something to my 
+eggs - and it felt good. It brought another burst of boob along with it, leaving my girls a 
+staggering size. I went to test its size against my hand and shuddered as I brushed my 
+nipple - it was sensitive. It also confirmed that my tits were now significantly more than I 
+could hold in one hand. I was in the middle of my tentative self-examination when the 
+sensation flared again. Another growth, another expansion of my breasts. Even my roomie 
+was able to take her eyes off her dick to stare at my chest as it expanded. </p>
+<p>Over the next half hour we could only sit and watch as my eggs bloated and my chest 
+swelled, over and over, until the green glow in my belly had faded away completely and the 
+sensations stopped. My tits were so big that I couldn't even completely see how big they </p>
+<p>were, especially not with how they were spread to either side of my belly, which hadn't 
+shrunk even slightly. </p>
+<p>I shifted to the side, and as well as feeling my tits sway, I felt whatever was inside me shift 
+around - it wasn't quite liquid, but it could move. I pushed my stomach from side to side, 
+feeling large masses inside shake and slide across each other. I was filled to the brim with 
+soft orbs. </p>
+<p>I slid my hands under my tits and heaved them to the side of the bed, then used the nearby 
+nightstand to painstakingly push myself to my feet. Every step across to the mirror was a 
+struggle, both from the weight and from the momentum of my bloated body, but I finally 
+reached it. </p>
+<p>Each of my tits was bigger than a high-school backpack, maybe about half the size of my 
+belly. They projected to either side of my stomach and slightly downward. My areolas, 
+formerly light pink, were now dark-brown and speckled around the edge and covered in 
+bumps. My nipples were enormous, and knobbly as well, with a depression in the centre of 
+each grapefruit-sized tip. Blue veins traced across the pale surface. Huge, motherly tits, 
+perfect for my gravid waistline. They felt full, and tentatively testing one of my nipples led 
+to a powerful squirt of a creamy, minty-green liquid. </p>
+<p>Almost as an afterthought I realised my hips and ass had expanded as well - my rump 
+projected out wider and further than ever, even at my heaviest. Turning around to examine 
+it, though, made me realise my roomie was staring intently at me, mouth slack. I could see 
+the green veins snaking their way back up her cock as it pulsed, and also snaking back 
+down around her testicles, which were bigger than before and also starting to glow again. </p>
+<p>"You like this? You like me so big, and round... All filled up?" Her eyes roamed all around my 
+body, my gigantic belly, my bloated, dripping breasts, and as they did her cock continued to 
+expand back up to erection. She stood up, licking her lips, and then her brow furrowed. </p>
+<p>I wasn't fit for breeding, and something inside her seemed to be telling her that. "Sorry, 
+lover, I'm closed for business right now. But maybe I can help you some other way?" </p>
+<p>I waddled slowly back over to the bed, kneeling next to it, patting it with one hand while 
+looking at her. She got the hint and sat down next to me, cock bobbing and balls swinging 
+pendulously. Her dick was back to its full size, throbbing, dripping thick goo. Her testicles 
+were, if anything, even bigger. I lifted one and couldn't help but gasp at its heat and weight 
+- at over a foot wide, it felt like trying to lift a bowling ball. She panted, and then growled at 
+me. </p>
+<p>"Cum!" </p>
+<p>"Okay, okay." I gently lowered the testicle back down, and then wrapped one hand around 
+the bottom of her shaft. Even just holding the massive thing made clear how unnatural it 
+was, how it dwarfed my hand. The skin was surprisingly pliant, though, and allowed me to 
+start stroking it with less effort than I would have expected. It still felt easier with a second 
+hand near the top, though, and my mutated roommate seemed to appreciate it as I fell into 
+a vigorous two-handed jerk-off. Copious amounts of thick fluid lubed her up nicely for me, </p>
+<p>belching from the tip and rolling down her cock's length and over my fingers. The scent 
+was so powerful that I couldn't stop myself from moving my head forward to kiss and lick 
+her cock as I stroked her. </p>
+<p>Before long she squealed, falling back on wobbling arms, before her cock flexed and fired. A 
+huge, thick rope of emerald-green cum launched from the yawning slit, travelling so fast 
+that it hit the ceiling before I realised what was happening, but I certainly felt it when it 
+slopped back down onto my tits. Her next cumshot was even harder, this time hitting the 
+ceiling with such force that it splattered, sending gobs of green goo in every direction. </p>
+<p>For the next minute her cumshots only got thicker and harder, her cock swaying so much 
+that predicting where any one rope would go was impossible. For the next minute, they 
+maintained their strength. They only began to wane for the last minute of her orgasm, but 
+by then every flat surface in the room, along with a lot of the walls, was coated in cooling 
+gobs of her jizz. I couldn't help but giggle as I looked around, and looked across myself, 
+then back at her penis. </p>
+<p>This time, it wasn't shrinking. It was still steel-hard, and if anything it was even harder. Her 
+balls hadn't shrunk an inch and still glowed like a desk lamp. It throbbed, drawing a gasp 
+from her, and another ball of fluid oozed from the tip and rolled down the underside. She 
+caught my gaze. </p>
+<p>"C-cum. Cum!" </p>
+<p>I took a deep breath, biting my lip. "I think we're going to need to deploy some serious 
+firepower for this." </p>
+<p>I snaked my hands underneath my breasts and, with some effort, lifted them up, my nipples 
+squirting wildly with every shake of my tit-flesh. At first I tried getting them into her lap, 
+but when the full extent of my belly bumped into her legs before my breasts got anywhere 
+near her lap, I decided on a different approach. I spread her legs and shuffled forward, and 
+the length of her dick meant I could squeeze it between both breasts and the top of my 
+stomach. That meant that at the same time as I could tit-fuck her (and belly-fuck, I guess) I 
+could also feel those giant balls smacking against the baby-bump they'd created. </p>
+<p>She realised what was happening pretty quickly and soon she was thrusting between my 
+boobs. They were a fair bit more sensitive than they'd started out, so the experience was 
+fun for all involved. The slap of her testicles against me made my pussy clench each time, 
+and the feeling of her slimy shaft gliding its way between the gelatinous softness of my tits 
+was better than anything I'd had inside me before tonight. Green breastmilk squirted in 
+every direction, rivulets of it running down my breasts and across my belly, collecting in 
+the fuck-hole crevasse I'd made for her cock. It almost took me by surprise when she came 
+again, but this time the entire load hit me straight in the face. I fell backwards, choking, 
+leaving her to another three-minute orgasmic performance that left another layer of green 
+go across her bedroom - but left her still throbbing and erect, ready to go as if nothing had 
+happened. She stared at me desperately. </p>
+<p>"Cum!" </p>
+<p>I looked back at her, panting, covered in gobbets of emerald jizz and my own milk, which 
+still leaked in a steady stream from my nipples. I could feel my heart sinking. I knew what 
+she needed, and I couldn't give it to her. She didn't just need to blow her load. She needed 
+to breed. What the fuck was I going to do? </p>
+<p>Almost as if to answer me, her phone rang. As my roomie wrapped her hands around her 
+cock and started to pump, I heaved my way onto my feet and waddled as fast as my 
+ungainly body would let me over to the nightstand. My belly had a mind of its own and its 
+back and forth sway nearly took me off my feet a couple of times. Every part of me wobbled 
+or jiggled or bounced - and honestly, it was fucking awesome. </p>
+<p>The name on the phone was one of her astronomy club friends. Another girl. That gave me 
+an idea. I swiped to answer. </p>
+<p>"Hey, I was just calling to check-" </p>
+<p>"Oh, thank God! She's really sick. Did something happen tonight? She's been calling for you, 
+she's sweating and feverish." </p>
+<p>As if to punctuate that she moaned from the bed. I couldn't help but grin watching her. 
+"You're a med student, right? Can you come over, and see if there's something you can do?" </p>
+<p>"Oh, uh. O-okay, yeah. Give me ten minutes." </p>
+<p>I practically squealed after she'd hung up. "Oh, this is going to be fun, darling! Just hang in 
+there, okay?" </p>
+<p>She responded with another rope of cum aimed directly at my tits. I left her to squeeze out 
+another orgasm and went back to my room to find something to cover myself. The only 
+thing that would fit was my mother's old dressing gown that she'd given me for college, and 
+even that was only just able to wrap around both my tits and stomach. I took the 
+opportunity for another look at myself in the mirror. I was so big. So much of me. So many 
+curves. My roomie had turned me into a gravid goddess and I was falling in love. I was so 
+enthralled that I was still staring at myself when I heard the knock at the door. </p>
+<p>Her clubmate was frizzy and dumpy, although it was the middle of the night. She had a first 
+aid kit in one hand. I saw her eyes go wide when she saw my body, but she clearly decided 
+not to question it as I led her towards the bedroom. She choked as she stepped inside, 
+looking around at dripping stalactites of cum that were going translucent as they dried, 
+and then my roomie, sitting in the middle of the bed, still desperately pumping her dick. </p>
+<p>Her testicles had kept growing. Each of the things was now as big as a beach ball, hanging 
+loosely in an oversized, rubbery sack snaked through with bright green veins, a pulsing 
+toxic glow coming from inside. Her whole body was traced with the glowing veins now, her 
+muscles straining everywhere they touched like they were trying to leap from her bones. 
+She looked up, spotting our new friend, and roared. </p>
+<p>"BREED!" </p>
+<p>She leapt from the bed with terrifying speed, not even stopping to make arrangements for 
+the bulk of her scrotum - just dragging and bouncing it behind her with heavy thuds on the 
+floor. Before her club friend could even scream my roomie had grabbed her and lifted her, 
+pushing the dripping end of her dick up the girl's skirt. This time, there was nothing in the 
+way. </p>
+<p>The beginnings of a scream instead turned into a moan, the girl's body going slack as 
+whatever fabulous chemicals were swimming in the mutant cum started to work their 
+magic. I watched in rapt attention as my roomie bounced the girl, not so much having sex 
+with her as using her fabulous strength to jerk herself off with the girl's helpless body. </p>
+<p>When she came, I finally got to see the process from the outside. I watched the glow swirl 
+in her nuts, sitting heavily on the floor behind her, and saw it extend up through the 
+bottom of her shaft as she started to cum. Drooling and frothing, locked in the same 
+endless orgasm I'd been when my roomie ravaged me, the girl accepted each burst of cum 
+with barely an extra sound. Her belly grew faster than mine had, each cumshot packing on 
+an inch or more of width, the green glow even stronger from inside the centre of her 
+expanding abdomen. My roomie collapsed backwards, not so much from the weight as 
+from the shaking legs from the sensation, leaving the girl sitting on top of her, rapidly 
+expanding. </p>
+<p>By the time her orgasm was over the girl was unrecognisable. Her belly extended out 
+beyond the full extent of her outstretched legs, smothering my roommate's face. She lifted 
+it without an issue, though, picking the newly-bloated girl up and dropping her on the bed. 
+The girl's face was wide in shock and ecstasy, her hands rubbing in dreamlike swirls across 
+her stomach's tight extent. It glowed bright enough to illuminate the room, while my 
+roommate's appendages had lost theirs - along with a significant amount of their size. </p>
+<p>I saw an odd expression pass the girl's face, along with a surge of the glow from inside her. 
+I realised what was happening and leaned in, ready to watch her eggs inflate with alien jizz. 
+Her tits were that unfortunate size where they'd look decent on a small girl but didn't really 
+match her overall figure, but they were already visibly inflating as the mutant goo began its 
+work. Her hands immediately shot to them, as if she'd decided to ignore what had 
+happened to her midsection and focus on her chest. Another obvious pang of pleasure 
+passed through her face and they bloated against her hands, filling up her palms with soft 
+meat. </p>
+<p>"Mmm, feels good, doesn't it? Feeling her cum change you from the inside out?" </p>
+<p>"I-uugghh, ohh, ff-fuck, I... W-will I get as big as youuu?" </p>
+<p>"Oh, I wasn't anywhere near as big as you. You're going to be huge." </p>
+<p>That, along with another couple of inflated eggs, made her reply die in her throat, replaced 
+with a moan as her tits expanded beyond the capacity of her hands. The surge was 
+accompanied by a squirt of the same mint-green milk I was making. For the next two hours 
+I sat with her, enraptured, watching her tits grow, her rump expand, watching her belly 
+slowly replace gooey cum with rubbery inflated eggs. Her tits ended up bigger than my </p>
+<p>stomach, hanging heavily to either side and pooling on the bed in fleshy mounds topped 
+with dark brown ultra-pregnant areolas and nipples the size of watermelons. Without even 
+the merest stimulation they sat leaking a lazy river of green milk. </p>
+<p>"My God, you're enormous. I'm so fucking jealous." </p>
+<p>She didn't reply, just staring down soundlessly at the swell of her belly, looking from side to 
+side at as much of her breasts as she could see. </p>
+<p>"I know it's a bit of a shock, but you'll get used to it, trust me." </p>
+<p>I turned back to check out my roomie. Her cock was soft again, finally, but her testicles 
+were already beginning to swell up again. She looked up at me pleadingly. </p>
+<p>"Breed?" </p>
+<p>I looked down at my own gravid body, then the even more bloated form of our new friend. 
+Until I finally got rid of these eggs, she wasn't going to be able to do anything with me, and 
+even just a few hours without breeding had her almost in pain. </p>
+<p>"We need more. More girls. She can't go without more wombs to fill. You need to help me 
+find them." </p>
+<p>No answer, just a rattling moan as she reached down to start pressing into one of her 
+oversized, knobbly nipples. I looked from her, to my panting, demanding roommate-slash-
+mistress. I felt a tingling in my eyes, matched by a flash from hers. Something filtered into 
+my brain as if from out of the air. </p>
+<p>"The Seed needs to spread. The Seed needs to Breed." </p>
+</body>
+</html>

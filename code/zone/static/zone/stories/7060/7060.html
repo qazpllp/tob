@@ -1,0 +1,2542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Full Bloom</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>Full Bloom </p>
+<p>Story by Akane 
+Written by HikerAngel </p>
+<p>PART 1: FAMILY </p>
+<p><em>Pop</em> </p>
+<p>The impressive sphere of pink bubblegum deflated rapidly, and Dee sucked its remnants 
+between pink, Maybelline-coated lips. Shuffling around the table, her prodigious cleavage 
+bounced in her tight, lycra top with every movement. Her blue eyes glowed with pride as she 
+watched her family wolfing down their bowls of Frosted Flakes. Reaching to the counter for the 
+worn tupperware pitcher half-filled with tepid tap water, she squished a melting can of Minute 
+Maid into it and began to stir the slimy mixture with a bent fork. </p>
+<p>"No juice for me, dear. Just coffee. I didn't sleep so good last night," said Harold absently, eyes 
+never leaving the sports section. He turned the page of his newspaper, the motion allowing a 
+curly-haired roll of his jiggling beer belly to escape the tight confines of his stained white 
+undershirt. </p>
+<p>Examining the dark circles beneath his father's eyes, Johnny commented. "You never sleep 
+good, Harold. I think I have a can of Jolt in my backpack," he said, sliding out of his chair to 
+retrieve the soda. "Stuff's pretty rad. I always keep a can handy so I can stay awake in Mr. 
+Matthews' class." </p>
+<p>"Call me 'dad', boy," Harold grumbled, still engrossed in an article about the Mets historic losing 
+streak. </p>
+<p>"Speaking of class, how did you do on your history test yesterday, hun?" asked Dee, taking the 
+opportunity to glide in and fill his glass with some orange sludge. </p>
+<p>"Flunked it," said Johnny, pulling wadded-up papers and ziplock bags of powder from his bag 
+before raising a can of Jolt Cola above his head with a victorious smile. </p>
+<p>"Oh, dear! I'm going to help you with your homework tonight. We can't have you repeating the 
+eighth grade, now, can we?" said Dee, her heavily made-up skin crinkling around concerned 
+eyes. </p>
+<p>"Oh, mom. I know you mean well, but let's just say homework isn't your strong suit," piped in 
+Joy. "I'll help him tonight." </p>
+<p>Dee's expression softened as she turned toward her daughter. "Oh, would you? You're such a 
+good sister, my little college grad. I'm so proud of you..." </p>
+<p>As he came back to the table, Johnny smacked Joy on the back of the head, sending a lock of 
+dull-brown hair flying into her face. </p>
+<p>"What was that for?" asked Joy, incredulous. </p>
+<p>Johnny slammed the can of soda on the table by his dad with a tinny thump, then rolled up the 
+sleeves on his Member's Only jacket. "For being a show-off. We all know you're smartypants 
+little nerd, okay?" </p>
+<p>"I'm just trying to help you, rodent!" said Joy, pounding her pudgy arms on the table in 
+exasperation. </p>
+<p>"I don't need no help. I mean, mom and dad didn't graduate high school, and look how they 
+turned out?" said Johnny, running a hand over his hairspray-drenched spiky blond hair. </p>
+<p>"I beg your pardon," said Dee, garish red press-on nails rising to cover her plump cleavage. "I'll 
+have you know that I 
+modeling." </p>
+<p>Harold snorted. "You make it sound so elegant, Dee. Wearing granny underpants and 
+fifties-style bras for the Sears catalog..." </p>
+<p>Dee glanced at the mirror, using a hand to fluff her frizzy blonde bangs. She'd put on some 
+pounds over the years, but the figure inside her skin-tight v-neck blouse and leggings remained 
+lush and sexy. "Well, it helped pay the bills while you worked your way into a management 
+position at the Wal-Mart, honey." </p>
+<p>Harold finally set down the paper, red-cheeked face settling in its typical scowl. "Speaking of 
+which, I gotta get to work. Those endcaps to promote our 88-cent-a-can baked bean sale won't 
+set up themselves!" </p>
+<p>"But I haven't made the bacon yet! I know how much you love pork with your cereal, hun..." said 
+Dee, forehead creasing in distress as her false eyelashes rose. </p>
+<p>graduate high school, young man. Right before I took up lingerie 
+did 
+​</p>
+<p>​
+them." 
+stand 
+​</p>
+<p>Einstein, the family’s rotund sheepdog, jumped onto the counter, belly swinging beneath him, 
+and began wolfing down the raw strips of bacon. In his haste to get to the food, the 
+greasy-haired mutt flung bits of packaging flew all over the kitchen. </p>
+<p>Harold yanked up his threadbare khakis with two large thumbs, then stretched a wrinkled blue 
+short-sleeved shirt over his gut before gravely announcing: "It's okay. These are the Goddamn 
+hurdles every working man's gotta face." </p>
+<p>"Oh, shit! The bus!" cried Johnny, running to his backpack and stuffing the plastic baggies and 
+wads of paper back into it. He ran out the door, Harold right behind. </p>
+<p>"Language, dear!" called Dee after them as the door closed with a wobbly-hinged clap. </p>
+<p>Joy rolled her eyes as quiet replaced the manic morning energy in the room. "I don't know how 
+you </p>
+<p>Plopping into a chair, Dee reached into her mouth and removed her pink bubble gum, sticking it 
+to the edge of the bowl with her thumb. She downed a spoonful of Johnny's leftover sugary 
+cereal, and sighed wearily. "Stop it, Joy. They're our family." </p>
+<p>"Yeah," said Joy wryly. "They're definitely that.” </p>
+<p>Johnny burst through the door and flung his backpack to the shag-carpeted floor, drawing the 
+startled gazes of his mother and sister. </p>
+<p>"Missed the fucking bus!" he huffed. </p>
+<p>"Language, dear!" Dee repeated, rising wearily to her feet and reaching for the car keys. "I'll 
+take you." </p>
+<hr />
+<p>The engine of Dee's '79 Oldsmobile turned over on the fourth try with a chorus of whinnies over 
+a deep rumble, rattling a few flakes of rust free. Johnny wound the rubber band that held 
+together the finicky passenger-side seat belt buckles until he could release it without worrying 
+about the nylon band snapping back upward. </p>
+<p>"How are your math grades doing, dear?" asked Dee. </p>
+<p>"I wish you'd stop fucking asking about my damn grades, Dee!" asked Johnny, words echoing 
+those he'd heard his father utter a thousand times. </p>
+<p>​
+ it at 
+loves
+​</p>
+<p>Chastened, Dee pursed her lips in frustration, and mother and son rode to the school in silence, 
+every bump sending the rusty brown car into a series of squeaky bounces. </p>
+<p>After a moment, Dee attempted to strike up conversation once more. "So are you and your 
+friends ready for high school next year? Linda Morelli tells me that her son Rick just 
+East Concrete High." </p>
+<p>Johnny said nothing, staring straight ahead at the passing trees and garbage cans in icy 
+silence. </p>
+<p>"You know, Rick Morelli? He used to babysit you when your father and I went out for a date at 
+McDonald's." </p>
+<p>The silence continued. </p>
+<p>As she pulled up in front of the school, two large, well-built boys in parachute pants and black, 
+studded leather jackets strolled over. "Hi there, boys," said Dee brightly. The taller of the two 
+nodded, rolling a toothpick from one side of his mouth to the other and pushing his aviator 
+sunglasses to the top of his head as if it were a headband. The other simply ogled her. </p>
+<p>"So does Johnny have the best-looking mom around or what?" Dee chortled, thrusting out her 
+buxom chest and fluffing her teased-out hair. </p>
+<p>"Jesus, mom! Do you have to act like such a fucking slut in front of my friends?" seethed 
+Johnny, slamming the car door loudly behind him, his friends doubling over in laughter. </p>
+<p>Dee's face fell, and her eyes grew glassy as she watched her son join the other two boys, 
+walking up the steps to the school. She sniffed twice, wiping away her welling tears before they 
+fell and ruined her heavily applied mascara, and drove home in contemplative silence. </p>
+<hr />
+<p>As she entered the house, Joy looked up and instantly identified the look in Dee's quivering 
+eyes. She rose from the table and gave her mom a warm hug. The loving gesture made Dee’s 
+tears well up once more. This time, she let them fall. </p>
+<p>"Sometimes, I wish I knew what to do, you know?" Dee told her daughter, voice thick with 
+emotion. "I try so hard, but our family just isn't the way I wish it was." </p>
+<p>"I know, mom. I know," Joy comforted her mother, patting her back as they held each other. </p>
+<p>"I guess I just wish that Harold and Johnny were more appreciative sometimes," she said, voice 
+shaking as she attempted to regain control of herself. </p>
+<p>​
+ need to stand up for myself." 
+do
+​</p>
+<p>Joy released the hug and pulled back, searching her mother's eyes. "You need to stand up for 
+yourself, mom. Dad totally takes you for granted. And Johnny's just a little punk sometimes." </p>
+<p>"You know, you're right, Joy," said Dee, setting her jaw resolutely, spine straightening even as 
+tears glistened on her cheeks. "I </p>
+<p>Joy smiled and nodded as her mother marched over to the dining room table and cleared off the 
+dishes with a new sense of purpose. </p>
+<hr />
+<p>As she heard keys fumbling at the lock of the front door, Dee thought of Joy's words with a 
+smile. Fighting her practiced urge to pull a cold beer from the fridge for Harold, she instead 
+approached the front door with nothing but a purposeful smile. </p>
+<p>Harold flung open the door with an overly hard swing to eye Dee suspiciously. "Where the fuck 
+is my beer?! I had the day from absolute hell! Some stupid teenager knocked over my bean 
+display the moment I finished it, I have another two employees pregnant, and all I want right 
+now is my damn beer, so I can sit down and watch the friggin' Mets game!" </p>
+<p>"Actually, I was thinking that we could spend some time together. You know, maybe go to the 
+bedroom a little early for some evening fun..." Dee batted her eyes hopefully. </p>
+<p>"Pfft," said Harold, rubbing his balding head as he walked over to the fridge and extracted a 
+frosty PBR. "Sex stopped being fun when you gained ten pounds about twenty years ago, 
+Double Dee," he said, mockingly using the bra size that doubled as her high school nickname. 
+He pulled the tab on his drink and took a long swig. Belching loudly, he staggered to the den, 
+where he kept his 27-inch TV, and slammed the door shut. </p>
+<p>Dee looked stunned as Joy entered the room. Brows furrowing at her mother's hurt expression, 
+Joy marched to the den and knocked loudly on the door. Harold appeared, beer in hand, giving 
+his daughter a "this had better be good" look. </p>
+<p>"Dad, apologize to mom 
+seemed to have no effect on Harold. </p>
+<p>"Kiddo, those physiology courses are never gonna help you get inside 
+Then his voice rose to a shout. "Buzz off, little bee." </p>
+<p>The door slammed behind him, and the volume of the ballgame emanating from inside rose. "It's 
+psychology,
+ dumbass," Joy said under her breath before turning to her mother and shrugging 
+​
+apologetically. </p>
+<p>," Joy's words were surprisingly commanding. But they 
+right now
+​</p>
+<p>head," he chuckled. 
+my
+​</p>
+<p>​
+​
+​
+ 
+"Thanks for trying, anyway, Joy. Means a lot," her mother said, squeezing her daughter's 
+shoulders in gratitude. </p>
+<p>A knock at the door interrupted the moment. Dee hustled over to open it. In the doorway stood 
+Carl and Linda Chapman. </p>
+<p>Carl wore a shiny-threaded powder blue suit, the top three buttons on his cream button-up shirt 
+open to expose a tanned expanse of hairy, well-muscled chest. One hand smoothing back his 
+thick brown hair, he extended the other to rest on his wife’s lower back, which was bare in the 
+short, tight cocktail dress she wore. </p>
+<p>Linda looked like a younger version of Dee, albeit with smaller, significantly perkier breasts. Her 
+perfectly coiffed, puffy blonde bangs hung lightly over bright blue eyes. Her wrinkless, 
+high-cheekboned face seemed to delight in tormenting Dee with visions of what hers used to 
+look like back in her Miss Trenton contestant days. </p>
+<p>As Linda leaned forward in her stilettos to give Dee a hug, Carl pinched his wife’s firm, rounded 
+ass. Linda drew back, slapping his hand away with a smile. “You brute!” </p>
+<p>Carl gave his wife a lopsided grin, then took her hand as they walked in the door. </p>
+<p>“Dad! Chapman’s are here!” Joy yelled at the door to Harold’s man cave, a look of satisfaction 
+at having interrupted his game again clearly written on her face. </p>
+<p>“What?! What the fuck are they doing here? I thought they weren’t coming over ‘til Thursday!” 
+came an annoyed voice from the other side of the flimsy fiberboard door. </p>
+<p>“It 
+neighbors. </p>
+<p>Harold pulled open the door, crushing the beer can in his hand and flinging it into the den 
+behind him. He stumbled out of the room, stretching his arms, crinkled shirt unbuttoned and 
+dangling crookedly over his dirty khakis. </p>
+<p>“Hi, Carl! How’s it hanging?” he yawned. </p>
+<p>“Never better, Hare. ‘Course it helps to have a wife with a hot-as-fuck body that’s tighter than 
+Fat Albert’s pants after lunch,” he grinned. “Check out the new toy...” </p>
+<p>He held up a hairy arm, and a heavy gold Rolex slid halfway down its length. </p>
+<p>“Good lord, is that a </p>
+<p>Thursday, dad,” Joy laughed, delighted at the opportunity to expose his stupidity before the 
+is
+​</p>
+<p>asked Harold in an awed tone. 
+Timex?”
+​</p>
+<p>​
+​
+stuff?” she prompted, a mischievous look in her eye. 
+do 
+​</p>
+<p>“Nope. It’s a Rolex,” proclaimed Carl with a satisfied smirk. </p>
+<p>“Well, that’s probably almost as good,” replied Harold dismissively, losing interest in Carl to 
+focus his beady eyes on Linda. </p>
+<p>The attractive blonde was giggling as she fingered Dee’s new leopard print blouse, her nubile 
+body clearly on display in her curve-hugging white cotton dress as she giggle-gushed about 
+shopping with the middle-aged mother of four. </p>
+<hr />
+<p>After two hours and twice as many bottles of expensive wine—courtesy, of course, of the 
+Chapmans—the two couples called it a night. </p>
+<p>Dee cleaned up downstairs while Harold spent thirty minutes in the bathroom. When Harold 
+finally staggered out, leaving a trail of hiccups as he went, he collapsed onto the bed face first, 
+like a tree crashing down in the forest. </p>
+<p>Dee slipped under the covers next to him, cuddling close to his warm, mushy body. “Want to, 
+you know, </p>
+<p>“Fuck no,” came a muffled voice from the pillow beside her. “I already whacked off to the 
+Polaroid of Linda and Carl we took.” </p>
+<p>He turned his head to the side, so that his speech was no longer muffled, only slurred. “She’s so 
+fuckin’ hot. Kinda like you used to be…” </p>
+<p>Dee shot back, away from her husband, as if bitten by a snake. Slipping out of bed, she went 
+into the bathroom and closed the door. </p>
+<p>Tears fell for the third time that day as Dee examined herself in the mirror. Her face was still 
+attractive, but its deepening wrinkles could no longer be completely covered, no matter how 
+much makeup she caked on. Her breasts were still large, but they seemed to sag, just as her 
+spirits did when she compared them to Linda’s perky pair. Her waist was still thin. But, she 
+lamented, leaning forward and pinching a small roll of fat on her belly, not as thin as it used to 
+be. She looked at the photo of her younger friend on the counter, then at her reflection in the 
+mirror. Not as thin as Linda’s either. </p>
+<p>Crumpling the picture in one long-nailed hand, she stared at the mirror, frustration and sadness 
+bubbling in her eyes. Letting out a long sigh, she quietly opened the door and went back to bed. </p>
+<p>Harold was already snoring. </p>
+<p>​
+ </p>
+<hr />
+<p>Say “ahhhh” directed the doctor the next day, placing a dry wooden tongue depressor over 
+Dee’s tongue as he did so. </p>
+<p>He proceeded to poke, prod, and carefully examine every part of her body. Dee looked up at 
+him hopefully, wanting to see a spark of desire in those cold, gray eyes, searching for 
+something to make her feel wanted again. She found nothing there but clinical detachment, 
+however. </p>
+<p>“You should get a mammogram,” said the doctor, flatly. “Women your age are at increased risk 
+of breast cancer.” </p>
+<p>Women her age? Way to make me feel good about myself, Dr. Downer!
+ Dee frowned. 
+​</p>
+<p>“And you’re officially entering menopause.” </p>
+<p>And the good news just keeps on coming…
+ thought Dee sarcastically, swallowing hard. As the 
+​
+man began to list the various symptoms she should be experiencing—hot flashes, weight gain 
+(joy!), missed periods, mood swings—her attention drifted, and her frown deepened. She 
+couldn’t think of a single time she’d exhibited any of those symptoms. Except the weight gain. 
+But even that had been gradual, over the course of the last ten years. </p>
+<p>Buoyed only slightly by the fact that she had yet to show any of the symptoms of menopause, 
+she left the doctor’s office wishing she could feel more like she had when she was younger and 
+had her pick of the boys in her high school. She had felt attractive back then. Desired. Powerful. </p>
+<p>A shiver passed through her as she walked to her tanklike Oldsmobile, goosebumps rising on 
+her olive skin. 
+ she laughed bitterly. It was just her 
+ flashes?
+cold
+Hot flashes? She was having 
+​
+​
+luck to have everything work out the opposite of how it should. </p>
+<p>​
+​
+PART 2: CHANGES </p>
+<p>“Stacy’s coming home this evening, Harold,” said Dee on Saturday, pulling her trademark 
+dish—her mother’s lasagna—from the oven and waving the oven mitt over it to cool the 
+bubbling mozzarella. </p>
+<p>“Great,” replied Harold enthusiastically. “I’m going to watch some football. The Jets are playing 
+the Dolphins tonight.” </p>
+<p>“But I made your favorite! Lasagna!” Dee interjected, smile faltering. </p>
+<p>“I’m good. Having a liquid dinner tonight,” replied Harold, raising a beer and rattling it above his 
+head as he walked away from her. “You’re always telling me to go on a fuckin’ diet, anyways.” </p>
+<p>“Well, 
+eat it,” said Johnny, plopping into a chair at the kitchen table as the door to Harold’s 
+I’ll 
+​
+man cave shut. </p>
+<p>Dee tossed the lasagna to the table in frustration, sliding it across to her son, then walked 
+toward the stairs. </p>
+<p>“Aren’t you going to have some?” asked Johnny.  </p>
+<p>“Not hungry,” replied Dee stone-faced, beginning to ascend. </p>
+<p>“Mom?” </p>
+<p>Dee paused. It was rare for her son to call her that. </p>
+<p>“Joy never helped me with my homework. She said I was an ungrateful little monkey boy who 
+was hopeless anyway. Can you believe that?” </p>
+<p>Dee suppressed a smile. “That’s terrible dear.” </p>
+<p>“Anyways, I thought about what you said. About not being able to go to high school next year?” 
+Johnny’s eyes grew grim. “And I was wondering if you might help me a little.” </p>
+<p>This time, Dee did smile, a bounce in her step as she flounced back down the stairs. “I’d love to, 
+little Johnny-wonny.” </p>
+<p>“Mom, you know I hate it when you call me that! I’m not six, you know.” </p>
+<p>​
+. 
+wasn’t
+​</p>
+<p>the first time he’d opened it! 
+was
+​</p>
+<p>You’re into the complicated stuff, aren’t you?” 
+“Letters?
+​</p>
+<p>Dee’s smile simply broadened in response. “Now, I’m not sure if I’m as good at this stuff as Joy, 
+dear, but I’ll do what I can…” </p>
+<p>Johnny smiled and opened his math book. The pages gave a tearing sound, and Dee caught a 
+whiff of “new paper” smell as he pried it open. Come to think of it, it was the first time Dee could 
+remember seeing him with his math book open—-maybe this </p>
+<p>Brows scrunching in concentration, Johnny looked in his notebook for the assignment, then 
+flipped a few more pages in the book until he found the correct page. </p>
+<p>into the math problems, and I don’t 
+y
+ and 
+x
+“So they’re starting to put these weird letters like 
+​
+​
+have a fucking clue where to begin!” Johnny confessed, fingers fiddling nervously with his 
+pencil. </p>
+<p>“Oh dear,” gasped Dee. </p>
+<p>Dee reached out a trembling hand to the book and spun it toward her. Her eyes scanned the 
+page, fully expecting to be completely confused. </p>
+<p>But, much to her surprise, she </p>
+<p>As she read the chapter, the lesson was actually making </p>
+<p>“Well, let’s see. See this first problem here? The one that says 3x + 5 = 17?” </p>
+<p>“Yeah, what about it?” </p>
+<p>“Well, all you have to do is the opposite thing to the other side!” Kind of like her life, she thought, 
+remembering her cold flash after the doctor had told her she should be having hot flashes.  </p>
+<p>“So just subtract five from each side, and you get 3x = 12, right?” </p>
+<p>Johnny scribbled the step into his notebook eagerly. </p>
+<p>“Then just divide by three!” said Dee, clasping her hands together delightedly. “Because dividing 
+is the opposite of multiplying!” </p>
+<p>“What the hell is </p>
+<p>“It’s where you say how many times one number goes into another.” </p>
+<p>“Oh, yeah. Right...” </p>
+<p>again?” asked her son earnestly. 
+dividing,
+​</p>
+<p>to her! 
+sense
+​</p>
+<p>​
+​
+​
+​
+​
+​
+​
+ you friggin’ helped me 
+time
+​</p>
+<p>her. On something other than 
+complimenting
+​</p>
+<p>,” Johnny harrumphed. But he closed his book over his notepad and took it up to 
+that
+​</p>
+<p>this!” said Johnny in a hushed voice. Then he continued, his surprise so great that he 
+do
+​</p>
+<p>Johnny scribbled furiously for several minutes, scratching out his work several times, then 
+working the problem again. Finally, he looked up at her questioningly. </p>
+<p>“So it’s four? This fucking ‘x’ letter is like the number four in disguise or some shit?” </p>
+<p>“Exactly!” said Dee, so delighted that she’d helped her son that she didn’t even chide him for his 
+language. </p>
+<p>“I can 
+didn’t stop to think about what he was saying. “Thanks to you…” </p>
+<p>Dee was practically floating. Her son was actually 
+her cooking, even! </p>
+<p>Johnny quickly looked away, clearing his throat. “I mean, it’s about 
+instead of being so, like, overbearing and shit.” </p>
+<p>“Language…” Dee reminded him in a singsong voice, unable to continue to let language like 
+that slide. </p>
+<p>“See? Like 
+his room to continue working on this math assignment. </p>
+<p>The doorbell rang as Dee sat at the dinner table, beaming. She shot to her feet, then shuffled to 
+the door, wearing heels tonight because she’d been feeling a bit sexier lately. </p>
+<p>She opened the door to find her oldest daughter Stacy twirling a lock of crimped blonde hair, 
+fingers emerging from her fingerless sequined gloves to intertwine with those of a tall, strapping, 
+clean-cut young man with a chiseled, masculine jaw and a sexy twinkle in his crystal blue eyes. </p>
+<p>“Nice to meet ya, Mrs….” </p>
+<p>“D’Amico,” whispered Stacy. “Same last name as me. She’s my mother, remember?” </p>
+<p>“Mrs. D’Amico,” said Chad, sounding out her last name hesitantly. He took Dee’s hand in his 
+and brought it up to his smoldering eyes. “It’s so cool that you have the same last name as your 
+daughter here. I’m Chad. Pleasure.” </p>
+<p>Stacy smiled perfunctorily, then pulled Chad’s hand away from her mother’s, pressing full 
+breasts that bulged over the neckline of her slinky clubbing dress into his muscled tricep.  </p>
+<p>Chad looked down at her, eyes drinking in Stacy’s impressive cleavage as she pressed upward 
+onto her toes to give him a lewd, open-mouthed kiss. </p>
+<p>​
+​
+​
+​
+ 
+The den door swung open with a wheezy squawk. Blinking, Harold stumbled out of the den with 
+an empty, half-crumpled beer car lodged in the folds of his faded green Jets sweatshirt, a line of 
+half-crusted yellowish drool dried onto the corner of his mouth. The right side of his face looked 
+irritated and red, as if he’d recently peeled it from the cracked pleather surface of the easychair 
+in his man cave. </p>
+<p>“Who’s this fuckin’ guy? Captain America?” Harold belched, giving the tanned, muscular blond 
+in the doorway a skeptical once-over as he frenched his eldest daughter. </p>
+<p>When Stacy finally pulled her lips from Chad’s, licking away a thin line of saliva that continued to 
+connect their mouths post-kiss, she turned to her father. “Dad, this is Chad.” </p>
+<p>Turning back to her boyfriend, pressing a finger to his nose, she continued. “Sexilicious 
+Chaddykins, this is my dad.” </p>
+<p>Harold wiped his meaty paw on his shirt, causing the beer can to fall to the floor with a soft 
+clatter, and extended it. Chad smiled as he shook Harold’s hand, then leaned in conspiratorially 
+and whispered. “Thanks for being cool about me fucking the shit out of your daughter and all.” </p>
+<p>Harold’s lips thinned, and he increased the pressure of his grip, but he said nothing. </p>
+<p>Chad eyed Dee as he released his grip on Harold’s sweaty palm, pulling back his hand to wipe 
+it on his pants. “You’re a lucky man, Mr…” </p>
+<p>“D’Amico!” chided Stacy in a loud whisper. “</p>
+<p>“D’Amico… right…” said Chad slowly, nodding his head as the wheels turned at glacial speed in 
+his mind. </p>
+<p>“Why the fuck do you say I’m lucky?” asked Harold, scratching his bald spot, honestly baffled. </p>
+<p>“Because, I mean, just 
+“And your sexy-as-hell wife! She’s like the hottest 40-year-old I’ve ever seen!” </p>
+<p>“Actually, she’s almost fift—” Harold’s breath whooshed out, putting a sudden end to his 
+sentence, as Dee elbowed him. </p>
+<p>“That’s so kind of you to say,” said Dee, fluffing her hair, batting her eyelashes, and staring at 
+Chad’s lips, still moist from the kiss he’d given her daughter.. </p>
+<p>“I mean it. I mean, you’re totally friggin’ smoking, Mrs…” </p>
+<p>at your daughter here,” he hugged her curvy body into his side. 
+look
+​</p>
+<p>Remember?” 
+Same. Last. Name. 
+​</p>
+<p>​
+​
+nuclear hot!” </p>
+<p>lost a few pounds these last few days…” 
+have 
+​</p>
+<p>Stacy simply shook her head in disgust this time, not bothering to fill in her last name for a third 
+time, having realized the futility of her previous efforts. </p>
+<p>Dee blushed and giggled in delight. “Well, I </p>
+<p>As Stacy watched her boyfriend ogle her mother, she cleared her throat. </p>
+<p>Chad didn’t take the hint, continuing to stare at the older woman. “You must have been, like, 
+nuclear hot back in the day because you’re still, like… </p>
+<p>Brows furrowing, Stacy elbowed him in his cobbled stomach. He startled and turned to her, then 
+began to stammer. “But, I mean, you’re like… 
+ nuclear hot, babe!” 
+super
+​</p>
+<p>He beamed, marveling at his own off-the-cuff cleverness with words. </p>
+<p>“Come on,” said Stacy, pulling a small bag of white powder from her bra to dangle it before her 
+imbecilic boyfriend. “Let’s go to my room.” </p>
+<p>“Yes, ma’am,” said Chad, stumbling behind her, eyebrows rising, his gaze drifting downward to 
+the hypnotic sway of her perfectly shaped ass. </p>
+<p>Harold turned to his wife and lowered his own gaze down her shapely form. Her body seemed 
+tighter, sleeker than he remembered. </p>
+<p>“You been taking them diet pills again?” he asked her, cocking his head to the side. </p>
+<p>“No! You know we can’t afford that kind of thing. Not with the way gas prices are headed these 
+days!” said Dee, secretly pleased by her husband’s lustful gaze. </p>
+<p>“Well ‘cause you're just looking especially hot tonight is all.” </p>
+<p>“I am?” Dee replied, biting her lower lip. </p>
+<p>“Yeah. But don’t get like a big head about it or nothin’. Jesus.” </p>
+<p>“So you wanna have some 
+finger, hands clutching her husband’s plump arm. </p>
+<p>“Yeah. Alright. But don’t expect no foreplay, capiche?” </p>
+<p>Dee simply gave him an evil smile and took him to the bedroom by his sweaty hand. </p>
+<hr />
+<p>tonight?” asked Dee, twirling a lock of golden hair around her 
+fun
+​</p>
+<p>​
+​
+​
+​
+aerobics?” </p>
+<p>Harold rolled over groggily in the morning to find his wife up and already dressed in a tight pink 
+leotard, white tights, and lemon yellow leg warmers. She smiled at his slack-jawed face as she 
+snapped her headband into place. </p>
+<p>“Where you goin’ dressed like that?” he mumbled, rubbing his eyes. </p>
+<p>“To aerobics class, Hare.” Dee said, admiring how her shapely body filled out the exercise outfit 
+in the cracked floor-length mirror next to her worn vanity. </p>
+<p>“Seriously? Since when do you do </p>
+<p>“Since Maria Dantonio invited me.” Dee said, doing a bit of final primping, then fetching the keys 
+from the dresser. </p>
+<p>“You mean that crazy fitness instructor lady across the street?” </p>
+<p>“Yeah. Her. You got a problem with it?” Dee said in uncharacteristic challenge to her husband, 
+crossing her arms under the ample swells of her voluptuous breasts. </p>
+<p>“No…” said Harold, scratching at his crotch. “Say, how’s about we, you know, 
+tonight?” </p>
+<p>Dee smiled, eyes twinkling. “We’ll see.” </p>
+<hr />
+<p>Dee strode into her neighbor’s aerobics class with a lively bounce in her step. </p>
+<p>Mrs. Morelli and Mrs. Dantonio gawked at her increasingly toned body as she set down her 
+duffle bag. “You been doin’ secret workouts or something, Dee?” asked Mrs. Morelli, sucking in 
+her own flabby belly. </p>
+<p>“No, I haven’t exercised in years. Why?” asked Dee nervously, finding a place in the front corner 
+of the room. </p>
+<p>“‘Cause you’re lookin’ like you dropped a few pounds,” said her frumpy middle-aged friend. </p>
+<p>“And a few years…” muttered Mrs. Dantonio as she took her place at the front of the room. </p>
+<p>As the class started, to her amazement, Dee discovered that she could not only do the 
+exercises, but she was doing them faster and with more range of movement than even Mrs. 
+Dantonio, the instructor! </p>
+<p>it again 
+do
+​</p>
+<p>​
+​
+feet into the air, kicking her leg up so far that her 
+three 
+​</p>
+<p>As the class set up their benches for the step portion of the class, Dee realized that she’d hardly 
+even broken a sweat. Deciding to take the intensity up a notch, when the music resumed, Dee 
+leapt a full two feet into the air before landing on her bench with every jump. She swayed to the 
+beat of the music as she twirled through every movement with almost casual ease. Not even 
+breathing heavily, she hummed to the Madonna song blaring over the speakers as she lunged 
+twice to the rest of the class’ every one. </p>
+<p>Soft murmurs began to make their way across the room as Dee continued to pick up speed and 
+height while the rest of the class began to tire. </p>
+<p>Maria Dantonio gave Dee the stink eye as the energetic woman launched herself into an extra 
+three sets of jump-squats during the class’ second five-minute break with glee. </p>
+<p>As the class ended, Dee leapt 
+legwarmer-encased shin met her nose at the peak of her jump. To the astonishment of the rest 
+of the class, Dee looked like a  tall, extremely voluptuous cheerleader. </p>
+<p>When she landed with a broad smile, all the other women crowded around Dee, eager to speak 
+to her. </p>
+<p>“What’s your secret?” asked one of them. </p>
+<p>“Have you taken up jogging? I heard Sue say jogging is the best way to lose weight…” said 
+another. </p>
+<p>“Are you having an affair?” arose another voice. </p>
+<p>“You should be 
+Maria Dantonio. </p>
+<p>“Goodness,
+ girls! I take one little bitty aerobics class, and everyone’s all a-titter!” said Dee, 
+​
+blushing but happy for the positive attention as she toweled off. </p>
+<hr />
+<p>As she walked through the door, cheeks flushed from the attention as much as the workout, she 
+found Al, her oldest son, lying on the floor of the man cave, hands casually resting under his 
+head, talking with Harold.  </p>
+<p>“...Guy’s a total meathead. So I tells him to add another two plates, so’s I can show him how it’s 
+done,” said Al, gesticulating excitedly as he told his father one of his gym stories, the long black 
+hair at the back of his mullet swishing over the carpeted floor. </p>
+<p>this class,” croaked an aged voice, eliciting another nasty glance from 
+teaching
+​</p>
+<p>​
+​
+ 
+“So I deadlift the damn thing, and the guy goes all fucking ruby and starts yellin’ at me and shit. 
+So I clock him. Right here,” Al said, pointing at his jaw. </p>
+<p>“Proud of you, son,” said Harold absently, eyes on the football game. “You’re really gettin’ good 
+at the whole bouncer thing, huh?” </p>
+<p>Al lay back smugly, crossing his beefy arms behind his head, huge pecs rippling. “I suppose you 
+could say that. But you know the best part of workin’ at the club?” </p>
+<p>“What’s that?” </p>
+<p>“The fucking tail, dad! I mean, there’s like hottie after hottie struttin’ around that place. Tits as far 
+as the eye can see. It’s fuckin’ dope as hell!” </p>
+<p>Dee cleared her throat, alerting the two men to her presence. </p>
+<p>“Hey, ma!” said Al, rising to his feet to give his mother a hug. </p>
+<p>“Finish your aerobics, hun?” asked Harold, eyes still glued to the television. </p>
+<p>“I did. And you know what? I was the best one in the class!” she beamed. </p>
+<p>“Pfft,” laughed Al. “That’s great, ma, but that Jane Fonda shit’s for pansies. Real exercise 
+means fuckin’ sweat and iron, baby.” </p>
+<p>Dee frowned, her son stripping her of the source of pride she’d found over the course of the 
+morning. Then she thought of Joy’s advice to stand up for herself. And the ease with which 
+she’d executed every exercise this morning. </p>
+<p>“Well, I think I can lift weights just like you can,” she blurted out. </p>
+<p>Her son blinked twice, then broke into guffaws of laughter. Harold joined in the laughter from the 
+den. </p>
+<p>“I’m </p>
+<p>When he began to calm down, tears in his eyes, he panted. “Okay, okay. Let’s see what you 
+got, ma…” </p>
+<p>Dee scowled, crossed her arms, and followed him into the garage where Harold kept his 
+weights. </p>
+<p>Dee insisted, and her son laughed even louder, slapping his knee. 
+serious!”
+​</p>
+<p>​
+ what a real 
+that’s
+​</p>
+<p>can do, ma!” he said victoriously. 
+man
+​</p>
+<p>Al blew a thin layer of dust off the 25-pound dumbbells and handed them to his mother. To his 
+surprise, she handled them with ease, beginning to curl them casually. </p>
+<p>“Well how do you like them apples, guys?” Dee beamed, setting down the weights and doing a 
+little dance before the two men. </p>
+<p>Al smiled, then put a 45-pound plate on each side of the cobwebbed barbell in the corner. 
+Grunting, face reddening, he curled the heavy weight to his chest, then dropped it to the floor.  </p>
+<p>“Now </p>
+<p>Dee frowned, and strode over to the weight, wrapping her long-nailed fingers around it and 
+pulling upward. She began to curl the bar, feeling her arms burn slightly, but the pain quickly 
+vanished, the bar rising and lowering easily a dozen times before she set it back down. </p>
+<p>Al and Harold blinked, mouths open. “How did you—?” asked Al. </p>
+<p>Dee’s brow furrowed in concentration, and she added another two plates to each side of the 
+bar. She took two deep breaths, then began to pull the bar upward. </p>
+<p>It rose to her hips... </p>
+<p>...then her chin… </p>
+<p>...and a moment later, strength pouring into her feminine muscles, she held it over her head. 
+Arms wobbling at first, she straightened until she held the weight proudly over herself with 
+apparent ease. </p>
+<p>Al and Harold’s tongues practically lolled from their mouths. </p>
+<p>“That’s. Not. Possible,” whispered Al, clearly awed. </p>
+<p>“It must be some kind of trick. Those must be made of plastic or somethin’,” said Harold. He 
+marched over to Dee as she set down the weight, and leaned over. </p>
+<p>“Outta my way,” he cried and tugged at the bar. </p>
+<p>It didn’t move. </p>
+<p>“Here, let me, dad,” suggested Al. He lifted it to his hips, breathing loudly, then dropped it. </p>
+<p>​
+​
+ she done it? </p>
+<p>“I don’t know how, but you’re cheating or something, ma! Very funny!” Al yelled, pointing a finger 
+at his mother, then whirled to face his father. “Come on, dad. Let’s go watch the game at the 
+fuckin’ bar. I’m outta here.” </p>
+<p>Dee watched them go, smile fading. </p>
+<p>How 
+had
+​</p>
+<p>Walking slowly up to her bedroom, she stared at herself in the mirror. She looked even better 
+than she had before she went to aerobics. </p>
+<p>Significantly better. </p>
+<p>The creases around her eyes had faded to the point where they were barely noticeable. Her 
+skin looked healthy and smooth, better than it had in years. </p>
+<p>She felt her large breasts through the thin fabric of her leotard. They seemed firmer, riding 
+higher on her chest than they had even yesterday.  </p>
+<p>Her waist looked slimmer, more toned. And her legs… gone was the cellulite she’d been battling 
+the last few years. As she rolled down her tights, she ran her hands along their long, tanned 
+surface. It was sinuous and smooth. </p>
+<p>She didn’t look a day over 35. </p>
+<p>She shivered. An insanely hot 35. </p>
+<p>How was this possible? Here she was, nearly 50 years old, hitting menopause, and all of 
+sudden, it was like her body was caught in a time warp, aging backwards. </p>
+<p>Her eyes rose once more to her face, when she noticed something else. Her irises were no 
+longer blue… </p>
+<p>...they were </p>
+<p>Gasping, she leaned closer to the mirror, examining her eyes closely. The change was 
+unmistakable. They had changed color. </p>
+<p>Did this have something to do with her new strength? She shifted her jaw, considering. She 
+didn’t know. </p>
+<p>She removed the leotard, turning her body from side to side, giving it a thorough look in the 
+mirror, butterflies fluttering her stomach. </p>
+<p>purple. </p>
+<p>​
+​
+ 
+She was definitely more attractive. Her body was near it’s peak, close to as stunningly gorgeous 
+as it had been in her youth. Stacy, her 27-year-old daughter, didn’t have much of an edge on 
+her now, she noted in satisfaction. </p>
+<p>She pinched her nipples, feeling electricity surge into her already aroused body. Hands drifting 
+lower along her firm curves, down her taut stomach, arriving at her suddenly dripping sex, she 
+began to finger herself. </p>
+<p>From his room, Johnny heard something. It was faint at first, then grew louder and louder, until 
+he heard his mother’s cries from the room above. Looking up to his ceiling a bit of plaster 
+cracked, showering him in white dust. Brow furrowing, he set down his homework and left his 
+room, climbing the steps. As he neared the top, he felt the house shaking beneath his feet as if 
+it were sitting on a gigantic laundry machine on a spin cycle. Oh, God! Was this an earthquake 
+or something? </p>
+<p>He sprinted to his mother’s room and pounded on the door. “Dee? Ma? You okay in there?” </p>
+<p>Pressing his ear to the door, he heard panting inside. Then a thump. Then footsteps. Then his 
+mom opened the door, cheeks flushed, tossing her wild, disheveled blonde hair to the side.  </p>
+<p>“Yes?” she said, breathlessly. </p>
+<p>“Um, I was just checkin’ to see if you’s okay. I thought we were havin’ an earthquake or 
+somethin’.” </p>
+<p>Dee tried to suppress a smile as she tugged her robe around her more tightly. “No, no, dear. 
+Everything’s okay. I’m fine.” </p>
+<p>“Well, okay then.” He eyed her suspiciously as he descended the stairs. </p>
+<p>Dee closed the door, then leaned against it, biting her lower lip. 
+Just your mom having the best orgasm of her entire fucking life! </p>
+<hr />
+<p>A few hours later, still in her bedroom, Dee heard Joy come home. 
+she thought. 
+That’s odd, 
+​
+ She supposed that if everything 
+Normally I can’t hear the front door open from way up here.
+​
+else about her was improving, her hearing may as well improve too. </p>
+<p>Rising to her feet, she set down the romance novel she’d devoured over the last two hours, and 
+made her way to Joy’s room. </p>
+<p>No, son. Not an earthquake. </p>
+<p>​
+​
+!” 
+purple
+​</p>
+<p>said Dee, beginning to pace Joy’s room. 
+amazing!”
+​</p>
+<p>“Joy Toy? You in there? I’ve got something to talk to you about…” </p>
+<p>“Yeah, mom. Come in.” </p>
+<p>Dee entered her daughter’s room, surveying the comic books and psychology reference 
+materials strewn over her desk. </p>
+<p>Dee looked up at her, startled, then craned her neck for a closer view. “Mom! Your eyes! 
+They’re </p>
+<p>“I know, hun. That’s why I wanted to talk.” </p>
+<p>Joy closed her mouth promptly and stared at her mom wide-eyed, blinking as she absorbed her 
+mother’s altered appearance.  </p>
+<p>“Something’s happening to me. Something 
+“This morning I went to aerobics and could go harder and faster than anyone else in the 
+class—even the instructor! And I haven’t been to an exercise class in </p>
+<p>Dee looked at Joy, who wore a blank expression, before continuing. </p>
+<p>“Then I get home, and Al is being all macho with your father. It made me mad. But then I 
+remembered what you said about standing up for myself, and I… I challenged him. In 
+weightlifting.” </p>
+<p>Joy blinked several times, her expression shifting from surprise to disappointment. “Mom, that’s 
+not exactly what I—” </p>
+<p>“But I 
+ him!” Dee interrupted, knowing what her daughter was about to say. “I lifted more 
+beat
+​
+than he could!” </p>
+<p>Joy looked skeptical. </p>
+<p>“Come on. Let’s go down to the garage. I’ll 
+her daughter to the garage, imagining her daughter’s reaction with gleeful anticipation. </p>
+<p>“Ew. This place is so disgusting,” said Joy, flinching and waving away a cobweb that she’d 
+walked through while making her way to the back corner where the weights were. </p>
+<p>Dee gave her daughter a meaningful glance, then reached down and lifted the barbell over her 
+head. It seemed even easier than it had earlier this afternoon. </p>
+<p>you…” Dee’s violet eyes sparkled as she led 
+show
+​</p>
+<p>easier! 
+Far
+​</p>
+<p>” 
+forever!
+​</p>
+<p>​
+​
+​
+​
+​
+​
+As Joy watched in astonishment, Dee set down the weight, then picked up one of the plates. 
+Putting one hand on each side of the thing. She squeezed, as if testing its solidity. Releasing 
+the pressure, she saw a thumbprint in the iron on either side. </p>
+<p>Dee re-gripped the plate and pulled her hands back and inward before her. She felt her heart 
+flutter in excitement as she saw the plate begin to bend. Further and further it went, the metal 
+straining to resist her powerful fingers and failing with a high-pitched groan. Finally, it snapped, 
+breaking cleanly in two. </p>
+<p>Surprised, Dee dropped the two halves of the plate to the ground, where they struck the 
+concrete with a loud <em>da-ding</em> before rolling in a circular pattern to a stop. Looking sheepish, 
+Dee shifted her gaze to her daughter. Joy simply stood there, transfixed, staring at the two 
+halves of the plate on the ground. </p>
+<p>“I bet I could do pretty well in one of those strong man competitions, huh?” joked Dee, 
+attempting to break the silence with a little levity. </p>
+<p>“Yeah,” said Joy in a hushed tone, eyes still glued to the plates. “For sure.” </p>
+<p>After a long moment, the pudgy brunette looked up at her mother. “Mom?” </p>
+<p>“Yeah?” </p>
+<p>“Do you think you’re becoming a superhero or something? Like in the comics?” </p>
+<p>Dee considered. “Maybe? Wouldn’t that be something?!” </p>
+<p>She puffed out her massive chest, breasts straining the fabric of her tight top, and put her hands 
+to her hips, adopting a superhero pose. Then she doubled over in laughter. </p>
+<p>“I’m kinda serious, mom. You’re going through some kind of scientific breakthrough or 
+something! Did anything happen to you? Like being bitten by a radioactive spider or having a 
+witch cast a spell on you or something?” </p>
+<p>Dee thought about it for a moment. “Not really, Joy. The only thing that’s any different is that the 
+doctor told me I was hitting menopause.” </p>
+<p>“Menopause…” Joy repeated, smiling. </p>
+<hr />
+<p>couldn’t have anything to do with it. Could it? 
+That 
+​</p>
+<p>​
+Dee was already in bed, nearly finished with her third romance novel of the evening, when 
+Harold opened the door to their bedroom, back from the bar. He stumbled to the edge of the 
+bed, then did a double take in slow motion. </p>
+<p>“Jesus, Dee. You get plastic surgery or somethin’? You look like a fuckin’ million bucks!” he 
+slurred. </p>
+<p>Dee smiled, then rose languidly to her knees, sliding across the bed to wrap her arms around 
+him. She gave him a long, deep kiss. </p>
+<p>“Jesus…” whispered Harold in an awed voice when she withdrew her lips from his. “That was…” </p>
+<p>He trailed off as Dee pulled off her nightgown, eyes following the bounce of her large breasts as 
+if they were a hypnotist’s pendulum. </p>
+<p>Dee smiled mischievously, and pulled him in for another kiss. His body bulged over hers as she 
+wrapped her long legs around his plump hips and used them to guide his lower body into 
+alignment with hers. Already hard, she used the strength of her shapely legs to pull him into her. 
+As he penetrated as far as he could, she felt him spasm. </p>
+<p>He had come? Already? </p>
+<p>Dee bit her lower lip and used her strong core to flip her heavy husband over onto his back. 
+Breathing heavily, he lay there, beginning to tremble as she slid her smooth, curvy body over his 
+until her right breast hovered over his drooling mouth. </p>
+<p>She lowered it to him, and he reached out his tongue to lick her nipple. Dee gasped in pleasure.  </p>
+<p>Encouraged by her reaction, he craned his neck upward until his lips closed around the 
+hardening tip of her breast. Dee threw her head back, delighting in the sensation of his hot 
+mouth around her aroused nipple. </p>
+<p>She pushed her breast deeper into his mouth, undulating her ample hips over his sloshing 
+stomach. Feeling his rapidly inflating member against the inside of her lower thigh, she slid the 
+toned flesh of her leg against it until she felt hot, sticky fluid splash against it. </p>
+<p>He had come </p>
+<p>Pulling back, she watched his eyes flutter shut as he drifted into unconsciousness. </p>
+<p>she thought. 
+Damn, 
+​</p>
+<p>He hadn’t even gotten her off once. </p>
+<p>Already! 
+again! 
+​</p>
+<p>​
+​
+She rose, went into the bathroom, and cleaned herself off. Then, she wandered over to Joy’s 
+room and sat silently at her desk as her daughter slept. She glanced at the clock. It was 11:03 
+PM. </p>
+<p>She opened one of Joy’s comic books and read it. Then she read another. She repeated the 
+process until she’d read them all. Then, she cracked open one of her daughter’s psychology 
+books, and read it from cover to cover. Then she read another. </p>
+<p>As she finished the last of her daughter’s college textbooks, she glanced over to the clock once 
+more. It was 2:37 AM. She just read a dozen comics and four college textbooks in less than four 
+hours. </p>
+<p>She realized something else... </p>
+<p>...She’d read them all </p>
+<p>As she rose and walked back to her bedroom, she found that her mind could bring up each 
+page in her mind as if she had stored a photo of it in her brain. Smiling, she slid under the 
+covers next to her husband and closed her eyes. </p>
+<p>She couldn’t wait to see what she could do tomorrow… </p>
+<p>in the dark! </p>
+<p>​
+PART 3: SUPER </p>
+<p>“There you are, dear,” said Dee with a wink as she slid the last plate of hot, steaming pancakes 
+before her youngest son. His eyes lit up as he took his first bite, then quickly dove in again to 
+wolf down another bite. </p>
+<p>“Theesh are sho good, ma!” said Johnny, his words muffled by the mouthful of food he was 
+busily chewing. </p>
+<p>Dee smiled, clapping her hands together happily, then walked around the table, pausing next to 
+her husband. As his gaze traveled up her incredible legs, which had grown two inches over the 
+past week, they paused at her hips, which were encased in absurdly tight Daisy Dukes under 
+her white apron. He licked his lips, imagining what was inside.  </p>
+<p>Dee reached down, and put a long, violet-polished fingernail—natural this time—under his chin, 
+lifting his gaze over her taut tummy to her massive breasts, at least a cup size or two larger than 
+they had been last week but seeming to defy gravity despite their heft. She continued to raise 
+his chin until his eyes met hers, which now almost glowed an iridescent shade of purple. She 
+leaned down and gave him a sumptuous kiss, feeling his body stiffen under the touch of her lips. </p>
+<p>Smiling, she rose again, strolled past Joy, and took a seat before her own stack of steaming 
+pancakes. </p>
+<p>“Geez, mom! You look even better than Stacy now,” said her youngest daughter. </p>
+<p>Dee beamed with the compliment, knowing it was true. She didn’t look a day over 25 now, 
+nearly supermodel beautiful. She was certain that she could win the Miss Trenton pageant this 
+time, looking even better now than she had when she had actually been 25. </p>
+<p>Dee took a bite of her own helping of pancakes as her eyes scanned around the table, watching 
+each member of her family hungrily chomping away at their delicious breakfast. </p>
+<p>As Johnny leaned back in his seat, chewing the last bite from his now-empty plate, he looked at 
+his watch. “Time for school!” </p>
+<p>He rose from the table, put his books in his backpack, and left, closing the door gently behind 
+him. </p>
+<p>As Joy and Harold began to discuss the health benefits—or lack thereof—of the ingredients in 
+their faux maple syrup, Dee’s delectable body suddenly went rigid. </p>
+<p>Joy caught the sudden change in her mother’s posture out of the corner of her eye. “What is it, 
+mom?” </p>
+<p>“I-I don’t know. I just had this feeling that Johnny’s bus is going to hit a truck!” </p>
+<p>“What?! But how do you know—” </p>
+<p>Before Joy could finish, her curly brown hair swirled into her face, and Dee was gone, the door 
+swinging on its squeaky hinge behind her. </p>
+<p>Dee sped out of the house and ran down the street faster than the speed of sound until she 
+spotted the yellow school bus that her son was on. Her eyes focused on a semi truck just 
+ahead, swerving into the bus’ lane. </p>
+<p>Zipping forward, the two huge vehicles about to collide, she did the only thing she could think of. 
+She reached under the side of the bus, and, just as she had with the barbell, lifted it over her 
+head and leapt toward the sidewalk. </p>
+<p>The truck whooshed by, swerving back into its lane and continuing on as if nothing had 
+happened. </p>
+<p>Dee breathed a sigh of relief, then carefully set the bus back onto the pavement. Two dozen 
+pairs of shocked, youthful eyes stared at her through the windows of the bus. Dee smiled and 
+waved, just as bedazzled by her actions as the children were. Then, she disappeared, in a swirl 
+of air, to reappear in her seat at the dining room table. </p>
+<p>“Wha—? Did you—? Is Johnny—?” </p>
+<p>“Everything’s fine, dear,” said Dee, giving her daughter a long-lashed wink. </p>
+<hr />
+<p>That evening, Joy flipped on the local news, her eyes widening in shock. “MOM!!!!” </p>
+<p>“What is it, Joy?” asked Dee, instantly appearing by Joy’s side in a rush of air with a puzzled 
+expression on her face. </p>
+<p>“Look!” said Joy, pointing to the television. </p>
+<p>They were interviewing a school bus driver outside Johnny’s school. </p>
+<p>you.” </p>
+<p>“Yeah, she just lifted the whole thing up like it wasn’t nothin’ and the truck blew past us. It’s a 
+good thing too. There’s no way I coulda gotten outta the way of that truck. A lotta kids woulda 
+been injured if it weren’t for that lady,” said the driver. </p>
+<p>The camera zoomed in on the pretty reporter. “Who is this mystery woman, you might ask? 
+Well, several of the students on the bus identified the woman as one of the students’ mothers, 
+however there were conflicting reports as to her actual identity,” she announced. </p>
+<p>The door swung open, and Johnny rushed inside, then slammed it shut. </p>
+<p>Leaning his back into the door, Johnny looked at his mother. “Mom, all these reporters tried to 
+talk to me about what you did with the bus! All the kids are talking about what you did, and the 
+news people are trying to find out who the mysterious superwoman in an apron actually is! It 
+seemed like such a big thing, I didn’t want to tell them it was </p>
+<p>Suddenly, the phone rang. Dee walked over to the table and picked it up. “Hello?” </p>
+<p>“Hi, it’s Maria. You know, Maria Dantonio? Anyways, my son is telling me that he thought it was 
+you that picked up his bus! I told him not to make stuff up, but then I saw it on the news! But he 
+said that the woman who did it looked like she was twenty-five. So then I thought it might have 
+been your daughter Stacy. But I’m very concerned about her, you know, ‘cause I had a cousin 
+Walter who thought he could fly, but when he jumped off a building… let’s just say it didn’t end 
+well. They had to scrape him off the pavement. Can you believe that? They had to have a 
+closed casket and everything. So anyways, I just didn’t want anything like that to happen to your 
+little girl, sugar. So I just thought I’d call you and see what all the fuss was…” </p>
+<p>Dee tuned out the talkative woman’s words, her attention turning back to the television. </p>
+<p>“Sources say that the U.S. military has taken an interest in this mystery woman but declined 
+when we asked them to comment. Back to you, Greg,” said the reporter, turning the camera 
+back over to the anchor. </p>
+<p>Mind already spinning with the implications of what she’d done, Dee’s eyes widened at the 
+mention of the military, and she dropped the phone, Mrs. Dantonio’s tinny voice still rising from 
+the speaker as it clattered to the floor. </p>
+<hr />
+<p>The next day, tired of avoiding the phone calls from reporters and neighbors wondering if she 
+might know something about the mystery savior of the schoolbus, Dee decided to get some air. 
+As she walked around the yard, she sighed. Harold had been neglecting his chores around the 
+house again, and the grass was beginning to get </p>
+<p>long. 
+really
+​</p>
+<p>The military? </p>
+<p>​
+​
+​
+She pulled open the rust-stained garage door, and rolled the mower out on wobbly wheels. She 
+pulled the cord to start it, nearly breaking off the handle despite the fact that she was only using 
+a small fraction of her prodigious strength. </p>
+<p>As its aged engine sputtered to life, Dee pushed the mower to the grass and began to roll it 
+around the yard, she yawned. This just felt 
+. An idea occurring to her, she stopped, 
+so tedious
+​
+switched off the mower, and rolled it back to the driveway, chasing down one of the wheels as it 
+detached from the rickety machine. </p>
+<p>She looked around the garage until her eyes landed on a machete sitting on top of the dusty 
+toolbox. “I wonder…” she mused aloud. </p>
+<p>Instantly the long knife was in her hand, and she was racing around the yard, whipping the 
+blade this way and that, tufts of cut grass flying everywhere. She finished less than five minutes 
+later, standing on the sidewalk to admire her handiwork. </p>
+<p>The lawn looked perfectly manicured, each blade of grass the same length—a feat that their 
+ancient mower never seemed to manage in ten times the time it had taken her with the knife. </p>
+<p>“Wowzers, Mrs. D’Amico!” came a voice from behind her. “How’d you </p>
+<p>Dee whirled to find a group of five high school students admiring her from across the street. </p>
+<p>Giving them a brilliant smile, she clasped her hands demurely before her, causing her cleavage 
+to bulge dangerously over the top of her tight, low-cut blouse. The wide-eyed young men wore 
+expressions ranging from lust to awe, as their eyes drank in her incredible curves. </p>
+<p>Dee cocked her head to the side as something occurred to her. “Shouldn’t you be in school?” </p>
+<p>The leader of the small group, the one who had spoken earlier, replied in a hushed voice. 
+“Yeah. You got us, Mrs. A. But it’s such a beautiful day that we just wanted to, um, enjoy the 
+view, if you know what I’m sayin’.” </p>
+<p>Dee returned his lecherous gaze, and her broad smile widened. “Well, in that case, why don’t 
+you come in for some lemonade?” </p>
+<p>The five young men nodded eagerly and followed her inside like a train of panting puppies. Dee 
+decided to have some fun as she poured their drinks. </p>
+<p>“So I guess you really like our yard, huh?” she asked in a singsong voice, turning away from 
+them to put away a dish on the top shelf, stretching languidly to give the boys a perfect view of 
+her long legs and voluptuous derriere. </p>
+<p>that?!” 
+do
+​</p>
+<p>​
+​
+ the supermom! I 
+are
+​</p>
+<p>it! Pay up, guys!” the boys’ leader stuck out his hands, palms 
+knew 
+​</p>
+<p>By the time she turned around, the bulges in their pants were visible. Dee smiled mischievously. </p>
+<p>“Because you all skipped school to see it, right?” she winked at them knowingly, then leaned 
+deeply over the counter to give them a clear view of her sumptuous cleavage. </p>
+<p>One of the boys fell over backward, hitting the ground with a small yelp. </p>
+<p>Instantly, she was by his side, using her superspeed instinctively. She grabbed his arm and 
+pulled him to his feet so hard that he flew a foot into the air before landing back on the ground. </p>
+<p>“Oops! So sorry. Supermom doesn’t know her own strength sometimes!” Dee realized her error 
+as soon as she made it, hand rising to cover her mouth. She’d give away her secret! </p>
+<p>“So you 
+facing up, and looked at the other boys expectantly. Each of them slapped a dollar bill into his 
+palm before turning to leave. </p>
+<p>Frustrated by her slip up, but wanting to measure the progress of her abilities and see how fast 
+she truly was, Dee went to the YWCA after the boys’ left. She stepped onto a treadmill and 
+pressed the start button. Pressing the + button until it reached its absolute max, she jogged at a 
+leisurely pace. </p>
+<p>Pulling the panel from the machine, her eyes surveyed the wires and circuit boards inside. She 
+pulled one wire from the edge of the plastic box and reconnected it in a different place, then 
+closed the panel. </p>
+<p>She pressed the + button again, and the machine responded, adding another mile per hour to 
+its speed. </p>
+<p>It was still </p>
+<p>She pressed the + button again. And again. And again. The pace was still far beneath what she 
+knew she could actually do. Using her superspeed, she pressed the button 1,000 times in rapid 
+succession. </p>
+<p>As the machine whirred to a high-pitched whine, Dee’s legs easily keeping pace with the 
+sound-barrier breaking speed she’d set the machine to deliver, the engine beneath the tread 
+suddenly exploded in a shower of sparks and flames.  </p>
+<p>Leaping from it, Dee scanned the room, but there was no fire extinguisher in sight. Giving a 
+small shrug, she decided to do something she’d seen in Joy’s comics. She sucked in a lungful 
+of air, formed a small circle with her luscious lips and blew as hard as she could. </p>
+<p>too slow. 
+far 
+​</p>
+<p>​
+​
+​
+A stream of air whistled from her mouth, like water from the nozzle of a firehose, blasting the 
+burning machine with supercooled air. The fire went out in a puff of smoke, and a thin layer of 
+ice formed over the surface of the half-melted treadmill. </p>
+<p>Satisfied that she’d put out the fire and that the building would be safe, Dee clasped her hands 
+behind her back, and slowly backed out of the gym, looking skyward and whistling innocently.  </p>
+<p>Not wanting to return home just yet and curious whether there was any sort of record of anyone 
+else spontaneously developing into a superhero, Dee sped to the library. </p>
+<p>As she sauntered to the librarian’s desk, all eyes in the library turned toward her. She was 
+hardly surprised any longer. She seemed to attract eyes wherever she went these days. With a 
+figure like hers, she supposed it was to be expected. </p>
+<p>“Hello, there,” she said, giving the young man at the front desk a sultry smile. “I was wondering if 
+you could direct me to the books that cover how people become superheroes.” </p>
+<p>He simply stared at her, eyes roaming her spectacular body, blinking his spectacle-magnified 
+eyes. </p>
+<p>When it became obvious he wasn’t going to speak, Dee prompted him again. “Superheroes?” </p>
+<p>The repeated question seemed to snap him out of his dazed ogling, and he cleared his throat. 
+“What? Oh! Yes. Superheroes? How people become…?” </p>
+<p>His eyes turned apologetic, and he gave an exaggerated wince, as if not wanting to give her an 
+answer she didn’t want to hear. “Um, I don’t think we actually have anything like that, Miss...” </p>
+<p>“Mrs.
+ D’Amico,” Dee corrected. “You don’t?” 
+​</p>
+<p>Dee’s expression turned into a pout. “Oh, fooey.” </p>
+<p>Then, her expression shifted into one of hopefulness. “Well, do you mind if I check anyway? I 
+mean, there’s only one way to be sure…” </p>
+<p>“Mind? Of course not, but what do you plan to do? Read every book in the library?” he scoffed. </p>
+<p>“How did you guess?” Dee said, with a twinkle in her violet eyes. </p>
+<p>The man’s papers flew in a miniature cyclone above his desk as Dee used her superspeed to 
+take her to the “A” section of the library in a heartbeat. Flipping through the pages faster than 
+the librarian could see, she scanned through the contents of the book in seconds. </p>
+<p>She proceeded to the next, reading it even faster. Then the next. And the next. Two hours later, 
+she placed the final volume in the “Z” section back on the shelf. </p>
+<p>Drat! She hadn’t managed to find anything on the process of superhero creation, outside of 
+writing and illustration of comic books, but she 
+ learned a few things. Finding that she could 
+had
+​
+recall every detail of every word she’d read, she took a moment to muse over the unique sexual 
+positions in the Kama Sutra as she walked back to the librarian’s desk, fanning herself as she 
+imagined herself using her newfound flexibility to entwine her body around Harold’s. </p>
+<p>She sighed as she approached the librarian’s desk. </p>
+<p>“You’re right,” she said, touching the man’s hand with her satin fingers. “No books on becoming 
+a superhero. Thanks, anyway!” </p>
+<p>She felt the librarian shiver under her touch as she withdrew her hand. Still feeling vaguely 
+turned on as she wondered which technique she should try on Harold first tonight, she noticed a 
+strange smell in the air as she left the library. It was honey sweet and hung heavy in the air. 
+Funny. She hasn’t smelled it on the way in. </p>
+<p>Unbeknownst to Dee, the pheromones that she’d released into the air in the library began to 
+circulate, and the librarian gave his pretty assistant a lascivious stare. </p>
+<hr />
+<p>Arriving back at home, Dee found Joy watching the news again on the couch. </p>
+<p>“I’m home!” Dee announced with a brilliant smile. </p>
+<p>“Where’d you go?” asked Joy, eyes glued to the scene on the television, a dozen flesh-colored 
+blurs writhing in the picture. </p>
+<p>“The library,” Dee responded, making her way to the kitchen. </p>
+<p>“The Trenton library?” breathed Joy, turning to her mom, a horrified expression on her face. </p>
+<p>“Yeah, why?” </p>
+<p>“‘Cause… look!” </p>
+<p>Dee turned her attention to the TV. </p>
+<p>The picture shifted to a pretty reporter, who stood before the entrance to the library, police 
+rushing by her on their way inside. “Apparently, the people at the Trenton Public Library burst </p>
+<p>​
+ things.” 
+untangle
+​</p>
+<p>, in fact, done something. If she had, it certainly hadn’t been 
+had
+​</p>
+<p>this afternoon. No one is certain as to the cause, but the police are on 
+orgy
+​</p>
+<p>becoming a superwoman,” said Joy, slightly dazed by the rush of information 
+are
+​</p>
+<p>into a spontaneous 
+scene attempting to, um,  </p>
+<p>Joy pursed her lips to look at her mother scoldingly. Dee simply shrugged. </p>
+<p>“What?” she said innocently. “Wasn’t me!” </p>
+<p>Joy’s lips twisted into a skeptical frown, and she gave Dee an “I’m not buying that for a minute” 
+stare. Dee wondered if she 
+intentional! </p>
+<p>“But I did start a fire at the Y,” Dee admitted sheepishly, remembering her first stop on her trip 
+into town. </p>
+<p>Dee told Joy about the lawn, the treadmill, and finally the reading frenzy at the library. </p>
+<p>“You really 
+that Dee had imparted, excitement in her eyes. She took her mother’s hands into her own. “Do 
+you know what this means?” </p>
+<p>Before Dee could answer, the door burst open. Chad stood in the doorway, a terrified 
+expression on his handsome features, Stacy’s limp arms and legs dangling over his 
+outstretched arms. </p>
+<p>“Help! I need some help! I mean, </p>
+<p>“Okay, Chad. Just calm down,” said Joy, rising from the couch. Dee was already at his side, 
+pulling Stacy into her arms. </p>
+<p>“What happened?” asked Harold, appearing at the entrance to his man cave in the den. </p>
+<p>“Sh-she overdosed. I told her she was doing too much, but she—” Chad said, nearly in tears. </p>
+<p>“Overdosed?” said Harold, features twisting in anger. “Give her to me!” </p>
+<p>Harold marched over and took his daughter in his hands, then turned to Dee. “Dee, stay here. 
+Wait for Johnny. Joy and I will take Stacy to the hospital. Bring Johnny as soon as he gets 
+home.” </p>
+<p>“But I could get her there—” Dee started, before seeing the look in Harold’s eyes. She decided 
+not to argue. He needed to be there for his daughter right now. He needed to help her, to 
+protect her. </p>
+<p>needs some help!” said Chad, voice high and shaky. 
+Stacy 
+​</p>
+<p>​
+​
+​
+​
+​
+Harold and Joy left, Harold giving Chad a death stare when he attempted to join them. </p>
+<p>As Chad re-entered the house, he found Dee pacing the room, hands fidgeting, eyes darting 
+nervously about the room. She spoke quietly without even looking at Chad. "How much did she, 
+you know, take?" </p>
+<p>"I don't know. She gets a little carried away sometimes, you know? I left the room while she was 
+doing lines and when I came back..." Chad's voice cracked, and tears began to run down his 
+cheeks. </p>
+<p>Dee looked at him for the first time since Harold had left, her shining violet eyes finding his 
+midnight blues, and her eyes softened. She walked over to give him a friendly hug. She rested 
+her head on his shoulder as she held him, comforting him. </p>
+<p>"I just feel so guilty, you know?" said Chad, voice thick, words drawn out as he fought to control 
+his emotions. “Like I should have stopped her or something.” </p>
+<p>His emotional distress made Dee lose it, and she began to cry. The pair of them shook as they 
+held each other. </p>
+<p>"Don't feel guilty," said Dee shakily after gathering herself from a moment of quiet tears. </p>
+<p>Pulling his chiseled body closer to hers, Dee continued. "Thank you for bringing her here." </p>
+<p>She withdrew her head from his shoulder, his handsome, tear-streaked face scant inches before 
+her own. "You did the right thing." </p>
+<p>Chad seemed mesmerized as their gazes met. Their lips hovered, inches apart. He smelled 
+something sweet, intoxicating. Leaning forward, Chad pressed his trembling lips to hers. </p>
+<p>Dee stiffened, long fingers tightening over the hard muscles in his back, gripping his fit, 
+masculine body with suddenly surging desire. She kissed him back.</p>
+<p>She began to walk him backward until the wall stopped their movement. Chad's hands began to 
+roam her superhumanly firm body. She squeezed his muscled ass hard enough to elicit a yelp 
+of pain. Pink lips curling upward in a vacant half-smile, she ran a finger from his collar 
+downward, tearing his shirt in half as easily as if the cloth were wet paper. As it fell away, her 
+hand continued its descent, her fingernail slicing through his belt and zipper. His pants dropped 
+to the floor. </p>
+<p>Stepping back, Dee drew back her shoulders. Her mammoth breasts tore through the tight 
+fabric of her overtaxed top, immense spheres rising from the thinning cloth as if emerging from 
+neon pink water. She wasn't wearing a bra, not having one large enough to accommodate the </p>
+<p>Hard. </p>
+<p>​
+growth of her awesome curves over the past week, so she was fully exposed as the cloth of her 
+blouse fell away. Chad sucked in a deep breath as Dee tensed her glutes, shredding her purple 
+leggings against her sensual hips. Dee could see arousal raging through him as she revealed 
+her spectacular body to him, his eyes drinking in the vast expanse of creamy, flawless flesh 
+before him. </p>
+<p>She bit her lower lip as he leapt forward, throwing himself against her gorgeous body like a 
+raging bull. Needing release from the stress of the moment, Dee let herself go. She flung Chad's 
+200 lb. frame to the couch with casual ease and jumped atop him, her long, sexy legs straddling 
+him, feeling his hardness against her svelte abs. </p>
+<p>Shifting her weight, she aligned their bodies and pressed downward with her hips, feeling him 
+enter her. He was huge. Hot. Hard. </p>
+<p>Closing her eyes and exhaling with a soft purr, Dee continued to push downward. She felt Chad 
+shudder beneath her, climaxing immediately, before he had completely entered her.   </p>
+<p>Her eyes reopened to find an apologetic expression on his dazed face, and she lifted herself off 
+him. She wriggled her smooth hips down his tensing quads, then smiled as she lowered her full, 
+pink lips to his softening member. </p>
+<p>Tongue darting out to dance along its salty tip, she swirled around it and felt it surge into full 
+hardness once more. Withdrawing her tongue, she used it to lick her lips, then pushed 
+their 
+moist, plump flesh over his tip. </p>
+<p>She felt the young, virile man shiver beneath her, his hands reaching out to grip Dee’s fully 
+extended arms, as if to steady himself. </p>
+<p>She continued, lowering her hot mouth over his penis, undulating her tongue on its underside. </p>
+<p>Chad gasped. Dee could hear his heartbeat quicken. </p>
+<p>She pressed downward. Taking him deeper into her mouth, feeling him squirm in pleasure. </p>
+<p>She took him the rest of the way in, able to control her gag reflex in a way she never could 
+before. She touched her lips to the base of his cock, then drew slowly upward. She swished her 
+tongue back and forth against him as she rose, feeling every movement of its flat, wet surface 
+ignite more excitement within his body, until he exploded, again, as she reached the top. He 
+gave a wheezing cry as his hips rose, rising into her, his body taut with a second climax in as 
+many minutes. </p>
+<p>Tasting warm, sticky salt squirting into her mouth, Dee sucked until his bucking hips fell, still 
+quivering, back to the pale green cushions of the couch. She withdrew her flushed lips, a strand </p>
+<p>​
+of viscous fluid still connecting her mouth to his tip. She wiped her mouth with the back of her 
+hand as she gave him a dark smile under low-lidded eyes. </p>
+<p>"You're... amazing..." he whispered in awe, body still trembling from pleasure like none he'd ever 
+experienced. </p>
+<p>"Oh, Chad. I'm just getting started..." Dee whispered in a deep, sultry voice. Her eyes danced in 
+delight as she saw goosebumps rise all over his delicious body with the delicate touch of her 
+words. </p>
+<p>She slid her body upward against his, massive breasts both silky soft and impossibly firm as 
+they traveled the carved ravines of his defined abs, the clenching, bulging muscles of his chest. 
+She rotated her hips once more to position them over his erect, but again-softening cock, then 
+lowered herself onto him, enveloping him once more. </p>
+<p>Dee's eyes flared an even lighter shade of violet, almost a dark pink now, as Chad's arms 
+wrapped around her impossibly tiny waist. She slammed her body downward, eliciting a gasp 
+from both of them as she felt the frame of the couch crack and shift under the force of her 
+movement. </p>
+<p>She felt Chad grow inside her, filling her, as she ground her hips into him. She raised her hips, 
+pulling his body off the couch, then again pounded them downward, feeling him fill more 
+completely this time, as he hardened, clearly coaxed into a third round of readiness by her 
+superhuman body. Another crack, another cry for mercy from the couch, and she drilled into 
+Chad's hard body, manic with the desire to reach a climax of her own. </p>
+<p>Chad cried out as her superhuman body crashed into his again and again, pace quickening, 
+steely muscles writhing beneath her perfect skin. </p>
+<p>Feeling massive waves of strength infusing her deliciously feminine muscles, Dee pulled Chad's 
+body against her and leaned backward, rising to her knees, then her feet as she held his body 
+like a ragdoll against her, still penetrating her to the hilt. Standing now, their bodies connected at 
+the hip, she staggered forward until his back hit the wall, denting the drywall, and knocking a 
+painting to bounce off the shag carpeted floor. </p>
+<p>The added pressure of Chad's body hitting the wall combined with another outward rotation of 
+Dee’s hips finally pushed him inside her far enough to fill her completely, and she tilted her head 
+back, releasing a long, growling moan. Chad climaxed again, but she didn't let him go, closing in 
+on the orgasm that had eluded her for the past week as her body had transcended mere 
+humanity to become something more. </p>
+<p>Instead, she gripped his short blond hair with one hand, and snaked the other around his firm 
+ass, working him into and out of her, feeling him harden for a fourth time as he scraped along </p>
+<p>the interior of her dripping canal. Chad was partially tensed, partially limp, as if his body didn't 
+know what to do. Never before had it been asked to deliver a fourth climax in a span of minutes. </p>
+<p>But Dee was lost in rapture, feeling him swelling inside her. Still huge. Still hard. Chad’s cock 
+was the only thing that existed in her world as she worked his sweat-soaked body into her, 
+determined to extract what she needed from him. </p>
+<p>She gasped with every downward roll of her hips and moaned with every upward retreat. Over 
+and over, sensations built inside her, until she felt her abdomen tremble with the telltale signs of 
+the quake to come. </p>
+<p>With one final screaming drive forward, she smashed Chad's body completely through the wall 
+to the studs, eyes rolling back in her head. Their bodies exploded in a symphony of lurching, 
+violent spasms, vibrating the entire house. More paintings fell from the walls; furniture wobbled; 
+the cheap faux-gold chandelier over the dining room table bounced on its chain behind them 
+until the rapturous sensations subsided. Dee released her grip on Chad's head and waist, and 
+he fell to the floor, bruised, utterly spent, and barely conscious. </p>
+<p>As Dee’s eyes fluttered open, they seemed to glow with radiating power. She cast a downward 
+glance at Chad's crumpled form, his chest rising and falling with deep breaths, as though his 
+body were starved for oxygen. It probably was, she thought, hearing his heartbeat pattering 
+insanely fast within his chest. </p>
+<p>Then it hit her. She had cheated on Harold! And with her</p>
+<p>Dee's knees gave out, and she fell to the ground, landing on her gorgeously rounded ass. Tears 
+welled in her eyes. How could she have done something like this?! It was so unlike her. They 
+had just both been hurting, and he had looked so 
+arousal with her rapidly improving body, and... </p>
+<p>She burst into long, heartfelt sobs, agony bubbling up from deep inside her, horrified by her own 
+actions. </p>
+<p>After several minutes, Chad struggled to his elbows to see what was happening, his 
+overwhelmed senses gradually coming back online. He saw Dee sobbing, back propped up 
+against the damaged sofa as the insanely beautiful woman held her head in her hands. </p>
+<p>He struggled to his hands and knees and crawled over to her, attempting to draw her into 
+another comforting embrace. The moment he touched her, however, her hand shot out and 
+knocked him backward. He skidded several feet on his butt until he came to a stop with a thud 
+against the far wall. </p>
+<p>"No!" she said, light violet eyes flashing in anger. "Not again." </p>
+<p>, and she had so much pent-up 
+miserable
+​</p>
+<p>daughter's boyfriend! </p>
+<p>and... </p>
+<p>​
+​
+​
+ 
+"NEVER AGAIN!!!" she said, her eyes glued to his, her fury somehow infusing her words with 
+power. </p>
+<p>Chad shrank back, as if physically struck by her words. He slumped to the ground, pupils 
+shrinking as her words seemed to burn the command into his mind. He struggled to his feet, 
+collected his ruined clothes, and ran out of the house, door swinging abruptly closed behind 
+him. </p>
+<p>Dee gathered herself, and, sniffing and puffy-eyed, worked to fix the damage to the couch and 
+the wall as best she could. By the time Johnny arrived home, she had pieced together most of 
+the shattered drywall using Elmer’s glue at super-speed and had duct-taped the frame of the 
+couch back into a normalish appearance, though she knew it would collapse again the moment 
+anyone sat on it. </p>
+<p>Johnny's eyes widened at his mother's damp, puffy-eyed face, and she told him about Stacy, 
+quickly ushering him out the door. They both arrived at the hospital to find Stacy looking 
+worse-for-wear, but conscious and talking. </p>
+<p>Bathed in relief with her daughter's recovery, Dee vowed never to speak to Chad again. </p>
+<p>PART 4: PARAGON </p>
+<p>Harold. No one man could possibly keep up 
+you,
+​</p>
+<p>to find release, even if it took ten men to do it. 
+had
+​</p>
+<p>“I’m so glad you understand, Harold,” said Dee, pink eyes glowing as her words monopolized 
+her husband’s consciousness. “It’s just that with a body as staggeringly perfect and supremely 
+sexual as mine, I simply can’t be expected to remain monogamous any longer.” </p>
+<p>She shifted, the white lingerie pulling down to reveal more of her magnificent breasts. She ran a 
+long-nailed finger along his bare arm as they lay in bed together, causing a ripple of pleasure to 
+send his rapidly beating heart into overdrive. </p>
+<p>“Don’t worry. I’ll still make you the happiest man alive. It’s just that I have needs. Needs that, 
+let’s face it, you simply cannot handle by yourself,” explained Dee sincerely, grateful that she 
+was making him understand. “And it’s not just 
+with me now.” </p>
+<p>It had been a month since her episode with Chad, and Harold hadn’t been able to last long 
+enough to bring her an orgasm in all the time since, and Dee, with her rapidly improving body 
+and staggeringly powerful libido, </p>
+<p>Harold nodded eagerly, and she brought his meaty hand to her perfect breast. He burst into a 
+series of spasms the moment his palm touched her naked flesh. </p>
+<p>Dee smiled knowingly. </p>
+<p>As her husband rolled over onto his back, she disappeared from their bed, appearing in Joy’s 
+room, standing before her floor-length mirror. </p>
+<p>She looked barely twenty. Not that 
+now. </p>
+<p>Waves platinum blonde hair tumbled down her shoulders and back, descending in a shimmering 
+mass all the way to her heartbreakingly perfect ass. High, arching eyebrows capped huge, 
+long-lashed, neon-pink eyes. Her upturned nose, plump lips, and sculpted cheekbones made 
+her face look as youthful as that of a teen. </p>
+<p>The rest of her body, however, hardly looked girlish. Breasts the size of large melons thrust 
+outward from her toned, tanned form. The soft, inward-curving lines of her insanely tiny waist 
+belied the earth-moving strength of the abs within. Her slender, sexy arms drifted gracefully 
+around her as her hands moved to feel the heavenly slopes of her supple hips. </p>
+<p>looked as good as she did right 
+ever 
+​</p>
+<p>twenty-year-old had 
+any 
+​</p>
+<p>​
+​
+​
+​
+Dee smiled, the sight of her absurdly dramatic hourglass figure always making her spirits soar. 
+She shifted her endless, sensuous legs with anticipation as she heard her daughter roll over in 
+bed behind her. </p>
+<p>“Geez, mom! Put on some clothes!” came a groggy voice from behind her. “I get it, already! 
+You’re the sexiest woman on the damn planet!” </p>
+<p>Dee strutted over to pinch her daughter’s cheek in delight. “And I’m just as smart as I am sexy. 
+Want me to teach you some more advanced psychology, little one?” Dee rose to her now 
+six-foot height, stretching her long, shapely calves. </p>
+<p>“Or maybe figure out more creative ways to measure my strength? I mean, lifting that beached 
+whale the other day and throwing him back into the ocean was so pitifully easy that I didn’t even 
+need two hands for it!” </p>
+<p>“Oh, I give up on the strength stuff. It’s just too hard to find things to train you on anymore. Have 
+you been practicing your mental powers?” </p>
+<p>“Of course!” said Dee, biting her luscious lower lip in concentration. Joy’s sheets began to rise, 
+then flew from their position over her body to the foot of the bed. </p>
+<p>“Mom! Come on. We talked about this. No more using your powers on me!” </p>
+<p>“Well, how about I use them 
+simply seemed to flicker before Joy’s eyes. </p>
+<p>Dee dangled a Flamenco dress before her daughter. “Just bought this for you in Spain a literal 
+second ago. Pretty sure it’s your size.” </p>
+<p>“Now you’re just showing off!” Joy rolled her eyes. </p>
+<p>“Absolutely! Are you impressed yet?” asked Dee, a mischievous twinkle in her unusually colored 
+eyes. </p>
+<p>“I’ll be impressed if you can find me a boyfriend,” said Joy sarcastically. </p>
+<p>“Well, that can certainly be arranged,” said Dee, shifting her jaw as she considered. </p>
+<p>“No!” cried Joy as she realized what her mother probably had in mind. “No using mind control to 
+make some poor sap be my love slave!” </p>
+<p>“Aw… you’re alway ruining my fun, Joy! But speaking of love slaves, it’s time for me to get back 
+to your father…” said Dee with a wink. </p>
+<p>you.” Dee disappeared and reappeared so quickly that her body 
+for
+​</p>
+<p>​
+ 
+She reappeared in her bedroom, where Harold was now up and getting dressed. Dee strode up 
+to him, looking down into his eyes from her now-superior height. “Harold, be a dear and fetch 
+me my clubbing skirt, would you? I’m in a frisky mood.” Dee’s eyes glowed as she spoke, and 
+Harold’s pupils dilated. </p>
+<p>“Yes! Of course, Dee!” said her husband, literally running to the closet to find the absurdly small 
+micro-mini he knew she wanted from the image she’d projected into his mind. </p>
+<p>“Hmmm…. Maybe I should have you start calling me a more formal title, Harold. What do you 
+think?” Dee tapped her cheek. </p>
+<p>“Whatever you’d like, ma’am!” replied Harold eagerly, handing her the skirt. </p>
+<p>Dee flashed with instantaneous movement once more, and she was suddenly dressed in a 
+white bikini top and her shiny pink skirt. She watched herself through Harold’s vision to shift her 
+enormous breasts inside the thin triangles of fabric, as if his mind were simply a mirror for her to 
+use. </p>
+<p>She stepped forward in her three-inch white heels, lording over Harold with her now four-inch 
+height advantage over his slumping 5’11” frame. </p>
+<p>Casually, she rifled through his memories until she found one of him telling someone at work 
+about her abilities. </p>
+<p>“Oh, Harold. You’re always bragging about me, aren’t you. I can see why. I mean, I 
+incredibly amazing. But you know I can’t have that!” Dee reached out with her mind to find that 
+of the coworker that Harold had told of her, and quickly erased that portion of the man’s 
+memory. </p>
+<p>“Now you’ll have to be punished, Harold.” Dee said scoldingly. </p>
+<p>“P-punished?” asked Harold. </p>
+<p>“Yes. I’m afraid so.” </p>
+<p>“It’s diet time! No food for you for the next three days.” Dee punctuated her words with a brief 
+glow from her pink eyes, searing them into Harold’s mind. She wouldn’t have to worry about him 
+disobeying this way. </p>
+<p>“Yes, ma’am,” he said, eyes dropping to the floor. </p>
+<p>am </p>
+<p>​
+Dee appeared at the club. It was so nice of them to keep it open 24 hours a day for her. She 
+strode to the center of the dance floor, raised her arms above her head and undulated her 
+hyper-sexy body to the deafening thump of the pumping beat. A crowd of men and women 
+surrounded her, mesmerized by the writhing, hypnotic motion of her provocative curves. </p>
+<p>Dee smiled as the attractive twenty-somethings around her reacted with hard swallows, wide 
+eyes, and opened mouths. She approached each of them in turn, rubbing her delectable breasts 
+against this one, entwining her legs around that one. </p>
+<p>She worked the clubbers into an absolute frenzy with the sensual movements of her perfect 
+body until her every touch felt erotic. Until they were staring at her in such undisguised need 
+that she almost felt sorry for them. </p>
+<p>With a quick burst of pheromones and a well-timed mental image of her naked body, she 
+brought them all to climax simultaneously, men and women alike.  </p>
+<p>As the group dropped to the floor, Dee stepped over them to find another eager wave of sexy 
+club-goers ready to take their place. She enveloped a particularly good-looking man’s mouth 
+with hers, feeling his orgasm spasm against her lower body. </p>
+<p>As he fell away, she turned to another, giving him a mental command not to come until she 
+allowed it. Smiling, she lowered his zipper and pulled out his cock with her mind, then mounted 
+him. </p>
+<p>Gritting his teeth, he fought to remain conscious as she rolled her hips over his length, pulling 
+him inside her with both mind and body. Unable to climax, he began to moan loudly in pained 
+ecstasy. Dee used her mind to augment his member, feeling tingles of pleasure ripple through 
+her. </p>
+<p>When she was ready, she commanded him. “Now!” </p>
+<p>Instantly, he shuddered, his knees giving out, and he dropped to the ground. She closed her 
+eyes and enjoyed the explosions of sensation with a gasp. </p>
+<p>Momentarily sated after a dozen more such conquests, Dee decided to return home. After all, 
+she had a psychology lecture to explain to her daughter. </p>
+<hr />
+<p>“Where 
+ Johnny, anyway?” asked Joy admiring her trimmer figure as she noticed her reflection 
+is
+​
+in the television. For some reason, sweets and junk food hadn’t appealed to her as much lately. 
+She had even begun to exercise. She suspected her mother’s mental influence at work. </p>
+<p>​
+ her son? 
+kicking
+​</p>
+<p>unusual for Johnny not to be home by 4:00 PM. She reached out to him with her 
+was
+​</p>
+<p>Dee smirked as she eavesdropped on her daughter’s thoughts. So what if Joy suspected what 
+she’d absolutely influenced her to do. It was for Joy’s own good. </p>
+<p>But it 
+mind. As she touched it, she instinctively pulled back. She felt 
+ It was jarring to experience 
+pain!
+​
+that sensation again. After all, she hadn’t experienced anything of the sort for a good five weeks 
+now. </p>
+<p>She focused her hearing on his location. </p>
+<p>Dee heard a soft thump, then a scuff of a shoe. Was someone </p>
+<p>“You’re our friend as long as you’re giving us leftover dust from your sister’s stash, moron. But 
+no more drugs, no more friends. Capiche?” </p>
+<p>Having heard enough, Dee teleported to her son’s location, appearing between Johnny, curled 
+in pain on the sidewalk and the two boys she’d left him with weeks ago when she’d dropped him 
+off at school. </p>
+<p>Dee stood tall, rising to her full six-foot height, taller than both of the boys before her. They 
+ogled her ultra-femine charms, as she opened their minds to her influence. </p>
+<p>“You will never do anything intentionally hurtful or violent again!” she commanded, her voice 
+reverberating inside their brains. “You will be true friends to my boy and do everything you can 
+for him from this moment forward.” </p>
+<p>The two boys blinked in confusion as Dee rewrote their minds. One of them noticed Johnny 
+lying on the ground and offered him a hand. Dee, however, slapped it aside. </p>
+<p>“I’ll help him. Now go home,” she directed. “Offer to help your mother with whatever she’d like.” </p>
+<p>The two boys nodded and scurried away as Dee turned and knelt by her son’s side. Reaching 
+out her hands, she touched her fingers delicately to his bruised stomach. Johnny ceased 
+writhing in pain, his eyes fluttering open to find his mother’s. </p>
+<p>“How did you—?” he asked, hands roaming his previously injured stomach for any trace of the 
+throbbing pain he’d just been feeling. </p>
+<p>Dee simply smiled and touched another finger to the corner of his mouth, causing his split lip to 
+close and the drying blood to fade until it disappeared. </p>
+<p>Dee used her telekinesis to pull her son to his feet as she rose herself. Ruffling his hair with her 
+long fingers, Dee spoke. </p>
+<p>​
+​
+​
+Maybe I should give flying a try. </p>
+<p>“Come on, Johnny. Let’s go home. You should find those boys to be good friends from now on. 
+They won’t be bad influences anymore,” Dee reassured him. “I’ll make you a wonderful dinner, 
+then I’ll help you with your homework.” </p>
+<hr />
+<p>The following day, Dee sat at the dining room table, bored. She’d had her fill of the people of the 
+club for now, had imparted all the knowledge Joy could handle for a while, brought her husband 
+to orgasm half a dozen times before breakfast, and had sent her son of to school with his history 
+paper completed and well-prepared for his math test. </p>
+<p>She seemed to be gaining new powers every few days. Maybe it was time to create a new one. </p>
+<p>She looked out the window to find a robin cocking his head as he sat on the branch of the tree 
+in their backyard. </p>
+<p>, she thought. 
+Hmmmm
+​</p>
+<p>She stood and walked outside. There, she stopped and bit her lower lip in concentration. She 
+closed her eyes, imagining herself as light as a feather. </p>
+<p>She felt her heels rise from the grass. </p>
+<p>Then the balls of her feet. </p>
+<p>Then her toes. </p>
+<p>She felt the light afternoon breeze float thick strands of hair into her face. </p>
+<p>She felt the warm sun on her spectacular body. </p>
+<p>She opened her eyes and looked around. She was even with the top of the house, hovering 
+above the yard. She floated over to the neighbor’s, right by the window where Mrs. Morelli was 
+curling her hair. </p>
+<p>The woman’s eyes widened, and Dee heard a yelp as the stunned middle-aged woman dropped 
+the curling iron onto her foot, smiling in amusement in spite of herself. </p>
+<p>Then Dee closed her eyes once more and imagined herself as fast as a fighter jet. As she 
+opened them, she rotated her body in the air, pushed a fist out before her, and flew. She 
+rocketed through the sky, faster and faster until the ground was simply a blur beneath her. Wind 
+whipped her hair, blasting her cheeks. She pushed herself even faster. </p>
+<p>​
+seconds! </p>
+<p>Suddenly, she was over an ocean, waves spraying below her, steam rising from the water in her 
+wake. She descended and reached a fingertip to the water, feeling it super-heat and evaporate 
+from the friction. </p>
+<p>She pushed herself still faster. </p>
+<p>Land reappeared. Green, lush jungles. She glanced behind her, finding a burning trail of fire in 
+line with her path. Her speed was so great now that her friction was superheating the air! </p>
+<p>Instantly, she stopped. Her pink eyes glimmered as massive pyramids of rock and glacier rose 
+before her. She recognized the profile of the mountain. It was the largest mountain in the world. 
+Mount Everest! </p>
+<p>She had flown from New Jersey to the Himalayas in </p>
+<p>She let out a cry of joy, ecstatic at the freedom and amazement her latest power had brought 
+her. Her look of triumph, however, quickly became one of sheepishness as the peaks of the 
+three nearest mountains exploded in a shower of rock and ice. </p>
+<p>Eyes scanning below the massive avalanches that were rolling down the mountainsides, 
+courtesy of her overenthusiastic shout, she found several parties of climbers looking up the 
+mountain in terror. </p>
+<p>Instantly, she was there, gathering their ropes in her hands and lifting the connected climbers 
+into the sky, just as the cascade of boulders and snow reached them. When the rumbling mass 
+of displaced earth had passed, she lowered the thankful people back to the mountainside. </p>
+<p>Ecstatic at the daring rescue, she leapt into the air once more. However, this time, her leap was 
+a little 
+ enthusiastic, and she blasted into the stratosphere, flying outward from the planet 
+too
+​
+until she found herself staring back at a massive blue sphere with swirls of brown and white 
+over its surface. </p>
+<p>In her enthusiasm, she had jumped right off the </p>
+<p>She tried to gasp, but found she couldn’t. Her lungs weren’t working! Realizing she had 
+launched herself outside the earth’s atmosphere, she panicked, clutching at her throat. </p>
+<p>Dee really didn’t want to die! She </p>
+<p>But after a moment, she released her neck, blinking. </p>
+<p>She wasn’t dead. </p>
+<p>didn’t want to die! What would it do to her kids?! 
+really
+​</p>
+<p>planet! </p>
+<p>​
+​
+​
+​
+ more. 
+Much
+​</p>
+<p>And she wasn’t dying. </p>
+<p>At least, she didn’t think she was. Her lungs weren’t engaging in the familiar inhale and exhale 
+that they always had before. It felt extremely strange, the absence of that perpetual pattern. But 
+she wasn’t dying, even without the function of her lungs. </p>
+<p>She looked around, noticing, for the first time, the direct radiation of the sun. It was bathing her 
+in rays that would have killed an unprotected human. But she clearly wasn’t human. Not 
+anymore. </p>
+<p>She was something more. </p>
+<p>Smiling, Dee reoriented in the blackness of space, took a brief detour to slingshot around the 
+moon, joyful in the knowledge that she was no longer a slave to gravity… or even oxygen! </p>
+<p>Pausing to float again before the massive wall of blue and white that encompassed her entire 
+field of vision, Dee experimented with her lungs again, this time forcing herself to inhale with all 
+her might. </p>
+<p>She noticed a wispy stream of blue snaking toward her as she sucked inward. It was coming 
+from the planet. </p>
+<p>Dee coughed as she felt oxygen once again re-enter her lungs. </p>
+<p>She tried it again. This time even more forcefully, sucking inward as hard as she possibly could. </p>
+<p>This time, a massive billow of atmosphere was funneled into her lungs, her already prodigious 
+chest expanding to phenomenal proportions. </p>
+<p>When she could no longer stand it, Dee exhaled, blowing outward with far beyond hurricane 
+force. An explosion of air blasted from her perfect lips, tearing through the atmosphere of the 
+planet. </p>
+<p>The unmoving white swirls over the planet’s surface began to twirl like pinwheels. Dee watched 
+in horror as she realized that she had just initiated a series of hurricanes along the Atlantic cost 
+of North America. </p>
+<p>What should she do? How could she stop what she’d started? She wasn’t sure. Perfect lips 
+curling into a frown, she decided she needed to correct her mistake. She needed to protect the 
+people she’d put in jeopardy. </p>
+<p>How was that possible? </p>
+<p>​
+​
+She blasted back toward earth, zeroing in first on the Florida coast. A large group of swimsuited 
+teenagers on the beach cowered, buffeted by 100 mph winds. Dee focused her pink eyes on the 
+water a hundred yards into the ocean, wondering if there was a way to block the winds 
+emanating from the newly formed hurricane offshore. Discovering another new power, Dee 
+watched in surprise as a beam of fire raced outward from her concentrating gaze into the water </p>
+<p>As the intense, concentrated heat met the water, a geyser of steam shot into the sky. As she 
+flew along, Dee’s beam of heat drew a line in the water, creating a wall of superheated steam 
+that blocked the wind momentarily, allowing the teenagers to run back to their cars and flee. </p>
+<p>Dee continued to fly north until she came across a passenger jet with both engines sputtering as 
+it was blasted by the second hurricane she’d unleashed, this one in the Carolinas. She rocketed 
+toward the disabled jet as it began to spiral downward, extending her arms as she swooped 
+under it from underneath. Slipping her fingers under the aluminum fuselage, she pushed 
+upward. Feeling the dense sheet of muscle of her inner core muscles tense, she countered its 
+circular descent. The plane tilted back to its normal horizontal position, creaking as Dee altered 
+its momentum. </p>
+<p>Twisting her body under the plane until she was facing its tail, she flew backward, examining the 
+billowing clouds and whistling winds of the storm. She sucked in a breath—careful not to make it 
+anywhere as deep as the one that had started this mess—and let it loose. The second hurricane 
+evaporated, as its air movement was suddenly halted by a precisely equivalent force working 
+against it. </p>
+<p>Dee smiled, pleased that she had gauged things correctly this time and calculated the exact 
+force to use to counteract and disperse this second hurricane. </p>
+<p>She knew there was still one more hurricane to deal with. This one rolling across the water 
+toward her home state. New Jersey. </p>
+<p>Dee teleported to the coast of the garden state, planting her stilettos in the dock as panicked 
+people ran inland all around her. This time, she reached into the hurricane with her mind. She 
+found the molecules of water and air, bouncing against each other, vibrating with the energy 
+she’d infused into them accidentally from space. </p>
+<p>Focusing on that energy, she began to siphon it, drawing it away from the whirling vortex of 
+moisture and air into herself. As the hurricane suddenly dissipated, she felt another surge of 
+power within her. </p>
+<p>Clenching her fingers into fists, closing her eyes with the effort required to control the tendrils of 
+euphoria that gripped her body with the sudden influx of power, Dee noticed the people around 
+her slow and stop, looking around in confusion. The winds had ended as abruptly as they’d 
+begun. </p>
+<p>you are! Where have you 
+There 
+​</p>
+<p>Smiling, Dee flew back home at a leisurely pace, pleased that she had corrected her little 
+accident without any loss of life. </p>
+<p>As she walked back into the house, she drew Joy’s gaze. “
+been, mom?” </p>
+<p>Dee simply gave her a heartbreakingly gorgeous smile and replied. “Oh, just out and about. You 
+know, mom stuff.” </p>
+<p>“Did you see the news? I guess there were three huge hurricanes that came out of nowhere this 
+afternoon. But all three of them ended up stopping before they made landfall and just 
+disappearing.” </p>
+<p>“Really?” Dee asked innocently. </p>
+<p>“Yeah…” Joy trailed off as a thought occurred to her, her eyelids lowering with suspicion. “Hey! 
+didn’t have anything to do with that did you?” 
+You 
+​</p>
+<p>“I’m not sure what you mean,” said Dee with a twinkle in her eye. “But speaking of hurricanes, 
+why don’t I do my superspeed cooking thing and make another gourmet dinner for us. How 
+does Duck Pâté en Croûte sound as an appetizer?” </p>
+<p>Joy’s face lit up, suspiciousness fading, and she clapped her hands together delightedly. “Oh 
+my God, mom. You are getting so amazing in the kitchen these days!” </p>
+<p>Dee smiled, pleased that her attempt to change the subject had worked so well. “I’m only 
+amazing in the kitchen?” </p>
+<p>“Okay, okay, I get it. You’re completely amazing in 
+rolled her eyes, but Dee could see that her girl was pleased beneath the veneer of sarcasm. 
+She liked having a superhero for a mother. </p>
+<hr />
+<p>The next day, Dee opened the door to find a man in an olive green uniform, hat under his left 
+arm. Glancing at his rank insignia, she recognized that he was a general, courtesy of the military 
+books she’d read at the library. </p>
+<p>“Good day, ma’am. May I come in?” the man asked politely. Two other soldiers stood behind 
+him, machine guns in hand. </p>
+<p>way, mom. Happy now?” Her daughter 
+every
+​</p>
+<p>​
+​
+Dee opened the door wider and stepped to the side, gesturing for the man to enter. As her 
+entire body came into view, the previously stoic man simply gaped. </p>
+<p>With the influx of power from the storm boosting the unnatural development of her body, Dee 
+was almost inhumanly attractive now. Harold had exploded in climax the previous night before 
+she could even manage to fully remove her clothes. A sensual touch of her body or the slightest 
+release of pheromones had the young men at the club coming in their pants before she could 
+even do anything further with them. </p>
+<p>She had learned to keep a tight lid on both her pheromones and touches as a result. Still, her 
+appearance alone was difficult for any man to handle. </p>
+<p>The general cleared his throat and tugged at his collar, cheeks turning bright red. “Y-you’re 
+p-probably wondering why I’m here,” the general said, clearly having difficulty concentrating on 
+his words as his eyes couldn’t seem to manage to leave the staggeringly perfect upper slopes of 
+her mind-bogglingly perfect breasts. </p>
+<p>Hiding a smirk at his reaction, Dee sighed inwardly. She knew that she would soon have to start 
+wearing some more conservative clothing if she wanted to actually carry on a conversation with 
+a man. Not that she needed this one to speak. She already knew the reason he was here. </p>
+<p>“You’re here because your satellites saw what I did yesterday,” Dee began for him. “You traced 
+me back to my house. You then briefed the president on my existence, telling him that I was a 
+potentially game-changing weapon of mass destruction, able to act with far more precision and 
+versatility than nuclear weapons.” </p>
+<p>The general’s eyes widened in shock. </p>
+<p>Dee smiled at his reaction but continued. “President Reagan agreed that you 
+to get to me 
+had 
+​
+before the Soviets did, as my willing assistance could fundamentally shift the balance of power 
+in the Cold War.” </p>
+<p>“H-how d-did you?” he stammered, as off balance now from her words as he was from her 
+outrageously exaggerated hourglass figure. </p>
+<p>Dee tapped her temple with a single shapely finger, her smiling widening as she watched a look 
+of comprehension blossom over his features. He understood that she could read his mind. </p>
+<p>“You can take me to the helicopter now. I know it’s waiting for us nearby. I’m actually looking 
+forward to the tests that you have planned. I wouldn’t mind knowing the full extent of my abilities 
+myself.” </p>
+<p>​
+Unable to resist a little fun, Dee brushed one of the general’s accompanying soldiers with her 
+magnificent breasts on her way out, watching him drop his rifle amidst an uncontrollable series 
+of spasms. The general whirled at the sound of his clattering weapon, a look of fear flashing in 
+his eyes as he realized that Dee had made his guard come with the mere touch of her body. </p>
+<hr />
+<p>“F-first, w-we’ll test your flight power,” said the attendant at the airstrip, his voice a hoarse rasp. 
+He was obviously struggling to control his quivering body. Dee was impressed that he was 
+managing to keep his eyes on her face rather than her breasts. That was probably for the best, 
+though. As tightly wound as he was, she doubted that he would be able to keep his pants dry if 
+he did. </p>
+<p>“Sounds good. Just let me know when you’re ready.” </p>
+<p>The soldier swallowed hard, then stepped back, managing to peel his eyes away from Dee’s 
+heavenly form for a moment to glance at the stopwatch in his hand. “You’re okay to start 
+whenever you’re ready. One trip around the world...” </p>
+<p>By the time he had finished, she was already back, now dressed in her workout outfit from the 
+other day. She fidgeted as the leotard began to tear at the chest, her breasts simply too much 
+for it to contain now. It had become loose in the waist as well. She reached into the fabric with 
+her mind and made some adjustments, removing some fabric from the middle and adding it to 
+the top, adjusting it to fit her superhumanly seductive shape. </p>
+<p>“W-wait! Did you already...?” he asked, blinking in shock. </p>
+<p>“Of course, silly!” Dee smiled, her pink eyes flashing as she searched his thoughts. “How about 
+the speed test now?” </p>
+<p>She seemed to flicker for a millisecond, as if she were a hologram and someone had walked 
+swiftly past the projector. </p>
+<p>“Done with that one too! What’s next?” asked Dee with a mischievous smirk. She took two steps 
+toward him until her face was mere inches from his. </p>
+<p>The stunned soldier’s fingers trembled around his stopwatch as she leaned in, her floral scent 
+absolutely intoxicating, even without a release of pheromones. Her full, scarlet lips brushed past 
+his cheek to hover millimeters from his ear. She whispered seductively. “I think you’re going to 
+need more sensitive equipment if you truly want to take your measure of 
+even </p>
+<p>the things I could do to you...” 
+imagine
+​</p>
+<p>body. You can’t 
+my
+​</p>
+<p>​
+​
+ will actually test me?” Her eyes turned to a stack of 
+that
+​</p>
+<p>Dee pulled back from his taut, quivering body to give him a knowing wink of her insanely long 
+eyelashes. She glanced down to see a circle of wetness forming at the top of his camouflage 
+pants, a look of satisfaction crossing her features. </p>
+<p>She appeared before the general in the hangar. “Strength next, right?” </p>
+<p>Her eyes flashed neon as they took in the thoughts from the general and the small group of men 
+that surrounded him. She frowned. </p>
+<p>“Oh, come on, guys. Really? You think 
+pallets packed with iron bricks. </p>
+<p>She teleported the entire group to the closest naval base, then launched herself into the air. 
+Hovering fifty feet in the air, rubbing her endless, legwarmer-clad legs together, she turned to 
+the men and called down to them. “Let’s try this instead!” </p>
+<p>She dove into the water next to the aircraft carrier that was anchored there. The small group of 
+men cast confused glances at each other as they mumbled questions under their breath. 
+Somehow, it felt more as if Dee was testing them than they were testing her! </p>
+<p>A second later, they heard the massive ship before them begin to creak and groan. Jaw going 
+slack, the general watched the waterline descend the ship’s hull. The ship rose slowly at first, 
+then faster and faster until the bottom of the enormous steel structure emerged fully from the 
+water, a small, ridiculously shapely figure visible beneath it as water poured from its hull. </p>
+<p>Dee grasped the bottom of the ship with her slender fingers, controlling the town-sized carrier 
+above her head with ease. She watched the shocked reactions of the group of men at the edge 
+of the pier with amusement, three of them keeling over at the sight of what she could do. </p>
+<p>Giggling, Dee darted out from under the ship, letting it crash back into the water, a massive 
+wave blasting upward to shower the men who sought to learn the extent of her abilities. </p>
+<p>Looking up, Dee noticed a stray fighter jet listing precariously at the edge of the ship. She flew 
+over to it, extended her index finger and gave it a light tap. The plane slid back onto the deck of 
+the carrier with a loud, grinding scrape of metal on metal. </p>
+<p>She teleported back to the general and his men, gave a sheepish shrug, then brought them all 
+back to the hangar. </p>
+<p>“So how’d I do on that one?” Dee asked innocently, strolling over to a nearby tank. </p>
+<p>She pulled the gun from its turret, used her mind to soften the molecular bonds within its steel, 
+and twirled it into a rope. She began to jump rope with the tank’s howitzer, mammoth breasts </p>
+<p>​
+jiggling with the motion, causing another two men to collapse, their systems unable to handle 
+the impossible combination of overwhelming sexiness and unbelievable power of the woman 
+before them. </p>
+<p>None of the rest of them could seem to say anything, so she gave them a moment. However, 
+their heartbeats only seemed to rise to increasingly dangerous levels as their eyes continued to 
+roam her perfect curves, their desire-addled minds unable to resist Dee’s mesmerizing allure. </p>
+<p>Sighing, Dee realized that she was going to have to help them a bit if she were going to finish 
+this series of tests. She reached out with her mind to adjust the levels of their imbalanced 
+hormones and slow the rate of adrenaline absorption in their fluttering hearts. </p>
+<p>The general and the two men that remained standing, seemed to relax slightly, less 
+overwhelmed by her presence—at least for the moment. </p>
+<p>The general actually managed to speak again, albeit in an awed whisper. “Okay, l-let’s go 
+inside. W-we have some mental tests to run now.” </p>
+<hr />
+<p>Dee waited at a table in an empty room, listening to the general’s conversation through the 
+six-foot thick concrete walls surrounding her. </p>
+<p>“I 
+charts!” the general’s exasperated voice demanded of the pair of scientists he was speaking 
+with now. </p>
+<p>Dee focused her eyes on the wall, feeling yet another power emerge within her increasingly 
+goddess-like body. A circular section of wall seemed to disappear and she could see clearly into 
+the next room. </p>
+<p>The two scientists exchanged a glance, then one of them answered the general. “Well, we’re 
+both comic book fans, and one time we tried to put some numbers around Superman’s abilities.” </p>
+<p>The general looked skeptical, and the scientist looked cowed, eyes shifting in embarrassment. 
+But he continued. “I know, I know. It’s silly, but it actually gives us a baseline for comparison 
+here.” </p>
+<p>Now the general looked interested. “Well? How does she stack up?” </p>
+<p>As they spoke, Dee experimented, turning herself invisible. She then made her corporeal body 
+intangible and walked through the massive steel door to the room with the three men like a 
+ghost. Pausing at the edge of the room, she listened to the rest of the conversation up close. </p>
+<p>that she’s off the charts in terms of physical abilities. What I’m asking is 
+realize 
+​</p>
+<p>off the 
+how far 
+​</p>
+<p>​
+​
+” 
+imagined?!!
+​</p>
+<p>“Well, sir, she’s at least twice as strong and ten times faster than our hypothetical 
+measurements of Superman.” </p>
+<p>“Twice? Ten times?!” mumbled the general, eyes widening in shock. “So you’re telling me she’s 
+more powerful than the mightiest fictional character anyone has ever even </p>
+<p>The scientist nodded. “Pretty much, sir. That’s about the size of it.” </p>
+<p>“And she has mental powers on top of that?” the general said incredulously. </p>
+<p>“Pretty clearly. I mean, she seems to be able to read minds, make changes to her surroundings 
+mentally, use telekinesis, and who knows what else.” </p>
+<p>The other scientist spoke up. “Frankly, sir, we’re not even sure how we can measure some of 
+these abilities. It’s not like we really planned to run into some sort of demigod.” </p>
+<p>The general chewed his lip, the lines in his face deepening in concern. “Well do the best you 
+can. We need to know what we’re dealing with here.” </p>
+<p>Smiling, Dee walked back through the wall into her room, examining her invisible hand as it 
+phased back into tangibility. </p>
+<hr />
+<p>Dee sat at the table, jaw resting in her right hand, eyes unfocused, as she answered the 
+scientist’s next question. </p>
+<p>“4,058,094,196” </p>
+<p>The lab-coated man blinked. “What does that mean?” </p>
+<p>“It’s the answer to the next question the computer is about to give you. I deduced its algorithm 
+based on it’s last ten stupidly easy math questions.” Dee sighed, examining her fingernails. </p>
+<p>“Now can we get to the next section? These questions are getting a little bit boring.” Dee tapped 
+the fingers of her left hand against the hardwood surface. </p>
+<p>“Okay then,” said the scientist, clearly shaken by the intellect of the stunning woman seated 
+before him. “Why don’t we proceed to the IQ portion of the test…” </p>
+<p>Dee nodded eagerly, happy to move on from the boredom of absurdly easy math questions. </p>
+<p>​
+ you can do with them?” 
+else…
+​</p>
+<p>By the time the testing was done, and she had learned that she possessed an IQ of 435, nearly 
+double the highest-ever recorded result, Dee was looking forward to learning the rest of her 
+abilities. </p>
+<p>She followed the scientist to the next room, where there lay a pyramid of basketball-sized steel 
+balls. </p>
+<p>“Now, raise the first ball with your telekinetic ability,” the man said, scribbling onto the page of 
+his clipboard. </p>
+<p>Dee raised the ball and floated it about a yard over the rest. </p>
+<p>“Now the next.” </p>
+<p>Dee smiled, knowing how the man planned to proceed with this testing and decided to cut to the 
+chase. She raised all the balls into the air, rolling them through the air before the scientist like a 
+miniature Ferris wheel. </p>
+<p>“Um, good,” said the scientist unsteadily. He seemed unsure what to ask her to do next. “Is 
+there anything… </p>
+<p>“Oh, yes,” said Dee with a wink. </p>
+<p>She shaped each metallic sphere into sculptures of various types of flowers, much to the 
+amazement of the scientist. Then, she winked them randomly into and out of existence. </p>
+<p>“What?! How are you doing that?!” he exclaimed in wonder. </p>
+<p>“Oh, I’m just changing the quantum state of the space their atoms occupy, replacing it with that 
+of a different reality.” Dee stated casually, as if it weren’t a big deal. </p>
+<p>“Oh. I see,” said the man dreamily, unable to think of anything else to say as he watched the 
+perpetual motion of the miniature sculptures as they disappeared and reappeared at Dee’s 
+whim. </p>
+<p>“Do you want to test my knowledge?” asked Dee happily. “I just managed to crack the 
+encryption on the database in the complex here and absorb the information directly into my 
+mind. It’s so convenient when data is stored as ones and zeros rather than on paper. Much 
+more efficient for me to be able to process. I’m going to have to visit some more data centers. A 
+nascent goddess has to feed her growing mind, after all.” </p>
+<p>“Y-you r-really are becoming a g-g-goddess aren’t you,” said the now completely flummoxed 
+scientist replied. </p>
+<p>​
+ 
+“Want to find out? How about a test of another sort?” asked Dee, her voice dropping, becoming 
+husky. As her pheromones poured into the air, Dee took control of his bodily functions, ensuring 
+that his heart didn’t stop with his dangerously strong attraction. She bolstered the function of his 
+internal organs, the strength of his bones, and the durability of his skin, needing to ensure he 
+could survive what she had in mind. </p>
+<p>Dee rose him into the air telekinetically, floating him toward her. As his lips met hers, she used 
+the air molecules around him to stroke every one of his erogenous zones simultaneously. At the 
+same time, she dissolved her clothing, connecting the image, the feel, the scent, and the taste 
+of her mind-shatteringly perfect body to every one of his senses in unison. </p>
+<p>He exploded in an orgasm that seemed to never end, shrieking until his voice gave out, turning 
+into an open-mouthed expulsion of air. When it finally subsided, his rattling heart stopped, even 
+his enhanced body unequal to ecstasy of that magnitude. </p>
+<p>Dee created a burst of static electricity by rubbing the air particles around him, its arc firing 
+directly into his halted heart. As she detected the familiar tha-thump of his heartbeat, she let out 
+a breath she hadn’t realized she’d been holding. Thank goodness she’d been able to revive him. 
+She’d simply been having some fun! Going forward, she would have to be more careful. Regular 
+humans were so fragile! </p>
+<p>Despite the fact that it needed a bit of fine tuning, the idea struck Dee as an interesting one. 
+Maybe if she were to enhance Harold to an even greater degree, as well as give him far more 
+control over his arousal, they would be able to resume their love life again. The thought brought 
+a beatific smile to Dee’s perfect lips. </p>
+<p>She re-formed her workout clothing and teleported back to the general, setting the military 
+scientist down gingerly before the surprised commander. </p>
+<p>“I think he’ll need a few moments to recover after my latest demonstration,” said Dee, trying to 
+suppress a smile. “I don’t think he understood the full extent of my abilities, General.” </p>
+<p>“W-was he able to f-finish measuring your mental abilities?” asked the General, again 
+attempting to control himself in the presence of Dee’s far-beyond-merely sensual presence. </p>
+<p>“He was, I think. Though there are some things that I can do that he had no way to truly 
+measure.” </p>
+<p>“Really?” asked the General with interest. “Like...?” </p>
+<p>“Like the fact that I could instantly shift every one of your nuclear warheads into another reality 
+and rid this one of their threat to the planet for good.” </p>
+<p>The General frowned as his mind whirred. “And you could do that to the Soviet warheads as 
+well?” </p>
+<p>“Of course. In fact, I may decide to do exactly that, if either side threatens to initiate World War 
+III,” said Dee, only realizing the potential of that idea as she spoke the words. It was a little 
+intimidating to think that she actually had the ability to put an end to the concept of certain 
+mutual destruction that formed the groundwork on which the cold war was built. </p>
+<p>“So are you willing to join us?” he asked, swallowing hard as the full weight of her abilities sunk 
+in. He knew that he couldn’t allow her to join the Soviets, but he also knew that he had no way 
+to force her to join him. </p>
+<p>“I don’t think I will,” said Dee. She didn’t need these people. And they could do nothing to her. 
+She could disable the most powerful of their weapons with a thought before they made it 
+anywhere near her. “I think I’d rather just remain on my own, General. Though I reserve the right 
+to help you from time to time.” </p>
+<p>It’s not like you could stop me, anyway, if I didn’t want you to, 
+she thought with a mental smirk. 
+​</p>
+<p>“B-but don’t you w-want to help your country?” he asked, voice pleading. He had no idea what 
+he would tell the president if she rebuffed his proposal. </p>
+<p>“Sure,” Dee replied, this time via telepathy rather than verbally. “But I’m far more intelligent and 
+knowledgeable than you are, and the difference between us is growing by the second. I think 
+I’m
+ the best judge of how to best help my country. And my planet.” Dee realized that sounded a 
+​
+bit arrogant, but it was manifestly true, so… </p>
+<p>As the general’s eyes darted about for something to say to that, Dee’s eyes softened with 
+warmth. She embraced the general and his two lieutenants in a huge mom hug, washing away 
+all of their fears and concerns with one overwhelmingly soothing touch of both her magnificent 
+body and her staggeringly brilliant mind.  </p>
+<p>“You all just looked like you needed a hug,” she said with a wink as she released them, pinching 
+the cheek of each lieutenant before planting a motherly kiss in the center of the quivering 
+General’s forehead, then disappeared from the base to instantly return home. </p>
+<p>PART 5: GODDESS </p>
+<p>, remember?” corrected Dee in a half-joking voice, cocking her head to send her large 
+dess
+​</p>
+<p>Five weeks later, the entire family was seated before her at the new table of their beach house. 
+Dee’s red eyes glowed briefly and the third course of their gourmet breakfast materialized out of 
+thin air before them. </p>
+<p>“Oh my God, mom. I’m going to gain like a hundred pounds if I keep eating like this!” said Stacy, 
+eyes lovingly glued to those of her new boyfriend as she squeezed his hand affectionately under 
+the table.  </p>
+<p>“God-
+crystal earrings swinging. </p>
+<p>“Oh yeah. Sorry, mom,” Stacy said wryly. “Anyway, I need to look my best for work tomorrow. 
+My overly wholesome new boy toy here got me a job at this women’s rights organization.” </p>
+<p>“Boy toy?” her new boyfriend intoned, amused. “And here I thought I was husband material…” </p>
+<p>Stacy laughed and gave him a slow, passionate kiss. “We’ll see…” she said in a breathy voice 
+as she pulled back, staring adoringly into his eyes. </p>
+<p>Al laughed as he watched the man’s bemused expression. “Get used to feeling like a high 
+school kid trying for a spot on the Jets roster, dude. Stacy’s probably the greatest catch in the 
+world, and she knows it.” </p>
+<p>Al paused and considered briefly, glancing at Dee before amending his comment. “Other than 
+mom, of course.” </p>
+<p>“Hey, watch it there, Al. 
+his huge biceps, a goofy smile on his handsome face. “Besides, I’m the only one that can 
+handle her now.” </p>
+<p>Lowering his muscular arms, he placed his hands on each side of his chair and began to 
+alternately flex each of his bulging pecs a few times, creating a ping pong effect that seemed to 
+hypnotize Johnny. </p>
+<p>“That’s so cool, dad! If I get another A+ on my math test this week, can you show me how to do 
+bench presses?” the youngest member of the family asked him. </p>
+<p>“I got you covered there, kiddo. As long as it’s okay with mom,” he cast a curious glance at his 
+heart-stoppingly gorgeous mother.  </p>
+<p>all mine,” said Harold. He raised his arms to either side and flexed 
+She’s
+​</p>
+<p>​
+​
+?” 
+everything
+​</p>
+<p>mom in the same conversation!” 
+and
+​</p>
+<p>“Is that seriously you in there, Al?” Joy asked, playfully pretending to knock on Al’s head. “If I 
+didn’t know better, it’s like that macho loser you used to be doesn’t even exist anymore! You 
+said something nice about Stacy </p>
+<p>Joy turned to Dee. “So mom, how many new degrees from Ivys did you pick up this week after 
+you awed them with your superior knowledge of, like, </p>
+<p>“Oh, a few...” said Dee, de-materializing her usual low-cut spandex leopard-print top and 
+skin-tight black capris in exchange for a graduation cap and gown for a moment. “...dozen.” </p>
+<p>Joy opened her mouth to request a cup of coffee before snapping it shut, when her mother had 
+read the thought forming in her mind faster than her own brain had. </p>
+<p>Huge puffs of vibrant blonde hair billowing, Dee waved a hand and a dozen hot dogs showered 
+a younger, fitter Einstein, a cute female border collie, and their four puppies. The dogs eagerly 
+chased the unexpected treats as they bounced and rolled on the brand new orange shag 
+carpet, sinking their teeth into them blissfully. </p>
+<p>“Anything about me in the paper today, Harold?” asked Dee, idly. </p>
+<p>“Of course!” he said, eagerly picking up the </p>
+<p>“Genius Housewife Turns $30 Investment Into $30 Million in a Week!” </p>
+<p>“Oh, not that dear, I mean something about my 
+smile. </p>
+<p>Harold set down that section and picked up the 
+he looked at the photo. “They always have to blur your pictures, though, so you don’t send their 
+readers into orgasmic convulsions when they see you.” </p>
+<p>“Naturally,” said Joy with a smile. “Or maybe it’s just her goddessy golden aura messing with the 
+film…” </p>
+<p>“Superwoman Ends Etheopian Drought by Flying Water Tankers to Affected Villages,” read 
+Harold. “Nice!” </p>
+<p>Dee winked at him. </p>
+<p>“Goddess Ends Cold War: Reagon and Gorbachev To Sign Disarmament Treaty Today,” Harold 
+continued, turning to her. “That’s a pretty good one, don’t you think?” </p>
+<p>section and pointing to the front page.<br />
+Business 
+​</p>
+<p>section of the paper, laughing as 
+World News
+​</p>
+<p>accomplishments,” said Dee with a sly 
+real
+​</p>
+<p>​
+​
+​
+​
+​
+Dee shrugged, smiling as she took a sip of coffee. </p>
+<p>“Supermom Tracks Down Homes for 23 Dogs in Trenton Pound,” Harold read. “I’m betting 
+Einstein was the driving force behind that one.” </p>
+<p>In the corner, Einstein barked once, wagging his tail happily. Dee gave him a telekinetic pat on 
+the head. </p>
+<p>“Goddess Materializes New Scientific Station on Moon, Teleports Leading Scientists There for 
+Research,” read Harold, raising an eyebrow. “Not bad…” </p>
+<p>Dee set down her coffee, rose-colored eyes sparkling. </p>
+<p>“Have you ever thought about making any sub-goddesses, or, like superheroes, mom? ‘Cause I 
+would totally be up for that job…” asked Joy hopefully. </p>
+<p>“Just wait until you hit my age, little one,” Dee reassured her telepathically, noticing, for the first 
+time, the subtle dark purple specks in the irises of her daughter’s eyes. “I have a feeling that you 
+have great things in store...” </p>
+<p>Joy beamed, nearly vibrating with excitement as her mood soared to match her name. The 
+doorbell rang as the others stared at Joy, wondering what had her looking so happy. </p>
+<p>“That must be Carl and Linda!” said Harold, jumping to his feet and hurrying to the door. </p>
+<p>He opened the door, and the pair gasped at his new appearance. Linda shifted her hips 
+seductively and began to twirl a lock of blonde hair around her forefinger. “Geez, Harold. You 
+look just like Sylvester Stallone. Except taller, and, well, um... better looking.” </p>
+<p>Then, Dee came up behind them, boosting the pair’s bodies, just as she had her family’s so that 
+she could unveil her True Self to them. </p>
+<p>Even with the changes designed to assist him, Carl collapsed into a quivering lump as he saw 
+the planet-bending curves of her divine form. Dee teleported him to the couch to recover as she 
+improved his ability to withstand her awesome visage still further. “I’m always misjudging how 
+much I need to improve humans so that they can withstand my presence! I suppose it’s just that 
+I just continue to improve so quickly! It’s difficult to keep up!” </p>
+<p>Harold came over, wrapped his arms around Dee, and planted a kiss so passionate on his 
+wife’s staggeringly succulent lips that it caused Linda to swoon as well. “Think they’re going to 
+be able to handle us?” </p>
+<p>Dee grinned, gazing lovingly into her husband’s eyes. “Not even close. That’s why this is going 
+to be so much fun...” </p>
+<p>She snapped her fingers, and they all appeared in the bedroom with a flash of light, Carl and 
+Linda on the bed, Harold and Dee floating above them. The younger couple’s trembling eyes 
+held a mixture of fear, eagerness, and awe as they looked up at their hosts. </p>
+<p>A breathtaking smile crept over Dee’s impossibly beautiful features as her crimson eyes began 
+to glow. </p>
+<p>Find my other free stories at: 
+Hikerangel.com </p>
+<p>My published books at: 
+Amazon.com/author/hikerangel </p>
+<p>And my audio stories at: 
+Superpoweredaudio.com </p>
+</body>
+</html>

@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Wedding Creme Chapter 1 The Thief</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p><strong>WEDDING CREME</strong> by GlassofGothMilk420</p>
+<p><strong>An old vintage</strong> from the groom\'s family distillery holds a surprise
+for his bride (and their maid of honor) after the rehearsal dinner ...
+down in the tasting room.</p>
+<p><strong>tags</strong>: big breasts, breast expansion, body expansion, ass expansion,
+gulping/chugging, threesome, aphrodesiac, alcohol, bondage, femdom,
+gentle dom</p>
+<p><strong>Starring:</strong></p>
+<p>Pan as the <strong>Maid of Honor</strong></p>
+<p>Poe as the <strong>Bride</strong></p>
+<p>Buck as the <strong>Groom</strong></p>
+<p>Ted as the <strong>Uncle</strong></p>
+<p><strong>CHAPTER 1: THE THIEF</strong></p>
+<p>Picture ample but believable cleavage with a trickle leading up the
+inner curve of the breast to the collarbone</p>
+<p>Picture a full mouth softly gasping, tongue licking the corner of rich
+lips where something spilled on the way in. In the foreground, something
+round and smooth.</p>
+<p>Picture that it's the base of her palm, wiping her cheek clean of her
+shooter: it's time to celebrate.</p>
+<p>The Bride, the Groom, and the Maid of Honor are taking a bourbon shot
+together to celebrate the last guests going home, bringing the rehearsal
+dinner to a close.</p>
+<p>ALL: \"Bottoms Up!\"</p>
+<p>Pan, the Maid slammed back her shooter like nothing and was wiping her
+cheek before the Bride and Groom got the bourbon glasses to their lips.</p>
+<p>She leaned her arms on the bar table before her, the shot softening away
+the stress of her best friends\' rehearsal dinner. It was finally just
+the three of them! She sighed, folding her arms to make a basket around
+her bust, pushing it up and making a pillow for her chin. Poe, the
+Bride, sat slumped down a little in the booth against Buck, her Groom:
+giddy, relieved, a little buzzed.</p>
+<p>POE: We\'re really lucky he let us use this place for our rehearsal
+dinner.</p>
+<blockquote>
+<p>BUCK: I\'ll thank him again tomorrow before the ceremony. It\'s such a
+beautiful old place. Imagine all the drinks folks have shared in happy
+times under this roof!</p>
+</blockquote>
+<p>POE: And top shelf! Tell him he makes a damn fine bottle of bourbon,
+too.</p>
+<p>Buck's uncle, Ted, stepped in from the door leading downstairs to the
+barrelhouse.</p>
+<blockquote>
+<p>TED: Ha! You can tell me yourself. And I\'ll thank you kindly for the
+compliment. It\'s one of those barrels even older than me, from way
+down in the back. Some of those casks are almost your grandfather\'s
+age, Buck.</p>
+</blockquote>
+<p>BUCK: Like the ones locked up in the tasting room down there?</p>
+<p>Ted tossed the ring of keys over his shoulder and caught it again in his
+rough hands.</p>
+<blockquote>
+<p>TED: That\'s right, the ones that *stay* locked up. Until someone in
+the family gets married, of course. Ha!</p>
+</blockquote>
+<p>Ted chuckled.</p>
+<p>Poe snuggled up to Buck a little more.</p>
+<p>POE: Is that the one you were telling me about, Buck?</p>
+<blockquote>
+<p>BUCK: Mhmm, family wedding tradition going back... who knows how long.
+A special creme liqueur for the bride and groom to share on their
+first night as a married couple.</p>
+</blockquote>
+<p>Poe cooed affectionately.</p>
+<p>POE: Sounds romantic!</p>
+<p>PAN: Cream ... sounds delicious. heh.</p>
+<p>She muttered to herself. Pan slipped away from the table discreetly
+while the others chatted.</p>
+<blockquote>
+<p>TED: Yes, that\'s a rare cask, certainly. And one of the finest! I
+remember it fondly from when your Aunt and I hitched it. Aging in
+those barrels can only have done it good since then!</p>
+</blockquote>
+<p>BUCK: Well, that'll be a great finish to the big day tomorrow. We'll
+look forward to it.</p>
+<p>Buck and Poe exchanged a flirty look.</p>
+<blockquote>
+<p>TED: Ha, well I\'ll look forward to the reception dinner, myself. Now
+I\'d better go off to bed before I make myself hungry. Goodnight, you
+lovebirds!</p>
+</blockquote>
+<p>He turned off a few lights and made his way through the kitchen doors to
+lock up the back.</p>
+<p>The couple noticed Pan was missing.</p>
+<p>BUCK: Did we lose maid?</p>
+<blockquote>
+<p>POE: She must have wandered off in search of further libations... I
+love that woman to death but she is always running off and getting
+into trouble.</p>
+</blockquote>
+<p>They looked around to the basement door, still ajar.</p>
+<p>POE: Well, where else would she be?</p>
+<p>They cautiously descended the unfinished wooden stairs to the
+barrelhouse, which was clean, though the lights were dimmed to a moody
+tone. As they stepped down into the rows and rows of large, sturdy
+barrels, they could feel the damp below-ground air settling in around
+them. It was comfortable and felt intimately quiet down beneath the
+earth with all the wood and rust and dust. Set out from the far end of
+the daunting space was a stone-walled room with its doorframe set around
+an elegant iron-studded door. Buck had never seen it unlocked before.</p>
+<p>The soon-to-be-weds pushed the tasting room door open to reveal the
+scene.</p>
+<p>There were two immense casks set into the wall, situated over a small
+bar counter and stools. Each barrel was as wide as Bucks arms. They were
+a bright golden color like pine and each had a rosy tap above the bar.
+The casks were stencil-painted with big white letters that read
+\"WEDDING\" and \"CRÈME."</p>
+<p>A trail of runoff cream led from one of the taps down the counter to a
+small puddle on the floor. Seated on the floor next to the puddle was
+Pan.</p>
+<p>She was settled against the wall with her arms resting at her sides,
+framing her bust. Was it larger? Had to be a trick of the light.</p>
+<p>She was toying with a mostly-empty glass of the creme and looking very
+satisfied, a little mischievous. Unable to take a drink without spilling
+it, it seemed, a bead of the stuff ran down the side of her face to meet
+at the top of her cleavage with her earlier bourbon.</p>
+<blockquote>
+<p>PAN: Oh, hi friends! *hic* my best friends are here and they\'re
+getting married, that\'s so cute! You two should try a glass of this
+stuff. It\'s so sweet! Ooooo...</p>
+</blockquote>
+<p>Pan's belly rumbled. Her breasts, barely tucked into the top of her
+dress to begin with, gently began to swell, pushing against her arms,
+tightening her \"strapless\" straps, deepening her cleavage just enough
+that it still might have only been wishful thinking.</p>
+<p>Poe and Buck were taken aback but quickly turned to playful scolding.</p>
+<blockquote>
+<p>POE: Pan, you thief! You know that booze is reserved for tomorrow. For
+me and Buck! Tsk, I can\'t believe you would betray us like this.</p>
+</blockquote>
+<p>She smirked suggestively at the Groom, who took the hint.</p>
+<p>POE: Buck, what are we going to do with her?</p>
+<p>With a theatrical sigh, he nonchalantly made his way over to a cluttered
+shelf with various distilling and barreling odds and ends. He ran his
+hand over a coil of rope and clutched it.</p>
+<p>BUCK: Well, well. What to do with a thirsty little slut?</p>
+<p>Pan grinned and giggled, giddy with anticipation at the scene beginning
+to unfold</p>
+<p>PAN: hey -- *hic* hey now, slow down, y'all! Let\'s be reasonable.</p>
+<p>Buck sauntered around until he was beside and slightly behind Pan. He
+leaned down and deftly looped her hands behind her back and knotted them
+with the rope, doing the same to her ankles, securing her in a light
+harness of knotted rope. He tossed the slack over a beam in the ceiling
+and began to draw it taut.</p>
+<p>As her shoulders shifted back, Pan's chest was thrust out even more
+prominently. Her restrained arms were unable to cover up or contain her
+seductively swollen breasts. The weight of her tits, heavy with liquid,
+rolled her forward on her knees.</p>
+<p>PAN: whoa, whoa! Oof, not too tight, I\'m not that bad a crook. hehe!</p>
+<p>Buck tied off the rope on a bolt in the wall and stepped around to
+admire his work. Pan knit her brows in mock indignation up at him. She
+shimmied her shoulders, wobbling in the harness and bouncing her
+overgrown breasts suggestively.</p>
+<blockquote>
+<p>PAN: Enjoying the view, Buck? I\'m feeling a little exposed, tied up
+with my huge tits falling out of my dress. Isn\'t it a little cruel
+and unusual?</p>
+</blockquote>
+<p>Poe and Buck laughed.</p>
+<blockquote>
+<p>POE: Well, we\'ll try not to be too cruel... but there's no promise of
+fair treatment when top-heavy little sluts take what doesn\'t belong
+to them.</p>
+</blockquote>
+<p>On cue at the words \"top-heavy little slut,\" Pan's stomach began to
+gurgle loudly again. With a bounce, her breasts plumped up in another
+huge swell. This time, her dress completely folded under her tits as
+they gushed and glugged to an even greater size.</p>
+<p>Her knees dug into the floor under the burgeoning weight of her chest
+blowing up in front of her. The weight rolled her forward just a little
+more. Some leftover cream spilled from her collarbone into a little lake
+at the top of her stuffed cleavage. Her M-Cup boobs pressed together as
+they rose and puffed up like bread dough, higher and higher as her chest
+fattened, perilously threatening the capacity of her bra.</p>
+<p>The bride extended a seductive finger and dipped it in the puddle of
+cream settled at the top of her maid's now overflowing bust. She scooped
+up the liquid, massaging it around the generous curve of her cleavage.
+She pressed her hand deep into the rotund, soft flesh and brought it
+still, stopping just shy of Pan's right nipple. The anticipation of
+wetness and pleasure forced her now engorged nipples to stiffen out and
+twitch.</p>
+<p>Poe finally swirled the slippery mess onto Pan's areolas and gathered up
+both gigantic breasts in her hands, massaging them in deep, wide
+circles, pinching at Pan's swollen nipples and feeling them squish, full
+of juice from the huge, chubby tits behind them. Pan's eyes rolled back
+in pleasure and she let loose an overdriven moan from deep in her
+enormous bosom, her huge breasts sloshing together as her best friend
+squeezed and shook them.</p>
+<blockquote>
+<p>POE: Tsk, tsk, tsk, look at that evidence glistening all over your
+huge tits. You're guilty as sin, darling. And now you're caught.</p>
+</blockquote>
+<p>Pan was pushed over the edge and blacked out with pleasure for an
+instant. In that instant, her rounding belly gave a deep groan. A huge
+bubble rose up into both of her breasts. As her bloated tits swelled
+outward, every clasp and hook on her persistent bra burst apart with a
+pop.</p>
+<p>The sound was quickly followed by her seams bursting all the way down
+both sides of her dress. Its rags flopped down onto the floor and her
+lap was swallowed up by her breasts as they gushed full, spreading out
+and down the sides of her thighs. Her toned hams were fattening up along
+with her handfuls of hips and ass.</p>
+<p>PAN: Oooooooooof, I burst right out of that ...</p>
+<p>The growth slowed as she bounced a little and came to rest, becoming
+still enough to notice how hot and wet she was. She hadn't spilled cream
+all the way down to her legs. That slippery wetness soaking her inner
+thighs was her own. She was grateful she hadn't worn panties tonight. If
+they had been stretched around her hips, doubled in size and begging to
+be squeezed and pounded, it would have been miserable.</p>
+<p>She tested her wrists against Buck's knots. No use. The resistance only
+made her ache more longingly to slide her cold fingers down her belly,
+across her soft pubes and slowly caress her clit with the pad of one
+finger, slipping one or two more just past her lips, adding the wetness
+there to the gentle caress washing around and around her clit.</p>
+<p>The mere thought sent waves of heat washing from her curled toes up
+through her navel, curving through her flushed bosom and up the nape of
+her neck, tingling. Her nipples crinkled harder, glossed with moisture
+and goosebumps, exposed to the cool basement air. She let out a
+quivering moan of desire to be touched.</p>
+<p>Poe was lost in thought, hypnotized as she gawked at Pan's now excessive
+and erotic figure as it transformed into a rounder, plumper, more
+luscious fertility goddess frame with an immense bust and buttocks.</p>
+<p>She picked up the glass and licked a dribble of cream off the rim. It
+was heavenly sweet. She could just taste the alcohol in it over a full,
+rich flavor she couldn't quite place. Maybe butterscotch?</p>
+<p>POE: Say, what's in this stuff?</p>
+<p>The groom shrugged.</p>
+<blockquote>
+<p>BUCK: Not sure if anyone knows. Ted always said it was special but he
+never said how ...</p>
+</blockquote>
+<p>He turned back to Pan. She was still sloshing and working against her
+restraints and her own lovely mass, struggling to grind her flooded
+thighs together, to satisfy the wild cravings overrunning every inch of
+her mind, rounding out every curve of her body. God, her body was so
+full, so sensitive to the slightest bounce or jiggle. And yet she was
+thirsty like she'd never been, her throat dry and her tongue smacking
+against her full lips.</p>
+<p>BUCK: ... Though, I think now I\'ve got some inkling of what he meant.</p>
+<p>Poe could see his "inkling" bulging against his inseam and she was
+obliged to agree.</p>
+<p><strong>END</strong> of <strong>Chapter 1: The Thief</strong></p>
+<p>Thanks for reading! If there is sufficient interest in this story, I
+will release <strong>Chapter 2: The Sentencing</strong> next week! <em>--
+Glassofgothmilk420</em></p>
+</body>
+</html>

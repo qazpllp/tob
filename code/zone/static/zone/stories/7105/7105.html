@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Boob Heist</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>﻿Boob Heist</p>
+<p>By Max</p>
+<p>“Where is the intercom?” Mandy said following the sound of the doorbell. When she reached it, she could see Jessica and the other side. “Hey Jessica. Took you long enough” she laughed.</p>
+<p>“It’s Detective Garrison and I’m here for official business. I need to ask you some questions” Jessica said, showing her badge. She was dressed in a suit and seemed very serious.</p>
+<p>“Sure, but that attitude of yours won’t do it” Mandy sighed annoyed snapping her fingers before buzzing her in..Then, she walked toward the door of her apartment and opened the front door </p>
+<p>“Hey Mandy. Long time without seeing you, girlfriend” Jessica smiled at her former classmate.</p>
+<p>“Now, that kind of attitude is better” Mandy giggled as she let her friend come in.</p>
+<p>Jessica stepped into the apartment looking at her Mandy from head to toe. She looked quite different from their times at the university. While she still stood at 5’6”, Mandy looked quite nerdy sporting quite messy curly red hair and thick glasses. Totally opposite to her impressive 5’9”, long perfect blonde hair and cute nose. She knew Mandy was quite smart, but she hated that she didn't always look her best all the time. Still, even with her uncared appearance, it was obvious Mandy was the owner of an eye-catching spectacular pair of breasts. </p>
+<p>“I see you are still trying to catch up with me ah?” she said looking at Mandy’s freckled breasts spilling out from top. “Last time you were filling an E-cup, but you seem fuller. Are you padding your bra?” she said poking on her friend's top where her nipple should be.</p>
+<p>Mandy bit her lip controlling the pleasure rush Jessica triggered in her. “I’m wearing a F-cup now thanks to an unexpected growth” she said, stepping back using in vain her hands to cover her ample chest showing off her breasts were much more than a handful.</p>
+<p>“So, are you trying to take my throne as the titty queen ah?” Jessica said, thrusting out her formidable round and heavy breasts. “Can you see you filling my H-cup bra in the future?”</p>
+<p>“Oh no. Filling it, no” Mandy said. “I can see me overfilling it. Just wait and when you least expect it, you will see me outgrowing it. I promise you that” she grinned.</p>
+<p>“Hahaha! You are on, girl! Boob swear!” Jessica said as she hugged Mandy tightly making their massive breasts smashed against each other as much as she could. The force she used was enough to make Mandy moan shamelessly. Her face turned red with embarrassment.</p>
+<p>“Oh crap Jessica. You must know how sensitive they are” Mandy stepped back again from her. “This incredible sensitivity has been driving me crazy lately, but it’s worth it,” she said.</p>
+<p>“Hearing you say it makes me so jealous. You and Elaine have been the most erogenous girls I have met. I mean, you two could just have an orgasm by playing with your nipples” Jessica said.</p>
+<p>“I guess it will be only me from now on” Mandy sighed when she heard the name. “I imagine she is the reason you are here today” she said, getting a more serious tone. “What happened to her and Caroline is terrible. Good luck they have the best detective in town to solve this mystery”</p>
+<p>“Thanks” Jessica forced a smile. “Still, there is something that isn’t right in this whole thing. I mean, when Elaine called me, I thought that she was drunk, but then Caroline did too with the same story. If it wasn’t because they sounded so desperate, I wouldn't have never believe it”</p>
+<p>“I don’t blame you. I was there and saw what happened with my own eyes and still don’t believe it myself. I mean, women’s breasts don’t simply shrink into nothingness, right?” Mandy said.</p>
+<p>“I have talked with the doctors who examine them, but they are as perplexed as we are. They don’t know if it’s a kind of virus or an extreme degenerative-wasting sickness but the tests showed they lost all breast tissue they had. They are officially as flat as boards” Jessica said.</p>
+<p>“I can’t believe they lost their wonderful breasts. You and I had always been the top heavy girls in the university while they stood behind us as our second in command. I don't like to imagine what we would do if we suddenly lost our precious babies” Mandy said, hugging her large bosom.</p>
+<p>“That is why I'm here. I think that what happened with Elaine and Caroline is not only unnatural, but I think someone did that to them” Jessica said. “My detective guts tells me that there is someone behind all of it. That is why I came here to talk to you. Since you were with them when that happened, perhaps you noticed something strange. Something that call your attention”</p>
+<p>“You are scaring me Jessica. Do you really think someone is responsible for our friend’s losses?” Mandy asked and Jessica seriously nodded. “I… I don’t want to think about it. I find it very disturbing the idea that someone out there could have the power to undo what nature gave us. Excuse me, but if we are going to talk about this, I better get myself a drink. Do you want some?” she asked.</p>
+<p>“A cold beer if you have” Jessica asked and Mandy walked toward the kitchen. “I brought some surveillance tape from Elaine’s gym and Caroline’s coffee shop. I was thinking we could see it together and see if we caught something strange. Where can I plug my laptop?” she asked.</p>
+<p>“Use the table in the living room. I noticed there was an electrical plug last night” Mandy said while opening the cabinets in her kitchen. “Now, where should the glasses be?” she said.</p>
+<p>“Hahaha. This is your apartment and you don’t know where things are?” Jessica mocked.</p>
+<p>“I just moved in last night. I haven't fully familiarized with this place yet, so sue me” Mandy laughed from the kitchen as she untapped two beer bottles. “No glasses, so it will be like in our dorm days ah?” she said, handing a bottle to Jessica before they clash them together.</p>
+<p>After her laptop started up, Jessica took a notebook and played the video from Elaine’s gym. There, both girls could see Elaine working out. Nothing was out of the ordinary. Then, Mandy stepped into the gym and greeted Elaine. Jessica smiled as she saw the Mary she recalled. Her hair was flawless, she was wearing makeup and possibly using contacts as there were no glasses in the image. “You should always take care of your image, Mandy. You can look very sexy if you propose yourself” Jessica said as she saw Elaine and Mandy chatting for a few minutes. “What were you and Elaine talking about?” Jessica inquired while her eyes were trying to see something or someone suspicious around the women.</p>
+<p>“Nothing out of the ordinary. I visited the gym to get a membership and when I talked with Elaine, she reminded me of all the times I helped her with her studies while she was dedicated to her athletic career. Then, she told me she had to return to her routine and we said goodbye. It was in that moment, that the impossible happened” Mandy said, pointing at the screen just as the video displayed the scene where Elaine grabbed her breasts and looked down at them.</p>
+<p>Jessica had read the report of the event, but seeing it was terrifying. She saw how the full breasts of Elaine started deflating. Everyone looked at her in disbelief as she stood there in total shock. Her eyes got wide open as Elaine’s sports bra was getting tighter and tighter on her broad torso as her hands tried desperately to hold her diminishing bust line. In barely seconds, the garment passed from holding a great pair of C-cup breasts, to holding less than a training bra will be designed to do. At the end, she dropped her hands in defeat as not even that little bit remained as the bra got completely flat over her pectoral muscles. Elained cried in despair before collapsing on the floor. Then, everyone, including Mandy, rushed to help her.</p>
+<p>“What an awful event. I recall going with Elaine to the hospital where they confirmed not only her breasts were gone, but her amazing sensibility as well. They pinched her nipples and she didn’t feet a thing. Poor girl. In this case, it’s better to haven't been sensitive at all than to have been once. Believe me, once you experience a sensibility like this, you won’t ever want to live without it” Mandy gulped her beer before rubbing her breasts together and purred like a kitty.</p>
+<p>“I will take your word for that” Jessica said, drinking some of her beer too before moving to the next video. “Here is the video surveillance of the coffee shop” she said as she saw when Mandy arrived and Caroline invited her to her private office. “Why did she take you there?” she asked.</p>
+<p>“When I arrived, she saw the sadness in my face and guided me to her office to talk. There, I told her what had happened to Elaine. We talked less than 10 minutes when what happened to Elaine also occured to Caroline” Mandy explained.</p>
+<p>Jessica nodded and switched the video feed to a camera inside the office. She fast forward until Mandy said ‘Stop’. Unlike the previous video, this one had audio. “Oh my… what is happening to me?” Caroline cried as she dropped the cup of coffee she had in her hand and stepped back.</p>
+<p>“Oh no… no… no…” Mandy said as she stepped back. “Your chest Caroline. It’s shrinking!!” she said in horror as for the second time in the day, she witnessed how the breasts of a friend shrunk before her eyes. “Whatever virus Elaine caught, you got it too” she said putting distance.</p>
+<p>“No. No. I don’t want to be flat chested. I simply can’t” Caroline sobbed as indeed she felt her breasts receding back into her chest. The pressure on her strained blouse was ceding and soon the nice valley of cleavage she was so proud to show collapsed on itself until there was only visible her flat nipples sticking to her ribcage. The large hollow cups of her bra kept the illusion of the former shape her once desirable breasts had. Soon, the padding of the bra was soaked in the tears Caroline who heartbrokenly cried at the loss of her jutting profile.</p>
+<p>“No. This must be a nightmare, Please Mandy tell me I’m just dreaming. Please tell me this is just a horrible dream” Caroline sobbed while she moved in a zombie state toward her friend.</p>
+<p>Mandy gulped down and sensing her friend's despair, she stepped forward and embraced her to calm her down. “It’s alright Caroline. Everything will be alright. I promise” she said in the video.</p>
+<p>“Oh my Mandy, You were so brave to hug Caroline like that. I wouldn’t have gotten close to her in fear of getting whatever thing was used on her to eat her breasts” Jessica said shivering.</p>
+<p>“I wouldn’t have believed it either if I hadn't seen it myself. I can’t recognize me to be honest” Mandy said, surprised to see how supportive she acted toward Caroline's predicament.</p>
+<p>"Well, we saw both videos and there wasn't anything suspicious on them. Still, there must be something that could lead us to the person behind this" Jessica said loading the gym video.</p>
+<p>"Wait a moment Jessica. We saw the videos. Nobody attacked them or something. Are you sure it wasn't just an unfortunate and very unnatural event?" Mandy asked.</p>
+<p>"I'm not sure, but I can feel it. Elaine and Caroline were mean to a lot of flat chested women during our university days. Perhaps one of them did this to them as revenge" Jessica said, taking another sip of her beer while checking the faces of the women trying in the gym. "If my hunch is right, she should have been close to them when it happen"</p>
+<p>"You're scaring me again.  Why would you say that? Mandy said.</p>
+<p>"Too see up close her handiwork. To gorge in the suffering of her victims. It's a classic behavior in this kind of people'' Jessica said, returning to the video of the coffee shop to see the faces of customers. "Besides, if she went after our friends, perhaps she will go after us".</p>
+<p>"Us?" Mandy said, hugging her breasts in protection. "I never was mean to a woman less developed than me, right?" Mandy said with fear in her voice.</p>
+<p>"Perhaps” Jessica said scratching her chin. “You have been there with them, so whoever attacked them, could have easily targeted you too, but you seem fine” she said, poking at Mandy's breasts making her squeal in surprise and embarrassment. “You have always been a good person, but I do have my share of shame for what I did in the past" Jessica said.</p>
+<p>"Oh! So you are admitting to have treated other women poorly just because they were less busty than you?" Mandy said, raising an eyebrow. "Do you feel regret for those actions?"</p>
+<p>Jessica looked at Mandy for a moment before bursting in laughter. "Regret? Hahahahaha” she laughed hard and long. She had to catch her breath and calm down before continuing. “I do admit there were a lot of things I shouldn't have done. I mean, I'm part of the police force now and that kind of behavior will ruin my career, but there is nothing more satisfying than shattering the confidence of another woman by just using only the size of your breasts. These days, I have to do it subtly to avoid any problems, but it isn't as satisfying as it was in the past. Making grown up women cry just because I made them feel like little girls by smashing my great breasts against theirs until the point my bust completely swallowed theirs was the best feeling in the world" Jessica grinned with a sadist smile emphasizing how much she missed those days.</p>
+<p>"I'm glad you feel that way Jessica. For a moment, I thought you had a change of heart that could have made things awkward between us. Until the bottom! Cheers" Mandy said, tapping Jessica’s bottle with hers before gulping it down. Jessica quickly stood up to follow her example. Then, both women exhaled happily putting down the empty bottles on the table with force.</p>
+<p>“Whoa” Jessica said, grabbing her head. “I’m feeling a bit dizzy” she said, starting to stumble.</p>
+<p>“Easy girl” Mandy said caught her. “Better rest a bit on my couch”  she said, leading her there.</p>
+<p>“What a strong beer you have. My head is spinning” she said, resting her back on the couch.</p>
+<p>“Oh! That punch isn't from the beer" Mandy smiled. "It must be the drug I put in it kicking in, which is good as I don’t want to keep up this facade much longer after your heartless confession” she grinned with a disapproving look in her eyes. “First let’s return your awareness of what is truly going on to get this party started, ok?” she said, snapping her fingers.</p>
+<p>In that moment Jessica’s eyes got wide open as a set of alter memories became available for her. On those Mandy has always looked the way she did now. She recalled the days in the university in which she was just a nerd that was bullied by Elaine and Caroline. She particularly wasn’t mean to her as Mandy was quite plain so there was no joy in her to torture her. There was nothing on her chest to smash with hers, so there was no point in even trying it.</p>
+<p>“Flatty Mandy!” Jessica yelled in anger. “It was you! I recall it now. When I was talking with Elaine and Caroline about the events, both mentioned I should talk with our ‘friend’ Mandy since she was there with them, but I didn’t recall any friend with that name. After reviewing the evidence, I noticed this very busty woman that was with them, so I asked them if they refer to her. They say yes, and that it was our university friend, and that it was weird I couldn’t remember her as the four of us were quite inseparable” she said.</p>
+<p>“I bet that must have been very confusing” Mandy grinned, pulling a chair to sit next to Jessica.</p>
+<p>“You have no idea. I looked into our old photos and there was you. Smiling next to us, but I couldn’t remember you. I mean, I will remember a woman with breasts as big as yours. Then, when I looked into one of the news articles of the university about you winning a science award, they showed a picture of you in high school. The messy hair, the thick glasses and especially the flat chest. That was when I recognized you. Somehow you have changed the past so you could have big breasts and be our friend, but that wasn’t enough, you had to obliterate Elaine and Caroline breasts so they will feel what you did, am I right?” Jessica said.</p>
+<p>Mandy clapped her hands in mocking appraisal. “Very good. And people say that I’m the smart one. You figure it all out by yourself” Mandy said with a big grin in her face</p>
+<p>“So, you confess to be responsible to get rid of Elaine’s and Caroline’s breasts?” Jessica asked. Then, she felt truly scared as Mandy’s grin became even bigger. </p>
+<p>Mandy lowered herself toward Jessica’s breasts. Then, she moved her mouth close to her ‘friend’ cleavage and puckering her lips, she said “Yes. I, Flatty Mandy, am responsible for Elaine’s and Caroline’s losses. It was I who planned their demise and even went further to drug an officer of the law” she smiled as she stood up again. “Was I clear enough or you need a better confession?” Mandy said looking at the perplexed expression of her friend.</p>
+<p>“You doomed yourself ‘girlfriend’. Guys, arrest this girl and take me out of here!” Jessica yelled.</p>
+<p>Jessica looked at her door, waiting for her swat team to burst open, but only ominous silence filled the room. “Well, this is awkward” Mandy giggled as nothing happened.</p>
+<p>“What the hell guys!!” Jessica tried to move but panicked when her body wasn’t responding. “I’m not joking guys, this psycho bitch had drugged me and I can’t move. Hurry up!” she screamed.</p>
+<p>“Sorry Jessica, but no cavalry will get you out of here” Mandy said, tearing open Jessica's blouse making her huge breasts bounce due the violent movement. “As you can see, or better said feel as I doubt you can see pass beyond your melons, you aren’t wired anymore. Unless you are counting the reinforcement in your bra” she laughed hard.</p>
+<p>“But? How? I recalled getting here with my swat team. They should be outside waiting for my signal” Jessica said, confused.</p>
+<p>“I don’t blame you. You see, that is the funny thing when reality reshapes. It can mess up with your head” Mandy explained. “What you are recalling is your previous reality, in which you remembered me as a flat nerdy girl who you won’t even spare the time of the day, but that is not our reality anymore. Right now, we are best friends and you trust me, so why will you get into my home with a swat team. You came here to talk to me, not to arrest me” Mandy grinned.</p>
+<p>Jessica’s eyes got unbelievably wide open as everything Mandy had said was true. She did recall her intention to come to visit her was to seek her opinion and possibly together find out what happened to her friends. She never put a wire on and much less brought reinforcements.</p>
+<p>“Can change alter our reality?” was the only thing that Jessica managed to say.</p>
+<p>“Well, that won’t be totally accurate. What I can do is control who is aware of the alteration” Mandy smiled. “You see, for everyone else besides the two of us, I have always been a busty woman that hangs out with the popular girls. Such a change has altered my life in ways I’m still trying to understand, but it’s definitely a huge improvement, even I hate to admit it. Having big breasts can make your life a lot easier if you know how to use them” Mandy said.</p>
+<p>“So, let me guess, you found a kind of ancient spell to change reality into one where you were born with large breasts. One where Elaine and Caroline never bullied you, but admired you. Still, that wasn’t enough, right? My guess is you got pissed off that you couldn’t rub on their faces to be now bigger than them. That must have driven you mad, so you used another weird magic to make their breasts disappear. You are no better than them” Jessica said in anger.</p>
+<p>Mandy exploded into an evil laugh that made Jessica tremble in fear. “Oh my… I never imagined I could be so predictable. You really got me there 100%. Of course I wanted to rub my growth in their faces and I already did it, or did you forget I can control who is aware?” Mandy said. “But I did more than that. I made them pay for all the humiliations they did to me” she gritted her teeth “But, to be fair, I must say there is something wrong in your statement. Their breasts didn’t disappeared” Mandy said with a cheshire grin on her face.</p>
+<p>“But you admitted you were responsible for getting rid of them?” Jessica said.</p>
+<p>“I admitted I was responsible for their losses, but their breasts aren’t gone. They are in a much better place” Mandy purred as she massaged her generous endowments. “You won’t deny I’m carrying them way better than any of them ever did. Especially after combining both of their sizes and their unique qualities for my own benefit” she said moaning louding without shame.</p>
+<p>“You stole Elaine’s sensitivity along with her breast size?” Jessica said incredulously.</p>
+<p>“Yep. And let me tell you that everything she told us about how erogenous she was, was an understaaaatemeeent” Mandy screamed as she was washed by a powerful orgasm. Her body trembling as she bite her lips enjoying her afterglow. “Honestly, she must have hidden the true dimension of her sensitivity to not hurt our feelings, but it’s mind blowing. I mean, I have more orgasm in this reality by just playing with my breasts than I ever did with my vibrators in my old life” Mandy said blushing for the first time after revealing something so intimate about herself.</p>
+<p>“You are a monster! I must get out of here” Jessica cried as she tried to stand up and run, but even though she had the initial momentum to stand up, her legs didn’t respond and she found herself falling to the ground, face first as her arms didn’t seem to work either.</p>
+<p>“Hey! Careful! I don’t want you to hurt yourself” Mandy said, catching her up before returning her to the couch. Jessica tried to bite her at least, but Mandy withdrew her arm on time. “The drug I gave you has numbed your extremities, so you can’t use your arms or legs, so there is no escape Jessica” she said. “And now that you know this, let me tell you what truly happened when I met Elaine and Caroline. Something your precious videos couldn’t retain” she said.</p>
+<p>“When I arrived at the gym, Elaine greeted me but not in the way you saw in the video. Oh no! She just had to shout Flatty Mandy for the whole gym to hear her. Fortunately people didn’t chorus or cherish her poor behavior, making Elaine uneasy. Still, that wasn’t enough and she was more than willing to remember those times where she humiliated me” she said.</p>
+<p>“I let her call me names and said a lot of nasty things, but I didn’t say anything back. I just wait for the perfect moment and that is when I strike. I activate the magic spell and you won’t believe how happy I was to see Elaine’s breast shrinking before my eyes. Her scared face was priceless and she started hyperventilating as she saw her breasts dwindling before her eyes. But soon, her face of fear turned into one of anger as she heard me moaning and noticed that my chest wasn’t so flat anymore. As if we were hooked by invisible hoses, her breast size was siphoned from her and given to me. The more her bust shrunk, the more pressure was put in mind. Soon, the buttons of my blouse started to bulge as the gaps between them were getting wider revealing an overflowing training bra I was wearing. With a loud orgasm, my buttons were fired across the gym and my training snapped due the heavy burden that has been deposited on them. I was pleased how Elaine’s bra looked so empty on her chest as her breasts had been completely transferred to me. I wasn’t expecting her sensitivity either, but at that moment, I thought it was a fair compensation for what she did to me” Mandy said.</p>
+<p>“You won’t get away with this Mandy. I will make you pay for what you did” Jessica said.</p>
+<p>“And how could you? Elaine doesn’t recall I stole her breasts, of course, at the moment, she did. You see, standing in the middle of a gym full of people showing my brand new breasts to the public wasn’t my way to get revenge, so I let the second part of the spell run its course. A reality reshape, but not any kind of reshape, while I let it rewrite it so I was always born with the breasts size Elaine had just moments ago, I didn’t let it alter her past to force her to be born with a plain chest. So, as a result, after the reality was changed I found myself properly dressed again. My torn up bra and ruined blouse were not only restored but enlarged to fit my new measurements. I stood there as busty as Eliane was like if nothing had happened, while Elaine had mysteriously lost her breast size after our conversation. The rest of the event happened just as you saw in the video, of course, I was less busty as I was sporting at the moment only Elaine’s size, but as you see in the images, it already shows me with the size of Caroline on top of what I took from Elaine. Isn’t this magic great or what?” Mandy laughed</p>
+<p>“But wait, that is not the best of it. What was the cherry of the pie was that Eliane knew the truth inside her head, but the spell didn’t let her voice her thinking, she was trapped in a kind of autopilot doing what she was supposed to do if she wasn’t aware of the changes. I subtly teased her telling her how sensitive and big her breasts felt to me. Nobody was near to hear me but the fire in Elaine's eyes told me everything. To make her suffer even more, I let one of the nurses in the ambulance to fondle my breasts just to be sure I wasn’t getting whatever my ‘friend’ was having. I forced her to watch how her former breasts were sucked and massaged by a perfect stranger letting her know all the pleasure they brought to their new owner. My orgams was even more pleasant as I felt the despair and agony Elaine fetl being trapped in her own being. I was torturing her and it was impossible to ask for help. It was in that moment she understood her wrongs and came to accept the punishment of her actions” Mandy said.</p>
+<p>“Oh my…” Jessica gasped feeling her body shaking as a primal fear took her over.</p>
+<p>“Now, good thing you brought the video feed of Caroline's office. That way you can see first hand what truly happened” Mandy said as she snapped her fingers. Suddenly, her image in the video got a severe breast reduction cutting more than half of its large dimension. “Ah! Before you asked, I let Caroline's awareness intact, so she was aware of my sudden growth” she said.</p>
+<p>“What have you done, Flatty Mandy? Did you finally get a boob job to compete with the big girls?” Caroline said closing the door of her office to avoid her clients would hear them.</p>
+<p>“Not at all Caroline. I came to get my revenge on you for always humiliating me” Mandy said.</p>
+<p>“If that is so?” Caroline said slowly undoing her blouse. “All those times you suck on my nipples feeling my large breasts on your face, are you going to tell me you didn’t enjoy it a little bit?” she smiled, throwing her blouse into the floor just to reveal she was wearing a nursery bra. “Back in those days I didn’t have any milk for you, but now, I’m able to produce my own milk” she said, opening the flaps on her cups to reveal her engorged nipple. “I may not be forcing people to suck my tits anymore, but I can get off knowing every person in this shop drinks their coffee with my milk on it. It’s so naugthy and erotic knowing my milk filled their stomatchs and they aren’t even aware of that” Caroline laughed playing with her nipple “Oh fuck!” she moaned as drops of milk started to flow. She pulled the cup of coffee close to her nipple as she squeezed a thick shot of milk into it. “So Mandy, want to try the secret ingredient of my special coffee?”</p>
+<p>“Actually…That doesn’t sound bad at all” Mandy smiled at her, “But, if we are going to do this. I want to drink straight from the faucet and with you begging me. If you agree, I will do” she said.</p>
+<p>“Oh! What you really want is a milky, isn’t it baby Mandy? Don’t worry, your horny mom will fill you up” Caroline moaned, getting quite aroused by the sudden change in Mandy’s behavior. “Please baby Mandy, suck on your mommy’s tits. Let her warm milk help you grow big boobies” </p>
+<p>“Nah… tell me like you mean it. If you want me to suck your nipples and gulp your milk, say ‘Mandy, I want you to have my big fat full of milk breasts stuffed in your mouth’” Mandy asked.</p>
+<p>“Oh you naughty girl” Caroline moaned while tweaking her nipple. “Mandy, I want you to have my big… fat… full of milk... breasts…. Mmhh” Caroline muffed as Mandy covered her mouth.</p>
+<p>“Thank you Caroline. That’s all I need to hear” Mandy moaned as she arched her back thrusting out her breasts. “Oh yes! I can already feel it. Your breasts and mine… becoming one” Mandy moaned as she pulled her hand from Caroline’s mouth to massage her breasts.</p>
+<p>“Oh my… what is happening to me?” Caroline cried as she dropped the cup of coffee in her hand as she felt a strange tingling in her breasts.</p>
+<p>“Oh yes… yes… yes!!” Mandy moaned as she stepped forward. “Your chest Caroline. It’s flowing into me!!” she smiled wickedly as the breasts of her long time bully were shrinking before her eyes. “By the way, these aren't implants. I stole Elaine’s breasts, and now I'm getting yours too” she moaned, getting closer as her blouse was having problems for the second time in the day to contain her swelling breasts.  </p>
+<p>“No. No. I don’t want to be flat chested. Don't take my precious breasts away from me” Caroline sobbed as she cupped her breasts and felt how they were slowly receding back into her chest. She watched in horror as the milk drops on her tit quickly dried out. Her plump nipples started to shrink as their color lighted out. She trembled in shock as felt her milk reserves depleting.</p>
+<p>"Oh Caroline! I can feel your breasts changing me and it feels so good!" Mandy moaned, feeling how tight her bra and blouse were getting. "Oh crap. This won’t do. My girls are running out of space to grow" she said, starting to feel more pain than pleasure. Grabbing the sides of her blouse, she pulled them apart with force, bursting the buttons open. Then, she pulled up the cups of her chest letting her enlarging breasts to bounce free. "Ouf! Much better and just in time" she sighed massaging her marked breasts for being severely constrained in a bra now too small for it. "I can already feel your milk coming" Mandy grinned hearing sloshing sounds.</p>
+<p>Caroline watched in disbelief as Mandy’s breasts continued growing, feeding on the size taken from her to reach the desired shape of ripped melons. Mandy's nipples were darkening considerably as her aurola distended and grew larger too. Caroline was very familiar with those changes and while seeing those being undone on her body was horrible, watching them mature on Mandy was 10 times worse. Caroline sobbed and cried as her hands could hold and keep her breast in her. Mandy was stealing everything she cared about and there was nothing she could do to stop her. Even her motherly traits were now imbued on Mandy’s enlarging bosom as there could be seem small drops of milk already starting to leak from her engorged nipples.</p>
+<p>Once the last bit of breast flesh left her, Caroline cried in deep sorrow. "Gone. It's all gone" she repeated as tears ran down her cheeks. The pads in her bra, designed to soak her milk, were now filled with the sourest tears a woman could have. “My breasts, my milk, gone” she sobbed</p>
+<p>"They have not gone silly. They are right here" Mandy grinned evilly as she massaged her enormous breasts. Bigger than Caroline has been. "You have made me so big Caroline. Since you and Elaine had the same size I expected to be close to an E-cup, but I didn't know you were lactating. All this milk has boosted my breasts girth wonderfully making them so full and heavy.. I feel I can feed an army with these” she said, thrusting out her chest while straightening her back. "Thanks for this wonderful gift" Mandy said, giving her nipple a thug and moaning in pleasure as a thick stream of milk came out from it. “I can definitely get used to this” she smiled.</p>
+<p>“No. I can't live like this. Please Mandy, give me back my tits. Please, I need them” Caroline sobbed, getting on her knees to beg at the feet of the woman that held her breasts hostages.</p>
+<p>Mandy took a deep breath, enjoying her former bully's despair she got on her knees to see into Caroline’s eyes. “It’s alright Caroline. Everything will be alright. I promise you” she grinned, grabbing one of her heavy breasts in her hand. “Let me share some of the milk you happily provide with me. Combining Elaine’s sensitivity with your lactation has made my breasts into a non ending pool of erogenous sensations. The milk sloshing inside me is like having mini orgasms and if this feels so good by just carrying the milk around, I bet having it being sucked should feel even better, especially through my sensitive nipples” Mandy said, guiding her nipple into Caroline’s mouth. “Now is your time to experience what you did to me, but don’t worry I won’t force you” Mandy said “If you want your milk back, you only have to drink it” she offered.</p>
+<p>Caroline was disgusted at the idea of sucking another woman's breasts, especially the one of Flatty Mandy. The humiliation was too much, but more was her desire to have her milk back. Hating herself for what she was going to do, she opened her mouth and closed her lips on Mandy’s nipple. Then, when she started sucking, she wanted to die right there as the milk was by far, the richest she had drunk. She had to have more of it and start to suck greedily. Her increased rhythm made Mandy moan more loudy and shamefully. She despited the idea of bringing more pleasure to her torturer, but she couldn’t stop herself. She needed that milk.</p>
+<p>“Oh yes! Yes!” Mandy moaned, enjoying how Caroline’s mouth was firmly attached to her nipple as if her life depended on it. “Good baby. You are now hooked on my milk” she cooed happily.</p>
+<p>“That is so humiliating. Making her suck your breasts so you could make her lactate again was truly twisted” Jessica said looking away. “At least she recovered something” she sighed.</p>
+<p>“Ah? What do you mean by that?” Mandy said puting the video on pause. “I never did that”</p>
+<p>“What?” Jessica exclaimed aloud. “But, you said…” she was saying but Mandy interrupted her.</p>
+<p>“I only offer her to have her milk back. I never say anything that will be back to her tits” Mandy laughed. “You should have seen her face. After bloating her belly so much in her milk, she learned it would remain there until she digested and pissed it out. She was in total shock”.</p>
+<p>“Well, you have your revenge. Good for you. Now what are you planning to do with me?” Jessica said. “I realize it will be pointless to arrest you. There is no evidence against you and with a move of your fingers you can easily make me unaware of anything. So, how if we let this go, you won’t receive any problem for drugging me and we can go separate ways” she said.</p>
+<p>“Were you going to give me a problem? The nerve you have” Mandy said, rubbing her fingers.</p>
+<p>“No. No. I said, I won’t give you any problem. Not at all” Jessica said scared </p>
+<p>“That is better” Mandy smiled, lowering her fingers. “Still, before letting you go, I will be a shame to let you go with such a heavy burden. So, before letting you go, I will take your heavy breasts”</p>
+<p>“My breasts?!! No way!” Jessica said. “Bad luck that you showed me that your little magic trick triggers when a person speaks what you desire. I’m too smart to fall into those games Mandy. You can make me ignorant to the chances, or even trapped me into a reality where we are best friends, but you won’t get the satisfaction of stealing them”' she said trying to push out her chest.</p>
+<p>“But I will get such satisfacion Jessica. Good thing I didn’t show you how I managed to secure Elaine’s bounty” Mandy laughed, making Jessica nervous as indeed she didn’t know what Mandy did to force Elaine to renounce her breasts. “But before ruining the surprise, it will be best to get comfortable” she  said, removing her top to expose more of her freckled breasts.</p>
+<p>Jessica quickly realized that while her breasts were bigger than Mandy’s, the boob thief had fuller and rounder breasts filling her with envy. Then, when Mandy removed her nursery bra showing her breasts sag due to their weight losing the round shape the bra provided, making Jessica grinned happy to know there was another thing her breasts were superior.</p>
+<p>“Stupid Jessica. You are so predictable. You think the firmness of your breasts make your breasts better than mine right?” Mandy said, stripping the upper clothes on Jessica. Once her friend has her torso exposed, Mandy took off Jessica’s bra letting her huge breasts bounce free, but these barely bounce on her chest. Even without the support of the bra, Jessica’s orbs remained perfectly firm and high on their owner's chest. “Do you realize I will take that when I obtain all the breast flesh you can offer me right?” she said, removing Jessica’s large bra.</p>
+<p>“You won’t unless I said it, and there is no way I will say those words” Jessica said.</p>
+<p>“But you have already said them” Mandy laughed as she put Jessica’s bra on her. “You were right when you said the spell is voice activated, but voice can be recorded” she said, taking from her between her breasts a small recorder. “I only need to properly time this...” she said, rewinding and forwarding the audio near her ear “And we can have this” she said, pressing play.</p>
+<p>“I said, I... <em>forward sound</em>... give you...<em>longer forward sound</em>... My breasts?!!” the recorder played Jessica's voice.</p>
+<p>“And with that, your breasts are mine,” Mandy said, hooking Jessica’s bra. “Remember when I told you I was planning to outgrow your bra when you least expected it? Well, I always keep  my word” she said, feeling the magic already working. “Adding your breasts on top of what I have already taken from Elaine and Caroline, will make me so massive. I can’t hardly wait”</p>
+<p>Just as fulfilling her master wishes, the magic spell linked both women together. Jessica felt a sickening sensation spreading around her breasts, while the opposite sensation felt Mandy taking place inside her bosom. Then, as she feared, Jessica’s breasts started deflating. She felt quite ashamed to have her breasts totally exposed giving Mandy a clear show of her demise. The worst part of it was that she couldn’t even cover her tits with her hands like Elaine or Caroline did. Not that it will matter at all, but even that instinct impulse to preserve her breasts, or any sense of modesty was denied making her humiliation even harder than it already was. </p>
+<p>“Don’t concentrate on the negative Jessica. Just admired how big you are making me” Mandy said, returning Jessica’s attention to her breasts. “Your huge bra is starting to feel a bit small” she grinned, thrusting her chest out more. Her breasts were already overflowing the cups of the bra as her freckled flesh was spilling from the sides. “Let’s hope you hold enough fuel to burst this bra open, You're getting close to Elaine’s and Caroline’s size” Mandy grinned massaging her bust.</p>
+<p>Upon hearing that, Jessica looked down at herself and gasped to see her breasts had lost half of their enormous size. She couldn’t remember a time where she had been that small and she was still shrinking. “No, please. Don’t leave me plain. I haven’t done anything to you. I never bother you for being flat chested. Please, have mercy” she begged as her breasts were now even smaller than her friends had been the day before. “Don’t punish me for other mistakes”</p>
+<p>“Of course you didn’t bother me because I didn’t have any breasts, but you did hurt me, even worse than those bitches did. But don’t worry, I will explain everything in time. For now, you better say goodbye to your bra” Mandy grinned, growling louder as the fabric of the bra started to tear apart. Then, Mandy took a deep breath inflating her lungs propelling her breasts even further to finally overpower what little resistance the garment still had. With a loud ‘SNAP’ the bra slaps finally gave out letting the vast breast flesh Mandy has stolen to overcome the cups of the bra in a freckles avalanche. But even without the bra restrictions, her breasts kept their perfect round shape as they continued growing, they also seemed firming up and rising higher  as each orb of flesh pressed tightly against each other. They were getting so big that the curve of her bust swelled beyond her torso. Unfortunately, as orgasmic and pleasant her growth was becoming, Mandy became disappointed as it subsided since Jessica had nothing more to offer. </p>
+<p>“Oh my… It seems I got all your once massive size nicely packed in her” Mandy whistled as she  patted and admired how big her breasts had become. “You won’t believe how good it feels to absorb another woman’s breasts. Perhaps later I will hire a couple of mega busty strippers or hookers to drain their lustful breasts flesh at the same time” she moaned getting excited as she played with her bigger and engorged nipples. “… still, I sense there is something calling me…” Mandy said, tensing her chest.  “Yes… I can feel it, very deep, buried inside you. Are you trying to hide it from me? No, I want it. Give it to me now!” she said, tensing her whole body.</p>
+<p>Jessica was crying at the terrible sight of her plain chest, when she thought Mandy had gone crazy. “You just tore off every bit of breasts I had, what could you possibly…” Jessica started to complain when she felt a tingle on her chest. “What? What are you doing?” she said scared as she felt a strange force sizing something inside her and started to pull it out of it.</p>
+<p>“Fuck you Jessica. How much more blessed you have been. ?” Mandy said with strain in her voice. “Stop hoarding the gift of nature, bitch!! If you aren’t going to use them. I will take them”</p>
+<p>Jessica gasped as while nothing physically and visibly changed on her, she did feel something being jank from deep inside her body. “That hurt a lot, What did you take from me?” she asked.</p>
+<p>Mandy didn’t reply as she felt a strong warm filling her body. Suddenly in a blink of the eye her body simply exploded in all directions as she grew at least 5 inches in height. Her hips flared out and her ass expanded dramatically in such quick motion that the seams of her jeans tore apart. Her beauty got enhanced as she had a more matured aura surrounding her body, but as impressive her abrupt development has been the best of it focused on her breasts.</p>
+<p>Mandy tilted her head back as she felt her breasts on fire. Then, in a blast, her impressive watermelons swollen into humongous pumpkins worth the first prize of any fair. “Oh Fuck! Yes!!!” she finally voiced her pleasure as her nipples gushed milk like crazy. Due to the size of her breasts, Mandy imagined each breasts should carry at least a gallon of milk. “This is so awesome Jessica. You have really turned my breasts into literal milk jugs” she laughed while trying her best to catch her breath. Her last growth gave her a satisfying mind blowing orgasm.</p>
+<p>“Your body. You are taller and curvier. How?” she asked perplexed to see Mandy so matured.</p>
+<p>“Oh Jessica. You still had some unused growth potential in you. A kind of dormant growth spurt hidden inside that you never used. Since it contained some boob growth, the spell let me reach it, but I couldn’t separate it from the rest of the growth spurt, so with some effort I took it all for myself. The results speak for themselves” she smiled showing off her overdeveloped body. “Now, let’s find out how big I had become, shall we?” she grinned, snapping her fingers.</p>
+<p>Jessica found herself sitting on a different couch. In fact, she was in a whole different living room. “What the…?” she said jumping from the couch and was surprised that she could. When she realized she could move her arms and legs again, she quickly touched her chest feeling her ribcage after her clothes. “That bitch Mandy will pay for what she has done. Now that I can move, I will go to the precinct and… “ she was saying when she realized her clothes had changed. She wasn’t wearing a suit anymore, but a police officer uniform. She grabbed her badge and it showed the number she had when she was an officer, but she was a detective.</p>
+<p>“I’m going to the store. Do you need anything else for dinner?” a male voice was heard.</p>
+<p>Jessica’s eyes lit up as she recognized the voice of her husband. “Jason? Is that you? Please you have to help me” Jessica said rushing to the stairs as the voice came from upstairs.</p>
+<p>“Of course it’s me Jessica. What can I do for you?” Jason said as she stepped down the stairs.</p>
+<p>“Oh baby. Hug me!!” Jessica said throwing herself into his arms, but suddenly she heard a snap.</p>
+<p>“So, what is what you need my help with?” Jason asked her again.</p>
+<p>“It’s about the prom reunion. You two are going right?” Jessica answered even those weren’t the words she wanted to say. She found herself unable to speak or even scream, She just stood there looking at Jason as he seemed surprised by her question.</p>
+<p>“Of course we are going dear Jessica. I wouldn’t miss it for nothing in the world” Mandy replied as she also walked down the stairs. “I can’t wait for the gang to be together again” she grinned.</p>
+<p>Jessica looked in awe at Mandy as she barely recognized her. She didn’t has her glasses on and her makeup enhanced her beauty greatly. Her hair looked fabulous, long and perfectly straight. She was wearing a very provocative pair of Daisy Dukes that barely cover her juicy ass. Her legs were all shapely and with each step on her high heels, she made her mammoth breasts, poorly constricted by a deformed crop top, bounce a little thanks to their incredible firmness. Mandy looked like she had walked out from a horny teenager dream and she knew it.</p>
+<p>“That is great. Elaine and Caroline will be glad to see you again” Jessica replied without having any control on her lips. She quickly realized she must be in autopilot mode Mandy described.</p>
+<p>“Well, if there are no more requests, I leave you two to catch up. Be right back my love” Jason said, surprising Mandy with a kiss right on her lips while grabbing her ass to press her chest against his. Grinning, he said goodbye and walked out the house, closing the door behind him.</p>
+<p>“WOW! This is not the first time she does this, but it’s the first time I experienced it. A girl can get used to that kind of love” Mandy said while licking her lips in a lustful way.</p>
+<p>“Jason is so lucky to have you. You are just too much of a woman for him” Jessica said.</p>
+<p>“OK. All that sweetness is going to ruin my teeth” Mandy said, looking deep into Jessica’s eyes. “Why don’t rest a bit and let the real Jessica taks sweet pie” she said, snapping her fingers.</p>
+<p>“You bitch!!” Jessica screamed at the top of her lungs.before catching herself up.</p>
+<p>“Ah! There you are!” Mandy grinned as she straight up to show she was now taller than Jessica. “How it feels to have no control over your life ah? It’s not very pretty, right?” Mandy said.</p>
+<p>“I don’t care about it. You kissed my husband psycho. Let him out of this” Jessica said furious.</p>
+<p>“Your husband you said?” Mandy asked. “I don’t know Jessica, this little ring says otherwise” she grinned flashing out the wedding ring she has on her finger. “Jason has a good taste”</p>
+<p>“That is my ring?!” Jessica screamed as she looked into her finger and her ring was gone.</p>
+<p>“Not anymore. In this reality Jason and I are happily married” Mandy said, sticking her tongue out. “Do you remember when I told you that I had just moved into the apartment you visited? Well I wasn’t lying about it. You see, when reality reshapes, my whole life changes. Having big breasts open new opportunities in life. Not having suffered the constant bullies of Elaine and Caroline made me more confident. As a result, I became more successful in life. I got a better job, a higher salary. It’s amazing what a pair of boobs can do for a girl that has the brains to properly use them” Mandy said pleased. “Of course, even bigger boobs meant bigger success so that is what brought us here. This is the house Jason and I bought after getting married. Isn’t it lovely?” Mandy said, looking around. “I remember when Jason and I brought that painting in one of our travels, and I recalled the first time we had sex in that couch after moving in. Everywhere I look is loaded with happy memories with him” she said feeling her heart racing.</p>
+<p>“I don’t get it. He was totally on me. Why are you doing this to me? Tell me” Jessica demanded.</p>
+<p>“The answer lies in your alter memories. My original plan was to take Elaine’s and Caroline’s breasts so they won’t ever bully me, but once reality reshaped, they not only became my friends, but made you notice me. That is what has led us here” Mandy said.</p>
+<p>“What are you talking about. I never…” Jessica said when a flashback of her alter memory was triggered on her. “Oh no. I didn’t mean to do that. That wasn’t me!” Jessica said. </p>
+<p>“Oh, but it was you. In our original reality you never had eyes for me or for Jason. Jason has always been a breast man, so certainly he was after you, but you dismiss him for him to be a nerd too. In our second reality, since I was the second bustiest woman in the university, it was logical he would go after me. Our preferences aligned and we became a couple. He was obsessed with big breasts, so to give him that, I induced myself to lactate. So, he became the reason I developed Caroline’s fetish. Ironic, right?” Mandy chuckled. “Everything was going good but seeing how many other guys were also trying to be with me, he decided to build some muscles and that was what called your attention. He stopped looking like a nerd and you couldn’t let such a piece of man escape you. You have the right weapons to call his attention and you did it. It didn’t matter we were dating, you screwed him and made him addicted to you. You did it just to show you were better than me. The titty queen who could have anyone she wanted” she said with hate in any word.</p>
+<p>“But, but…''Jessica tried to argue, but she knew too well. She enjoyed destroying other women's confidences and taking the man of the second busty girl, no matter if it was her friend or not, was the higher pleasure she had achieve. Seeing at Mandy crying when she ‘accidentely’ let her found her having sex with Jason give her the biggest orgasm in her life. She had enjoyed every minute of it and if she could do it again, she will definitely repeat it without remorse</p>
+<p>“You can’t deny who you are, Jessica. So you need to be punished for your actions” Mandy said “And since you have proven to me that you can be aware of what the Jessica of this reality do, I can imagine how miserable Elaine and Caroline must be” Mandy grinned.</p>
+<p>Looking into the memories of this reality, Jessica found that Elaine and Caroline never lost their breasts. They have always been flat chested as she was. The three of them were bullied for other women bustier than them, but then they met Mandy who kept them safe and protected. Soon, Mandy became like an older sister and the four of them became best friends.</p>
+<p>Of course that wasn’t the whole change in reality. Without their breasts, Elaina became a better athlete and now owns the gym she used to work with. Caroline’s fate was different as she didn’t own the coffee shop, but worked there as a barista. There was no doubt that having or not breasts could affect a person's future, but Jessica was experiencing first hand.</p>
+<p>“But I’m not a bad person. I will let them suffer until the reunion. If during our meeting, they ask my forgiveness, I will let their memories of the previous reality disappear, so they can be my cute and adorable little sisters. Won’t that be what a good older sister should do?” she said.</p>
+<p>“That is for them, but what are you going to do with me? There is still a week before the reunion. I will go insane. There must be something I could do to avoid this suffering” Jessica begged.</p>
+<p>“Uhm… there could be something” Mandy said, scratching her chin. “What about this? I will not only forgive you, but I will buy you a pair of implants to make you bigger than your original size, of course smaller than my current ones if you give me something from you” she offered.</p>
+<p>“Gi…” Jessica was about to say something when she covered her mouth. “Oh no. I won’t be tricked this time” she said looking at Mandy with anger.</p>
+<p>“Oh no. I won't use any of my tricks this time” Mandy said, pulling the voice recorder from between her breasts to put it aside. "The spell can give me anything you want if you voice it. I'm not asking for much. Perhaps a few inches of height, your cute nose, perhaps some of your intelligence, I don't know" she said. "Having taken your growth spurt felt truly great, so I want to experience that feeling again" she said.</p>
+<p>"So, if I agree to this… you promise to take away this pain so I can live happily and you will buy me huge breasts?" Jessica said.</p>
+<p>"That's right, I promise it.. And you know that I keep my promises” Mandy said. "Tell you what. To sweeten the deal, I realize how the Jessica of this reality seemed quite interested in me. If I'm not mistaken, she has a crush on me" she whispered in Jessica's ear, making her shriver.</p>
+<p>Jessica didn't want to admit it, but it was true. When she checked her memories, she learned she was not only interested in Mandy, she was quite madly in love of her. Jessica didn't know it, but she had an obsession with large breasts. When she had them, it was natural for her to have such high esteem, but without them, she felt quite attracted to a woman with big breasts and Mandy was the bustiest she knew. No pornstar had such a perfect pair, not naturally anyway.</p>
+<p>"Let's say that I have an interest in your breasts, not in you. So, what about it?" Jessica said.</p>
+<p>"Well, if you agree with my request, I won't not only do what I already promised, but I will take you as my lover. What about that? I can't promise to share Jason with you, but if he likes the idea of a threesome, it could be possible" Mandy said, licking her lips while raising an eyebrow.</p>
+<p>"That sounds very tempting" Jessica said, biting her lips. She only needed to give away a bit of her and she will be able to enjoy Mandy's body. Mandy was totally showing she wanted this too.</p>
+<p>"So, what do you say? I promise to let you suck all the milk you can handle and I will take care of you always" Mandy said, bending down a bit while pulling her crop top to give Jessica a good look of her freckled breasts. "Do we have a deal? Or I must put these goodies away" she asked.</p>
+<p>Jessica had to control herself to not show her watering mouth. "OK. You promise, so you better keep your word. How do we do this?" she said, feeling a bit anxious to suck on Mandy’s breast.</p>
+<p>"Simple. Just say aloud what you want to give me, but please be as specific as possible. I don't want you to say 'I give my hair' so you can end up bald. You can say 'I give you 4 inches of my hair, or half of it, any length you want, but be specific” Mandy said, opening her arms to receive Jessica's willing donation. “Do it, and these can be yours forever” she said grabbing her tits.</p>
+<p>"Alright, I give you…" Jessica started to say when she realized she wasn't sure what to give her. 'She had mentioned my height, my nose, my intelligence and even my hair, but perhaps I can surprise her with other things. Mandy seems to enjoy her breast sensitivity, so perhaps I could give her some of my pussy sensitivity? No, that wouldn't be enough. Perhaps some of my strength? I will definitely enjoy being carried next to her breasts while sucking on them, but I will need to give her some of my height too. No, think Jessica. Think' Jessica thought in her mind.</p>
+<p>"I'm still waiting" Mandy sang anxiously.</p>
+<p>"I give you… I give you…" Jessica licking her lips as she saw Mandy's massive breasts. She needed to have those breasts. She only needed to make up her mind, but the more she thought about it, the more frustrated she got. Mandy was offering a good deal. After all the bad things she did to her, she was willing to take her at her side so they could be together. She even was offering her body to play with, she needed to show her how much she wanted to be with her. "I give you… I give you…" she repeated desperately as Mandy only looked at her with lovely eyes, wanting for her, ready to forgive her. Grabbing the voice recorder, Jessica voiced her desire.</p>
+<p>Ten minutes later, Jason returned from the store. As soon as he crossed the door, he saw Mandy walking toward him with a big smile on her face. She flicked her long hair to the side making it look as if it was enveloped in flames. Her natural combination of red and blonde hair gave her a ravish look hard to ignore, and in motion, it was like a wild fire ready to consume all.</p>
+<p>"Hello lover boy. You return quite soon. Perhaps you can’t stay away from your beautiful wife?" Mandy smiled at him in such a way that made his heart skip a beat.</p>
+<p>As Mandy approached him, Jason had to rise his face higher and higher to keep eye contact with her. As her shadow enveloped him, he had to keep himself from diverting his eyes toward her gigantic breasts which she kept at a safe distance. If she got closer, she wouldn't be able to see him under them. "You know me very well honey. It's hard to stay away from such a spectacular woman" he grinned embracing at his toweringl wife burying his head between her breasts, each one bigger than his head. "Your presence is so commanding that I can't avoid it. I need to be with you Mandy. I want your body so bad that I will give…" Jason was saying when Mandy put a finger on his mouth.</p>
+<p>"You don't have to say it baby… like never, ok? I’m serious. Promise me" Mandy said in such an angelic voice that Jason only nodded in agreement. "Good, now be a good boy and prepare dinner while I talk in private with my friend Jessica. She has suffered a huge loss and I promised to be with her" Mandy explained.</p>
+<p>"Oh crap. Is she alright?" Jason asked concerned. </p>
+<p>"Believe or not, it was something she desired, but I think she didn't consider the consequences very well, that is why I need time alone with her" Mandy said crouching on her knees to look Jason in the face. "Now, don't worry about anything and prepare dinner. If you feed me well tonight, I will do the same with you in our bed after having sex" Mandy offered.</p>
+<p>"Oh right. You got a deal babe. Your milk after sex is the best energetic drink a man could wish" he grinned as he rushed into the kitchen.</p>
+<p>With him gone, Mandy stretched up as she walked toward the mirror in her living room. "I must say Jessica, you really impressed me. You have made me quite an impressive woman" Mandy smiled looking at the 8 feet tall mirror she specially ordered. It was the only way she could see her outstanding 7’6” tall body in its fullness. After admiring her inhuman height, she noticed how good Jessica's blonde hair had merged with hers. She also admired her new cute button nose too. Her lips definitely were fuller and her eyes now had a perfect sight. "Quite impressive indeed" she said, flexing her arms to show her worked out biceps. She hadn't seen them before, due Jessica's wearing a suit and later her uniform. "Your training in the police force will come in handy" she grinned, enjoying how powerful her body looks, especially with her increíble stature. "This new reality you have give me is amazing. If having big breast let me dominate men before, with my new height, strength and enhanced beauty, they are no more than playthings in my hands, while women, even envied me so much, feel compelled to obey me as if I was a bee queen. The world has become a much better place for me thanks to you Jessica. Which only makes me feel worse for not being able fulfill my end of our agreement" she sighed.</p>
+<p>"You see Jessica. While I was honest with you when I said I won't be using any of my tricks on you, I didn't mean I won't be using any of yours. I have seen how you broke the will of so many girls that I decided to give you a final lesson by breaking you. It was so easy seeing you all fall for me, that I didn’t realize on time the amplified effect my bigger breasts will have in your tactics. For that, I'm sorry" Mandy said, picking up the voice recorder to press play.</p>
+<p>"There is nothing I will like more than please you. I want to be with you, I want to show my worth to you, so I give you everything I'm to you”' Jessica voice said before Mandy pressed stop.</p>
+<p>"And I got all of you. In a blink of an eye, everything that made you Jessica was given to me. Your body, memories, skills, your past and your future rush into me and I accepted you with my arms opened. Whatever you could have accomplished in your life has now merged with me making me a woman that neither of us alone could be, and while I never seek that you will have to sacrifice yourself like that, I must admit that... I LOVE IT!" Mandy yelled in pleasure.</p>
+<p>"Absorbing your whole body, your entire existence was like having a million orgasms happening at the same time. The pleasure almost drove me insane, but the change in reality helped me cope with it" Mandy said, caressing her breasts and pussy. “The mere idea that I totally own you Jessica, to the point that your life only served to improve mine is enough to make me orgasm hard. Unfortunately without a body, I won't be able to fullfill my promises to you, but at least we will be together forever" she purred enjoying the extra sensibility her sex was poviding. </p>
+<p>"But don't worry Jessica. Wherever you are now, you won't be alone too long. In a week, Elaine and Caroline will make you company, I will be sure that happens, so the four of us will stick together for the rest of MY life, and what a life it will be. With their bodies and potentials added to what you already give me I will become unstoppable. My beauty, intelligence, strength and size will be improved again. Normal people will be at the level of my pussy if not smaller and my breasts should be bigger than a woman’s pregnant belly with quintuplets” she laughed imagining how her new reality will be by having the potential of four women merged in one. “But a week seems like a long time to become a goddess" Mandy said, frustrated. "Jason, forget the dinner and get the car ready baby. Mommy needs to visit some friends she hasn't seen in a long time" she grinned, using her improved intellect to plot the best way to have them both submit to her at the same time. "I can hardly wait to let them become part of my life" she laughed evilly.</p>
+<p>The end.</p>
+</body>
+</html>

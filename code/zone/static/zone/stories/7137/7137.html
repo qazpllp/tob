@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Research & Development, part two</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p><em>This is the second part of a two-part story, 'Research and
+Development'.</em></p>
+<h1>Part 2: Development</h1>
+<blockquote>
+<p><em>"If the word on the street is true, Galactea has got even more in
+store for all you Boob Drug fans. For those who just can't get enough
+of their More Me serum, we're hearing rumors that there's a new, more
+powerful product in the pipeline. And recent updates to the More Me
+app have revealed the possibility that this product will be available
+to existing More Me customers as soon as next spring. If you're like
+us you'll be desperate to know more, and we're going to be bringing
+you more Galactea news from our own confidential inside sources just
+as soon as we can." Glamor Today magazine, autumn 2032</em></p>
+</blockquote>
+<p>Fresh from her morning briefing meeting, Emma Wallace, chief scientist
+of Galactea, walked briskly down the corridor to the accommodation
+block, her heels clicking on the floor. She was looking forward to
+seeing Katie again, and finding out how the young journalist was getting
+on after two weeks of More Me Plus treatment. If Katie wasn't going to
+write a story revealing uncomfortable truths about the new product, Emma
+would be a lot happier.</p>
+<p>The apartments in the Galactea complex were bright and airy modern
+units, with views out over the nearby hillsides and the city below.
+Visiting staff or contractors could stay in them, and it was not unknown
+for volunteers for medical trials - like Katie Leland - to use the
+little suites so they could be supervised.</p>
+<p>Emma knocked briskly on the apartment door and walked in.</p>
+<p>"Good morning, Katie," Emma called. "Are you ready for our check-up
+meeting?"</p>
+<p>"Be right with you!" She heard a voice and some indistinct noises coming
+from the bedroom. After a few moments, Katie emerged, barefoot, wearing
+a big white towelling robe.</p>
+<p>"Oh, sorry, did you want to - " Emma was slightly startled by the girl's
+appearance.</p>
+<p>"I was showering. I'm fine, so long as you don't mind me with wet hair
+and no makeup."</p>
+<p>"No, it's all the same to me." The two women sat down at the table, the
+morning sun shining into the room.</p>
+<p>Emma put a paper bag in front of Katie, with a bottle in it. "Here's
+some more serum - it's still at no cost to you, as our guest, so you can
+have some whenever you want." She took out her notepad as Katie eyed the
+bag. "They gave you the medical checks yesterday?" Katie nodded. "I've
+just got the results, which are fine. That means you'll be ready for
+your second infusion this afternoon. I wanted to find out how you feel
+about that."</p>
+<p>"Honestly? I can't wait. I wasn't sure what to expect, but these last
+two weeks have been fantastic."</p>
+<p>"Fantastic how? Just a general feeling of well-being, or..." Emma gave a
+serious medical professional look, but when she raised her eyebrows,
+Katie smiled.</p>
+<p>"Or what? You've come up here to see for yourself, right? Don't worry, I
+knew you'd want to. You are a doctor, right?" Katie got to her feet and
+stepped back, fumbling with the tie around her bathrobe. She giggled as
+the oversized white garment slid to the ground, and Emma's eyes widened.
+The tall blond was wearing nothing but a pair of panties and the
+eggshell-blue crop top that she had shown off in Emma's office a few
+weeks earlier.</p>
+<p>Katie gave a mischievous grin as she arched her back, pushing her tits
+forward in a provocative pose. "Notice any difference?" Emma nodded
+slowly. There was indeed quite a difference. Last time she had seen that
+garment on Katie, her breasts were just about covered by the skimpy
+vest. A few tantalising glimpses of pale undercurve had been on display,
+and the top was clearly under strain. But now, after two weeks of
+growth, it didn't even reach Katie's erect nipples. The crop top just
+sat around her slender neck, resting on the tops of her boobs. Fully
+aware of the effect she was having, Katie began a clumsy attempt to pull
+the stretchy fabric over her naked tits, pushing first one fat orb and
+then the other up into the garment, her hands shoving in a futile effort
+to keep the heavy, wobbling spheres from popping out again. Her dark
+nipples were hard with excitement. "I'm getting bigger fast, Emma. I'm
+not sure this top really fits me any more, what do you think?"</p>
+<p>"I see the growth has kicked in." Emma was staying professional but her
+eyes were not on her notes any more. Katie had given up trying to stuff
+herself into the tiny vest and was just letting her bare tits sway. "Any
+other changes you've become aware of?"</p>
+<p>"I'm sure your team has told you I'm eating about 6,000 calories per
+day, to feed these girls." Katie's hands looked absurdly small as she
+reached up and weighed her breasts. Emma swallowed as she noticed her
+surreptitiously give the tiniest tweak to one of her rigid nipples.
+Katie's eyes seemed distant for a moment, before she exhaled a long
+breath. There was a moment of silence between the two women.</p>
+<p>"And I know you're wondering: yes my sexual appetite is still as intense
+as ever - stronger if anything. I mean right now I haven't fucked this
+morning, because I knew you were coming over. That means I might have
+some... trouble... keeping my mind focussed. I'll be fine once I've
+worked off some of this tension."</p>
+<p>"And just how would you...?" Emma was considering the possibilities.</p>
+<p>"Oh, don't worry, I've made arrangements. You remember I told you about
+the boyfriend I dumped? Well, it turns out he's the forgiving type. You
+can probably guess why. Anyway he's come to keep me company. Scott!"
+There was some movement in the nearby bedroom. After a few moments a
+lanky young man emerged, looking somewhat sheepish.</p>
+<p>"Good morning Dr Wallace. I hope you don't mind me staying over?"</p>
+<p>"I guess not, if Katie, ah, needs you here, I can't see a problem with
+that." Emma was thinking fast. "In fact, perhaps you'd like me to move
+you both to a larger suite? This one's not really meant for two." Katie
+smiled at Scott, then turned to her host.</p>
+<p>"Sure, Emma, thanks. It might be better in a bigger place."</p>
+<p>"Then that's agreed. I'll get the team to move you later today, while
+you're having your infusion." Emma could see that Katie was not really
+concentrating on her words any more. The journalist took the bottle of
+More Me serum out of the bag and held it in front of herself.</p>
+<p>"So if I understand this right, the new injections don't replace the
+serum, they just make you more sensitive to it, is that right?"</p>
+<p>"You got it. You still need to take your normal More Me dose, as you
+have been, but our studies suggest the results could be more intense
+than before."</p>
+<p>"More intense? You're not kidding. Have you actually watched somebody
+taking their serum dose after the More Me Plus injection Emma?"</p>
+<p>"I haven't. Do you think I should?"</p>
+<p>"I don't know, but you're gonna see it right now anyway." Katie couldn't
+wait any longer. She unscrewed the cap of the bottle and chugged back a
+couple of mouthfuls.</p>
+<p>"Hey, you're meant to dilute it, and measure the dose carefully!"</p>
+<p>"Yeah, right. Your guys told me that. I ignored them too." Discarding
+the pointless crop top, Katie sauntered over to the couch and sat boldly
+in the centre of it, her legs crossed and arms spread along the back.
+Emma and Scott could only stare at the disproportionately huge breasts
+hanging from the slim woman. Katie gazed back at Emma. "Now watch this,
+Miss Galactea," she smiled oddly. "See what you have created."</p>
+<p>"I'm not sure I - "</p>
+<p>"Look." A blush rose in Katie's pale cheeks, and Emma saw the gentle
+rosiness spread across the naked girl's skin. The room was silent. Katie
+shifted her hips slightly, shut her eyes, and inhaled deeply. As the
+flush reached her tits she thrust her chest out and began to pant. Emma
+was transfixed. The smooth curves of Katie's breasts were already
+obscuring her entire ribcage, but Emma was astounded to watch the
+undercurve get lower, and lower, as Katie's bust began to slowly swell.
+With each short breath the girl took, her firm tits inflated slightly as
+the powerful serum combination coursed through her body, artificial
+hormones driving her freakishly large bust to grow even further. The
+sides of each orb gently pushed out, blue veins clearly visible beneath
+the stretching skin.</p>
+<p>Katie was breathing more quickly, her eyes still closed as she
+luxuriated in the ecstasy of growth. The expansion gradually slowed
+until she blinked and met Emma's bewildered gaze once more. "You see?
+That's what I can do, with More Me."</p>
+<p>"But - that shouldn't even be possible? How did you - Where did all that
+-" Emma was gobsmacked by what she had just seen, and not a little
+excited. The scientist in her was incredulous, but the evidence of her
+own eyes could not be denied. She took a few steps towards Katie,
+staring at her bare tits. They were visibly larger than they had been
+just a few minutes earlier, the heavy globes almost obscuring Katie's
+navel.</p>
+<p>Katie wiped sweat from her forehead, and squirmed on the couch. She was
+starting to look uncomfortable.</p>
+<p>"Emma, I'd love to chat, but right now Scott and I have some urgent
+business. Can we catch up later?"</p>
+<p>"Sure, but what's urgent? This is amazing!"</p>
+<p>"Yeah, amazing is right. And it's just about to get even more amazing.
+Can you excuse us?" Katie rose to her feet, staggering for a moment as
+she adjusted to her even more top-heavy weight distribution. Boobs
+wobbling and jiggling, she strolled briskly over to Scott and grabbed
+him by the hand, dragging him towards the bedroom. "Urgent business,
+Emma. See you later!" The bedroom door slammed.</p>
+<p>Emma slowly retreated, her thoughts racing. As she shut the apartment
+door she could already hear Katie's rhythmic, high-pitched cries. Half
+way down the corridor Emma shook her head in amazement, hearing the
+journalist's triumphant wail as her orgasm swept through her.</p>
+<p>----o0OO0o----</p>
+<p>Across the country at a conference, Emma was disappointed that she'd had
+to leave the young couple in the care of her colleagues for so long.
+She'd been keen to see for herself how the trial was going after the
+extraordinary scenes she'd witnessed recently. Luckily with Katie and
+Scott in the new apartment, she didn't have to miss out entirely.
+Tonight Emma was working late in her hotel room, intending to review the
+results of some recent studies. Instead, she was drawn to the video feed
+from the suite that she had moved her guests into. She glanced back at
+her spreadsheets for a moment, but they could wait.</p>
+<p>Adjusting the screen, Emma expanded the view to show Katie and Scott
+sitting at a table. She squinted at Scott, trying to see if he looked
+any different, but in the afternoon light it was hard to tell. She knew
+from the reports she was getting that Scott was spending time in the
+employee gym, and she put this down to the supplements she'd asked her
+team to slip into Scott's meals. Emma wanted Scott ready to service
+Katie's enhanced libido at any time, and that meant that the
+unremarkable young man she'd met in the little apartment had been given
+something to keep his energy and sexual stamina up.</p>
+<p>Emma was, of course, thinking more about the continuation of her
+experiment with Katie. She was certain that the danger of a critical
+article in Glamor Today had passed, but what was Katie Leland going to
+do instead? What would happen if a woman was exposed to as much More Me
+serum as she wanted? A woman who, like Katie, was helplessly addicted to
+it? This was something nobody knew, because nobody had ever gone this
+far before. Emma Wallace was not used to stopping half way when she
+wanted to know something. She looked on at the oblivious couple in the
+apartment.</p>
+<p>Katie flicked her long hair back and turned slightly. Emma drew in her
+breath as the high resolution camera focussed on the slim figure of the
+blond journalist, giving Emma a side view of the big, naked breasts that
+half-filled the table. The taut skin of each firm orb showed the fast
+rate of Katie's ongoing expansion. Her darkened nipples pointed forward,
+now the size of thumbs. Emma could see that Katie had been eating her
+evening meal - having to reach around her own swollen tits to get to the
+plate.</p>
+<p>Katie rose, revealing that she was wearing nothing but sweat pants and
+an open-fronted hoodie. It would have been difficult for the younger
+woman to have zipped up her garment even if she tried - her bust was too
+enormous to fit inside it. Emma watched intently as Katie struggled to
+maneuver herself around the domestic environment of the little
+kitchenette. Katie's size was now so extreme, Emma thought, that it was
+starting to interfere with her everyday life. Washing the dishes Scott
+passed to her, Emma guessed that Katie had no hope of seeing what was
+going on in the sink - her tits were big enough to completely block her
+view. As she reached up to put the crockery away in the cupboard, the
+wobbling boobs knocked over a pot of utensils on the counter. And this
+was a woman, Emma marvelled, who was greedy to increase her dose of More
+Me serum yet again. Katie didn't just want to grow - she needed to grow,
+even if it turned her into a sex-dependant slut with impractically large
+breasts.</p>
+<p>----o0OO0o----</p>
+<p>Ten days after her last visit to Katie Leland, Emma was back in the
+Galactea campus and wasted no time in visiting the guest apartments.
+Outside the door to Katie's suite, she paused, listening. She could hear
+the muffled sounds of groans and gasps inside. Emma smiled to herself.
+Katie's craving for orgasm was now so great that she could hardly go a
+few hours without a climax. Emma waited until the panting subsided, then
+gently knocked.</p>
+<p>Hearing no answer she opened the door and peered in, eventually finding
+Katie in the bedroom. The journalist was sprawled naked on the big
+double bed. The room reeked of sex, and sounds from the en suite shower
+suggested that Scott was cleaning up from another bout of serum-driven
+lust. Katie was sweating profusely. The spectacular mane of blond hair
+was unkempt and greasy. But these details were not the first things that
+the scientist noticed. Emma was stunned to see in person the scale of
+Katie's breasts. The younger woman was lying on her front, on top of her
+colossal bust. Her tits had grown considerably since Emma had seen her
+on the video feed. The massive swollen orbs rested on the bed in front
+of her, skin taut and shiny with relentless expansion. Veins etched a
+delicate tracery underneath her pale skin, contrasting with florid
+stretch marks that betrayed the incredible speed of her growth. Katie
+lay on top of her tits like pillows - pillows that lifted her a couple
+of feet from the mattress. Her smooth, long legs were still spread as
+Scott must have left her, spent with passion. Her hands were, as usual,
+gently stroking the flanks of her breasts, caressing the taut walls of
+these incredible globes. She looked up.</p>
+<p>"Help me, Emma,\'\' said Katie without ceremony. Taking her proffered
+hands, Emma realised that for Katie, even the simple action of lifting
+herself from the bed was almost beyond her strength, so distended and
+heavy were the two firm spheres that she carried before her. She was
+virtually immobilised by her own breasts. Katie carefully swung her legs
+round, Emma gingerly pulled her upright and set the younger woman on her
+feet. Katie cradled her bust in both arms, leaning back steeply to
+support the burden. Her nipples stuck forward, now almost an inch in
+diameter, set on brown areolae bigger than an outstretched hand. She
+took a cautious step, barely able to balance. Tottering, the tall girl's
+slim legs and narrow waist seemed comically inadequate to support the
+gargantuan bust that dominated her upper body. She reached the nearby
+shelving and leaned against the wall for support. Her pale breasts,
+released from her embrace, shifted and jostled alarmingly. Katie grabbed
+a bottle from several that were lined up, and upended it, glugging back
+the contents in a rapid series of swigs.</p>
+<p>"Did you just -" Emma looked again, startled. "Did you just empty a
+whole bottle of neat serum?"</p>
+<p>"That's right. I - uh - need a lot of fluids. I get very thirsty."</p>
+<p>"You sure do - that's about two week's dose. How did you get all that
+serum? How much are you taking?"</p>
+<p>"Well, ah, see, Scott is quite popular with some of the ladies
+downstairs. He kinda got us a few cases and I've been working my way
+through. That's almost the last one. I hope you brought me some more?"
+Emma looked in amazement at the slender woman, barely able to stand with
+the weight of her own distended bust. It seemed hardly credible that
+even in this extraordinary state her overriding need was more breast
+growth.</p>
+<p>"Are you quite sure that's the best idea Katie? I mean, I have been
+meaning to discuss with you when our experiment might come to an end,
+and it looks to me like this might be a good time."</p>
+<p>"Emma, this is - ahhh - definitely not a good time. Get me on the bed.
+Scotty!" Katie's voice rose urgently above the sound of the shower. As a
+bewildered Emma reached out her hand again, Katie staggered and nearly
+fell as a spasm wracked her body. "Ah, it\'s starting. Scott? I need
+you!" The shower sounds stopped abruptly. Emma used both her arms to
+hold Katie from falling, and found herself pressed against the warm,
+yielding flesh of two gigantic tits. An erect nipple stuck into her side
+like a poking finger as she scrambled for purchase. Slick with sweat,
+the wobbling globes slipped from her grasp, almost toppling both women
+as Emma struggled to maneuver the gasping, top-heavy journalist across
+the room. The serum overdose was hitting Katie hard and fast. Her
+breathing was getting harsh and urgent, her eyes staring wildly. Another
+groan, and her legs collapsed under her just as Emma managed to pull her
+sideways onto the broad divan.</p>
+<p>"Scott!" yelled Emma, panicked. "A little help in here?"</p>
+<p>"OK, OK, I'm coming!" Scott piled out of the bathroom, wearing nothing
+but a towel wrapped precariously around his waist. "Dr Wallace! Did she
+take the medicine?" Emma nodded mutely. "Okay then." Scott drew in a
+breath, and turned to face the prone woman. "Help me turn her over."
+With Emma's tentative assistance Scott manipulated his girlfriend's
+weakly twitching body until she was in a similar position to the one
+he'd left her in earlier. Katie laid on top of her heavy breasts, her
+naked ass raised to reveal her engorged, dripping pussy. Her breaths
+were coming sharply now.</p>
+<p>"Scotty, please!" she mewled, desperate with need. Her hips were bucking
+uncontrollably with each gasp. As Scott's towel fell to the floor, a
+stunned Emma Wallace saw how the unremarkable young guy she had met a
+few weeks earlier had been transformed. Either he really had been
+hitting the gym insanely hard, or the supplements Emma had given him had
+been highly effective. Naked and glowing from the shower, Scott was an
+exaggerated epitome of manliness. Even bent over Katie, he seemed to
+have grown a few inches taller. His broad shoulders rippled with muscle
+as he spread Katie's willing legs and prepared to mount her from behind.
+An erection that could have shamed a stallion bobbed in front of him -
+thick droplets of translucent pre-cum already oozing from his purple,
+engorged cockhead. The rigid, veiny appendage must have been ten inches
+long, and as thick as Emma's wrist. A heavy sac that swayed underneath
+it looked big enough to hold two tennis balls. Emma's scientific mind
+wondered at the fact that Scott had obviously been plowing Katie a few
+minutes earlier, but, focussed on pleasing his insatiable woman, he was
+getting ready to go another round. At the same time excitement was
+rising in her.</p>
+<p>"Alright baby, Scotty's here," murmured the ripped young man. Katie's
+hand was flailing ineffectually at her wet snatch, working to give the
+stimulation she craved. As Scott gently but firmly slipped his
+glistening cock in, her thrashing stilled and she took a deep, slow
+breath. The monster organ slowly pushed into her and she began to pant
+and moan again, this time with delight. Before Scott had even drawn back
+for a second stroke, the first wave of her growing orgasm washed over
+her. Katie cried out in ecstasy and relief.</p>
+<p>Scott began to thrust a little faster, and a groan escaped from him as
+Katie's throbbing pussy clenched onto his dick, stretching as he slid
+further into the wet, eager girl.</p>
+<p>"My tits... my tits!" Katie moaned, her hands pushing feebly at the vast
+globes that supported her. Her slim body began to gently rock in time
+with Scott's motion. "Emma, please..." She looked imploringly at the
+scientist, who was standing, transfixed by the scene in the bedroom.
+Emma realised that Katie's size prevented her, or Scott for that matter,
+from reaching her swollen nipples. The teats bobbed rhythmically as
+Katie was thrust back and forth on the end of Scott's rigid prick,
+spreading her legs as far as she could to take her man as deeply as
+possible. Hesitantly, Emma reached out a hand and touched a taut nipple.
+Immediately Katie let out an appreciative gasp and thrust her chest out
+into Emma's grasp. "Squeeze them! Now Emma, now!" Emma's fingers closed
+around the nipple, and her other hand reached out to grip the second
+one, bouncing and wobbling next to her.</p>
+<p>Emma sank to her knees, bringing herself almost level with Katie's
+panting face and giving easier access to her tits. Her hands moved
+almost by instinct, and she began to rub the erect nipples with her
+fingers, cautiously rolling and squeezing each big, hard nub.</p>
+<p>Katie's response was immediate and ecstatic. With a yell, another
+overwhelming surge of orgasm washed over her, and she reared up on the
+bed, almost lifting those titanic jugs off the divan. Emma clung on and
+squeezed harder, tweaking and teasing as she began to go red in the face
+herself. Scott was pounding away, letting out guttural grunts as his
+excitement rose. Katie whined and wriggled, hardly recovering before her
+breathing became faster and shallower and the next peak began to build.</p>
+<p>After a few more rounds of Scott pumping his cock into his rapacious
+girlfriend, and Katie alternating between hyperventilating and yelling,
+Emma noticed the younger woman was starting to go red, and understood
+what was about to happen. The blush of oncoming serum-mediated growth
+was rushing across Katie's pale skin. When it reached her overtaxed
+breasts, Emma immediately felt the warmth under her fingers. She mashed
+and tweaked Katie's throbbing nipples more quickly, helping the
+lust-addled girl crest the waves of her uninhibited arousal.</p>
+<p>Despite knowing what was to come, Emma was stunned to feel Katie's
+ballooning tits as the growth set in. Her massaging fingers were
+slipping on the sweaty, taut skin as the swelling orbs lifted Katie
+further up off the bed, her body moving to and fro uncontrollably as
+Scott's overstimulated dong slammed into her again and again. Fattening
+flanks of sideboob filled the space the girl could reach, and her
+flailing hands weakly slid over the vast sea of overfilled tit that
+jostled beneath her.</p>
+<p>Incoherent shrieks rang through the apartment as both Emma and Scott
+worked on Katie, one at each end. She was rocking, helplessly, on her
+monumentally distended jugs as they continued to swell.</p>
+<p>Scott began to puff and blow, and Emma realised that the well-hung young
+man could hold it in no longer. His thrusting slowed and his eyes
+widened as an epic load built within him. His first quivering grunt of
+satisfaction as he unloaded into Katie made Emma tremble with excitement
+herself. Katie, exhausted, just mewled and whined, frantic with lust.
+She thrust her hips back firmly to receive her lover's rigid cock as it
+pulsed and throbbed, at last rewarding her with shot after shot of the
+hot, creamy cum she so craved.</p>
+<p>It was only when Scott finally lolled back, utterly spent, onto the bed,
+that Emma realised Katie too had gone still. Her hands fell from the
+sides of Katie's slick breasts and she sat, dazed, contemplating what
+she could see.</p>
+<p>Katie was passed out on top of her own tits like a rag doll laid over a
+couple of beach balls. A peaceful smile of satiation could be seen on
+her sleeping face. Drool was dripping down her cheek, and semen trickled
+from her inflamed snatch: a tiny proportion of the vast volume Scott had
+blasted into her.</p>
+<p>Emma considered the changes that Katie's latest massive dose had
+wrought. The growth spurt she had witnessed was the biggest yet,
+expanding Katie to a size where her breasts must have made up much more
+than half her body weight. There was no hope that the young woman could
+walk normally, or even stand for long unaided. Katie's unchecked use of
+More Me had transformed her into a colossal pair of breasts with a
+slender girl attached. The immense sacs of growing titflesh seemed to
+have taken over her body and her mind, driving her only towards more and
+more expansion. A helpless slave to her own uncontrolled lust and greed,
+her only remaining motivations were to drink more serum, and to be
+fucked. What was more, Emma realised that the raging addiction she had
+fostered in Katie meant that the girl would almost certainly overdose
+again and again, given any opportunity, so her journey was far from
+done.</p>
+<p>Leaning down to examine Katie, Emma felt a pleasant echo of the passion
+that had been surging through her, too, just a few moments ago. She
+wondered for a moment if the sex-crazed girl was producing some
+reproductive pheromone as a part of her transformation. On a whim, she
+took the young woman's sleeping face in her hands and kissed her on the
+lips. Immediately the sweet, cloying taste of More Me filled her mouth.
+Katie's drool was almost pure serum.</p>
+<p>Pulling herself together, the scientist stood up, shaking her head. She
+stood for a while, then looked at the two blissfully comatose young
+people and pulled out her phone. Dialling her head of facility, she
+remembered a similar situation years ago, when she'd made provision to
+care for a young woman who had been through some extreme breast growth,
+and what had come afterwards.</p>
+<p>"Can we get Andrea's old suite ready for occupation? And get some care
+staff on hand? Good. Make that happen right now please. We'll have a new
+guest staying there."</p>
+<p>----o0OO0o----</p>
+<p>Emma trotted back down the corridor towards her office. Having missed
+all her morning meetings she was going to be doing a lot of apologising.
+She had done her best to make herself presentable, but she knew her hair
+and makeup were ruined after her passionate encounter in the guest
+suite. She pulled her hair loose from its usual tight ponytail, and
+shook it out. That would have to do. She would need to take the
+afternoon off at least, and maybe get herself some more clothes, perhaps
+something a bit more relaxing. Running a finger under her bra-strap she
+realised the undergarment was pressing into her. The taste of neat More
+Me serum was strong in her mouth - then she understood what was
+happening.</p>
+<p>Katie's last bottle of serum was in Emma's hand. She didn't remember
+taking it from the apartment, but there it was.</p>
+<p>"Again?" she murmured to herself, half smiling.</p>
+<p>With one motion, she unscrewed the cap of the bottle and threw it behind
+her. She wasn't planning on putting it back on.</p>
+<p><em>Aethiop</em></p>
+<p><em>September 2021</em></p>
+<p>----o0OO0o----</p>
+<p>[Author's footnote]{.underline}</p>
+<p>This is the end of Research &amp; Development, but it may not be the last
+adventures of Dr Emma Wallace and Galactea Inc. There are a couple more
+tales in my mind that may one day come forward. Like, how did Emma come
+to be in possession of these breast-related scientific secrets? And what
+happened to Andrea? I'm not likely to take up my pen again for a while
+so if you want to have a go with the characters yourself be my guest.</p>
+<p>I would like to take a moment to give my sincere thanks to those who
+have given feedback (positive, obviously) on TOB. It means a great deal
+to me and to other authors, and I am sure this story would not have been
+written the way it was without the encouragement and kind words of those
+who left comments and suggestions. Please, if you've got a favourite
+download from the site, leave a note for the author. We read them and
+pay attention. Yes, even years later.</p>
+<p>Your friend</p>
+<p>Aethiop</p>
+</body>
+</html>

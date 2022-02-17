@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>New Designs: Bethany III</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>Author's Legal Name About 3,000 words</p>
+<p>Address</p>
+<p>Email</p>
+<p>Phone Number</p>
+<p>Address</p>
+<p>New Designs: Bethany III</p>
+<p>by Fisk Prime</p>
+<h1>Chapter One</h1>
+<p>Bethany hefted herself off of the table bench and followed the waifish
+girl. Walking came with more of a struggle as Bethany took note that her
+waist is long gone. </p>
+<p>"Are you okay?" asked the girl.</p>
+<p>Donning a smile out of embarassment, "Yes, just getting used to a new
+way of walking. I'm sorry, I didn't catch your name."</p>
+<p>"You wouldn't, you're not in the arts program. I'm Heidi. Is
+your...erm...<em>walking...</em>that much harder now?"</p>
+<p>Catching up to Heidi, noticing that Heidi isn't someone a person would
+notice. Heidi's body is flat, her hair was a dull strawberry blonde. But
+there was an above-average behind that Bethany noticed while waddling a
+little faster to match the other girl's pace. </p>
+<p>"Instead of being able to move my legs forward, I have to add a shift in
+body weight. I can't just bend my knee. I sort of have to move by
+building momentum and going until it's time to stop." </p>
+<p>Heidi and Bethany got to the theater room. There was a schedule, and
+Bethany noticed that the theater never had a 1st period class. Heidi
+opened the door for Bethany and there was a couch with a tea set and a
+small spread.</p>
+<p>Bethany became suspicious and held her hands to the underside of her
+bump, "Heidi? Mr. Jenkins didn't ask me here, did he?"</p>
+<p>Heidi's face turned beet red, "N-no. I-I've wanted to talk to you since
+I saw you growing a couple of months ago. My friend helped me set this
+up and put me up to it."</p>
+<p>"So you're asking me on a date?" Heidi nodded, and Bethany felt...well
+<em>something</em> well up inside of her and leaned sideways to give an awkward
+hug. "That's really sweet. Tell me, who was the friend who helped you?"</p>
+<p>Another girl walked in, "That would be me. I'm Sami. I <em>was</em> going to be
+in the other room in case something bad happened, but...wow look you.
+You're...you're..."</p>
+<p>Bethany beamed, "Huge?" The thought that she was big, the idea that
+other people thought she was big washed over her. It was like she had
+been denying her own identity until she became this swelling magical
+broodmother. </p>
+<p>The two girls led Bethany to the couch; she noticed that she took up an
+entire third. <em>Wow, I really</em> am <em>getting bigger. I used to take up part
+of a seat.</em> Bethany felt her bosom pushing against her dress again.
+<em>Hrng, my milk must really be coming in...I guess I could pretend I was
+sick this period and find a place to take care of myself after I'm done
+here.</em></p>
+<p>Heidi rolled the cart over, "I didn't know what you liked, so I have a
+bunch of everything."</p>
+<p>Bethany turned her head to Sami, "Aren't you joining us?"</p>
+<p>Sami's eyes bugged out, "Are you sure?" Sami was clearly more attractive
+than Heidi. She was wearing a puffy shirt that made her chest look
+bigger, but she already had pretty big boobs. Nothing much more anywhere
+else, but Bethany did like Sami's waist-length black hair and
+fashionable glasses. </p>
+<p>Bethany smiled, "I'd like it more if you both were here. Besides, I
+think you like me, too, don't you?"</p>
+<p>Sami walked over, "Well y-yeah. I didn't want to take the moment away
+from Heidi.</p>
+<p>Her smile widened, "On the contrary, I want this moment with both of
+you." Again, Bethany felt her boobs push against her dark green dress.
+She felt pressure mounting, and she could see the outline in her dress
+where her boobs were overflowing her cups. She had to lean her neck back
+a little as her giant baby bump was still working as a kind of shelf for
+her swelling tits. </p>
+<p><em>I want to see where this goes before I say something. It's 8:03 and 1st
+period ends at 9:30. Maybe I can make it.</em></p>
+<p>#</p>
+<p>25 minutes later, and Bethany was not holding out well. Her breasts
+continued their swelling and the outline in her clothes were in
+full-blown "quad boob" territory. The food was delicious; Heidi and Sami
+were gorgeous in their own ways. </p>
+<p>"Hey Bethany" started Heidi, "You're...you're...are you okay?"</p>
+<p>"Yes, I'm fine," lied Bethany, "Why do you ask?"</p>
+<p>Sami placed her hand on Bethany's shoulder, "We're all girls here, B.
+Your boobs look like they're cramped. A-are you..." Sami's voice dropped
+a little, "...already lactating?"</p>
+<p>Bethany nodded. </p>
+<p>"You poor mommy! You're killing yourself. Let me help you!" Sami bolted
+a little <em>too</em> fast out of the couch, walked to the back, and unzipped
+Bethany's dress down the back. The zipper gave Sami some fight early on,
+but as she got it past the crest of Bethany's boobs, all three girls
+heard a snap coming from Bethany.</p>
+<p>Upon checking, they found that Bethany's bra snapped from the pressure.
+Giant, pliable beachball-sized tits each fell an inch to the side of
+Bethany's belly. The front of the bra was soaking wet and when they all
+saw the dress, corresponding wet spots were seen there, too.</p>
+<p>"Bethany, you're leaking! When did you last milk yourself?" asked Sami. </p>
+<p>Bethany noticed that Heidi's face turned bright red and was staying
+there. "Um...I haven't had the chance to." <em>Alyssa told me getting
+intimate with someone would push me along, and the magic changes the
+world to just accept any changes that happen to me. What would happen
+with two? Can I even get these two? I</em> am <em>in the theater
+section...maybe...</em></p>
+<p>Feigning embarrassment by cradling each breast in an arm and covering
+her nipples, "I haven't been able to get a pump yet," intentionally
+breathing hard to make it sound like she's ashamed. Almost as if they
+had a mind of their own, her droplets formed on Bethany's nipples. </p>
+<p>Sami was biting her lip and looking over to Heidi who was doing the
+same. "I know this sounds creepy, but could I help you?"</p>
+<p>Looking hopefully at Heidi, "Is that okay with you? Could you drink from
+me?"</p>
+<p>Heidi stiffened up, "D-d-drink from y-you? Uhhh, uhhh, uhh."</p>
+<p>Sami plopped back down next to Bethany, "Heidi, stop being a sissy." She
+put her arm around Bethany, "When Heidi asked my help to make this
+happen, I told her this was something that <em>might</em> happen. I thought it
+was really unlikely, but you never know. We thought going to school with
+a really pregnant girl wasn't likely either."</p>
+<p>Bethany smiled softly, "Glad to be of service, I guess." <em>Dammit this is
+becoming painful, just ask me already!</em></p>
+<p>"Besides," Sami added, "I was hoping for this, too. Heidi and I think
+preggos are hot."</p>
+<p>"SAMI!" shouted Heidi.</p>
+<p>"Don't mind her, she doesn't think anyone would be into pregnant women.
+What do <em>you</em> think, Bethany?" asked Sami with bedroom eyes and the
+faintest of smiles. </p>
+<p><em>Easier than I thought. Looks like we're all going to get what we want.</em></p>
+<p>"I...guess it's possible. You can't help what you like, right?" Her tits
+began openly dripping milk. The pressure teased and stretched her
+engorged boobs more than they - or she - could bare. </p>
+<p>"Right!" said Sami. "So you won't mind iiiiiiif," gently placing her
+free hand on Bethany's left boob, "Oh, wow, it's so heavy and tight.
+Heidi, come grab the other one. *ahem* Bethany, you wouldn't mind if I
+we empty you?"</p>
+<p><em>Oh thank god, this was easier than I thought it was going to be!</em> </p>
+<p>Sami leaned around thinking she could sit on the couch and drink from
+there, but quickly dismissed this. She stood up and moved the cart away
+from Bethany. She knelt on the ground, and licked her lips. Bethany saw
+Sami's lips part as her head inched closer to the turgid nipple. "Hey."</p>
+<p>"Sami?"</p>
+<p>"Thank you. I really wanted to be in on this, too. I think you look so
+hot, and even being in the same room as you, I just felt like I needed
+you so bad."</p>
+<p>"Please Sami, it's starting to hurt. I'm thankful someone finds me
+hot." </p>
+<p>Sami thrust her mouth onto Bethany's nip, got a sense of the size of the
+nipple, then latched on. </p>
+<p>Bethany instantly felt her milk letting down, and heard gulping sounds
+coming from Sami. In all the distraction of trying to entice Sami to
+touch her, to drink from her, Bethany didn't realize how turned on she
+already was. The pressure that was in her breasts were parallel to the
+pressure elsewhere in her body. Pleasure and need had welled up inside
+the girl's brain, 'splashing' against a wall. </p>
+<p>That wall was her next orgasm. A wall that can give with enough
+pleasure. Sami's pleasure fed into her own, and hearing Sami's surprise
+and gulping made the 'wall' fall. Bethany felt herself gasping for air.
+She realized that for the last few minutes, her right hand was playing
+with her right nipple, getting wet in the process. She knew this because
+her breasts expanded further, taking the nipple out of reach! If she
+inched her middle finger, she could just barely get to the outer ring of
+her areola, but that was it. </p>
+<p><em>Ugh, Sami alone made my tits bigger? Holy shit, I must be enormous</em>!
+Bethany immediately felt uncomfortable. Her seat wasn't as nice as it
+was a moment before. Unknown to her, the already weight-laden hips
+pushed themselves out more. When she looked down, she readjusted
+herself. <em>I don't know why that was so odd, I've been wider than one
+section of a couch for a couple weeks now</em>. <em>That comes with carrying
+sextuplets...wait six?</em> After a moment passed*, yes, six. *</p>
+<p>Opening her eyes, she spied Heidi and patted on the seat. "Please sit.
+You wanted me here, after all."</p>
+<p>Heidi nodded and sat down. Sami was making the occasional slurp and
+licking noises to catch errant milk that tried to escape. </p>
+<p>"Heidi, what's wrong?" Bethany leaned closer to the blonde girl and like
+Sami before, wrapped an arm around Heidi. "Isn't this what you wanted?"</p>
+<p>"W-well yes it is, I guess. But I was hoping..." she trailed off.</p>
+<p>Bethany nodded contemplatively, "I bet you were hoping to get me alone?"
+Heidi nodded. "I understand." Pulling Heidi a little closer, "Do you see
+Sami there? She can barely keep up with my production."</p>
+<p>"I didn't think of that."</p>
+<p>"And that's fine, Heidi! I didn't think I'd be meeting you two today,
+but I'm super happy I did! And I'm glad I did because I can't reach
+around my boobs anymore." Now a couple centimeters from Heidi's face,
+Bethany spoke in hushed tones, "Could you please help me out? We'll both
+get what we want: This won't be your only time being with a pregnant
+girl, and I have someone who I can trust help with my tits." She kissed
+Heidi. "Deal?"</p>
+<p>Heidi said nothing. She copied what she saw Sami do only minutes before.
+A second mouth on her second tit sent Bethany over the edge. Like that
+another orgasm swept over Bethany, and with that, another round of
+growth. The necklace took on a soft glow in response and its magic acted
+in accord. </p>
+<p>With each breast being sucked and pressed, an observer would see that
+her tits were growing again, more volume, and greater heft. Invisible to
+all, the muscles on Bethany's back grew stronger to show that she had
+always had these impossible boobs. </p>
+<p>Her thighs grew once again, memories of buying pants for obese women.
+While these legs were certainly plush, they weren't pocked with
+cellulite. These legs had definition, with feminine padding to keep an
+alluring look. </p>
+<p>Her ass grew again. With all the heavy lifting Bethany has done as her
+pregnancy ushered in hypersexual hips, her booty hasn't lost a single
+iota of shape. </p>
+<p>But that belly - that sumptuous belly that already dominated Bethany's
+middle - the reason her body is flooded with hormones. The thing in her
+life she didn't know her entire life she wanted more than anything else.
+It pushed itself larger once more. What carried six now carried seven.
+The farthest point of Bethany now pushed beyond her knees; Bethany
+becoming the first person ever to have a pregnancy that reached past two
+and a half feet deep. </p>
+<p>Her clothes adapted once again. The dress material grew adding necessary
+yards to make Bethany as modest as she thought she was when she left
+home a few hours ago. The necklace needed to make another adaptation - a
+harness appeared under Bethany's dress to help preserve her mobility. </p>
+<p>"Bethany? Bethany?" called Heidi. </p>
+<p>Bethany came back to Earth after zoning out. The pressure in her tits
+were gone, and when she crooked her head as far as her body will allow,
+she saw Sami and Heidi panting. "We're finished. There's nothing left."</p>
+<p>"Thank you girls. I feel much better." She <em>did</em> feel better. Two
+orgasms and now carrying septuplets, it was like Bethany was riding an
+almost constant endorphin-high. "How about you two? Did you like this?"</p>
+<p>"You bet" said Sami, plopping onto the couch next to Bethany. Her tummy
+was bloated from all of that milk. Her shirt was untucked and the
+buttons to her blouse were for once straining below her bosom. </p>
+<p>"I erm. I agree" said Heidi, sitting gently against Bethany. Like Sami,
+her tummy has pulled her shirt taught, probably the first real curve on
+her torso to emerge since puberty. Heidi laughed, "Look at our tummies.
+We look like triplets."</p>
+<p>That sentence gave Bethany an idea. <em>There's no reason this should work,
+but...</em> She recalled what Alyssa said that yesterday she went to school
+not-pregnant. While she didn't believe the necklace she wore followed
+consistent rules, she thought that maybe the still-warm necklace might
+still be changing history. <em>Either I'll look crazy or this'll work...</em></p>
+<p>"What do you mean, 'look like?' We are triplets, aren't we?"</p>
+<p>Both of the other girls stood up and grabbed their stomachs and emitted
+a low "oof" sound.</p>
+<p>Heidi's hair turned reddish-brown and grew out of her head in earnest,
+matching the length of Bethany's. Her clothes merged together and took
+on a sunshine-yellow color. The clothes then became the same material as
+Bethany's dress and started pooling around Heidi. Her bust inched
+forward - almost imperceptibly - until it matched Sami's size. </p>
+<p>The same could be said for Sami - her clothes merged together and took
+on a cherry-red color.</p>
+<p>Both girls were swimming in these dresses, like they took them from a
+much larger woman, or Bethany's closet. </p>
+<p>That didn't last long. Clutching their middles, both girls began to
+thiccen everywhere. Like watching bread dough proof, the pooled dresses
+began to straighten out over the growing bounty of the two women. Both
+Sami and Heidi were moaning - catching up to missed orgasms and ecstasy
+that Bethany enjoyed bit by bit up to this point; these young women had
+to experience all of Bethany's bliss in one sprint.</p>
+<p>Heidi's thighs plumped in yoga pants that she now remembered shopping
+with Bethany to get. Heidi remembered needing to get a few sizes larger
+than her sister. </p>
+<p>Sami's memory flooded with new bra shopping trips with Bethany. The trio
+were always hypersexual, but Sami's boobs were always noticeably larger
+than her now-sisters. Before becoming pregnant, classmates called her
+"Sammary Glands." While Bethany's tits could be cupped somewhat by her
+arms, Sami's looked like she was carrying two full-term pregnant bellies
+on her chest. </p>
+<p>Together, all three women were very pregnant. Their faces and arms were
+still trim. If someone looked at the triplets from the behind, their
+backs weren't overladen with fat - there were still thin ...well,
+relatively thin... women behind the giant pregnancies. Each with
+seven...sort of.</p>
+<p>Coming back to Earth herself, Heidi replied, "No no, you're right. But
+looks like other people can finally tell us apart. I take up half of
+that couch with my giant ass and hips. Well...giant compared to you
+two," said with a song in her heart. </p>
+<p>"And no one can rival my tits. I'm glad daddy bought multiple milkers at
+home, because it takes me 15 minutes more to finish me off than you
+two." Sami was proud of her enormous tits, and with good reason - "Tits
+are sexy" as she always said.</p>
+<p>Heidi waddled over to Sami, "but we're only pregnant with seven. Bethany
+has nine in there."</p>
+<p>"Yeah sis. We all got pregnant at the same time, and you snuck two more
+in there?"</p>
+<p><em>Wait, I have NINE?</em> Bethany's dress and body grew simultaneously. The
+dress tried to outrun her growth, nearly touching the floor before
+Bethany's overstuffed middle grew to the width of Heidi's ass. This
+pushed her tits up and above her eyes. Bethany couldn't enter a single
+room that didn't have double-doors with the middle removed. </p>
+<p>Her sisters would fetch her 10 minutes before the end of each class and
+slowly guide Bethany to the next class. The school fitted Bethany wish a
+tablet and webcam so she could at least see what was ahead of her. The
+hormones pumping now-nonstop in her body kept her in a near constant
+state of arousal. </p>
+<p><em>Oh shit, I didn't realize how big this was going to get...at least I
+can wait until tomorrow to find another person.</em> After a minute in her
+head, <em>I hope I don't do</em> this <em>again, holy shit, I wasn't expected to
+get this big.</em></p>
+</body>
+</html>

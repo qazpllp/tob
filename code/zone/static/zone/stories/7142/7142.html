@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Six Scary Stories of HalloBEen</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>SIX SCARY STORIES OF HALLOBEEN</p>
+<p>By Bigby Wolfe</p>
+<h1>Introduction</h1>
+<p>In the dark hours of the night, in a crypt bedecked with cobwebs, a woman rose from the grave. Her skin was as white as snow, her hair as black as coal, and her boobs as big as bowling balls. "Deary, deary me," she said, as if to an invisible audience, "is it that time of year again? The time for gremlins and goblins and guh-guh-ghosts?" Her talking made her breasts bounce underneath the sheer fabric of her black gown. "I guess it is, you lucky devils. It's time to tell six supernatural stories of strange specters and sweater meat, horrors and H-cups, frights and freakishly large breasts. So sit right back and enjoy these...SIX SCARY STORIES OF HALLOBEEN!"</p>
+<p>Her laughter echoed through the empty cemetery.</p>
+<hr />
+<p>Table of Contents</p>
+<p><a href="#h.wv9n38altvm6">Introduction</a></p>
+<p><a href="#h.if3ew790jd6b">The Devil and Danielle Webster</a></p>
+<p><a href="#h.4edn3hfgfgxs">Room 58008</a></p>
+<p><a href="#h.98ujroc31lsv">The Haunting of BE Manor</a></p>
+<p><a href="#h.msnregqnamnt">V/H/S/B/E</a></p>
+<p><a href="#h.xbzln66kxowv">The Evolutionary Aftereffects of Alien Parasites</a></p>
+<p><a href="#h.6ayvvnmeun53">The Perks of Being a Vampire</a></p>
+<p><a href="#h.va57pb8fptnk">Epilogue</a></p>
+<p>In our first story, a deal with the Devil doesn't turn out exactly as planned...for both parties involved.</p>
+<h1>The Devil and Danielle Webster</h1>
+<p>"Just sign here and here," the Devil said and pointed to two separate lines on the contract in front of Danielle.</p>
+<p>"And you're sure that I'm not damning my soul to Hell for all eternity, right?" Danielle asked.</p>
+<p>"Ms. Webster, please," the Devil said. He looked debonair in his suit and tie, with a thin pencil mustache and bowler hat. In contrast, Danielle Webster looked ordinary, stick thin and plain. And, worst of all, old. She was only forty, but she looked like she was in her sixties, wrinkles radiating from her eyes and mouth. "One's immortal soul is never up for bargain -- it cannot be traded or sold. Your soul is only damned if you do something immoral or evil and, as stated by this contract, all you want is beauty. Beauty, by its nature, is not something evil nor good. It's what you do with beauty that determines where you go, Ms. Webster."</p>
+<p>Danielle Webster had been skeptical about this new store, but after hearing all of the great testimonials from friends and acquaintances about how the store had "everything you ever wanted," she had come to the conclusion that the proprietor wasn't just the Devil, but that he could give her what she wanted: not just youth, but beauty. She hadn't been much of a looker at age twenty, but now she would be and more.</p>
+<p>She signed on the dotted lines.</p>
+<p>The Devil smiled. He always had a plan with these deals. Some way to twist the terms of their deal to his liking. He took the contract, licked his fingers and folded it up and, with the flick of a wrist, made it disappear in a puff of smoke. Danielle looked appropriately amazed.</p>
+<p>"Now what?" Danielle asked.</p>
+<p>"Now," the Devil said, "I do some tinkering." The contract she signed gave him complete access to her full history and DNA and, with a bit of showmanship, he began to change them, rewriting both with a flourish.</p>
+<p>Her history shifted. No longer born forty years ago, now twenty. No longer an "elder Millennial," she was now a member of Generation Z. The years rolled back and the wrinkles disappeared. Her face was smooth, her skin supple. Her hair lightened, turning from gray to blonde, and her eyes turned from a dull brown to a deep blue. Her face, plain seconds before, was now made up and beautiful, red lips and smoky highlights. </p>
+<p>He changed some DNA as he shuffled her history. Her legs grew longer, her waist tightened, and her breasts grew. "Oh!" she exclaimed as her breasts pulled her shirt down as they grew outward, eventually settling in size comparable to cantaloupes. Their roundness seemed unnatural at first, not sagging, but the tightness of her shirt made her forget that and suck in her breath. Her nipples were like two diamonds and they gave her good feelings as she moved to touch them.</p>
+<p>The Devil grabbed her hand before she could do so. "Not yet, my dear," he said. "Just a few more changes." Her hair shifted from blonde to red and came curling down her shoulders. Her eyeshadow grew even smokier and her shirt changed into a dark black minidress, the bottom of it barely concealing her fully rounded backside. Her breasts heaved again and plumped up some more and she let out a squeak of pleasure as her thighs plumped up, too.</p>
+<p>"There," the Devil said. "All done." He waved a hand and made a mirror appear out of thin air. Danielle looked at her reflection in astonishment.</p>
+<p>"I look so...so…" She brushed a red lock of hair out of her eyes and smiled. "Slutty. I love it."</p>
+<p>"I knew you would, my dear," the Devil said with a smile. "I do good work. Of course, now you're a pansexual nymphomaniac, but, hey, that's what you get for not reading the fine print."</p>
+<p>Danielle Webster, still looking in the mirror and licking her red lipstick-coated lips, said, "But I did read the fine print. I just didn't care, because I was already a pansexual nymphomaniac."</p>
+<p>The Devil, who had begun to stand up, paused. "No, that can't be right," he said. "According to my records, you've only had sex with one man."</p>
+<p>"That doesn't mean I wasn't a pansexual nymphomaniac," Danielle said, "only that my looks prevented me from really being who I wanted to be. So thanks for setting me free from that -- I can now do all the things I've ever wanted. Which, again, is lots and lots of sex. From men and women and everyone else."</p>
+<p>"You will never be fully satisfied," the Devil said. </p>
+<p>Danielle shrugged. "Who is? But a little bit of satisfaction goes a long way." She stood up and stretched her new arms above her head, creating a cascade effect in her bosom. "You know," she said as she turned around and checked out her body, "if you come with me, I can introduce you to a number of people who also want new bodies. And then, after you make a deal with them, I can have sex with them. A continual, self-sustaining, deal-with-the-Devil-making orgy."</p>
+<p>The Devil looked at Danielle Webster. "Well, I do declare. I did not expect this. But just because something's unexpected doesn't mean it's bad. As for your proposition...yes."</p>
+<p>Danielle smiled at the Devil and he smiled back. They shook hands and there was an electric, sexual thrill in the air. "Then it's a deal," she said and winked.</p>
+<hr />
+<p>In our next story, a horror writer learns a valuable lesson about staying in haunted hotel rooms...and himself.</p>
+<h1>Room 58008</h1>
+<p>Mike Engels held the keys to Room 58008. The manager of the Songbird Hotel had only parted with it reluctantly after Mike had informed them that the law stated he could stay in any room in the hotel that wasn't occupied or dangerous. "And there's nowhere on your website that states Room 58008 is dangerous," he said, even though he had heard the stories.</p>
+<p>The manager, Mister Owens, had looked him up and down and then pulled out the keys from his desk drawer. Before handing them over, however, he said, "You've probably heard some of the stories, Mr Engels, but not all of them." With his other hand, he pulled out a folder stuffed with newspaper clippings and articles. "A hundred and forty two instances over six decades. Men and women who went mad after a few seconds and those who committed suicide after a few hours. One woman managed to stay the night and was found the next morning on the street corner doing blowjobs for dollar bills. Her mind was gone, Mister Engles." He offered the folder to Mike, who accepted it without comment and flipped through it.</p>
+<p>"I've been in a lot of scary places," Mike said. "I stayed in the same rooms as serial killers and cult leaders. I've been to places where they said bad things had happened too many times to count. And do you know what I've actually seen?"</p>
+<p>"What?" Mister Owens said.</p>
+<p>"Jack shit," Mike said and held out his hand for the key.</p>
+<p>"Fine," Mister Owens stated and placed the key in his palm. "Don't say I didn't warn you."</p>
+<p>As he was leaving the manager's office, Mike asked, "So, what kind of ghost do you think the room has?"</p>
+<p>Mister Owens looked at him. "You misunderstand, Mister Engels. There is no ghost, no demonic presence. It's just a horny fucking room."</p>
+<p>His words echoed through Mike's mind as he stood in front of Room 58008. Then he entered the key in the antiquated lock and turned it, opening the door.</p>
+<p>The room, for all of the hype that Mister Owens had built, looked fairly normal. There was a bed and a desk and a mini-fridge. There was a clock radio and a telephone and a TV set. Mike plopped down on the bed. "Scary," he said.</p>
+<p>The clock radio turned on. "Mama's got a squeeze box she wears on her chest," the Who croned from the radio. "And when daddy comes home he never gets no rest." Mike looked at the radio and pressed the off button. The song stopped.</p>
+<p>The television turned on. It was some daytime talk show where the host was interviewing large breasted women about how much they loved their large breasts. "I just love them, Maury. I can't get enough," one woman stated as she fondled her own chest. Mike grabbed the remote and switched it off.</p>
+<p>"Is that it?" he asked. "That could be anybody. Mister Owens could be in the next room with a remote control for the radio and TV. That's nothing. You gotta be better than that, room."</p>
+<p>The phone began to ring. Mike hesitantly picked it up. "Thank you for your suggestion, Mister Engels," a woman's voice said, "but I think we know what we are doing. Why not have something to drink?"</p>
+<p>Mike hung up the phone and looked around. Hidden cameras and microphones, that's it. That's what was happening. But a drink, sure, that did sound good. He went to the mini-fridge, but stopped. What if the drink was drugged? That was a possibility. He looked around the room again.</p>
+<p>There was a painting on the wall. He hadn't looked at it closely before, but now he did. It looked like an impressionist painting of a woman. She had dark hair and a red dress that seemed to just barely cover her enormous breasts.</p>
+<p>Mike was sensing a theme. He went over to the window and opened it to get some air. Across the street, he could see a woman in another hotel room. She looked familiar to Mike, but pretty soon she began engaging in an act of self-pleasure, so he turned away and closed the curtain. Then he took a small peek, but the woman was gone. Only a dark and empty room remained.</p>
+<p>"I'm going crazy," he said. "This is all trickery."</p>
+<p>The clock radio turned on again. "She goes in and out and in and out and in and out and in and out. She's playing all night and the music's all right. Mama's got a squeeze box. Daddy never sleeps at night." Mike rushed to the radio and turned it off again. There was laughter from the bathroom. He slowly opened it and looked inside. </p>
+<p>"I just don't feel like a man," he saw himself say. "I don't know how I feel. Like this is just the wrong body for me."</p>
+<p>His wife looked at him with burning eyes. "So why don't you do something about it?" she asked. The question hung in the air like a noose.</p>
+<p>"No," Mike said. "It's nothing. Forget about it."</p>
+<p>The bathroom was empty. The scene had replayed in his head, but it was gone now. Why had he recalled it? Was it something to do with this room? Why was he here anyway? Another hotel, another haunting, another book to write. Scares, chills, frights, ghosts, none of them mattered. </p>
+<p>Mike entered the bathroom and looked in the mirror. He didn't like what he saw. He was forty-three, with a beer gut and bags under his eyes. He wanted something more. He had always wanted some more.</p>
+<p>His reflection smiled at him, but he wasn't wearing a smile. Mike reeled backwards as his reflection began to twist and turn, shaking with wild abandon.</p>
+<p>He would hear the television turn itself on. "I just love them, Maury! I love them so much!" The radio turned on next. "She goes, squeeze me, come on and squeeze me. Come on and tease me like you do. I'm so in love with you. Mama's got a squeeze box. Daddy never sleeps at night."</p>
+<p>His reflection looked back at him, but gone was the forty-three year old man. In his place was a beautiful woman. She had flowing dark brown hair and wore a tight red dress that barely covered her enormous breasts. Mike looked at her enviously. He reached into the mirror…</p>
+<p>Mister Owens waited in the lobby. He hadn't heard from Mister Engels since last night and now it was check out time. He wondered in what condition Mister Engels would be found. A sufferer of eternal priapism, perhaps? </p>
+<p>A woman exited the elevator and went to the check out desk, placing the key to Room 58008 on it. Mister Owens looked at her with an electric excitement. "Mister Engels?" he asked.</p>
+<p>"Ms. Engels," she replied. Her eyes twinkled with joy. "Thank you for the stay in the room, Mister Owens. It was definitely...illuminating." She smiled and breathed deep, her breasts straining against the red dress.</p>
+<p>"You're welcome," Mister Owens said. </p>
+<p>And as Michaela Engels walked out of the Songbird Hotel and into her new life, Mister Owens wondered if perhaps the room did some good sometimes after all.</p>
+<hr />
+<p>In our next story, a couple of house hunters find more than they bargain for in a haunted manor.</p>
+<h1>The Haunting of BE Manor</h1>
+<p>The Brent-Eriksson Manor stood at the edge of the woods. For many years, it had stood empty and alone, silent and still, holding darkness within. Today, however, it was visited by Julia and Edward Crain, the married hosts of Flip It or Flop It, a house hunting reality show on HGTV.</p>
+<p>Well, formerly married. The tabloids had published the juicy details of their divorce last year, but both of them were still on contract with HGTV, so they had to still work together. It had resulted in some...tense episodes.</p>
+<p>"One more," Julia said as the car approached the house.</p>
+<p>"What was that?" Edward asked as he parked the car.</p>
+<p>"I said 'one more.'" Julia waved her arms towards the Brent-Erikkson Manor. "One more episode, one more house, then our contract is done. No more of this shit." She opened the door and got out.</p>
+<p>She wasn't the woman he married, Edward thought. Gone was any and all passion for the job or passion for their sex life. She had just...stopped. </p>
+<p>The doors to the Manor opened. An old woman exited the house, a ring of keys in one hand. Her hair was a tangled mess of grey, but to Edward, she seemed to move much more quickly than someone of her age -- although what age she actually was, he couldn't tell. In fact, the more he looked at her, the more he realized she wasn't old at all, she was just wearing a dress that covered her entire body and made it seem unshapely.</p>
+<p>"You must be Mrs. Dudley the caretaker," Julia said.</p>
+<p>"Yes, I am," the woman said. "And you are the Crains. I wasn't sure whether or not to expect an entire camera crew along with you."</p>
+<p>"It's just us right now," Edward said. "We're going to take a look around first, make sure there are no surprises, and then we'll come back with a camera crew. If that's alright?"</p>
+<p>Mrs. Dudley hesitated. "Of course," she finally said. "Take as much time as you want. My husband and I live about thirty minutes east of here."</p>
+<p>"You don't live on the grounds?" Edward asked.</p>
+<p>"No," Mrs. Dudley said. "We don't stay here at night." She then turned around and pushed open the doors to the Brent-Eriksson Manor.</p>
+<p>Edward looked at Julia who just shrugged. They had flipped plenty of creepy old houses, this wouldn't be any different. They followed Mrs. Dudley inside, where her husband, Mr. Dudley, appeared to be sweeping up some dust on the floor. Edward couldn't tell how old he was either, since he also had grey in his hair, but he seemed tall and robust. Was there something in the water in this place?</p>
+<p>The air felt heavy. Motes of dust swirled around the room. Edward looked at Mrs. Dudley and felt an electric tingle through his body. Her dress seemed a bit more form fitting inside the house. And she was not old. </p>
+<p>Julia was looking at Mr. Dudley with the same expression and had the same electric tingle. Mr. Dudley's unshaved face looked manly and there was a musk in the air. Julia's eyes lingered on Mr. Dudley's crotch as she noticed there was quite a bulge there.</p>
+<p>Edward shook his head, clearing out the cobwebs of his mind. "Can we get a tour?" he asked.</p>
+<p>Mrs. Dudley looked at her husband and then back at them. "Very well, follow me," she said and she turned around to begin walking through the Manor. Julia and Edward followed her, with Edward appreciating the supple curve of her legs as they finally showed through her dress.</p>
+<p>They walked through the kitchen (with its own pantry), the dining room, the foyer, the breakfast nook, the library (complete with actual books, although they moved past it so fast that Edward wasn't able to read any of the titles), and, finally, the five different bedrooms. There was the Master Bedroom on the first floor, complete with a huge bathroom, and four bedrooms on the second floor, each with their own smaller bathroom.</p>
+<p>As Mrs. Dudley led Edward into the Master Bedroom, he took a look at the huge king-sized bed and wondered how many people had slept there. How many people had sex on this bed, how many women had orgasmed with wild abandon, their lips quivering, their breasts heaving, his dick thrust into them with enough force to make them come again and again and again…</p>
+<p>Edward shook his head again. Where had that come from? A pornographic film had reeled through his mind and he didn't know why. Was it Mrs. Dudley's now obviously busty figure? She looked at him with knowing eyes.</p>
+<p>"Julia, I think-" he said, but when he turned, Julia wasn't there.</p>
+<p>"Oh, I believe she had to go to the little girl's room," Mrs. Dudley said. "I had my husband lead her there."</p>
+<p>This was true. Julia had felt an urgent need to go to the bathroom, but not to relieve herself. Inside one of Brent-Eriksson Manor's many bathrooms, she pushed her fingers into her pussy with an urgency she had never felt before. I never masturbate in the houses we flip, she thought, but she couldn't stop herself. She hadn't felt like this in a long, long time.</p>
+<p>It wasn't that she had lost her sex drive, it was that Edward no longer excited her as he once did. She knew all of his moves and they hadn't been that great to start with. She wanted something new and exciting and he had refused to change from his old, boring ways. So she stopped being interested in sex with him and then she stopped being interested in him.</p>
+<p>The door to the bathroom opened. "You okay in there? You didn't fall in?" It was Mr. Dudley and Julia felt a surge of panic and embarrassment, her skirt and panties down at her ankles, her fingers slick with the juice of her vagina.</p>
+<p>All she could say as Mr. Dudley looked at her was, "I thought I locked that door."</p>
+<p>"Oh, the doors here are tricky," he said, not even commenting on what she had been doing. "Sometimes they lock without you knowing, sometimes they unlock. Depends on its mood, really."</p>
+<p>He was unbuckling his belt and unzipping his pants. "What are you doing?" Julia asked, even as she stared at the large bugle at his crotch.</p>
+<p>"You appear to need some help," Mr. Dudley lowered his pants, pulling down his underwear in the process. "I can do that." Julia sucked in her breath as she saw what appeared to be the largest penis she had never seen. Bigger than the dildo she kept next to her bed that she pretended was real. Bigger than any porno she had seen.</p>
+<p>It hypnotized her with its largeness and she felt herself drawn to it. Her hands barely wrapped themselves around it and, as Mr. Dudley held the back of her head, he said, "That's it. I love when the house is in this kind of mood."</p>
+<p>Back in the Master Bedroom, all sorts of scenarios were going through Edward's head and most of them involved throwing Mrs. Dudley down in the bed and ravaging her. He shook his head again and tried to stop thinking about that, but it didn't work. He turned to look at Mrs. Dudley and saw that she had unbuttoned her dress and was in the process of removing it, revealing her large, round, juicy breasts.</p>
+<p>"What are you doing?" he asked.</p>
+<p>She finished unbuttoning the dress and it slipped off revealing a body made for sin. Her gray hair seemed incongruous now on such a young and supple body, but it also made it more interesting, more exciting. "I thought that would be obvious," she said. "This is the Master Bedroom, in fact. What do you want me to do, Master?" She winked and leaned forward, her pendulous breasts looking succulent and delicious to Edward. She began pulling off his clothes and he decided, what the hell, let's do this.</p>
+<p>Five minutes later, he was thrusting back and forth as Mrs. Dudley's orgasmic screams echoed through the Manor. He suckled at her breast as he felt teh manic, sexual energy of the house course through him. After a while, he saw Julia next to him and Mr. Dudley thrusting into her, his penis thick and veiny, her screams mingling with Mrs. Dudley's.</p>
+<p>After a number of hours, they both collapsed on the bed and fell into a deep sleep. Mr. and Mrs. Dudley kissed over their freshly fucked bodies and then put on their clothes and slipped out as night fell.</p>
+<p>Edward woke up in the middle of the night and remembered what happened like it was a dream. That kind of stuff never happened. It was something out of a pornographic film. But Julia was right next to him, naked and covered in a sheen of sweat.</p>
+<p>There was a whisper above him and when he looked up, he saw a translucent woman hovering above the bed. Her neck was bent as if from a noose, but her bosom was huge and daunting, a moment to sex. She whispered something and Edward leaned forward.</p>
+<p>She pushed her fingers into his chest and whispered, "I like my men bigger." Edward choked and felt his body tense and then relax itself as his pecs grew bigger and his penis longer and thicker. It inched downward until it hit his knee.</p>
+<p>The bent-neck woman then turned to the sleepy Julia and kissed her with translucent lips...and slipped inside, a glow emanating from Julia's body indicating the ghost inside. Her breasts heaved and grew until they were like watermelons covered in flesh, juicy and tantalizing, like Mrs. Dudley's but bigger. Her ass rounded itself more with plump flesh and her flips reshaped themselves until they were fuller and redder. She opened her eyes and they glowed with spectral resolve. She smiled and kissed Edward on the lips, her kiss making his cock grow even bigger and, together, they fucked until the night.</p>
+<p>The next day, HGTV got an email with the resignation of Julia and Edward Craine. They still had one more episode in their contract, but all they said was that if HGTV really wanted the episode, to send a camera crew to the Brent-Eriksson Manor, their new home. They would love some visitors.</p>
+<hr />
+<p>In our next story, a group of friends finds a room full of video tapes that hold something special inside.</p>
+<h1>V/H/S/B/E</h1>
+<p>They had found the videotape in the old man's house. In fact, they had found stacks of videotapes, each one labeled with strange symbols. They had broken into the house because they thought he had prescription drugs they could steal, but there was nothing in the bathroom except condoms and soap.</p>
+<p>"Fuck this," Geoff said. "We did this all for nothing."</p>
+<p>"Not for nothing," Kimbra said. "Look, there's a TV. We could sell that."</p>
+<p>"It's an old TV, Kimbra," Geoff said. "It probably doesn't even work."</p>
+<p>Harvey turned the TV on and static was displayed on its screen. "See?" Geoff said, but Harvey pressed a button and the screen turned gray with green numbers. "What did you do?"</p>
+<p>"I set it to the VCR," Harvey said. His girlfriend Helen clapped. "Look around, there are tons of VHS tapes in here. Gotta be something good on them."</p>
+<p>The found the videotape with the words "растущая грудь" on it. "Looks Russian," Geoff said. "Maybe this guy was a spy or something." The old man whose house this had been had died a day earlier. They had seen him get carted away by an ambulance, but had heard he was already dead by the time they got to the hospital. Helen said she heard his heart just stopped, but nobody asked where she heard it. She was a gossip machine and always had here sources.</p>
+<p>And now it appeared the old man had been collecting VHS tapes for years. Some were unlabeled, some were labeled in foreign languages, and some were labeled in English, but still made no sense. Geoff looked at the Russian VHS tape, but then saw another one on a nearby table. The label read "ultimate sex party" and, as Geoff picked it up, he turned to the others. "Check it," he said, "it must be a sex tape. We gotta watch it."</p>
+<p>"I don't know," Kimbra said. They had been dating for a few months, but she was still refusing to have sex with him, saying it was too soon, which frustrated Geoff, since the only reason he was going out with her was to have sex with her -- he had heard through some (perhaps unreliable) gossip that she gave it up on the first date, but now he had sunken too much money and effort to give up before getting the goods. "This feels like invading someone's privacy."</p>
+<p>"Come on," Geoff said derisively. "We're already invading his house, why not his privacy? And he's dead, after all, he won't care." He slipped the videotape into the VCR and told Harvey, "Hit play."</p>
+<p>What came on screen was blurry and out of focus, but it was definitely two people having sex. The camera zoomed in and out and it came in and out of focus, revealing two sets of women who were making her, their legs intertwined with each other, their heavy, heavy breasts pressed against one another.</p>
+<p>"Lesbians, nice," Geoff said. Harvey nodded in approval as Helen shrugged and said, "Boys."</p>
+<p>Kimbra was entranced by what was on screen. There was a reason for why she didn't want to sleep with Geoff and it wasn't because she had never had sex and it wasn't because she had no sex drive. It was because, more and more, she was realizing that men simply weren't attractive to her. Women, however, were. The growing realization in her mind and the images on the screen made her step forward and reach out to touch the TV.</p>
+<p>"Whoa there," Geoff said, "what do you think you're doing?" But Kimbra was already reaching forward towards the hands of the women on the screen and, suddenly, the screen bulged outward and a burst of bright light enveloped them.</p>
+<p>The sky was grainy, but everything was in focus. There was a mattress on the floor and two women scissoring, their screams echoing into the star-filled sky. No, not stars. Static.</p>
+<p>Kimbra didn't care. She stepped forward and the women accepted her without shame, pulling the clothes off her body with raging desire, suckling her breasts until they swelled with lust, kissing her shoulders, her neck, her lips.</p>
+<p>In the old man's house, Geoff watched in horror as his girlfriend joined the women on the tape. "What the fuck was that?" he asked. Harvey paused the tape right at the moment Kimbra climaxed and, in her new world, she continued her orgy of delight.</p>
+<p>Geoff pulled the tape from the VCR and tossed it onto a nearby chair. "Wait," Harvey said.</p>
+<p>"What the fuck!" Geoff yelled.</p>
+<p>"Stop and think," Harvey said. "These gotta be magic or something, right?"</p>
+<p>"My girlfriend is living inside a lesbian porno now, sure," Geoff said.</p>
+<p>"So...this is even better than drugs," Harvey said. "Imagine selling someone a tape that lets them live inside a porno."</p>
+<p>Geoff stopped. He wasn't the brightest bulb, but he knew this was something he could monetize. Harvey was the real brains and when Harvey had an idea, well, that was an idea worth doing.</p>
+<p>"Fine," he said, "but is it only the lesbian orgy tape or is it all the tapes? Or...is it the VCR?"</p>
+<p>"Well, let's try it out," Harvey said. "Let's see what's on another tape."</p>
+<p>Helen said, "Uh, we don't know what's on anything else. These might all be dangerous, Harv."</p>
+<p>"Baby," Harvey said, his hand on her shoulder. "Life is dangerous. And this? Could make our lives a whole lot better."</p>
+<p>Helen nodded nervously. She usually let Harvey make the decisions, because while she knew what she wanted, she liked being under someone else's protection. It took the worry off of her.</p>
+<p>She grabbed the tape with the Russian words on it and said, "Let's try this one then!" Harvey smiled at her and put it in the VCR.</p>
+<p>Immediately, an image of a woman's full naked breasts appeared on screen. They appeared to be growing larger, going from a relatively small size to bigger and bigger. Helen tried to figure out what bra size this woman was, but couldn't, and then she tried to figure out what size they were comparable to fruits or sports equipment, but stopped when she realized her bra was feeling tight.</p>
+<p>She looked down. She had been wearing a pushup bra to make her medium Bs into something bigger, but now they looked too big. Another breath and they were bigger still. They matched in growth the woman on the screen. Her face grew flushed as she felt her chest grow more and more.</p>
+<p>Geoff said, "I don't know what this is, but I love it."</p>
+<p>Harvey said, "Hey, babe, can you get another tape" and turned to her to see her shirt had become as tight as a balloon, her tits the size of...well, very big tits. Similes were lost in her head as the sensations her breasts made her feel cascaded through her.</p>
+<p>"I need you," she said, her voice husky and seductive.</p>
+<p>"Oh yeah," Harvey said as he rubbed one hand across her breast and she shivered in erotic delight. "I know a saw a bedroom back there, let's go and use it."</p>
+<p>"Wait," Geoff said, "what I am supposed to do here alone? Just go through all these tapes one by one?"</p>
+<p>"Hey, I need to satisfy my lady," Harvey said as he was led away by the bustier Helen. "Go see if you can get your lady out of that tape."</p>
+<p>Geoff huffed as he heard the bedroom door open and close. He didn't like it when people didn't do as he told them. He looked around for the "ultimate sex party" tape and saw one with a symbol written on the side: a circle with a downward cross. It looked a little like a stick figure man.</p>
+<p>"Maybe this one will give me a huge dick," Geoff said and put the tape into the VCR.</p>
+<p>A woman appeared on the screen. Geoff looked at her, mesmerized. She was his perfect woman: a face so beautiful it hurt, a body that seemed like it was poured into her black corset, her breasts popping up and out and tantalizing Geoff with their every sway. He reached out his hand and the woman on the screen did the same. In fact, she moved in the exact same way Geoff did every single time. He turned around and she turned out. He covered one eye and she covered one eye. It was like a mirror, except she was a divinely beautiful woman and he was, well, not. He reached out with one hand towards the screen again.</p>
+<p>He didn't see the screen expand, but rather felt it. It enveloped him and he felt the woman's hands in his. He kissed her with every single bit of passion he had. She kissed him back with every passion she had. Together, they were one.</p>
+<p>Geoff opened her eyes then and looked down. She felt absolutely terrific, better than she ever had before. She breathed in and felt her breasts straining against her corset. All the better to let it loose, let it free. Now, where was that "ultimate sex party" tape, again?</p>
+<p>When Harvey finished having sex with Helen, he wandered back into the living room. The "ultimate sex party" tape was playing in the VCR, but now there were four women having a lesbian orgy, instead of three. "Geoff?" Harvey said, looking around. His friend was gone.</p>
+<p>Harvey looked at the tape again as it went in and out of focus. He could clearly see Kimbra and this new woman making out furiously as they pressed their breasts together.</p>
+<p>Helen called out from the bedroom. "Harvey, I need you. I need more."</p>
+<p>Harvey took the Russian tape from the chair and said, "I think we better go. These tapes are dangerous, although...I think we'll keep this one. Just in case." As he and Helen left, he turned back to see the lesbian orgy still playing on the screen. It would come to an end eventually, he thought. Right? He left without an answer.</p>
+<p>And under the static sky, Geoff and Kimbra made love. Forever.</p>
+<hr />
+<p>In this next story, a distress signal out in space results in a strange parasite...and a few side effects.</p>
+<h1>The Evolutionary Aftereffects of Alien Parasites</h1>
+<p>The crew of the Patna received the distress call while they were all in hypersleep. The ship's artificial intelligence, Mother May Eye, woke the crew members slowly one by one, making sure that they came out of their hypersleep in top condition. After all, space was large and it took a long time to go places, so they had been sleeping for years now.</p>
+<p>"What's the issue, Captain?" Kipling said as she stretched and shook the cobwebs from her head. "We're weeks away from our destination. Why did Mother May Eye wake us?"</p>
+<p>Captain Worth was already in the pilot deck checking the records that Mother May Eye had checked and rechecked. "There's a distress signal from BE-480."</p>
+<p>"That's a blackrock," Heinlein said. "Nothing there but dust."</p>
+<p>"And a ship," Worth said. "A crashed ship sending out a distress signal. Mother May Eye's programmed to respond to distress signals, so c'mon, wakey wakey, let's get to it."</p>
+<p>The crew of the Patna was small, but an expert at what they did: Captain Josef Worth, science officer Elizabeth Kipling, mechanic Haywood Heinlein, and the ship's android doctor, Krummholz. The ship slowed down and slowly began to descend into BE-480, where the signal originated. Huge dust clouds made visual confirmation of the crashed ship impossible, but radar and lidar found it in a crater, a large egg-shaped ship that had cracked in two.</p>
+<p>"That's like nothing I've seen," Heinlein said.</p>
+<p>"Quit your gawkin' and get down there," Worth said. "We either find survivors or don't. We don't want to waste time and money, so let's be fast."</p>
+<p>"And safe, right?" Kipling said.</p>
+<p>"Yeah, and safe," Worth said.</p>
+<p>"I'd better go down alongside you," Doctor Krummholz said. "In case anyone gets injured."</p>
+<p>Kipling shrugged and put on her spacesuit, tightening each buckled and switching on the overhead lights. The ship landed safely and they left on foot, the crashed egg-shaped ship only a few dozen yards away. It loomed ominously over them and Kipling heard the distress signal in her comms steadily beating away like a heartbeat.</p>
+<p>Inside the ship was a huge chamber. In the middle, a large humanoid figure lay dead. Kipling had no idea how long ago this being had died nor what species it could possibly be. It's face was distorted in pain, but it appeared to have no other injuries.</p>
+<p>And all around it lay hundreds and hundreds of eggs.</p>
+<p>"Uh, I think we might have a situation here," Kipling said. "We've got a lot of eggs, probably of an unknown alien species, and we really don't need that trouble. I say we leave this place and forget we were ever here."</p>
+<p>"Negative," Worth's voice came over the comms. "Find any survivors and then see if you can turn off the signal."</p>
+<p>"These eggs may be the survivors," Krummholz said. He touched on gingerly on the side and felt it with his smooth android hands. "In which case, I would recommend bringing one of them back to the ship for study."</p>
+<p>"No fucking way," Kipling said, but one of the eggs was already opening and a mass of tentacles leaped out, attaching themselves to her helmet. She could hear and smell the burning plastic as the tentacled creature found a way to get through her faceplate and, as it wrapped itself around her hand and shoved its tentacles into her throat, she managed to yell one last "FUUUUUUCK" before succumbing to unconsciousness.</p>
+<p>Kipling woke up back on the Patna. She was in the sick bay, her arms and legs splayed out, a breathing apparatus on her face. She coughed and saw Krummholz appear and pull the breather off her face, pulling out a long thin tube. "What the fuck," she said.</p>
+<p>"Some disorientation should be normal," Krummholz said. "But it should pass."</p>
+<p>Kipling breathed in and out. "What the fuck happened?" she asked.</p>
+<p>"The alien parasite attached itself to you," Krummholz said. "We managed to bring you back here, but the parasite was too entrenched in your system to remove. However, after several hours, the parasite removed itself from your system and died."</p>
+<p>"You know you just broke about every quarantine rule there is, right?" Kipling said, rubbing her neck.</p>
+<p>"And saved your life," Krummholz said, putting his instruments away one by one.</p>
+<p>"That thing did put anything in me, right?" Kipling asked. "I don't have, like, a little alien baby waiting inside me to burst out at some inopportune moment?"</p>
+<p>"That thing was a marvel of genetics and evolution," Krummholz said. "But no, I have checked and double-checked your body. It left something except what was already there."</p>
+<p>"Thanks, Doc," Kipling said.</p>
+<p>They threw her a feast for not dying, of course. Heinlein, aside from being a great mechanic, was a good cook as well. He boiled some potatoes they had been saving and chopped up some onions and cabbage that had been frozen for quite a while. Captain Worth made his trademark protein salad (which was just the protein bars from the pantry mixed with whatever else they had lying around) and they helped themselves to the best alcohol they could find, which, as Krummholz remarked, was more akin to paint thinner. That didn't matter, because one of them had cheated death, so it was time to celebrate.</p>
+<p>By the end of the meal, however, Kipling didn't feel so good. She went to the head and felt like she was going to throw up, but nothing came out. All the food had been absorbed. Her stomach felt tight. And then, slowly, the tight sensation moved from her stomach up and into her chest.</p>
+<p>Kipling had never been what you would call "busty." In fact, there was very little bust there. But as she stood up from the toilet, she noticed there was a bit more bounce. And then there was a lot more bounce. She pulled her shirt over her head and looked down as something slithered beneath her skin...and pushed itself against her breast, stretching the skin. She cried out in pain.</p>
+<p>"You okay in there?" Captain Worth asked from outside the door. "I thought I heard something."</p>
+<p>Kipling was going to tell him, she really was, but then she couldn't. They would have to kill her, wouldn't they? There was a parasite inside her and they couldn't bring that back to Earth, so they would have to chuck her outside an airlock. She didn't want to die.</p>
+<p>"I'm fine," she said. And, surprisingly, the pain subsided. But her hunger returned, this time greater than ever. She opened the door. "Any more food?" she asked.</p>
+<p>"Only the protein salad," Worth said and laughed.</p>
+<p>"I'll take it," she said and went back to the dining room, her hands digging into the protein bars and then devouring them one after the other.</p>
+<p>"She seem fine to you?" Worth asked Krummholz.</p>
+<p>"She might be suffering from the aftereffects of almost dying," Krummholz said. "That will cause unusual behavior."</p>
+<p>"Alright, I get it, I'll leave her alone," Worth said and went back to the pilot deck.</p>
+<p>Kipling finished stuffing her mouth with protein bars and sat down. She felt her stomach gurgle. There was something inside her. Something that hungered. Again, the sensation in her stomach moved up into her chest. She could feel it growing outward, pushing the skin, creating new pockets of fat and flesh. Her breasts sat on her chest like teardrops.</p>
+<p>"It's amazing," Krummholz said. "That creature really was a marvel of genetic engineering and evolutionary direction. It didn't plant anything inside you, it just changed your fundamental DNA. It's making you more like it."</p>
+<p>"I don't feel like I'm growing tentacles," Kipling said. "And if you knew this, why even let me out?"</p>
+<p>"Oh the Company has known about the creatures for years," Krummholz said. "It's been trying to get a specimen for...a while, shall we say. But don't worry, you won't grow tentacles. That was just an embryonic stage of the creature. As it advances, it looks more and more like its host. Like you. You won't change that much more. Just become more...motherly. After all, it needs someone to lay all those eggs."</p>
+<p>Kipling tried to rush him, but he avoided her. Her stomach felt full again and she stopped and waited as the food shifted itself and turned itself into deposits of fat again and moved that fat into her breasts. They bulged out of her uniform obscenely. Her nipples yearned for someone's touch and, as she felt them, they began to bubble a milky fluid.</p>
+<p>"Oh good," Krummholz said. "The genetic proteins have combined already. I would recommend you get the others to drink from you. You can alter their DNA with what's in those mammaries. It's fascinating, really."</p>
+<p>Kipling wanted to kill him. She also really, really wanted to have sex. Her sex drive seemed as if it had been turned to eleven and her face was flushed with hormonal excitement.</p>
+<p>Krummholz seemed to disappear from the room as she heard Heinlein's voice. "Hey, you okay? You look-" He didn't finish that sentence as Kipling turned out, her breasts turning alongside her, and she launched herself at him, her mouth savagely kissing his.</p>
+<p>Heinlein wasn't a young man, but he wasn't stupid. He knew this was unusual behavior from Science Officer Kipling. And yet, as he felt her heaving breasts swell into his own chest, he couldn't resist. Kipling pulled her uniform down and pulled Heinlein's face to her breast, where he tasted the milky fluid and began suckling at her teat.</p>
+<p>Two days later, the ship's A.I. was operating pretty much everything, while Krummholz cleaned up the various fluids around the ship. Heinlein and Worth were sleeping naked next to Kipling, whose breasts were now the size of medicine balls. The fluid had clearly changed them, their muscles large, their cocks the size of baseball bats. Their minds had also gone, but not Kipling's mind. Her mind raced. She knew she needed more people to suckle at her breast. She needed more men to give her their fluids and their lives. She was a queen after all.</p>
+<p>And she had a lot of eggs to make.</p>
+<hr />
+<p>In this next story, a young girl finds out that being a member of the undead is actually pretty cool.</p>
+<h1>The Perks of Being a Vampire</h1>
+<p>Drea Abrams died at 11:02 PM on the evening before her 18th birthday. She hadn't graduated high school yet. This would have been reported to the newspapers as a tragedy, a young girl dying so suddenly before she even got a chance to live (or something to that effect), except that nobody reported her death to the newspapers. This was because at 11:03 PM on the evening before her 18th birthday, she woke up.</p>
+<p>There was blood on her neck. She couldn't remember how it got there. She had been walking home from the library -- another study session before finals -- and something had jumped out from behind a tree and bit her.</p>
+<p>She couldn't tell what it was. She couldn't even remember what it looked like. It was possibly a wolf. It was possibly a coyote, they sometimes wandered down from the mountains. Although she had never heard of a coyote biting people in the neck.</p>
+<p>Her mother and father were sleeping when she got home. They trusted her to be back in time and, even if she was late, they didn't berate her. She was a "good girl." She never did anything bad. She stayed home, she went to the library, she studied. She played clarinet in the school band. Her worst vice was that she bought comics at the local comic shop.</p>
+<p>In her bathroom, she washed her neck and applied Neosporin to the bite. It looked pretty shallow, so she didn't think she should go to the hospital. She put a band-aid on it and went to bed.</p>
+<p>Her dreams were filled with imagery she didn't understand. Trees loomed out of the ground, shadows bent around her like fingers. The moon was full and red. Blood seeped from the ground like water. She touched the blood, ran her finger through it, and then licked her finger. There was an electric tingle that ran through her. The blood was warm. The blood was life.</p>
+<p>Drea woke up in a cold sweat as her alarm blared out. She ran to the bathroom where she retched up her lunch from the day before. Wiping her mouth, she looked in the mirror. Her reflection looked different. She looked paler. Her hair, which had been a brown tangle of split ends, looked better, darker, fuller. Her lips looked redder.</p>
+<p>She pulled the band-aid away from the bite on her neck and found the bite had healed overnight.</p>
+<p>A bite that healed overnight? Skin that turned pale? And the dreams of blood? Drea looked back in the mirror and said, "Am I a vampire?"</p>
+<p>For a brief moment in the ninth grade, Drea had gotten into the Twilight books. She had thought that they had been popular with kids, so if she read them, she could understand how to be popular herself. It didn't work. It only made her more of an outcast, as the other kids had already moved on. Vampires were always popular in the media, but you had to find the right vampires to be popular. Anne Rice was out, Twilight was out. Castlevania, now that was popular these days.</p>
+<p>Drea opened the window to see if the sun burned her skin, but she didn't catch fire. Although, she had always been prone to sunburns before, so she didn't understand if there would be any change. </p>
+<p>"Drea!" her mother called out. "The school bus leaves in ten minutes!"</p>
+<p>Drea packed her backpack with a speed she had never known, put on a long-sleeve sweater and gloves, and sunglasses with a hat, and then raced out the front door. "Bye, I'm going to AV Club tonight, so I'll be late, bye," she said as she ran out the door.</p>
+<p>The bus wasn't leaving in ten minutes, it was leaving in five. And yet, somehow, she still made it before it left and the run didn't leave her out of breath. She felt an energy coursing through her. Beneath her sweater, she felt a rumble in her stomach and then a shifting around of things in her body. Perhaps it was only her imagination. Perhaps she wasn't becoming a vampire.</p>
+<p>But then she caught a boy looking at her chest in first period and went to the bathroom to discover that, okay, she had boobs now. Not particularly big ones, but enough of them to show. Her hair also looked much better than it ever had, falling down around her shoulders in ringlets. Her skin was still pale and her lips were still red, but she felt good. She felt strong.</p>
+<p>After school, she went to the AV Club and asked if they had any movies or shows with vampires. They did. She spent a few hours watching episodes of Buffy the Vampire Slayer and Angel and wondered if they were any help at all. In those cases, being turned into a vampire was a bad thing -- it meant that your soul went away and a demon inhabited your body. Angel was a good vampire because he had been cursed with a soul.</p>
+<p>Drea wondered if she still had her soul. The vampires in those shows were repelled and burned by crosses, but she was Jewish. Could she still touch a Star of David? She didn't have one on hand, but she drew one on a piece of paper and looked at it. It didn't feel repellent. She touched it. It didn't burn her hand. This was stupid, she thought and crumped the page and threw it out.</p>
+<p>As she walked home, she felt her stomach rumble again. She was hungry now. She had skipped lunch, since she hadn't felt hungry then, but she felt hungry now. The feeling pulled her until she found a fast food place open late and ordered a burger. "Can you make it rare, though?" she asked. "Like, super rare?"</p>
+<p>The burger wasn't rare, but it was close enough. Drea had been thinking about becoming vegetarian, but that was out of the question now, as she pushed the beef patty until her mouth. It felt...well, not good, but good enough. Perhaps she could go to a butcher tomorrow and buy some blood.</p>
+<p>That night, however, her parents presented her with a birthday cake with eighteen candles and she had to pretend to be full so she wouldn't have to eat any. But it was still a nice gesture and they gave her presents (mainly books and socks) and said that she was an adult now. She wondered if that was true, if dying and being reborn into a vampire somehow froze her at the moment of her death, like it did with Kirsten Dunst in Interview with a Vampire.</p>
+<p>She looked in the mirror. She could still see her reflection. She wondered if the whole "no reflection for vampires" thing was a myth. She wondered what other changes were in store.</p>
+<p>The next morning, she looked in the mirror and smiled. Her eyelashes were fuller now, as was her lips. Her hair looked professionally done. And her breasts had grown another few cup sizes, meaning that she had actual cleavage to deploy if she wanted to.</p>
+<p>In first period, more boys looked at her chest, but she didn't mind. She liked the attention. She wondered if perhaps there was a demon inside her. A demon named "female sexuality." A demon that men had long repressed over the years.</p>
+<p>Finals week flew by. Her mind seemed not just as sharp as ever, but sharper. Every day, she found herself feeling better and better. The butcher was happy to sell her pig's blood, only warning her that she shouldn't "do a Carrie" on anyone. As she pulled off the plastic lid, it smelled delicious to her. She drank it up outside, behind the dumpster.</p>
+<p>The next day, she felt and looked even better. Her breasts had exceeded the normal bra sizes now, so her bewildered mother took her to the bra store in order to buy the larger sizes, the ones with big industrial straps. But while she was there, she saw the black, lacy ones and grew transfixed.</p>
+<p>Finals week ended and the countdown to graduation began. With nothing more to learn, her classes consisted of teachers getting students to do busywork or just setting a TV down in front of them and putting on a movie.</p>
+<p>During one such class, as the lights dimmed and the movie started, the boy who sat behind her, Evan, tapped on her shoulder. She turned to look at him. He was, what the other girls called, "cute." Cute enough for some of them to date. "What?" she asked.</p>
+<p>"I've noticed you," he said, as if that was a compliment. "You've changed."</p>
+<p>"Okay," she said and turned back to the front of the class.</p>
+<p>He tapped her shoulder again and she turned her head. "We should hang out after school," he said.</p>
+<p>"I have AV Club," she said, going back to her normal excuse.</p>
+<p>"Good, I can pick you up from there," Evan said. Her excuse fell by the wayside as his brazen confidence didn't seem to care that she wasn't interested. She turned back to the front of the class and wondered what it would take for him to leave her alone.</p>
+<p>After school, she did have AV Club, but she decided to skip it, since she didn't want Evan finding her there. However, he ended up spotting her outside the school and, with a confident smile, drove his car up to where she was walking. "C'mon, I'll give you a ride," he said.</p>
+<p>"No thanks," she said.</p>
+<p>He stopped the car and got out. "Oh, come on. Did I do or say something to offend you? If so, I completely apologize! I just want to get to know you more."</p>
+<p>"No, you don't," Drea said, her voice lowering an octave. She unbuttoned the top button of her sweater, revealing the deep cleavage of her breasts. "You want to get to know these, don't you?"</p>
+<p>His eyes ping-ponged downward and then back up to her face. "Oh, come on. Guys like boobs, we can't help it. It doesn't mean I don't want to get to know you. Let me drive you home, you'll see. I'm a nice guy."</p>
+<p>"No," she said.</p>
+<p>"Fine." Evan got back in his car and pulled away. "But you're missing out."</p>
+<p>At home, she feigned illness in order to avoid eating her mom's dinner again and went to her room. Just a few more days and there wouldn't be any more school. No more classes, no more Evans, say goodbye to all that.</p>
+<p>She pulled off her sweater and felt her full, round breasts with her hand. She felt the inside of her thighs wet. Wet and gushy, she thought and laughed. That song echoed through her mind and she pleasured herself under her covers.</p>
+<p>The next day, as she walked to school, she saw police cars at Evan's house. She could hear people talking and, as she concentrated, their voices became clearer. "He never came home!" Evan's mom said. "I just thought he was out with friends!"</p>
+<p>Something bad had happened to Evan, Drea knew. Something very bad.</p>
+<p>At school, there was an announcement that senior Evan McCulloch had "suddenly died" and that grief counselors were available and that the graduation ceremony was going to be dedicated in his memory. Nobody mentioned how he died, but there were rumors. Drea heard from across classrooms and hallways as people whispered. He had been found dismembered. Body drained of blood.</p>
+<p>She stayed behind when school let out. There was no AV Club, no clubs at all this week. Someone was organizing a memorial for Evan, but that wasn't for a few days. The janitor was rolling his bucket and mop down the hall. It squeaked as he stopped at every door to check it was locked.</p>
+<p>Drea emerged from the bathroom. The lights were out, but she could see fine. The rods and cones in my eyes must have increased, she thought. The school after dark had always been creepy to her before she became a vampire, but now it was just an empty building. Now it was just a place for her to figure out what was going on.</p>
+<p>She listened for the squeak of the janitor's bucket. She couldn't hear it any more. Not even in the distant hallways, where she should have been able. She felt something behind her, eyes on the back of her neck boring into her. She turned and the janitor was looking down at her. She hadn't seen him sneak up nor had she really noticed him before today. Nobody noticed the janitor.</p>
+<p>His eyes were black holes. "I thought you might stay," he said, his voice deep and rumbling, an earthquake of a voice. "The process of becoming a vampire is different for everyone, but you seem to be adjusting quite well. Sometimes the side effects are more...extreme. Sometimes religious conviction makes people believe they are burned by holy symbols or sunlight, but that's all nonsense. Vampires become that which they want to be. What they believe themselves to be. You didn't become a beautiful, pale goth girl because that's what vampires are, it's because that's what you wanted to be. I merely set you free."</p>
+<p>"And Evan?" she asked. She could feel his eyes peering into her soul, which, she guessed, answered the question of if she still had one.</p>
+<p>"He was rude to you," the janitor said. "I cannot abide rudeness. Besides, I needed something to do while I waited for your metamorphosis to be complete. Before you became the beautiful butterfly you were always meant to be."</p>
+<p>"Before you make me a slave," she said.</p>
+<p>"That, too," the janitor said and smiled. His teeth were yellow and serrated like a shark.</p>
+<p>Drea could feel the blood in her rising. This was the creature that turned her into a vampire? This was the being that was going to enslave her and make her do degrading, awful things?</p>
+<p>She remembered how afraid she was when the wolf attacked her, when it bit her so hard she passed out. When she died and then came back. When she looked in the mirror in shame. No more. No more fear. No more shame. No. More.</p>
+<p>Drea tensed up her body and leapt forward, grabbing the janitor by the neck and biting down deep, ignoring the blood spurting in her mouth and face. She pulled his neck apart with her teeth and fingers and then, as he choked on his blood, she tore his eyes out and ate them.</p>
+<p>The fucker never saw it coming.</p>
+<p>The next day was a Saturday and Drea spent the day in bed asleep. The body was buried in a local landfill, but she had drained him of everything he had. Her metamorphosis was, thus, almost complete. The blood changed her. The blood was warm and good. The blood was life.</p>
+<p>She woke up as the sun set. There was a note from her mom saying that she was letting her sleep, that obviously Evan's death had affected her a lot, and that she was there for her. Drea smiled. Sure, she would outlive her parents, but that's what every child should do. It's just that she wouldn't age.</p>
+<p>She looked in the mirror. Her breasts were full and her nipples dark. She played with them without shame. Being a vampire wasn't that bad, she thought. Nothing like being in high school.</p>
+<hr />
+<h1>Epilogue</h1>
+<p>"And there we are, sweetpea," the woman in the sheer black dress said as she lay against the coffin. "Six scary stories of HalloBEen. How did you like them? Did they give you a fright? Or perhaps make your blood race in other ways? Or were they just bad? Oh well, it's always a grab bag this time of year." The woman stretched her arms above her head and wiggled her chest, making mesmerizing movements with her breasts. "And if you're wondering why it's six stories and not, say, thirteen, then...look, the writer got tired and decided to quit at six. Take it up with him, not me."</p>
+<p>She began to tiptoe towards the entrance of the cemetery. "Until next time, kiddos! I'm going to find a nice boy and pick his brains if you know what I mean."</p>
+<p>Her laughter echoed through the silent graves.</p>
+</body>
+</html>

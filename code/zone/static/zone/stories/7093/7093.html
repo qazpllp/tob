@@ -1,0 +1,1456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Growing Her Grade</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p><img alt="" src="media/image1.jpeg" />{width="8.49375in" height="3.7555555555555555in"}</p>
+<p><strong>Oh hi there!</strong></p>
+<p>I see you\'ve discovered this new little document bundled with my zip
+downloads. Well due to certain avenues not having places for profiles,
+interactive descriptions, or hyperlinks, and not wanting to make double
+copies of my stories for those that do, this here is just a little one
+pager with a few important Madam Materia links. And maybe some FAQ at a
+later date.</p>
+<p>Anywhore, if you wanna keep up to date with my works, see about
+supporting my craft with a sub or commission, or just in general chat,
+then the following links are your best friend.</p>
+<p><strong>Twitter:</strong> <a href="https://twitter.com/MadamMateria">\@MadamMateria</a></p>
+<p><strong>Discord:</strong> <a href="https://discord.gg/svqa8Z2">The Menagerie Lobby</a></p>
+<p><strong>Reddit AMA:</strong> <a href="https://www.reddit.com/r/overflowingbra/comments/azte2c/ask_the_author_madam_materia/">For public
+questions</a></p>
+<p><strong>Patreon:</strong> <a href="https://www.patreon.com/MadamMateria">Madam Materia</a></p>
+<p><strong>Commissions:</strong> <a href="http://www.furaffinity.net/commissions/madammateria/">Gasp!
+FurAffinity!</a></p>
+<p><strong>[Growing Her Grade]{.underline}</strong></p>
+<p><strong>Warning</strong>: The following is erotic content featuring <em>breast
+expansion, giantess,</em> and other minor fetishes. You know why you're
+here, so don't complain to me if it's not your thing.</p>
+<p><strong>Commission:</strong> The following is a commission for DeviantArt user
+<em>JTSchwa</em>.</p>
+<ul>
+<li><em>Madam Materia</em></li>
+</ul>
+<p>Valedictorian. It was a heavy title, earned through hard work and
+determination; and it was one Karen held when she departed from high
+school. Had she deserved it?</p>
+<p>She wasn't dumb by any means, her academic achievements were plentiful,
+what made her the top was her willingness to dip into "extracurricular"
+activities. Shining ruby hair flowed down to the small of her back, a
+curtain that highlighted her silhouette from the light flare of her hips
+to the perky curve of her modest chest. She was hot, she knew it in how
+she carried herself, the choices she made with her fashion, and she knew
+when and how to use it.</p>
+<p>Some considered such tactics meant she cheated. To the contrary, school
+was supposed to teach you to be ready for the world. If she was the only
+one smart enough to use every tool at her disposal, then didn't that put
+her head and shoulders above the rest? Besides, it wasn't like she
+wasn't learning the things she'd need for the future, just bumping the
+numbers of more worthless classes along the way; to prove her work ethic
+and dedication for her resume.</p>
+<p>Disappointingly however, college was proving just the slightest bit more
+difficult for the redhead to take advantage of her wiles. Whether
+because she was surrounded by proper adults now, where an early puberty
+and good genes weren't the same level of edge they were in her teens, or
+because her professors were more accustomed to the "sex for grades"
+trade, she hadn't yet completely pinned down. Still, she'd managed over
+the past two semesters to find the weaknesses she needed to keep her GPA
+where she wanted it.</p>
+<p>Well, most of them anyway. "Miss Neff," her instructor's voice called
+out over the class, disrupting the girl from her train of thought.</p>
+<p>Professor Allen Mullins, the aegis immune to her attempts. How, she had
+no idea. He was exactly the type who'd normally succumb to her whims,
+moderately attractive with a fit form and well-cut brown hair.
+Plastic-rimmed glasses sat low on his nose, drawing attention to the
+stern gaze of his dark eyes and hinting at the slightest bit of
+nerdiness. There wasn't a wedding band on his finger, and she'd pretty
+much ruled out him being gay, but still her attempt...</p>
+<p>It had been after class a few days back, the redhead emboldened by her
+nature and the low-cut v-neck she'd chosen to show off her cleavage,
+enhanced by her best push up bra. "Professor Mullins," she cooed, towing
+the line being feigned innocence and being obvious about her intentions,
+"think I could have a word?"</p>
+<p>"Yes Miss Neff?" he was neutral in his delivery, tapping together a
+stack of papers against his desk.</p>
+<p>She sidled up, resting her elbows down and using them as a frame for her
+assets as she laid them over her arms. "I was wondering if, maybe, we
+could talk about my grade?" her teeth raked her bottom lip, pushing it
+out and making its ruby paint shine.</p>
+<p>His dark eyes turned to her, magnified by his glasses. "What about it
+Karen?" he asked, briefly flicking his gaze up to her hair, avoiding her
+chest entirely.</p>
+<p>The girl could read the signs, tell what a man was into and play to it.
+She reached up to fan her ruby mane, bringing it over her shoulder to
+display its shine and once more point down to her bust. "I was thinking,
+there has to be some... extra credit I could do, right? Bump up my
+numbers a bit," she rolled her shoulders, her forearms pulling her
+already risky top down another inch so the edge of her bra was peeking
+up over the neckline.</p>
+<p>"Well," the professor adjusted his glasses, bringing a small smirk to
+her face, "you could start with a proper interest in philosophy Miss
+Neff."</p>
+<p>The curl to her lip faded, her sense she'd gotten her way going with it.
+Time to double down. "You do a pretty good job on interesting me
+professor," she cast her sparkling greens on him, undressing him with
+her eyes, letting subtleties in her expression speak for her "interest".</p>
+<p>Once more the man looked her over. "That's good," he said, once again
+tapping his papers to the desk before getting to his feet, "I'm glad
+that I can pique your interest in the subject. Mayhap if you put the
+same effort you do dressing into your assignments, you wouldn't be
+failing," and with that, he left her there on long steps without so much
+as a second thought.</p>
+<p>It was still stinging her to this day. "Miss Neff, if you paid attention
+and took notes, perhaps you'd be closer to that grade you want?" he
+suggested, locking her back in the present as he openly called her out
+in front of the whole lecture hall.</p>
+<p>The silent shame of her classmates was worse than the sort of giggling
+high schoolers would have given, leaving Karen blushing nearly red as
+her hair and hiding behind her textbook. Who was he to criticize her?
+Philosophy, nothing here was going to be useful for her career plan.
+This was just a filler course on the way to her future as a software
+engineer.</p>
+<p>She used the sound of the bell to hide a groan, the rest of her
+classmates filtering out around her and leaving her the only student in
+the lecture hall, as Professor Mullins made his way up to her seat. "You
+know, Epicurus once said: 'The greater the difficulty, the more glory in
+surmounting it'. I have no issue helping you with my class Miss Neff, I
+could even recommend you a few readings that would certainly offer
+insight into the subject."</p>
+<p>"Bite me," the redhead wasn't in the mood for a lecture.</p>
+<p>With a laugh Allen shook his head, the loose bits of his woody hair
+swaying across his forehead. "That wouldn't be appropriate," he said as
+he laid a small stack of sheets upon her desk. "Here, copies of the
+slides and quotes from today, since you didn't seem keen on opening your
+notebook," he stepped away calmly, suitcase in hand, towards the door to
+head for his break. But not before giving her one last bit of advice.
+"'Morality is not the doctrine of how we make ourselves happy, but how
+we may make ourselves worthy of happiness\'."</p>
+<p>She turned towards him, an incredulous look in her eye at his unsubtle
+call out. "More Epicurus?" she tried to sass.</p>
+<p>"No, Immanuel Kant. You'd know that if you read your textbook," the man
+chastised with a small adjustment of his glasses before departing.</p>
+<p>Karen kept on a smile as long as she could, to be certain he was gone,
+then took up her book bag and smothered her face in it to scream. "Who
+does he think he is?" she furiously muttered, stamping her hard-soled
+shoes on the linoleum to vent her frustration.</p>
+<p>Her eyes turned to the stack, slapping it away and all across the
+lecture hall; something she immediately regretted. Littering in the
+halls was frowned upon, she'd have to clean up before she left, lest she
+score herself a suspension that would impact her other classes.</p>
+<p>With a sigh to calm herself, the curvy girl got to her feet, starting to
+collect the print outs one at a time until she happened upon a curious
+one: "I can control my passions and emotions if I can understand their
+nature" -- Spinoza</p>
+<p>Perhaps there <em>was</em> something to be learned from philosophy?</p>
+<p>So what if he'd resisted her charms immediately? Every man had a
+weakness, it was only a matter of figuring it out; understanding the
+nature of Professor Mullins\' passions. And what was it that he'd said:
+"The greater the difficulty, the more glory in surmounting it"?</p>
+<p>Oh, she would surmount it. Find his Achilles heel and turn him to putty
+in her fingers. All she had to do was find it.</p>
+<p>It would take a couple days yet. Karen had to ensure she was ahead
+enough in her important courses, and that her less relevant professors
+were placated, to allow herself a lull to execute the first stage of her
+plan. It wasn't too hard, a request to do some assignments early here, a
+handy there, and she had herself a proper safety net to take a day off.
+One she was putting to good use.</p>
+<p>She arrived on campus early, pulling her car into a nice secluded corner
+of the parking lot with a good view. A bit of pre-emptive sleuthing with
+one of her other marks let her know which spot was Allen's, so all the
+redhead had to do was wait.</p>
+<p>The exact details of her plan weren't entirely set in stone. If she
+could get her hands on a laptop or internet search data, that would be
+the best method; she even programmed herself a worm that could do the
+job. The opportunity to slip it into a USB port, out of the sight of
+campus security, while also being able to get her thumb drive back, was
+the big hiccup. If she fumbled at any step, she could be risking far
+more than a low grade or a suspension.</p>
+<p>So, finding her window would take delicate care. The curvy redhead
+needed to figure out some semblance of her professor's schedule,
+starting with his arrival; which she caught right on cue. A beat-up
+looking car slipped into the empty slot her sparkling verdant eyes had
+been watching like a bird of prey, and as she'd been promised Professor
+Mullins stepped out with a full book bag and his briefcase.</p>
+<p>Now was the tricky part. Karen was one to stand out, she enjoyed it, but
+she couldn't let her mark know she was following him. She managed to get
+her aunt's help, the woman was one hell of a looker, with tits enough it
+left her sweaters a pinch oversized; sweaters that on her niece were
+baggy enough to be inconspicuous. A tight bun for her ruby locks with a
+simple cap and she felt...</p>
+<p>Schlumpy. It was enough of a contrast from her usual self though she was
+sure it would help her blend in. With the pen she kept in the rings of
+her notebook she scribbled the time in the back pages, <em>"Arrives: \~8:30
+AM"</em>, and locked her vehicle to start her pursuit.</p>
+<p>The man juggled his belongings, setting his briefcase on the back of his
+car so he could adjust his glasses before collecting everything and
+starting inside. The redhead kept close behind him, doing her best to
+fade into with any small groups of students going the same direction,
+and praying not to be noticed by anyone she knew. His first step was
+obvious, she recognized the halls well enough, he was headed towards the
+faculty lounge; somewhere she was unable to follow.</p>
+<p>Already the curvy stalker could tell he was suspicious, those stern eyes
+flicking her way as he started opening the door. Fortunately, luck was
+on her side, and there was a small flock of girls chatting she could
+hide behind.</p>
+<p>Their lead wasn't too dissimilar to her, a fiery redhead, attractive.
+She probably had a good head on the to-be software engineer's five-foot
+four frame though, and such extra size wasn't limited to just a vertical
+advantage. The girl was wearing a stretchy turtleneck, for good reason
+as the front was pulled tight around a pair of lush, if Karen had to
+guess, double Ds; more than enough to leave the smaller girl jealous.</p>
+<p>"Girls," Professor Mullins dipped his head, his loose bangs casting a
+shadow over his face.</p>
+<p>They gave him a small wave as they passed, their stowaway keeping her
+books to her chest, but stealing a peek at him on the way. Were his
+cheeks flush? It was hard to tell between the shade and her company, but
+she would swear his face was pink, and those thin lips were twisted in a
+nervous smile.</p>
+<p>He finally stepped into the lounge, letting her stop her pursuit and
+take a few more notes. <em>"First stop, faculty lounge, \~8:35 AM. Likes
+tall girls?"</em> the other possibility was bustier girls, leaving her hand
+trembling, ready to write it and scratch it out in frustration. So, she
+wasn't good enough?</p>
+<p>She pulled open the collar of her oversized top, staring down at her
+proud and perky bosom. Who was he not to appreciate what she had? It was
+plenty! Plus, she had a way better face than that bitch. Hell, she was
+probably stuffing or something to keep people's attention down that way.</p>
+<p>It was all just a hunch, but it was still enough to have her blood
+boiling. "Focus," she told herself, slapping her notebook closed. She
+needed to find her opportunity.</p>
+<p>Peeking in through the small window in the door she watched the
+professor unpacking his laptop onto the table before heading to the
+little kitchenette for a cup of coffee. In her head, Karen was counting
+the seconds. She couldn't get at his computer in the staff room,
+obviously, but his relaxed behaviour could be a weak point to exploit.
+If it was regular.</p>
+<p>He stayed at the pot, waiting for the end of the drip before getting
+himself a mug and pouring his first for the morning. Two cream, a sugar,
+useless details but it added to the time she'd have if this was her only
+break. She marked the end when he turned, taking a sip and making his
+way back to look over his lessons for the day.</p>
+<p>About twenty-seven seconds. Plenty, if his PC was fast enough to read
+her thumb drive, but she had to potentially consider driver
+installation, not to mention she knew there were cameras in the hall;
+the little bubbles on the ceiling set to record and ensure there was
+evidence if a student was suspected of nabbing test answers.</p>
+<p>No good, she reasoned, jotting down her observations in the margins,
+<em>"Lax with device, at least in faculty areas."</em></p>
+<p>There was some time yet until classes began, and she was playing a risky
+game. Spying on the teacher's lounge was asking him to look and see her,
+and on camera she needed to move in case she aroused suspicion. His
+first lecture wasn't until nine, so she deemed it safest to make at
+least one loop around the hall before a second check.</p>
+<p>She took her time, plotting out her excuse in case she was questioned.
+Coming around the bend she re-approached the door, trying to keep it
+subtle, her green eyes peeking over from under her cap and through that
+little window; a mistake.</p>
+<p>Allen was already on his feet, briefcase in his hand and his laptop
+tucked under his arm. <em>"Crap!"</em> was her only thought, in a panic that
+had her scrambling for what to do.</p>
+<p>It was only a split second, but in her head, it felt like a minute. She
+was the only one in the hall right now, most students would be hovering
+around their classrooms, leaving her with two options: keep going
+forward, or quickly turn around. She didn't know which way her professor
+would be going either.</p>
+<p>If she kept on her path, and he followed behind, she'd be right in his
+sights, leaving her caught in the headlights with little chance for
+recovery. If he went the opposite way, regardless of her choice, she had
+to hit the end of the hall to make her U-turn, which risked losing him.
+It was lose-lose, she was going to have to improvise either way.</p>
+<p>Forward was the shorter distance; the curvy girl pressed on. Her pace
+quickened and she heard the door open behind her, Professor Mullins\'
+dress shoes slapping on the tile as he entered the hall with her. She
+honed her ears on that sound, unable to reasonably turn around to watch
+him. It paused and she wished she could see what was going on. Was he
+looking at her, suspicious? He'd seen her with those other girls after
+all.</p>
+<p>The moment passed however, and soon enough those shoes were coming in
+steady; he was going the same direction.</p>
+<p>Her worst-case scenario. Karen needed a way to fall behind him again,
+and immediately set to wracking her brain. A small part of her cursed a
+lack of foresight, she could have asked her professor directly for his
+schedule, where she could find him if she needed any help. Then again,
+considering she'd revealed her hand early as seduction that probably
+would have just come off fishing for more opportunities to get him
+alone.</p>
+<p>An idea, she only hoped he wasn't too close to see through it. Her steps
+slowed, and she fished into her packet for her phone, opening it up and
+flicking into the first app she could think of to make it look like
+she'd gotten a message.</p>
+<p>Sweat was on her brow, her heart hammering nervously as the sound on the
+man's footsteps grew closer. She dared to let her eyes wander, beneath
+the veil of her cap, to watch his crisp, pale blue, dress shirt walk by
+her. His gaze was forward, not on her, and soon enough he continued
+onwards to his destination.</p>
+<p>A sigh of relief escaped under her breath, and she marked the time from
+her phone for her notes. <em>"\~8:46 AM departs for first lecture,"</em> she
+scribbled down quickly and resumed her pursuit.</p>
+<p>The disguised redhead was able to slip into the crowd once more as they
+got into the larger common area. Gaggles of students sitting at the
+various couches were her screen, as they waited for the first class to
+begin. Professor Mullins was greeted warmly, the man giving a nod and
+setting his case down rather than awkwardly unlock the hall. Not
+everyone was here for him, letting his stalker relax in one of the plush
+seats and watch from afar once more. Nice and safe.</p>
+<p><em>"First class: 9:00 AM."</em> It wasn't too much of a surprise. Still, it
+meant at least a couple hours of Karen just bumming around this area of
+the college campus.</p>
+<p>Reclining on the little sofa, the soft cushions cradling and reminding
+her of her well-hidden form, she plotted her next move with taps of the
+back of her pen against the page. The only thing she cared about was if
+there was any lull in this class, but even then, if she snuck in, there
+would be at least thirty pairs of potential eyes that could see her. No
+good. All she could do was monitor which exit the professor opted for at
+the lunch bell and continue her pursuit.</p>
+<p>For as boring as she found philosophy lectures, just waiting outside for
+one to end was worse. She didn't even have anything to work on, her
+whole plan having relied on getting far enough ahead to have the day
+free to find her opening. What was it they say about hindsight?</p>
+<p>As the minutes crept forward, she could feel her eyelids growing droopy,
+fluttering on the cusp of consciousness. Karen knew she couldn't fall
+asleep, she needed to keep her mind active. She ran through her social
+media, got up for a stretch, briefly checked on the class in case she
+might stumble across something she could use.</p>
+<p>Eventually she settled on reviewing her notes, lingering on that memory
+from earlier. <em>"Likes tall girls."</em> Begrudgingly she added <em>"Bustier?"</em>
+to it. Whether she liked it or not, she couldn't overlook that
+possibility. That was the point of her virus after all, to find his
+weaknesses. If she could observe more data to support it, she may not
+need to use her worm.</p>
+<p>Maybe she could get her aunt to help her out a bit more? She was single
+at the moment, not that the woman ever had trouble getting what she
+wanted.</p>
+<p>A potential path, which the ruby-haired girl scribbled down in her
+margin.</p>
+<p>After a long wait, and more idle observation through the small window,
+the bell rang loud. Time to get back to work. Pulling her cap down the
+curvy stalker waited by the door, watching the crowd of students pour
+out into the open area. Mullins stayed to pack up his briefcase,
+slipping his laptop into a Velcro section of the lid, and started up the
+pitch towards the second floor.</p>
+<p>Good and bad. It would be easier to blend in, not being right outside
+the door, but she had to beat him up there. Rushing on her flats she got
+to the stairwell, squeezing her way between others going up and down
+towards their own goals, until she popped out on the second floor. Just
+in time, as she caught the professor's loosely kept hair headed down the
+hall. Towards the cafeteria, the girl noted, easily able to blend in
+with the flow of bodies headed that way.</p>
+<p>From the tight halls to an open space once more, she had to keep her
+eyes trained on her mark. He moved with purpose, making his way directly
+to one of the little fast-food booths to get himself a sub sandwich; and
+Karen had a pretty good idea why.</p>
+<p>The girl working the till had a cheery little smile on her
+burgundy-coloured lips, strawberry blonde hair tucked into a hair net.
+She stood only a couple inches shorter than the six-foot teacher, still
+quite tall for a woman, with a bit of a larger frame to match. Her most
+prominent feature however were her breasts, the white uniform she wore
+stretched out to the sides further than her green apron could cover.</p>
+<p>His stalker settled at a table with a good view, opening her notebook
+and readying her pen as she watched.</p>
+<p>Professor Mullins got to the front, and she saw it again, that pink tint
+in his cheeks visible even from this distance. She watched his eyes,
+starting at the counter, then slowly rising to linger on that
+overstuffed bust, before he broke away and got up to the service girl's
+face. "The usual Germaine," his voice wavered as he spoke.</p>
+<p>You couldn't be more obvious. That same envious jealousy bubbled up
+within Karen, and she scribbled down the confirmation, <em>"Definitely a
+tits guy."</em></p>
+<p>Karen watched carefully, expecting him to return to the teacher's
+lounge; it was customary after all. To her surprise, the professor made
+his way to one of the cafeteria tables, close to the sub shop of course,
+and pulled out his laptop.</p>
+<p>The redhead perked, immediately setting to jotting this vulnerability
+down. <em>"\~12:10 PM works in the cafeteria."</em></p>
+<p>As she finished writing the sentence however, it occurred to her to add
+one last part, catching the way his eyes would casually drift behind his
+glasses, <em>"to ogle the cashier."</em></p>
+<p>Once more she checked her chest, stewing in negative thoughts of her own
+perceived inadequacy. This was the best opportunity for her to deploy
+her virus, but in reality, she'd already found the chip in his armor. It
+just wasn't her.</p>
+<p>It didn't matter. With what she'd observed so far, he'd buckle to her
+aunt like wheat in the wind. Still, she had pride in herself, her body,
+and today was dealing it some heavy hits.</p>
+<p>There wasn't much more to gain following him. She had what she needed,
+the only thing to do was definitively confirm her findings, like any
+good programmer, and put together her plan of attack. For the former,
+they were in one of the most crowded parts of the school. It was as easy
+as people watching, and subtly sending girls with the right traits his
+way.</p>
+<p>Tall, busty, and considering the commonalities the girls that flustered
+him seemed to have, she dared to jot down red-headed. At least she was
+one out of three. She stayed to observe her findings for the whole of
+the lunch hour, occasionally convincing women with any one of the
+desired traits his way. There was definitely a hierarchy, tits would get
+the longest looks on their own, taller girls next, though they needed at
+least chest comparable to Karen's to get his attention, and finally if
+they were a redhead, it would add a little extra tint to his cheeks; she
+recognized a fetish when she saw it.</p>
+<p>Yes, her aunt would do fine. What she lacked in the second department
+she more than made up for in the first, it was just going to be a matter
+of convincing her. And finally netting herself that "A" she deserved.</p>
+<p>"Aunt Donna?" Karen called as she stepped into her aunt's home.</p>
+<p>A quick text to her buxom relative to announce she was coming, tell her
+she had a little "problem" she needed help with, and the girl had set
+off with the lunch bell; she still had the rest of the day off, and saw
+no reason not to start putting things into motion. Her aunt had seemed
+receptive, despite not knowing the exact details. <em>"I'll make sure to be
+ready for you Karrie,"</em> had been her reply.</p>
+<p>However, the redheaded girl received no answer to her arrival. The door
+had been unlocked, but her aunt was nowhere to be seen. There was no
+sound of running water, nor the gentle sizzle of food on the stove that
+would indicate where the woman might be; just silence.</p>
+<p>"Aunt Donna?" the curvy girl called once more, and again, got nothing.</p>
+<p>Maybe she'd arrived early? Either way, she had privacy, and the
+oversized sweater she'd worn for the day's covert activities was
+starting to get stuffy. Built for her aunt's massive chest and not her
+own, it came off her body easily, revealing the thin sheen of sweat it
+had helped her work up over the day. It gave her lithe form a natural
+glow, one many a man had drooled over, and yet even in her cute little
+push up bra, today had left her feeling bitter about it.</p>
+<p>There was nothing she could do, and that made it all the more
+aggravating. With an annoyed huff she threw the top at one of her aunt's
+chairs with enough force to leave it wobbling on its legs, and set about
+letting her hair down from its bun.</p>
+<p>What did he know anyway? She was-</p>
+<p>As Karen moved out into her aunt's living room, she caught sight of the
+dining room; where atop the woman's polished table sat an old book,
+along with what looked to be a hand-written letter. Curiosity was never
+something she was light on, and thus the scantily clad cutie made her
+way over to investigate.</p>
+<p><em>"Dear Karrie,"</em> the letter began.</p>
+<p><em>"It's your auntie Donna, of course. Sorry I couldn't be there for you,
+but life calls as it usually does, at the least opportune times.</em></p>
+<p><em>When you came for my sweater yesterday, I had a pretty good idea what
+you were really after from that itchy tone in your voice. Your mother
+informed me about your 'extracurriculars'. I remember when I was about
+your age, I was the same way, and also remember the first time I hit a
+brick wall. It's frustrating, I know, but there's a way over every
+boundary that will get in your way.</em></p>
+<p><em>This book, my grandmother gave it to me when I hit my snag, and I never
+looked back. I wish I could be there to guide you like she did me, but
+like I said, life calls. You're a smart girl, smarter than me for sure,
+so I know you'll be able to figure it out.</em></p>
+<p><em>Auntie Donna."</em></p>
+<p>An old book? How was that supposed to help?</p>
+<p>Setting the letter aside she took up the tome, lightly brushing the thin
+veneer of dust from its surface. It definitely looked like something
+from her great grandmother's time. It was properly leather bound, faded
+around the edges, and without any sort of title; simply some embroidery.
+A journal maybe?</p>
+<p>Despite her skepticism, her curiosity was greater. She pulled the heavy
+cover open, immediately beset by strange symbols and hand-written notes
+so old the ink had begun to fade and stain the page. Clearly the book
+had seen many hands over the years, her aunt's delicate, looping scripts
+only the most recent, offering advice and translations.</p>
+<p>Whatever original language it was Karen didn't recognize it, but through
+the notes of those that owned it before, she was able to parse it as
+some sort of instruction manual. For what though?</p>
+<p>Delicately turning the pages, she came across one that had her aunt's
+writing all over it, with one line in particular catching the redhead's
+inquisitive spark. "Better boobs?"</p>
+<p>No way, it was impossible. Granted aunt Donna had a chest beyond anyone
+else in the family, by leaps and bounds, it was a medical condition
+though, right? The more she thought about it however, the more the curvy
+girl couldn't recall her aunt ever saying anything of the sort, her mom
+either. But some random recipe in a book, really?</p>
+<p>It was stupid, but at the same time, what did she have to lose? She had
+to wait for the buxom woman to return home anyway, why not waste some
+time on a dumb, fake "spell"?</p>
+<p>Looking it over, it didn't seem too hard either, just a matter of
+pronouncing these old words properly, and all the work there had been
+done for her. Guiding her finger along the phonetic line her aunt had
+written, she sounded it out. It felt childish, little more than
+gibberish as it escaped her lips as a series of drawled vowels and sharp
+consonants, and she wondered if maybe her relative was sitting just
+around the corner ready to pop out with a "gotcha" and lecture her on
+her habits. Soon though, those thoughts were laid to rest.</p>
+<p>A tingle came over her, causing her to lean back in her seat. It was
+nearly impossible for Karen to articulate, it wasn't bad per say, but it
+was definitely something she'd never experienced before; somewhere
+between the feeling of having her whole body fall asleep and basking in
+the sun.</p>
+<p>She took a breath in, and it held a strange taste on her tongue; cold
+like mint, and tingly like sour sugar. The sensation moved through her
+body, down her throat to her lungs where it seemed to swell inside her
+chest. With each quickened gasp it intensified, growing inside of her
+until it reached its apex, and her leafy eyes went wide.</p>
+<p>Her breasts. In nothing but her bra, every little change was obvious.
+She could feel her nipples, hard like diamonds and brushing against the
+soft padding of her little push-up as they thickened. The round masses
+were pushing up, each heartbeat pushing that feeling within her chest
+into them, making her skin tickle and stretch to accommodate their
+expanding size. In just a few seconds they were overflowing her poor
+undergarment, billowing out above and below, and leaving her straps
+digging into her shoulders.</p>
+<p>The high slowly wore off, the sensations fading and leaving the redhead
+feeling normal again. Well, as normal as having just watched your tits
+grow before your eyes could be. She reached up instinctively, cupping
+them, making sure they were real and not just her imagination. The
+doughy flesh squished between her fingers, and she could feel her
+sensitive teats pushing into her palms as they tented even the rigid
+fabric of her shaping bra. Definitely real, just toying with them
+sending a delightful euphoria through her.</p>
+<p>It actually worked! Her aunt was some kind of witch, or something, with
+a book that gave her massive, reality defying, boobs. And now it was in
+Karen's hands.</p>
+<p>Should she do it again? She had to at least be on par with that tall
+girl from the hall now, a little more and she might even be able to be
+biggest on campus if she wanted.</p>
+<p>Then again, such endowments would likely get in her way in the long run;
+she'd seen all too well the havoc her aunt's chest could cause in tight
+spaces. Plus, it was only one part of the Mullins equation. If this
+thing could make her bustier, what else could it do? Could it make her
+taller? Smarter perhaps?</p>
+<p>The next hour was spent diving deep into the mysteries of the text,
+pouring over the other spells, the translations from over the years by
+its past owners. It was remarkable really, an ancient language that, if
+the notes were any indication, made its words into reality. Something
+that with a smirk the now busty girl couldn't help but equate to her
+passion: programming.</p>
+<p>In theory, with the research here, all she had to do was put the right
+syllables together, and she could craft a spell to do anything she'd
+need. And with that knowledge, why just boost her bust and tweak her
+height, when she could make herself, if these translations were
+accurate, "Whatever I want."</p>
+<p>Fetching her notebook, she opened a fresh page, eagerly clicking her pen
+and getting to work. Not every spell had her aunt's notes, or even what
+she assumed to be her great grandmother's, but there was enough to
+fairly accurately make out most of them, and break them down to their
+base components. Karen scrawled down her first few symbols, along with
+their phonetics and their meaning.</p>
+<p>The book, overall, seemed to focus heavily on the self, the betterment
+of the caster whether through physical change, or by charming others,
+gifts of wealth and the like. It was rudimentary, all the more
+comparable to basic programming language, but before too long she had
+the beginnings of her spell.</p>
+<p>"Make caster," that was easy enough to simply copy from her aunt's
+breast spell, once she found the pattern in other modification spells.</p>
+<p>She had to be careful with the rest of her words however. It was
+dangerous to try and reliably lean on the older translations; some words
+had many meanings in English, and which one an ancient owner of the book
+may have meant were a guess at best. After a good while of cross
+referencing, she figured she had it though. Three more symbols that
+seemed to mean something between "the object of desire", and "what they
+desire".</p>
+<p>The notes on those words generally involved having a clear image in your
+head of what you wanted. So, if her hypothesis was correct, she just had
+to picture the body she wanted in her mind, speak the words, and it
+would be hers. She could even keep it for later to deal with problems
+like this down the line, it was the ultimate multi-function spell!</p>
+<p>With a grin on her lips, it was time for her to test it. Karen took a
+moment to close her eyes, picturing herself in her mind's eye. She
+replayed the day's events, walking with the girls in the hall, this
+time, standing tall enough her nose was above the tall one's head. In
+the cafeteria she could walk up to the counter, resting tits larger than
+her head down in front of the cashier just to dwarf the poor girl. Then
+she dipped back further, to her failed seduction attempt on the
+philosophy professor, lording over him and hanging those same amazing
+tits in front of his face, watching him squirm.</p>
+<p>Yes, a few more minor touch-ups and she had it. The emerald in her eyes
+sparkled, and she looked down past her already improved cleavage to her
+notes, reading them aloud.</p>
+<p>That tingling sensation returned, spreading over the whole of her body.
+The sharp intake of excited breath she took in tasted of sour and mint,
+beginning to fill up in her very core. It was working, she was changing!</p>
+<p>It was slower than with her breasts, then again, she was asking a lot
+more. The redhead felt it first in her toes and fingertips. Her arms
+were getting long, ready to fit on a form more than a foot taller. She
+felt her shoes getting snug, the stitching between the cheap parts of
+her sneakers audibly straining. The hems of her pant legs started rising
+up her ankles, the rough fabric of her jeans rubbing against her calves
+as they subtly thickened, and pushed her line of sight higher.</p>
+<p>With all the sensations, just standing up in her excitement was
+vertigo-inducing. The growing girl stumbled with a small wave of
+dizziness, and just that little movement of her body had her clothes
+crying out in protest. Her bra strap was growing tighter, creaking as it
+struggled with the renewed swelling of her bust, along with the
+two-pronged attack coming from her widening torso. A shame she probably
+wouldn't be in the thirties band range, but with the jaws she was going
+to drop, it was well worth it.</p>
+<p>One of her hands jumped to the table to catch her balance, the legs
+scraping on the floor from the sudden impact of her multiplying weight.
+In the motion, her ruby hair poured over her shoulders, her already
+eye-catching locks having gained a surreal luster. Caressing her skin,
+it had the feeling of fine silk, cascading down her body to fall around
+her thighs in a lustrous mane.</p>
+<p>There was a restrictive tightness building in her jeans, the seams along
+the sides beginning to strain, growing into tiny diamond shaped holds
+that cried out in protest at each small shift in her position. As
+another breath came in, hitting her with a wave of growth, her thighs
+extended and filled the room with the popping of threads.</p>
+<p>She had to look down, had to see them, so thick and juicy she couldn't
+get her hands around them. They were needed of course, to support the
+luscious ass that was growing in her bottoms. She could feel her thong
+already pulling up between the hot lips of her sex, rubbing against her
+clit as each little squirm had her inflating butt digging them deeper.
+The girl had never imagined something like this was possible, let alone
+that it would feel so good. When the back of her pants finally burst,
+letting the cleavage of her cheeks squeeze out and take off some of the
+pressure, she couldn't help but moan at the feeling of those underthings
+wedging themselves deeper.</p>
+<p>This was just a teaser though. Couldn't have everything down below after
+all, hourglasses need a good base to balance amazing tops, and Karen's
+was going to have extra.</p>
+<p>Already she could feel the climax coming, the grand finale of her
+transformation. Her core extended, leaving her skin feeling tight, her
+spine stiff, as she started towering over her old self. Like a blossom
+in bloom, it then pressed out into her breasts. Her nipples peeked up
+over the edge of her ill-equipped undergarment, the rosy buds fattening
+in anticipation of what was to come.</p>
+<p>The now Amazonian redhead wasn't about to miss it either, not when she
+knew what was coming. On shaky feet she tried to straighten, combatting
+the vertigo just so she could take her tits in her grasp. Her teats were
+tender, their caps as big round as her pinky, and she could feel her
+flesh starting to multiply under her touch. A breath in, and she could
+feel them filling up, squeezing between her fingers where they could and
+applying more strain on her bra.</p>
+<p>Her straps were already digging into her shoulders, so it was no
+surprise when with a groan they burst, whipping up and around to fall
+slack over her expanding bust. The band was screaming, the topmost
+connector snapping in its vain attempt to contain breasts that defied
+containment. They were spilling over the hem, muffining out beneath the
+underwire, putting the very stitching to the test to see which part of
+the supportive garment would give first.</p>
+<p>Turned out to be the hooks. With a resounding tear the metal loops were
+ripped from the fabric, the unbound band exploding off its owner's body.
+Without any further restraint Karen's chest jumped forward, nearly
+bowling her over at the surge of flesh overflowing her hands. She
+stumbled, but couldn't keep the grin on her face as she caught herself
+and looked down.</p>
+<p>The magical sensations began to dissipate, their spell complete, leaving
+the divine creature to bask in her new beauty. Even hanging freely her
+head-sized boobs created a natural cleavage. There wasn't a girl at the
+college that could make her feel second best, she was massive, and with
+just another few "words" and an image in her head, she could go even
+further.</p>
+<p>Straightening herself proved to be a challenge. Her body ached a dozen
+different ways, and she heard her joints popping, demanding her to
+stretch and work out the kinks. The remnants of her jeans stressed, a
+few last errant strands bursting as they tried to stay on her voluptuous
+form, and her fingers were effortlessly brushing the ceiling.</p>
+<p>"Probably should have seen if I could make my clothes grow," she mused,
+closing the spell book and catching another note from her aunt beneath.</p>
+<p><em>"You'll probably need some new clothes; take anything you need from my
+bedroom Karrie."</em></p>
+<p>The redhead couldn't help a chuckle. Yeah, she'd need some of those;
+probably not so oversized anymore, but they'd do until she could get to
+the mall for some properly fitting, and revealing, attire. Yes, Allen
+was going to crumble beneath her charms when he saw her tomorrow.</p>
+<p>The shrill ring of the bell signaled the beginning of another class,
+Professor Mullins already right where he needed to be. Despite her
+absence from class the prior day, the man had obviously noticed the less
+than conspicuous redhead tailing him for the majority of the day. Was
+Miss Neff so desperate as to try and steal test answers? He certainly
+hoped not. She was a brilliant girl, and seeing her expelled for doing
+something stupid was a waste of her potential.</p>
+<p>Despite her distaste for his subject, he knew her to at least be
+punctual. So, as the second bell sounded and she wasn't there in her
+usual seat, he couldn't help a small spark of concern. "Alright class,"
+he started, flicking the projector on to get things started, "if
+you'll-"</p>
+<p>The sound of the door interrupted, drawing the educator and his class'
+attention to whoever it was entering late. A hushed whisper fell over
+them, the professor's dark eyes, unable to keep composure, went wide
+behind his spectacles. Through the portal ducked a goddess of a woman,
+an Amazon of old, towering near seven feet high in her loud heels. Legs
+that seemed a mile long were hugged by near-sheer tights, a loose skirt
+flowed about her thighs, just around the acceptable level, teasing the
+firm roundness of her ass. Her waist cinched in sinfully, shown off by
+the real show, a perfect pair of heavy tits so big her, by comparison
+tiny, textbooks had to be held beneath, pushing them further upward to
+display the foot's worth of cleavage revealed by her low v-neck.</p>
+<p>"I-I think you may have the wrong class Miss," Allen tried to at least
+stay professional, adjusting his glasses to try and hide the redness
+starting to seep into his face.</p>
+<p>The beauty just smirked, taking a moment to flair her gorgeous ruby
+hair, letting it cascade through her fingers and over her magnificent
+form. "No, this is the right one," she purred, fishing through the books
+pulled to her core and showing off her Philosophy 101 textbook. "What's
+wrong Professor Mullins, I miss one day and you don't recognize me?"</p>
+<p>"Karen?" a number of her classmates\' voices broke the weighty silence,
+fueling the redhead's ego all the more.</p>
+<p>Her mark's speechlessness however was perfect. "Miss Neff? M-my
+apologies," he finally managed, clearly struggling to maintain himself.
+She could see it from here, the tent in his slacks he turned to his desk
+to hide. "Well, if you'd take your seat, you're holding up the rest of
+your classmates."</p>
+<p>The waver in his voice was precious. The enormous woman didn't even
+bother with a reply, letting the clicks of her high heels be the only
+sound in the room as she ascended the stands to her desk.</p>
+<p>It was quite the effort just to sit. These little pullover seats were
+made to handle plus sized individuals, but never had their makers
+considered someone of Karen's new extreme proportions. Though not fat,
+she was heavy, and the chair groaned from her massive body settling into
+it. Worse was her legs. Muscle memory had her knees banging the
+underside of her little pull out, making her books jump and bang,
+keeping the room's attention on her; right where she liked it, but not
+for the reasons she wanted.</p>
+<p>She needed to stretch out, her strappy footwear poking over the edge and
+nearly kicking the student in front of her were it not for her own
+delicate care. Behind her she could hear the annoyed grunts of the
+classmate her new high head was blocking. They didn't seem keen on her
+new form, but they weren't who mattered.</p>
+<p>Karen's verdant greens were gazing up the lecture hall, watching the
+source of her weeks-long ire with a smirk upon her full lips. She had
+him squirming, she could see it in the tremble of his hands while he
+explained his slides, the way his attention would dart her way and he'd
+skip a beat of his lecture as his tongue tied. He was finally playing
+her game, and thus she was rewarding him: A little uncrossing of her
+legs to let him see her underwear; a finger toying with her hair, else
+her neckline to air out the extreme cleavage she now sported; slowly
+running her tongue over the scarlet paint on her lips; or leaning
+forward and pressing her tits through the window of her arms, to have
+them billow out and appear even bigger. There wasn't a need for subtly
+anymore, she was all he craved, it was just a matter of teasing him to
+set the expectation.</p>
+<p>The end of class couldn't come soon enough. Even in her usual boredom,
+the pre-lunch lecture always droned on. Today, it was anticipation
+reaching its breaking point. She'd never really cared about her targets.
+Sex was sex; fun, but a tool like any other. This time however, there
+was a thirst for the satisfaction of finally surmounting this obstacle,
+and earning her top grade.</p>
+<p>When the bell sounded the beauty could feel her heart hammering, she
+plush rear staying firmly in its seat while she waited for her
+classmates to file out. Unsurprisingly, many opted to come up from the
+front rows, stealing glances at the buxom Amazon as they passed.
+Flattering, but they weren't her focus. She was transfixed by her prey
+up at his desk, hurriedly rushing to get his things away before she
+descended upon him.</p>
+<p>That just wouldn't do. She drew up her books, if only for the illusion
+she needed his help as she walked against the crowd, head and shoulders
+above them, unable to be ignored. Each step down left her heavy chest
+bouncing on its confines, threatening to spill out or bowl over any soul
+unfortunate enough to get in her way.</p>
+<p>"Professor Mullins," she hailed to ensnare him in her trap.</p>
+<p>She was close enough to catch him sweating, combatting his baser urges
+to keep his eyes up towards hers. "Yes Miss Neff?"</p>
+<p>Laying down her props Karen repeated her first attempt, resting on her
+elbows and letting her bust pour over her arms. This time however, they
+overflowed, spilling so far out her textbook disappeared beneath their
+soft mass. "I was wondering if maybe we could talk about my grade
+again?"</p>
+<p>The man swallowed thickly, running his fingers through his brown bangs
+to clear his forehead. "What about it?" he repeated his reply from her
+first attempt, still idly packing his notes and laptop.</p>
+<p>A grin spread across her painted lips as she leaned forward, her breasts
+billowing through her arms, peeking over the neckline of her top. "I
+think you know," she teased, "You're a bright man Allen, and what did
+you tell me the other day? It's not about how we make ourselves happy,
+but how we <em>make</em> ourselves worthy of it," she recited.</p>
+<p>"Kant, on morality," he wasn't really of the mind to correct the
+statement, his dark eyes unable to keep from drinking in the girl's new
+body. "How?" he couldn't help asking, unable to conceive how such a
+growth spurt could happen almost overnight.</p>
+<p>The Amazonian beauty brushed a strand of her long, ruby hair over her
+shoulder, letting it cascade over the curve of her slender neck and drag
+through her deep cleavage. "The greater the difficulty," she taunted.</p>
+<p>"I decided to follow the advice of a philosopher, and discover the
+nature of your passion," she rose to her full height again, lifting
+herself onto the desk, much to its creaking protest, and planted her
+plush rear on its surface to look down on her previously impassable
+wall, "and now, I'm looking forward to that glory of mounting it."</p>
+<p>Her legs spread, showing off her provocative panties to him as she
+watched the way he tried to hide behind his glasses. That telltale pink
+was in his cheeks, deepening to a proper flustered red. He knew she was
+onto his likes, and she could taste... Sour mint?</p>
+<p>As Karen drew in her breath there was no denying it. That magical taste
+was on her tongue, flowing into her and pooling in her core. Why though?
+The book was back at her aunt's place, and clearly, she hadn't repeated
+any of the spells within recently. So, what was happening?</p>
+<p>"Is something wrong?" Allen asked, seeing the look of shock on her face;
+concern for his student more powerful than any awkward arousal he was
+dealing with.</p>
+<p>It was a valid question, triggering the programmer in her. Each breath
+she was drawing in more energy to fuel a transformation, the sensation
+growing inside her chest and starting to reach out to her extremities.
+All over, her skin tingled, and she could feel the beginnings of growth
+starting up.</p>
+<p>The redhead's leggings tightened, their tops slipping down her thighs
+before one developed a run that filled the air with the light popping of
+elastic threads. Her freshly purchased top was riding up her midriff,
+exposing more of her pristine skin, the tight dip of her belly,
+amplified by the magnificence of her bust. She'd already selected a bra
+that would show off a little nipple, but now they had popped out,
+standing hard on display and rubbing against the soft fabric of her
+clothing as it seemingly shrunk around her.</p>
+<p>The desk groaned beneath her, making what was happening all too obvious
+as the sturdy wood began to buckle. "You're g-growing?" her professor
+stammered.</p>
+<p>Her leafy greens turned to him, to the straining erection he wasn't even
+bothering to hide at the sight. This was turning him on, more than her
+original buxom form, even when she'd been fully provoking him. The
+realization hit her like a freight train: this was a fetish.</p>
+<p>So, it wasn't just big girls. The grin returned to Karen's lips, her
+smallest motions causing her clothes further distress as they struggled
+to keep on her enormous frame. "I am," she leaned forward, offering her
+deepening cleavage to him and reaching out. He didn't resist, letting
+her lengthy fingers curl into the waist of his pants and pull him to
+her, "You like, Allen?" she purred, pulling her shoulders back to let
+the popping stitches of her bra fill his ears.</p>
+<p>Words failed him, her face sitting inches above his own, bearing down on
+him with that hungry smirk. That didn't mean his body wasn't answering.
+Faced with the very manifestation of his unreal fantasies, he was almost
+painfully hard, every ounce of his will devoted to trying to hold back
+on principle. His dark eyes were wandering though, watching the already
+scanty garb continue to shrink on her body, the strongest points
+starting to dig in as their wearer continued to expand.</p>
+<p>"I'm sure there's some philosophical rhetoric about taking
+opportunities," the growing giantess continued, undoing his belt with
+digits that were starting to become a tad too big for such a task as she
+pushed up to the eighth foot mark, "When are you going to get another
+chance at something like this?"</p>
+<p>A point well made, as Karen finished up her delicate task and set his
+cock free to force his zipper down in its eagerness. He was ready, all
+she had to do now was give him the invitation.</p>
+<p>Just sitting herself back up caused her outfit a flurry of issues. On
+pure reflex she went with a classic, a body this big, however, was not
+prepared to accommodate. Her skirt was practically painted on her
+thighs, and the subtle motion of leaning back, spreading her legs to
+show of her waiting sex, had it splitting with a profound rip that ran
+from hem to hip. The runs in her tights now resembled erratic stripes,
+sharp arrows that pointed down towards her heels, whose straps were
+beginning to show gaps in their stitching. The true treasure though was
+her panties, fighting with her hips and rear to wind up pulled so
+tightly into her muff the stiff bud of her clit was obvious.</p>
+<p>The delight of growing, the anticipation of finally catching her prey,
+the combination had her soaked. Reaching down, an act that had the seam
+of her top tearing open to let her half-restrained tits surge forward,
+her lithe fingers peeled the line of fabric from her folds. "Well?" she
+purred, fluttering those shining fields of green at him.</p>
+<p>Most people will experience at least one moment in their lives, where
+inhibitions are tossed out the window in favor of primal instinct, or
+personal gain. The realization of the phrase, "Ah, fuck it." Karen had
+seen it herself in many a man, but never had it been as satisfying as
+now, watching her insurmountable obstacle finally break.</p>
+<p>The brunette professor let his pants down, the belt buckle clattering to
+the floor loud enough to overpower even the growing aches of the desk
+beneath his giantess obsession's rear, and he climbed up into position.
+She felt the head of his dick at her entrance, making her draw in a gasp
+of magical air that tickled her tongue. Her growth surged by full inches
+all at once, the band of her underwear snapping to fall slack, a second
+large split running up her skirt, and the band of her bra finally
+breaking to let loose tits larger than any normal-sized person could
+hope to achieve. If her six-foot suitor could scale her massive form,
+she had no doubt she could have wrapped them around the whole of his
+upper body and still had plenty to spare.</p>
+<p>His hands searched for purchase, her hips too wide to be taken without
+him fully extending his arms; and even then, she was still getting
+bigger. He settled for resting them on her thick thighs, half-over the
+now nearly-transparent stockings, more hole than fabric, desperately
+clinging to her body. The arousal of feeling her continue to grow
+beneath his very fingers was nearly maddening, and with little
+resistance he plunged his rod right to the hilt in her soaked channel.</p>
+<p>The ruby-haired goddess gave a moan, the satisfaction of her victory
+better than the sex itself. She let herself fall back, to just focus on
+the feeling of his cock stroking her walls, the way his pelvis rammed
+into her stiff button. Not the wisest of choices it turned out.</p>
+<p>Her head hung over the edge if the desk, and with her full weight spread
+across it the legs groaned in protest, before snapping and abruptly
+dropping her to the floor. Splintered wood scattered about, and yet more
+movement had the tattered remains of her clothing further destroyed and
+awkwardly draping over her massive body. Mullins had stumbled forward
+from the collapse, face landing in the underside of her cleavage, but
+unhindered as he continued to savour the object of his fantasies with
+further frenzied thrusts.</p>
+<p>How big was she now? Just eyeballing it, she had to be twice his size,
+and yet each breath she took in was still tingling her tongue with that
+sour mint taste. Not only that, but her growth wasn't simply consistent,
+but accelerating as her lungs grew deeper, flowing further energy into
+her that moved to every part of her body. It was euphoric in ways she'd
+never experienced.</p>
+<p>Her first orgasm hit like a freight train, the fire in her loins
+building up and exploding through her body as she let out an echoing
+moan. She couldn't take hold of Allen, he was too small to anchor her
+gigantic form, and so her hand jumped out and smashed into the wall with
+enough force to crack the plastic surface of the whiteboard.</p>
+<p>A startled gasp brought in more air, spiking her growth with another
+full foot that destroyed any hope her clothes had left. Unrecognizable
+shreds tumbled off her hyper-curvy form, landing all around only to
+disappear beneath her as she grew. Her breasts expanded into the realm
+of obscene; proportionately obscene. Their heavy mass was pouring over
+her, each more than the size of a fully grown man, and blocking her
+sight of the one still vigorously going at her as her walls quivered
+around his length.</p>
+<p>Riding out the high, every part of her was warm and sensitive. Her mind
+was fuzzy, as each slip of his cock through her oversized channel, each
+slap of his abs against her stiff clit, rocked her and kept her
+teetering on the edge of another big "O". Still, she recognized a
+problem. The restrictions of her clothing were now a non-issue, but that
+didn't mean she wasn't still running out of space. Her left thigh, hot
+to the touch from her climactic peak, was starting to press against the
+wall.</p>
+<p>She didn't want it to stop, to interrupt the pleasure running through
+her, and undoubtedly neither did her professor if his diamond hardness
+was an indicator; she needed to move though. Reaching down Karen found
+her hand, while still slender and delicate, covered nearly all of his
+back, her thumb and palm easily reaching shoulder to shoulder; and each
+breath in she could feel her fingertips pushing further. There was no
+doubt she was reaching into the twenties, standing would have her head
+punching clean through the lecture hall ceiling.</p>
+<p>Needs guiding her she pulled her playmate into her muff, the man letting
+out a semi-startled shout as he was buried balls deep in her, and
+started to shift. Her knee slammed into the wall, knocking the damaged
+whiteboard to the ground. Her rear rose up with minimal effort from her
+enormous body, though the crash of it coming down rumbled through the
+room to let her, and likely most of the outside halls, just how heavy
+she really was. When her arm swung back to find balance it broke through
+the seats, a forearm wide as their backs more than enough to tear
+through their supports and warp them as they were crushed beneath her;
+and still, the redhead could feel herself continuing to expand, the
+ruins raking across her skin as she continued to stretch outward.</p>
+<p>Between thighs bigger than he was, Allen was still adjusting to the
+move. What for her was just a simple shuffle of her ass had carried him
+all the way from where his desk one stood, to the first row of seats.
+Even securely held to her sex, whose labia ran from his hips to pecs, it
+was still dizzying; a testament to just how large she was becoming. He
+could hear her foot still hitting the wall behind him. Looking up, it
+was a massive wall of tit-flesh that one could get lost in. There was so
+much of her, all he could do was try and picture the giantess in his
+mind's eye, and the image had his ready rod jumping inside her with an
+eager burst of pre.</p>
+<p>Ruby rivers ran through the walkways, from the tip of the growing
+goddess' head down to her knees, shimmering in the light as they dragged
+up the steps with each new inch. She could feel it, the shudder in the
+man's fingers, trembling against the plush thickness of her legs, slowly
+moving towards her sensitive button. Whether he'd just thought the
+moment through, or had enough experience, he knew how to please a girl.</p>
+<p>His comparatively tiny fingers wrapped her throbbing clit, massaging it
+and making her squeal with ecstasy. Her body was thrown back, crushing
+the stands beneath her more than five layers deep. Once more she was
+rocked with a climax, her leg shooting out stiffly to nearly punch a
+hole through the back wall as the sturdy brick buckled inward, her
+steaming folds tightening and coating her puny lover with her liquid
+love.</p>
+<p>Soaked neck to knee Mullins hit his own limit. His grip tightened,
+squeezing her abundant body like a little pinch, and with a mighty groan
+he plunged deep and blasted the largest load of his life into her giant
+chasm.</p>
+<p>It was barely enough to dent her, but still, Karen felt the warmth of
+his seed inside of her. That sour mint taste started to lessen, the
+energy within her dying down as needs were sated; and never had she felt
+such a sweet sense of victory. With a cat-like smile she relaxed into
+the rubble, reveling in her self-satisfaction. "So," she purred once
+she'd re-collected her wits, spreading her armfuls of tit to get a good
+look at the insignificant little obstacle between her legs, "about my
+grade."</p>
+<p>The professor was red in the cheeks, still catching his breath as he
+pushed himself back to his feet. "This was fun Miss Neff," he admitted,
+fixing his glasses up his nose, "but, I'm afraid your grasp of the
+source material is severely lacking. If you want to succeed in
+philosophy, you need to let go of the literal and be more open-minded to
+interpretation, to application in your future career as a software
+developer."</p>
+<p>The student could feel a cold sweat on her brow. "But we-" she
+stammered, growing flush with renewed frustration, "I-"</p>
+<p>"You're a big girl, Miss Neff," Allen joked, admiring her as he stepped
+back, drinking in a woman six times his size, well over thirty feet tall
+and curved to the extremes. A true fantasy. "But you're not a child
+anymore, you're an adult, free to do as she pleases; as am I."</p>
+<p>Adjusting the buttons of his top, he went about collecting his trousers.
+"'The brave man is he who overcomes not only his enemies but his
+pleasures.' Democritus, and something you could take insight from," he
+pointed about the destroyed lecture hall, plenty to hold over her head
+if she tried to manipulate or spin this against him.</p>
+<p>Stunned, all the redhead could do was huff in annoyance. All of this,
+and she still didn't even get her marks. Not only that, her aunt's book
+of magic was far off from being able to help with a new problem: How a
+giantess with tits like small cars was going to fit through an
+eight-foot door frame.</p>
+</body>
+</html>

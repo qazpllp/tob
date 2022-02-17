@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Busted</title>
+    <style>
+        /* Taken from simple.css */
+        /* Global variables. */
+        :root {
+        /* Set sans-serif & mono fonts */
+        --sans-font: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir,
+            "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica,
+            "Helvetica Neue", sans-serif;
+        --mono-font: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+        /* Default (light) theme */
+        --bg: #fff;
+        --accent-bg: #f5f7ff;
+        --text: #212121;
+        --text-light: #585858;
+        --border: #d8dae1;
+        --accent: #0d47a1;
+        --code: #d81b60;
+        --preformatted: #444;
+        --marked: #ffdd33;
+        --disabled: #efefef;
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #212121;
+            --accent-bg: #2b2b2b;
+            --text: #dcdcdc;
+            --text-light: #ababab;
+            --border: #666;
+            --accent: #ffb300;
+            --code: #f06292;
+            --preformatted: #ccc;
+            --disabled: #111;
+        }
+        /* Add a bit of transparancy so light media isn't so glaring in dark mode */
+        img,
+        video {
+            opacity: 0.8;
+        }
+        }
+
+        html {
+        /* Set the font globally */
+        font-family: var(--sans-font);
+        scroll-behavior: smooth;
+        }
+
+        /* Make the body a nice central block */
+        body {
+        color: var(--text);
+        background: var(--bg);
+        font-size: 1.15rem;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns:
+            1fr min(45rem, 90%) 1fr;
+        margin: 0;
+        }
+
+        body>* {
+        grid-column: 2;
+        }
+
+        /* Make the header bg full width, but the content inline with body */
+        body > header {
+        background: var(--accent-bg);
+        border-bottom: 1px solid var(--border);
+        text-align: center;
+        padding: 0 0.5rem 2rem 0.5rem;
+        grid-column: 1 / -1;
+        box-sizing: border-box;
+        }
+
+        body > header h1 {
+        max-width: 1200px;
+        margin: 1rem auto;
+        }
+
+        body > header p {
+        max-width: 40rem;
+        margin: 1rem auto;
+        }
+
+        /* Add a little padding to ensure spacing is correct between content and nav */
+        main {
+        padding-top: 1.5rem;
+        }
+
+        body > footer {
+        margin-top: 4rem;
+        padding: 2rem 1rem 1.5rem 1rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        }
+
+        /* Format headers */
+        h1 {
+        font-size: 3rem;
+        }
+
+        h2 {
+        font-size: 2.6rem;
+        margin-top: 3rem;
+        }
+
+        h3 {
+        font-size: 2rem;
+        margin-top: 3rem;
+        }
+
+        h4 {
+        font-size: 1.44rem;
+        }
+
+        h5 {
+        font-size: 1.15rem;
+        }
+
+        h6 {
+        font-size: 0.96rem;
+        }
+
+        /* Fix line height when title wraps */
+        h1,
+        h2,
+        h3 {
+        line-height: 1.1;
+        }
+
+        /* Reduce header size on mobile */
+        @media only screen and (max-width: 720px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2.1rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+        }
+
+        /* Format links & buttons */
+        a,
+        a:visited {
+        color: var(--accent);
+        }
+
+        a:hover {
+        text-decoration: none;
+        }
+
+        button,
+        [role="button"],
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+        border: none;
+        border-radius: 5px;
+        background: var(--accent);
+        font-size: 1rem;
+        color: var(--bg);
+        padding: 0.7rem 0.9rem;
+        margin: 0.5rem 0;
+        }
+
+        button[disabled],
+        [role="button"][aria-disabled="true"],
+        input[type="submit"][disabled],
+        input[type="reset"][disabled],
+        input[type="button"][disabled],
+        input[type="checkbox"][disabled],
+        input[type="radio"][disabled],
+        select[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        cursor: not-allowed;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        select:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled);
+        }
+
+        input[type="range"] {
+        padding: 0;
+        }
+
+        /* Set the cursor to '?' while hovering over an abbreviation */
+        abbr {
+        cursor: help;
+        }
+
+        button:focus,
+        button:enabled:hover,
+        [role="button"]:focus,
+        [role="button"]:not([aria-disabled="true"]):hover,
+        input[type="submit"]:focus,
+        input[type="submit"]:enabled:hover,
+        input[type="reset"]:focus,
+        input[type="reset"]:enabled:hover,
+        input[type="button"]:focus,
+        input[type="button"]:enabled:hover {
+        filter: brightness(1.4);
+        cursor: pointer;
+        }
+
+        /* Format navigation */
+        nav {
+        font-size: 1rem;
+        line-height: 2;
+        padding: 1rem 0;
+        }
+
+        nav a,
+        nav a:visited {
+        margin: 0 1rem 0 0;
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        color: var(--text);
+        display: inline-block;
+        padding: 0.1rem 1rem;
+        text-decoration: none;
+        }
+
+        nav a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        }
+
+        /* Reduce nav side on mobile */
+        @media only screen and (max-width: 750px) {
+        nav a {
+            border: none;
+            padding: 0;
+            color: var(--accent);
+            text-decoration: underline;
+            line-height: 1;
+        }
+        }
+
+        /* Format the expanding box */
+        details {
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        }
+
+        summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 0.6rem 1rem;
+        }
+
+        details[open] {
+        padding: 0.6rem 1rem 0.75rem 1rem;
+        }
+
+        details[open] summary {
+        margin-bottom: 0.5rem;
+        padding: 0;
+        }
+
+        details[open] > *:last-child {
+        margin-bottom: 0;
+        }
+
+        /* Format tables */
+        table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1.5rem 0;
+        }
+
+        td,
+        th {
+        border: 1px solid var(--border);
+        text-align: left;
+        padding: 0.5rem;
+        }
+
+        th {
+        background: var(--accent-bg);
+        font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+        /* Set every other cell slightly darker. Improves readability. */
+        background: var(--accent-bg);
+        }
+
+        table caption {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        }
+
+        /* Format forms */
+        textarea,
+        select,
+        input {
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        box-shadow: none;
+        box-sizing: border-box;
+        width: 60%;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        }
+
+        /* Add arrow to drop-down */
+        select {
+        background-image: linear-gradient(45deg, transparent 49%, var(--text) 51%),
+            linear-gradient(135deg, var(--text) 51%, transparent 49%);
+        background-position: calc(100% - 20px), calc(100% - 15px);
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        }
+
+        select[multiple] {
+        background-image: none !important;
+        }
+
+        /* checkbox and radio button style */
+        input[type="checkbox"],
+        input[type="radio"] {
+        vertical-align: bottom;
+        position: relative;
+        }
+
+        input[type="radio"] {
+        border-radius: 100%;
+        }
+
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+        background: var(--accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+        /* Creates a rectangle with colored right and bottom borders which is rotated to look like a check mark */
+        content: " ";
+        width: 0.1em;
+        height: 0.25em;
+        border-radius: 0;
+        position: absolute;
+        top: 0.05em;
+        left: 0.18em;
+        background: transparent;
+        border-right: solid var(--bg) 0.08em;
+        border-bottom: solid var(--bg) 0.08em;
+        font-size: 1.8em;
+        transform: rotate(45deg);
+        }
+        input[type="radio"]:checked::after {
+        /* creates a colored circle for the checked radio button  */
+        content: " ";
+        width: 0.25em;
+        height: 0.25em;
+        border-radius: 100%;
+        position: absolute;
+        top: 0.125em;
+        background: var(--bg);
+        left: 0.125em;
+        font-size: 32px;
+        }
+
+        /* Make the textarea wider than other inputs */
+        textarea {
+        width: 80%;
+        }
+
+        /* Makes input fields wider on smaller screens */
+        @media only screen and (max-width: 720px) {
+        textarea,
+        select,
+        input {
+            width: 100%;
+        }
+        }
+
+        /* Ensures the checkbox and radio inputs do not have a set width like other input fields */
+        input[type="checkbox"],
+        input[type="radio"] {
+        width: auto;
+        }
+
+        /* do not show border around file selector button */
+        input[type="file"] {
+        border: 0;
+        }
+
+        /* Misc body elements */
+        hr {
+        color: var(--border);
+        border-top: 1px;
+        margin: 1rem auto;
+        }
+
+        mark {
+        padding: 2px 5px;
+        border-radius: 4px;
+        background: var(--marked);
+        }
+
+        main img,
+        main video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+        }
+
+        figure {
+        margin: 0;
+        text-align: center;
+        }
+
+        figcaption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        }
+
+        blockquote {
+        margin: 2rem 0 2rem 2rem;
+        padding: 0.4rem 0.8rem;
+        border-left: 0.35rem solid var(--accent);
+        color: var(--text-light);
+        font-style: italic;
+        }
+
+        cite {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: normal;
+        }
+
+        /* Use mono font for code elements */
+        code,
+        pre,
+        pre span,
+        kbd,
+        samp {
+        font-size: 1.075rem;
+        font-family: var(--mono-font);
+        color: var(--code);
+        }
+
+        kbd {
+        color: var(--preformatted);
+        border: 1px solid var(--preformatted);
+        border-bottom: 3px solid var(--preformatted);
+        border-radius: 5px;
+        padding: 0.1rem;
+        }
+
+        pre {
+        padding: 1rem 1.4rem;
+        max-width: 100%;
+        overflow: auto;
+        overflow-x: auto;
+        color: var(--preformatted);
+        background: var(--accent-bg);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        }
+
+        /* Fix embedded code within pre */
+        pre code {
+        color: var(--preformatted);
+        background: none;
+        margin: 0;
+        padding: 0;
+        }
+    </style>
+</head>
+<body>
+<p>PLEASE READ!</p>
+<p><strong><em>Disclaimer:</em>* This story is a complete fantasy involving breast
+expansion, body inflation, humiliation, and gore. It also has
+non-consensual themes, which may be too extreme for some readers. So, if
+that\'s </strong>NOT<strong> something you want to read...</strong>DON\'T.<strong> As stated,
+this is a work of </strong>fantasy<strong> and I do not wish, or condone, harm to
+anyone in</strong> REAL** life. *</p>
+<ul>
+<li><em>Again, this story includes breast inflation, </em><strong>body inflation,</strong><em>
+humiliation, and</em><strong> gore (bursting).</strong>* AGAIN, I wish no harm to anyone.
+Don\'t read if you don\'t like these extreme themes. I can\'t stress it
+enough.</li>
+</ul>
+<p>That being said, I\'m screwed in the head and I wrote this....</p>
+<p>BUSTED</p>
+<p><img alt="" src="Pictures/10000000000002720000020D2B280F50.jpg" />{width="3.7965in"
+height="2.8311in"}</p>
+<p>Sarah Nox road quietly in the passenger seat of the police cruiser,
+trying to think of something to say to the woman behind the steering
+wheel. The two officers had been on the beat for almost an hour, driving
+around the streets of Main City. They had only spoken a few words to
+each other the entire time.</p>
+<p>Sarah, new to the force, had been recently paired with the 34-year-old
+Lt. Jane Calhoun, a legend at the academy and highly respected among her
+peers.</p>
+<p>Lt. Calhoun rarely smiled, her lips perpetually pursed, her narrowed
+eyes mostly unseen behind a pair of aviator sunglasses. Her blonde hair,
+styled in a short bob, complimented her high cheekbones. Her dark blue
+police uniform hugged her tall, physically fit body. A wide leather kit
+belt around her waist held various necessities, including leather
+pouches, metal handcuffs, and a holstered Glock 22. The polished gold
+badge above her left breast glinted in the sunlight, which streamed
+through the cruiser\'s front windshield as she drove. She looked as if
+the gods had molded her to be the perfect police officer....</p>
+<p>Sarah on the other hand, looked soft by comparison: shorter, doughier,
+with a broad rear end, wearing a much baggier uniform to conceal her
+imperfections. She kept her long brunette hair in a ponytail for
+practicality.</p>
+<p>"I...I saw you take down Sgt. Mills today," Sarah spoke softly, finally
+finding the courage to say something. "He\'s a big man. I can\'t believe
+the way you handled him."</p>
+<p>Calhoun waited a moment before speaking. "We were just sparring...but
+yes...I take it seriously."</p>
+<p>"I\'ve heard a lot of stories about you," Sarah continued. "Did you
+really stop a bank robbery by yourself?"</p>
+<p>Calhoun smirked. It was the first time Sarah had seen Calhoun\'s
+expression change since they climbed into the cruiser. "I\'m the best,"
+Calhoun remarked humorlessly.</p>
+<p>The comment took Sarah aback. She didn\'t expect Lt. Calhoun to be so
+upfront. Confident, <strong>yes</strong>, but the way she said it made her seem
+cocky, braggadocios.</p>
+<p>Calhoun took a corner. "You can\'t be scared," she said. "You have to
+charge into any situation...sometimes with guns blazing."</p>
+<p>Sarah began to wonder if Calhoun had let her reputation go to her head.
+She had the methods of a rogue cop from a bad eighties movie.</p>
+<p>"But aren\'t we trained to--" Sarah started to say.</p>
+<p>"Forget what they say at the academy. This is the<strong><em> </em></strong>real<strong><em>
+</em></strong>world. It\'s dangerous. It\'s either<strong><em> </em></strong><strong>you</strong> or<strong> them.</strong><strong><em>
+</em></strong>I\'m not afraid of<em> </em>anything. I\'d rather <strong>go down</strong> than let any
+punks out there get the upper hand."</p>
+<p>Suddenly, the mic clipped on the shoulder of Calhoun\'s shirt buzzed and
+a voice came over it: "Lt. Calhoun, we have a call from an abandoned
+building on the edge of town. Can you and Nox check it out?"</p>
+<p>Calhoun gripped the mic and pressed the button on the side of it.
+"What\'s the problem?" she said, tilting her head toward the mic.</p>
+<p>The dispatcher: "Not sure. Somebody called and said there was a
+\'disturbance\' and hung up. Could be a prank, could be kids messing
+around the property, but you need to find out. I\'ll send the address to
+your cruiser\'s computer."</p>
+<p>"We\'re on it." Calhoun released the mic.</p>
+<p>She turned the wheel at the next light and proceeded toward the
+building\'s location.</p>
+<p>A few minutes later, Lt. Calhoun and Sarah were walking across the
+vacant parking lot and toward the entrance of the building, a six-story
+concrete block with a windowless black door for a front entrance. It
+stood on the outskirts of the city and had been abandoned for a few
+years now.</p>
+<p>Calhoun had her hand on her holster as she approached the entrance. "I
+doubt there\'s anything going on here. Civilians are pests, always
+making prank calls."</p>
+<p>Sarah already had her pistol unholstered, eyeing around the property
+anxiously. "We should be cautious just in case. We\'re not wearing any
+body armor."</p>
+<p>"Look, kid, I\'m the <strong>boss</strong> around here. I\'ve been to dozens of
+calls, taken out dozens of creeps. This is nothing...."</p>
+<p>Calhoun tried the door handle. It was unlocked. She brazenly swung the
+door open and marched into the building. Inside was a large empty room,
+gray walls, thin carpeting, a few adjoining doors. It was well kept,
+nothing in disrepair. It appeared to be a former business office, but no
+longer.</p>
+<p>Calhoun snorted. "What did I tell you? Nothing but a prank. She dropped
+her hand from her holster.</p>
+<p>Sarah was still gripping her weapon tightly, standing outside the
+building\'s entrance. She peered around the corner of the door. She
+could see Lt. Calhoun from behind. She was standing a few feet from
+Sarah in the large empty room.</p>
+<p>After scanning the interior more closely, Sarah spotted something
+Calhoun did not: perched atop a standing tripod in the far right corner
+of the room, a small digital camera.</p>
+<p>"Hey," Sarah whispered to Calhoun. "There\'s a camera."</p>
+<p>Calhoun twisted her head back at Sarah, lifted her aviator sunglasses,
+resting them on top of her head, and narrowed her eyes even more. That
+glare sent shivers down Sarah\'s spine.</p>
+<p>Then Calhoun turned her attention to the camera and began to walk toward
+it. When she was in front of it, she bent over slightly and inspected
+it, looking straight into the lens.</p>
+<p>Sarah unconsciously noticed the firmness and roundness of Calhoun\'s
+rear end, the fabric of her blue slacks straining against the apple
+shape of her buttocks. Sarah shook her head to dispel the thought.</p>
+<p>She finally stepped into the room, scanning it with her pistol out in
+front of her.</p>
+<p>Calhoun leaned in even closer to the camera. She spotted a little tube
+jutting out the front of it, sticking out beneath the lens. As soon as
+she notice it, a quick blast of mist shot from the tube and sprayed her
+directly in the face.</p>
+<p>Calhoun became immediately vertical, her aviator sunglasses falling back
+over her eyes, sliding a bit too far down her nose. She stumbled
+backwards. A sweet, flowery smell enveloped her nostrils, almost
+burning. She looked at Sarah. It was the first time Calhoun\'s
+expression had changed, her stoic scowl giving away to shock.</p>
+<p>Suddenly the front door slammed closed. Sarah spun around and directed
+her gun toward the door, when a man in a black ski mask and black
+clothes jumped up in front of her. He knocked the gun out of her hands
+with a quick karate-style chop.</p>
+<ul>
+<li>"*No!" she screamed.</li>
+</ul>
+<p>She swung a wild punch at the man, but he grabbed her by the wrist. He
+slipped behind her, trapping her arms at her sides. She tried to wriggle
+free but the man was too strong.</p>
+<p>Across the room, Calhoun frantically reached for her pistol, but she
+hadn\'t unclasped her holster, her fingers fumbling at the leather
+clasp.</p>
+<p>"Freeze, punk," she yelled.</p>
+<p>But she suddenly became dizzy and staggered backwards, knees buckling,
+her aviator sunglasses tumbling completely off her face and onto the
+floor.</p>
+<p>"What the...?" she muttered.</p>
+<p>Shit, she thought, that stuff that sprayed me must\'ve been some kind of
+<strong>drug. </strong></p>
+<p>That\'s when a door near Calhoun swung open and six large men filed out.
+They wore the same outfits as the man holding Sarah: black clothes and
+black ski masks.</p>
+<p>Calhoun, again, tried to compose herself, clasping a hand on her head.
+"Dammit, what\'s wrong with me?!" she said, her body still rocking in
+the same spot.</p>
+<p>One of the six men stepped forward. He was the tallest and appeared to
+be the leader. "Officer...you have about ten minutes to do what we
+say." His voice boomed deep and menacing. "The only antidote is semen.
+So, you better wet your lips."</p>
+<p>Finally Calhoun\'s woozy head subsided and she could think clearly. She
+couldn\'t believe what this fucking<strong> scumbag</strong> had just said to her.
+She steadied herself, became vertical, jutting out her chest. "How dare
+you say that to me! I\'m Lt. Jane Calhoun of the Main City Police
+Department!"</p>
+<p>The tall man spoke again: "We know, <strong>Jane</strong><strong><em>.</em></strong> We\'re the ones who
+dispatched you here, by hijacking your radio. You\'ve busted me and my
+friends many times. Now we\'re going to<strong> bust</strong> in <strong>you</strong>...<strong><em>" </em></strong></p>
+<p>Lt. Calhoun finally unclasped her holster and lifted her pistol at the
+men. "Hardly, creeps! On the ground!"</p>
+<p>The men just stood there motionless. Sarah was still held captive by the
+other man, but she could clearly see everything happening in front of
+her.</p>
+<p>Calhoun stood her ground, her eyes sharp and serious. "You dip-shits
+better do as I say---<strong>now!</strong>"</p>
+<p>One of the men chuckled.</p>
+<p>Then a gurgling sound arose deep from inside Lt. Calhoun...very, very
+deep down...</p>
+<p>"Ahh..." she moaned involuntarily. She could feel heat rising in her
+neck and face, her cheeks flushing red. She looked down. A strange
+sensation washed over her breasts, a tingling, like countless pin pricks
+all over them. She could feel her nipples become instantly stiff,
+starting to press against the fabric of her button-up dress shirt. She
+lowered her gun, continuing to look down at her chest. "W-what\'s
+happening?!"</p>
+<p>"You\'re blowing up," the tall man in front of the others said.</p>
+<p>She could now see her breasts slowly rising, growing under her shirt,
+like slowly inflating balloons. She tried not to panic. She couldn\'t
+panic. She couldn\'t show fear!</p>
+<p>But the pressure began to grow, a liquid inside her breasts filling up.</p>
+<p>Just then, her body lurched forward, breasts surging outward, the sound
+of two milk jugs sloshing could be heard. "Ah," she yelped, arching her
+back, dropping her gun with a trembling hand.</p>
+<ul>
+<li>"Ka-klink!"*</li>
+</ul>
+<p>She tried to stay steady, tried to stay stoic, grimacing, fighting her
+emotions back.</p>
+<p>Then her shirt began to pull from her pants, her shirttail becoming
+loose, the ever tightening shirt straining at the buttons.</p>
+<p>Sarah watched in awe as Lt. Calhoun\'s breasts grew from a B-cup, to a
+C-Cup, and then to a D-cup in a matter of seconds. This was something
+out of a horror movie, Sarah thought.</p>
+<p>The men in front of Lt. Calhoun began to pull down their pants. They
+wore no underwear, their penises springing to attention. Not one of the
+men were under seven inches in length. The tall man in the front also
+had the longest cock: huge, rock hard and veiny, over nine inches long.</p>
+<p>Calhoun\'s eyes turned to dinner plates upon seeing their manhood. "Piss
+off!" she shouted.</p>
+<p>Her breasts surged in another quick growth spurt, undulating forward
+under the shirt.</p>
+<p>*"Plink!" *</p>
+<ul>
+<li>*And a button popped off, shooting across the room.</li>
+</ul>
+<p>They were now past F-cups and growing. The weight was becoming too much.
+Calhoun\'s legs wobbled, finally gave, and she dropped to her knees. She
+grabbed her breasts in a vain attempt to lessen the growth, her hands
+squishing into the massive orbs.</p>
+<p>"You bastards!" she growled. "<strong>I </strong>have control<strong>--NOT YOU!</strong>"</p>
+<p><em>"Plink, plink, plink!"</em></p>
+<p>Three more buttons gone and the top of her shirt splayed open, revealing
+swelling, heaving cleavage, shiny with sweat.</p>
+<p>"Are you ready to suck now?" the tall man in front asked with a chuckle,
+gripping his throbbing shaft. "They\'re not gonna stop unless you taste
+some cum."</p>
+<p>Another man in the back spoke up: "That\'s right. Blow us or <strong>blowup</strong>,
+bitch!" He had started masturbating.</p>
+<p>Calhoun glared up at the men, burning a hole into their souls.
+"Go...to...hell..."</p>
+<p>Sarah then knew while watching her superior, her new partner, that she
+hadn\'t been bluffing. Lt. Jane Calhoun<strong> would </strong>really<strong> </strong>rather die
+than lower herself to these creeps. Sarah felt proud of the defiant
+police officer.</p>
+<p>And that\'s when it happened. The remaining buttons on Lt. Calhoun\'s
+shirt exploded everywhere, the bra she wore ripping to shreds. Her huge,
+round J-cups spilled out, pulsating bluish veins running through them.
+They looked completely freakish and unnatural, her nipples protruding at
+least three inches.</p>
+<p>Upon seeing her bloated naked beach balls, Calhoun\'s face changed again
+to one of shock. Her defiance completely zapped away. She stared
+wide-eyed up at the tall man in front of the group.</p>
+<p>"Okay, okay, okay!" she squealed, her pitch uncharacteristically high.
+"Come here. If semen will fix this---<strong>I\'LL DO IT!</strong>" She was totally
+crazed-looking, sweat pouring down her face.</p>
+<p>Sarah couldn\'t believe her ears. What did Lt. Calhoun say?</p>
+<p>The tall man stepped closer to Calhoun, who was still on her knees. She
+didn\'t waste anytime. She shot forward and clasped a hand around his
+massive member. She then wrapped her lips around it and began to suck
+violently, her head bobbing forward and back.</p>
+<p>"Whoa..." the tall man said. "I didn\'t think you\'d <strong>actually</strong> do
+it." He looked back at the rest of the men. "Can you believe this guys?
+She\'s <strong>really</strong> doing it."</p>
+<p>The rest of the men, except the one holding Sarah, began to circle
+Calhoun, who continued to blow the tall man. They <strong>all</strong> began jerking
+off feverishly.</p>
+<p>The tall man gripped her head and began to force himself further down
+her gullet. Her eyes bulged red and watery. She gagged, and he released
+her. She recomposed herself and continued bobbing. Saliva began to pour
+down her chin and foam around her mouth: a sloppy, sticky, disgusting
+mess. But she couldn\'t slow down. She needed that cum. She needed
+<strong>him</strong> to cum--<strong>FAST!</strong></p>
+<p>Sarah didn\'t want to look at the obscene show. However, like staring at
+a car wreck, she couldn\'t turn away. She could feel the dick of the man
+holding her beginning to push into her large ass, pressing into her
+slacks, and she couldn\'t wriggle away from it.</p>
+<p>Meanwhile, Lt. Calhoun\'s breasts were still expanding. She could feel
+them getting bigger, the skin tightening. She could hear the milk in
+them swishing about. Her panic increased.</p>
+<p>She halted the blowjob. <strong>"</strong>Hurry up! They\'re starting to<strong> HURT!"</strong></p>
+<p>The tall man, looking down at her, said: "Better go balls deep then. No
+gagging."</p>
+<p>To afraid to argue, she relaxed her throat and forced herself all the
+way to the base of his cock, her tongue flicking his hairy balls. She
+couldn\'t believe she was able to do it,</p>
+<p>"gluck, gluck, gluck."</p>
+<p>As she sucked, the word<strong><em> </em></strong><strong>blowjob </strong>kept returning to her. The
+word made her ill. It was <strong>so</strong> debased.... Yet she was in the middle
+of giving one to this horrible shit-bag---<strong>pleasuring him!
+</strong>Truthfully, she had never given oral sex to anyone. Sex in general had
+never been a priority. She had never married, rarely dated, never wanted
+a <strong>man</strong> telling her what to do. She was "<strong>the man</strong>." Her pride had
+been to immense to ever debase herself in this way...until now.</p>
+<p>After a few seconds devouring his member, the tall man groaned and
+blasted into Lt. Calhoun\'s virgin throat, a deep hard orgasm, a blast
+of cum so intense it instantly filled her belly. She hastily drew back,
+his massive penis sliding from her open gob like a boa
+constrictor--snot, saliva, and loads of stringy cum bridging her mouth
+to his dick. She gasped for air.</p>
+<p>After a moment, she reached down and felt her breasts. She could tell
+that they had stopped growing, but they were still gigantic. Yes, the
+cum had stopped them, but hadn\'t shrunk them. All the same, for a
+second, she felt relief....</p>
+<p>The tall man patted her patronizingly on the top of her head. "See, that
+wasn\'t so bad. And I bet your fans all over the<strong> </strong>world are loving it
+too." He ruffled her hair.</p>
+<p>Tears from choking on his dick continued down her cheeks, leftover spit
+and cum dripping from her well-defined chin. She looked with blurry eyes
+up at the tall man.</p>
+<p>Calhoun could see his mouth and eyes through the holes in his ski mask.
+He was grinning. "You see, that camera is broadcasting this as a live
+stream. Hundreds, if not<strong><em> </em></strong><strong>thousands</strong> of people are watching
+you...likely beating off to you. How does that make you feel?"</p>
+<p>Now in her sober state, the humiliation overcame her, the disgust,
+undying embarrassment. Her tough facade had been annihilated.... She
+had broke, and so many perverts had seen it, likely recorded<em> </em>it. She
+breathed deeply and a cum bobble inflated from her left nostril and
+popped.</p>
+<p>The men surrounding her, still masturbating, collectively chuckled.</p>
+<p>One of them stepped forward. "Hey, look up at me, bimbo. You want those
+stupid-looking melons to go down, better swallow my baby batter."</p>
+<p>Calhoun frowned in anger.<strong><em> </em></strong>BIMBO?!</p>
+<p>The man holding Sarah was rubbing up against her now, groping her
+breasts, his stiff cock sliding over her slacks and between her butt
+crack. After a minute, he made a funny sound and muttered: "I came."
+Sarah didn\'t care. At least he had stopped, and compared to Lt.
+Calhoun, she had it easy.</p>
+<p>"I\'m done!" Calhoun said, her defiance returning. "I\'ll have these
+reduced medically! I\'ll <strong>never</strong> do what you say!"</p>
+<p>"Alright," the man in front of her said. He pulled a knife from a sheath
+strapped to his belt. "Then how \'bout we pop them balloons now?" He
+made a jabbing motion with the knife.</p>
+<p>Come on, Lieutenant, Sarah thought, show<strong><em> </em></strong><strong>some</strong> grit. Go out
+with an<strong><em> </em></strong><strong>ounce</strong><strong><em> </em></strong>of dignity.</p>
+<p>But Calhoun immediately cracked. "Don\'t do it. I-I\'ll do anything."
+And she put his dick in her mouth.</p>
+<p>The rest of the men, aside from the tall man, continued casually
+stroking their dicks, waiting to be serviced. The tall man had exited
+the room through the door he entered from.</p>
+<p>"I bet you don\'t remember me, copper..." the man being blown said.
+"But you kicked my ass once, fucked me up good, caught me breaking into
+a car. Well, now look at you..." He then nutted into her mouth, filling
+it up.<strong> </strong>"<strong>Ah, shit!</strong>"</p>
+<p>He pulled his eight inch cock from her lips.</p>
+<p>Calhoun\'s cheeks were puffed out, full of cum. She swallowed hard.
+Getting the nasty thickness into her belly.</p>
+<p>She looked down again at her breasts, inspecting for any change in size.
+They remained the same: disturbingly huge, round and fake-looking...
+She could never go out in public like this.</p>
+<p>"It didn\'t work!" she screamed. "I\'m doing<strong><em> </em></strong><strong>this</strong><strong><em> </em></strong>for
+nothing!"</p>
+<p>"No," one of the men circling her said. "You just need <strong>more</strong> cum."
+And he walked over to her, continuing to stroke. "Tilt your head back."</p>
+<p>She didn\'t talk back this time. She did what he said and opened wide,
+just wanting to get this over with and return to normal. The man quickly
+unloaded into her open mouth, filling it almost to the brim, the cum
+sliding between her teeth. "Don\'t swallow yet," The man said. "You need
+much more to deflate those disgusting udders."</p>
+<p>The comments angered her, the degradation, but she complied. What else
+could she do?...</p>
+<p>Then the next man walked up, jerking.</p>
+<p>"Push them<strong> fat</strong> titties together," he said.</p>
+<p>She tried to speak but just gargled the cum and saliva foaming in her
+mouth.</p>
+<p>"Your<strong><em> </em></strong><strong>boobs, </strong>idiot," the man said. "I need some visual aid.
+Your butch haircut ain\'t gonna do it."</p>
+<p>Calhoun glared at the man. She felt like spitting the cum at him,
+yelling, clawing his eyes out. But, again, she shoved down her pride and
+did as she was told. She grabbed her tits on each side and pushed them
+up and together, which made a deep, long valley of cleavage, the round
+tops of her breasts almost rising to her chin.</p>
+<p>Upon seeing the once-mighty officer display herself like this, the man
+quickly busted a nut in her mouth, some splattering on her cheeks. "I
+bet your peers are proud," he said sarcastically. He sauntered off. At
+least it was quick.</p>
+<p>Then the next man stepped up to bat. With his free hand he grabbed the
+back of her head, yanking her hair. "Don\'t spill any, dumb dumb," he
+said, while continuing to stroke his dick with the other hand.</p>
+<p>Then the last man, not able to hold back, rushed over to her and both
+men finished in her mouth at the same time.</p>
+<p>She held the cum in her mouth for a moment, preparing herself to
+swallow. She then forced it down---bitterly.</p>
+<p>There was no immediate change to her breasts.</p>
+<p>The tall man from before strolled back through the door and over to Lt.
+Calhoun, who he thought was a precious sight: on her knees, face
+splattered with cum, breasts much bigger than her head, still wearing
+her kit belt, slacks, and tactical boots.</p>
+<p>The tall man was carrying a large white plastic bucket. It appeared to
+be filled with something, because he seemed to struggle carrying it.</p>
+<p>"Nothing can stop this much of the chemical," the tall man said to Lt.
+Calhoun. "You\'ll quickly pop like a balloon. Pretty humiliating way to
+go...Isn\'t it, <strong>Dirty Harry?</strong>"</p>
+<p>Calhoun\'s eyes, again, grew wide with shock. Her bottom lip quivered.
+"W-wait."</p>
+<p>"This concoction was created by me. You see, I\'m a bit of a <strong>mad</strong>
+chemist. I used to make exotic drugs for all the dealers around town,
+until you and your pig buddies raided my lab and tossed me behind bars.
+You\'re testimony put me there. You were just a newbie cop at the time,
+twenty or so...Well, I vowed that after I got out, I\'d make a drug
+that would put <strong>you</strong> out--<strong>for good</strong>."</p>
+<p>He turned to one of the other men. "Hey, pick up her glasses. That\'s
+the least we can do for her. Maybe it\'ll keep some of this out of her
+eyes."</p>
+<p>The man nodded, grinning through his ski mask, and walked over to where
+Calhoun had dropped her aviator\'s. He picked them up and placed them on
+her face. She was too hypnotized with fear and panic to do anything
+about it.</p>
+<p>The tall man began to raise the bucket up. "Well..." he said.</p>
+<p>Lt. Calhoun raised her hands over her head. "No, I\'ll blow you again!
+I\'ll blow you all! Don\'t do it!"</p>
+<p>"Here it<em><strong> </strong>comes</em>!"</p>
+<p>Just then a shot rang out and all the men looked over to the front
+entrance. Sarah stood there holding her pistol again. She had somehow
+subdued the other man, as he lie sprawled on the ground, knocked out
+behind her.</p>
+<p>"Put down the bucket!" Sarah demanded.</p>
+<p>The tall man slowly lowered the bucket.</p>
+<ul>
+<li><em>"</em><em>ON THE GROUND!</em>*"</li>
+</ul>
+<p>The men slowly began to lower themselves to the floor. After they were
+down, Sarah rushed over to Lt. Calhoun. "Alright, " Sarah told her. "Get
+up." Sarah grabbed her under the arm, careful not to touch any sticky
+mess that might have splattered onto Lt. Calhoun\'s body.</p>
+<p>With help from Sarah, Lt. Calhoun slowly wobbled to her feet. Sarah then
+bent over and grabbed Calhoun\'s pistol, which Calhoun had dropped
+earlier.</p>
+<p>"Jane," Sarah said, trying to snap Calhoun back to reality by using her
+first name. "Can you hold this?" She showed Calhoun the pistol, her
+Glock 22. "I need to run to the cruiser and grab some restraints. I\'ll
+call backup, too."</p>
+<p>Calhoun finally turned her head slowly to Sarah. "You can\'t speak of
+this to any one. <strong>Got that?</strong>..." Her tone was low and very serious.</p>
+<p>Sarah nodded. "Here," She gave Calhoun the pistol. "Keep this on them.
+I\'ll be--"</p>
+<p>"I know what <strong>I\'m</strong> doing, <strong>ROOKIE!</strong>" Calhoun shouted, jerking away
+from Sarah. "Now <strong>go</strong><strong><em> </em></strong>to the cruiser and <strong>grab</strong> those
+restraints!"</p>
+<p>Sarah couldn\'t believe Calhoun was acting like this...after Sarah had
+just saved her.</p>
+<p>Sarah simply nodded again and hurried out the front entrance.</p>
+<p>A moment later, Sarah returned and secured all the men with the
+restraints, hands and feet zip-tied, while Calhoun held the gun on them.</p>
+<p>"Alright, Sarah..." Calhoun started, "I want you to go wait in the
+cruiser."</p>
+<p>"But--"</p>
+<p>"Do it now!" She barred her teeth at Sarah.</p>
+<p>Sarah\'s face was firm now. "Yes, Ma\'am," she said, turned and stamped
+to the cruiser, leaving Calhoun and the men alone.</p>
+<p>Calhoun slipped the pistol back into her holster and began to pace in
+front of the men, who were still face-down on the ground. "Alright, you
+bastards," she said, her massive breasts swaying as she walked in front
+of them. "It\'s time to get what <strong>you</strong> deserve. Do you think I\'m
+gonna leave here without revenge?" Calhoun sauntered toward the bucket
+of chemicals. She looked down into it. The liquid inside was clear, a
+bit thicker than water. It smelled the same as the first mist that hit
+her, only much stronger. She grabbed the bucket around the rim and
+struggled to lift it, but it was very heavy. Plus, her very massive
+breasts were in the way.</p>
+<p>"You can\'t do that," the tall man said.</p>
+<p>Calhoun began to drag the bucket toward him. "And what...would this...
+concoction do...to you?" she panted, struggling with the bucket.</p>
+<p>"Nothing. We\'ve tested it...It only works on women. I mean you
+<strong>literally</strong> can\'t hurt us."</p>
+<p>"<strong>SAVE IT</strong><strong><em>!</em></strong>"<strong><em> </em></strong>Calhoun snapped. "You lie!" She could hear
+police sirens approaching in the distance, her backup. She better move
+fast!</p>
+<p>She began to lift the bucket, straining against the weight. "I\'m
+tougher than <strong>all</strong><strong><em> </em></strong>of you <strong>dirt-bags!</strong>"<strong> </strong>she said, veins in
+her temples bulging, muscles straining,. "I\'m better!" She had the
+bucket up, almost to her neck, when the entrance burst open and a group
+of police officers rushed in. The sudden calamity startled Calhoun, who
+lost her concentration, and she fell backwards, bucket in hand.</p>
+<p>"<strong>FUCK NO!</strong>" She howled, slamming back-first onto the ground, the
+chemical in the bucket dumping all over her: pouring up her nose, down
+her throat, sliding into her cleavage, down her stomach, saturating her
+slacks, panties, and draining into her vagina and anus. She gargled a
+scream, the chemical bubbling and spurting out of her mouth.</p>
+<p>Seven officers witnessed this, including Sarah, who stood in the back.</p>
+<p>Almost instantly Calhoun\'s already swollen mammaries began to inflate,
+much more rapidly this time.</p>
+<p>"Don\'t look at me!" she yelled, writhing around, her breasts swelling.</p>
+<p>Milk began to leak out of her engorging nipples, the sound of something
+akin to rubbing balloons together could be heard--<strong>stretching skin</strong>.
+The breasts grew half the size of her body in seconds and continued to
+grow even bigger. Then her ass began to inflate as well, bursting her
+belt and ripping her slacks to pieces.</p>
+<p>The men lying on the ground begin spewing derisive remarks, heckling
+her.</p>
+<p>"Stupid klutz!" one of the men said.</p>
+<p>"Finally her tits are as big as her ego!" said another.</p>
+<p>And unbeknownst to everyone, the camera had never been turned off,
+streaming the whole thing to anyone who was watching, which could have
+been hundreds, if not thousands!</p>
+<p>"I\'m not going out like<em> </em>this!"<strong><em> </em></strong>Calhoun said, contorting her
+face in anger and pain. "I won\'t let it happen!<strong> I CAN HOLD IT!</strong>"</p>
+<p>Soon after those words left her lips, a geyser of milk erupted from her
+nipples and ecstasy abruptly spread throughout her body, like nothing
+she\'d ever felt before.</p>
+<p>"<strong>Oh my God!</strong>" she howled uncontrollably for everyone to hear, her
+pussy squirting like a fire hose. "<strong>I-I\'M CUMMING! DON\'T LOOK AT
+ME!</strong>"</p>
+<p>The officers watching just stood there in silent disbelief. They all
+knew Lt. Calhoun. She was such a strong, powerful figure in the
+department. She was someone everybody admired, someone everybody feared.
+Seeing her in this sorry state disturbed them. How did <strong>she</strong> let this
+happen?</p>
+<p>In a moment, the orgasm subsided. In the afterglow, she exhaled relief.
+Her swelling breasts and ass seemed to have calmed.</p>
+<p>Sarah pushed past the other officers and ran over to Calhoun.</p>
+<p>"We\'ll get you help," Sarah said to her. "Just stay still."</p>
+<p>Calhoun\'s breasts were so big now, that even though she lay back-first
+on the ground, they came up to Sarah\'s head. The skin was so tight and
+shiny, Sarah could almost see her reflection in it. Stretchmarks had
+started to form on them like stripes on a watermelon, blue veins like
+spiderwebs were spread throughout. Calhoun\'s ass remained in a similar
+state, inflated a few feet off the ground.</p>
+<p>"Don\'t touch me," Calhoun said. "I\'m holding the growth back. I\'m
+doing it...with sheer<strong><em> </em></strong>will<strong> </strong>power. <strong>YOU HEAR THAT EVERYBODY!
+I\'M STILL IN CONTROL!</strong>"</p>
+<p>Suddenly, her belly groaned terribly, gurgled from deep within.
+Calhoun\'s cheeks puffed out and she puckered her lips tightly, her eyes
+crossing. A second later, she puked up all the cum she\'d swallowed.</p>
+<ul>
+<li>"BLARRF!"*</li>
+</ul>
+<p>Like a volcano, it poured over her face, pooling into her eye sockets,
+draining into her nostrils.</p>
+<p>Everyone watching collectively groaned in disgust.</p>
+<p>"Gross..." Sarah said. She couldn\'t help it. It was true.</p>
+<p>Then Calhoun\'s stomach began to swell rapidly. After a few seconds, it
+had grown ginormous, as big as her breasts.</p>
+<p>The terror in her face returned. "What, what\'s happening?!"</p>
+<p>Sarah had finally given up on Calhoun, lost all respect. "Should\'ve
+kept that jizz down, Janey." Sarah turned and hurried back to join the
+other officers.</p>
+<p>Then Calhoun\'s whole body instantly expanded: arms, hands, legs, and
+feet, blowing apart her tactical boots. She looked like a giant
+flesh-colored tomato, only with huge breasts and a giant ass. The only
+parts of her body that remained their original size was her head and
+neck, which she twisted toward the group of officers. They could see she
+was straining hard, gritting her teeth, veins pulsating in her temples,
+her neck muscles bulging out---forcing the inflation from rising above
+her collarbone.</p>
+<p>"<strong>FUUUCK! IT HURRRTS! HELP ME!</strong>"</p>
+<p>But it was too late. The officers could see Lt. Calhoun\'s skin
+beginning to tear on the side of her breasts and body, and she could
+feel every bit of it.</p>
+<p>Then, as if to counteract the pain, another orgasm began to rise. Her
+crotch was going to erupt into something she\'d never felt before,
+something amazing. She lost concentration and relaxed her neck muscles.
+"<strong>I\'M GONNA...I\'M GONNA...I\'M GONNA CUUU--</strong>"</p>
+<p><strong> </strong> Then the pressure thrust up through her neck, expanding it, and
+filled into her head, which swelled into the size of a beach ball. Her
+eyes bulged out of the sockets, her cheeks ballooning around her mouth,
+muffling any speech.</p>
+<p>"<strong>MMMMMPH!</strong>"</p>
+<p><strong><em> </em></strong>Suddenly she exploded into a bloody, milky mess painting
+everybody in the building red.</p>
+<p>Sarah grimaced, the liquid remains of Lt. Calhoun dripping off her,
+soaking into her uniform. She absentmindedly licked her lips and some of
+Calhoun slid down her throat. Then a sweet, flowery smell attacked her
+nose.</p>
+<p><strong>END</strong></p>
+<p>I will likely be writing more stories in the future. Some will not be
+quite as extreme, others might be. I also wrote The Jewel several years
+ago. If you have any questions or comments, write me at:</p>
+<p>LordTempo\@mail.com</p>
+<p>.</p>
+</body>
+</html>
