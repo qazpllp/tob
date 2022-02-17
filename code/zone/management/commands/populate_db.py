@@ -162,7 +162,7 @@ class Command(BaseCommand):
 				if created_a:
 					print(f"Creating author {author}")
 				if created_s:
-					print(f"Creating Story {title}")
+					print(f"Creating Story {story}")
 
 	def import_tags(self, *args, **options):
 		"""
@@ -174,8 +174,10 @@ class Command(BaseCommand):
 			for row in reader:
 				tag, created_t = Tag.objects.update_or_create(
 					slug = row[0],
-					description = row[1],
-					defaults = {'category': row[2]}
+					defaults = {
+						'description': row[1],
+						'category': row[2]
+					}
 				)
 
 	def download_story(self, story: Story, *args, **options):
