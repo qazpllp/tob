@@ -23,13 +23,14 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      # Download stories that have been zipped and saved in a publically accesible gdrive location
-      - name: Download stories zip
+      # Download GDrive download utility
+      - name: Download GDrive CLI
         run: |
-          fileid="1mOU-1a17DvORtdL2bOFXtxdmPbeJ8oU2"
-          filename="stories.zip"
-          curl -c ./cookie -s -L "https://drive.google.com/uc?export=download&id=${fileid}"
-          curl -Lb ./cookie "https://drive.google.com/uc?export=download&confirm=`awk '/download/ {print $NF}' ./cookie`&id=${fileid}" -o ${filename}
+          sudo apt-get install -y pip
+          pip install godwn
+      
+      - name: Download stories
+        run: gdown --id 1mOU-1a17DvORtdL2bOFXtxdmPbeJ8oU2
         
       # unzip and move the stories to the expected location
       - name: Unzip stories
