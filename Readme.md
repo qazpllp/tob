@@ -62,7 +62,7 @@ If the story/static files are already in place, run `python manage.py populate_d
 
 Include dotenv python package to make use of env variables (https://help.pythonanywhere.com/pages/environment-variables-for-web-apps). Run `pip install dotenv` within the pythonanywhere console, using the appropriate virual environment
 
-set static path according to settings.py. By default this should be the url: `/static`, and the path can be anywhere relevant, e.g. `~/tob/code/static`. This setting is adjusted within the "website" tab.
+set static path according to settings.py. By default this should be the url: `/static`, and the path can be anywhere relevant, e.g. `~/tob/code/static`. This setting is adjusted within the "website" tab. Also do the same for media files `~tob/code/media` to `media`, as per the MEDIA_ROOT and MEDIA_URL values in the settings file.
 
 To save on computation on the hosting device, it is recommended to set up a local version of the site. This site then runs the downloading and database-ing of the stories, which are then exported locally and imported onto the server.
 Pre-populate the sqlite database locally (see above)by running `python manage.py populate_db --use_static` if not already done. Then run `python manage.py dumpdata dump.json`. Import this file somewhere into the pythonanywhere app, then import it `python manage.py loaddata /path/to/dump.json`.

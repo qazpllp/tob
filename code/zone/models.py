@@ -24,8 +24,8 @@ class Story(models.Model):
     downloads = models.IntegerField()
     words = models.IntegerField()
     id = models.IntegerField(primary_key=True)
-    # text = models.TextField()
     tags = models.ManyToManyField(Tag)
+    text = models.FileField(upload_to='story_text')
 
     class Meta:
         verbose_name_plural = "stories"
