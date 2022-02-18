@@ -5,10 +5,8 @@ services:
     image: postgres
     volumes:
       - db_persistent:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_NAME=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+    env_file:
+      - .env
   web:
     build: .
     command: gunicorn tob.wsgi:application --bind 0.0.0.0:8000 --access-logfile - --error-logfile -  --reload
@@ -17,15 +15,8 @@ services:
       - static:/static # static files
     ports:
       - "8000:8000"
-    environment:
-      - POSTGRES_NAME=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - DEBUG=1 # Debug true? Set to 0 for production
-      - URL=127.0.0.1 # change to site, if hosting on site that is not localhost
-      - CSRF_URL=https://*.127.0.0.1 # change to site, if hosting on site that is not localhost
-      - DATABASE_URL=postgres://postgres:postgres@db:5432/postgres # of form: postgres://user:password@host:port/database
-      - DJANGO_LOGLEVEL = INFO
+    env_file:
+      - .env
     depends_on:
       - db
 

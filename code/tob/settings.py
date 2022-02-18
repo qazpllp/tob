@@ -121,7 +121,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Clear prev config
 LOGGING_CONFIG = None
 # Get loglevel from env
-LOGLEVEL = os.getenv('DJANGO_LOGLEVEL', 'info').upper()
+LOGLEVEL = os.getenv('DJANGO_LOGLEVEL', default='info').upper()
 
 logging.config.dictConfig({
     'version': 1,
