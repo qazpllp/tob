@@ -60,7 +60,10 @@ If the story/static files are already in place, run `python manage.py populate_d
 
 # Pythonanywhere
 
-Include dotenv python package to make use of env variables (https://help.pythonanywhere.com/pages/environment-variables-for-web-apps). Run `pip install dotenv` within the pythonanywhere console, using the appropriate virual environment
+Set up a virtualenv (https://help.pythonanywhere.com/pages/Virtualenvs).
+
+Include dotenv python package to make use of env variables (https://help.pythonanywhere.com/pages/environment-variables-for-web-apps). Run `pip install dotenv` within the pythonanywhere console, using the appropriate virual environment. Load it within the wsgi.py file: e.g. `load_dotenv('/home/<user>/tob/.env')`. Ensure the .env file has `export ...` preceeding each variable.
+
 
 set static path according to settings.py. By default this should be the url: `/static`, and the path can be anywhere relevant, e.g. `~/tob/code/static`. This setting is adjusted within the "website" tab. Also do the same for media files `~tob/code/media` to `media`, as per the MEDIA_ROOT and MEDIA_URL values in the settings file.
 
