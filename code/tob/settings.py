@@ -183,5 +183,5 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # Security
 # Available over only SSL (no non-ssl connections)
 SECURE_SSL_REDIRECT = True if os.environ.get('DEPLOYMENT') == "1" else False
-
 SESSION_COOKIE_SECURE = True if os.environ.get('DEPLOYMENT') == "1" else False
+CSRF_COOKIE_SECURE = True if os.environ.get('DEPLOYMENT') == "1" else False
