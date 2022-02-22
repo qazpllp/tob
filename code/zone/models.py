@@ -26,6 +26,8 @@ class Story(models.Model):
     id = models.IntegerField(primary_key=True)
     tags = models.ManyToManyField(Tag)
     text = models.FileField(upload_to='story_text')
+    text_pdf = models.FileField(upload_to='story_text_pdf')
+    text_html = models.FileField(upload_to='story_text_html')
 
     class Meta:
         verbose_name_plural = "stories"

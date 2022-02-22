@@ -16,12 +16,10 @@ class Command(BaseCommand):
             '--year', 
             help='Optional comma separated list of years to search',
         )
-        # parser.add_argument('limit_number', help='Limit the number of searched files')
     
     def handle(self, *args, **options):
         urlYearBase = "https://overflowingbra.com/ding.htm?dates="
         htmls = []
-        # stories = []
 
         if options['year']:
             years = [int(s.strip()) for s in options["year"].split(",")]
