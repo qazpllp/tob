@@ -7,6 +7,7 @@ import glob
 import codecs
 from pathlib import Path
 from io import StringIO
+from typing import List
 
 from django.core.management import BaseCommand
 from django.templatetags.static import static
@@ -26,7 +27,7 @@ import pdfminer
 import markdown
 import pdfkit
 
-from zone.models import Story
+from zone.models import Author, Story, Tag
 
 # Various strings (key) to replace with (value)
 replace_dict = {
@@ -49,26 +50,158 @@ class Command(BaseCommand):
 		parser.add_argument('--forced_wordcount', action="store_true", help="Overwrite word count")
 		parser.add_argument('--forced_convert', action="store_true", help="Overwrite pdf/html, e.t.c. files for serving")
 		parser.add_argument('--story_id', help="Download a particular story (if already known about in database)")
-	
+		parser.add_argument('--year', help='Optional comma separated list of years to search')
+		parser.add_argument('--update', action="store_true", help='Only finds and consideres newly added stories to textify')
+
 	def handle(self, *args, **options):
 		baseUrl = "https://overflowingbra.com/download.php?StoryID="
 
+		if options['forced']:
+			options['forced_download'] = options['forced_textify'] = options['forced_wordcount'] = options['forced_convert'] = True
+
+		# find stories
+		htmls = self.get_tob_pages(**options)
+		new_stories = []
+		for html in htmls:
+			new_stories += self.add_stories_by_year(html)
+
+		# iterate over stories
 		# handle arguments
 		if options['story_id']:
 			stories = [Story.objects.get(id=options['story_id'])]
 			options['forced'] = True
+		elif options['update']:
+			stories = new_stories
 		else:
 			stories = Story.objects.all()
-		if options['forced']:
-			options['forced_download'] = options['forced_textify'] = options['forced_wordcount'] = options['forced_convert'] = True
-
-		# iterate over stories
 		Path(self.raw_loc).mkdir(parents=True, exist_ok=True)
 		for s in stories:
 			self.download_to_cache(s, **options)
 			self.cache_to_markdown(s, **options)
 			self.get_wordcount(s, **options)
 			self.convert_text(s, **options)
+
+	def get_tob_pages(self, *args, **options) -> List[str]:
+		"""
+		Scrape TOB site to find pages with all the stories, by year
+		Returns a list of 1 html page per year 
+		"""
+		urlYearBase = "https://overflowingbra.com/ding.htm?dates="
+		htmls = []
+
+		if options['year']:
+			years = [int(s.strip()) for s in options["year"].split(",")]
+		elif options['update']:
+			years = years = [datetime.datetime.now().year]
+		else:
+			years = range(1998, datetime.datetime.now().year + 1)
+
+		# Find available stories by searching by year
+		for year in years:
+			
+			# store pages for later use
+			html_path = 'zone/cache/zone/original/'
+			Path(html_path).mkdir(parents=True, exist_ok=True)
+			filename = os.path.join(html_path, str(year) + ".html")
+
+			# Try to use cache if html file found in cache, and not current year
+			if not os.path.exists(filename) or year == datetime.datetime.now().year:
+				url = urlYearBase + str(year)
+				try:
+					obj = request.urlopen(url)
+				except error.HTTPError as e:
+					print('Error code: ', e.code)
+				except error.URLError as e:
+					print('Reason: ', e.reason)
+				text = obj.read()
+				htmls.append(text)
+				with open(filename, 'wb') as f:
+					f.write(text)
+			else:
+				print(f"Using cache for year {year}")
+				with open(filename, 'rb') as f:
+					htmls.append(f.read())
+		return htmls
+
+	def add_stories_by_year(self, html_doc: str, *args, **options) -> List[Story]:
+		"""
+		Takes a html doc containing potential stories and extracts story/author info
+		"""
+		soup = BeautifulSoup(html_doc, 'html.parser')
+		new_stories = []
+
+		for i, story in enumerate(soup.find_all("div", class_="storybox")):
+			author = story.find("div", class_="author").a.contents[0]
+			title = story.find("div", class_="storytitle").a.contents[0]
+			
+			try:
+				date = story.find("div", class_="submitdate").contents[0]
+				
+				# remove text on the day (e.g. 3rd)
+				day = date.split(',')
+				day[0] = ''.join([i for i in day[0] if i.isdigit()])
+				date = ''.join(day)
+
+				date = datetime.datetime.strptime(date, '%d %b %y')
+			except:
+				date = datetime.datetime(1970, 1, 1)
+			
+			try:
+				summarys = story.find("div", class_="summary").contents
+				summary = ' '.join(x.text for x in summarys)
+			except:
+				summary = ""
+			
+			try:
+				tags = story.find("div", class_="storycodes").contents[0].split()
+			except:
+				tags = []
+			downloads = int(story.find("div", class_="downloads").contents[0].split()[0])
+			authorId = story.find("div", class_="author").a["href"].split("=")[1]
+			storyId = story.find("div", class_="storytitle").a["href"].split("=")[1]
+
+
+			author, created_a = Author.objects.get_or_create(
+				id = authorId,
+				name = author,
+			)
+
+			tags_found = []
+			for t in tags:
+				tag, created_t = Tag.objects.get_or_create(
+					slug = t
+				)
+				tags_found.append(tag)
+
+			# else:
+			story, created_s = Story.objects.get_or_create(
+				id = storyId,
+				pub_date = date,
+				title = title,
+				summary = summary,
+				author = author,
+				# The following values may change when accessing the same story at different times
+				defaults = {
+					'words': 0,
+					'downloads': downloads,
+				}
+			)
+
+			# story must be saved before assigning many-to-many tags field
+			if created_s:
+				for t in tags_found:
+					story.tags.add(t)
+			# If not created, update with more recent values
+			else:
+				story.downloads = downloads
+				story.save()
+
+			if created_a:
+				print(f"Creating author {author}")
+			if created_s:
+				print(f"Creating Story {story}")
+				new_stories.append(story)
+		return new_stories
 
 	def download_to_cache(self, s: Story, *args, **options):
 		"""
