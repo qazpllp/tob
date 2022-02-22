@@ -11,21 +11,25 @@ from zone.models import Author, Story, Tag
 class Command(BaseCommand):
     help = 'Find stories/authors/tags on TOB. Imports info to database'
 
-    # def add_arguments(self, parser):
-    #     parser.add_argument(
-    #         '--create-only', 
-    #         action="store_true",
-    #         help='Does not update if already exists',
-    #     )
-    #     # parser.add_argument('limit_number', help='Limit the number of searched files')
+    def add_arguments(self, parser):
+        parser.add_argument(
+            '--year', 
+            help='Optional comma separated list of years to search',
+        )
+        # parser.add_argument('limit_number', help='Limit the number of searched files')
     
     def handle(self, *args, **options):
         urlYearBase = "https://overflowingbra.com/ding.htm?dates="
         htmls = []
         # stories = []
 
+        if options['year']:
+            years = [int(s.strip()) for s in options["year"].split(",")]
+        else:
+            years = range(1998, datetime.datetime.now().year + 1)
+
         # Find available stories by searching by year
-        for year in range(1998, datetime.datetime.now().year + 1):
+        for year in years:
             
             # store pages for later use
             html_path = 'zone/cache/zone/original/'
@@ -97,7 +101,7 @@ class Command(BaseCommand):
                     tags_found.append(tag)
 
                 # else:
-                story, created_s = Story.objects.update_or_create(
+                story, created_s = Story.objects.get_or_create(
                     id = storyId,
                     pub_date = date,
                     title = title,
@@ -105,7 +109,7 @@ class Command(BaseCommand):
                     author = author,
                     # The following values may change when accessing the same story at different times
                     defaults = {
-                        # 'words': 0,
+                        'words': 0,
                         'downloads': downloads,
                     }
                 )
@@ -114,6 +118,10 @@ class Command(BaseCommand):
                 if created_s:
                     for t in tags_found:
                         story.tags.add(t)
+                # If not created, update with more recent values
+                else:
+                    story.downloads = downloads
+                    story.save()
 
                 if created_a:
                     print(f"Creating author {author}")
