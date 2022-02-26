@@ -27,6 +27,7 @@ import pdfminer
 import markdown
 import pdfkit
 
+from django.conf import settings
 from zone.models import Author, Story, Tag
 
 # Various strings (key) to replace with (value)
@@ -39,9 +40,10 @@ replace_dict = {
 class Command(BaseCommand):
 	help = 'Download stories from TOB and extract the text, and word count'
 
-	raw_loc = 'zone/cache/zone/stories_raw/'
+	cache_loc = os.path.join(settings.CACHE_ROOT,'zone/')
+	raw_cache_loc = os.path.join(cache_loc,'story_raw/')
 	baseUrl = "https://overflowingbra.com/download.php?StoryID="
-	static_dir = 'zone/static/zone/stories/'
+	# static_dir = os.path.join(settings.CACHE_ROOT,'zone/static/zone/stories/')
 
 	def add_arguments(self, parser):
 		parser.add_argument('--forced', action="store_true", help="Overwrite already stored data. Equivalent to all the other optional arguments together")
@@ -49,6 +51,7 @@ class Command(BaseCommand):
 		parser.add_argument('--forced_textify', action="store_true", help="Overwrite text data")
 		parser.add_argument('--forced_wordcount', action="store_true", help="Overwrite word count")
 		parser.add_argument('--forced_convert', action="store_true", help="Overwrite pdf/html, e.t.c. files for serving")
+		parser.add_argument('--skip_find', action="store_true", help="Overwrite pdf/html, e.t.c. files for serving")
 		parser.add_argument('--story_id', help="Download a particular story (if already known about in database)")
 		parser.add_argument('--year', help='Optional comma separated list of years to search')
 		parser.add_argument('--update', action="store_true", help='Only finds and consideres newly added stories to textify')
@@ -56,14 +59,17 @@ class Command(BaseCommand):
 	def handle(self, *args, **options):
 		baseUrl = "https://overflowingbra.com/download.php?StoryID="
 
+		if options['story_id']:
+			options['skip_find'] = options['forced'] = True
 		if options['forced']:
 			options['forced_download'] = options['forced_textify'] = options['forced_wordcount'] = options['forced_convert'] = True
 
 		# find stories
-		htmls = self.get_tob_pages(**options)
-		new_stories = []
-		for html in htmls:
-			new_stories += self.add_stories_by_year(html)
+		if not options['skip_find']:
+			htmls = self.get_tob_pages(**options)
+			new_stories = []
+			for html in htmls:
+				new_stories += self.add_stories_by_year(html)
 
 		# iterate over stories
 		# handle arguments
@@ -74,7 +80,7 @@ class Command(BaseCommand):
 			stories = new_stories
 		else:
 			stories = Story.objects.all()
-		Path(self.raw_loc).mkdir(parents=True, exist_ok=True)
+		Path(self.cache_loc).mkdir(parents=True, exist_ok=True)
 		for s in stories:
 			self.download_to_cache(s, **options)
 			self.cache_to_markdown(s, **options)
@@ -100,7 +106,7 @@ class Command(BaseCommand):
 		for year in years:
 			
 			# store pages for later use
-			html_path = 'zone/cache/zone/original/'
+			html_path = os.path.join(self.cache_loc,'year_html/')
 			Path(html_path).mkdir(parents=True, exist_ok=True)
 			filename = os.path.join(html_path, str(year) + ".html")
 
@@ -209,13 +215,13 @@ class Command(BaseCommand):
 		Returns whether successed to create the files.
 		"""			
 		# file of interest
-		folderName=os.path.join(self.raw_loc, str(s.id))
+		folderName=os.path.join(self.raw_cache_loc, str(s.id))
 		url = self.baseUrl + str(s.id)
 
 		# Download story as necessary
 		if options['forced_download'] or (not s.text and not os.path.exists(folderName)):
 			print(f"Downloading {s}")
-			temploc = "zone/cache/zone/temp.zip"
+			temploc = os.path.join(self.cache_loc, "temp.zip")
 			Path(os.path.dirname(temploc)).mkdir(parents=True, exist_ok=True)
 			try:
 				tempname,_ = request.urlretrieve(url, temploc)
@@ -244,7 +250,7 @@ class Command(BaseCommand):
 
 		print(f"Textifying {s}")
 		handled = False
-		folderName=os.path.join(self.raw_loc, str(s.id))
+		folderName=os.path.join(self.raw_cache_loc, str(s.id))
 
 		# extentions that can and will be converted. Order first as highest priority. Try to order in ease of conversion to markdown, and that has relevant styling (headings, e.t.c.)
 		exts = ['html', 'htm', 'doc', 'docx', 'odt', 'pdf', 'rtf', 'txt']
@@ -356,7 +362,7 @@ class Command(BaseCommand):
 			print(f'{s} has no text to convert')
 			return
 
-		story_dir = os.path.join(self.static_dir, str(s.id))
+		story_dir = os.path.join(self.cache_loc, "conv_story", str(s.id))
 		Path(story_dir).mkdir(parents=True, exist_ok=True)
 		
 		# html
