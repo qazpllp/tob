@@ -431,15 +431,13 @@ class Command(BaseCommand):
 		"""
 		Take a htm(l) filename and convert it to markdown text
 		"""
-		with codecs.open(filename, 'r', encoding='utf-8', errors='replace') as file: 
+		with codecs.open(filename, 'r', encoding='utf-8', errors='ignore') as file: 
 			soup = BeautifulSoup(file, 'html5lib')
-		try:
-			contents = '\n'.join([str(e) for e in soup.body.contents])
-		except:
-			contents = '\n'.join([str(e) for e in soup.contents])
+		# remove single newlines within <p>
+		# Double newlines for ending <p> tags, to ensure newline generated
+		contents = '\n\n'.join([str(e) for e in soup.stripped_strings])
 		text = markdownify(contents, heading_style="ATX")
-		handled = True
-		return (text, handled)
+		return (text, True)
 
 	def striprtf(self, text):
 		"""
