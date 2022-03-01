@@ -252,6 +252,9 @@ class Command(BaseCommand):
 		handled = False
 		folderName=os.path.join(self.raw_cache_loc, str(s.id))
 
+		# remove old file
+		s.text.delete()
+
 		# extentions that can and will be converted. Order first as highest priority. Try to order in ease of conversion to markdown, and that has relevant styling (headings, e.t.c.)
 		exts = ['html', 'htm', 'doc', 'docx', 'odt', 'pdf', 'rtf', 'txt']
 
@@ -431,9 +434,30 @@ class Command(BaseCommand):
 		"""
 		Take a htm(l) filename and convert it to markdown text
 		"""
-		with codecs.open(filename, 'r', encoding='utf-8', errors='ignore') as file: 
+		encoding = 'utf-8'
+		with codecs.open(filename, 'r', encoding=encoding, errors='ignore') as file: 
 			soup = BeautifulSoup(file, 'html5lib')
-		# remove single newlines within <p>
+		
+		# See if alternative encoding is defined in the head
+		try:
+			# for http-equiv meta tag
+			content = soup.find("meta", {
+				'http-equiv': lambda x: x and x.lower() == 'content-type'
+				})["content"]
+				# Should be of form "text/html; charset=xxx"
+			charset_str = "charset="
+			charset = content.lower().find(charset_str)
+			if charset != -1:
+				c = content[charset+len(charset_str):]
+				if c.lower() == 'windows-1252':
+					encoding = 'cp1252'
+		except:
+			pass
+		if encoding != 'utf-8':
+			with codecs.open(filename, 'r', encoding=encoding, errors='ignore') as file: 
+				soup = BeautifulSoup(file, 'html5lib')
+		
+		# remove single newlines within <p> ...todo
 		# Double newlines for ending <p> tags, to ensure newline generated
 		contents = '\n\n'.join([str(e) for e in soup.stripped_strings])
 		text = markdownify(contents, heading_style="ATX")
