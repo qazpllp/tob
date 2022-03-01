@@ -595,8 +595,14 @@ class Command(BaseCommand):
 		"""
 		Converts (plain) text to markdown.
 		"""
+		parags = text.split("\n\n")
+		if not len(parags) > (len(text)/500):
+			# probably uses 1 newlines for paragraphs
+			parags = text.split("\n")
+		parags = [p.strip() for p in parags]
+	
 		# Convert single newlines to double - so they are visible in MD
-		text = "\n\n".join(text.split("\n"))
+		text = "\n\n".join(parags)
 
 		# Escape MD characters
 		replace = {
