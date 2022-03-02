@@ -26,6 +26,7 @@ from pdfminer.pdfparser import PDFParser
 import pdfminer
 import markdown
 import pdfkit
+from markdownify import MarkdownConverter
 
 from django.conf import settings
 from zone.models import Author, Story, Tag
@@ -459,8 +460,9 @@ class Command(BaseCommand):
 		
 		# remove single newlines within <p> ...todo
 		# Double newlines for ending <p> tags, to ensure newline generated
-		contents = '\n\n'.join([str(e) for e in soup.stripped_strings])
-		text = markdownify(contents, heading_style="ATX")
+		# contents = '\n\n'.join([str(e) for e in soup.stripped_strings])
+		# text = markdownify(contents, heading_style="ATX")
+		text = MarkdownConverter(heading_style="ATX").convert_soup(soup)
 		return (text, True)
 
 	def striprtf(self, text):
