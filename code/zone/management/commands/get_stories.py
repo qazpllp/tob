@@ -458,6 +458,10 @@ class Command(BaseCommand):
 			with codecs.open(filename, 'r', encoding=encoding, errors='ignore') as file: 
 				soup = BeautifulSoup(file, 'html5lib')
 		
+		# If a siterip from deviantart - extract only text div section
+		if soup.find("body", id="deviantART-v7"):
+			soup = soup.find("div", {"class": "grf-indent"})
+
 		# remove single newlines within <p> ...todo
 		# Double newlines for ending <p> tags, to ensure newline generated
 		# contents = '\n\n'.join([str(e) for e in soup.stripped_strings])
