@@ -329,8 +329,12 @@ class Command(BaseCommand):
 						text.append(t)
 						handled = True
 		
+			break 
+
 		if handled:
-			# combine the potential multiple documents
+			# combine the potential multiple documents with titles
+			titles = [f"# {Path(fname).stem}" for fname in filenames ]
+			text = [a + b for a, b in zip(titles, text)]
 			text = '\n'.join(text)
 
 			# clean text
