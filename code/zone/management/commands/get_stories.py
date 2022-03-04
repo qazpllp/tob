@@ -427,11 +427,11 @@ class Command(BaseCommand):
 			with s.text_html.open('r') as f:
 				try:
 					pdfkit.from_file(f, pdf_name, options=opts)
+					with open(pdf_name, 'rb') as f:
+						s.text_pdf = File(f, name=f'{s.id}.pdf')
+						s.save()
 				except:
 					pass
-			with open(pdf_name, 'rb') as f:
-				s.text_pdf = File(f, name=f'{s.id}.pdf')
-				s.save()
 			os.remove(pdf_name)
 
 
