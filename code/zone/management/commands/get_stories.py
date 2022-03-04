@@ -421,6 +421,7 @@ class Command(BaseCommand):
 				'encoding': "UTF-8",
 				'enable-local-file-access': None,
 				'title': f"{s.title}.pdf",
+				'disable_javascript': None,
 			}
 
 			# format newlines for html
