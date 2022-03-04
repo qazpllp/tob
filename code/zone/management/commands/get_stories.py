@@ -27,6 +27,7 @@ import pdfminer
 import markdown
 import pdfkit
 from markdownify import MarkdownConverter
+import chardet
 
 from django.conf import settings
 from zone.models import Author, Story, Tag
@@ -281,15 +282,13 @@ class Command(BaseCommand):
 			for filename in filenames:
 
 				# html
-				ext_html = ['html', 'htm']
-				if ext in ext_html:
+				if ext in ['html', 'htm']:
 					t, handled = self.html2md(filename)
 					text.append(t)
 
 
 				# pandoc
-				exts_pandoc = ['doc', 'docx', 'odt']
-				if ext in exts_pandoc:
+				if ext in ['doc', 'docx', 'odt']:
 					extra_args=['--atx-headers']
 					try:
 						t = pypandoc.convert_file(filename, 'md', 
@@ -300,8 +299,7 @@ class Command(BaseCommand):
 						pass
 
 				# pdf
-				ext_pdf = ['pdf']
-				if ext in ext_pdf:
+				if ext in ['pdf']:
 					output_string = StringIO()
 					with open(filename, 'rb') as in_file:
 						parser = pdfminer.pdfparser.PDFParser(in_file)
@@ -315,25 +313,21 @@ class Command(BaseCommand):
 					text.append(t)
 					handled = True
 				
-				# rtf
-				ext_rtf = ['rtf']
-				if ext in ext_rtf:
-					with open(filename, 'r', errors='replace') as file:
+				# text, rtf
+				if ext in ['rtf', 'txt']:
+					with open(filename, 'rb') as f:
+						tb = f.read()
+					cd = chardet.detect(tb)
+					with open(filename, 'r', errors='ignore', encoding=cd['encoding']) as file:
 						t = file.read()
-						try:
-							t = self.striprtf(t)
+						if ext == 'rtf':
+							try:
+								t = self.striprtf(t)
+								t = self.txt2markdown(t)
+							except:
+								t = ""
+						else:
 							t = self.txt2markdown(t)
-							text.append(t)
-							handled = True
-						except:
-							hadled = False
-
-				# text
-				ext_txt = ['txt']
-				if ext in ext_txt:
-					with open(filename, 'r', errors='replace') as file:
-						t = file.read()
-						t = self.txt2markdown(t)
 						text.append(t)
 						handled = True
 			if handled:
