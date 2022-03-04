@@ -336,8 +336,8 @@ class Command(BaseCommand):
 						t = self.txt2markdown(t)
 						text.append(t)
 						handled = True
-		
-			break 
+			if handled:
+				break 
 
 		if handled:
 			# combine the potential multiple documents with titles
