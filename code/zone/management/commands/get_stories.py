@@ -55,6 +55,7 @@ class Command(BaseCommand):
 		parser.add_argument('--skip_find', action="store_true", help="Overwrite pdf/html, e.t.c. files for serving")
 		parser.add_argument('--story_id', help="Download a particular story (if already known about in database)")
 		parser.add_argument('--year', help='Optional comma separated list of years to search')
+		parser.add_argument('--skip_id', help='comma separated list of story_ids to ignore')
 		parser.add_argument('--update', action="store_true", help='Only finds and consideres newly added stories to textify')
 
 	def handle(self, *args, **options):
@@ -81,6 +82,13 @@ class Command(BaseCommand):
 			stories = new_stories
 		else:
 			stories = Story.objects.all()
+		if options['skip_id']:
+			# remove skip_id stories from the list
+			skipping = [int(s.strip()) for s in options["skip_id"].split(",")]
+			for s in skipping:
+				stories = [item for item in stories if item.id != s]
+
+
 		Path(self.cache_loc).mkdir(parents=True, exist_ok=True)
 		for s in stories:
 			self.download_to_cache(s, **options)
