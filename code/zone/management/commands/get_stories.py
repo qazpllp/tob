@@ -421,7 +421,7 @@ class Command(BaseCommand):
 				'encoding': "UTF-8",
 				'enable-local-file-access': None,
 				'title': f"{s.title}.pdf",
-				'disable_javascript': None,
+				'disable-javascript': None,
 			}
 
 			# format newlines for html
@@ -432,6 +432,7 @@ class Command(BaseCommand):
 						s.text_pdf = File(f, name=f'{s.id}.pdf')
 						s.save()
 				except:
+					print(f"failed to create pdf of {s}")
 					pass
 			os.remove(pdf_name)
 
